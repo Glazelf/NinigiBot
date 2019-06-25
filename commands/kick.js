@@ -18,3 +18,9 @@ exports.run = (client, message, [mention, ...reason]) => {
     message.reply(`${member.user.username} was succesfully kicked.`);
   });
 };
+
+module.exports.help = {
+  name: "kick",
+  description: "Kicks a user.",
+  usage: `${client.config.prefix}kick [@user]`
+};
