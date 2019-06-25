@@ -1,0 +1,2 @@
+# NinigiBot
+NinigiBot for Discord
