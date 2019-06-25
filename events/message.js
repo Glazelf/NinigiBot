@@ -3,7 +3,10 @@ module.exports = (client, message) => {
   if (message.author.bot) return;
 
   // Ignore commands in DMs
-  if (message.channel.type == "dm") return;
+  if (message.channel.type == "dm" && !message.author.id===client.config.ownerI) {
+    message.author.send(`Sorry but you're not allowed to use messages in DMs!`).catch(console.error);
+    return;
+  }
 
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
