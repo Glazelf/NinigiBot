@@ -22,7 +22,7 @@ module.exports.run = async (bot, message, args, con) => {
             usage = help.usage;
 
             // send help text
-            message.author.send(`**${namelist}** \n${desclist} \n${usage}`);
+            message.author.send(`**${namelist}** \n${desclist} \n${usage}`).catch(console.error);
         });
     });
 };

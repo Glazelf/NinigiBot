@@ -2,6 +2,9 @@ module.exports = (client, message) => {
   // Ignore all bots
   if (message.author.bot) return;
 
+  // Ignore commands in DMs
+  if (message.channel.type == "dm") return;
+
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
 
