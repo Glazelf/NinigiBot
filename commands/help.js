@@ -21,7 +21,7 @@ module.exports.run = async (bot, message, args, con) => {
             let props = require(`./${f}`);
             namelist = `**${props.help.name}**\n`;
             desclist = `Description: ${props.help.description}\n`;
-            usage = `Usage: ${client.config.prefix}${props.help.usage}\n`;
+            usage = `Usage: ${props.help.usage}\n`;
             full += `${namelist}${desclist}${usage}\n`
         });
         // send help text
@@ -30,7 +30,7 @@ module.exports.run = async (bot, message, args, con) => {
 };
 
 module.exports.help = {
-    name: "help",
+    name: "Help",
     description: "Sends you a private message with all the commands.",
     usage: `help`
 };
