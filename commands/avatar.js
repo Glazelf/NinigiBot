@@ -1,16 +1,9 @@
 module.exports.run = async (bot, client, message, args) => {
-    let msg = await message.channel.send("Using Psychic to find the desired image...");
-    let target = message.mentions.users.first() || message.author;
-
-    await message.channel.send({
-        files: [
-            {
-                attachment: target.displayAvatarURL,
-                name: "avatar.png"
-            }
-        ]
-    })
-    msg.delete();
+    var member= message.mentions.members.first();
+    let embed = new Discord.RichEmbed()
+  .setImage(message.member.avatarURL)
+  .setColor('#7E21EF')
+    message.channel.send(embed)
 };
 
 module.exports.help = {
