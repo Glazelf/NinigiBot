@@ -15,3 +15,9 @@ exports.run = (client, message, args) => {
   client.commands.set(commandName, props).catch(console.error);
   message.channel.send(`The command ${commandName} has been reloaded`);
 };
+
+module.exports.help = {
+  name: "Reload",
+  description: "Reloads a specific command. Requires ownership of this bot.",
+  usage: `reload [command]`
+};

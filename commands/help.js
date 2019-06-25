@@ -31,6 +31,6 @@ module.exports.run = async (bot, message, args, con) => {
 
 module.exports.help = {
     name: "help",
-    description: "Lists all commands.",
+    description: "Sends you a private message with all the commands.",
     usage: `help`
 };
