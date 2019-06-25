@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: "info",
+    name: "Info",
     description: "Displays some general info about this bot.",
     usage: `info`
 };

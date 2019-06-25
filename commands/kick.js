@@ -16,7 +16,7 @@ exports.run = (client, message, [mention, ...reason]) => {
 };
 
 module.exports.help = {
-  name: "kick",
+  name: "Kick",
   description: "Kicks a user.",
   usage: `kick [@user]`
 };

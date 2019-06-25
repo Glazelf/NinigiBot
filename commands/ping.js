@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: "ping",
+    name: "Ping",
     description: "Responds with Pong! and the time it took to process this command.",
     usage: `ping`
 };
