@@ -1,9 +1,10 @@
 module.exports.run = async (bot, client, message, args) => {
-    var user = message.mentions.users.first();
-    let embed = new Discord.RichEmbed()
-        .setImage(user.avatarURL)
+    const user = message.mentions.users.first() || message.author;
+    const avatarEmbed = new Discord.RichEmbed()
         .setColor('#7E21EF')
-    message.channel.send(embed)
+        .setAuthor(user.username)
+        .setImage(user.avatarURL);
+    message.channel.send(avatarEmbed);
 };
 
 module.exports.help = {
