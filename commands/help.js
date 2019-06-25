@@ -18,13 +18,12 @@ module.exports.run = async (bot, message, args, con) => {
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);
-            namelist = props.name;
-            desclist = props.description;
-            usage = props.usage;
-
-            // send help text
-            message.author.send(`**${namelist}** \n${desclist} \n${usage}`).catch(console.error);
+            namelist += props.name;
+            desclist += props.description;
+            usage += props.usage;
         });
+        // send help text
+        message.author.send(`**${namelist}** \n${desclist} \n${usage}`).catch(console.error);
     });
 };
 
