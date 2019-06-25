@@ -3,4 +3,5 @@ exports.run = (client, message, args) => {
     message.channel.send('Resetting...')
     .then(msg => client.destroy())
     .then(() => client.login(client.config.token));
+    message.channel.send('Reset succesfull!')
 };
