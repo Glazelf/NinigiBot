@@ -8,6 +8,7 @@ module.exports.run = async (bot, message, args, con) => {
         let jsfiles = files.filter(f => f.split(".").pop() === "js");
         if (jsfiles.length <= 0) {
             console.log("No commands to load!");
+            message.author.send("No commands to load!");
             return;
         }
 
