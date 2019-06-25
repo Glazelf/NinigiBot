@@ -15,15 +15,17 @@ module.exports.run = async (bot, message, args, con) => {
         var namelist = "";
         var desclist = "";
         var usage = "";
+        var full = "";
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);
-            namelist += `${props.name}\n`;
+            namelist += `**${props.name}**\n`;
             desclist += `${props.description}\n`;
             usage += `${props.usage}\n`;
+            full += `${namelist}${desclist}${usage}\n`
         });
         // send help text
-        message.author.send(`**${namelist}** \n${desclist} \n${usage}`).catch(console.error);
+        message.author.send(`${full}`).catch(console.error);
     });
 };
 
