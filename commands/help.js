@@ -19,9 +19,9 @@ module.exports.run = async (bot, message, args, con) => {
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);
-            namelist = `**${props.name}**\n`;
-            desclist = `${props.description}\n`;
-            usage = `${props.usage}\n`;
+            namelist = `**${props.help.name}**\n`;
+            desclist = `Description: ${props.help.description}\n`;
+            usage = `Usage: ${client.config.prefix}${props.help.usage}\n`;
             full += `${namelist}${desclist}${usage}\n`
         });
         // send help text
