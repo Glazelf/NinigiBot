@@ -1,7 +1,6 @@
 module.exports.run = async (bot, client, message, args) => {
-    let target = message.mentions.users.first() || message.author;
     let embed = new Discord.RichEmbed()
-        .setImage(target.avatarURL)
+        .setImage(message.author.avatarURL)
         .setColor('#7E21EF')
     message.channel.send(embed)
 };
