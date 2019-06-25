@@ -16,7 +16,7 @@ module.exports.run = async (bot, message, args, con) => {
         var desclist = "";
         var usage = "";
         var full = "";
-        var message = "";
+        var messageContent = "";
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);
@@ -24,10 +24,10 @@ module.exports.run = async (bot, message, args, con) => {
             desclist = `${props.description}\n`;
             usage = `${props.usage}\n`;
             full = `${namelist}${desclist}${usage}\n`
-            message += `${full}`
+            messageContent += `${full}`
         });
         // send help text
-        message.author.send(`${message}`).catch(console.error);
+        message.author.send(`${messageContent}`).catch(console.error);
     });
 };
 
