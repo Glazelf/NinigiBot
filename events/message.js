@@ -3,7 +3,7 @@ module.exports = (client, message) => {
   if (message.author.bot) return;
 
   // Ignore commands in DMs
-  if (message.channel.type == "dm" && !message.author.id===client.config.ownerI) {
+  if (message.channel.type == "dm" && !message.author.id === client.config.ownerI) {
     message.author.send(`Sorry but you're not allowed to use messages in DMs!`).catch(console.error);
     return;
   }

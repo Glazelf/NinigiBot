@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-  if (!message.author.id===client.config.ownerID){
+  if (!message.author.id === client.config.ownerID) {
     return message.channel.send("You aren't allowed to reload commands because you're not the owner of this bot.")
   }
   if (!args || args.length < 1) return message.channel.send("Must provide a command name to reload.");
