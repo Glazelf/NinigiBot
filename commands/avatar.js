@@ -1,7 +1,4 @@
 module.exports.run = async (bot, client, message, args) => {
-    let name = "avatar";
-    let description = "Shows a user's avatar.";
-    let usage = `${client.config.prefix}avatar [@user]`
     let msg = await message.channel.send("Using Psychic to find the desired image...");
     let target = message.mentions.users.first() || message.author;
 
