@@ -18,5 +18,5 @@ exports.run = (client, message, [mention, ...reason]) => {
 module.exports.help = {
   name: "kick",
   description: "Kicks a user.",
-  usage: `${client.config.prefix}kick [@user]`
+  usage: `kick [@user]`
 };

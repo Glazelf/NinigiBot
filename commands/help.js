@@ -30,5 +30,5 @@ module.exports.run = async (bot, message, args, con) => {
 module.exports.help = {
     name: "help",
     description: "Lists all commands.",
-    usage: `${client.config.prefix}help`
+    usage: `help`
 };

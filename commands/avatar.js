@@ -14,8 +14,8 @@ module.exports.run = async (bot, message, args) => {
     msg.delete();
 };
 
-module.exports.help = (client) = {
+module.exports.help = {
     name: "avatar",
     description: "Shows a user's avatar.",
-    usage: `${client.config.prefix}avatar [@user]`
+    usage: `avatar [@user]`
 };

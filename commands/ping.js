@@ -5,5 +5,5 @@ exports.run = (client, message, args) => {
 module.exports.help = {
     name: "ping",
     description: "Responds with Pong! and the time it took to process this command.",
-    usage: `${client.config.prefix}ping`
+    usage: `ping`
 };
