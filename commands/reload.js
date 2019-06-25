@@ -1,4 +1,7 @@
 exports.run = (client, message, args) => {
+  if (!message.author.id===client.config.ownerID){
+    return message.reply("You are not the owner of this bot.")
+  }
   if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
   const commandName = args[0];
   // Check if the command exists and is valid

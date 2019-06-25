@@ -1,16 +1,12 @@
 exports.run = (client, message, [mention, ...reason]) => {
-  const modRole = message.guild.roles.find(role => role.name === "Mods");
-  if (!modRole)
-    return console.log("The Mods role does not exist");
-
-  if (!message.member.roles.has(modRole.id))
-    return message.reply("You can't use this command.");
+  if (!member.hasPermission('KICK_MEMBERS'))
+    return console.log("You don't have permission to kick people!");
 
   if (message.mentions.members.size === 0)
-    return message.reply("Please mention a user to kick");
+    return message.reply("Please mention a user to kick.");
 
   if (!message.guild.me.hasPermission("KICK_MEMBERS"))
-    return message.reply("");
+    return message.reply("I don't have permission to kick people! :(");
 
   const kickMember = message.mentions.members.first();
 
