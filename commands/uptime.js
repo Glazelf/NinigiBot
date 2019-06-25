@@ -8,10 +8,10 @@ exports.run = (client, message, args) => {
     let seconds = Math.floor(totalSeconds % 60);
     if (days >= 1) {
         let uptime = `${days} day(s), ${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
-        message.channel.send(`This bot has been online for ${uptime}`).catch(console.error);
+        message.channel.send(`This bot has been online for ${uptime}`);
     } else {
         let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
-        message.channel.send(`This bot has been online for ${uptime}`).catch(console.error);
+        message.channel.send(`This bot has been online for ${uptime}`);
     }
 };
 

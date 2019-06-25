@@ -25,7 +25,7 @@ module.exports.run = async (bot, message, args, con) => {
             full += `${namelist}${desclist}${usage}\n`
         });
         // send help text
-        message.author.send(`${full}`).catch(console.error);
+        message.author.send(`${full}`);
     });
 };
 

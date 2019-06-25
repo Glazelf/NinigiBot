@@ -12,7 +12,7 @@ exports.run = (client, message, args) => {
   // Delete and reload the command from the client.commands Enmap
   client.commands.delete(commandName);
   const props = require(`./${commandName}.js`);
-  client.commands.set(commandName, props).catch(console.error);
+  client.commands.set(commandName, props);
   message.channel.send(`The command ${commandName} has been reloaded`);
 };
 
