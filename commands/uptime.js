@@ -5,7 +5,7 @@ exports.run = (client, message, args) => {
     let hours = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
     let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
+    let seconds = Math.floor(totalSeconds % 60);
     if (days > 1) {
         let uptime = `${days} day(s), ${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
         message.channel.send(`This bot has been online for ${uptime}`).catch(console.error);
