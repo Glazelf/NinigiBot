@@ -18,9 +18,9 @@ module.exports.run = async (bot, message, args, con) => {
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);
-            namelist = help.name;
-            desclist = help.description;
-            usage = help.usage;
+            namelist = props.help.name;
+            desclist = props.help.description;
+            usage = props.help.usage;
 
             // send help text
             message.author.send(`**${namelist}** \n${desclist} \n${usage}`).catch(console.error);
