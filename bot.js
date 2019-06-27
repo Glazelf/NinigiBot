@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+var commando = require('discord.js-commando');
 const Enmap = require("enmap");
 const fs = require("fs");
 
