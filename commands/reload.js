@@ -13,7 +13,7 @@ exports.run = (client, message, args) => {
   client.commands.delete(commandName);
   const props = require(`./${commandName}.js`);
   client.commands.set(commandName, props);
-  message.channel.send(`The command "${commandName}" has been reloaded.`);
+  message.channel.send(`The command "${client.config.prefix}${commandName}" has been reloaded.`);
 };
 
 module.exports.help = {
