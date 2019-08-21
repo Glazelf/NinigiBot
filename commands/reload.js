@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
   if (message.author.id !== client.config.ownerID) {
-    return message.channel.send(`${client.config.lackPerms}`)
+    return message.channel.send(client.config.lackPerms)
   }
   if (!args || args.length < 1) return message.channel.send("Must provide a command name to reload.");
   const commandName = args[0];
