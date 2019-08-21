@@ -1,7 +1,7 @@
 const fs = require("fs");
 const Discord = require("discord.js");
 
-module.exports.run = async (client, bot, message, args, con) => {
+module.exports.run = async (bot, message, args, con) => {
     fs.readdir("./commands/", (err, files) => {
         if (err) console.error(err);
 
@@ -21,7 +21,8 @@ module.exports.run = async (client, bot, message, args, con) => {
             let props = require(`./${f}`);
             namelist = `**${props.help.name}**\n`;
             desclist = `Description: ${props.help.description}\n`;
-            usage = `Usage: ${client.config.prefix}${props.help.usage}\n`;
+            // one day i will fix this so i dont have to use ? 
+            usage = `Usage: ?${props.help.usage}\n`;
             full += `${namelist}${desclist}${usage}\n`
         });
         // send help text
