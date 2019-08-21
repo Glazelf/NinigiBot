@@ -1,7 +1,4 @@
 exports.run = (client, message, args) => {
-    if (message.author.id !== client.config.ownerID) {
-        return message.channel.send(`${client.config.lackPerms}`)
-    }
     // Split off command
     var textMessage = message.content.slice(5);
 
