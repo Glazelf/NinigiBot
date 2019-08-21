@@ -19,7 +19,7 @@ module.exports = (client, message) => {
   const cmd = client.commands.get(command);
 
   // If that command doesn't exist, exit
-  if (!cmd) return message.channel.send("This command doesn't exist.");;
+  if (!cmd) return message.channel.send("That command doesn't exist.");;
 
   // Run the command
   cmd.run(client, message, args);
