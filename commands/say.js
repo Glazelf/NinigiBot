@@ -2,8 +2,9 @@ exports.run = (client, message, args) => {
     if (message.author.id !== client.config.ownerID) {
         return message.channel.send(`${client.config.lackPerms}`)
     }
-    // send channel a message that you're resetting bot [optional]
-    message.channel.send(message.content)
+    // Split off unwanted text
+    var textMessage = message.content.slice(5);
+    message.channel.send(textMessage)
 };
 
 module.exports.help = {
