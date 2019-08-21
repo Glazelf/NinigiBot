@@ -2,17 +2,20 @@ exports.run = (client, message, args) => {
     if (message.author.id !== client.config.ownerID) {
         return message.channel.send(`${client.config.lackPerms}`)
     }
-    // Split off unwanted text
+    // Split off command
     var textMessage = message.content.slice(5);
 
+    //Catch empty argument
     if (textMessage.length < 1) {
-        return message.channel.send("You need to specify a text for me to say.")
+        return message.channel.send("You need to specify text for me to say.")
     }
-    //if (message.author.id !== client.config.ownerID) {
+
+    //Add credits to avoid anonymous abuse
+    if (message.author.id !== client.config.ownerID) {
         textMessage = `${textMessage} 
     -${message.member.user.tag}`;
         
-    //}
+    }
     message.channel.send(textMessage)
 };
 
