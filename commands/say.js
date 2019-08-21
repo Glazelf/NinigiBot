@@ -6,7 +6,7 @@ exports.run = (client, message, args) => {
     var textMessage = message.content.slice(5);
     //if (message.author.id !== client.config.ownerID) {
         textMessage = `${textMessage} 
-        -${message.member.user.tag}`;
+    -${message.member.user.tag}`;
         
     //}
     message.channel.send(textMessage)
