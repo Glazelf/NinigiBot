@@ -4,11 +4,14 @@ exports.run = (client, message, args) => {
     }
     // Split off unwanted text
     var textMessage = message.content.slice(5);
+    // if (message.author.id !== client.config.ownerID) {
+        textMessage = `${textMessage} (Message prompted by: ${message.member.user.tag})`
+    // }
     message.channel.send(textMessage)
 };
 
 module.exports.help = {
     name: "Say",
-    description: "Replies with the same message you sent. Requires ownership of this bot.",
+    description: "Replies with the same message you sent.",
     usage: `say [text]`
 }; 
