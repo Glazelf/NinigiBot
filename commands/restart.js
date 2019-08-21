@@ -6,7 +6,7 @@ exports.run = (client, message, args) => {
     message.channel.send('Resetting...')
         .then(msg => client.destroy())
         .then(() => client.login(client.config.token))
-        .then(message.channel.send('Successfully restarted!'))
+        .then(() => message.channel.send('Successfully restarted!'))
 };
 
 module.exports.help = {
