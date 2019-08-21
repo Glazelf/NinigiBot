@@ -1,7 +1,7 @@
 const fs = require("fs");
 const Discord = require("discord.js");
 
-module.exports.run = async (bot, message, args, con) => {
+module.exports.run = async (client, bot, message, args, con) => {
     fs.readdir("./commands/", (err, files) => {
         if (err) console.error(err);
 
