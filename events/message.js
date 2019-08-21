@@ -4,7 +4,7 @@ module.exports = (client, message) => {
 
   // Ignore commands in DMs
   if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help`) {
-    message.author.send(`Sorry but you're not allowed to use commands in private messages!`).catch(console.error);
+    message.author.send(`Sorry but you're not allowed to use commands other than "${client.config.prefix}help" in private messages!`).catch(console.error);
     return;
   }
 
