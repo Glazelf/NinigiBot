@@ -5,8 +5,9 @@ exports.run = (client, message, args) => {
     // Split off unwanted text
     var textMessage = message.content.slice(5);
     //if (message.author.id !== client.config.ownerID) {
-        var user = message.mentions.users.first();
-        var textMessage = `@${user} ${textMessage}`;
+        textMessage = `${textMessage} 
+        -${message.member.user.tag}`;
+        
     //}
     message.channel.send(textMessage)
 };
