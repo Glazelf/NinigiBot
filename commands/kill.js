@@ -6,9 +6,3 @@ exports.run = (client, message, args) => {
     message.channel.send('Shutting down...')
         .then(msg => client.destroy())
 };
-
-module.exports.help = {
-    name: "Kill",
-    description: "Shuts down the entire bot. Requires ownership of this bot.",
-    usage: `kill`
-}; 
