@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const ms = require("ms");
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (client, bot, message, args) => {
 
   //usage: ?tempmute @user 1s/m/h/d
 
