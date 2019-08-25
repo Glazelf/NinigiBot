@@ -22,6 +22,6 @@ exports.run = (client, message, args) => {
 
 module.exports.help = {
     name: "Uptime",
-    description: "Displays the current uptime of this bot.",
+    description: "Displays the amount of time this bot has been online for.",
     usage: `uptime`
 };
