@@ -8,11 +8,10 @@ exports.run = (client, message, args) => {
     }
 
     //Add credits to avoid anonymous abuse
-    if (message.author.id !== client.config.ownerID) {
+    // if (message.author.id !== client.config.ownerID) {
         textMessage = `${textMessage} 
-    -${message.member.user.tag}`;
-        
-    }
+    -<@${message.member.user.id}>`;
+    // }
     message.channel.send(textMessage)
 };
 
