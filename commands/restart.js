@@ -7,3 +7,9 @@ exports.run = (client, message, args) => {
         .then(msg => client.destroy())
         .then(() => client.login(client.config.token));
 };
+
+module.exports.help = {
+    name: "Restart",
+    description: "Restarts the entire bot. Requires ownership of this bot.",
+    usage: `restart`
+}; 
