@@ -1,22 +1,44 @@
-exports.run = (client, message, args) => {
-    if (message.author.id !== client.config.ownerID) {
-        return message.channel.send(client.config.lackPerms)
+const Discord = require("discord.js");
+const ms = require("ms");
+
+module.exports.run = async (bot, message, args) => {
+
+  //usage: ?tempmute @user 1s/m/h/d
+
+  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  if(!tomute) return message.reply("Couldn't find user.");
+  if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
+  let muterole = message.guild.roles.find(`name`, "muted");
+  //start of create role
+  if(!muterole){
+    try{
+      muterole = await message.guild.createRole({
+        name: "muted",
+        color: "#000000",
+        permissions:[]
+      })
+      message.guild.channels.forEach(async (channel, id) => {
+        await channel.overwritePermissions(muterole, {
+          SEND_MESSAGES: false,
+          ADD_REACTIONS: false
+        });
+      });
+    }catch(e){
+      console.log(e.stack);
     }
-    let member= message.mentions.members.first();
-    if(!member) return message.reply("You have not mentioned a member to mute, please specify a target.");
-    let muteRole = message.guild.roles.find("name", "Muted");
-    if(!muteRole) return message.reply(`There is no "Muted" role, please create one.`);
-    let params = message.content.split(" ").slice(1);
-    let time = params[1];
-    if(!time) return message.reply("There was no time specified, please specify an amount of time to mute for.");
+  }
+  //end of create role
+  let mutetime = args[1];
+  if(!mutetime) return message.reply("You didn't specify a time the target should be muted for.");
 
-    member.addRole(muteRole.id);
-    message.channel.send(`You've been muted for ${ms(ms(time), {long: true})} ${member.user.tag}`);
+  await(tomute.addRole(muterole.id));
+  message.reply(`<@${tomute.id}> has been muted for ${ms(ms(mutetime))}.`);
 
-    setTimeout(function(){
-        member.removeRole(mute.id);
-    }, ms(time))
-};
+  setTimeout(function(){
+    tomute.removeRole(muterole.id);
+    message.channel.send(`<@${tomute.id}> has been unmuted.`);
+  }, ms(mutetime));
+}
 
 module.exports.help = {
     name: "Mute",
