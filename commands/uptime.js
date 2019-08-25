@@ -15,7 +15,7 @@ exports.run = (client, message, args) => {
         let uptime = `${days} day(s), ${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
         message.channel.send(`This bot has been online for ${uptime}`);
     } else {
-        let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
+        let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s).`;
         message.channel.send(`This bot has been online for ${uptime}`);
     }
 };
