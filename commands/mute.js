@@ -4,12 +4,12 @@ const ms = require("ms");
 module.exports.run = async (client, bot, message, args) => {
 
   //usage: ?tempmute @user 1s/m/h/d
-
-  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  let tomute = message.member(message.mentions.users.first() || message.members.get(args[0]));
   if(!tomute) return message.reply("Couldn't find user.");
   if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
   let muterole = message.guild.roles.find(`name`, "muted");
-  //start of create role
+
+  //if no role, create
   if(!muterole){
     try{
       muterole = await message.guild.createRole({
@@ -27,7 +27,7 @@ module.exports.run = async (client, bot, message, args) => {
       console.log(e.stack);
     }
   }
-  //end of create role
+
   let mutetime = args[1];
   if(!mutetime) return message.reply("You didn't specify a time the target should be muted for.");
 
