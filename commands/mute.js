@@ -4,7 +4,7 @@ const ms = require("ms");
 module.exports.run = async (client, bot, message, args) => {
 
   //usage: ?tempmute @user 1s/m/h/d
-  let tomute = message.member(message.mentions.users.first() || message.members.get(args[0]));
+  let tomute = message.member(message.mentions.first() || message.members.get(args[0]));
   if(!tomute) return message.reply("Couldn't find user.");
   if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
   let muterole = message.guild.roles.find(`name`, "muted");
