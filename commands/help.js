@@ -25,6 +25,11 @@ module.exports.run = async (bot, message, args, con) => {
             usage = `Usage: ?${props.help.usage}\n`;
             full += `${namelist}${desclist}${usage}\n`
         });
+
+        // if not in dms, confirm command in channel
+        if (message.channel.type !== "dm"){
+            message.channel.send(`Help has been sent to your DMs!`)
+        }
         // send help text
         message.author.send(`${full}`);
     });
