@@ -17,7 +17,7 @@ module.exports.run = async (client, bot, message, args) => {
     }
 
   //usage: ?tempmute @user 1s/m/h/d
-  const user = getUserFromMention(args[0])
+  const user = getUserFromMention()
   let tomute = message.member(user || message.members.get(args[0]));
   if(!tomute) return message.reply("Couldn't find user.");
   if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
