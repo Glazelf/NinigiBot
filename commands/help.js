@@ -27,7 +27,7 @@ module.exports.run = async (bot, message, args, con) => {
         });
 
         // if not in dms, confirm command in channel
-        if (message.channel.type !== "dm"){
+        if (message.channel.type !== "dm") {
             message.channel.send(`Help has been sent to your DMs!`)
         }
         // send help text
