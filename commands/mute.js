@@ -23,13 +23,13 @@ module.exports.run = async (client, bot, message, args) => {
   let tomute = message.member(message.mentions.users.first() || message.members.get(args[0]));
   if (!tomute) return message.reply("Couldn't find user.");
   if (tomute.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
-  let muterole = message.guild.roles.find(`name`, "muted");
+  let muterole = message.guild.roles.find(`name`, "Muted");
 
   //if no role, create
   if (!muterole) {
     try {
       muterole = await message.guild.createRole({
-        name: "muted",
+        name: "Muted",
         color: "#000000",
         permissions: []
       })
