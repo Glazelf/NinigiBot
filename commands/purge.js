@@ -7,7 +7,7 @@ exports.run = (client, message, args) => {
         return message.channel.send(`Sorry, but "${numberOfMessages}" is not a number, please specify an amount of messages that should be deleted.`);
     }
     if (numberOfMessages > 100) {
-        return returnmessage.channel.send(`Sorry, but Discord does not allow more than 100 messages to be deleted at once.`);
+        return message.channel.send(`Sorry, but Discord does not allow more than 100 messages to be deleted at once.`);
     }
     let messageCount = parseInt(numberOfMessages);
     message.channel.fetchMessages({ limit: messageCount })
