@@ -15,7 +15,8 @@ module.exports = (client, message) => {
   if (message.content === client.config.prefix) return;
 
   // Ignore messages that start with prefix double or prefix space
-  if (message.content.includes('??')) return;
+  var secondCharacter = message.content.charAt(1)
+  if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
   // Ignore messages that start with prefix + space
   // if (message.content.includes('? ')) return;
