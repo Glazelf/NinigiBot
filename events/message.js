@@ -12,7 +12,7 @@ module.exports = (client, message) => {
   if (message.content.indexOf(client.config.prefix) !== 0) return;
 
   // Ignore messages that are just prefix
-  if (message.content = client.config.prefix) return;
+  
 
   // Ignore messages that start with prefix double or prefix space
   if (message.content.charAt(1) = `${client.config.prefix}`) return;
