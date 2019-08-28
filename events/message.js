@@ -18,7 +18,7 @@ module.exports = (client, message) => {
   if (message.content.charAt(1) = `${client.config.prefix}`) return;
 
   // Ignore messages that start with prefix + space
-  if (message.content.charAt(1) = ` `) return;
+  
 
   // Standard definition
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
