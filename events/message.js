@@ -18,9 +18,6 @@ module.exports = (client, message) => {
   var secondCharacter = message.content.charAt(1)
   if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
-  // Ignore messages that start with prefix + space
-  // if (message.content.includes('? ')) return;
-
   // Standard definition
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
