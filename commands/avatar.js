@@ -8,7 +8,6 @@ exports.run = (client, message, args) => {
             if (mention.startsWith('!')) {
                 mention = mention.slice(1);
             }
-    
             return client.users.get(mention);
         }
     }
@@ -18,10 +17,8 @@ exports.run = (client, message, args) => {
 		if (!user) {
 			return message.reply('Please use a proper mention if you want to see someone else\'s avatar.');
 		}
-
 		return message.channel.send(`${user.username}'s avatar: ${user.displayAvatarURL}`);
 	}
-
 	return message.channel.send(`${message.member.user.username}, your avatar: ${message.author.displayAvatarURL}`);
 };
 
