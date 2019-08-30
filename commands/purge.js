@@ -1,7 +1,5 @@
 exports.run = (client, message, args) => {
-    if (message.author.id !== client.config.ownerID && message.author.id !== client.config.subOwnerID) {
-        return message.channel.send(client.config.lackPerms)
-    }
+    if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
 
     var numberOfMessages = message.content.slice(7);
 

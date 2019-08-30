@@ -8,7 +8,7 @@ exports.run = (client, message, args) => {
     }
 
     //Add credits to avoid anonymous abuse
-    if (message.author.id !== client.config.ownerID) {
+    if (!message.member.hasPermission("ADMINISTRATOR")) {
         textMessage = `${textMessage} 
     -<@${message.member.user.id}>`;
     }
