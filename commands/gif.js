@@ -108,28 +108,22 @@ exports.run = (client, message, args) => {
 -Chimchar
 -Piplup`);
     } else if (gifArgument == "dango") {
-        var gifsArray = this.gifsDango;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsDango[Math.floor(Math.random() * this.gifsDango.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "shinx") {
-        var gifsArray = this.gifsShinx;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsShinx[Math.floor(Math.random() * this.gifsShinx.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "squirtle") {
-        var gifsArray = this.gifsSquirtle;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsSquirtle[Math.floor(Math.random() * this.gifsSquirtle.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "turtwig") {
-        var gifsArray = this.gifsTurtwig;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsTurtwig[Math.floor(Math.random() * this.gifsTurtwig.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "chimchar") {
-        var gifsArray = this.gifsChimchar;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsChimchar[Math.floor(Math.random() * this.gifsChimchar.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "piplup") {
-        var gifsArray = this.gifsPiplup;
-        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        var randomGif = this.gifsPiplup[Math.floor(Math.random() * this.gifsPiplup.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else {
         return message.channel.send(`This word has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help", or message Glaze#6669 to request gifs being added.`);
