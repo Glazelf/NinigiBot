@@ -98,7 +98,7 @@ exports.run = (client, message, args) => {
     var gifArgumentUncased = message.content.slice(5);
     var gifArgument = gifArgumentUncased.toLowerCase();
     if (gifArgument.length < 1) {
-        return message.channel.send(`You need to specify a word to use this command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
+        return message.channel.send(`You need to specify a word to use command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
     } else if (gifArgument == "help") {
         return message.channel.send(`Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
 -Dango
@@ -108,22 +108,28 @@ exports.run = (client, message, args) => {
 -Chimchar
 -Piplup`);
     } else if (gifArgument == "dango") {
-        var randomGif = this.gifsDango[Math.floor(Math.random() * this.gifsDango.length)];
+        var gifsArray = gifsDango;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "shinx") {
-        var randomGif = this.gifsShinx[Math.floor(Math.random() * this.gifsShinx.length)];
+        var gifsArray = gifsShinx;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "squirtle") {
-        var randomGif = this.gifsSquirtle[Math.floor(Math.random() * this.gifsSquirtle.length)];
+        var gifsArray = gifsSquirtle;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "turtwig") {
-        var randomGif = this.gifsTurtwig[Math.floor(Math.random() * this.gifsTurtwig.length)];
+        var gifsArray = gifsTurtwig;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "chimchar") {
-        var randomGif = this.gifsChimchar[Math.floor(Math.random() * this.gifsChimchar.length)];
+        var gifsArray = gifsChimchar;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "piplup") {
-        var randomGif = this.gifsPiplup[Math.floor(Math.random() * this.gifsPiplup.length)];
+        var gifsArray = gifsPiplup;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else {
         return message.channel.send(`This word has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help", or message Glaze#6669 to request gifs being added.`);
