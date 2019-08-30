@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
         return message.channel.send(client.config.lackPerms)
     }
     // send channel a message that you're resetting bot [optional]
-    message.channel.send('Restarting...')
+    message.channel.send('Restarting for...')
         .then(msg => client.destroy())
         .then(() => client.login(client.config.token));
 };

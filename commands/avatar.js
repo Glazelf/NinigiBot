@@ -19,7 +19,7 @@ exports.run = (client, message, args) => {
 		}
 		return message.channel.send(`${user.username}'s avatar: ${user.displayAvatarURL}`);
 	}
-	return message.channel.send(`${message.member.user.username}, your avatar: ${message.author.displayAvatarURL}`);
+	return message.channel.send(`<@${message.member.user.id}>, your avatar: ${message.author.displayAvatarURL}`);
 };
 
 module.exports.help = {

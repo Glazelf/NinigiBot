@@ -12,7 +12,7 @@ exports.run = (client, message, args) => {
     let messageCount = parseInt(numberOfMessages);
     message.channel.fetchMessages({ limit: messageCount })
         .then(messages => message.channel.bulkDelete(messages))
-        .then(message.channel.send(`${numberOfMessages} messages have been deleted.`));
+        .then(message.channel.send(`${numberOfMessages} messages have been deleted, <@${message.member.user.id}>.`));
 };
 
 module.exports.help = {
