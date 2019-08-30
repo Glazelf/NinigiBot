@@ -31,7 +31,7 @@ module.exports.run = async (bot, message, args, con) => {
             message.channel.send(`Help has been sent to your DMs, <@${message.member.user.id}>!`)
         }
         // send help text
-        message.author.send(`${full}`);
+        return message.author.send(`${full}`);
     });
 };
 

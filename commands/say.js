@@ -12,7 +12,7 @@ exports.run = (client, message, args) => {
         textMessage = `${textMessage} 
     -<@${message.member.user.id}>`;
     }
-    message.channel.send(textMessage)
+    return message.channel.send(textMessage)
 };
 
 module.exports.help = {
