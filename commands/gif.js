@@ -1,20 +1,38 @@
 exports.run = (client, message, args) => {
-    if (message.author.id !== client.config.ownerID && message.author.id !== client.config.subOwnerID) {
-        return message.channel.send(client.config.lackPerms)
-    }
-    var gifArgument = message.content.slice(5);
+    var gifArgumentUncased = message.content.slice(5);
+    var gifArgument = gifArgumentUncased.toLowerCase();
     if (gifArgument.length < 1) {
         return message.channel.send(`You need to specify a word to use this command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
     } else if (gifArgument == "help") {
         return message.channel.send(`Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
--dango
--shinx`);
+-Dango
+-Shinx
+-Squirtle
+-Turtwig
+-Chimchar
+-Piplup`);
     } else if (gifArgument == "dango") {
-        var gifsArray = client.config.gifsDango
+        var gifsArray = client.config.gifsDango;
         var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else if (gifArgument == "shinx") {
-        var gifsArray = client.config.gifsShinx
+        var gifsArray = client.config.gifsShinx;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
+    } else if (gifArgument == "squirtle") {
+        var gifsArray = client.config.gifsSquirtle;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
+    } else if (gifArgument == "turtwig") {
+        var gifsArray = client.config.gifsTurtwig;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
+    } else if (gifArgument == "chimchar") {
+        var gifsArray = client.config.gifsChimchar;
+        var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+        return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
+    } else if (gifArgument == "piplup") {
+        var gifsArray = client.config.gifsPiplup;
         var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
         return message.channel.send(`Here's your gif: <@${message.member.user.id}>: ${randomGif}`);
     } else {
