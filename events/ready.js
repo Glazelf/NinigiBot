@@ -6,9 +6,7 @@ module.exports = (client) => {
   client.user.setStatus('idle')
   client.user.setActivity('over Sinnoh', { type: 'WATCHING' })
 
-  // Create global variables
-  var totalMessages = 0;
-  var totalCommands = 0;
+
 
   // List servers the bot is connected to
   console.log("Servers:")
@@ -18,6 +16,10 @@ module.exports = (client) => {
 
 
 }
+
+// Create global variables
+var totalMessages = 0;
+var totalCommands = 0;
 
 // Export global variables
 module.exports = { totalMessages };
