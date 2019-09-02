@@ -116,6 +116,22 @@ exports.run = (client, message, args) => {
     "http://24.media.tumblr.com/tumblr_ljk1xdrdjX1qfjerio1_500.gif",
     "https://sixprizes.com/wp-content/uploads/2016/06/wooper-tightrope-walk-confident-happy.gif"
   ];
+  var gifsReshiram = [
+    "https://thumbs.gfycat.com/IndeliblePalatableBasilisk-size_restricted.gif",
+    "https://media1.giphy.com/media/vnKDhfyvcMOo8/giphy.gif",
+    "https://i.pinimg.com/originals/5c/79/38/5c7938caeaa94302065551a322483c95.gif",
+    "https://media1.tenor.com/images/221b464fe4bb6aa607099f5444e8abba/tenor.gif?itemid=7399449",
+    "https://gifimage.net/wp-content/uploads/2018/04/reshiram-gif-8.gif",
+    "https://media.giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
+  ];
+  var gifsTorchic = [
+    "https://media1.tenor.com/images/272bd23d81e5aec8c54fb152f4876b0e/tenor.gif",
+    "https://media1.tenor.com/images/efaf163a382cb8514608b8e715c41e97/tenor.gif",
+    "https://media1.tenor.com/images/2507f9f78b2020ded18ea28c438f5e7e/tenor.gif",
+    "https://media1.tenor.com/images/cbaa7638c9abb97b42b7bfc8501c07ec/tenor.gif",
+    "http://fanaru.com/pokemon/image/251444-pokemon-torchic.gif",
+    "https://thumbs.gfycat.com/AchingSickDinosaur-max-1mb.gif"
+  ];
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
 
@@ -123,13 +139,15 @@ exports.run = (client, message, args) => {
     return message.channel.send(`You need to specify a word to use command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
   } else if (gifArgument == "help") {
     return message.channel.send(`Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
--Dango
--Shinx
 -Squirtle
+-Wooper
+-Torchic
 -Turtwig
 -Chimchar
 -Piplup
--Wooper`);
+-Shinx
+-Reshiram
+-Dango`);
   } else if (gifArgument == "dango") {
     var gifsArray = gifsDango;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
@@ -156,6 +174,14 @@ exports.run = (client, message, args) => {
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "wooper") {
     var gifsArray = gifsWooper;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "reshiram") {
+    var gifsArray = gifsReshiram;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "torchic") {
+    var gifsArray = gifsTorchic;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else {
