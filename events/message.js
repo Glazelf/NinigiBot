@@ -1,4 +1,6 @@
 module.exports = (client, message) => {
+  // +1 messages count
+  client.config.totalMessages += 1;
   // Ignore all bots
   if (message.author.bot) return;
 
@@ -29,5 +31,6 @@ module.exports = (client, message) => {
   if (!cmd) return message.channel.send("That command doesn't exist.");;
 
   // Run the command
+  client.config.totalCommands += 1;
   cmd.run(client, message, args);
 };

@@ -9,8 +9,6 @@ exports.run = (client, message, args) => {
 
     if (hours >= 24) {
         hours = hours - 24;
-    } else {
-        //
     }
 
     if (days >= 1) {
@@ -18,7 +16,8 @@ exports.run = (client, message, args) => {
         return message.channel.send(`This bot has been online for ${uptime}`);
     } else {
         let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s).`;
-        return message.channel.send(`This bot has been online for ${uptime}`);
+        return message.channel.send(`This bot has been online for ${uptime}
+In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.`);
     }
 };
 
