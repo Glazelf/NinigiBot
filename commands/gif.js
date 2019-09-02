@@ -45,6 +45,27 @@ exports.run = (client, message, args) => {
     "http://24.media.tumblr.com/tumblr_ljk1xdrdjX1qfjerio1_500.gif",
     "https://sixprizes.com/wp-content/uploads/2016/06/wooper-tightrope-walk-confident-happy.gif"
   ];
+  // Scizor DexNr. 212
+  var gifsScizor = [
+    "https://media1.giphy.com/media/pIG4Dds2aEGIg/giphy.gif",
+    "https://thumbs.gfycat.com/OpenInsignificantAxolotl-size_restricted.gif",
+    "https://pa1.narvii.com/6389/bcf868b12c5fb81e958b05db599e87e7672ad452_hq.gif",
+    "https://archive-media-0.nyafuu.org/vp/image/1506/24/1506243095242.gif",
+    "https://media2.giphy.com/media/LkcSpYZNgz4Zy/giphy.gif",
+    "https://pa1.narvii.com/6270/edb05b52a0ce00d767909d4171036faab3619e88_hq.gif",
+    "https://66.media.tumblr.com/82af9c0fa09e680407c6d9c656f657c8/tumblr_mg0hgvSH4M1rc2uczo8_250.gif"
+  ];
+  // Heracross DexNr. 214
+  var gifsHeracross = [
+    "http://pa1.narvii.com/5875/05d79c61831339336344c875959689dcd02e8d5a_00.gif",
+    "http://pa1.narvii.com/5740/fd9f625f90a74db8bd484e88f5a5023a5f52e7e7_00.gif",
+    "https://pa1.narvii.com/5807/9521fd748a9dd01d3f7444b0c6cc610ac5554cbe_hq.gif",
+    "https://media2.giphy.com/media/T726Xfs8br06Q/giphy.gif",
+    "https://vignette.wikia.nocookie.net/pokemonfanon/images/0/03/Venusaur_Heracross.gif",
+    "https://pa1.narvii.com/5807/94885714653e3bc09f11619a7e53e9e3a20b6051_hq.gif",
+    "https://archive-media-0.nyafuu.org/vp/image/1556/68/1556685719593.gif",
+    "https://2.bp.blogspot.com/-cG4FA7PVMKU/Vpg8ayx1gvI/AAAAAAAACQ8/ixYuBp-93Y0/s1600/heracross.gif"
+  ];
   // Torchic DexNr. 255
   var gifsTorchic = [
     "https://media1.tenor.com/images/272bd23d81e5aec8c54fb152f4876b0e/tenor.gif",
@@ -78,7 +99,8 @@ exports.run = (client, message, args) => {
     "https://66.media.tumblr.com/b4d5a670634c7d72a7248ddc2bc73c8c/tumblr_mh6qo03jjW1r7c13zo1_500.gif",
     "https://i.pinimg.com/originals/17/ba/e8/17bae84b77cd63fb53f9e139b09f2dcf.gif",
     "https://66.media.tumblr.com/tumblr_lso287JZvY1qczibyo1_500.gif",
-    "http://pa1.narvii.com/5878/8aa49f1c2cbb1b7728f265e218a8ace66987c034_hq.gif"
+    "http://pa1.narvii.com/5878/8aa49f1c2cbb1b7728f265e218a8ace66987c034_hq.gif",
+    "https://media1.tenor.com/images/8495b356feb4e0d20633eeae56b59472/tenor.gif"
   ];
   // Piplup DexNr. 393
   var gifsPiplup = [
@@ -131,7 +153,8 @@ exports.run = (client, message, args) => {
     "https://data.whicdn.com/images/181265990/original.gif",
     "https://pa1.narvii.com/6359/e85d5b3509640e73294d0e439db8bed58d955e38_hq.gif",
     "http://pa1.narvii.com/5718/945c8f89a576744373ef022ea5dfdb8221b942b9_00.gif",
-    "https://pa1.narvii.com/6157/9163f2d3b4f1df4f0ae8db8ff07d264f4bab3136_hq.gif"
+    "https://pa1.narvii.com/6157/9163f2d3b4f1df4f0ae8db8ff07d264f4bab3136_hq.gif",
+    "https://media.giphy.com/media/tH8zhpQ1ez3IA/giphy.gif"
   ];
   // Gliscor DexNr. 472
   var gifsGliscor = [
@@ -172,11 +195,14 @@ exports.run = (client, message, args) => {
     return message.channel.send(`Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
 -Squirtle
 -Wooper
+-Scizor
+-Heracross
 -Torchic
 -Turtwig
 -Chimchar
 -Piplup
 -Shinx
+-Pachirisu
 -Gliscor
 -Reshiram
 -Dango`);
@@ -187,6 +213,14 @@ exports.run = (client, message, args) => {
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "wooper") {
     var gifsArray = gifsWooper;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "scizor") {
+    var gifsArray = gifsScizor;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "heracross") {
+    var gifsArray = gifsHeracross;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "torchic") {
