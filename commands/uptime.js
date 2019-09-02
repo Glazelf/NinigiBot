@@ -7,6 +7,10 @@ exports.run = (client, message, args) => {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
 
+    // Import totals
+    var { totalMessages } = require('../events/ready');
+    var { totalCommands } = require('../events/ready');
+
     if (hours >= 24) {
         hours = hours - 24;
     }
@@ -14,11 +18,11 @@ exports.run = (client, message, args) => {
     if (days >= 1) {
         let uptime = `${days} day(s), ${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
         return message.channel.send(`This bot has been online for ${uptime}
-In that time, ${client.config.totalMessages} messages have been sent and ${client.config.totalCommands} commands have been used.`);
+In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.`);
     } else {
         let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s).`;
         return message.channel.send(`This bot has been online for ${uptime}
-In that time, ${client.config.totalMessages} messages have been sent and ${client.config.totalCommands} commands have been used.`);
+In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.`);
     }
 };
 
