@@ -95,6 +95,27 @@ exports.run = (client, message, args) => {
     "https://media.giphy.com/media/sLNtrlujiKvC/source.gif",
     "https://68.media.tumblr.com/822ffd1028921998b1a984e8c6760749/tumblr_ni4yfpSKcs1rq9h94o1_500.gif"
   ];
+  var gifsWooper = [
+    "http://i.imgur.com/VOKPenb.gif",
+    "https://media.giphy.com/media/13ErhPzkOJoty/giphy.gif",
+    "https://media3.giphy.com/media/nhNa1pj7kYVi0/giphy.gif",
+    "https://i.pinimg.com/originals/89/00/34/89003420c54d6b304be5d7ed7ebdf4c7.gif",
+    "https://thumbs.gfycat.com/ForcefulDiligentHoneybee-small.gif",
+    "https://i.pinimg.com/originals/c7/b2/32/c7b2320c583e6b08069465f2e3570075.gif",
+    "https://66.media.tumblr.com/fbe3d87fdf2e9e4e24941a3b36c0781f/tumblr_ori5yo2mIj1vhvnzyo1_400.gif",
+    "https://i.imgur.com/JAzs0iP.gif",
+    "http://49.media.tumblr.com/tumblr_m9b5jpGplP1qcm0wfo1_500.gif",
+    "https://media.giphy.com/media/10VKWqp5QHEpc4/giphy.gif",
+    "https://thumbs.gfycat.com/CoordinatedDescriptiveAlabamamapturtle-small.gif",
+    "https://78.media.tumblr.com/f8ad9d7ce9d1432b574951f7c616c368/tumblr_nxk4pjBhDg1tqptlzo1_500.gif",
+    "https://68.media.tumblr.com/f097cb1f27e986cffca34d50dfbad8b3/tumblr_nxk4pjBhDg1tqptlzo2_500.gif",
+    "https://media1.tenor.com/images/160a719e7182123c715bf63b8a4d0269/tenor.gif?itemid=7178145",
+    "https://66.media.tumblr.com/c2c5ccd1854065134127795e6a1edaf7/tumblr_nnne81Vigx1qfjr5zo1_400.gif",
+    "http://i.imgur.com/uQhro.gif",
+    "https://static.fjcdn.com/gifs/An_df96da_5425362.gif",
+    "http://24.media.tumblr.com/tumblr_ljk1xdrdjX1qfjerio1_500.gif",
+    "https://sixprizes.com/wp-content/uploads/2016/06/wooper-tightrope-walk-confident-happy.gif"
+  ];
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
 
@@ -107,7 +128,8 @@ exports.run = (client, message, args) => {
 -Squirtle
 -Turtwig
 -Chimchar
--Piplup`);
+-Piplup
+-Wooper`);
   } else if (gifArgument == "dango") {
     var gifsArray = gifsDango;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
@@ -130,6 +152,10 @@ exports.run = (client, message, args) => {
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "piplup") {
     var gifsArray = gifsPiplup;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "wooper") {
+    var gifsArray = gifsWooper;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else {
