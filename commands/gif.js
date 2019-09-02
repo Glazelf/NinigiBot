@@ -186,6 +186,39 @@ exports.run = (client, message, args) => {
     "https://68.media.tumblr.com/0294cb166355ddfadf279d3b0be72821/tumblr_o1xrestimL1sl23m0o1_500.gif",
     "https://cdn.discordapp.com/attachments/614979959156375567/616708137394634759/d73jb8k-2711c667-fdd2-4291-8e87-c78e9808a6d0.gif"
   ];
+  // Interactions and emotions
+  var gifsHug = [
+    "https://media0.giphy.com/media/8tpiC1JAYVMFq/source.gif",
+    "https://media.giphy.com/media/LpoYxe6nuzeus/giphy.gif",
+    "https://media1.giphy.com/media/qPoCDRpGkRG5a/giphy.gif",
+    "https://thumbs.gfycat.com/WetBoilingIaerismetalmark-size_restricted.gif",
+    "https://i.pinimg.com/originals/0f/34/78/0f3478f3c29bfc2e43f400a774766940.gif",
+    "https://am23.akamaized.net/tms/cnt/uploads/2016/07/hug-team-rocket-pokemon.gif",
+    "https://i.kym-cdn.com/photos/images/original/001/370/086/eba.gif",
+    "https://media1.tenor.com/images/ddef9605935455ab0ca5b309bcf048f9/tenor.gif",
+    "https://media1.tenor.com/images/7668460649c6e9d4b3bca5ea55fab97d/tenor.gif",
+    "https://thumbs.gfycat.com/CleverUnfoldedEgg-size_restricted.gif",
+    "https://i.makeagif.com/media/9-13-2015/q3Rq3X.gif",
+    "http://25.media.tumblr.com/tumblr_mab1kl209a1rzsfkvo1_500.gif",
+    "https://uncyclopedia.ca/w/images/thumb/6/6b/Gotta-catch-em-all.gif/300px-Gotta-catch-em-all.gif",
+    "https://66.media.tumblr.com/a1f81311447e6c699aeea636edbe93bd/tumblr_njexevcqw21tgjlm2o1_500.gif",
+    "https://66.media.tumblr.com/c2d1ef7a3bb26fef3161ced5285e959f/tumblr_oz5n1z0SXX1tpvtc4o2_r1_500.gif",
+    "https://archive-media-0.nyafuu.org/vp/image/1405/06/1405062700437.gif",
+    "https://68.media.tumblr.com/b10505755069fc6e3a532ef7759e937d/tumblr_ogtv5qpyd01vala9ro1_r3_500.gif",
+    "https://38.media.tumblr.com/b94380561be418a8966f719b425fac5c/tumblr_n47wr3JRrq1rjenv2o1_500.gif",
+    "https://78.media.tumblr.com/03965920124aab7f4bb878bd5723d045/tumblr_omx30nOAb81rsrk2xo2_500.gif",
+    "https://data.whicdn.com/images/246283707/original.gif",
+    "https://cdn24.picsart.com/159757429002202.gif",
+    "https://i.kym-cdn.com/photos/images/newsfeed/000/664/162/36e.gif",
+    "https://archive-media-0.nyafuu.org/vp/image/1467/85/1467851659473.gif",
+    "https://i.kym-cdn.com/photos/images/original/000/938/171/f86.gif",
+    "https://data.whicdn.com/images/67093491/original.gif",
+    "https://68.media.tumblr.com/0a6257ad22e62e3fe2fe33380587f5c6/tumblr_ojsfaiqf2I1rsrk2xo1_500.gif",
+    "https://68.media.tumblr.com/2fe9e27a783cf0792426c8452ed186ba/tumblr_ok3werVjwm1r8sc3ro1_500.gif",
+    "https://68.media.tumblr.com/aa88db14c65b4c936322e394464050f5/tumblr_ottjgzEHP11v68t0mo4_r1_500.gif",
+    "https://i.pinimg.com/originals/a9/c7/06/a9c70693148d2ad5083f391680b99e0f.gif",
+    "https://data.whicdn.com/images/140239223/original.gif"
+  ];
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
 
@@ -205,8 +238,8 @@ exports.run = (client, message, args) => {
 -Pachirisu
 -Gliscor
 -Reshiram
--Dango`);
-
+-Dango
+-Hug`);
   } else if (gifArgument == "squirtle") {
     var gifsArray = gifsSquirtle;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
@@ -259,8 +292,12 @@ exports.run = (client, message, args) => {
     var gifsArray = gifsDango;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "hug") {
+    var gifsArray = gifsHug;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else {
-    return message.channel.send(`This word has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help", or message Glaze#6669 to request gifs being added.`);
+    return message.channel.send(`This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM ${client.config.ownerAccount}.`);
   };
 };
 
