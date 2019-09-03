@@ -175,6 +175,7 @@ exports.run = (client, message, args) => {
     "https://giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
   ];
   // Non-Pokémon gifs:
+  // Dango
   var gifsDango = [
     "https://media.tumblr.com/b2ef75e4a6c6ddca39bb9de9b076070a/tumblr_n9o9izGbos1rcikyeo1_500.gif",
     "http://media.tumblr.com/tumblr_me08tqhext1qbtacbo1_500.gif",
@@ -186,7 +187,29 @@ exports.run = (client, message, args) => {
     "https://media.tumblr.com/0294cb166355ddfadf279d3b0be72821/tumblr_o1xrestimL1sl23m0o1_500.gif",
     "https://cdn.discordapp.com/attachments/614979959156375567/616708137394634759/d73jb8k-2711c667-fdd2-4291-8e87-c78e9808a6d0.gif"
   ];
+  //Stitch
+  var gifsStitch = [
+    "http://media.tumblr.com/b0bca037616ce9f268458d5e1610dee0/tumblr_msnvoyvo9v1s9qf9ro1_500.gif",
+    "https://thumbs.gfycat.com/CharmingDecisiveGalapagosdove-max-1mb.gif",
+    "https://pa1.narvii.com/6890/235e5f7b07d195d993e90649044cd528a30ef2fcr1-500-281_hq.gif",
+    "https://media.tumblr.com/07460ce49df9a1c9a7d35b978fa88670/tumblr_pl9o2yqoe61qfq1l5o3_500.gif",
+    "https://media1.tenor.com/images/120f3b8ef4ba0364f45a91bbb9d1fd9f/tenor.gif",
+    "http://images6.fanpop.com/image/photos/33900000/lilo-and-stitch-lilo-and-stitch-33997852-500-396.gif",
+    "https://i.imgur.com/LNBobNg.gif",
+    "http://media.tumblr.com/1cd17fd88ed7134b0d46a23b476840da/tumblr_nmntqo3P3c1qm6oc3o2_500.gif",
+    "https://media3.giphy.com/media/Lg5R4NBvLbB84/giphy.gif",
+    "http://0.media.dorkly.cvcdn.com/88/99/6522d67a324b0e1374e9b45e39efd3a8.gif",
+    "https://data.whicdn.com/images/43352527/original.gif",
+    "http://4.bp.blogspot.com/-kUE5HIefmsc/U4ODJB7WuAI/AAAAAAAAALE/nPSLpROHX34/s1600/nani.gif",
+    "http://33.media.tumblr.com/44773d5f52c57601764b33fd3f8f2554/tumblr_n9ab97pqsp1tp6lx0o1_500.gif",
+    "http://2.bp.blogspot.com/--ptwPAnxuyY/U4OBiiyMMVI/AAAAAAAAAKY/2c-9H--H4lQ/s1600/tumblr_n586m0dTQc1s0xjvpo1_500+(1).gif",
+    "http://www.tor.com/wp-content/uploads/2014/12/lilo.gif",
+    "http://1.media.dorkly.cvcdn.com/59/69/726346324b015b868c217a697acfea1b.gif",
+    "http://s2.favim.com/orig/150715/disnet-disney-lilo-and-stitch-stitch-Favim.com-2962683.gif",
+    "https://media.tenor.com/images/88ba7356041dab0dca94bfc77e03d7f7/tenor.gif"
+  ];
   // Interactions and emotions
+  //Hug
   var gifsHug = [
     "https://giphy.com/media/8tpiC1JAYVMFq/source.gif",
     "https://giphy.com/media/LpoYxe6nuzeus/giphy.gif",
@@ -217,7 +240,10 @@ exports.run = (client, message, args) => {
     "https://media.tumblr.com/2fe9e27a783cf0792426c8452ed186ba/tumblr_ok3werVjwm1r8sc3ro1_500.gif",
     "https://media.tumblr.com/aa88db14c65b4c936322e394464050f5/tumblr_ottjgzEHP11v68t0mo4_r1_500.gif",
     "https://i.pinimg.com/originals/a9/c7/06/a9c70693148d2ad5083f391680b99e0f.gif",
-    "https://data.whicdn.com/images/140239223/original.gif"
+    "https://data.whicdn.com/images/140239223/original.gif",
+    "https://thumbs.gfycat.com/LegitimateCompleteIvorygull-size_restricted.gif",
+    "http://33.media.tumblr.com/tumblr_llf2y4v3Wp1qhigt0o1_500.gif",
+    "http://media3.giphy.com/media/LWTxLvp8G6gzm/giphy.gif"
   ];
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
@@ -239,6 +265,7 @@ exports.run = (client, message, args) => {
 -Gliscor
 -Reshiram
 -Dango
+-Stitch
 -Hug`);
   } else if (gifArgument == "squirtle") {
     var gifsArray = gifsSquirtle;
@@ -290,6 +317,10 @@ exports.run = (client, message, args) => {
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "dango") {
     var gifsArray = gifsDango;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
+  } else if (gifArgument == "stitch") {
+    var gifsArray = gifsStitch;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     return message.channel.send(`Here's your gif, <@${message.member.user.id}>: ${randomGif}`);
   } else if (gifArgument == "hug") {
