@@ -217,7 +217,8 @@ exports.run = (client, message, args) => {
     "https://media1.giphy.com/media/iU8I3XPGCBnCU/source.gif",
     "https://media1.tenor.com/images/fe986598cc67a9ce7ecb9da06172a104/tenor.gif",
     "http://media.tumblr.com/2007cd519ce9b09e7581e75098a1c058/tumblr_mmvukzxZr31rh58ldo1_400.gif",
-    "https://media1.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif"
+    "https://media1.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
+    "https://media1.tenor.com/images/534b7fbb372900815007a3f11128d790/tenor.gif?itemid=11626143"
   ];
   // Interactions and emotions
   //Hug
