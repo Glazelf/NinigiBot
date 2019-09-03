@@ -197,7 +197,7 @@ exports.run = (client, message, args) => {
     "http://images6.fanpop.com/image/photos/33900000/lilo-and-stitch-lilo-and-stitch-33997852-500-396.gif",
     "https://i.imgur.com/LNBobNg.gif",
     "http://media.tumblr.com/1cd17fd88ed7134b0d46a23b476840da/tumblr_nmntqo3P3c1qm6oc3o2_500.gif",
-    "https://media3.giphy.com/media/Lg5R4NBvLbB84/giphy.gif",
+    "https://giphy.com/media/Lg5R4NBvLbB84/giphy.gif",
     "http://0.media.dorkly.cvcdn.com/88/99/6522d67a324b0e1374e9b45e39efd3a8.gif",
     "https://data.whicdn.com/images/43352527/original.gif",
     "http://4.bp.blogspot.com/-kUE5HIefmsc/U4ODJB7WuAI/AAAAAAAAALE/nPSLpROHX34/s1600/nani.gif",
@@ -213,8 +213,8 @@ exports.run = (client, message, args) => {
     "https://i.pinimg.com/originals/c2/2d/6b/c22d6bb39e927f4dfe4dfac24c3a4cec.gif",
     "https://media.tumblr.com/7f420ccacd5d01f104de1d739da9c423/tumblr_nk6epyl4g31tf0o9zo1_500.gif",
     "https://media1.tenor.com/images/b846fd0799324125b8d66254499d584c/tenor.gif",
-    "https://media1.giphy.com/media/vz4rWqFNihWqk/giphy.gif",
-    "https://media1.giphy.com/media/iU8I3XPGCBnCU/source.gif",
+    "https://giphy.com/media/vz4rWqFNihWqk/giphy.gif",
+    "https://giphy.com/media/iU8I3XPGCBnCU/source.gif",
     "https://media1.tenor.com/images/fe986598cc67a9ce7ecb9da06172a104/tenor.gif",
     "http://media.tumblr.com/2007cd519ce9b09e7581e75098a1c058/tumblr_mmvukzxZr31rh58ldo1_400.gif",
     "https://media1.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
@@ -255,7 +255,7 @@ exports.run = (client, message, args) => {
     "https://data.whicdn.com/images/140239223/original.gif",
     "https://thumbs.gfycat.com/LegitimateCompleteIvorygull-size_restricted.gif",
     "http://33.media.tumblr.com/tumblr_llf2y4v3Wp1qhigt0o1_500.gif",
-    "http://media3.giphy.com/media/LWTxLvp8G6gzm/giphy.gif"
+    "http://giphy.com/media/LWTxLvp8G6gzm/giphy.gif"
   ];
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
