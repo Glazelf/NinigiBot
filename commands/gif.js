@@ -206,7 +206,17 @@ exports.run = (client, message, args) => {
     "http://www.tor.com/wp-content/uploads/2014/12/lilo.gif",
     "http://1.media.dorkly.cvcdn.com/59/69/726346324b015b868c217a697acfea1b.gif",
     "http://s2.favim.com/orig/150715/disnet-disney-lilo-and-stitch-stitch-Favim.com-2962683.gif",
-    "https://media.tenor.com/images/88ba7356041dab0dca94bfc77e03d7f7/tenor.gif"
+    "https://media.tenor.com/images/88ba7356041dab0dca94bfc77e03d7f7/tenor.gif",
+    "https://data.whicdn.com/images/37872216/original.gif",
+    "https://media1.tenor.com/images/be28585ce334d07cad7088b42358f9a4/tenor.gif",
+    "https://media1.tenor.com/images/35de46b0897c3ee3ccf1c6fadcb4eed8/tenor.gif",
+    "https://i.pinimg.com/originals/c2/2d/6b/c22d6bb39e927f4dfe4dfac24c3a4cec.gif",
+    "https://media.tumblr.com/7f420ccacd5d01f104de1d739da9c423/tumblr_nk6epyl4g31tf0o9zo1_500.gif",
+    "https://media1.tenor.com/images/b846fd0799324125b8d66254499d584c/tenor.gif",
+    "https://media1.giphy.com/media/vz4rWqFNihWqk/giphy.gif",
+    "https://media1.giphy.com/media/iU8I3XPGCBnCU/source.gif",
+    "https://media1.tenor.com/images/fe986598cc67a9ce7ecb9da06172a104/tenor.gif",
+    "http://media.tumblr.com/2007cd519ce9b09e7581e75098a1c058/tumblr_mmvukzxZr31rh58ldo1_400.gif"
   ];
   // Interactions and emotions
   //Hug
