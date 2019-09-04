@@ -7,6 +7,16 @@ exports.run = (client, message, args) => {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
 
+    //figure out if the numbers given is different than 1
+    let multiDays = "";
+    if (days=1) {multiDays = ""} else{multiDays = "s"};
+    let multiHours = "";
+    if (hours=1) {multiHours = ""} else{multiHours = "s"};
+    let multiMinutes = "";
+    if (minutes=1) {multiMinutes = ""} else{multiMinutes = "s"};
+    let multiSeconds = "";
+    if (seconds=1) {multiSeconds = ""} else{multiSeconds = "s"};
+
     // Import totals
     var { totalMessages } = require('../events/ready');
     var { totalCommands } = require('../events/ready');
@@ -15,10 +25,10 @@ exports.run = (client, message, args) => {
         hours = hours - 24;
     }
 
-    let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`
+    let uptime = `${hours} hour${multiDays}, ${minutes} minute${multiDays} and ${seconds} second${multiDays}`
     
     if (days >= 1) {
-        uptime = `${days} day(s) + ${uptime}`
+        uptime = `${days} day${multiDays} + ${uptime}`
     } else {
         return message.channel.send(`This bot has been online for ${uptime}.
         WORK IN PROGRESS:
