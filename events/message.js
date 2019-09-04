@@ -9,8 +9,8 @@ module.exports = (client, message, channel) => {
   // Ignore all bots
   if (message.author.bot) return;
 
-    // Ignore messages that aren't in bot channel or by a mod
-    if (channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES")) return;
+  // Ignore messages that aren't in bot channel or by a mod
+  if (message.channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES")) return;
 
   // Ignore commands in DMs
   if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help` && message != `${client.config.prefix}info`) {
