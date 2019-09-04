@@ -5,6 +5,7 @@ module.exports = (client, message) => {
 
   // +1 messages count
   totalMessages += 1;
+
   // Ignore all bots
   if (message.author.bot) return;
 
@@ -12,7 +13,7 @@ module.exports = (client, message) => {
   if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help`) {
     message.author.send(`Sorry but you're not allowed to use commands other than "${client.config.prefix}help" in private messages!`).catch(console.error);
     return;
-  }
+  };
 
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
@@ -21,7 +22,7 @@ module.exports = (client, message) => {
   if (message.content === client.config.prefix) return;
 
   // Ignore messages that start with prefix double or prefix space
-  var secondCharacter = message.content.charAt(1)
+  var secondCharacter = message.content.charAt(1);
   if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
   // Standard definition
@@ -32,9 +33,11 @@ module.exports = (client, message) => {
   const cmd = client.commands.get(command);
 
   // If that command doesn't exist, exit
-  if (!cmd) return message.channel.send("That command doesn't exist.");;
+  if (!cmd) return message.channel.send("That command doesn't exist.");
+
+  // +1 command count
+  totalCommands += 1;
 
   // Run the command
-  totalCommands += 1;
   cmd.run(client, message, args);
 };
