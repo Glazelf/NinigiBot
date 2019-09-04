@@ -9,10 +9,12 @@ module.exports = (client, message) => {
   // Ignore all bots
   if (message.author.bot) return;
 
+    // Ignore messages that aren't in bot channel or by a mod
+    if (channel.id !== `614979959156375567` && !message.member.hasPermission("MANAGE_MESSAGES")) return;
+
   // Ignore commands in DMs
-  if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help`) {
-    message.author.send(`Sorry but you're not allowed to use commands other than "${client.config.prefix}help" in private messages!`).catch(console.error);
-    return;
+  if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help` && message != `${client.config.prefix}info`) {
+    return message.author.send(`Sorry but you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info"  in private messages!`).catch(console.error);
   };
 
   // Ignore messages not starting with the prefix
