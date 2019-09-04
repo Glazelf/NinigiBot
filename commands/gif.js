@@ -287,7 +287,7 @@ exports.run = (client, message, args) => {
     var gifsArray = gifsSquirtle;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
 
     //// Test for changing layout of this giant if/else statement:
     // var gifsArray = gifArgument.charAt(0).toUpperCase() + string.slice(1);
@@ -297,72 +297,72 @@ exports.run = (client, message, args) => {
     var gifsArray = gifsWooper;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "scizor") {
     var gifsArray = gifsScizor;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "heracross") {
     var gifsArray = gifsHeracross;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "torchic") {
     var gifsArray = gifsTorchic;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "turtwig") {
     var gifsArray = gifsTurtwig;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "chimchar") {
     var gifsArray = gifsChimchar;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "piplup") {
     var gifsArray = gifsPiplup;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "shinx") {
     var gifsArray = gifsShinx;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "pachirisu") {
     var gifsArray = gifsPachirisu;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "gliscor") {
     var gifsArray = gifsGliscor;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "reshiram") {
     var gifsArray = gifsReshiram;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "dango") {
     var gifsArray = gifsDango;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "stitch") {
     var gifsArray = gifsStitch;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "hug") {
     var gifsArray = gifsHug;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
+    return message.channel.send(totalMessage);
   } else {
     return message.channel.send(`This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM ${client.config.ownerAccount}.`);
   };

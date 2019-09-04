@@ -10,7 +10,7 @@ module.exports.run = async (bot, message, args, con) => {
             console.log("No commands to load!");
             message.author.send("No commands to load!");
             return;
-        }
+        };
 
         var namelist = "";
         var desclist = "";
@@ -29,10 +29,10 @@ module.exports.run = async (bot, message, args, con) => {
         // if not in dms, confirm command in channel
         if (message.channel.type !== "dm") {
             message.channel.send(`Help has been sent to your DMs, <@${message.member.user.id}>!`)
-        }
+        };
 
         // send help text
-        return message.author.send(`${full}`);
+        return message.author.send(full);
     });
 };
 

@@ -30,7 +30,7 @@ exports.run = (client, message, args) => {
     if (days >= 1) {
         uptime = `${days} day${multiDays}, ${uptime}`;
     }
-    return message.channel.send(`This bot has been online for ${uptime}.`);
+    return message.channel.send(`<@${message.member.user.id}>, this bot has been online for ${uptime}.`);
     // In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.
 };
 
