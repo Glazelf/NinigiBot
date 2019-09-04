@@ -1,8 +1,9 @@
 exports.run = (client, message, args) => {
+  //// Pokémon
   // Squirtle DexNr. 7
-  //// Test for changing layout of this giant if/else statement:
-  // var Squirtle = [
   var gifsSquirtle = [
+    //// Test for changing layout of this giant if/else statement:
+    // var Squirtle = [
     "http://media.tumblr.com/3393cf4f82933c5ca0a5e23797a006d3/tumblr_mjmpsh0S9k1r6nfvjo1_500.gif",
     "https://media.tumblr.com/4ce496c0f612e4471f9e972b1589cfc7/tumblr_mz1wc0pQqo1tp9ck7o1_500.gif",
     "http://media.tumblr.com/tumblr_m22ue3qYTj1ql5an1o1_500.gif",
@@ -143,7 +144,7 @@ exports.run = (client, message, args) => {
     "https://media.tumblr.com/tumblr_m53z92PXqT1rpn9eno1_500.gif",
     "https://media.tumblr.com/b1b5f9ed0d561cc153931aa2b992ca08/tumblr_nynufvjEwW1r8sc3ro3_500.gif",
     "http://media.tumblr.com/1d860b01b97f8587521d79e55c88cb9d/tumblr_newu4fmADn1qf8rnjo1_500.gif"
-  ];  
+  ];
   // Pachirisu DexNr. 417
   var gifsPachirisu = [
     "http://1.media.dorkly.cvcdn.com/87/44/26a36920d400c1b0c0ddb29c3373a1eb.gif",
@@ -176,7 +177,7 @@ exports.run = (client, message, args) => {
     "https://gifimage.net/wp-content/uploads/2018/04/reshiram-gif-8.gif",
     "https://giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
   ];
-  // Non-Pokémon gifs:
+  //// Non-Pokémon gifs:
   // Dango
   var gifsDango = [
     "https://media.tumblr.com/b2ef75e4a6c6ddca39bb9de9b076070a/tumblr_n9o9izGbos1rcikyeo1_500.gif",
@@ -222,7 +223,7 @@ exports.run = (client, message, args) => {
     "https://media1.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
     "https://media1.tenor.com/images/534b7fbb372900815007a3f11128d790/tenor.gif?itemid=11626143"
   ];
-  // Interactions and emotions
+  //// Interactions and emotions
   //Hug
   var gifsHug = [
     "https://giphy.com/media/8tpiC1JAYVMFq/source.gif",
