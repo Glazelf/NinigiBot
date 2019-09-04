@@ -9,13 +9,13 @@ exports.run = (client, message, args) => {
 
     //figure out if the numbers given is different than 1
     let multiDays = "";
-    if (days == 1) {multiDays = ""} else{multiDays = "s"};
+    if (days !== 1) {multiDays = "s"};
     let multiHours = "";
-    if (hours == 1) {multiHours = ""} else{multiHours = "s"};
+    if (hours !== 1) {multiHours = "s"};
     let multiMinutes = "";
-    if (minutes == 1) {multiMinutes = ""} else{multiMinutes = "s"};
+    if (minutes !== 1) {multiMinutes = "s"};
     let multiSeconds = "";
-    if (seconds == 1) {multiSeconds = ""} else{multiSeconds = "s"};
+    if (seconds !== 1) {multiSeconds = "s"};
 
     // Import totals
     var { totalMessages } = require('../events/ready');
