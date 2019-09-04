@@ -9,12 +9,14 @@ module.exports = (client, message, channel) => {
   // Ignore all bots
   if (message.author.bot) return;
 
-  // Ignore messages that aren't in bot channel or by a mod
-  if (message.channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES")) return;
+  // Ignore messages that aren't in bot channel or by a mod (except help)
+  if (message.channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES" && message != `${client.config.prefix}help`)) {
+    return message.channel.send(`Sorry <@${message.member.user.id}>, you're not allowed to use commands here, try using commands in: <#${client.config.botChannelID}>.`);
+  };
 
   // Ignore commands in DMs
   if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help` && message != `${client.config.prefix}info`) {
-    return message.author.send(`Sorry but you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info"  in private messages!`).catch(console.error);
+    return message.author.send(`Sorry <@${message.member.user.id}>, you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info"  in private messages!`).catch(console.error);
   };
 
   // Ignore messages not starting with the prefix
@@ -35,7 +37,7 @@ module.exports = (client, message, channel) => {
   const cmd = client.commands.get(command);
 
   // If that command doesn't exist, exit
-  if (!cmd) return message.channel.send("That command doesn't exist.");
+  if (!cmd) return message.channel.send(`Sorry <@${message.member.user.id}>, that command doesn't exist.`);
 
   // +1 command count
   totalCommands += 1;
