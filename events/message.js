@@ -1,4 +1,4 @@
-module.exports = (client, message) => {
+module.exports = (client, message, channel) => {
   // Import totals
   var { totalMessages } = require('./ready');
   var { totalCommands } = require('./ready');
