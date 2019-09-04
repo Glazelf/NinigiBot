@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
   // Squirtle DexNr. 7
-  var gifsSquirtle = [
+  var Squirtle = [
     "http://media.tumblr.com/3393cf4f82933c5ca0a5e23797a006d3/tumblr_mjmpsh0S9k1r6nfvjo1_500.gif",
     "https://media.tumblr.com/4ce496c0f612e4471f9e972b1589cfc7/tumblr_mz1wc0pQqo1tp9ck7o1_500.gif",
     "http://media.tumblr.com/tumblr_m22ue3qYTj1ql5an1o1_500.gif",
@@ -281,10 +281,12 @@ exports.run = (client, message, args) => {
 -Stitch
 -Hug`);
   } else if (gifArgument == "squirtle") {
-    var gifsArray = gifsSquirtle;
+
+    var gifsArray = gifArgument.charAt(0).toUpperCase() + string.slice(1);
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
     return message.channel.send(`${totalMessage}`);
+    
   } else if (gifArgument == "wooper") {
     var gifsArray = gifsWooper;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
