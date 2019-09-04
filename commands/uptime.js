@@ -9,13 +9,13 @@ exports.run = (client, message, args) => {
 
     //figure out if the numbers given is different than 1
     let multiDays = "";
-    if (days = 1) { multiDays = "" } else { multiDays = "s" };
+    if (days == 1) {multiDays = ""} else{multiDays = "s"};
     let multiHours = "";
-    if (hours = 1) { multiHours = "" } else { multiHours = "s" };
+    if (hours == 1) {multiHours = ""} else{multiHours = "s"};
     let multiMinutes = "";
-    if (minutes = 1) { multiMinutes = "" } else { multiMinutes = "s" };
+    if (minutes == 1) {multiMinutes = ""} else{multiMinutes = "s"};
     let multiSeconds = "";
-    if (seconds = 1) { multiSeconds = "" } else { multiSeconds = "s" };
+    if (seconds == 1) {multiSeconds = ""} else{multiSeconds = "s"};
 
     // Import totals
     var { totalMessages } = require('../events/ready');
@@ -25,8 +25,8 @@ exports.run = (client, message, args) => {
         hours = hours - 24;
     }
 
-    let uptime = `${hours} hour${multiDays}, ${minutes} minute${multiDays} and ${seconds} second${multiDays}`
-
+    let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`
+    
     if (days >= 1) {
         uptime = `${days} day${multiDays} + ${uptime}`
     }
