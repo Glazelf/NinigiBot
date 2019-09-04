@@ -281,12 +281,15 @@ exports.run = (client, message, args) => {
 -Stitch
 -Hug`);
   } else if (gifArgument == "squirtle") {
-
-    var gifsArray = gifArgument.charAt(0).toUpperCase() + string.slice(1);
+    var gifsArray = gifsSquirtle;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
-    return message.channel.send(`${totalMessage}`);
-    
+
+    // Test for changing layout of this giant if/else statement:
+    // var gifsArray = gifArgument.charAt(0).toUpperCase() + string.slice(1);
+    // var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    // var totalMessage = `${gifString} ${randomGif}`;
+    // return message.channel.send(`${totalMessage}`);
   } else if (gifArgument == "wooper") {
     var gifsArray = gifsWooper;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
