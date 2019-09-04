@@ -10,7 +10,7 @@ module.exports = (client, message, channel) => {
   if (message.author.bot) return;
 
   // Ignore messages that aren't in bot channel or by a mod (except help)
-  if (message.channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES" && message != `${client.config.prefix}help`)) {
+  if (message.channel.id != `${client.config.botChannelID}` && !message.member.hasPermission("MANAGE_MESSAGES") && message != `${client.config.prefix}help`) {
     return message.channel.send(`Sorry <@${message.member.user.id}>, you're not allowed to use commands here, try using commands in: <#${client.config.botChannelID}>.`);
   };
 
