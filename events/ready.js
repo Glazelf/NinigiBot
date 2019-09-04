@@ -6,8 +6,6 @@ module.exports = (client) => {
   client.user.setStatus('idle')
   client.user.setActivity('over Sinnoh', { type: 'WATCHING' })
 
-
-
   // List servers the bot is connected to
   console.log("Servers:")
   client.guilds.forEach((guild) => {
