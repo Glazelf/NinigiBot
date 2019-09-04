@@ -15,13 +15,11 @@ exports.run = (client, message, args) => {
         hours = hours - 24;
     }
 
+    let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`
+    
     if (days >= 1) {
-        let uptime = `${days} day(s), ${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s)`;
-        return message.channel.send(`This bot has been online for ${uptime}.
-        WORK IN PROGRESS:
-In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.`);
+        uptime = `${days} day(s) + ${uptime}`
     } else {
-        let uptime = `${hours} hour(s), ${minutes} minute(s) and ${seconds} second(s).`;
         return message.channel.send(`This bot has been online for ${uptime}.
         WORK IN PROGRESS:
 In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.`);
