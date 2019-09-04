@@ -23,12 +23,12 @@ exports.run = (client, message, args) => {
 
     if (hours >= 24) {
         hours = hours - 24;
-    }
+    };
 
-    let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`
+    let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
     
     if (days >= 1) {
-        uptime = `${days} day${multiDays}, ${uptime}`
+        uptime = `${days} day${multiDays}, ${uptime}`;
     }
     return message.channel.send(`This bot has been online for ${uptime}.`);
     // In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.
