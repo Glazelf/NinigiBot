@@ -282,7 +282,7 @@ exports.run = (client, message, args) => {
 -Hug`);
   } else if (gifArgument == "squirtle") {
 
-    var gifsArray = gifArgument.charAt(0).toUpperCase() + string.slice(1);
+    var gifsArray = gifArgument.charAt(0).toUpperCase() + gifArgument.slice(1);
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
     return message.channel.send(`${totalMessage}`);
