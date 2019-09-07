@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-    var baseMessage = `**Servers:**`;
+    var baseMessage = `**Servers (${client.guilds.size}):**`;
 
     client.guilds.forEach((guild) => {
         baseMessage = `${baseMessage}
