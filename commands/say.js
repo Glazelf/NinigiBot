@@ -11,7 +11,8 @@ exports.run = (client, message, args) => {
     if (!message.member.hasPermission("ADMINISTRATOR")) {
         textMessage = `${textMessage} 
     -<@${message.member.user.id}>`;
-    }
+    };
+    
     return message.channel.send(textMessage)
 };
 
