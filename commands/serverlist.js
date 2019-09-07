@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
 
     client.guilds.forEach((guild) => {
         baseMessage = `${baseMessage}
--${guild.name}`
+-${guild.name} (${guild.size} users).`
     });
 
     return message.channel.send(baseMessage);
