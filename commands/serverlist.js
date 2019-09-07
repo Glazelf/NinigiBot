@@ -1,9 +1,9 @@
 exports.run = (client, message, args) => {
-    var baseMessage = `**Servers (${client.guilds.size}):**`;
+    var baseMessage = `This bot is in ${client.guilds.size} servers, <@${message.member.user.id}>:`;
 
     client.guilds.forEach((guild) => {
         baseMessage = `${baseMessage}
--${guild.name} (${guild.size} users).`
+-${guild.name} (${guild.users.size} users).`
     });
 
     return message.channel.send(baseMessage);
