@@ -32,8 +32,8 @@ exports.run = (client, message, args) => {
     }
     return message.channel.send(`Here are some of the bot's statistics, <@${message.member.user.id}>:
 Uptime: ${uptime}.
-Servers: ${client.guilds.size}.
-Users: ${client.users.size}.`);
+Servers: ${client.guilds.size}
+Users: ${client.users.size}`);
     // In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.
 };
 
