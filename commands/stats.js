@@ -29,7 +29,8 @@ exports.run = (client, message, args) => {
 
     if (days >= 1) {
         uptime = `${days} day${multiDays}, ${uptime}`;
-    }
+    };
+
     return message.channel.send(`Here are some of the bot's statistics, <@${message.member.user.id}>:
 Uptime: ${uptime}.
 Servers: ${client.guilds.size}
