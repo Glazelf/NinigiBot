@@ -364,7 +364,7 @@ exports.run = (client, message, args) => {
     var totalMessage = `${gifString} ${randomGif}`;
     return message.channel.send(totalMessage);
   } else {
-    return message.channel.send(`This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM ${client.config.ownerAccount}.`);
+    return message.channel.send(`This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM <@${client.config.ownerID}>.`);
   };
 };
 
