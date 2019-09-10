@@ -24,6 +24,6 @@ exports.run = (client, message, args, member) => {
 
 module.exports.help = {
     name: "quoteadd",
-    description: "",
-    usage: `?quoteadd [quote] | [quoted person's name]`
+    description: "Adds a quote to the database, if no arguments are given, displays a random quote instead.",
+    usage: `?quote [quote] | [quoted person's name]`
 };
