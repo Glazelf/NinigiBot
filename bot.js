@@ -2,10 +2,12 @@ const Discord = require('discord.js');
 var commando = require('discord.js-commando');
 const Enmap = require("enmap");
 const fs = require("fs");
+const sqlite3 = require('sqlite3').verbose();
 
 const client = new Discord.Client();
 const config = require("./config.json");
 client.config = config;
+let dbNinigi = new sqlite3.Database('./db/ninigi.db');
 
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
 fs.readdir("./events/", (err, files) => {
@@ -30,6 +32,7 @@ fs.readdir("./events/", (err, files) => {
 
 client.commands = new Enmap();
 
+// This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 fs.readdir("./commands/", (err, files) => {
   if (err) return console.error(err);
   files.forEach(file => {
