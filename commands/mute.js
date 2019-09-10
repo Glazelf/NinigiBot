@@ -1,10 +1,10 @@
 module.exports.run = async (client, bot, message, args) => {
-  const Discord = require("discord.js");
-  const ms = require("ms");
-
   if (message.author.id !== client.config.ownerID) {
     return message.channel.send(client.config.lackPerms)
   };
+
+  const Discord = require("discord.js");
+  const ms = require("ms");
 
   function getUserFromMention(mention) {
     if (!mention) return;

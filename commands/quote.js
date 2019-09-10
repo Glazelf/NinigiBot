@@ -1,10 +1,9 @@
 exports.run = (client, message, args, member) => {
-    const sqlite3 = require('sqlite3').verbose();
-
     if (message.author.id !== client.config.ownerID) {
         return message.channel.send(client.config.lackPerms)
     };
 
+    const sqlite3 = require('sqlite3').verbose();
     let dbNinigi = new sqlite3.Database('./db/ninigi.db');
 
     // insert one row into the quote table
