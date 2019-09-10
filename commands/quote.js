@@ -1,4 +1,10 @@
 exports.run = (client, message, args, member) => {
+    const sqlite3 = require('sqlite3').verbose();
+
+    if (message.author.id !== client.config.ownerID) {
+        return message.channel.send(client.config.lackPerms)
+    };
+
     let dbNinigi = new sqlite3.Database('./db/ninigi.db');
 
     // insert one row into the quote table
@@ -6,7 +12,7 @@ exports.run = (client, message, args, member) => {
         if (err) {
             return console.log(err.message);
         }
-        
+
         // get the last insert id
         var message = `A row has been inserted with rowid ${this.lastID} and content: `
         console.log(message);
