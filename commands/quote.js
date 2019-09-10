@@ -19,7 +19,7 @@ exports.run = (client, message, args, member) => {
     });
 
     // close the database connection
-    db.close();
+    dbNinigi.close();
 };
 
 module.exports.help = {
