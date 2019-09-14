@@ -225,8 +225,23 @@ exports.run = (client, message, args) => {
   ];
   //Jojo
   var gifsJojo = [
-    // "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
-    "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif"
+    "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
+    "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif",
+    "https://giphy.com/media/bC0caT4xYU8qQ/source.gif",
+    "https://giphy.com/media/kiJEGxbplHfT5zkCDJ/giphy.gif",
+    "https://media.tumblr.com/88d978700d977ef7de997601502f4526/tumblr_phku9yAXpm1tqvsfso1_400.gif",
+    "https://thumbs.gfycat.com/ForthrightBoldDaddylonglegs-max-1mb.gif",
+    "http://giphygifs.s3.amazonaws.com/media/IzfJSTepKi5vW/giphy.gif",
+    "https://giphy.com/media/TyFdAtfZBODNC/giphy.gif",
+    "https://media1.tenor.com/images/cf028dae44f0f5b1e7763747f422bbe0/tenor.gif",
+    "https://media.tenor.com/images/f1fa5d2363b34bdadbcf1e7690fed3b8/tenor.gif",
+    "https://giphy.com/media/JPgbfbcXxDr6E/giphy.gif",
+    "https://i.gifer.com/DeW7.gif",
+    "https://giffiles.alphacoders.com/358/35854.gif",
+    "https://i.pinimg.com/originals/77/2c/2f/772c2fdc3c92c2ea385ae670bde332e4.gif",
+    "https://i.makeagif.com/media/6-28-2015/DOrFwp.gif",
+    "http://1.bp.blogspot.com/-RxDLJr3oeuM/UlYlciCeMWI/AAAAAAAABmo/vi9VggbFzIc/s1600/do+do+do+do+do.gif",
+    "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif"
   ];
   //// Interactions and emotions
   //Hug
@@ -287,6 +302,7 @@ exports.run = (client, message, args) => {
 -Reshiram
 -Dango
 -Stitch
+-Jojo
 -Hug`);
   } else if (gifArgument == "squirtle") {
     var gifsArray = gifsSquirtle;
