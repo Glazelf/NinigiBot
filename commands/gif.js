@@ -223,6 +223,11 @@ exports.run = (client, message, args) => {
     "https://media1.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
     "https://media1.tenor.com/images/534b7fbb372900815007a3f11128d790/tenor.gif?itemid=11626143"
   ];
+  //Jojo
+  var gifsJojo = [
+    // "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
+    "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif"
+  ];
   //// Interactions and emotions
   //Hug
   var gifsHug = [
