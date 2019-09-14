@@ -363,6 +363,11 @@ exports.run = (client, message, args) => {
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
     var totalMessage = `${gifString} ${randomGif}`;
     return message.channel.send(totalMessage);
+  } else if (gifArgument == "jojo") {
+    var gifsArray = gifsJojo;
+    var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
+    var totalMessage = `${gifString} ${randomGif}`;
+    return message.channel.send(totalMessage);
   } else if (gifArgument == "hug") {
     var gifsArray = gifsHug;
     var randomGif = gifsArray[Math.floor(Math.random() * gifsArray.length)];
