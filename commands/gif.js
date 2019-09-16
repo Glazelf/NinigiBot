@@ -310,7 +310,7 @@ exports.run = (client, message, args) => {
 -Stitch
 -Jojo
 -Hug`);
-  } else if (Object.keys[gifs].includes(gifArgument)) {
+  } else if (Object.keys(gifs).includes(gifArgument)) {
     let randomGif = gifs[gifArgument].pick();
     let totalMessage = `${gifString} ${randomGif}`;
     return message.channel.send(totalMessage);
