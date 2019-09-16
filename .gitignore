@@ -14,3 +14,4 @@ jspm_packages
 init
 .channels
 *.bak
+*.db
