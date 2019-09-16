@@ -2,7 +2,7 @@ module.exports = (client, message, channel) => {
   //// Import totals
   // var { totalMessages } = require('./ready');
   // var { totalCommands } = require('./ready');
-  
+
   //// +1 messages count
   // totalMessages += 1;
 
