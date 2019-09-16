@@ -12,4 +12,4 @@ module.exports.help = {
     name: "Kill",
     description: "Shuts down the entire bot. Requires ownership of this bot.",
     usage: `kill`
-}
+};
