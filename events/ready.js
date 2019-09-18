@@ -13,10 +13,12 @@ module.exports = (client) => {
   });
 
   // Create global variables
-  var totalMessages = 0;
-  var totalCommands = 0;
+  let totalMessages = 0;
+  let totalCommands = 0;
 
   // Export global variables
-  module.exports = { totalMessages };
-  module.exports = { totalCommands };
+  // module.exports = { totalMessages };
+  // module.exports = { totalCommands };
 };
+module.exports.totalMessages = 0;
+module.exports.totalCommands = 0;
