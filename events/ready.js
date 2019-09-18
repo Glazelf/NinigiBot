@@ -11,14 +11,6 @@ module.exports = (client) => {
   client.guilds.forEach((guild) => {
     console.log(' - ' + guild.name)
   });
-
-  // Create global variables
-  let totalMessages = 0;
-  let totalCommands = 0;
-
-  // Export global variables
-  // module.exports = { totalMessages };
-  // module.exports = { totalCommands };
 };
 module.exports.totalMessages = 0;
 module.exports.totalCommands = 0;
