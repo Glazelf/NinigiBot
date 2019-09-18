@@ -15,7 +15,7 @@ module.exports = (client, message, channel) => {
   if (message.content === client.config.prefix) return;
 
   // Ignore messages that start with prefix double or prefix space
-  var secondCharacter = message.content.charAt(1);
+  let secondCharacter = message.content.charAt(1);
   if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
   // Ignore commands in DMs
