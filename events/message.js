@@ -1,12 +1,12 @@
 module.exports = (client, message, channel) => {
-  //// Import totals
+  // Import totals
   let totalStats = require('./ready');
-
-  //// +1 messages count
-  totalStats.totalMessages += 1;
 
   // Ignore all bots
   if (message.author.bot) return;
+
+  // +1 messages count
+  totalStats.totalMessages += 1;
 
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
