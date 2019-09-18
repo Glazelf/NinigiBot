@@ -19,8 +19,6 @@ exports.run = (client, message, args) => {
 
     // Import totals
     let totalStats = require('../events/ready');
-    // var { totalMessages } = require('../events/ready');
-    // var { totalCommands } = require('../events/ready');
 
     if (hours >= 24) {
         hours = hours - 24;
