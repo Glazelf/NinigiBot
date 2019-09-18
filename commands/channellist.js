@@ -1,5 +1,7 @@
 exports.run = (client, message, args) => {
-    if (!message.member.hasPermission("MANAGE_CHANNELS")) return message.reply(client.config.lackPerms);
+    if (message.author.id !== client.config.ownerID && message.author.id !== client.config.subOwnerID) {
+        return message.channel.send(client.config.lackPerms)
+    };
 
     let baseMessage = `This bot can see ${client.channels.size} channels, <@${message.member.user.id}>:`;
 
