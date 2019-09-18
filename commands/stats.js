@@ -7,7 +7,7 @@ exports.run = (client, message, args) => {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
 
-    //figure out if the numbers given is different than 1
+    // Figure out if the numbers given is different than 1
     let multiDays = "";
     if (days !== 1) { multiDays = "s" };
     let multiHours = "";
@@ -35,7 +35,9 @@ Uptime: ${uptime}.
 Servers: ${client.guilds.size}
 Channels: ${client.channels.size}
 Users: ${client.users.size}
-    In that time, ${totalStats.totalMessages} messages have been sent and ${totalStats.totalCommands} commands have been used.`);
+Messages read: ${totalStats.totalMessages}
+Commands used: ${totalStats.totalCommands}
+`);
 };
 
 module.exports.help = {
