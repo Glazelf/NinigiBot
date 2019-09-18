@@ -7,7 +7,7 @@ exports.run = (client, message, args) => {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
 
-    //figure out if the numbers given is different than 1
+    // Figure out if the numbers given is different than 1
     let multiDays = "";
     if (days !== 1) { multiDays = "s" };
     let multiHours = "";
@@ -18,8 +18,7 @@ exports.run = (client, message, args) => {
     if (seconds !== 1) { multiSeconds = "s" };
 
     // Import totals
-    var { totalMessages } = require('../events/ready');
-    var { totalCommands } = require('../events/ready');
+    let totalStats = require('../events/ready');
 
     if (hours >= 24) {
         hours = hours - 24;
@@ -35,8 +34,10 @@ exports.run = (client, message, args) => {
 Uptime: ${uptime}.
 Servers: ${client.guilds.size}
 Channels: ${client.channels.size}
-Users: ${client.users.size}`);
-    // In that time, ${totalMessages} messages have been sent and ${totalCommands} commands have been used.
+Users: ${client.users.size}
+Messages read: ${totalStats.totalMessages}
+Commands used: ${totalStats.totalCommands}
+`);
 };
 
 module.exports.help = {

@@ -44,7 +44,7 @@ fs.readdir("./commands/", (err, files) => {
     // Get just the command name from the file name
     let commandName = file.split(".")[0];
     console.log(`Attempting to load command ${commandName}`);
-    
+
     // Store the whole thing in Enmap
     client.commands.set(commandName, props);
   });

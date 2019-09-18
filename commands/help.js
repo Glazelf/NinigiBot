@@ -12,10 +12,10 @@ module.exports.run = async (bot, message, args, con) => {
             return;
         };
 
-        var namelist = "";
-        var desclist = "";
-        var usage = "";
-        var full = "";
+        let namelist = "";
+        let desclist = "";
+        let usage = "";
+        let full = "";
 
         let result = jsfiles.forEach((f, i) => {
             let props = require(`./${f}`);

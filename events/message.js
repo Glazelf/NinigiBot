@@ -1,13 +1,12 @@
 module.exports = (client, message, channel) => {
-  //// Import totals
-  // var { totalMessages } = require('./ready');
-  // var { totalCommands } = require('./ready');
-  
-  //// +1 messages count
-  // totalMessages += 1;
+  // Import totals
+  let totalStats = require('./ready');
 
   // Ignore all bots
   if (message.author.bot) return;
+
+  // +1 messages count
+  totalStats.totalMessages += 1;
 
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
@@ -16,7 +15,7 @@ module.exports = (client, message, channel) => {
   if (message.content === client.config.prefix) return;
 
   // Ignore messages that start with prefix double or prefix space
-  var secondCharacter = message.content.charAt(1);
+  let secondCharacter = message.content.charAt(1);
   if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
   // Ignore commands in DMs
@@ -34,8 +33,9 @@ module.exports = (client, message, channel) => {
   // If that command doesn't exist, exit
   if (!cmd) return message.channel.send(`Sorry <@${message.member.user.id}>, that command doesn't exist.`);
 
-  //// +1 command count
-  // totalCommands += 1;
+  // +1 command count and drop message count
+  totalStats.totalCommands += 1;
+  totalStats.totalMessages -= 1;
 
   // Run the command
   cmd.run(client, message, args);

@@ -13,7 +13,7 @@ exports.run = (client, message, args, member) => {
         }
 
         // get the last insert id
-        var message = `A row has been inserted with rowid ${this.lastID} and content: `
+        let message = `A row has been inserted with rowid ${this.lastID} and content: `
         console.log(message);
         message.channel.send(message);
     });

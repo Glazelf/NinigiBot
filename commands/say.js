@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
     // Split off command
-    var textMessage = message.content.slice(5);
+    let textMessage = message.content.slice(5);
 
     //Catch empty argument
     if (textMessage.length < 1) {
