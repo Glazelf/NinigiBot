@@ -24,11 +24,11 @@ exports.run = (client, message, args) => {
         hours = hours - 24;
     };
 
-    let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
+    let uptime = `${days} day${multiDays}, ${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
 
-    if (days >= 1) {
-        uptime = `${days} day${multiDays}, ${uptime}`;
-    };
+    // if (days >= 1) {
+    //     uptime = `${days} day${multiDays}, ${uptime}`;
+    // };
 
     return message.channel.send(`Here are some of the bot's statistics, <@${message.member.user.id}>:
 Uptime: ${uptime}.
