@@ -164,6 +164,17 @@ exports.run = (client, message, args) => {
       "https://pa1.narvii.com/6157/9163f2d3b4f1df4f0ae8db8ff07d264f4bab3136_hq.gif",
       "https://giphy.com/media/tH8zhpQ1ez3IA/giphy.gif"
     ],
+    //Glaceon DxNr. 471
+    glaceon: [
+      "https://media.discordapp.net/attachments/479083635815874561/622871175827161143/bruh.gif",
+      "https://giphy.com/media/hJ35szPqcbllK/giphy.gif",
+      "https://i.gifer.com/BZCq.gif",
+      "https://i.gifer.com/LpEp.gif",
+      "https://i.pinimg.com/originals/e7/c5/85/e7c58536ac9c04a9754bcf8956509e7d.gif",
+      "http://media.tumblr.com/7f87448901a786d6fe9662c33c4a671c/tumblr_mjzqexjeWa1s720cfo1_500.gif",
+      "https://giphy.com/media/APhaqCNC9goRW/giphy.gif",
+      "https://i.redd.it/2wk2ry3yzi531.gif"
+    ],
     // Gliscor DexNr. 472
     gliscor: [
       "https://giphy.com/media/pKgMRyqlq65na/giphy.gif",
@@ -283,7 +294,8 @@ exports.run = (client, message, args) => {
       "https://data.whicdn.com/images/140239223/original.gif",
       "https://thumbs.gfycat.com/LegitimateCompleteIvorygull-size_restricted.gif",
       "http://33.media.tumblr.com/tumblr_llf2y4v3Wp1qhigt0o1_500.gif",
-      "http://giphy.com/media/LWTxLvp8G6gzm/giphy.gif"
+      "http://giphy.com/media/LWTxLvp8G6gzm/giphy.gif",
+      "https://media1.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif"
     ]
   }
   var gifArgumentUncased = message.content.slice(5);
@@ -304,6 +316,7 @@ exports.run = (client, message, args) => {
 -Piplup
 -Shinx
 -Pachirisu
+-Glaceon
 -Gliscor
 -Reshiram
 -Dango
