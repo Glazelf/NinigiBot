@@ -302,26 +302,26 @@ exports.run = (client, message, args) => {
   var gifString = `Here's your gif, <@${message.member.user.id}>:`
 
   if (gifArgument.length < 1) {
-    return message.channel.send(`You need to specify a word to use command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
+    return message.channel.send(`> You need to specify a word to use command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
   } else if (gifArgument == "help") {
-    return message.channel.send(`Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
--Squirtle
--Wooper
--Scizor
--Heracross
--Torchic
--Turtwig
--Chimchar
--Piplup
--Shinx
--Pachirisu
--Glaceon
--Gliscor
--Reshiram
--Dango
--Stitch
--Jojo
--Hug`);
+    return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
+> -Squirtle
+> -Wooper
+> -Scizor
+> -Heracross
+> -Torchic
+> -Turtwig
+> -Chimchar
+> -Piplup
+> -Shinx
+> -Pachirisu
+> -Glaceon
+> -Gliscor
+> -Reshiram
+> -Dango
+> -Stitch
+> -Jojo
+> -Hug`);
   } else if (Object.keys(gifs).includes(gifArgument)) {
     let randomGif = gifs[gifArgument].pick();
     let totalMessage = `> ${gifString} 
