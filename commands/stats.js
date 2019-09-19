@@ -20,15 +20,18 @@ exports.run = (client, message, args) => {
     // Import totals
     let totalStats = require('../events/ready');
 
+    // Reset hours
     if (hours >= 24) {
         hours = hours - 24;
     };
 
-    let uptime = `${days} day${multiDays}, ${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
+    // Bind variables together into a string
+    let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
 
-    // if (days >= 1) {
-    //     uptime = `${days} day${multiDays}, ${uptime}`;
-    // };
+    // Add day count if there are days
+    if (days != 0) {
+        uptime = `${days} day${multiDays}, ${uptime}`;
+    };
 
     return message.channel.send(`Here are some of the bot's statistics, <@${message.member.user.id}>:
 Uptime: ${uptime}.
@@ -36,8 +39,7 @@ Servers: ${client.guilds.size}
 Channels: ${client.channels.size}
 Users: ${client.users.size}
 Messages read: ${totalStats.totalMessages}
-Commands used: ${totalStats.totalCommands}
-`);
+Commands used: ${totalStats.totalCommands}`);
 };
 
 module.exports.help = {
