@@ -33,13 +33,13 @@ exports.run = (client, message, args) => {
         uptime = `${days} day${multiDays}, ${uptime}`;
     };
 
-    return message.channel.send(`Here are some of the bot's statistics, <@${message.member.user.id}>:
-Uptime: ${uptime}.
-Servers: ${client.guilds.size}
-Channels: ${client.channels.size}
-Users: ${client.users.size}
-Messages read: ${totalStats.totalMessages}
-Commands used: ${totalStats.totalCommands}`);
+    return message.channel.send(`> Here are some of the bot's statistics, <@${message.member.user.id}>:
+> Uptime: ${uptime}.
+> Servers: ${client.guilds.size}
+> Channels: ${client.channels.size}
+> Users: ${client.users.size}
+> Messages read: ${totalStats.totalMessages}
+> Commands used: ${totalStats.totalCommands}`);
 };
 
 module.exports.help = {

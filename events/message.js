@@ -20,7 +20,7 @@ module.exports = (client, message, channel) => {
 
   // Ignore commands in DMs
   if (message.channel.type == "dm" && message.author.id !== client.config.ownerID && message != `${client.config.prefix}help` && message != `${client.config.prefix}info`) {
-    return message.author.send(`Sorry <@${message.member.user.id}>, you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info"  in private messages!`).catch(console.error);
+    return message.author.send(`> Sorry <@${message.member.user.id}>, you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info"  in private messages!`).catch(console.error);
   };
 
   // Standard definition
@@ -31,7 +31,7 @@ module.exports = (client, message, channel) => {
   const cmd = client.commands.get(command);
 
   // If that command doesn't exist, exit
-  if (!cmd) return message.channel.send(`Sorry <@${message.member.user.id}>, that command doesn't exist.`);
+  if (!cmd) return message.channel.send(`> Sorry <@${message.member.user.id}>, that command doesn't exist.`);
 
   // +1 command count and drop message count
   totalStats.totalCommands += 1;

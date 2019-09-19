@@ -1,5 +1,5 @@
 exports.run = (client, message, args, member) => {
-    return message.channel.send(`Pong!'ed back at <@${message.member.user.id}> in ${new Date().getTime() - message.createdTimestamp}ms.`).catch(console.error);
+    return message.channel.send(`> Pong!'ed back at <@${message.member.user.id}> in ${new Date().getTime() - message.createdTimestamp}ms.`).catch(console.error);
 };
 
 module.exports.help = {

@@ -324,10 +324,11 @@ exports.run = (client, message, args) => {
 -Hug`);
   } else if (Object.keys(gifs).includes(gifArgument)) {
     let randomGif = gifs[gifArgument].pick();
-    let totalMessage = `${gifString} ${randomGif}`;
+    let totalMessage = `> ${gifString} 
+> ${randomGif}`;
     return message.channel.send(totalMessage);
   } else {
-    return message.channel.send(`This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM <@${client.config.ownerID}>.`);
+    return message.channel.send(`> This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM <@${client.config.ownerID}>.`);
   };
 };
 
