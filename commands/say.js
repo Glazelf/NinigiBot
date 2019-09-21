@@ -1,6 +1,9 @@
 exports.run = (client, message, args) => {
     // Split off command
     let textMessage = message.content.slice(5);
+    let split = textMessage.split(` `, 1);
+    const channelID = split[0];
+    let remoteMessage = textMessage.slice(channelID.length + 1);
 
     // Catch empty argument
     if (textMessage.length < 1) {
@@ -8,28 +11,21 @@ exports.run = (client, message, args) => {
     };
 
     // Owner only function to send messages in different channels
-    if (message.author.id == client.config.ownerID && message.member.hasPermission("ADMINISTRATOR")) {
-        let split = textMessage.split(` `, 1);
-        const channelID = split[0];
-        let remoteMessage = textMessage.slice(channelID.length + 1);
-
-        // If channel ID is missing, do old function
-        if(channelID == NaN || channelID == undefined || channelID == null) {
+    if (message.author.id == client.config.ownerID) {
+        try {
+            // If channelID is specified correctly, throw message into specified channel
+            return message.guild.channels.find("id", channelID).send(remoteMessage);
+        } catch (e) {
+            // If error: execute regular quoteless say
             return message.channel.send(textMessage);
         };
-
-        return message.guild.channels.find(channel => channel.id === channelID).send(remoteMessage);
-    };
-
-    // Add credits to avoid anonymous abuse by people who are admin nor owner
-    if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) {
-        textMessage = `> "${textMessage}"
-> -<@${message.member.user.id}>`;
+    } else if (message.member.hasPermission("ADMINISTRATOR")) {
+        // Return plain message if member is admin
         return message.channel.send(textMessage);
-    };
-
-    // Return plain message if member is only either admin or owner
-    if(message.member.hasPermission("ADMINISTRATOR") || message.author.id == client.config.ownerID){
+    } else {
+        // Add credits to avoid anonymous abuse by people who are admin nor owner
+        textMessage = `> "${textMessage}"
+    > -<@${message.member.user.id}>`;
         return message.channel.send(textMessage);
     };
 };
