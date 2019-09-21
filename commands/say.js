@@ -14,7 +14,7 @@ exports.run = (client, message, args) => {
         const channelID = split[0];
 
         // Catch nonexisting channel IDs
-        if (!client.channels.has(channelID)) {
+        if (!client.channels.has(channelID) || channelID == undefined) {
             return message.channel.send("> The bot can't access the channel ID you provided.");
         };
 
