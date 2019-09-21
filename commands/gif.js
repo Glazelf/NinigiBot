@@ -298,7 +298,8 @@ exports.run = (client, message, args) => {
       "https://media1.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif",
       "https://cdn.discordapp.com/attachments/599180353441366026/625034816269582357/image4.gif"
     ]
-  }
+  };
+  
   var gifArgumentUncased = message.content.slice(5);
   var gifArgument = gifArgumentUncased.toLowerCase();
   var gifString = `Here's your gif, <@${message.member.user.id}>:`
@@ -330,7 +331,7 @@ exports.run = (client, message, args) => {
 > ${randomGif}`;
     return message.channel.send(totalMessage);
   } else {
-    return message.channel.send(`> This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help". If you want to have gifs added to certain arguments, or have entire new arguments added you should DM <@${client.config.ownerID}>.`);
+    return message.channel.send(`> This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
   };
 };
 
