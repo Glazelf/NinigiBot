@@ -129,7 +129,8 @@ exports.run = (client, message, args) => {
       "https://media.tumblr.com/f59f09f9c81b962f85f5d7ee7c0ba269/tumblr_mm1txu8t521s5h198o1_500.gif",
       "https://media.tumblr.com/77889071c19f19dbf14ad1e0816a06c7/tumblr_mzb1okSayJ1rpn9eno1_500.gif",
       "https://giphy.com/media/sLNtrlujiKvC/source.gif",
-      "https://media.tumblr.com/822ffd1028921998b1a984e8c6760749/tumblr_ni4yfpSKcs1rq9h94o1_500.gif"
+      "https://media.tumblr.com/822ffd1028921998b1a984e8c6760749/tumblr_ni4yfpSKcs1rq9h94o1_500.gif",
+      "https://cdn.discordapp.com/attachments/599180353441366026/625034815355355206/image1.gif"
     ],
     // Shinx DexNr. 403
     shinx: [
@@ -294,7 +295,8 @@ exports.run = (client, message, args) => {
       "https://thumbs.gfycat.com/LegitimateCompleteIvorygull-size_restricted.gif",
       "http://33.media.tumblr.com/tumblr_llf2y4v3Wp1qhigt0o1_500.gif",
       "http://giphy.com/media/LWTxLvp8G6gzm/giphy.gif",
-      "https://media1.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif"
+      "https://media1.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif",
+      "https://cdn.discordapp.com/attachments/599180353441366026/625034816269582357/image4.gif"
     ]
   }
   var gifArgumentUncased = message.content.slice(5);
