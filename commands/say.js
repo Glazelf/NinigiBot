@@ -9,6 +9,12 @@ exports.run = (client, message, args) => {
 
     // Owner only function to send messages in different channels
     if (message.author.id == client.config.ownerID && message.member.hasPermission("ADMINISTRATOR")) {
+        if (textMessage = NaN) {
+            // Return plain message if member is only either admin or owner
+            if (message.member.hasPermission("ADMINISTRATOR") || message.author.id == client.config.ownerID) {
+                return message.channel.send(textMessage);
+            };
+        };
         let split = textMessage.split(` `, 1);
         let remoteMessage = textMessage.slice(channelID.length + 1);
         const channelID = split[0];
@@ -25,11 +31,6 @@ exports.run = (client, message, args) => {
     if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) {
         textMessage = `> "${textMessage}"
 > -<@${message.member.user.id}>`;
-        return message.channel.send(textMessage);
-    };
-
-    // Return plain message if member is only either admin or owner
-    if(message.member.hasPermission("ADMINISTRATOR") || message.author.id == client.config.ownerID){
         return message.channel.send(textMessage);
     };
 };
