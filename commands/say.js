@@ -9,28 +9,27 @@ exports.run = (client, message, args) => {
 
     // Owner only function to send messages in different channels
     if (message.author.id == client.config.ownerID && message.member.hasPermission("ADMINISTRATOR")) {
-        if (textMessage = NaN) {
-            // Return plain message if member is only either admin or owner
-            if (message.member.hasPermission("ADMINISTRATOR") || message.author.id == client.config.ownerID) {
-                return message.channel.send(textMessage);
-            };
-        };
         let split = textMessage.split(` `, 1);
-        let remoteMessage = textMessage.slice(channelID.length + 1);
         const channelID = split[0];
+        let remoteMessage = textMessage.slice(channelID.length + 1);
 
-        // Catch nonexisting channel IDs
-        if (!client.channels.has(channelID) || channelID == undefined) {
-            return message.channel.send("> The bot can't access the channel ID you provided.");
+        // If channel ID is missing, do old function
+        if(channelID == NaN || channelID == undefined || channelID == null) {
+            return message.channel.send(textMessage);
         };
 
-        return message.guild.channels.find("id", channelID).sendMessage(remoteMessage);
+        return message.guild.channels.find(channel => channel.id === channelID).send(remoteMessage);
     };
 
     // Add credits to avoid anonymous abuse by people who are admin nor owner
     if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) {
         textMessage = `> "${textMessage}"
 > -<@${message.member.user.id}>`;
+        return message.channel.send(textMessage);
+    };
+
+    // Return plain message if member is only either admin or owner
+    if(message.member.hasPermission("ADMINISTRATOR") || message.author.id == client.config.ownerID){
         return message.channel.send(textMessage);
     };
 };
