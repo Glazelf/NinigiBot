@@ -1,12 +1,23 @@
 exports.run = (client, message, args) => {
-    let baseMessage = `> This bot is in ${client.guilds.size} servers, <@${message.member.user.id}>:`;
+    try {
+        let baseMessage = `> This bot is in ${client.guilds.size} servers, <@${message.member.user.id}>:`;
 
-    client.guilds.forEach((guild) => {
-        baseMessage = `${baseMessage}
+        client.guilds.forEach((guild) => {
+            baseMessage = `${baseMessage}
 > -${guild.name}`
-    });
+        });
 
-    return message.channel.send(baseMessage);
+        return message.channel.send(baseMessage);
+        
+    } catch (e) {
+        // send msg to owner
+        let members = message.channel.members;
+        let owner = members.find('id', client.config.ownerID);
+        owner.send(`An error occurred using a command in <#${message.channel.id}> by <@${message.member.user.id}> using a command, check console for more information.`);
+        // log error
+        console.log(e);
+        return message.channel.send(`An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+    };
 };
 
 module.exports.help = {
