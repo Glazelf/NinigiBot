@@ -30,6 +30,16 @@ exports.run = (client, message, args) => {
         "https://thumbs.gfycat.com/HeavenlyBrightCollardlizard-size_restricted.gif",
         "https://ugc.reveliststatic.com/gen/full/2016/07/12/14/eq/cf/phpuk05tcs2qbwe.gif"
       ],
+      // Flareon DexNr. 136
+      flareon: [
+        "https://media.tenor.com/images/9e01fce76670e505d73fe800310ea70d/tenor.gif",
+        "https://media1.tenor.com/images/857ba14c98c405cbdb097723357fe793/tenor.gif",
+        "https://media1.tenor.com/images/df0cb3e0747c1a96ed045b950ad8ea7a/tenor.gif",
+        "https://media1.tenor.com/images/a576c18e4d32091502d2e7acfef9e2fc/tenor.gif",
+        "https://media1.tenor.com/images/1c010877b6816fdd9656ae5c4e96bbcf/tenor.gif",
+        "https://thumbs.gfycat.com/OrangeBlueDalmatian-size_restricted.gif",
+        "https://pa1.narvii.com/6533/9221fb480ab50b2211ab5e1cd40736931dc144e3_hq.gif"
+      ],
       // Wooper DexNr. 194
       wooper: [
         "http://i.imgur.com/VOKPenb.gif",
@@ -309,6 +319,7 @@ exports.run = (client, message, args) => {
     } else if (gifArgument == "help") {
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
 > -Squirtle
+> -Wooper
 > -Wooper
 > -Scizor
 > -Heracross
