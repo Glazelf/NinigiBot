@@ -36,6 +36,7 @@ exports.run = (client, message, args) => {
         "https://media1.tenor.com/images/857ba14c98c405cbdb097723357fe793/tenor.gif",
         "https://media1.tenor.com/images/df0cb3e0747c1a96ed045b950ad8ea7a/tenor.gif",
         "https://media1.tenor.com/images/a576c18e4d32091502d2e7acfef9e2fc/tenor.gif",
+        "https://media1.tenor.com/images/85f252feb659d588489fb68cb4b052d5/tenor.gif",
         "https://media1.tenor.com/images/1c010877b6816fdd9656ae5c4e96bbcf/tenor.gif",
         "https://thumbs.gfycat.com/OrangeBlueDalmatian-size_restricted.gif",
         "https://pa1.narvii.com/6533/9221fb480ab50b2211ab5e1cd40736931dc144e3_hq.gif"
