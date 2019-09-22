@@ -32,7 +32,7 @@ exports.run = (client, message, args) => {
       ],
       // Flareon DexNr. 136
       flareon: [
-        "https://media.tenor.com/images/9e01fce76670e505d73fe800310ea70d/tenor.gif",
+        "https://media1.tenor.com/images/e8d68a1ea84856f5eb2bd23b17bf47ee/tenor.gif",
         "https://media1.tenor.com/images/857ba14c98c405cbdb097723357fe793/tenor.gif",
         "https://media1.tenor.com/images/df0cb3e0747c1a96ed045b950ad8ea7a/tenor.gif",
         "https://media1.tenor.com/images/a576c18e4d32091502d2e7acfef9e2fc/tenor.gif",
