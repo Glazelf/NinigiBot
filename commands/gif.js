@@ -39,7 +39,8 @@ exports.run = (client, message, args) => {
         "https://media1.tenor.com/images/85f252feb659d588489fb68cb4b052d5/tenor.gif",
         "https://media1.tenor.com/images/1c010877b6816fdd9656ae5c4e96bbcf/tenor.gif",
         "https://thumbs.gfycat.com/OrangeBlueDalmatian-size_restricted.gif",
-        "https://pa1.narvii.com/6533/9221fb480ab50b2211ab5e1cd40736931dc144e3_hq.gif"
+        "https://pa1.narvii.com/6533/9221fb480ab50b2211ab5e1cd40736931dc144e3_hq.gif",
+        "https://cdn.discordapp.com/attachments/599180353441366026/625487752527347722/flareongif1.gif"
       ],
       // Wooper DexNr. 194
       wooper: [
