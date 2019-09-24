@@ -113,8 +113,7 @@ exports.run = (client, message, args) => {
         "http://media.tumblr.com/5b082a2ec64b696d773de7e1717225d9/tumblr_mvraoypK4z1rxsnrxo1_500.gif",
         "https://pa1.narvii.com/5711/251eca7cceb6303081428b544d5f0d8d63eb6381_hq.gif",
         "https://i.kym-cdn.com/photos/images/original/000/916/589/243.gif",
-        "http://pa1.narvii.com/6150/6bdd1fd42b1a8748daafb0fac1eea041cd0575dd_00.gif",
-        ""
+        "http://pa1.narvii.com/6150/6bdd1fd42b1a8748daafb0fac1eea041cd0575dd_00.gif"
       ],
       // Torchic DexNr. 387
       turtwig: [
