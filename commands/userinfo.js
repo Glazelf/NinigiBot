@@ -25,11 +25,11 @@ exports.run = (client, message, args) => {
                     presenceType = "Watching";
                     break;
                 default:
-                    presenceType = "Playing"
+                    presenceType = "Playing";
                     break;
             };
         } else {
-            presenceType = "Playing"
+            presenceType = "Playing";
         };
 
         // Define presence name
