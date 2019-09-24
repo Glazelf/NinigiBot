@@ -18,7 +18,7 @@ exports.run = (client, message, args) => {
         if (args[0]) {
             const user = getUserFromMention(args[0]);
             if (!user) {
-                return message.reply(`> Please use a proper mention if you want to see someone else's avatar, <@${message.author.id}.`);
+                return message.reply(`> Please use a proper mention if you want to see someone's userinfo, <@${message.author.id}.`);
             };
             const avatarEmbed = new Discord.RichEmbed()
                 .setColor(0x219dcd)
@@ -47,7 +47,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: "Avatar",
+    name: "Userinfo",
     description: "Replies a URL to the target's avatar.",
-    usage: `avatar [target]`
+    usage: `userinfo [optional target]`
 }; 
