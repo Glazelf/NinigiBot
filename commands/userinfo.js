@@ -2,35 +2,49 @@ exports.run = (client, message, args) => {
     try {
         const Discord = require("discord.js");
 
-        function getUserFromMention(mention) {
-            if (!mention) return;
+        let user = message.mentions.users.first();
 
-            if (mention.startsWith('<@') && mention.endsWith('>')) {
-                mention = mention.slice(2, -1);
-
-                if (mention.startsWith('!')) {
-                    mention = mention.slice(1);
-                };
-                return client.users.get(mention);
-            };
+        if (!user) {
+            user = message.author;
         };
 
-        if (args[0]) {
-            const user = getUserFromMention(args[0]);
-            if (!user) {
-                return message.reply(`> Please use a proper mention if you want to see someone's userinfo, <@${message.author.id}.`);
-            };
-            const avatarEmbed = new Discord.RichEmbed()
-                .setColor(0x219dcd)
-                .setAuthor(user.username)
-                .setImage(user.avatarURL);
-            return message.channel.send(avatarEmbed);
+
+        let presenceType = null;
+        switch (user.presence.game.type) {
+            case 0:
+                presenceType = "Playing";
+                break;
+            case 1:
+                presenceType = "Streaming";
+                break;
+            case 2:
+                presenceType = "Listening to";
+                break;
+            case 3:
+                presenceType = "Watching";
+                break;
         };
-        const avatarEmbed = new Discord.RichEmbed()
+        
+        let presenceName = null;
+        if (!user.presence.game){
+            presenceName = "None";
+        } else {
+            presenceName = user.presence.game;
+        };
+
+        const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
-            .setAuthor(user.username)
-            .setImage(user.avatarURL);
-        return message.channel.send(avatarEmbed);
+            .setAuthor(`User: ${user.tag}`)
+            .addField("ID:", user.id, true)
+            .setThumbnail(user.avatarURL)
+            .addBlankField()
+            .addField("Status:", user.presence.status, true)
+            .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            .addField("Created at:", user.createdAt, true)
+            .setFooter(`Requested by ${message.author.tag} at:`)
+            .setTimestamp();
+
+        return message.channel.send(profileEmbed);
 
     } catch (e) {
         // send msg to owner
@@ -48,6 +62,6 @@ exports.run = (client, message, args) => {
 
 module.exports.help = {
     name: "Userinfo",
-    description: "Replies a URL to the target's avatar.",
+    description: "Replies with information about a user.",
     usage: `userinfo [optional target]`
 }; 
