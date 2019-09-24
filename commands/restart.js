@@ -19,7 +19,7 @@ exports.run = (client, message, args) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
+        return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
     };
 };
 

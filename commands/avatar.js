@@ -8,19 +8,19 @@ exports.run = (client, message, args) => {
 
                 if (mention.startsWith('!')) {
                     mention = mention.slice(1);
-                }
+                };
                 return client.users.get(mention);
-            }
-        }
+            };
+        };
 
         if (args[0]) {
             const user = getUserFromMention(args[0]);
             if (!user) {
-                return message.reply('> Please use a proper mention if you want to see someone else\'s avatar.');
-            }
+                return message.reply(`> Please use a proper mention if you want to see someone else's avatar, <@${message.author.id}.`);
+            };
             return message.channel.send(`> ${user.username}'s avatar: 
 > ${user.displayAvatarURL}`);
-        }
+        };
         return message.channel.send(`> <@${message.author.id}>, your avatar: 
 > ${message.author.displayAvatarURL}`);
 
@@ -34,7 +34,7 @@ exports.run = (client, message, args) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
+        return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
     };
 };
 
