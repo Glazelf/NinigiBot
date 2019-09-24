@@ -8,28 +8,59 @@ exports.run = (client, message, args) => {
             user = message.author;
         };
 
-
-        let presenceType = null;
-        switch (user.presence.game.type) {
-            case 0:
-                presenceType = "Playing";
-                break;
-            case 1:
-                presenceType = "Streaming";
-                break;
-            case 2:
-                presenceType = "Listening to";
-                break;
-            case 3:
-                presenceType = "Watching";
-                break;
+        // Name presence type
+        let presenceType = "Playing";
+        if (user.presence.game) {
+            switch (user.presence.game.type) {
+                case 0:
+                    presenceType = "Playing";
+                    break;
+                case 1:
+                    presenceType = "Streaming";
+                    break;
+                case 2:
+                    presenceType = "Listening to";
+                    break;
+                case 3:
+                    presenceType = "Watching";
+                    break;
+                default:
+                    presenceType = "Playing"
+                    break;
+            };
+        } else {
+            presenceType = "Playing"
         };
-        
-        let presenceName = null;
-        if (!user.presence.game){
-            presenceName = "None";
+
+        // Define presence name
+        let presenceName = "";
+        if (!user.presence.game) {
+            presenceName = "nothing";
         } else {
             presenceName = user.presence.game;
+        };
+
+        // Clear up status wording
+        let userStatus = "Error?";
+        switch (user.presence.status) {
+            case "online":
+                userStatus = "Online";
+                break;
+            case "idle":
+                userStatus = "Idle";
+                break;
+            case "dnd":
+                userStatus = "Busy";
+                break;
+            case "invisible":
+                userStatus = "Invisible";
+                break;
+            case "offline":
+                userStatus = "Offline";
+                break;
+            default:
+                userStatus = "Error?";
+                break;
         };
 
         const profileEmbed = new Discord.RichEmbed()
@@ -38,8 +69,8 @@ exports.run = (client, message, args) => {
             .addField("ID:", user.id, true)
             .setThumbnail(user.avatarURL)
             .addBlankField()
-            .addField("Status:", user.presence.status, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            .addField("Availability:", userStatus, true)
             .addField("Created at:", user.createdAt, true)
             .setFooter(`Requested by ${message.author.tag} at:`)
             .setTimestamp();
