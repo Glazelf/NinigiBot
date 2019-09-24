@@ -7,7 +7,6 @@ exports.run = (client, message, args) => {
       //// Pokémon
       // Squirtle DexNr. 007
       squirtle: [
-        // var Squirtle = [
         "http://media.tumblr.com/3393cf4f82933c5ca0a5e23797a006d3/tumblr_mjmpsh0S9k1r6nfvjo1_500.gif",
         "https://media.tumblr.com/4ce496c0f612e4471f9e972b1589cfc7/tumblr_mz1wc0pQqo1tp9ck7o1_500.gif",
         "http://media.tumblr.com/tumblr_m22ue3qYTj1ql5an1o1_500.gif",
@@ -163,7 +162,9 @@ exports.run = (client, message, args) => {
         "https://media.tumblr.com/77889071c19f19dbf14ad1e0816a06c7/tumblr_mzb1okSayJ1rpn9eno1_500.gif",
         "https://media.giphy.com/media/sLNtrlujiKvC/source.gif",
         "https://media.tumblr.com/822ffd1028921998b1a984e8c6760749/tumblr_ni4yfpSKcs1rq9h94o1_500.gif",
-        "https://cdn.discordapp.com/attachments/599180353441366026/625034815355355206/image1.gif"
+        "https://cdn.discordapp.com/attachments/599180353441366026/625034815355355206/image1.gif",
+        "https://media.tumblr.com/c7d300c8d8c66964138f7898e67c69ad/tumblr_obxdu8Nzen1rpn9eno1_400.gif",
+        "https://pa1.narvii.com/6722/813befd39acd10191d1828a2036a2800029efb00_hq.gif"
       ],
       // Shinx DexNr. 403
       shinx: [
@@ -197,7 +198,17 @@ exports.run = (client, message, args) => {
         "https://pa1.narvii.com/6157/9163f2d3b4f1df4f0ae8db8ff07d264f4bab3136_hq.gif",
         "https://media.giphy.com/media/tH8zhpQ1ez3IA/giphy.gif"
       ],
-      //Glaceon DxNr. 471
+      // Gible DexNr. 443
+      gible: [
+        "https://media.giphy.com/media/9n7lqu8rhWRu8/giphy.gif",
+        "https://media.giphy.com/media/W1HnOqaGXwure/giphy.gif",
+        "https://media.tumblr.com/ee8a5825d26c84fbd06e09401675fc51/tumblr_n33vb0m9l51rsrk2xo1_400.gif",
+        "https://archive-media-0.nyafuu.org/vp/image/1483/40/1483402345677.gif",
+        "https://pa1.narvii.com/6627/822df2c9c87ef4c2e4ab54897b3e5168fe5a22d4_hq.gif",
+        "http://media.tumblr.com/46a4ef524f4284ea5a49c111eb99d8d4/tumblr_n6qnpsnzQv1rjenv2o1_500.gif",
+        "https://media.tumblr.com/4943dded74d6f3c460b8af183e267773/tumblr_pdqsj2AJ7V1xx1hnao2_250.gif"
+      ],
+      // Glaceon DxNr. 471
       glaceon: [
         "https://media.discordapp.net/attachments/479083635815874561/622871175827161143/bruh.gif",
         "https://media.giphy.com/media/hJ35szPqcbllK/giphy.gif",
@@ -206,7 +217,8 @@ exports.run = (client, message, args) => {
         "https://i.pinimg.com/originals/e7/c5/85/e7c58536ac9c04a9754bcf8956509e7d.gif",
         "http://media.tumblr.com/7f87448901a786d6fe9662c33c4a671c/tumblr_mjzqexjeWa1s720cfo1_500.gif",
         "https://media.giphy.com/media/APhaqCNC9goRW/giphy.gif",
-        "https://i.redd.it/2wk2ry3yzi531.gif"
+        "https://i.redd.it/2wk2ry3yzi531.gif",
+        "https://thumbs.gfycat.com/UnnaturalSparklingIlsamochadegu-size_restricted.gif"
       ],
       // Gliscor DexNr. 472
       gliscor: [
@@ -239,7 +251,7 @@ exports.run = (client, message, args) => {
         "https://media.tumblr.com/0294cb166355ddfadf279d3b0be72821/tumblr_o1xrestimL1sl23m0o1_500.gif",
         "https://cdn.discordapp.com/attachments/614979959156375567/616708137394634759/d73jb8k-2711c667-fdd2-4291-8e87-c78e9808a6d0.gif"
       ],
-      //Stitch
+      // Stitch
       stitch: [
         "http://media.tumblr.com/b0bca037616ce9f268458d5e1610dee0/tumblr_msnvoyvo9v1s9qf9ro1_500.gif",
         "https://thumbs.gfycat.com/CharmingDecisiveGalapagosdove-max-1mb.gif",
@@ -272,7 +284,7 @@ exports.run = (client, message, args) => {
         "https://media.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
         "https://media.tenor.com/images/534b7fbb372900815007a3f11128d790/tenor.gif?itemid=11626143"
       ],
-      //Jojo
+      // Jojo
       jojo: [
         "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
         "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif",
@@ -293,7 +305,7 @@ exports.run = (client, message, args) => {
         "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif"
       ],
       //// Interactions and emotions
-      //Hug
+      // Hug
       hug: [
         "https://media.giphy.com/media/8tpiC1JAYVMFq/source.gif",
         "https://media.giphy.com/media/LpoYxe6nuzeus/giphy.gif",
@@ -329,7 +341,8 @@ exports.run = (client, message, args) => {
         "http://33.media.tumblr.com/tumblr_llf2y4v3Wp1qhigt0o1_500.gif",
         "http://media.giphy.com/media/LWTxLvp8G6gzm/giphy.gif",
         "https://media.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif",
-        "https://cdn.discordapp.com/attachments/599180353441366026/625034816269582357/image4.gif"
+        "https://cdn.discordapp.com/attachments/599180353441366026/625034816269582357/image4.gif",
+        "https://media.tumblr.com/b6a5c4410b7ff47295afa7ac7190f52d/tumblr_mgth99gQrf1r7c13zo1_500.gif"
       ]
     };
 
@@ -354,6 +367,7 @@ exports.run = (client, message, args) => {
 > -Piplup
 > -Shinx
 > -Pachirisu
+> -Gible
 > -Glaceon
 > -Gliscor
 > -Reshiram
