@@ -1,5 +1,7 @@
 exports.run = (client, message, args) => {
     try {
+        const Discord = require("discord.js");
+
         function getUserFromMention(mention) {
             if (!mention) return;
 
@@ -18,11 +20,17 @@ exports.run = (client, message, args) => {
             if (!user) {
                 return message.reply(`> Please use a proper mention if you want to see someone else's avatar, <@${message.author.id}.`);
             };
-            return message.channel.send(`> ${user.username}'s avatar: 
-> ${user.displayAvatarURL}`);
+            const avatarEmbed = new Discord.RichEmbed()
+                .setColor(0x219dcd)
+                .setAuthor(user.username)
+                .setImage(user.avatarURL);
+            return message.channel.send(avatarEmbed);
         };
-        return message.channel.send(`> <@${message.author.id}>, your avatar: 
-> ${message.author.displayAvatarURL}`);
+        const avatarEmbed = new Discord.RichEmbed()
+            .setColor(0x219dcd)
+            .setAuthor(user.username)
+            .setImage(user.avatarURL);
+        return message.channel.send(avatarEmbed);
 
     } catch (e) {
         // send msg to owner
