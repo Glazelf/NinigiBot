@@ -8,7 +8,7 @@ exports.run = (client, message, args) => {
 
         // Catch empty argument
         if (textMessage.length < 1) {
-            return message.channel.send(`> You need to specify text for me to say, <@${message.author.id}>.`)
+            return message.channel.send(`> You need to specify text for me to say, <@${message.author.id}>.`);
         };
 
         // Owner only function to send messages in different channels
@@ -17,7 +17,7 @@ exports.run = (client, message, args) => {
 
                 // If channelID is specified correctly, throw message into specified channel
                 message.client.channels.find("id", channelID).send(remoteMessage);
-                return message.channel.send(`Message succesfully sent to specified channel, <<@${message.author.id}>.`);
+                return message.channel.send(`Message succesfully sent to specified channel, <@${message.author.id}>.`);
             } catch (e) {
 
                 // If error: execute regular quoteless say

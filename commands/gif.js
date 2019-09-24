@@ -2,7 +2,8 @@ exports.run = (client, message, args) => {
   try {
     Array.prototype.pick = function () {
       return this[Math.floor(Math.random() * this.length)];
-    }
+    };
+
     let gifs = {
       //// Pokémon
       // Squirtle DexNr. 007
@@ -348,7 +349,7 @@ exports.run = (client, message, args) => {
 
     var gifArgumentUncased = message.content.slice(5);
     var gifArgument = gifArgumentUncased.toLowerCase();
-    var gifString = `Here's your gif, <@${message.author.id}>:`
+    var gifString = `Here's your gif, <@${message.author.id}>:`;
 
     if (gifArgument.length < 1) {
       return message.channel.send(`> You need to specify a word to use command, <@${message.author.id}>, for usable arguments, use "?gif help".`);
@@ -379,7 +380,7 @@ exports.run = (client, message, args) => {
       let randomGif = gifs[gifArgument].pick();
       let totalMessage = `> ${gifString}`;
       return message.channel.send(totalMessage, {
-        file: `${randomGif}`
+        file: randomGif
       });
     } else {
       return message.channel.send(`> This argument has no gifs bound to it, <@${message.author.id}>, for usable arguments, use "?gif help".`);

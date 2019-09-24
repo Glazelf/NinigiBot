@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
     try {
-        let baseMessage = `> This bot is in ${client.guilds.size} servers, <<@${message.author.id}>:`;
+        let baseMessage = `> This bot is in ${client.guilds.size} servers, <@${message.author.id}>:`;
 
         client.guilds.forEach((guild) => {
             baseMessage = `${baseMessage}
