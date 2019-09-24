@@ -1,12 +1,12 @@
 module.exports = (client, message, channel) => {
   // Import totals
-  let totalStats = require('./ready');
+  let globalVars = require('./ready');
 
   // Ignore all bots
   if (message.author.bot) return;
 
   // +1 messages count
-  totalStats.totalMessages += 1;
+  globalVars.totalMessages += 1;
 
   // Ignore messages not starting with the prefix
   if (message.content.indexOf(client.config.prefix) !== 0) return;
@@ -34,8 +34,8 @@ module.exports = (client, message, channel) => {
   if (!cmd) return message.channel.send(`> Sorry <@${message.author.id}>, that command doesn't exist.`);
 
   // +1 command count and drop message count
-  totalStats.totalCommands += 1;
-  totalStats.totalMessages -= 1;
+  globalVars.totalCommands += 1;
+  globalVars.totalMessages -= 1;
 
   // Run the command
   cmd.run(client, message, args);

@@ -19,7 +19,7 @@ exports.run = (client, message, args) => {
         if (seconds !== 1) { multiSeconds = "s" };
 
         // Import totals
-        let totalStats = require('../events/ready');
+        let globalVars = require('../events/ready');
 
         // Reset hours
         if (hours >= 24) {
@@ -39,8 +39,8 @@ exports.run = (client, message, args) => {
 > Servers: ${client.guilds.size}
 > Channels: ${client.channels.size}
 > Users: ${client.users.size}
-> Messages read: ${totalStats.totalMessages}
-> Commands used: ${totalStats.totalCommands}`);
+> Messages read: ${globalVars.totalMessages}
+> Commands used: ${globalVars.totalCommands}`);
 
     } catch (e) {
         // send msg to owner
@@ -52,7 +52,7 @@ exports.run = (client, message, args) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
+        return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
     };
 };
 
