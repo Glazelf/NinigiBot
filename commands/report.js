@@ -6,8 +6,7 @@ exports.run = (client, message, args) => {
         // send msg to owner
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
-        owner.send(`> Report done by: <@${message.member.user.id}> in <#${message.channel.id}>.
-> Contents: 
+        owner.send(`> **Report by <@${message.member.user.id}> in <#${message.channel.id}>:**
 > ${reportMessage}`);
 
         // return confirmation
