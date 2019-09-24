@@ -11,7 +11,7 @@ exports.run = (client, message, args) => {
 ${reportMessage}`);
 
         // return confirmation
-        return message.channel.send(`> Report successfully sent.`);
+        return message.channel.send(`> Report successfully sent, <@${message.author.id}>.`);
 
     } catch (e) {
         // send msg to owner
