@@ -19,13 +19,13 @@ exports.run = (client, message, args) => {
     const props = require(`./${commandName}.js`);
     client.commands.set(commandName, props);
     return message.channel.send(`> The command "${client.config.prefix}${commandName}" has been reloaded, <@${message.author.id}>.`);
-    
+
   } catch (e) {
     // send msg to owner
     let members = message.channel.members;
     let owner = members.find('id', client.config.ownerID);
     owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
-    
+
     // log error
     console.log(e);
 

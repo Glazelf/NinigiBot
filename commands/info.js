@@ -8,7 +8,7 @@ exports.run = (client, message, args) => {
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
-        
+
         // log error
         console.log(e);
 

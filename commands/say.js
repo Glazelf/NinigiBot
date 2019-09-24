@@ -14,7 +14,7 @@ exports.run = (client, message, args) => {
         // Owner only function to send messages in different channels
         if (message.author.id == client.config.ownerID) {
             try {
-                
+
                 // If channelID is specified correctly, throw message into specified channel
                 message.client.channels.find("id", channelID).send(remoteMessage);
                 return message.channel.send(`Message succesfully sent to specified channel, <<@${message.author.id}>.`);
@@ -34,13 +34,13 @@ exports.run = (client, message, args) => {
     > -<@${message.author.id}>`;
             return message.channel.send(textMessage);
         };
-        
+
     } catch (e) {
         // send msg to owner
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
-        
+
         // log error
         console.log(e);
 
