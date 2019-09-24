@@ -19,8 +19,8 @@ module.exports = (client, message, channel) => {
   if (secondCharacter == `${client.config.prefix}` || secondCharacter == ` `) return;
 
   // Ignore commands in DMs
-  if (message.channel.type == "dm" && message != `${client.config.prefix}help` && message != `${client.config.prefix}info`) {
-    return message.author.send(`> Sorry <@${message.author.id}>, you're not allowed to use commands other than "${client.config.prefix}help" and "${client.config.prefix}info" in private messages!`).catch(console.error);
+  if (message.channel.type == "dm") {
+    return message.author.send(`> Sorry <@${message.author.id}>, you're not allowed to use commands in private messages!`).catch(console.error);
   };
 
   // Standard definition
