@@ -340,9 +340,10 @@ exports.run = (client, message, args) => {
 > -Hug`);
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
-      let totalMessage = `> ${gifString} 
-> ${randomGif}`;
-      return message.channel.send(totalMessage);
+      let totalMessage = `> ${gifString}`;
+      return message.channel.send(totalMessage, {
+        file: `${randomGif}`
+    });
     } else {
       return message.channel.send(`> This argument has no gifs bound to it, <@${message.author.id}>, for usable arguments, use "?gif help".`);
     };
@@ -357,7 +358,7 @@ exports.run = (client, message, args) => {
     console.log(e);
 
     // return confirmation
-    return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
+    return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
   };
 };
 
