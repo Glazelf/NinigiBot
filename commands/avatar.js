@@ -21,7 +21,7 @@ exports.run = (client, message, args) => {
             return message.channel.send(`> ${user.username}'s avatar: 
 > ${user.displayAvatarURL}`);
         }
-        return message.channel.send(`> <@${message.member.user.id}>, your avatar: 
+        return message.channel.send(`> <@${message.author.id}>, your avatar: 
 > ${message.author.displayAvatarURL}`);
 
     } catch (e) {
@@ -29,9 +29,12 @@ exports.run = (client, message, args) => {
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+        
         // log error
         console.log(e);
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+        // return confirmation
+        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
     };
 };
 

@@ -4,12 +4,12 @@ exports.run = (client, message, args) => {
       return message.channel.send(client.config.lackPerms)
     };
 
-    if (!args || args.length < 1) return message.channel.send("> Must provide a command name to reload, <@${message.member.user.id}>.");
+    if (!args || args.length < 1) return message.channel.send(`> Must provide a command name to reload, <@${message.author.id}>.`);
     const commandName = args[0];
 
     // Check if the command exists and is valid
     if (!client.commands.has(commandName)) {
-      return message.channel.send("> That command does not exist, <@${message.member.user.id}>.");
+      return message.channel.send(`> That command does not exist, <@${message.author.id}>.`);
     };
 
     delete require.cache[require.resolve(`./${commandName}.js`)];
@@ -18,16 +18,19 @@ exports.run = (client, message, args) => {
     client.commands.delete(commandName);
     const props = require(`./${commandName}.js`);
     client.commands.set(commandName, props);
-    return message.channel.send(`> The command "${client.config.prefix}${commandName}" has been reloaded, <@${message.member.user.id}>.`);
+    return message.channel.send(`> The command "${client.config.prefix}${commandName}" has been reloaded, <@${message.author.id}>.`);
     
   } catch (e) {
     // send msg to owner
     let members = message.channel.members;
     let owner = members.find('id', client.config.ownerID);
     owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+    
     // log error
     console.log(e);
-    return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+    // return confirmation
+    return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
   };
 };
 

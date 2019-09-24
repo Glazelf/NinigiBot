@@ -29,7 +29,7 @@ module.exports.run = async (bot, message, args, con) => {
 
             // if not in dms, confirm command in channel
             if (message.channel.type !== "dm") {
-                message.channel.send(`> Help has been sent to your DMs, <@${message.member.user.id}>!`);
+                message.channel.send(`> Help has been sent to your DMs, <@${message.author.id}>!`);
             };
 
             // send help text
@@ -41,9 +41,12 @@ module.exports.run = async (bot, message, args, con) => {
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+        
         // log error
         console.log(e);
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+        // return confirmation
+        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
     };
 };
 

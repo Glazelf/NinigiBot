@@ -34,7 +34,7 @@ exports.run = (client, message, args) => {
             uptime = `${days} day${multiDays}, ${uptime}`;
         };
 
-        return message.channel.send(`> Here are some of the bot's statistics, <@${message.member.user.id}>:
+        return message.channel.send(`> Here are some of the bot's statistics, <@${message.author.id}>:
 > Uptime: ${uptime}.
 > Servers: ${client.guilds.size}
 > Channels: ${client.channels.size}
@@ -47,9 +47,12 @@ exports.run = (client, message, args) => {
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+        
         // log error
         console.log(e);
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+        // return confirmation
+        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
     };
 };
 

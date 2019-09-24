@@ -16,16 +16,20 @@ exports.run = (client, message, args) => {
 
         message.channel.fetchMessages({ limit: messageCount })
             .then(messages => message.channel.bulkDelete(messages))
-            .then(message.channel.send(`> ${numberOfMessages} messages have been deleted, <@${message.member.user.id}>.`));
-            
+            .then(message.channel.send(`> ${numberOfMessages} messages have been deleted, <@${message.author.id}>.`));
+        return;
+
     } catch (e) {
         // send msg to owner
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+
         // log error
         console.log(e);
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+        // return confirmation
+        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
     };
 };
 

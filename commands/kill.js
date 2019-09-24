@@ -5,7 +5,7 @@ exports.run = (client, message, args) => {
         };
 
         // send channel a message that you're killing bot [optional]
-        message.channel.send('> Shutting down...')
+        message.channel.send(`> Shutting down for <@${message.author.id}>...`)
             .then(msg => client.destroy());
 
     } catch (e) {
@@ -13,9 +13,12 @@ exports.run = (client, message, args) => {
         let members = message.channel.members;
         let owner = members.find('id', client.config.ownerID);
         owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+        
         // log error
         console.log(e);
-        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+        // return confirmation
+        return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
     };
 };
 

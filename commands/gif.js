@@ -314,12 +314,12 @@ exports.run = (client, message, args) => {
 
     var gifArgumentUncased = message.content.slice(5);
     var gifArgument = gifArgumentUncased.toLowerCase();
-    var gifString = `Here's your gif, <@${message.member.user.id}>:`
+    var gifString = `Here's your gif, <@${message.author.id}>:`
 
     if (gifArgument.length < 1) {
-      return message.channel.send(`> You need to specify a word to use command, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
+      return message.channel.send(`> You need to specify a word to use command, <@${message.author.id}>, for usable arguments, use "?gif help".`);
     } else if (gifArgument == "help") {
-      return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.member.user.id}>:
+      return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
 > -Squirtle
 > -Wooper
 > -Wooper
@@ -344,7 +344,7 @@ exports.run = (client, message, args) => {
 > ${randomGif}`;
       return message.channel.send(totalMessage);
     } else {
-      return message.channel.send(`> This argument has no gifs bound to it, <@${message.member.user.id}>, for usable arguments, use "?gif help".`);
+      return message.channel.send(`> This argument has no gifs bound to it, <@${message.author.id}>, for usable arguments, use "?gif help".`);
     };
     
   } catch (e) {
@@ -352,9 +352,12 @@ exports.run = (client, message, args) => {
     let members = message.channel.members;
     let owner = members.find('id', client.config.ownerID);
     owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
+    
     // log error
     console.log(e);
-    return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`)
+
+    // return confirmation
+    return message.channel.send(`> An error has occurred trying to run the command, please contact <@${client.config.ownerID}>.`);
   };
 };
 
