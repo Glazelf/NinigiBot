@@ -8,6 +8,9 @@ exports.run = (client, message, args) => {
             user = message.author;
         };
 
+        // convert user to member for server related stats
+        //let member = client.members.find('id', user.id);
+
         // Name presence type
         let presenceType = "Playing";
         if (user.presence.game) {
@@ -71,7 +74,9 @@ exports.run = (client, message, args) => {
             .addField("Availability:", userStatus, true)
             .addField("Full account:", user, true)
             .addField("ID:", user.id, true)
-            .addField("Created at:", user.createdAt, true)
+            .addField("Created at:", user.createdAt)
+            // example of server related stats
+            //.addField("Joined at:", member.joined_at)
             .setFooter(`Requested by ${message.author.tag} at:`)
             .setTimestamp();
 
