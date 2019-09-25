@@ -2,7 +2,7 @@ exports.run = (client, message, args) => {
     try {    
         const Discord = require("discord.js");
         
-        let bot = client.users.find("id", client.config.botID)
+        let bot = client.users.find("id", client.config.botID);
 
         // Name presence type
         let presenceType = "Playing";
@@ -41,12 +41,14 @@ exports.run = (client, message, args) => {
             .setAuthor(`Name: ${client.config.botName}`)
             .setThumbnail(bot.avatarURL)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
-            .addField("Full account:", client.config.botAccount, true)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
+            .addField("Full account:", client.config.botAccount, true)
             .addField("Bot ID:", client.config.botID, true)
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
+            .addField("Prefix:", client.config.prefix, true)
             .addField("Language:", `Javascript`, true)
-            .addField("Created at:", bot.createdAt, true)
+            .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>`)
+            .addField("Created at:", bot.createdAt)
             .setFooter(`Requested by ${message.author.tag} at:`)
             .setTimestamp();
 
