@@ -1,7 +1,56 @@
 exports.run = (client, message, args) => {
-    try {
-        return message.channel.send(` > Hello, <@${message.author.id}>. ${client.config.botName} was made by ${client.config.ownerName} as a passion project in Javascript! You can DM him at <@${client.config.ownerID}> for more information! 
-> Github link: https://github.com/Glazelf/NinigiBot`);
+    try {    
+        const Discord = require("discord.js");
+        
+        let bot = client.users.find("id", client.config.botID)
+
+        // Name presence type
+        let presenceType = "Playing";
+        if (bot.presence.game) {
+            switch (bot.presence.game.type) {
+                case 0:
+                    presenceType = "Playing";
+                    break;
+                case 1:
+                    presenceType = "Streaming";
+                    break;
+                case 2:
+                    presenceType = "Listening to";
+                    break;
+                case 3:
+                    presenceType = "Watching";
+                    break;
+                default:
+                    presenceType = "Playing";
+                    break;
+            };
+        } else {
+            presenceType = "Playing";
+        };
+
+        // Define presence name
+        let presenceName = "";
+        if (!bot.presence.game) {
+            presenceName = "nothing";
+        } else {
+            presenceName = bot.presence.game;
+        };
+
+        const profileEmbed = new Discord.RichEmbed()
+            .setColor(0x219dcd)
+            .setAuthor(`Name: ${client.config.botName}`)
+            .setThumbnail(bot.avatarURL)
+            .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            .addField("Full account:", client.config.botAccount, true)
+            .addField("Owner:", `<@${client.config.ownerID}>`, true)
+            .addField("Bot ID:", client.config.botID, true)
+            .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
+            .addField("Language:", `Javascript`, true)
+            .addField("Created at:", bot.createdAt, true)
+            .setFooter(`Requested by ${message.author.tag} at:`)
+            .setTimestamp();
+
+        return message.channel.send(profileEmbed);
 
     } catch (e) {
         // send msg to owner
