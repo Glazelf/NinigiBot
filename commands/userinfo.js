@@ -65,12 +65,12 @@ exports.run = (client, message, args) => {
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
-            .setAuthor(`User: ${user.tag}`)
-            .addField("ID:", user.id, true)
+            .setAuthor(`User: ${user.username}`)
             .setThumbnail(user.avatarURL)
-            .addBlankField()
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Availability:", userStatus, true)
+            .addField("Full account:", user, true)
+            .addField("ID:", user.id, true)
             .addField("Created at:", user.createdAt, true)
             .setFooter(`Requested by ${message.author.tag} at:`)
             .setTimestamp();
