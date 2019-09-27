@@ -42,7 +42,7 @@ exports.run = (client, message, args) => {
             .addField("Channels:", message.guild.channels.size, true)
             .addField("Roles:", message.guild.roles.size, true)
             .addField("Created at:", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(message.channel.guild.createdAt)}.`)
-            .setFooter(`Requested by ${message.author.tag} at:`)
+            .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);

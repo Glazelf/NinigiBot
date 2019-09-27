@@ -84,7 +84,7 @@ exports.run = (client, message, args) => {
             .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
             // example of server related stats
             //.addField("Joined at:", member.joined_at)
-            .setFooter(`Requested by ${message.author.tag} at:`)
+            .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);

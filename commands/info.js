@@ -96,7 +96,7 @@ exports.run = (client, message, args) => {
             .addField("Uptime:", `${uptime}.`)
             .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>`)
             .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
-            .setFooter(`Requested by ${message.author.tag} at:`)
+            .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);
