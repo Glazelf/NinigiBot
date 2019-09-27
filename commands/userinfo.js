@@ -8,6 +8,13 @@ exports.run = (client, message, args) => {
             user = message.author;
         };
 
+        function checkDays(date) {
+            let now = new Date();
+            let diff = now.getTime() - date.getTime();
+            let days = Math.floor(diff / 86400000);
+            return days + (days == 1 ? " day" : " days") + " ago";
+        };
+
         // convert user to member for server related stats
         //let member = client.members.find('id', user.id);
 
@@ -74,7 +81,7 @@ exports.run = (client, message, args) => {
             .addField("ID:", user.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Created at:", user.createdAt)
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
             // example of server related stats
             //.addField("Joined at:", member.joined_at)
             .setFooter(`Requested by ${message.author.tag} at:`)

@@ -4,6 +4,13 @@ exports.run = (client, message, args) => {
 
         let bot = client.users.find("id", client.config.botID);
 
+        function checkDays(date) {
+            let now = new Date();
+            let diff = now.getTime() - date.getTime();
+            let days = Math.floor(diff / 86400000);
+            return days + (days == 1 ? " day" : " days") + " ago";
+        };
+
         // Name presence type
         let presenceType = "Playing";
         if (bot.presence.game) {
@@ -86,9 +93,9 @@ exports.run = (client, message, args) => {
             .addField("Commands used:", globalVars.totalCommands, true)
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
             .addField("Language:", `Javascript`, true)
-            .addField("Uptime:", uptime)
+            .addField("Uptime:", `${uptime}.`)
             .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>`)
-            .addField("Created at:", bot.createdAt)
+            .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag} at:`)
             .setTimestamp();
 
