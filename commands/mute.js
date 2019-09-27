@@ -47,6 +47,6 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.help = {
   name: "Mute",
-  description: "Replies with the same message you sent.",
+  description: "Mutes the targeted user for a specified amount of time.",
   usage: `mute [@target] [time]`
 }; 
