@@ -68,12 +68,12 @@ exports.run = (client, message, args) => {
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
-            .setAuthor(`User: ${user.username}`)
+            .setAuthor(user.username, user.avatarURL)
             .setThumbnail(user.avatarURL)
-            .addField("Activity:", `${presenceType} ${presenceName}`, true)
-            .addField("Availability:", userStatus, true)
             .addField("Full account:", user, true)
             .addField("ID:", user.id, true)
+            .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            .addField("Availability:", userStatus, true)
             .addField("Created at:", user.createdAt)
             // example of server related stats
             //.addField("Joined at:", member.joined_at)
@@ -98,6 +98,6 @@ exports.run = (client, message, args) => {
 
 module.exports.help = {
     name: "Userinfo",
-    description: "Replies with information about a user.",
+    description: "Returns information about a user.",
     usage: `userinfo [optional target]`
 }; 

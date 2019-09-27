@@ -72,7 +72,7 @@ exports.run = (client, message, args) => {
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
-            .setAuthor(`Name: ${client.config.botName}`)
+            .setAuthor(client.config.botName, bot.avatarURL)
             .setThumbnail(bot.avatarURL)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
@@ -110,6 +110,6 @@ exports.run = (client, message, args) => {
 
 module.exports.help = {
     name: "Info",
-    description: "Displays some general info about this bot.",
+    description: "Returns some information about this bot.",
     usage: `info`
 };
