@@ -1,7 +1,7 @@
 exports.run = (client, message, args) => {
     try {
-        if(!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
-        
+        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
+
         const Discord = require("discord.js");
 
         let user = message.mentions.users.first();
@@ -80,27 +80,26 @@ exports.run = (client, message, args) => {
                 break;
         };
 
-        function getMapKeyValueByIndex(obj, idx) {
-            var key = Object.keys(obj)[idx];
-            return { key: key, value: obj[key] };
-         }
-
         function getRoles() {
             let elementArray = [];
             let elementList = [];
             member.roles.forEach(element => {
                 if (element.name != '@everyone')
-                elementArray.push(element)
+                    elementArray.push(element)
             });
 
-            elementArray.sort(function(a,b){return b.position-a.position})
+            elementArray.sort(function (a, b) { return b.position - a.position })
 
             elementArray.forEach(element => {
                 elementList += `${element} `
             });
 
+            if (!member.roles[1]) {
+                elementList = "None";
+            };
+
             return elementList;
-        }
+        };
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
@@ -110,7 +109,7 @@ exports.run = (client, message, args) => {
             .addField("ID:", user.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Roles:", getRoles(), true)
+            .addField("Roles:", getRoles())
             .addField("Joined at:", `${member.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(member.joinedAt)}.`)
             .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
