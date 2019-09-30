@@ -89,14 +89,16 @@ exports.run = (client, message, args) => {
             let elementArray = [];
             let elementList = [];
             member.roles.forEach(element => {
-                console.log(element.name)
                 if (element.name != '@everyone')
                 elementArray.push(element)
             });
 
+            elementArray.sort(function(a,b){return b.position-a.position})
+
             elementArray.forEach(element => {
                 elementList += `${element} `
             });
+
             return elementList;
         }
 
