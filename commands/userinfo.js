@@ -5,9 +5,14 @@ exports.run = (client, message, args) => {
         const Discord = require("discord.js");
 
         let user = message.mentions.users.first();
+        let member = message.mentions.members.first();
 
         if (!user) {
             user = message.author;
+        };
+
+        if (!member) {
+            member = message.member;
         };
 
         function checkDays(date) {
@@ -83,9 +88,8 @@ exports.run = (client, message, args) => {
             .addField("ID:", user.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Availability:", userStatus, true)
+            .addField("Joined at:", `${member.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(member.joinedAt)}.`)
             .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
-            // example of server related stats
-            //.addField("Joined at:", member.joined_at)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
