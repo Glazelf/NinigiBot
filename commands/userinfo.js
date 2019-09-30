@@ -94,7 +94,7 @@ exports.run = (client, message, args) => {
                 elementList += `${element} `
             });
 
-            if (!member.roles[1]) {
+            if (!elementArray[1]) {
                 elementList = "None";
             };
 
