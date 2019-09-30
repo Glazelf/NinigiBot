@@ -1,5 +1,7 @@
 exports.run = (client, message, args) => {
     try {
+        if(!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
+
         const Discord = require("discord.js");
 
         let bot = client.users.find("id", client.config.botID);
