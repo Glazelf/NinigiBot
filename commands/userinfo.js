@@ -80,6 +80,26 @@ exports.run = (client, message, args) => {
                 break;
         };
 
+        function getMapKeyValueByIndex(obj, idx) {
+            var key = Object.keys(obj)[idx];
+            return { key: key, value: obj[key] };
+         }
+
+        function getRoles() {
+            let elementArray = [];
+            let elementList = [];
+            member.roles.forEach(element => {
+                console.log(element.name)
+                if (element.name != '@everyone')
+                elementArray.push(element)
+            });
+
+            elementArray.forEach(element => {
+                elementList += `${element} `
+            });
+            return elementList;
+        }
+
         const profileEmbed = new Discord.RichEmbed()
             .setColor(0x219dcd)
             .setAuthor(user.username, user.avatarURL)
@@ -88,6 +108,7 @@ exports.run = (client, message, args) => {
             .addField("ID:", user.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Availability:", userStatus, true)
+            .addField("Roles:", getRoles(), true)
             .addField("Joined at:", `${member.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(member.joinedAt)}.`)
             .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
