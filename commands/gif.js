@@ -232,6 +232,18 @@ exports.run = (client, message) => {
         "https://media.giphy.com/media/kix7tthrZuWsg/source.gif",
         "https://j.gifs.com/xGKrVB.gif"
       ],
+      // Gallade DexNr. 475
+      gallade: [
+        "https://i.pinimg.com/originals/a6/cd/6f/a6cd6f8eef8c8f849bed4435d5bbfdd6.gif",
+        "https://media.tenor.com/images/d848a333e88f3b89287658d67d21c82e/tenor.gif",
+        "https://media.tenor.com/images/cdeeaafae440e35ff9449d2b8ed6bef1/tenor.gif",
+        "https://media.tenor.com/images/ff85cc48f39f70dee0cd1c632867532c/tenor.gif",
+        "https://thumbs.gfycat.com/PeskyEuphoricDrever-size_restricted.gif",
+        "https://archive-media-0.nyafuu.org/vp/image/1422/20/1422206202594.gif",
+        "https://pa1.narvii.com/6257/499cc35514c260213673de6eac8e8eabd9a25319_hq.gif",
+        "https://i.pinimg.com/originals/50/5f/29/505f298a5baa69b4b587f89b7bc3bee6.gif",
+        "https://cdn.discordapp.com/attachments/600426622658543616/629551398119276545/giphy_2.gif"
+      ],
       // Reshiram DexNr. 643
       reshiram: [
         "https://thumbs.gfycat.com/IndeliblePalatableBasilisk-size_restricted.gif",
@@ -357,6 +369,8 @@ exports.run = (client, message) => {
       return message.channel.send(`> You need to specify a word to use command, <@${message.author.id}>, for usable arguments, use "?gif help".`);
     } else if (gifArgument == "help") {
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
+      
+> **Pokémon:**
 > -Squirtle
 > -Slowpoke
 > -Flareon
@@ -373,10 +387,15 @@ exports.run = (client, message) => {
 > -Gible
 > -Glaceon
 > -Gliscor
+> -Gallade
 > -Reshiram
+
+> **Not Pokémon:**
 > -Dango
 > -Stitch
 > -Jojo
+
+> **Interactions/Emotions:**
 > -Hug`);
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
