@@ -1,6 +1,6 @@
 exports.run = (client, message) => {
   try {
-    if(!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
+    if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
 
     Array.prototype.pick = function () {
       return this[Math.floor(Math.random() * this.length)];
@@ -266,6 +266,26 @@ exports.run = (client, message) => {
         "https://media.tumblr.com/0294cb166355ddfadf279d3b0be72821/tumblr_o1xrestimL1sl23m0o1_500.gif",
         "https://cdn.discordapp.com/attachments/614979959156375567/616708137394634759/d73jb8k-2711c667-fdd2-4291-8e87-c78e9808a6d0.gif"
       ],
+      // Jojo
+      jojo: [
+        "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
+        "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif",
+        "https://media.giphy.com/media/bC0caT4xYU8qQ/source.gif",
+        "https://media.giphy.com/media/kiJEGxbplHfT5zkCDJ/giphy.gif",
+        "https://media.tumblr.com/88d978700d977ef7de997601502f4526/tumblr_phku9yAXpm1tqvsfso1_400.gif",
+        "https://thumbs.gfycat.com/ForthrightBoldDaddylonglegs-max-1mb.gif",
+        "http://media.giphygifs.s3.amazonaws.com/media/IzfJSTepKi5vW/giphy.gif",
+        "https://media.giphy.com/media/TyFdAtfZBODNC/giphy.gif",
+        "https://media.tenor.com/images/cf028dae44f0f5b1e7763747f422bbe0/tenor.gif",
+        "https://media.tenor.com/images/f1fa5d2363b34bdadbcf1e7690fed3b8/tenor.gif",
+        "https://media.giphy.com/media/JPgbfbcXxDr6E/giphy.gif",
+        "https://i.gifer.com/DeW7.gif",
+        "https://giffiles.alphacoders.com/358/35854.gif",
+        "https://i.pinimg.com/originals/77/2c/2f/772c2fdc3c92c2ea385ae670bde332e4.gif",
+        "https://i.makeagif.com/media/6-28-2015/DOrFwp.gif",
+        "http://1.bp.blogspot.com/-RxDLJr3oeuM/UlYlciCeMWI/AAAAAAAABmo/vi9VggbFzIc/s1600/do+do+do+do+do.gif",
+        "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif"
+      ],
       // Stitch
       stitch: [
         "http://media.tumblr.com/b0bca037616ce9f268458d5e1610dee0/tumblr_msnvoyvo9v1s9qf9ro1_500.gif",
@@ -298,26 +318,6 @@ exports.run = (client, message) => {
         "http://media.tumblr.com/2007cd519ce9b09e7581e75098a1c058/tumblr_mmvukzxZr31rh58ldo1_400.gif",
         "https://media.tenor.com/images/178cd8d91483eafd98026edadcca738b/tenor.gif",
         "https://media.tenor.com/images/534b7fbb372900815007a3f11128d790/tenor.gif?itemid=11626143"
-      ],
-      // Jojo
-      jojo: [
-        "https://media.tenor.com/images/91ee06114445dc4caa7f3f4512c62ff9/tenor.gif",
-        "https://i.pinimg.com/originals/01/36/d1/0136d1db14a36c5c2ba83bc1b5df45c7.gif",
-        "https://media.giphy.com/media/bC0caT4xYU8qQ/source.gif",
-        "https://media.giphy.com/media/kiJEGxbplHfT5zkCDJ/giphy.gif",
-        "https://media.tumblr.com/88d978700d977ef7de997601502f4526/tumblr_phku9yAXpm1tqvsfso1_400.gif",
-        "https://thumbs.gfycat.com/ForthrightBoldDaddylonglegs-max-1mb.gif",
-        "http://media.giphygifs.s3.amazonaws.com/media/IzfJSTepKi5vW/giphy.gif",
-        "https://media.giphy.com/media/TyFdAtfZBODNC/giphy.gif",
-        "https://media.tenor.com/images/cf028dae44f0f5b1e7763747f422bbe0/tenor.gif",
-        "https://media.tenor.com/images/f1fa5d2363b34bdadbcf1e7690fed3b8/tenor.gif",
-        "https://media.giphy.com/media/JPgbfbcXxDr6E/giphy.gif",
-        "https://i.gifer.com/DeW7.gif",
-        "https://giffiles.alphacoders.com/358/35854.gif",
-        "https://i.pinimg.com/originals/77/2c/2f/772c2fdc3c92c2ea385ae670bde332e4.gif",
-        "https://i.makeagif.com/media/6-28-2015/DOrFwp.gif",
-        "http://1.bp.blogspot.com/-RxDLJr3oeuM/UlYlciCeMWI/AAAAAAAABmo/vi9VggbFzIc/s1600/do+do+do+do+do.gif",
-        "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif"
       ],
       //// Interactions and emotions
       // Hug
@@ -371,32 +371,43 @@ exports.run = (client, message) => {
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
       
 > **Pokémon:**
-> -Squirtle
-> -Slowpoke
-> -Flareon
-> -Wooper
-> -Scizor
-> -Heracross
-> -Torchic
-> -Lotad
-> -Turtwig
-> -Chimchar
-> -Piplup
-> -Shinx
-> -Pachirisu
-> -Gible
-> -Glaceon
-> -Gliscor
-> -Gallade
-> -Reshiram
+> Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Reshiram
 
 > **Not Pokémon:**
-> -Dango
-> -Stitch
-> -Jojo
+> Dango, Jojo, Stitch
 
 > **Interactions/Emotions:**
-> -Hug`);
+> Hug`);
+
+      //// OLD HELP TEXT:
+      // > **Pokémon:**
+      // > -Squirtle
+      // > -Slowpoke
+      // > -Flareon
+      // > -Wooper
+      // > -Scizor
+      // > -Heracross
+      // > -Torchic
+      // > -Lotad
+      // > -Turtwig
+      // > -Chimchar
+      // > -Piplup
+      // > -Shinx
+      // > -Pachirisu
+      // > -Gible
+      // > -Glaceon
+      // > -Gliscor
+      // > -Gallade
+      // > -Reshiram
+
+      // > **Not Pokémon:**
+      // > -Dango
+      // > -Stitch
+      // > -Jojo
+
+      // > **Interactions/Emotions:**
+      // > -Hug
+
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
       let totalMessage = `> ${gifString}`;
