@@ -67,7 +67,7 @@ exports.run = (client, message, args) => {
         let globalVars = require('../events/ready');
 
         // Reset hours
-        if (hours >= 24) {
+        while (hours >= 24) {
             hours = hours - 24;
         };
 
