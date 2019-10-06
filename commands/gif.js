@@ -6,6 +6,15 @@ exports.run = (client, message) => {
       return this[Math.floor(Math.random() * this.length)];
     };
 
+    let helpText = `> **Pokémon:**
+    > Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Reshiram
+    
+    > **Not Pokémon:**
+    > Dango, Jojo, Stitch
+    
+    > **Interactions/Emotions:**
+    > Hug`;
+
     let gifs = {
       //// Pokémon
       // Squirtle DexNr. 007
@@ -366,18 +375,13 @@ exports.run = (client, message) => {
     var gifString = `Here's your gif, <@${message.author.id}>:`;
 
     if (gifArgument.length < 1) {
-      return message.channel.send(`> You need to specify a word to use command, <@${message.author.id}>, for usable arguments, use "?gif help".`);
+      return message.channel.send(`> You didn't provide a gif argument, so instead here's a list of the available ones, <@${message.author.id}>:
+
+${helpText}`);
     } else if (gifArgument == "help") {
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
-      
-> **Pokémon:**
-> Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Reshiram
 
-> **Not Pokémon:**
-> Dango, Jojo, Stitch
-
-> **Interactions/Emotions:**
-> Hug`);
+${helpText}`);
 
       //// OLD HELP TEXT:
       // > **Pokémon:**
@@ -415,7 +419,9 @@ exports.run = (client, message) => {
         file: randomGif
       });
     } else {
-      return message.channel.send(`> This argument has no gifs bound to it, <@${message.author.id}>, for usable arguments, use "?gif help".`);
+      return message.channel.send(`> This argument has no gifs bound to it, so instead here's a list of the available arguments, <@${message.author.id}>:
+
+${helpText}`);
     };
 
   } catch (e) {
