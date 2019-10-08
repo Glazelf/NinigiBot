@@ -94,7 +94,7 @@ exports.run = (client, message, args) => {
             .addField("Messages read:", globalVars.totalMessages, true)
             .addField("Commands used:", globalVars.totalCommands, true)
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
-            .addField("Language:", `Javascript`, true)
+            .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=368438486 'Invite Link')", true)
             .addField("Uptime:", `${uptime}.`)
             .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>`)
             .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
