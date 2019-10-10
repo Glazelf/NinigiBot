@@ -24,7 +24,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: "Restart",
-    description: "Restarts the entire bot. Requires ownership of this bot.",
-    usage: `restart`
+    name: null,
+    description: null,
+    usage: null
 }; 

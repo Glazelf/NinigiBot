@@ -35,7 +35,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-  name: "Reload",
-  description: "Reloads a specific command. Requires ownership of this bot.",
-  usage: `reload [command]`
+  name: null,
+  description: null,
+  usage: null
 };

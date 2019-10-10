@@ -23,7 +23,7 @@ exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: "Kill",
-    description: "Shuts down the entire bot. Requires ownership of this bot.",
-    usage: `kill`
+    name: null,
+    description: null,
+    usage: null
 };
