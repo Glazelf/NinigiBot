@@ -382,36 +382,6 @@ ${helpText}`);
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
 
 ${helpText}`);
-
-      //// OLD HELP TEXT:
-      // > **Pokémon:**
-      // > -Squirtle
-      // > -Slowpoke
-      // > -Flareon
-      // > -Wooper
-      // > -Scizor
-      // > -Heracross
-      // > -Torchic
-      // > -Lotad
-      // > -Turtwig
-      // > -Chimchar
-      // > -Piplup
-      // > -Shinx
-      // > -Pachirisu
-      // > -Gible
-      // > -Glaceon
-      // > -Gliscor
-      // > -Gallade
-      // > -Reshiram
-
-      // > **Not Pokémon:**
-      // > -Dango
-      // > -Stitch
-      // > -Jojo
-
-      // > **Interactions/Emotions:**
-      // > -Hug
-
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
       let totalMessage = `> ${gifString}`;
