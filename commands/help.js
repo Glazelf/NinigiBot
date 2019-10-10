@@ -53,7 +53,7 @@ module.exports.run = async (client, message, args, con) => {
 };
 
 module.exports.help = {
-    name: "Help",
-    description: "Sends you a private message with all the commands.",
-    usage: `help`
+    name: null,
+    description: null,
+    usage: null
 };
