@@ -46,7 +46,11 @@ module.exports.run = async (client, message, args) => {
 };
 
 module.exports.help = {
-  name: "Mute",
-  description: "Mutes the targeted user for a specified amount of time.",
-  usage: `mute [@target] [time]`
+  name: null,
+  description: null,
+  usage: null
+  //// Help tags for when this cmd works: 
+  // name: "Mute",
+  // description: "Mutes the targeted user for a specified amount of time.",
+  // usage: `mute [@target] [time]`
 }; 
