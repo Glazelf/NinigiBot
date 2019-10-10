@@ -1,4 +1,4 @@
-module.exports.run = async (bot, message, args, con) => {
+module.exports.run = async (client, message, args, con) => {
     try {
         const fs = require("fs");
         const Discord = require("discord.js");
@@ -15,16 +15,18 @@ module.exports.run = async (bot, message, args, con) => {
 
             let namelist = "";
             let desclist = "";
-            let usage = "";
+            let usagelist = "";
             let full = "";
 
             let result = jsfiles.forEach((f, i) => {
                 let props = require(`./${f}`);
                 namelist = `> **${props.help.name}**\n`;
                 desclist = `> Description: ${props.help.description}\n`;
-                // one day i will fix this so i dont have to use ? 
-                usage = `> Usage: ?${props.help.usage}\n`;
-                full += `${namelist}${desclist}${usage}\n`
+                usagelist = `> Usage: ${client.config.prefix}${props.help.usage}\n\n`;
+                if (props.help.name == null) namelist = "";
+                if (props.help.description == null) desclist = "";
+                if (props.help.usage == null) usagelist = "";
+                full += `${namelist}${desclist}${usagelist}`;
             });
 
             // if not in dms, confirm command in channel
