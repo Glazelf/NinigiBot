@@ -1,6 +1,7 @@
 exports.run = (client, message, args, member) => {
     try {
-        return message.channel.send(`> Pong!'ed back at <@${message.author.id}> in ${new Date().getTime() - message.createdTimestamp}ms.`).catch(console.error);
+        let PongString = `> Pong!'ed back at <@${message.author.id}> in`;
+        return message.channel.send(`${PongString} (hold on, processing latency...)`).then(m => m.edit(`${PongString} ${m.createdTimestamp - message.createdTimestamp}ms, with ${Math.round(client.ping)}ms latency.`) );
 
     } catch (e) {
         // send msg to owner
