@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
     try {
         // Split off command
         let textMessage = message.content.slice(5);

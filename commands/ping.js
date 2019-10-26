@@ -1,4 +1,4 @@
-exports.run = (client, message, args, member) => {
+exports.run = (client, message) => {
     try {
         let PongString = `> Pong!'ed back at <@${message.author.id}> in`;
         return message.channel.send(`${PongString} (hold on, processing latency...)`).then(m => m.edit(`${PongString} ${m.createdTimestamp - message.createdTimestamp}ms, with ${Math.round(client.ping)}ms latency.`) );

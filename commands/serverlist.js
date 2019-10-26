@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
     try {
         let baseMessage = `> This bot is in ${client.guilds.size} servers, <@${message.author.id}>:`;
 

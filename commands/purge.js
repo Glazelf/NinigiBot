@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
     try {
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
 

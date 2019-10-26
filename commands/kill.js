@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
     try {
         if (message.author.id !== client.config.ownerID) {
             return message.channel.send(client.config.lackPerms)
