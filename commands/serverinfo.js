@@ -32,7 +32,7 @@ exports.run = (client, message) => {
         };
 
         const profileEmbed = new Discord.RichEmbed()
-            .setColor(0x219dcd)
+            .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL)
             .setThumbnail(message.guild.iconURL)
             .addField("Owner:", `<@${message.guild.owner.user.id}>`, true)

@@ -102,7 +102,7 @@ exports.run = (client, message) => {
         };
 
         const profileEmbed = new Discord.RichEmbed()
-            .setColor(0x219dcd)
+            .setColor("#219DCD")
             .setAuthor(user.username, user.avatarURL)
             .setThumbnail(user.avatarURL)
             .addField("Full account:", user, true)

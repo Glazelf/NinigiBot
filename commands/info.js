@@ -80,7 +80,7 @@ exports.run = (client, message) => {
         };
 
         const profileEmbed = new Discord.RichEmbed()
-            .setColor(0x219dcd)
+            .setColor("#219DCD")
             .setAuthor(client.config.botName, bot.avatarURL)
             .setThumbnail(bot.avatarURL)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
