@@ -7,7 +7,7 @@ exports.run = (client, message) => {
     };
 
     let helpText = `> **Pokémon:**
-    > Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Reshiram
+    > Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Maractus, Reshiram
     
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
@@ -252,6 +252,14 @@ exports.run = (client, message) => {
         "https://pa1.narvii.com/6257/499cc35514c260213673de6eac8e8eabd9a25319_hq.gif",
         "https://i.pinimg.com/originals/50/5f/29/505f298a5baa69b4b587f89b7bc3bee6.gif",
         "https://cdn.discordapp.com/attachments/600426622658543616/629551398119276545/giphy_2.gif"
+      ],
+      // Maractus DexNr. 556
+      maractus: [
+        "https://media.tenor.com/images/9c483f890d5ca3714197a2fc73673de4/tenor.gif",
+        "https://thumbs.gfycat.com/PerkyClutteredChuckwalla-small.gif",
+        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3d21a08f-a035-4696-b885-8655cebde056/dd5chod-740272eb-9302-4bb5-b7b1-cd085d40bd65.gif",
+        "https://pa1.narvii.com/6028/d0938b65de4ba94a569f37bf6b484f1c5b1b63cf_hq.gif",
+        "https://media.tumblr.com/tumblr_m1my8pviVZ1qeyy6oo1_r1_500.gif"
       ],
       // Reshiram DexNr. 643
       reshiram: [
