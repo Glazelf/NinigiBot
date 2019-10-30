@@ -1,4 +1,4 @@
-module.exports = (client, message, channel) => {
+module.exports = (client, message) => {
   // Import totals
   let globalVars = require('./ready');
 
