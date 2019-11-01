@@ -266,7 +266,7 @@ exports.run = (client, message) => {
         "https://thumbs.gfycat.com/IndeliblePalatableBasilisk-size_restricted.gif",
         "https://media.giphy.com/media/vnKDhfyvcMOo8/giphy.gif",
         "https://i.pinimg.com/originals/5c/79/38/5c7938caeaa94302065551a322483c95.gif",
-        "https://media.tenor.com/images/221b464fe4bb6aa607099f5444e8abba/tenor.gif?itemid=7399449",
+        "https://media.tenor.com/images/221b464fe4bb6aa607099f5444e8abba/tenor.gif",
         "https://gifimage.net/wp-content/uploads/2018/04/reshiram-gif-8.gif",
         "https://media.giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
       ],
