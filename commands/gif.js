@@ -75,7 +75,21 @@ exports.run = (client, message) => {
         "https://media.giphy.com/media/T9ep0ZVwtON0Y/giphy.gif",
         "https://media.giphy.com/media/qdFCb59rXKZ1K/giphy.gif",
         "https://media.giphy.com/media/hllwtNe9cnAeA/source.gif",
-        "https://pa1.narvii.com/5687/afee5659818479ca8f17b4f6714462e3db3c42a1_hq.gif"
+        "https://pa1.narvii.com/5687/afee5659818479ca8f17b4f6714462e3db3c42a1_hq.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335919202533406/giphy_2.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335922004066312/HalfLittleCuscus-small.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335937778843738/tumblr_m04l6tgKLz1r4xd9jo1_500.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335952115105802/TrfM1Fh.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335968716161044/tumblr_m9xm4z0GZK1rnln23o1_500.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335971379675176/giphy_4.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335978807525400/giphy_6.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335986684559433/HollowMiserableErne-max-1mb.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335992544002048/fc63ca4cdf6a7f0b-content-of-gift-boxes-from-phase-2-of-the-event-otakukart.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641335993210765312/78e37f2165cb7cb41dc73c921a4b685a.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641336007148699676/giphy_5.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641336010885824532/source.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641336012772999178/source_1.gif",
+        "https://cdn.discordapp.com/attachments/641335699601358856/641336171640651782/source.gif"
       ],
       // Wooper DexNr. 194
       wooper: [
