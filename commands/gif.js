@@ -7,7 +7,7 @@ exports.run = (client, message) => {
     };
 
     let helpText = `> **Pokémon:**
-    > Squirtle, Slowpoke, Flareon, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Maractus, Reshiram
+    > Squirtle, Slowpoke, Flareon, Snorlax, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Maractus, Reshiram
     
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
@@ -64,6 +64,18 @@ exports.run = (client, message) => {
         "https://thumbs.gfycat.com/OrangeBlueDalmatian-size_restricted.gif",
         "https://pa1.narvii.com/6533/9221fb480ab50b2211ab5e1cd40736931dc144e3_hq.gif",
         "https://cdn.discordapp.com/attachments/599180353441366026/625487752527347722/flareongif1.gif"
+      ],
+      // Snorlax DexNr. 143
+      snorlax: [
+        "https://media.giphy.com/media/Ev2Ov4wBz9Ogg/giphy.gif",
+        "https://media.giphy.com/media/l3vQXn15dRVNMru7e/giphy.gif",
+        "https://media.giphy.com/media/5RxNQCK01NdAc/giphy.gif",
+        "https://media.giphy.com/media/CXaDzPow0SJqM/giphy.gif",
+        "https://media.giphy.com/media/14nG1hm40I2UCY/giphy.gif",
+        "https://media.giphy.com/media/T9ep0ZVwtON0Y/giphy.gif",
+        "https://media.giphy.com/media/qdFCb59rXKZ1K/giphy.gif",
+        "https://media.giphy.com/media/hllwtNe9cnAeA/source.gif",
+        "https://pa1.narvii.com/5687/afee5659818479ca8f17b4f6714462e3db3c42a1_hq.gif"
       ],
       // Wooper DexNr. 194
       wooper: [
