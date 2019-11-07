@@ -244,7 +244,8 @@ exports.run = (client, message) => {
         "https://archive-media-0.nyafuu.org/vp/image/1483/40/1483402345677.gif",
         "https://pa1.narvii.com/6627/822df2c9c87ef4c2e4ab54897b3e5168fe5a22d4_hq.gif",
         "http://media.tumblr.com/46a4ef524f4284ea5a49c111eb99d8d4/tumblr_n6qnpsnzQv1rjenv2o1_500.gif",
-        "https://media.tumblr.com/4943dded74d6f3c460b8af183e267773/tumblr_pdqsj2AJ7V1xx1hnao2_250.gif"
+        "https://media.tumblr.com/4943dded74d6f3c460b8af183e267773/tumblr_pdqsj2AJ7V1xx1hnao2_250.gif",
+        "https://thumbs.gfycat.com/UnnaturalSparklingIlsamochadegu-size_restricted.gif"
       ],
       // Glaceon DxNr. 471
       glaceon: [
@@ -255,8 +256,7 @@ exports.run = (client, message) => {
         "https://i.pinimg.com/originals/e7/c5/85/e7c58536ac9c04a9754bcf8956509e7d.gif",
         "http://media.tumblr.com/7f87448901a786d6fe9662c33c4a671c/tumblr_mjzqexjeWa1s720cfo1_500.gif",
         "https://media.giphy.com/media/APhaqCNC9goRW/giphy.gif",
-        "https://i.redd.it/2wk2ry3yzi531.gif",
-        "https://thumbs.gfycat.com/UnnaturalSparklingIlsamochadegu-size_restricted.gif"
+        "https://i.redd.it/2wk2ry3yzi531.gif"
       ],
       // Gliscor DexNr. 472
       gliscor: [
