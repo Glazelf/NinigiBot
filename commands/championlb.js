@@ -1,7 +1,7 @@
 exports.run = (client, message) => {
     try {
-        if (message.guild.id !== 517008998445350922) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
-        if (message.channel.id !== 649886193911332885) return message.channel.send(`> This command can only be used in <#649886193911332885>.`);
+        if (message.guild.id !== "517008998445350922") return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
+        if (message.channel.id !== "649886193911332885") return message.channel.send(`> This command can only be used in <#649886193911332885>.`);
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
