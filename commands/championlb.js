@@ -1,7 +1,10 @@
 exports.run = (client, message) => {
     try {
-        if (message.guild.id !== "517008998445350922") return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
-        if (message.channel.id !== "649886193911332885") return message.channel.send(`> This command can only be used in <#649886193911332885>.`);
+        ////Check servers, channels and embed perms
+        // Sinnoh server, Glaze server (only Ninigitest and Ninigispam)
+        if (message.guild.id !== "517008998445350922" && message.channel.id !== "593014621095329812" || message.channel.id !== "636688230066028547") return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
+        // Pal Park, Battle Champion channel, Ninigitest, Ninigispam
+        if (message.channel.id !== "599180353441366026" && message.channel.id !== "649886193911332885" && message.channel.id !== "593014621095329812" || message.channel.id !== "636688230066028547") return message.channel.send(`> This command can only be used in <#649886193911332885>, <#599180353441366026> or a Ninigi testing channel.`);
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
