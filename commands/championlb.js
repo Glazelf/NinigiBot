@@ -13,7 +13,7 @@ exports.run = (client, message) => {
         const Discord = require("discord.js");
 
         let roleID = "264410914592129025";
-        let battleChampionRole = message.guild.roles.get(roleID);
+        let battleChampionRole = `@Battle Champion`
         //Cris
         let currentChampion = `<@492847613754736650>`;
         //Cris
@@ -26,7 +26,7 @@ exports.run = (client, message) => {
             .setColor("#219DCD")
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
-            .addField(`Current ${battleChampionRole.tag}`, `${currentChampion}`, false)
+            .addField(`Current ${battleChampionRole}`, `${currentChampion}`, false)
             .addField(`1st place`, `${firstPlace} with ${firstPoints}`, false)
             .addField("2nd place", `${secondPlace} with ${secondPoints}`, false)
             .setFooter(`Requested by ${message.author.tag}`)
