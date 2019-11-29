@@ -6,11 +6,11 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let champion = discord.utils.get(ctx.guild.roles, id="649737913537658931");
+        let champion = Discord.utils.get(ctx.guild.roles, id="649737913537658931");
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
-            .setAuthor(`${champion.mention} Leaderboard`, message.guild.iconURL)
+            .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
             //Glaze
             .addField(`1st place`, `<@${client.config.ownerID}> with 1 point`, false)
