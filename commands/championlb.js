@@ -17,6 +17,8 @@ exports.run = (client, message) => {
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
             //Cris
+            .addField(`Current <@&649737913537658931>`, `<@492847613754736650>, false`
+            //Cris
             .addField(`1st place`, `<@492847613754736650> with 1 point`, false)
             //2ndplace
             .addField("2nd place", `???`, false)
