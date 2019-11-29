@@ -6,8 +6,6 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let champion = Discord.utils.get(ctx.guild.roles, id="649737913537658931");
-
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
