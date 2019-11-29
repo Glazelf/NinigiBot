@@ -12,7 +12,7 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let currentChampion = message.guild.roles.get("649737913537658931").members;
+        let currentChampion = message.guild.roles.get("649737913537658931").members[0];
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
