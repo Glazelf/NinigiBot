@@ -8,10 +8,13 @@ exports.run = (client, message) => {
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
-            .setAuthor(message.guild.name, message.guild.iconURL)
-            .setThumbnail(message.guild.iconURL)
-            .addField("1. Glaze", `10 points`, true)
-            .addField(`2. test`, `10 points`, true)
+            .setAuthor("<@649737913537658931> Leaderboard", message.guild.iconURL)
+            .setThumbnail("https://i.imgur.com/gpraYi7.png")
+            //Glaze
+            .addField(`1st place`, `<@${client.config.ownerID} with 10 points`, false)
+            //Cris
+            .addField("2nd place", `<@492847613754736650> with 13944 points`, false)
+
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
