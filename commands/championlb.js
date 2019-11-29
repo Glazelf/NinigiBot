@@ -1,9 +1,9 @@
 exports.run = (client, message) => {
     try {
-        let SinnohServer = new Boolean(message.guild.id == "517008998445350922");
-        let NinigiTestChannel = new Boolean(message.channel.id == "593014621095329812" || message.channel.id == "636688230066028547");
-        let PalParkChannel = new Boolean(message.channel.id == "599180353441366026");
-        let BattleChampionChannel = new Boolean(message.channel.id == "649886193911332885");
+        let SinnohServer = Boolean(message.guild.id == "517008998445350922");
+        let NinigiTestChannel = Boolean(message.channel.id == "593014621095329812" || message.channel.id == "636688230066028547");
+        let PalParkChannel = Boolean(message.channel.id == "599180353441366026");
+        let BattleChampionChannel = Boolean(message.channel.id == "649886193911332885");
 
         //Check servers, channels and embed perms
         if (SinnohServer === false && NinigiTestChannel === false) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
