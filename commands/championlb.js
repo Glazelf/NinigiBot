@@ -12,18 +12,23 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let currentChampion = message.guild.roles.get("649737913537658931").members[0];
+        let roleID = "264410914592129025";
+        let battleChampionRole = message.guild.roles.get(roleID);
+        //Cris
+        let currentChampion = `<@492847613754736650>`;
+        //Cris
+        let firstPlace = `<@492847613754736650>`;
+        let firstPoints = `2 points`;
+        let secondPlace = `???`;
+        let secondPoints = `???`;
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
-            //Cris
-            .addField(`Current <@649737913537658931>`, `${currentChampion.tag}`, false)
-            //Cris
-            .addField(`1st place`, `<@492847613754736650> with 1 point`, false)
-            //2ndplace
-            .addField("2nd place", `???`, false)
+            .addField(`Current ${battleChampionRole}`, `${currentChampion}`, false)
+            .addField(`1st place`, `${firstPlace} with ${firstPoints}`, false)
+            .addField("2nd place", `${secondPlace} with ${secondPoints}`, false)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
