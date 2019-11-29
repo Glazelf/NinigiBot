@@ -12,28 +12,7 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        function getRoles() {
-            let elementArray = [];
-            let elementList = [];
-            message.guild.roles.forEach(element => {
-                if (element.name = '@Battle Champion')
-                    elementArray.push(element)
-            });
-
-            elementArray.sort(function (a, b) { return b.position - a.position })
-
-            elementArray.forEach(element => {
-                elementList += `${element} `
-            });
-
-            if (!elementArray[1]) {
-                elementList = "None";
-            };
-
-            return elementList;
-        };
-
-        let battleChampionRole = getRoles()
+        let battleChampionRole = `Battle Champion`
         //Cris
         let currentChampion = `<@492847613754736650>`;
         //Cris
