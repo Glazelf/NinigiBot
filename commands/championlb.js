@@ -8,10 +8,10 @@ exports.run = (client, message) => {
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
-            .setAuthor("<@649737913537658931> Leaderboard", message.guild.iconURL)
+            .setAuthor("<@&649737913537658931> Leaderboard", message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
             //Glaze
-            .addField(`1st place`, `<@${client.config.ownerID} with 10 points`, false)
+            .addField(`1st place`, `<@${client.config.ownerID}> with 1 point`, false)
             //Cris
             .addField("2nd place", `<@492847613754736650> with 13944 points`, false)
 
