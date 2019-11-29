@@ -1,23 +1,25 @@
 exports.run = (client, message) => {
     try {
         let SinnohServer = Boolean(message.guild.id == "517008998445350922");
-        let NinigiTestChannel = Boolean(message.channel.id == "593014621095329812" || message.channel.id == "636688230066028547");
+        let TestChannel = Boolean(message.channel.id == "599180638360174592");
         let PalParkChannel = Boolean(message.channel.id == "599180353441366026");
         let BattleChampionChannel = Boolean(message.channel.id == "649886193911332885");
 
         //Check servers, channels and embed perms
-        if (!SinnohServer && !NinigiTestChannel) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
-        if (!PalParkChannel && !BattleChampionChannel && !NinigiTestChannel) return message.channel.send(`> This command can only be used in <#649886193911332885>, <#599180353441366026> or a Ninigi testing channel.`);
+        if (!SinnohServer) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
+        if (!PalParkChannel && !BattleChampionChannel && !TestChannel) return message.channel.send(`> This command can only be used in <#649886193911332885>, <#599180353441366026> or a Ninigi testing channel.`);
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
+
+        let currentChampion = message.guild.roles.get("649737913537658931").members;
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
             //Cris
-            .addField(`Current <@649737913537658931>`, `<@492847613754736650>`, false)
+            .addField(`Current <@649737913537658931>`, `${currentChampion.tag}`, false)
             //Cris
             .addField(`1st place`, `<@492847613754736650> with 1 point`, false)
             //2ndplace
