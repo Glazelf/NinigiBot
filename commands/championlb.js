@@ -12,15 +12,35 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let roleID = "264410914592129025";
-        let battleChampionRole = `@Battle Champion`
+        function getRoles() {
+            let elementArray = [];
+            let elementList = [];
+            guild.roles.forEach(element => {
+                if (element.name = '@Battle Champion')
+                    elementArray.push(element)
+            });
+
+            elementArray.sort(function (a, b) { return b.position - a.position })
+
+            elementArray.forEach(element => {
+                elementList += `${element} `
+            });
+
+            if (!elementArray[1]) {
+                elementList = "None";
+            };
+
+            return elementList;
+        };
+
+        let battleChampionRole = getRoles()
         //Cris
         let currentChampion = `<@492847613754736650>`;
         //Cris
         let firstPlace = `<@492847613754736650>`;
         let firstPoints = `2 points`;
         let secondPlace = `???`;
-        let secondPoints = `???`;
+        let secondPoints = `??? points`;
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
