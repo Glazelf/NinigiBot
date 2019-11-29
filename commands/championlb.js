@@ -1,13 +1,13 @@
 exports.run = (client, message) => {
     try {
-        let notSinnohServer = new Boolean(message.guild.id !== "517008998445350922");
-        let notNinigiTestChannel = new Boolean(message.channel.id !== "593014621095329812" && message.channel.id !== "636688230066028547");
-        let notPalParkChannel = new Boolean(message.channel.id !== "599180353441366026");
-        let notBattleChampionChannel = new Boolean(message.channel.id !== "649886193911332885");
+        var SinnohServer = new Boolean(message.guild.id == "517008998445350922");
+        var NinigiTestChannel = new Boolean(message.channel.id == "593014621095329812" || message.channel.id == "636688230066028547");
+        var PalParkChannel = new Boolean(message.channel.id == "599180353441366026");
+        var BattleChampionChannel = new Boolean(message.channel.id == "649886193911332885");
 
         //Check servers, channels and embed perms
-        if (notSinnohServer && notNinigiTestChannel) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
-        if (notPalParkChannel && notBattleChampionChannel && notNinigiTestChannel) return message.channel.send(`> This command can only be used in <#649886193911332885>, <#599180353441366026> or a Ninigi testing channel.`);
+        if (!SinnohServer && !NinigiTestChannel) return message.channel.send(`> This command can only be used in the following server: https://discord.gg/Xn7B6fH.`);
+        if (!PalParkChannel && !BattleChampionChannel && !NinigiTestChannel) return message.channel.send(`> This command can only be used in <#649886193911332885>, <#599180353441366026> or a Ninigi testing channel.`);
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
