@@ -15,7 +15,7 @@ exports.run = (client, message) => {
         function getRoles() {
             let elementArray = [];
             let elementList = [];
-            guild.roles.forEach(element => {
+            message.guild.roles.forEach(element => {
                 if (element.name = '@Battle Champion')
                     elementArray.push(element)
             });
