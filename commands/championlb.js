@@ -19,7 +19,7 @@ exports.run = (client, message) => {
         let firstPlace = `<@492847613754736650>`;
         let firstPoints = `3 points`;
         let secondPlace = `<@${client.config.ownerID}>`;
-        let secondPoints = `1 point`;
+        let secondPoints = `2 points`;
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
