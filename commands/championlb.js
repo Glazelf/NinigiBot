@@ -14,12 +14,12 @@ exports.run = (client, message) => {
 
         let battleChampionRole = `Battle Champion`
         //Cris
-        let currentChampion = `<@492847613754736650>`;
+        let currentChampion = `<@${client.config.ownerID}>`;
         //Cris
         let firstPlace = `<@492847613754736650>`;
-        let firstPoints = `2 points`;
-        let secondPlace = `???`;
-        let secondPoints = `??? points`;
+        let firstPoints = `3 points`;
+        let secondPlace = `<@${client.config.ownerID}>`;
+        let secondPoints = `1 point`;
 
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
