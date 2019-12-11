@@ -29,8 +29,8 @@ exports.run = (client, message) => {
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
             .addField(`Current ${battleChampionRole}`, `${currentChampion}`, false)
-            .addField(`1st place`, `${firstPlace} with ${firstPoints}`, true)
-            .addField("2nd place", `${secondPlace} with ${secondPoints}`, true)
+            .addField(`1st place`, `${firstPlace}`, `${firstPoints}`, true)
+            .addField("2nd place", `${secondPlace}`, `${secondPoints}`, true)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
