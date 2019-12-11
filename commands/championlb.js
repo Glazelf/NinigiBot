@@ -12,13 +12,16 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
+        let GlazeID = client.config.ownerID;
+        let CrisID = "492847613754736650";
+
         let battleChampionRole = `Battle Champion`
         //Cris
-        let currentChampion = `<@${client.config.ownerID}>`;
+        let currentChampion = `<@${CrisID}>`;
         //Cris
-        let firstPlace = `<@492847613754736650>`;
-        let firstPoints = `3 points`;
-        let secondPlace = `<@${client.config.ownerID}>`;
+        let firstPlace = `<@${CrisID}>`;
+        let firstPoints = `4 points`;
+        let secondPlace = `<@${GlazeID}>`;
         let secondPoints = `2 points`;
 
         const profileEmbed = new Discord.RichEmbed()
