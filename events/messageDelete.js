@@ -1,7 +1,7 @@
 module.exports = async (client, message) => {
     const Discord = require("discord.js");
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
-    const logs = message.guild.channels.find(channel => channel.name === "log");
+    const logs = message.guild.channels.find(channel => channel.name === "log" || channel.name === "🤖〉logs");
 
     if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
         message.guild.createChannel('log', 'text');
