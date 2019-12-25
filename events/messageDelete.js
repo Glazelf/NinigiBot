@@ -3,6 +3,8 @@ module.exports = async (client, message) => {
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
     const logs = message.guild.channels.find(channel => channel.name === "log");
 
+    if(message.content == "") return;
+
     if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
         message.guild.createChannel('log', 'text');
         return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
