@@ -1,7 +1,7 @@
 module.exports = async (client, message) => {
     const Discord = require("discord.js");
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
-    const logs = message.guild.channels.find(channel => channel.name === "log");
+    const log = message.guild.channels.find(channel => channel.name === "log");
 
     if(message.content == "") return;
 
@@ -12,15 +12,15 @@ module.exports = async (client, message) => {
     // if (!SinnohServer && !GlazeServer) return;
 
     //// Make log channel if doesn't exist yet
-    // if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
+    // if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !log) {
     //     message.guild.createChannel('log', 'text');
     //     return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
     // };
-    // if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
+    // if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !log) {
     //     return message.channel.send(`> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
     // };
 
-    if(!logs) return;
+    if(!log) return;
     
     let user;
 
@@ -41,5 +41,5 @@ module.exports = async (client, message) => {
         .setFooter(`Deleted by ${user.tag}`)
         .setTimestamp();
 
-    return logs.send(deleteEmbed);
+    return log.send(deleteEmbed);
 };
