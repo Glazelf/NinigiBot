@@ -28,7 +28,7 @@ exports.run = (client, message) => {
             .setColor("#219DCD")
             .setAuthor(`Battle Champion Leaderboard`, message.guild.iconURL)
             .setThumbnail("https://i.imgur.com/gpraYi7.png")
-            .addField(`Current ${battleChampionRole}`, `${currentChampion}`, false)
+            .setDescription(`Current ${battleChampionRole}: ${currentChampion}`, false)
             .addField(`1st place`, `${firstPlace} with ${firstPoints}`, true)
             .addField("2nd place", `${secondPlace} with ${secondPoints}`, true)
             .setFooter(`Requested by ${message.author.tag}`)
