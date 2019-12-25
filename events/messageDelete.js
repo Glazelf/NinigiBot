@@ -5,10 +5,10 @@ module.exports = async (client, message) => {
 
     if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
         message.guild.createChannel('log', 'text');
-        return message.channel.send(`> The log channel didn't exist yet, so I have created it for you!`);
+        return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
     };
     if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-        return message.channel.send('> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels.');
+        return message.channel.send(`> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
     };
     
     let user;
@@ -26,7 +26,7 @@ module.exports = async (client, message) => {
         .setColor("#FF0000")
         .setAuthor(`Message deleted`, user.avatarURL)
         .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>`)
-        .addField(`Deleted message:`, `"${message.content}"`, false)
+        .addField(`Message content:`, `"${message.content}"`, false)
         .setFooter(`Deleted by ${user.tag}`)
         .setTimestamp();
 
