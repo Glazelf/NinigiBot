@@ -16,7 +16,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
         .addField(`Before:`, `"${oldMessage.content}"`, false)
         .addField(`After:`, `"${message.content}"`, false)
         .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
-        .setFooter(`Edited by ${user.tag}`)
+        .setFooter(`Edited by ${message.author.tag}`)
         .setTimestamp();
 
     return log.send(updateEmbed);
