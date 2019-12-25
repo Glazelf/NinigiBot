@@ -5,10 +5,9 @@ module.exports = async (client, message) => {
 
     if(message.content == "") return;
 
-    let SinnohServer = Boolean(message.guild.id == "517008998445350922");
-    let GlazeServer = Boolean(message.guild.id == "549214833858576395");
-
     //// Limit log to only Sinnoh and Glaze server
+    // let SinnohServer = Boolean(message.guild.id == "517008998445350922");
+    // let GlazeServer = Boolean(message.guild.id == "549214833858576395");
     // if (!SinnohServer && !GlazeServer) return;
 
     //// Make log channel if doesn't exist yet
@@ -17,7 +16,7 @@ module.exports = async (client, message) => {
     //     return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
     // };
     // if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !log) {
-    //     return message.channel.send(`> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
+    //     return message.channel.send(`> The log channel does not exist yet, so I tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
     // };
 
     if(!log) return;
@@ -26,7 +25,7 @@ module.exports = async (client, message) => {
 
     if (entry.extra.channel.id === message.channel.id
         && (entry.target.id === message.author.id)
-        && (entry.createdTimestamp > (Date.now()))
+        && (entry.createdTimestamp > (Date.now() - 5000))
         && (entry.extra.count >= 1)) {
         user = entry.executor;
     } else {
@@ -34,9 +33,9 @@ module.exports = async (client, message) => {
     };
 
     const deleteEmbed = new Discord.RichEmbed()
-        .setColor("#FF0000")
-        .setAuthor(`Message deleted`, user.avatarURL)
-        .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>`)
+        .setColor("#219DCD")
+        .setAuthor(`Message deleted ❌`, user.avatarURL)
+        .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
         .addField(`Message content:`, `"${message.content}"`, false)
         .setFooter(`Deleted by ${user.tag}`)
         .setTimestamp();
