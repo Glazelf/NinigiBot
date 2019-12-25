@@ -5,13 +5,22 @@ module.exports = async (client, message) => {
 
     if(message.content == "") return;
 
-    if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-        message.guild.createChannel('log', 'text');
-        return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
-    };
-    if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-        return message.channel.send(`> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
-    };
+    let SinnohServer = Boolean(message.guild.id == "517008998445350922");
+    let GlazeServer = Boolean(message.guild.id == "549214833858576395");
+
+    //// Limit log to only Sinnoh and Glaze server
+    // if (!SinnohServer && !GlazeServer) return;
+
+    //// Make log channel if doesn't exist yet
+    // if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
+    //     message.guild.createChannel('log', 'text');
+    //     return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
+    // };
+    // if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
+    //     return message.channel.send(`> The log channel does not exist and tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
+    // };
+
+    if(!logs) return;
     
     let user;
 
