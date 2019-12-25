@@ -7,7 +7,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
 
     if(!log) return;
     
-    let user = entry.executor;
+    let user = entry.author;
 
     const updateEmbed = new Discord.RichEmbed()
         .setColor("#219DCD")
