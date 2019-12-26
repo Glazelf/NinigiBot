@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
         .setColor("#219DCD")
         .setAuthor(`Message deleted ❌`, user.avatarURL)
         .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
-        .addField(`Message content:`, `"${message.content}"`, false)
+        .addField(`Message content:`, message.content, false)
         .setFooter(`Deleted by ${user.tag}`)
         .setTimestamp();
 
