@@ -4,6 +4,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
     const log = message.guild.channels.find(channel => channel.name === "log");
 
     if(message.content == "") return;
+    if(message.content === oldMessage.content) return;
 
     if(!log) return;
     
@@ -14,8 +15,8 @@ module.exports = async (client, message, oldMessage, newMessage) => {
         .setAuthor(`Message edited ⚒️`, user.avatarURL)
         .setDescription(`Message sent by ${message.author} edited in <#${message.channel.id}>.`)
         //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
-        .addField(`Before:`, `"${message.content}"`, false)
-        .addField(`After:`, `"${oldMessage.content}"`, false)
+        .addField(`Before:`, message.content, false)
+        .addField(`After:`, oldMessage.content, false)
         .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
         .setFooter(`Edited by ${user.tag}`)
         .setTimestamp();
