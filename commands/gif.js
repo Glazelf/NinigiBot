@@ -327,7 +327,8 @@ exports.run = (client, message) => {
         "https://i.pinimg.com/originals/77/2c/2f/772c2fdc3c92c2ea385ae670bde332e4.gif",
         "https://i.makeagif.com/media/6-28-2015/DOrFwp.gif",
         "http://1.bp.blogspot.com/-RxDLJr3oeuM/UlYlciCeMWI/AAAAAAAABmo/vi9VggbFzIc/s1600/do+do+do+do+do.gif",
-        "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif"
+        "http://0.media.dorkly.cvcdn.com/18/29/1120927389b6bb3499b9d8d477ccf089.gif",
+        "https://i.kym-cdn.com/photos/images/original/001/196/367/c6c.gif"
       ],
       // Stitch
       stitch: [
