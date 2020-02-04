@@ -1,14 +1,15 @@
 exports.run = (client, message) => {
     try {
+        let reportChannelID = "674370122026057789";
+
         // Split off command
         let reportMessage = message.content.slice(8);
         if (reportMessage.length < 1) {
             return message.channel.send(`> You need to specify something to report, <@${message.author.id}>.`);
         }
-        // send msg to owner
-        let members = message.channel.members;
-        let owner = members.find('id', client.config.ownerID);
-        owner.send(`> **Report by <@${message.member.user.id}> in <#${message.channel.id}>:**
+        // send msg to report channel
+        let reportChannel = client.channels.find('id', reportChannelID);
+        reportChannel.send(`> **Report by <@${message.member.user.id}> in <#${message.channel.id}>:**
 > ${reportMessage}`);
 
         // return confirmation
