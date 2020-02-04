@@ -19,8 +19,6 @@ module.exports = (client, message) => {
     // Send message contents to dm channel
     let DMChannel = client.channels.find('id', NinigiDMChannelID);
 
-    console.log("yest")
-
     const dmEmbed = new Discord.RichEmbed()
       .setColor("#219DCD")
       .setAuthor(`DM`, message.author.avatarURL)
