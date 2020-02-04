@@ -100,7 +100,8 @@ exports.run = (client, message) => {
 
             return elementList;
         };
-
+    
+        console.log(member.presence.activities)
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
             .setAuthor(user.username, user.avatarURL)
@@ -108,6 +109,7 @@ exports.run = (client, message) => {
             .addField("Full account:", user, true)
             .addField("ID:", user.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            // .addField("Activity:", `${member.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
             .addField("Roles:", getRoles())
             .addField("Joined at:", `${member.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(member.joinedAt)}.`)
