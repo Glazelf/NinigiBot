@@ -11,7 +11,7 @@ exports.run = (client, message) => {
         let remoteMessage = textMessage.slice(userID.length + 1);
 
         if (remoteMessage.length < 1) {
-            return message.channel.send(`> You need to provide a message to send, <@${message.author.id}.`);
+            return message.channel.send(`> You need to provide a message to send, <@${message.author.id}>.`);
         };
 
         targetUser = client.users.get(userID);
