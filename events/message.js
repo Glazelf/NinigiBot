@@ -16,6 +16,20 @@ module.exports = (client, message) => {
     if (message.content.indexOf(client.config.prefix) == 0) {
       message.author.send(`> Sorry <@${message.author.id}>, you're not allowed to use commands in private messages!`).catch(console.error);
     };
+
+    let AttachmentString = `None`;
+    var Attachment = (message.attachments).array();
+    if (message.attachment) {
+      let AttachmentString = ``;
+      forEach(Attachment) 
+        AttachmentString = `${AttachmentString}
+${Attachment.url}`;
+      };
+
+    if (!message.content) {
+      message.content = `None`
+    };
+
     // Send message contents to dm channel
     let DMChannel = client.channels.find('id', NinigiDMChannelID);
 
@@ -26,6 +40,7 @@ module.exports = (client, message) => {
       .addField(`Author account:`, message.author, false)
       .addField(`Author ID:`, message.author.id, false)
       .addField(`Message content:`, message.content, false)
+      // .addField(`Attachment(s):`, AttachmentString, false)
       .setFooter(`DM passed through by ${client.config.botName}.`)
       .setTimestamp();
 
