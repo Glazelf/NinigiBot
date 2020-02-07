@@ -132,6 +132,17 @@ exports.run = (client, message) => {
         "https://archive-media-0.nyafuu.org/vp/image/1556/68/1556685719593.gif",
         "https://2.bp.blogspot.com/-cG4FA7PVMKU/Vpg8ayx1gvI/AAAAAAAACQ8/ixYuBp-93Y0/s1600/heracross.gif"
       ],
+      // Celebi DexNr. 251
+      celebi: [
+        "https://media.giphy.com/media/n824SIfb1oM6s/source.gif",
+        "https://thumbs.gfycat.com/PointlessFlatBushbaby-small.gif",
+        "https://media.giphy.com/media/bvAuIee5c1vJ6/giphy.gif",
+        "https://media.giphy.com/media/5v1xUkcqwLE8E/giphy.gif",
+        "https://media.giphy.com/media/wHxLRwtdlQ7aE/source.gif",
+        "https://media.giphy.com/media/Y6MOgplWuWZz2/giphy.gif",
+        "https://media.giphy.com/media/RqmU8xUmBLj8I/source.gif",
+        "https://media.giphy.com/media/dtcfmpLFssvew/giphy.gif"
+      ],
       // Torchic DexNr. 255
       torchic: [
         "https://media.tenor.com/images/272bd23d81e5aec8c54fb152f4876b0e/tenor.gif",
@@ -276,6 +287,13 @@ exports.run = (client, message) => {
         "https://pa1.narvii.com/6257/499cc35514c260213673de6eac8e8eabd9a25319_hq.gif",
         "https://i.pinimg.com/originals/50/5f/29/505f298a5baa69b4b587f89b7bc3bee6.gif",
         "https://cdn.discordapp.com/attachments/600426622658543616/629551398119276545/giphy_2.gif"
+      ],
+      // Azelf DexNr. 482
+      azelf: [
+        "https://media.giphy.com/media/NN6xamMLrDQYg/source.gif",
+        "https://media.tumblr.com/2d99f5a13907af0cc3902ceaf79f714f/tumblr_okiinawbHA1uh3x51o1_250.gif",
+        "https://i.pinimg.com/originals/41/0e/09/410e092971b0bfb4964cc2e990b4fd38.gif",
+        "https://archive-media-0.nyafuu.org/vp/image/1575/07/1575071810924.gif"
       ],
       // Maractus DexNr. 556
       maractus: [
