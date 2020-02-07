@@ -1,7 +1,5 @@
 exports.run = (client, message) => {
   try {
-    if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
-
     Array.prototype.pick = function () {
       return this[Math.floor(Math.random() * this.length)];
     };
@@ -417,6 +415,8 @@ ${helpText}`);
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
 
 ${helpText}`);
+    } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
+      return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
       let totalMessage = `> ${gifString}`;
