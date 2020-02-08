@@ -5,7 +5,7 @@ exports.run = (client, message) => {
     };
 
     let helpText = `> **Pokémon:**
-    > Squirtle, Slowpoke, Flareon, Snorlax, Wooper, Scizor, Heracross, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Maractus, Reshiram
+    > Squirtle, Slowpoke, Flareon, Snorlax, Wooper, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Maractus, Reshiram
     
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
