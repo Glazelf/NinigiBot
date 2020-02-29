@@ -3,11 +3,14 @@ module.exports = async (client, message, oldMessage, newMessage) => {
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_UPDATE' }).then(audit => audit.entries.first());
     const log = message.guild.channels.find(channel => channel.name === "log");
 
-    if(message.content == "") return;
-    if(message.content === oldMessage.content) return;
+    // Import totals
+    let globalVars = require('./ready');
 
-    if(!log) return;
-    
+    if (message.content == "") return;
+    if (message.content === oldMessage.content) return;
+
+    if (!log) return;
+
     let user = message.author;
 
     const updateEmbed = new Discord.RichEmbed()
@@ -21,5 +24,6 @@ module.exports = async (client, message, oldMessage, newMessage) => {
         .setFooter(`Edited by ${user.tag}`)
         .setTimestamp();
 
+    globalVars.totalLogs += 1;
     return log.send(updateEmbed);
 };

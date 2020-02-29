@@ -3,7 +3,10 @@ module.exports = async (client, message) => {
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
     const log = message.guild.channels.find(channel => channel.name === "log");
 
-    if(message.content == "") return;
+    // Import totals
+    let globalVars = require('./ready');
+
+    if (message.content == "") return;
 
     //// Limit log to only Sinnoh and Glaze server
     // let SinnohServer = Boolean(message.guild.id == "517008998445350922");
@@ -19,8 +22,8 @@ module.exports = async (client, message) => {
     //     return message.channel.send(`> The log channel does not exist yet, so I tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
     // };
 
-    if(!log) return;
-    
+    if (!log) return;
+
     let user;
 
     if (entry.extra.channel.id === message.channel.id
@@ -40,5 +43,6 @@ module.exports = async (client, message) => {
         .setFooter(`Deleted by ${user.tag}`)
         .setTimestamp();
 
+    globalVars.totalLogs += 1;
     return log.send(deleteEmbed);
 };

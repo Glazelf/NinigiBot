@@ -15,3 +15,4 @@ module.exports = (client) => {
 
 module.exports.totalMessages = 0;
 module.exports.totalCommands = 0;
+module.exports.totalLogs = 0;
