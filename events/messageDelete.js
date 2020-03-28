@@ -7,6 +7,7 @@ module.exports = async (client, message) => {
     let globalVars = require('./ready');
 
     if (message.content == "") return;
+    if (channel.id == "549220763341815808") return;
 
     //// Limit log to only Sinnoh and Glaze server
     // let SinnohServer = Boolean(message.guild.id == "517008998445350922");

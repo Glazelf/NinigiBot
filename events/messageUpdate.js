@@ -8,6 +8,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
 
     if (message.content == "") return;
     if (message.content === oldMessage.content) return;
+    if (channel.id == "549220763341815808") return;
 
     if (!log) return;
 
