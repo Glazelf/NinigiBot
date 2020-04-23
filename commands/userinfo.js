@@ -7,9 +7,6 @@ exports.run = (client, message) => {
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
-        let userCache = client.userCache.cache.get(user.id);
-        let memberCache = guild.members.cache.get(member.id);
-
         if (!user) {
             user = message.author;
         };
@@ -17,6 +14,9 @@ exports.run = (client, message) => {
         if (!member) {
             member = message.member;
         };
+
+        let userCache = client.users.cache.get(user.id);
+        let memberCache = message.guild.members.cache.get(member.id);
 
         function checkDays(date) {
             let now = new Date();
@@ -86,7 +86,7 @@ exports.run = (client, message) => {
         function getRoles() {
             let elementArray = [];
             let elementList = [];
-            memberCache.roles.forEach(element => {
+            memberCache.roles.cache.forEach(element => {
                 if (element.name != '@everyone')
                     elementArray.push(element)
             });
@@ -105,10 +105,10 @@ exports.run = (client, message) => {
         };
 
         console.log(memberCache.presence.activities)
-        const profileEmbed = new Discord.RichEmbed()
+        const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(userCache.username, userCache.avatarURL)
-            .setThumbnail(userCache.avatarURL)
+            .setAuthor(userCache.username, userCache.avatarURL())
+            .setThumbnail(userCache.avatarURL())
             .addField("Full account:", user, true)
             .addField("ID:", userCache.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
