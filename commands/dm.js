@@ -14,7 +14,7 @@ exports.run = (client, message) => {
             return message.channel.send(`> You need to provide a message to send, <@${message.author.id}>.`);
         };
 
-        targetUser = client.users.get(userID);
+        targetUser = client.users.cache.get(userID);
         if (!targetUser) {
             return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, <@${message.author.id}>.`);
         };
