@@ -7,7 +7,9 @@ exports.run = (client, message) => {
         // send channel a message that you're resetting bot [optional]
         message.channel.send(`> Restarting for <@${message.author.id}>...`)
             .then(msg => client.destroy())
-            .then(() => client.login(client.config.token));
+            .then(() => client.login(client.config.token))
+            .then(message.channel.send(`> Successfully restarted!`));
+            return;
 
     } catch (e) {
         // log error
