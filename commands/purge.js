@@ -14,7 +14,7 @@ exports.run = (client, message) => {
 
         let messageCount = parseInt(numberOfMessages);
 
-        message.channel.fetchMessages({ limit: messageCount })
+        message.channel.messages.fetch({ limit: messageCount })
             .then(messages => message.channel.bulkDelete(messages))
             .then(message.channel.send(`> ${numberOfMessages} messages have been deleted, <@${message.author.id}>.`));
         return;
