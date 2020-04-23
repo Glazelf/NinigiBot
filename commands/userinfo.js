@@ -7,6 +7,9 @@ exports.run = (client, message) => {
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
+        let userCache = client.userCache.cache.get(user.id);
+        let memberCache = guild.members.cache.get(member.id);
+
         if (!user) {
             user = message.author;
         };
@@ -23,12 +26,12 @@ exports.run = (client, message) => {
         };
 
         // convert user to member for server related stats
-        //let member = client.members.find('id', user.id);
+        //let member = client.members.find('id', userCache.id);
 
         // Name presence type
         let presenceType = "Playing";
-        if (user.presence.game) {
-            switch (user.presence.game.type) {
+        if (userCache.presence.game) {
+            switch (userCache.presence.game.type) {
                 case 0:
                     presenceType = "Playing";
                     break;
@@ -51,15 +54,15 @@ exports.run = (client, message) => {
 
         // Define presence name
         let presenceName = "";
-        if (!user.presence.game) {
+        if (!userCache.presence.game) {
             presenceName = "nothing";
         } else {
-            presenceName = user.presence.game;
+            presenceName = userCache.presence.game;
         };
 
         // Clear up status wording
         let userStatus = "Error?";
-        switch (user.presence.status) {
+        switch (userCache.presence.status) {
             case "online":
                 userStatus = "Online";
                 break;
@@ -83,7 +86,7 @@ exports.run = (client, message) => {
         function getRoles() {
             let elementArray = [];
             let elementList = [];
-            member.roles.forEach(element => {
+            memberCache.roles.forEach(element => {
                 if (element.name != '@everyone')
                     elementArray.push(element)
             });
@@ -100,41 +103,36 @@ exports.run = (client, message) => {
 
             return elementList;
         };
-    
-        console.log(member.presence.activities)
+
+        console.log(memberCache.presence.activities)
         const profileEmbed = new Discord.RichEmbed()
             .setColor("#219DCD")
-            .setAuthor(user.username, user.avatarURL)
-            .setThumbnail(user.avatarURL)
+            .setAuthor(userCache.username, userCache.avatarURL)
+            .setThumbnail(userCache.avatarURL)
             .addField("Full account:", user, true)
-            .addField("ID:", user.id, true)
+            .addField("ID:", userCache.id, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
-            // .addField("Activity:", `${member.presence.activities}`, true)
+            // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
             .addField("Roles:", getRoles())
-            .addField("Joined at:", `${member.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(member.joinedAt)}.`)
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`)
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`)
+            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);
 
     } catch (e) {
-        // send msg to owner
-        let members = message.channel.members;
-        let owner = members.find('id', client.config.ownerID);
-        owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
-
         // log error
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
     };
 };
 
 module.exports.help = {
     name: "Userinfo",
-    description: "Returns information about a user.",
+    description: "Returns information about a userCache.",
     usage: `userinfo [optional target]`
 }; 

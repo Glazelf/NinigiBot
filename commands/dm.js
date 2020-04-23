@@ -15,7 +15,7 @@ exports.run = (client, message) => {
         };
 
         targetUser = client.users.get(userID);
-        if(!targetUser) {
+        if (!targetUser) {
             return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, <@${message.author.id}>.`);
         };
 
@@ -23,16 +23,11 @@ exports.run = (client, message) => {
         return message.channel.send(`> Message succesfully sent to specified user, <@${message.author.id}>.`);
 
     } catch (e) {
-        // send msg to owner
-        let members = message.channel.members;
-        let owner = members.find('id', client.config.ownerID);
-        owner.send(`> An error occurred while <@${message.member.user.id}> tried to use a command in <#${message.channel.id}>, check console for more information.`);
-
         // log error
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, <@${message.author.id}>, please use "${client.config.prefix}report" to report the issue.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
     };
 };
 
