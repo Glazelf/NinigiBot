@@ -40,9 +40,11 @@ exports.run = (client, message) => {
         };
 
         function fetchThings(){
-            message.guild.members.fetch()
+            message.guild.members.fetch();
+            message.guild.channels.fetch();
+            message.guild.roles.fetch();
         };
-        fetchThings()
+        fetchThings();
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
