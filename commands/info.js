@@ -4,7 +4,7 @@ exports.run = (client, message) => {
 
         const Discord = require("discord.js");
 
-        let bot = client.users.find("id", client.config.botID);
+        let bot = client.users.cache.get(client.config.botID);
 
         function checkDays(date) {
             let now = new Date();
@@ -79,18 +79,18 @@ exports.run = (client, message) => {
             uptime = `${days} day${multiDays}, ${uptime}`;
         };
 
-        const profileEmbed = new Discord.RichEmbed()
+        const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(client.config.botName, bot.avatarURL)
+            .setAuthor(client.config.botName, bot.avatarURL())
             .setThumbnail(bot.avatarURL)
             .addField("Full account:", `<@${client.config.botID}>`, true)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Bot ID:", client.config.botID, true)
             .addField("Prefix:", client.config.prefix, true)
-            .addField("Users:", client.users.size, true)
-            .addField("Servers:", client.guilds.size, true)
-            .addField("Channels:", client.channels.size, true)
+            .addField("Users:", client.users.cache.size, true)
+            .addField("Servers:", client.guilds.cache.size, true)
+            .addField("Channels:", client.channels.cache.size, true)
             .addField("Messages read:", globalVars.totalMessages, true)
             .addField("Commands used:", globalVars.totalCommands, true)
             .addField("Logs made:", globalVars.totalLogs, true)
