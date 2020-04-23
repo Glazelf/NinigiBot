@@ -1,49 +1,40 @@
 module.exports = async (client, message) => {
-    const Discord = require("discord.js");
-    const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
-    const log = message.guild.channels.find(channel => channel.name === "log");
+    try {
+        const Discord = require("discord.js");
+        const entry = await member.guild.fetchAuditLogs({
+            limit: 1,
+            type: 'MESSAGE_DELETE',
+        });
+        const log = message.guild.channels.get(channel => channel.name === "log");
+        if (!log) return;
 
-    // Import totals
-    let globalVars = require('./ready');
+        // Import totals
+        let globalVars = require('./ready');
 
-    if (message.content == "") return;
-    if (message.channel.id == "549220763341815808") return; //Glazesdump
+        let user;
 
-    //// Limit log to only Sinnoh and Glaze server
-    // let SinnohServer = Boolean(message.guild.id == "517008998445350922");
-    // let GlazeServer = Boolean(message.guild.id == "549214833858576395");
-    // if (!SinnohServer && !GlazeServer) return;
+        if (entry.extra.channel.id === message.channel.id
+            && (entry.target.id === message.author.id)
+            && (entry.createdTimestamp > (Date.now() - 5000))
+            && (entry.extra.count >= 1)) {
+            user = entry.executor;
+        } else {
+            user = message.author;
+        };
 
-    //// Make log channel if doesn't exist yet
-    // if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !log) {
-    //     message.guild.createChannel('log', 'text');
-    //     return message.channel.send(`> The log channel didn't exist yet, so I have created it for you, <@${message.author.id}>!`);
-    // };
-    // if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !log) {
-    //     return message.channel.send(`> The log channel does not exist yet, so I tried to create the channel but I am lacking permission to manage channels, <@${message.author.id}>.`);
-    // };
+        const deleteEmbed = new Discord.MessageEmbed()
+            .setColor("#219DCD")
+            .setAuthor(`Message deleted ❌`, message.author.avatarURL())
+            .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
+            .addField(`Message content:`, message.content, false)
+            .setFooter(`Deleted by ${user.tag}`)
+            .setTimestamp();
 
-    if (!log) return;
+        globalVars.totalLogs += 1;
+        return log.send(deleteEmbed);
 
-    let user;
-
-    if (entry.extra.channel.id === message.channel.id
-        && (entry.target.id === message.author.id)
-        && (entry.createdTimestamp > (Date.now() - 5000))
-        && (entry.extra.count >= 1)) {
-        user = entry.executor;
-    } else {
-        user = message.author;
+    } catch (e) {
+        // log error
+        console.log(e);
     };
-
-    const deleteEmbed = new Discord.RichEmbed()
-        .setColor("#219DCD")
-        .setAuthor(`Message deleted ❌`, user.avatarURL)
-        .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
-        .addField(`Message content:`, message.content, false)
-        .setFooter(`Deleted by ${user.tag}`)
-        .setTimestamp();
-
-    globalVars.totalLogs += 1;
-    return log.send(deleteEmbed);
 };

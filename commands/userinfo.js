@@ -103,8 +103,9 @@ exports.run = (client, message) => {
 
             return elementList;
         };
-
-        console.log(memberCache.presence.activities)
+        
+        //console.log(memberCache.presence.activities)
+        
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(userCache.username, userCache.avatarURL())
