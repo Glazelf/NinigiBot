@@ -28,7 +28,9 @@ exports.run = (client, message) => {
             "amsterdam": ":flag_nl: Amsterdam",
             "hongkong": ":flag_hk: Hong Kong",
             "russia": ":flag_ru: Russia",
-            "southafrica": ":flag_za:  South Africa"
+            "southafrica": ":flag_za:  South Africa",
+            "europe": ":flag_eu: Europe",
+            "india": ":flag_in: India"
         };
 
         const profileEmbed = new Discord.RichEmbed()
