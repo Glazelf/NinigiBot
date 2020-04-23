@@ -11,7 +11,13 @@ exports.run = (client, message) => {
             return days + (days == 1 ? " day" : " days") + " ago";
         };
 
-        let verifLevels = ["None", "Low", "Medium", "(╯°□°）╯︵  ┻━┻", "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"];
+        let verifLevels = {
+            "NONE": "None", 
+            "LOW": "Low", 
+            "MEDIUM": "Medium", 
+            "HIGH": "(╯°□°）╯︵  ┻━┻", 
+            "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"
+        };
 
         let region = {
             "brazil": ":flag_br: Brazil",
@@ -33,18 +39,23 @@ exports.run = (client, message) => {
             "india": ":flag_in: India"
         };
 
-        const profileEmbed = new Discord.RichEmbed()
+        function fetchThings(){
+            message.guild.members.fetch()
+        };
+        fetchThings()
+
+        const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(message.guild.name, message.guild.iconURL)
-            .setThumbnail(message.guild.iconURL)
+            .setAuthor(message.guild.name, message.guild.iconURL())
+            .setThumbnail(message.guild.iconURL())
             .addField("Owner:", `<@${message.guild.owner.user.id}>`, true)
             .addField("Region:", region[message.guild.region], true)
             .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
             .addField("ID:", message.guild.id, true)
-            .addField("Users:", `${message.guild.members.filter(member => !member.user.bot).size}`, true)
-            .addField("Bots:", `${message.guild.members.filter(member => member.user.bot).size}`, true)
-            .addField("Channels:", message.guild.channels.size, true)
-            .addField("Roles:", message.guild.roles.size, true)
+            .addField("Users:", message.guild.members.cache.filter(member => !member.user.bot).size, true)
+            .addField("Bots:", `${message.guild.members.cache.filter(member => member.user.bot).size}`, true)
+            .addField("Channels:", message.guild.channels.cache.size, true)
+            .addField("Roles:", message.guild.roles.cache.size, true)
             .addField("Created at:", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(message.channel.guild.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
