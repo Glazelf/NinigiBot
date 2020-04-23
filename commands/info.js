@@ -82,7 +82,7 @@ exports.run = (client, message) => {
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(client.config.botName, bot.avatarURL())
-            .setThumbnail(bot.avatarURL)
+            .setThumbnail(bot.avatarURL())
             .addField("Full account:", `<@${client.config.botID}>`, true)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
