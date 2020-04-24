@@ -439,7 +439,7 @@ ${helpText}`);
       let randomGif = gifs[gifArgument].pick();
       let totalMessage = `> ${gifString}`;
       return message.channel.send(totalMessage, {
-        file: randomGif
+        files: [randomGif]
       });
     } else {
       return message.channel.send(`> This argument has no gifs bound to it, so instead here's a list of the available arguments, <@${message.author.id}>:
