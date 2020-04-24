@@ -39,13 +39,6 @@ exports.run = (client, message) => {
             "india": ":flag_in: India"
         };
 
-        function fetchThings(){
-            message.guild.members.fetch();
-            message.guild.channels.fetch();
-            message.guild.roles.fetch();
-        };
-        fetchThings();
-
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL())
