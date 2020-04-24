@@ -1,8 +1,15 @@
 module.exports = async (client, message, oldMessage, newMessage) => {
     try {
+        console.log("0")
         const Discord = require("discord.js");
-        const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_UPDATE' }).then(audit => audit.entries.first());
-        const log = message.guild.channels.find(channel => channel.name === "log");
+        const entry = await message.member.guild.fetchAuditLogs({
+            limit: 1,
+            type: 'MESSAGE_UPDATE',
+        });
+        const log = message.guild.channels.cache.find(channel => channel.name === "log");
+
+        console.log("1")
+        if (!log) return;
 
         // Import totals
         let globalVars = require('./ready');
@@ -15,9 +22,11 @@ module.exports = async (client, message, oldMessage, newMessage) => {
 
         let user = message.author;
 
-        const updateEmbed = new Discord.RichEmbed()
+        console.log("2")
+
+        const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`Message edited ⚒️`, user.avatarURL)
+            .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
             .setDescription(`Message sent by ${message.author} edited in <#${message.channel.id}>.`)
             //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
             .addField(`Before:`, message.content, false)
