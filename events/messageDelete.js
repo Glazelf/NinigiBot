@@ -1,6 +1,5 @@
 module.exports = async (client, message) => {
     try {
-        console.log("0")
         const Discord = require("discord.js");
         const entry = await message.member.guild.fetchAuditLogs({
             limit: 1,
@@ -8,7 +7,6 @@ module.exports = async (client, message) => {
         });
         
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
-        console.log("1")
         if (!log) return;
 
         // Import totals
@@ -19,14 +17,12 @@ module.exports = async (client, message) => {
             user = message.author;
         };
 
-        console.log("2")
-
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
             .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
             .addField(`Message content:`, message.content, false)
-            .setFooter(`Deleted by ${user.tag}.`)
+            .setFooter(`Deleted by ${user.tag}`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;

@@ -1,6 +1,5 @@
 module.exports = async (client, message, oldMessage, newMessage) => {
     try {
-        console.log("0")
         const Discord = require("discord.js");
         const entry = await message.member.guild.fetchAuditLogs({
             limit: 1,
@@ -8,7 +7,6 @@ module.exports = async (client, message, oldMessage, newMessage) => {
         });
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
 
-        console.log("1")
         if (!log) return;
 
         // Import totals
@@ -21,8 +19,6 @@ module.exports = async (client, message, oldMessage, newMessage) => {
         if (!log) return;
 
         let user = message.author;
-
-        console.log("2")
 
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
