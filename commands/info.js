@@ -79,6 +79,11 @@ exports.run = (client, message) => {
             uptime = `${days} day${multiDays}, ${uptime}`;
         };
 
+        function fetchThings(){
+            client.users.fetch();
+        };
+        fetchThings();
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(client.config.botName, bot.avatarURL())
