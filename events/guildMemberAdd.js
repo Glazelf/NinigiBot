@@ -9,7 +9,7 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
-        const leaveEmbed = new Discord.RichEmbed()
+        const leaveEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Member joined ❤️`, user.avatarURL())
             .addField(`User:`, `<@${user.id}>`)
