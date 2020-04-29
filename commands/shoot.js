@@ -5,10 +5,10 @@ exports.run = (client, message) => {
         let user = message.mentions.users.first();
 
         if (!user) {
-            return message.channel.send(`> You shoot wildly, but can't seem to hit anything.`);
+            return message.channel.send(`> You shoot wildly, <@${message.author.id}> but you can't seem to hit anything.`);
         };
 
-        return message.channel.send(`> Boom, headshot through <@${user.id}>'s skull.`);
+        return message.channel.send(`> Boom, <@${message.author.id}> made a headshot right through <@${user.id}>'s skull.`);
     } catch (e) {
         // log error
         console.log(e);
