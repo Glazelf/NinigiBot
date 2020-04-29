@@ -9,7 +9,7 @@ exports.run = (client, message) => {
             if(!textTarget) {
                 return message.channel.send(`> You shoot wildly, <@${message.author.id}>, but you can't seem to hit anything.`);
             };
-            return message.channel.send(`> You shoot wildly, <@${message.author.id}>. Through a lucky shot you hit ${textTarget}`);
+            return message.channel.send(`> You shoot wildly, <@${message.author.id}>. Through a lucky shot you hit ${textTarget}.`);
         };
 
         if (user.id == message.author.id) {
