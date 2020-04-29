@@ -5,7 +5,7 @@ exports.run = (client, message) => {
         let user = message.mentions.users.first();
 
         if (user.id == message.author.id) {
-            return message.gechannel.send(`> <@${message.author.id}> shot themself.`)
+            return message.channel.send(`> <@${message.author.id}> shot themself.`)
         };
 
         if (!user) {
