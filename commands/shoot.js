@@ -4,8 +4,13 @@ exports.run = (client, message) => {
 
         let user = message.mentions.users.first();
 
+        if (user.id == message.author.id) {
+            return message.gechannel.send(`> <@${message.author.id}> shot themself.`)
+        };
+
         if (!user) {
-            return message.channel.send(`> You shoot wildly, <@${message.author.id}> but you can't seem to hit anything.`);
+            let textTarget = message.content.slice(7);
+            return message.channel.send(`> You shoot wildly, <@${message.author.id}>. Through a lucky shot you hit ${textTarget}`);
         };
 
         return message.channel.send(`> Boom, <@${message.author.id}> made a headshot right through <@${user.id}>'s skull.`);
