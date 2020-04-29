@@ -1,8 +1,9 @@
-exports.run = (client, message) => {
+module.exports.run = async (client, message) => {
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
+        let memberFetch = await message.guild.members.fetch();
 
         function checkDays(date) {
             let now = new Date();
@@ -39,11 +40,6 @@ exports.run = (client, message) => {
             "india": ":flag_in: India"
         };
 
-        function fetchThings(){
-            message.guild.members.fetch();
-        };
-        fetchThings();
-
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL())
@@ -52,8 +48,8 @@ exports.run = (client, message) => {
             .addField("Region:", region[message.guild.region], true)
             .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
             .addField("ID:", message.guild.id, true)
-            .addField("Users:", message.guild.members.cache.filter(member => !member.user.bot).size, true)
-            .addField("Bots:", `${message.guild.members.cache.filter(member => member.user.bot).size}`, true)
+            .addField("Users:", memberFetch.filter(member => !member.user.bot).size, true)
+            .addField("Bots:", memberFetch.filter(member => member.user.bot).size, true)
             .addField("Channels:", message.guild.channels.cache.size, true)
             .addField("Roles:", message.guild.roles.cache.size, true)
             .addField("Created at:", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(message.channel.guild.createdAt)}.`)
