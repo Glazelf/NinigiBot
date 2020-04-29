@@ -16,7 +16,6 @@ exports.run = (client, message) => {
             return message.channel.send(`> <@${message.author.id}> shot themself.`)
         };
 
-
         return message.channel.send(`> Boom, <@${message.author.id}> made a headshot right through <@${user.id}>'s skull.`);
 
     } catch (e) {
