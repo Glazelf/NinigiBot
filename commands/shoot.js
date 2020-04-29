@@ -6,7 +6,7 @@ exports.run = (client, message) => {
 
         if (!user) {
             let textTarget = message.content.slice(7);
-            if(!textTarget) {
+            if (!textTarget) {
                 return message.channel.send(`> You shoot wildly, <@${message.author.id}>, but you can't seem to hit anything.`);
             };
             return message.channel.send(`> You shoot wildly, <@${message.author.id}>. Through a lucky shot you hit ${textTarget}.`);
@@ -18,6 +18,7 @@ exports.run = (client, message) => {
 
 
         return message.channel.send(`> Boom, <@${message.author.id}> made a headshot right through <@${user.id}>'s skull.`);
+
     } catch (e) {
         // log error
         console.log(e);

@@ -9,7 +9,7 @@ exports.run = (client, message) => {
             .then(msg => client.destroy())
             .then(() => client.login(client.config.token))
             .then(message.channel.send(`> Successfully restarted!`));
-            return;
+        return;
 
     } catch (e) {
         // log error
