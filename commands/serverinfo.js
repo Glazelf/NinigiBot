@@ -13,10 +13,10 @@ module.exports.run = async (client, message) => {
         };
 
         let verifLevels = {
-            "NONE": "None", 
-            "LOW": "Low", 
-            "MEDIUM": "Medium", 
-            "HIGH": "(╯°□°）╯︵  ┻━┻", 
+            "NONE": "None",
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "(╯°□°）╯︵  ┻━┻",
             "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"
         };
 
