@@ -17,6 +17,10 @@ module.exports = async (client, message) => {
             user = message.author;
         };
 
+        if (!message.content) {
+            message.content = "None";
+        };
+
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
