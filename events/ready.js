@@ -4,8 +4,7 @@ module.exports = (client) => {
     console.log(`Connected as ${client.user.tag}.`);
 
     // Set bot status
-    client.user.setStatus('idle');
-    client.user.setActivity('over Sinnoh', { type: 'WATCHING' });
+    client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' })
 
     // List servers the bot is connected to
     console.log("Servers:")
