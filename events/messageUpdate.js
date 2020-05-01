@@ -18,8 +18,6 @@ module.exports = async (client, message, oldMessage, newMessage) => {
 
         if (!log) return;
 
-        let user = message.author;
-
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
@@ -28,7 +26,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)
             .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
-            .setFooter(`Edited by ${user.tag}`)
+            .setFooter(`Edited by ${message.author.tag}`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
