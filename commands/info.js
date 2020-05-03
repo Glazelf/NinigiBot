@@ -3,8 +3,11 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
-        let bot = client.users.cache.get(client.config.botID);
-        let userFetch = await client.users.fetch();
+        let bot = await client.users.cache.get(client.config.botID);
+        // let userCount = await client.users.fetch();
+        // let memberFetch = await message.guild.members.fetch();
+        // console.log(userCount)
+        // console.log(Object.keys(userCount))
 
         function checkDays(date) {
             let now = new Date();
@@ -88,7 +91,7 @@ module.exports.run = async (client, message) => {
             .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Bot ID:", client.config.botID, true)
             .addField("Prefix:", client.config.prefix, true)
-            .addField("Users:", userFetch.size, true)
+            //.addField("Users:", userCount.length, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Channels:", client.channels.cache.size, true)
             .addField("Messages read:", globalVars.totalMessages, true)
@@ -115,6 +118,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.help = {
     name: "Info",
-    description: "Returns some information about this bot.",
+    description: "Returns information about this bot.",
     usage: `info`
 };

@@ -4,6 +4,9 @@ module.exports.run = async (client, message) => {
 
         const Discord = require("discord.js");
         let memberFetch = await message.guild.members.fetch();
+        let realMembers = memberFetch.filter(member => !member.user.bot).size;
+        let bots =  memberFetch.filter(member => member.user.bot).size;
+        let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
 
         function checkDays(date) {
             let now = new Date();
@@ -48,8 +51,9 @@ module.exports.run = async (client, message) => {
             .addField("Region:", region[message.guild.region], true)
             .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
             .addField("ID:", message.guild.id, true)
-            .addField("Users:", memberFetch.filter(member => !member.user.bot).size, true)
-            .addField("Bots:", memberFetch.filter(member => member.user.bot).size, true)
+            .addField("Users:", realMembers, true)
+            .addField("Online users:", onlineMembers, true)
+            .addField("Bots:", bots, true)
             .addField("Channels:", message.guild.channels.cache.size, true)
             .addField("Roles:", message.guild.roles.cache.size, true)
             .addField("Created at:", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(message.channel.guild.createdAt)}.`)
