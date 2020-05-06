@@ -21,11 +21,14 @@ module.exports = async (client, message) => {
             message.content = "None";
         };
 
+        console.log(message.attachments)
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
             .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
-            .addField(`Message content:`, message.content, false)
+            .addField(`Content:`, message.content, false)
+            // WIP log attachments
+            //.attachFiles(message.attachments)
             .setFooter(`Deleted by ${user.tag}`)
             .setTimestamp();
 
