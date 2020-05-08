@@ -39,4 +39,4 @@ module.exports = async (client, message) => {
         // log error
         console.log(e);
     };
-}
+};
