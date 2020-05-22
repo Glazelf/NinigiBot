@@ -161,7 +161,21 @@ exports.run = (client, message) => {
         "https://i.kym-cdn.com/photos/images/original/000/916/589/243.gif",
         "http://pa1.narvii.com/6150/6bdd1fd42b1a8748daafb0fac1eea041cd0575dd_00.gif"
       ],
-      // Torchic DexNr. 387
+      // Mawile DexNr. 303
+      mawile: [
+        "https://i.pinimg.com/originals/4a/30/91/4a30913507b507323ff7c1dcc0188de9.gif",
+        "https://i.pinimg.com/originals/cd/2c/cb/cd2ccbc2f08d9fe0ab5e0453a00612ae.gif",
+        "https://cdn.discordapp.com/attachments/695354062236811295/713330928226926663/tumblr_n1x3glJcqJ1ttdkobo1_400.gif",
+        "https://media.tumblr.com/15c865f801536c6745f96b1afd794626/tumblr_mvrm3gMFPE1qau6z9o1_500.gif",
+        "https://gifimage.net/wp-content/uploads/2017/10/mawile-gif-13.gif",
+        "https://gifimage.net/wp-content/uploads/2018/11/gif-mawile-2.gif",
+        "https://cdn.discordapp.com/attachments/695354062236811295/713331751514144778/1512034948_mawile.gif",
+        "https://cdn.discordapp.com/attachments/695354062236811295/713331776432635924/tumblr_n7f5r405Xh1rsrk2xo1_500.gif",
+        "https://cdn.discordapp.com/attachments/695354062236811295/713331787438358538/mawile-gif-10.gif",
+        "https://cdn.discordapp.com/attachments/695354062236811295/713332164137320508/4c3.gif",
+        "https://i.imgur.com/Heb4cMb.gif"
+      ],
+      // Turtwig DexNr. 387
       turtwig: [
         "http://img2.wikia.nocookie.net/__cb20110507193239/ilvg/images/4/46/Turtwig.gif",
         "https://media.tumblr.com/270b7d3228003fb3d441133d9de26185/tumblr_pgp7wmf0fy1xnfihso2_500.gif",
