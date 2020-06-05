@@ -1,5 +1,9 @@
 exports.run = (client, message) => {
     try {
+        if (message.author.id !== client.config.ownerID) {
+            return message.channel.send(client.config.lackPerms)
+        };
+
         let baseMessage = `> This bot is in ${client.guilds.cache.size} servers, <@${message.author.id}>:`;
 
         client.guilds.cache.forEach((guild) => {
@@ -19,7 +23,7 @@ exports.run = (client, message) => {
 };
 
 module.exports.help = {
-    name: "Serverlist",
-    description: "Lists all servers the bot is in.",
-    usage: `serverlist`
+    name: null,
+    description: null,
+    usage: null
 };
