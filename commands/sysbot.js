@@ -3,29 +3,24 @@ module.exports.run = async (client, message) => {
         let SysbotID = "696086046685003786";
         let userCache = client.users.cache.get(SysbotID);
 
-        let userStatus = "Error?";
+        let userStatus = "Offline";
+        let queueStatus = "Closed";
+        
         switch (userCache.presence.status) {
             case "online":
                 userStatus = "Online";
+                queueStatus = "Open";
                 break;
             case "idle":
-                userStatus = "Onling for trading";
+                userStatus = "Online";
+                queueStatus = "Open";
                 break;
             case "dnd":
-                userStatus = "Online but not accepting trades";
-                break;
-            case "invisible":
-                userStatus = "Offline";
-                break;
-            case "offline":
-                userStatus = "Offline";
-                break;
-            default:
-                userStatus = "Error?";
+                userStatus = "Online";
                 break;
         };
 
-            return message.channel.send(`> <@${SysbotID}> is currently: ${userStatus}! 
+            return message.channel.send(`> <@${SysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
