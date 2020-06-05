@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
         };
 
             return message.channel.send(`> <@${SysbotID}> is currently: ${userStatus}! 
-> Check the pins in <#${client.config.botChannelID}> for more information on how to use it, a FAQ and more!`);
+> Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
         // log error
