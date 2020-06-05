@@ -1,20 +1,32 @@
 module.exports.run = async (client, message) => {
     try {
         let SysbotID = "696086046685003786";
-        let memberFetch = await message.guild.members.fetch();
-        let SysbotIDFetch = memberFetch.filter(member => member.id == SysbotID);
-        let SysbotStatus = SysbotIDFetch.filter(member => member.presence.status !== "offline").size;
+        let userCache = client.users.cache.get(SysbotID);
 
-
-        if (SysbotStatus == "1") {
-            return message.channel.send(`> <@${SysbotID}> is currently: Online! 
-> Check the pins in <#${client.config.botChannelID}> for more information on how to use it and a general FAQ.`);
-        } else if (SysbotStatus == "0") {
-            return message.channel.send(`> <@${SysbotID}> is currently: Offline! 
-> Check the pins in <#${client.config.botChannelID}> for more information on when it might be back online.`);
-        } else {
-            return message.channel.send(`> Something seems to be going wrong, please check the status yourself for now: <@${SysbotID}>.`);
+        let userStatus = "Error?";
+        switch (userCache.presence.status) {
+            case "online":
+                userStatus = "Online";
+                break;
+            case "idle":
+                userStatus = "Onling for trading";
+                break;
+            case "dnd":
+                userStatus = "Online but not accepting trades";
+                break;
+            case "invisible":
+                userStatus = "Offline";
+                break;
+            case "offline":
+                userStatus = "Offline";
+                break;
+            default:
+                userStatus = "Error?";
+                break;
         };
+
+            return message.channel.send(`> <@${SysbotID}> is currently: ${userStatus}! 
+> Check the pins in <#${client.config.botChannelID}> for more information on how to use it, a FAQ and more!`);
 
     } catch (e) {
         // log error
