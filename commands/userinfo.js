@@ -1,4 +1,4 @@
-exports.run = (client, message) => {
+module.exports.run = async (client, message) => {
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
