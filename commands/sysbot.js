@@ -20,7 +20,8 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
-        return message.channel.send(`> <@${SysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
+        return message.channel.send(`> Hey, <@${message.author.id}>.
+> <@${SysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
