@@ -1,5 +1,9 @@
 module.exports.run = async (client, message) => {
     try {
+        if(message.guild.id !== client.config.botServerID){
+            return;
+        };
+
         let SysbotID = "696086046685003786";
         let userCache = client.users.cache.get(SysbotID);
 
@@ -9,7 +13,6 @@ module.exports.run = async (client, message) => {
         switch (userCache.presence.status) {
             case "online":
                 userStatus = "Online";
-                queueStatus = "Open";
                 break;
             case "idle":
                 userStatus = "Online";
@@ -34,7 +37,7 @@ module.exports.run = async (client, message) => {
 };
 
 module.exports.help = {
-    name: "Sysbot",
-    description: `Responds with a status update on <@696086046685003786>.`,
-    usage: `sysbot`
+    name: null,
+    description: null,
+    usage: null
 };
