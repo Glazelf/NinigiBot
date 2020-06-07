@@ -1,11 +1,10 @@
 module.exports.run = async (client, message) => {
     try {
-        if(message.guild.id !== client.config.botServerID){
+        if (message.guild.id !== client.config.botServerID) {
             return;
         };
 
-        let SysbotID = "696086046685003786";
-        let userCache = client.users.cache.get(SysbotID);
+        let userCache = client.users.cache.get(client.config.sysbotID);
 
         let userStatus = "Offline";
         let queueStatus = "Closed";
@@ -24,7 +23,7 @@ module.exports.run = async (client, message) => {
         };
 
         return message.channel.send(`> Hey, <@${message.author.id}>.
-> <@${SysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
+> <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
