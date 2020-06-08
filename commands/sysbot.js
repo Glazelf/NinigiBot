@@ -12,6 +12,7 @@ module.exports.run = async (client, message) => {
         switch (userCache.presence.status) {
             case "online":
                 userStatus = "Online";
+                queueStatus = "either Open (and empty!) or Closed";
                 break;
             case "idle":
                 userStatus = "Online";
