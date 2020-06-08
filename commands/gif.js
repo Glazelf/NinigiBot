@@ -5,11 +5,11 @@ exports.run = (client, message) => {
     };
 
     let helpText = `> **Pokémon:**
-    > Squirtle, Slowpoke, Flareon, Snorlax, Wooper, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Maractus, Reshiram
-    
+    > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Dracovish
+
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
-    
+
     > **Interactions/Emotions:**
     > Hug`;
 
@@ -38,6 +38,19 @@ exports.run = (client, message) => {
         "https://media.giphy.com/media/7mLXZL4UlLf1K/giphy.gif",
         "https://thumbs.gfycat.com/HeavenlyBrightCollardlizard-size_restricted.gif",
         "https://ugc.reveliststatic.com/gen/full/2016/07/12/14/eq/cf/phpuk05tcs2qbwe.gif"
+      ],
+      // Jigglypuff DexNr. 039
+      jigglypuff: [
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477089916551198/image0.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477164667305984/image0.gif",
+        "https://media.giphy.com/media/EKDSLoPz0yLVC/giphy.gif",
+        "https://media.giphy.com/media/UmLKVhZSLBQmk/source.gif",
+        "https://media.tumblr.com/289234a52529121551624d34ce8237c6/tumblr_pqsrniJzGX1tzqospo1_400.gif",
+        "https://media.giphy.com/media/E4unmDmXBaJnq/giphy.gif",
+        "https://i.gifer.com/73jY.gif",
+        "https://imgur.com/AECsTVv.gif",
+        "https://thumbs.gfycat.com/HauntingSphericalIggypops-size_restricted.gif",
+        "https://media.tumblr.com/f3de08dbd16f811bc02f5c10dd4d4394/tumblr_nexmn649br1s4sxkjo5_250.gif"
       ],
       // Slowpoke DexNr. 079
       slowpoke: [
@@ -89,6 +102,22 @@ exports.run = (client, message) => {
         "https://cdn.discordapp.com/attachments/641335699601358856/641336012772999178/source_1.gif",
         "https://cdn.discordapp.com/attachments/641335699601358856/641336171640651782/source.gif"
       ],
+      // Mewtwo DexNr. 150
+      mewtwo: [
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477155200892998/image0.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477523913900032/image0.gif",
+        "https://media.giphy.com/media/7ProItiELBagM/giphy.gif",
+        "https://media.tumblr.com/547f65f16965bc1745200c0e7cc732a8/tumblr_ne2t12QKF41s8sotmo2_500.gif"
+      ],
+      // Mew Dexr. 151
+      mew: [
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477371710734406/image0.gif",
+        "https://media.giphy.com/media/vMV8KKoHREdtm/source.gif",
+        "https://i.imgur.com/XafPydz.gif",
+        "https://i.gifer.com/PWd3.gif",
+        "https://media.giphy.com/media/WuqSMXfhEhqz6/source.gif",
+        "https://thumbs.gfycat.com/DazzlingDishonestGossamerwingedbutterfly-size_restricted.gif"
+      ],
       // Wooper DexNr. 194
       wooper: [
         "http://i.imgur.com/VOKPenb.gif",
@@ -110,6 +139,16 @@ exports.run = (client, message) => {
         "https://static.fjcdn.com/gifs/An_df96da_5425362.gif",
         "http://media.tumblr.com/tumblr_ljk1xdrdjX1qfjerio1_500.gif",
         "https://sixprizes.com/wp-content/uploads/2016/06/wooper-tightrope-walk-confident-happy.gif"
+      ],
+      // Espeon DexNr. 196
+      espeon: [
+        "https://cdn.discordapp.com/attachments/719450617835159623/719450651557494835/yes_emote.gif",
+        "https://media.giphy.com/media/kuh4q8Jt9qHJe/giphy.gif",
+        "https://data.whicdn.com/images/250469240/original.gif",
+        "https://media.giphy.com/media/gawo6ALlSBYA/source.gif",
+        "https://media.tumblr.com/2093fc59826e8022ab3a454908b50e26/tumblr_nyekswwK2o1tgjlm2o1_500.gif",
+        "https://i.gifer.com/MFRA.gif",
+        "https://media.tenor.com/images/582c4bd04e6f3623e8d87674d8fe0717/tenor.gif"
       ],
       // Scizor DexNr. 212
       scizor: [
@@ -309,6 +348,16 @@ exports.run = (client, message) => {
         "https://i.pinimg.com/originals/41/0e/09/410e092971b0bfb4964cc2e990b4fd38.gif",
         "https://archive-media-0.nyafuu.org/vp/image/1575/07/1575071810924.gif"
       ],
+      // Oshawott DexNr. 501
+      oshawott: [
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478570233102376/image6.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478569935568977/image5.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478569528721458/image4.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478569096708276/image3.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478568672821308/image2.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478568417099793/image1.gif",
+        "https://cdn.discordapp.com/attachments/719476975172845598/719478567737622578/image0.gif"
+      ],
       // Maractus DexNr. 556
       maractus: [
         "https://media.tenor.com/images/9c483f890d5ca3714197a2fc73673de4/tenor.gif",
@@ -325,6 +374,12 @@ exports.run = (client, message) => {
         "https://media.tenor.com/images/221b464fe4bb6aa607099f5444e8abba/tenor.gif",
         "https://gifimage.net/wp-content/uploads/2018/04/reshiram-gif-8.gif",
         "https://media.giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
+      ],
+      // Dracovish DexNr. 882
+      dracovish: [
+        "https://cdn.discordapp.com/attachments/719476975172845598/719477859458088970/image0.gif",
+        "https://archive-media-0.nyafuu.org/vp/image/1574/15/1574158361866.gif",
+        "https://archive-media-0.nyafuu.org/vp/image/1573/85/1573850901814.gif"
       ],
       //// Non-Pokémon gifs:
       // Dango
