@@ -2,7 +2,9 @@ exports.run = (client, message) => {
     try {
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
 
-        let numberOfMessages = message.content.slice(7);
+        let numberFromMessage = message.content.slice(7);
+        let numberFromMessagestoNumber = Number(numberFromMessage);
+        let numberOfMessages = numberFromMessagestoNumber + 1;
 
         if (isNaN(numberOfMessages)) {
             return message.channel.send(`> Sorry, but "${numberOfMessages}" is not a number, please specify an amount of messages that should be deleted.`);
