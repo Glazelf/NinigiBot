@@ -48,6 +48,21 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
+    // Reply with checkthepinsemote if people mention the word bot lol
+    let lowercaseContent = message.content.toLowerCase();
+    let PokemonChannelID = "656557551755853844";
+    if (lowercaseContent.includes("bot")) {
+      switch (message.channel.id) {
+        case client.config.botChannelID:
+          sysbotMessage = `<a:checkthepins:712296040455471185>`;
+          break;
+        case PokemonChannelID:
+          sysbotMessage = `<a:checkthepins:712296040455471185> in <#${client.config.botChannelID}>.`;
+          break;
+      };
+      message.channel.send(sysbotMessage);
+    };
+
     // Ignore messages not starting with the prefix
     if (message.content.indexOf(client.config.prefix) !== 0) return;
 
@@ -74,7 +89,7 @@ ${Attachment.url}`;
 
     // Run the command
     cmd.run(client, message, args);
-    
+
   } catch (e) {
     // log error
     console.log(e);
