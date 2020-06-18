@@ -55,12 +55,13 @@ ${Attachment.url}`;
       switch (message.channel.id) {
         case client.config.botChannelID:
           sysbotMessage = `<a:checkthepins:712296040455471185>`;
+          message.channel.send(sysbotMessage);
           break;
         case PokemonChannelID:
           sysbotMessage = `<a:checkthepins:712296040455471185> in <#${client.config.botChannelID}>.`;
+          message.channel.send(sysbotMessage);
           break;
       };
-      message.channel.send(sysbotMessage);
     };
 
     // Ignore messages not starting with the prefix
