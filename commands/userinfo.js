@@ -8,6 +8,11 @@ module.exports.run = async (client, message) => {
         let member = message.mentions.members.first();
 
         if (!user) {
+            let userID = message.content.slice(10);
+            user = client.users.cache.get(userID);
+        };
+
+        if (!user) {
             user = message.author;
         };
 
@@ -135,5 +140,5 @@ module.exports.run = async (client, message) => {
 module.exports.help = {
     name: "Userinfo",
     description: "Returns information about a userCache.",
-    usage: `userinfo [optional target]`
+    usage: `userinfo [either tagging the target or putting]`
 }; 
