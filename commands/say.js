@@ -1,6 +1,7 @@
 exports.run = (client, message) => {
     try {
         if (!message.channel.permissionsFor(message.author).has("MENTION_EVERYONE")) return message.channel.send(client.config.lackPerms);
+        
         // Split off command
         let textMessage = message.content.slice(5);
         let split = textMessage.split(` `, 1);
