@@ -1,6 +1,7 @@
 exports.run = (client, message) => {
     try {
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(client.config.lackPerms);
+        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, <@${message.author.id}>.`);
 
         let numberFromMessage = message.content.slice(7);
         let numberFromMessagestoNumber = Number(numberFromMessage);
