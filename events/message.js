@@ -65,12 +65,12 @@ ${Attachment.url}`;
 
         globalVars.sysbotQueue += 1;
 
-        return message.channel.send(`<@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${days} days.`);
+        return message.channel.send(`> <@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${days} days.`);
       };
 
       // Correct Sysbot prefix
       if (lowercaseContent.includes("?trade") || lowercaseContent.includes(".trade") || lowercaseContent.includes("$trade") || lowercaseContent.includes("&trade")) {
-        return message.channel.send(`The prefix for <@${client.config.sysbotID}> is "!". For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
+        return message.channel.send(`> The prefix for <@${client.config.sysbotID}> is "!". For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
       };
     };
 
