@@ -23,9 +23,13 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
+//         return message.channel.send(`> Hey, <@${message.author.id}>.
+// > <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
+// > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
+
         return message.channel.send(`> Hey, <@${message.author.id}>.
-> <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
-> Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
+> <@${client.config.sysbotID}> is currently **Outdated** and needs to be updated to accomodate for the Isle of Armor DLC before it can be used again! 
+> Check the pins in <#${client.config.botChannelID}> for more information!`);
 
     } catch (e) {
         // log error
