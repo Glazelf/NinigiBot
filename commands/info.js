@@ -100,7 +100,7 @@ module.exports.run = async (client, message) => {
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
             .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=368438486 'Invite Link')", true)
             .addField("Uptime:", `${uptime}.`)
-            .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>`)
+            .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>, <@${client.config.contributorSkaidusID}>`)
             .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
