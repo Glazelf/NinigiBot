@@ -51,14 +51,37 @@ ${Attachment.url}`;
     // Reply with checkthepinsemote if people mention the word bot lol
     let lowercaseContent = message.content.toLowerCase();
     let PokemonChannelID = "656557551755853844";
-    if (lowercaseContent.includes("bot")) {
+    let pinsEmote = "<a:checkthepins:712296040455471185>";
+
+    if (message.channel.id == client.config.botChannelID) {
+      if (lowercaseContent.includes("!trade")) {
+        var deadline = new Date("Jun 27, 2020 3:00:00").getTime();
+        var now = new Date().getTime();
+        var t = deadline - now;
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        if (days < 0) {
+          days = 0;
+        };
+
+        globalVars.sysbotQueue += 1;
+
+        return message.channel.send(`<@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${days} days.`);
+      };
+
+      // Correct Sysbot prefix
+      if (lowercaseContent.includes("?trade") || lowercaseContent.includes(".trade") || lowercaseContent.includes("$trade")) {
+        return message.channel.send(`The prefix for <@${client.config.sysbotID}> is "!". For more help use "!help" or ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
+      };
+    };
+
+    if (lowercaseContent.includes("bot") || lowercaseContent.includes("b0t")) {
       switch (message.channel.id) {
         case client.config.botChannelID:
-          sysbotMessage = `<a:checkthepins:712296040455471185>`;
+          sysbotMessage = pinsEmote;
           message.channel.send(sysbotMessage);
           break;
         case PokemonChannelID:
-          sysbotMessage = `<a:checkthepins:712296040455471185> in <#${client.config.botChannelID}>.`;
+          sysbotMessage = `${pinsEmote} in <#${client.config.botChannelID}>.`;
           message.channel.send(sysbotMessage);
           break;
       };
