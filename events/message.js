@@ -70,7 +70,7 @@ ${Attachment.url}`;
 
       // Correct Sysbot prefix
       if (lowercaseContent.includes("?trade") || lowercaseContent.includes(".trade") || lowercaseContent.includes("$trade") || lowercaseContent.includes("&trade")) {
-        return message.channel.send(`The prefix for <@${client.config.sysbotID}> is "!". For more help use "!help" or ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
+        return message.channel.send(`The prefix for <@${client.config.sysbotID}> is "!". For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
       };
     };
 
