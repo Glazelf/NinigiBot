@@ -74,16 +74,18 @@ ${Attachment.url}`;
       };
     };
 
-    if (lowercaseContent.includes("bot") || lowercaseContent.includes("b0t")) {
-      switch (message.channel.id) {
-        case client.config.botChannelID:
-          sysbotMessage = pinsEmote;
-          message.channel.send(sysbotMessage);
-          break;
-        case PokemonChannelID:
-          sysbotMessage = `${pinsEmote} in <#${client.config.botChannelID}>.`;
-          message.channel.send(sysbotMessage);
-          break;
+    if (globalVars.togglePins == 1) {
+      if (lowercaseContent.includes("bot") || lowercaseContent.includes("b0t")) {
+        switch (message.channel.id) {
+          case client.config.botChannelID:
+            sysbotMessage = pinsEmote;
+            message.channel.send(sysbotMessage);
+            break;
+          case PokemonChannelID:
+            sysbotMessage = `${pinsEmote} in <#${client.config.botChannelID}>.`;
+            message.channel.send(sysbotMessage);
+            break;
+        };
       };
     };
 
