@@ -34,9 +34,9 @@ module.exports.run = async (client, message) => {
           hourText = "hour";
         };
 
-        let minuteText = "hours";
+        let minuteText = "minutes";
         if (minutes == 1) {
-          minuteText = "hour";
+          minuteText = "minute";
         };
 
 //         return message.channel.send(`> Hey, <@${message.author.id}>.
