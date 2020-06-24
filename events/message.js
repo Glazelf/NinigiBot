@@ -66,9 +66,9 @@ ${Attachment.url}`;
           hourText = "hour";
         };
 
-        let minuteText = "hours";
+        let minuteText = "minutes";
         if (minutes == 1) {
-          minuteText = "hour";
+          minuteText = "minute";
         };
 
         globalVars.sysbotQueue += 1;
