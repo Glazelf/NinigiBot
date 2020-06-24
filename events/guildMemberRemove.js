@@ -12,10 +12,10 @@ module.exports = (client, member) => {
         const joinEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Member left 💔`, user.avatarURL())
+            .setThumbnail(user.avatarURL())
             .addField(`User:`, `<@${user.id}>`)
             .setFooter(`We'll miss you, ${user.username}!`)
             .setTimestamp();
-
 
         globalVars.totalLogs += 1;
         return log.send(joinEmbed);

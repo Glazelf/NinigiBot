@@ -12,6 +12,7 @@ module.exports = (client, member) => {
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Member joined ❤️`, user.avatarURL())
+            .setThumbnail(user.avatarURL())
             .addField(`User:`, `<@${user.id}>`)
             .setFooter(`Welcome, ${user.username}!`)
             .setTimestamp();
