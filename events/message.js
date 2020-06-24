@@ -54,18 +54,31 @@ ${Attachment.url}`;
     let pinsEmote = "<a:checkthepins:712296040455471185>";
 
     if (message.channel.id == client.config.botChannelID) {
-      if (lowercaseContent.includes("!trade")) {
-        var deadline = new Date("Jun 27, 2020 3:00:00").getTime();
+      if (lowercaseContent.startsWith("!trade")) {
+        var deadline = new Date("Jun 25, 2020 3:00:00").getTime();
         var now = new Date().getTime();
         var t = deadline - now;
-        var days = Math.floor(t / (1000 * 60 * 60 * 24));
-        if (days < 0) {
-          days = 0;
+        var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+
+        let hourText = "hours";
+        if (hours == 1) {
+          hourText = "hour";
+        };
+
+        let minuteText = "hours";
+        if (minutes == 1) {
+          minuteText = "hour";
         };
 
         globalVars.sysbotQueue += 1;
+        let timeMessage = `> <@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${hours} ${hourText} and ${minutes} ${minuteText}.`;
 
-        return message.channel.send(`> <@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${days} days.`);
+        if (t==0||t<0){
+          let timeMessage = `> <@${client.config.sysbotID}> isn't updated yet even though update is out, please tell <@${client.config.ownerID}> to update <@${client.config.sysbotID}>.`
+        };
+
+        return message.channel.send(timeMessage);
       };
 
       // Correct Sysbot prefix
