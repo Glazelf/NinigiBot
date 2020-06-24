@@ -82,23 +82,9 @@ ${Attachment.url}`;
       };
 
       // Correct Sysbot prefix
-      if (lowercaseContent.includes("?trade") || lowercaseContent.includes(".trade") || lowercaseContent.includes("$trade") || lowercaseContent.includes("&trade")) {
-        return message.channel.send(`> The prefix for <@${client.config.sysbotID}> is "!". For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
-      };
-    };
-
-    if (globalVars.togglePins == 1) {
-      if (lowercaseContent.includes("bot") || lowercaseContent.includes("b0t")) {
-        switch (message.channel.id) {
-          case client.config.botChannelID:
-            sysbotMessage = pinsEmote;
-            message.channel.send(sysbotMessage);
-            break;
-          case PokemonChannelID:
-            sysbotMessage = `${pinsEmote} in <#${client.config.botChannelID}>.`;
-            message.channel.send(sysbotMessage);
-            break;
-        };
+      if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
+        return message.channel.send(`> The prefix for <@${client.config.sysbotID}> is "!" and commands should only be used in <#${client.config.botChannelID}>. 
+> For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
       };
     };
 

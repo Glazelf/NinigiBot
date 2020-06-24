@@ -22,4 +22,3 @@ module.exports.totalMessages = 0;
 module.exports.totalCommands = 0;
 module.exports.totalLogs = 0;
 module.exports.sysbotQueue = 0;
-module.exports.togglePins = 1;
