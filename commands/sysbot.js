@@ -23,30 +23,9 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
-        var deadline = new Date("Jun 25, 2020 3:00:00").getTime();
-        var now = new Date().getTime();
-        var t = deadline - now;
-        var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-
-        let hourText = "hours";
-        if (hours == 1) {
-          hourText = "hour";
-        };
-
-        let minuteText = "minutes";
-        if (minutes == 1) {
-          minuteText = "minute";
-        };
-
-//         return message.channel.send(`> Hey, <@${message.author.id}>.
-// > <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
-// > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
-
         return message.channel.send(`> Hey, <@${message.author.id}>.
-> <@${client.config.sysbotID}> is currently **Outdated** and needs to be updated to accomodate for the Isle of Armor DLC before it can be used again! 
-> Check the pins in <#${client.config.botChannelID}> for more information!
-> Estimated: ${hours} ${hourText} and ${minutes} ${minuteText}.`);
+> <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
+> Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
         // log error

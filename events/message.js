@@ -48,42 +48,18 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
-    // Reply with checkthepinsemote if people mention the word bot lol
-    let lowercaseContent = message.content.toLowerCase();
-    let PokemonChannelID = "656557551755853844";
-    let pinsEmote = "<a:checkthepins:712296040455471185>";
+    if (message.guild.id !== client.config.botServerID) {
+      // Correct Sysbot prefix
+      let lowercaseContent = message.content.toLowerCase();
+      let pinsEmote = "<a:checkthepins:712296040455471185>";
 
-    if (message.channel.id == client.config.botChannelID) {
-      if (lowercaseContent.startsWith("!trade")) {
-        var deadline = new Date("Jun 25, 2020 3:00:00").getTime();
-        var now = new Date().getTime();
-        var t = deadline - now;
-        var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-
-        let hourText = "hours";
-        if (hours == 1) {
-          hourText = "hour";
-        };
-
-        let minuteText = "minutes";
-        if (minutes == 1) {
-          minuteText = "minute";
-        };
-
-        globalVars.sysbotQueue += 1;
-        let timeMessage = `> <@${message.author.id}> - Added to the LinkTrade queue. Current Position: ${globalVars.sysbotQueue}. Estimated: ${hours} ${hourText} and ${minutes} ${minuteText}.`;
-
-        if (t==0||t<0){
-          let timeMessage = `> <@${client.config.sysbotID}> isn't updated yet even though update is out, please tell <@${client.config.ownerID}> to update <@${client.config.sysbotID}>.`
-        };
-
-        return message.channel.send(timeMessage);
+      if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
+        return message.channel.send(`> The prefix for <@${client.config.sysbotID}> is "!" and trade commands can only be used in <#${client.config.botChannelID}>.
+> For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
       };
 
-      // Correct Sysbot prefix
-      if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
-        return message.channel.send(`> The prefix for <@${client.config.sysbotID}> is "!" and commands should only be used in <#${client.config.botChannelID}>. 
+      if (message.channel.id !== client.config.botChannelID && message.guild.id == client.config.botServerID && lowercaseContent.startsWith("!trade")) {
+        return message.channel.send(`> Trade commands for <@${client.config.sysbotID}> can only be used in <#${client.config.botChannelID}>.
 > For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
       };
     };
