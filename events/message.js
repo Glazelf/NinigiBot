@@ -48,7 +48,7 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
-    if (message.guild.id !== client.config.botServerID) {
+    if (message.guild.id == client.config.botServerID) {
       // Correct Sysbot prefix
       let lowercaseContent = message.content.toLowerCase();
       let pinsEmote = "<a:checkthepins:712296040455471185>";
