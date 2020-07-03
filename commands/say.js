@@ -1,7 +1,5 @@
 exports.run = (client, message) => {
     try {
-        if (!message.channel.permissionsFor(message.author).has("MENTION_EVERYONE")) return message.channel.send(client.config.lackPerms);
-        
         // Split off command
         let textMessage = message.content.slice(5);
         let split = textMessage.split(` `, 1);
@@ -16,21 +14,20 @@ exports.run = (client, message) => {
         // Owner only function to send messages in different channels
         if (message.author.id == client.config.ownerID) {
             try {
-
                 // If channelID is specified correctly, throw message into specified channel
                 message.client.channels.find("id", channelID).send(remoteMessage);
                 return message.channel.send(`Message succesfully sent to specified channel, <@${message.author.id}>.`);
             } catch (e) {
-
                 // If error: execute regular quoteless say
                 return message.channel.send(textMessage);
             };
         } else if (message.member.hasPermission("ADMINISTRATOR")) {
-
             // Return plain message if member is admin
             return message.channel.send(textMessage);
         } else {
-
+            // Prevent using bot to go around ping permissions
+            if(textMessage.includes("@")){return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, <@${message.author.id}>.`)};
+            
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `> "${textMessage}"
     > -<@${message.author.id}>`;
