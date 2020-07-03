@@ -1,10 +1,6 @@
-module.exports = async (client, message, oldMessage, newMessage) => {
+module.exports = async (client, message, oldMessage) => {
     try {
         const Discord = require("discord.js");
-        const entry = await message.member.guild.fetchAuditLogs({
-            limit: 1,
-            type: 'MESSAGE_UPDATE',
-        });
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
 
         if (!log) return;
@@ -26,7 +22,7 @@ module.exports = async (client, message, oldMessage, newMessage) => {
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)
             .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
-            .setFooter(`Edited by ${message.author.tag}`)
+            .setFooter(`Edited by ${message.author.tag} at`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;

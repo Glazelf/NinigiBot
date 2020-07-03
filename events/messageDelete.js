@@ -1,27 +1,19 @@
 module.exports = async (client, message) => {
     try {
         const Discord = require("discord.js");
-        const entry = await message.member.guild.fetchAuditLogs({
-            limit: 1,
-            type: 'MESSAGE_DELETE',
-        });
-        
+
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
         if (!log) return;
 
         // Import totals
         let globalVars = require('./ready');
 
-        let user = entry.executor;
-        if (!user) {
-            user = message.author;
-        };
-
         if (!message.content) {
             message.content = "None";
         };
 
-        console.log(message.attachments)
+        // WIP log attachments
+        // console.log(message.attachments)
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
@@ -29,7 +21,8 @@ module.exports = async (client, message) => {
             .addField(`Content:`, message.content, false)
             // WIP log attachments
             //.attachFiles(message.attachments)
-            .setFooter(`Deleted by ${user.tag}`)
+            // WIP fix executor sometime
+            .setFooter(`Deleted at`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
