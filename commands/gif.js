@@ -5,7 +5,7 @@ exports.run = (client, message) => {
     };
 
     let helpText = `> **Pokémon:**
-    > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Dracovish
+    > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
 
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
@@ -375,6 +375,14 @@ exports.run = (client, message) => {
         "https://gifimage.net/wp-content/uploads/2018/04/reshiram-gif-8.gif",
         "https://media.giphy.com/media/JnbnlmEYYCQ0w/giphy.gif"
       ],
+      // Lurantis DexNr. 754
+      lurantis: [
+        "https://media.tumblr.com/9988cc40214c08ab4ca17d3b31761eb2/tumblr_otrfnxywc61rd4ymxo1_400.gif",
+        "https://pa1.narvii.com/6623/318a0c94773d03813f2bd7fc110671e8a44df982_00.gif",
+        "https://i.pinimg.com/originals/fa/ea/a0/faeaa0b4d05e14eef5ee0b46b79a1def.gif",
+        "https://media.tumblr.com/ebd629d1df61855b41ed77c9da030dff/tumblr_omjbiduhAi1uh3x51o2_500.gif",
+        "https://i.kym-cdn.com/photos/images/newsfeed/001/205/998/357.gif"
+      ],
       // Dracovish DexNr. 882
       dracovish: [
         "https://cdn.discordapp.com/attachments/719476975172845598/719477859458088970/image0.gif",
@@ -486,7 +494,8 @@ exports.run = (client, message) => {
         "http://media.giphy.com/media/LWTxLvp8G6gzm/giphy.gif",
         "https://media.tenor.com/images/d5cff5ce9c815361eb680f062ae2a84d/tenor.gif",
         "https://cdn.discordapp.com/attachments/599180353441366026/625034816269582357/image4.gif",
-        "https://media.tumblr.com/b6a5c4410b7ff47295afa7ac7190f52d/tumblr_mgth99gQrf1r7c13zo1_500.gif"
+        "https://media.tumblr.com/b6a5c4410b7ff47295afa7ac7190f52d/tumblr_mgth99gQrf1r7c13zo1_500.gif",
+        "https://i.pinimg.com/originals/fa/ea/a0/faeaa0b4d05e14eef5ee0b46b79a1def.gif"
       ]
     };
 
