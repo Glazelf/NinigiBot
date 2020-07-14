@@ -20,7 +20,7 @@ exports.run = (client, message) => {
         };
 
         targetUser.send(remoteMessage);
-        return message.channel.send(`> Message succesfully sent to specified user, <@${message.author.id}>.`);
+        return message.channel.send(`> Message succesfully sent to ${targetUser.tag}, <@${message.author.id}>.`);
 
     } catch (e) {
         // log error
