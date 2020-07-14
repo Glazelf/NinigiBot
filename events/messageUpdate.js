@@ -1,6 +1,7 @@
 module.exports = async (client, message, oldMessage) => {
     try {
         const Discord = require("discord.js");
+
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
 
         if (!log) return;
@@ -14,6 +15,8 @@ module.exports = async (client, message, oldMessage) => {
 
         if (!log) return;
 
+        const image = message.attachments.size > 0 ? await this.extension(reaction, message.attachments.array()[0].url) : ''; 
+
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
@@ -22,6 +25,7 @@ module.exports = async (client, message, oldMessage) => {
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)
             .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
+            .setImage(image)
             .setFooter(`Edited by ${message.author.tag} at`)
             .setTimestamp();
 
