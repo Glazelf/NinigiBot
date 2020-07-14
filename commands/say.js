@@ -15,7 +15,8 @@ exports.run = (client, message) => {
         if (message.author.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
-                message.client.channels.find("id", channelID).send(remoteMessage);
+                targetChannel = message.client.channels.cache.get(channelID)
+                targetChannel.send(remoteMessage);
                 return message.channel.send(`Message succesfully sent to specified channel, <@${message.author.id}>.`);
             } catch (e) {
                 // If error: execute regular quoteless say
