@@ -82,7 +82,7 @@ ${Attachment.url}`;
     const cmd = client.commands.get(command);
 
     // If that command doesn't exist, exit
-    // if (!cmd) return message.channel.send(`> Sorry <@${message.author.id}>, that command doesn't exist.`);
+    if (!cmd) return;
 
     // +1 command count and drop message count
     globalVars.totalCommands += 1;
