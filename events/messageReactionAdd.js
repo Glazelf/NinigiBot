@@ -1,31 +1,14 @@
-module.exports = (reaction, user, message) => {
+module.exports = async (reaction, user, message) => {
     try {
-        const Discord = require("discord.js");
-        let starboard = reaction.message.guild.channels.find(channel => channel.name === "starboard");
+        if (message.guild.id !== client.config.botServerID) {
+            return;
+        };
 
-        if (!starboard) return;
+        // if (reaction.emoji.name === "⭐") {
+        //     console.log("someone reacted with ⭐⭐⭐⭐⭐")
+        // };
 
-        // Import totals
-        let globalVars = require('./ready');
-
-        if (message.content == "") return;
-        if (message.content === oldMessage.content) return;
-        if (message.channel.id == "549220763341815808") return; //Glazesdump
-
-        if (!log) return;
-
-        const starEmbed = new Discord.MessageEmbed()
-            .setColor("#219DCD")
-            .setAuthor(`${message.author.username} :star:`, message.author.avatarURL())
-            .setDescription(message.content)
-            //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
-            .addField(`Before:`, message.content, false)
-            .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
-            .setFooter(`Edited by ${message.author.tag}`)
-            .setTimestamp();
-
-        globalVars.totalLogs += 1;
-        return starboard.send(starEmbed);
+        return; 
 
     } catch (e) {
         // log error
