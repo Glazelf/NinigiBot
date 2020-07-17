@@ -4,22 +4,20 @@ exports.run = (client, message) => {
             return message.channel.send(client.config.lackPerms)
         };
 
-        let guildID = message.content.slice(10);
+        let guildID = message.content.slice(13);
         let guild = client.guilds.cache.get(guildID);
 
-        if (!guild) {
-            let baseMessage = `> Since you didn't provide an ID, <@${message.author.id}>, here is a list of serverIDs instead:`
-            client.guilds.cache.forEach((guild) => {
-                baseMessage = `${baseMessage}
-    > -${guild.name} - ${guild.id}`
-            });
-        };
+        if (!guild) return message.channel.send(`> I couldn't find that server, <@${message.author.id}>.`);
 
-        guild.fetchInvites()
-            .then(invites => message.channel.send(`> <@${message.author.id}>, I found the following invites:\n` + invites.map(invite => invite).join(`\n`)))
-            .catch(console.error);
+        let baseMessage = `> Here's a list of all channels for ${guild.name}, <@${message.author.id}>:`;
 
-            return;
+        guild.channels.cache.forEach((channel) => {
+            baseMessage = `${baseMessage}
+> -${channel.name} - ${channel.id}`
+        });
+
+        return message.channel.send(baseMessage);
+
     } catch (e) {
         // log error
         console.log(e);
