@@ -8,7 +8,7 @@
     "discord.js": "^12.2.0",
     "discord.js-commando": "^0.10.0",
     "enmap": "^5.2.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "minimist": "^1.2.5",
     "sqlite3": "^4.1.1"
   },
