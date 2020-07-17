@@ -36,7 +36,7 @@ module.exports.run = async (client, message) => {
 };
 
 module.exports.help = {
-name: "avatar",
+name: "Avatar",
 description: "Sends you the target's profile picture as a file.",
 usage: "avatar [either tagging the target or their userID]"
 };
