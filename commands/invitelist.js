@@ -4,7 +4,7 @@ exports.run = (client, message) => {
             return message.channel.send(client.config.lackPerms)
         };
 
-        let guildID = message.content.slice(10);
+        let guildID = message.content.slice(12);
         let guild = client.guilds.cache.get(guildID);
 
         if (!guild) {
