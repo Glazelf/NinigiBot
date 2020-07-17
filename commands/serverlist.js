@@ -8,7 +8,7 @@ exports.run = (client, message) => {
 
         client.guilds.cache.forEach((guild) => {
             baseMessage = `${baseMessage}
-> -${guild.name}`
+> -${guild.name} - ${guild.id}`
         });
 
         return message.channel.send(baseMessage);
