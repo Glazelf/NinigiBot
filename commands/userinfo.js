@@ -22,7 +22,7 @@ module.exports.run = async (client, message) => {
         };
 
         let userCache = client.users.cache.get(user.id);
-        let memberCache = memberFetch.get(userID);
+        let memberCache = memberFetch.get(user.id);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         function checkDays(date) {
