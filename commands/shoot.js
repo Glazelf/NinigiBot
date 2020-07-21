@@ -29,6 +29,6 @@ exports.run = (client, message) => {
 
 module.exports.help = {
     name: "Shoot",
-    description: "Shoots Cris, somehow. This is USA now",
+    description: "Shoots Abril, somehow. This is USA now.",
     usage: `shoot`
 };
