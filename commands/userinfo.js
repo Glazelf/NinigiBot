@@ -4,11 +4,12 @@ module.exports.run = async (client, message) => {
 
         const Discord = require("discord.js");
 
+        let memberFetch = await message.guild.members.fetch();
+        let userID = message.content.slice(10);
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
         if (!user) {
-            let userID = message.content.slice(10);
             user = client.users.cache.get(userID);
         };
 
@@ -21,7 +22,8 @@ module.exports.run = async (client, message) => {
         };
 
         let userCache = client.users.cache.get(user.id);
-        let memberCache = message.guild.members.cache.get(member.id);
+        let memberCache = memberFetch.get(userID);
+        let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         function checkDays(date) {
             let now = new Date();
@@ -29,9 +31,6 @@ module.exports.run = async (client, message) => {
             let days = Math.floor(diff / 86400000);
             return days + (days == 1 ? " day" : " days") + " ago";
         };
-
-        // convert user to member for server related stats
-        //let member = client.members.find('id', userCache.id);
 
         // Name presence type
         let presenceType = "Playing";
@@ -88,39 +87,16 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
-        function getRoles() {
-            let elementArray = [];
-            let elementList = [];
-            memberCache.roles.cache.forEach(element => {
-                if (element.name != '@everyone')
-                    elementArray.push(element)
-            });
-
-            elementArray.sort(function (a, b) { return b.position - a.position })
-
-            elementArray.forEach(element => {
-                elementList += `${element} `
-            });
-
-            if (!elementArray[1]) {
-                elementList = "None";
-            };
-
-            return elementList;
-        };
-
-        //console.log(memberCache.presence.activities)
-
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(userCache.username, userCache.avatarURL())
             .setThumbnail(userCache.avatarURL())
             .addField("Full account:", user, true)
             .addField("ID:", userCache.id, true)
-            .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Roles:", getRoles())
+            .addField("Roles:", memberRoles.sort((r,r2) => r2.position - r.position).array().join(", "))
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
