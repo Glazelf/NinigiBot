@@ -88,10 +88,11 @@ module.exports.run = async (client, message) => {
             .setThumbnail(bot.avatarURL())
             .addField("Full account:", `<@${client.config.botID}>`, true)
             .addField("Owner:", `<@${client.config.ownerID}>`, true)
-            .addField("Activity:", `${presenceType} ${presenceName}`, true)
+            // WIP fix activity
+            // .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Bot ID:", client.config.botID, true)
             .addField("Prefix:", client.config.prefix, true)
-            //.addField("Users:", userCount.length, true)
+            // .addField("Users:", userCount.length, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Channels:", client.channels.cache.size, true)
             .addField("Messages read:", globalVars.totalMessages, true)
