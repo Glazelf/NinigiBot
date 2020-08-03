@@ -1,14 +1,12 @@
-module.exports = async (reaction, user, message) => {
+module.exports = (reaction, client, message) => {
     try {
-        if (message.guild.id !== client.config.botServerID) {
-            return;
-        };
+        // let guild = client.guilds.cache.get(message.guild.id);
 
         // if (reaction.emoji.name === "⭐") {
         //     console.log("someone reacted with ⭐⭐⭐⭐⭐")
         // };
 
-        return; 
+        return;
 
     } catch (e) {
         // log error
