@@ -4,27 +4,44 @@ module.exports.run = async (client, message) => {
             return;
         };
 
-        let userCache = client.users.cache.get(client.config.sysbotID);
+        let ACNHbotID = "739823632267608135";
+        let Konohana = client.users.cache.get(client.config.sysbotID);
+        let Ribbot = client.users.cache.get(ACNHbotID);
 
-        let userStatus = "Offline";
+        let KonohanaStatus = "Offline";
         let queueStatus = "Closed";
 
-        switch (userCache.presence.status) {
+        switch (Konohana.presence.status) {
             case "online":
-                userStatus = "Online";
+                KonohanaStatus = "Online";
                 queueStatus = "Open";
                 break;
             case "idle":
-                userStatus = "Online";
+                KonohanaStatus = "Online";
                 queueStatus = "Open";
                 break;
             case "dnd":
-                userStatus = "Online";
+                KonohanaStatus = "Online";
+                break;
+        };
+
+        let RibbotStatus = "Offline";
+
+        switch (Ribbot.presence.status) {
+            case "online":
+                RibbotStatus = "Online";
+                break;
+            case "idle":
+                RibbotStatus = "Online";
+                break;
+            case "dnd":
+                Ribbotstatus = "Online";
                 break;
         };
 
         return message.channel.send(`> Hey, <@${message.author.id}>.
-> <@${client.config.sysbotID}> is currently **${userStatus}** and queue is currently **${queueStatus}**! 
+> <@${client.config.sysbotID}> (Pokémon Bot) is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
+> <@${ACNHbotID}> (ACNH Bot) is currently **${RibbotStatus}**!
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
