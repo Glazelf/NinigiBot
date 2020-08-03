@@ -25,6 +25,11 @@ module.exports.run = async (client, message) => {
         let memberCache = memberFetch.get(user.id);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
+        let rolesSorted = "None";
+        if (memberRoles.size !== 0) {
+            rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
+        };
+
         function checkDays(date) {
             let now = new Date();
             let diff = now.getTime() - date.getTime();
@@ -96,7 +101,7 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Roles:", memberRoles.sort((r,r2) => r2.position - r.position).array().join(", "))
+            .addField("Roles:", rolesSorted)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
