@@ -59,7 +59,8 @@ ${Attachment.url}`;
             .setColor("#219DCD")
             .setAuthor(`⭐ ${message.author.tag}`, message.author.avatarURL())
             .setDescription(message.content)
-            .addField(`Sent in <#${message.channel.id}>:`, `[Link](${message.url})`, false)
+            .addField(`Sent in:`, `<#${message.channel.id}>`, false)
+            .addField(`Context:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setTimestamp();
           starboard.send(starEmbed);
