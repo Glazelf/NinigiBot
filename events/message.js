@@ -48,6 +48,24 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
+    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
+      if (collected.size == globalVars.starboardLimit) {
+        const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
+        if (message.channel !== starboard) {
+          const starEmbed = new Discord.MessageEmbed()
+            .setColor("#219DCD")
+            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setDescription(message.content)
+            .addField(`Context:`, `[Link](${message.url})`, false)
+            // WIP log attachments
+            // .setImage(image)
+            // WIP fix executor sometime
+            .setTimestamp();
+          starboard.send(starEmbed);
+        };
+      };
+    });
+
     if (message.guild.id == client.config.botServerID) {
       // Correct Sysbot prefix
       let lowercaseContent = message.content.toLowerCase();
