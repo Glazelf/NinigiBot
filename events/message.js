@@ -57,9 +57,7 @@ ${Attachment.url}`;
             .setAuthor(message.author.tag, message.author.avatarURL())
             .setDescription(message.content)
             .addField(`Context:`, `[Link](${message.url})`, false)
-            // WIP log attachments
-            // .setImage(image)
-            // WIP fix executor sometime
+            .setImage(message.attachments.first().url)
             .setTimestamp();
           starboard.send(starEmbed);
         };
