@@ -48,8 +48,8 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
-    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: 3, time: 3600000 }).then(collected => {
-      if (collected.size == 3) {
+    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 300000 }).then(collected => {
+      if (collected.size == globalVars.starboardLimit) {
         const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
         if (message.channel !== starboard) {
           let messageImage = null;
