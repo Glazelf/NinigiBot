@@ -52,12 +52,15 @@ ${Attachment.url}`;
       if (collected.size == globalVars.starboardLimit) {
         const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
         if (message.channel !== starboard) {
+          let messageImage = null;
+          if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
           const starEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(message.author.tag, message.author.avatarURL())
             .setDescription(message.content)
             .addField(`Context:`, `[Link](${message.url})`, false)
-            .setImage(message.attachments.first().url)
+            .setImage(messageImage)
             .setTimestamp();
           starboard.send(starEmbed);
         };

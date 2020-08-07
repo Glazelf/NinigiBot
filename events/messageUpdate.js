@@ -15,6 +15,9 @@ module.exports = async (client, message, oldMessage) => {
 
         if (!log) return;
 
+        let messageImage = null;
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
@@ -23,13 +26,13 @@ module.exports = async (client, message, oldMessage) => {
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
-            .setImage(message.attachments.first().url)
+            .setImage(messageImage)
             .setFooter(`Edited by ${message.author.tag} at`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
         return log.send(updateEmbed);
-        
+
     } catch (e) {
         // log error
         console.log(e);
