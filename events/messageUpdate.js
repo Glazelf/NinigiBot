@@ -24,7 +24,7 @@ module.exports = async (client, message, oldMessage) => {
             //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)
-            .addField(`Jump to message:`, `[Link](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`, false)
+            .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(image)
             .setFooter(`Edited by ${message.author.tag} at`)
             .setTimestamp();
