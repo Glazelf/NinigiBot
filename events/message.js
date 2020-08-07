@@ -48,8 +48,8 @@ ${Attachment.url}`;
       return DMChannel.send(dmEmbed);
     };
 
-    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
-      if (collected.size == globalVars.starboardLimit) {
+    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: 3, time: 3600000 }).then(collected => {
+      if (collected.size == 3) {
         const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
         if (message.channel !== starboard) {
           let messageImage = null;
@@ -57,7 +57,7 @@ ${Attachment.url}`;
 
           const starEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(message.author.tag, message.author.avatarURL())
+            .setAuthor(`⭐ ${message.author.tag}`, message.author.avatarURL())
             .setDescription(message.content)
             .addField(`Context:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
