@@ -49,7 +49,7 @@ ${Attachment.url}`;
     };
 
     // Starboard functionality
-    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 600000 }).then(collected => {
+    message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 86400000 }).then(collected => {
       if (collected.first().count == globalVars.starboardLimit) {
         const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
         if (message.channel !== starboard) {
