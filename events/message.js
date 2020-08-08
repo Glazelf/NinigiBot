@@ -50,21 +50,24 @@ ${Attachment.url}`;
 
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 86400000 }).then(collected => {
+      const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
+      if(starboard){
       if (collected.first().count == globalVars.starboardLimit) {
-        const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
+        
         if (message.channel !== starboard) {
           let messageImage = null;
           if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
           const starEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`⭐ ${message.author.tag}`, message.author.avatarURL())
+            .setAuthor(`⭐ ${message.author.username}`, message.author.avatarURL())
             .setDescription(message.content)
             .addField(`Sent in:`, `<#${message.channel.id}>`, false)
             .addField(`Context:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setTimestamp();
           starboard.send(starEmbed);
+        };
         };
       };
     });
