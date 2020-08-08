@@ -8,7 +8,6 @@ module.exports.run = async (client, message) => {
         const helpEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Help`, bot.avatarURL())
-            .addField("Info:", `[Link](https://github.com/Glazelf/NinigiBot/wiki)`, false)
             .addField("Commands:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Commands)`, false)
             .addField("Features:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Commands)`, false)
             .addField("Home Discord:", `[Link](https://discord.gg/2gkybyu)`, false)
