@@ -1,6 +1,6 @@
 module.exports.run = async (client, message) => {
     try {
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't send you embeds because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
+        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
         let bot = await client.users.cache.get(client.config.botID);
@@ -115,10 +115,4 @@ module.exports.run = async (client, message) => {
         // return confirmation
         return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
     };
-};
-
-module.exports.help = {
-    name: "Info",
-    description: "Returns information about this bot.",
-    usage: `info`
 };
