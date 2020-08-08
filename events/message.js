@@ -57,11 +57,11 @@ ${Attachment.url}`;
             let messageImage = null;
             if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-            if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
+            if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
 
             const starEmbed = new Discord.MessageEmbed()
               .setColor("#219DCD")
-              .setAuthor(`⭐ ${message.author.username}`, bot.avatarURL())
+              .setAuthor(`⭐ ${message.author.username}`, message.author.avatarURL())
               .setDescription(message.content)
               .addField(`Sent in:`, `<#${message.channel.id}>`, false)
               .addField(`Context:`, `[Link](${message.url})`, false)
