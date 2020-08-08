@@ -9,6 +9,10 @@ module.exports.run = async (client, message) => {
         // console.log(userCount)
         // console.log(Object.keys(userCount))
 
+        let contributorZoraID = "188737578038591488"
+        let contributorSkinnixID = "480821452610863114"
+        let contributorSkaidusID = "301087103008243723"
+
         function checkDays(date) {
             let now = new Date();
             let diff = now.getTime() - date.getTime();
@@ -101,10 +105,11 @@ module.exports.run = async (client, message) => {
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
             .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=368438486 'Invite Link')", true)
             .addField("Uptime:", `${uptime}.`)
-            .addField("Contributors:", `<@${client.config.contributorZoraID}>, <@${client.config.contributorSkinnixID}>, <@${client.config.contributorSkaidusID}>`)
+            .addField("Contributors:", `<@${contributorZoraID}>, <@${contributorSkinnixID}>, <@${contributorSkaidusID}>`)
             .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
+
 
         return message.channel.send(profileEmbed);
 
