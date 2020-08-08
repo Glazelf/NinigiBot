@@ -522,7 +522,7 @@ ${helpText}`);
       if(gifArgument == "hug"){
         if(user){
           gifString = `<@${message.author.id}> gave <@${user.id}> a tight hug!`;
-          if(user = message.author) {
+          if(user == message.author) {
             gifString = `<@${user.id}> is hugging themselves... This is kind of sad...`;
           };
         }else {
