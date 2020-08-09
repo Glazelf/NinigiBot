@@ -9,7 +9,7 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
-        const joinEmbed = new Discord.MessageEmbed()
+        const leaveEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Member left 💔`, user.avatarURL())
             .setThumbnail(user.avatarURL())
@@ -18,7 +18,7 @@ module.exports = (client, member) => {
             .setTimestamp();
 
         globalVars.totalLogs += 1;
-        return log.send(joinEmbed);
+        return log.send(leaveEmbed);
         
     } catch (e) {
         // log error
