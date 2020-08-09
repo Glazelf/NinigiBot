@@ -6,7 +6,8 @@ module.exports = async (reaction, client, message) => {
         //     console.log("someone removed a ⭐⭐⭐⭐⭐")
         // };
 
-        return; 
+        return;
+        
     } catch (e) {
         // log error
         console.log(e);

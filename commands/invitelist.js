@@ -21,8 +21,8 @@ exports.run = (client, message) => {
         guild.fetchInvites()
             .then(invites => message.channel.send(`> <@${message.author.id}>, I found the following invites:\n` + invites.map(invite => invite).join(`\n`)))
             .catch(console.error);
+        return;
 
-            return;
     } catch (e) {
         // log error
         console.log(e);

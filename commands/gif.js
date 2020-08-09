@@ -519,13 +519,13 @@ ${helpText}`);
     } else if (Object.keys(gifs).includes(gifArgument)) {
       let randomGif = gifs[gifArgument].pick();
 
-      if(gifArgument == "hug"){
-        if(user){
+      if (gifArgument == "hug") {
+        if (user) {
           gifString = `<@${message.author.id}> gave <@${user.id}> a tight hug!`;
-          if(user == message.author) {
+          if (user == message.author) {
             gifString = `<@${user.id}> is hugging themselves... This is kind of sad...`;
           };
-        }else {
+        } else {
           gifString = `It seems <@${message.author.id}> wants to hug...`;
         };
       };
@@ -539,7 +539,7 @@ ${helpText}`);
         .setTimestamp();
 
       return message.channel.send(gifEmbed);
-      
+
     } else {
       return message.channel.send(`> This argument has no gifs bound to it, so instead here's a list of the available arguments, <@${message.author.id}>:
 

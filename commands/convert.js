@@ -7,7 +7,7 @@ exports.run = (client, message) => {
         if (!conversionValue) return message.channel.send(`> You need to provide a number to calculate, <@${message.author.id}>.`);
         if (isNaN(conversionValue)) return message.channel.send(`> What you provided isn't a number, <@${message.author.id}>.`);
         parseFloat(conversionValue);
-        
+
         conversionType = conversionType.toLowerCase();
 
         switch (conversionType) {

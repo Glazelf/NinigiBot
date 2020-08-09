@@ -5,7 +5,7 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         let memberFetch = await message.guild.members.fetch();
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
-        let bots =  memberFetch.filter(member => member.user.bot).size;
+        let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
 
         function checkDays(date) {

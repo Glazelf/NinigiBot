@@ -3,7 +3,7 @@ var commando = require('discord.js-commando');
 const Enmap = require("enmap");
 const fs = require("fs");
 
-const client = new Discord.Client({ partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']});
+const client = new Discord.Client({ partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'] });
 const config = require("./config.json");
 client.config = config;
 

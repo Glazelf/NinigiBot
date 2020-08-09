@@ -10,6 +10,7 @@ exports.run = (client, message) => {
         // send channel a message that you're killing bot [optional]
         message.channel.send(`> Shutting down for <@${message.author.id}>...`)
             .then(msg => client.destroy());
+        return;
 
     } catch (e) {
         // log error

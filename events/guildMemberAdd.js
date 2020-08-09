@@ -19,6 +19,7 @@ module.exports = (client, member) => {
 
         globalVars.totalLogs += 1;
         return log.send(joinEmbed);
+
     } catch (e) {
         // log error
         console.log(e);
