@@ -1,8 +1,12 @@
 module.exports.run = async (client, message, args) => {
   try {
-    if (message.author.id !== client.config.ownerID) {
-      return message.channel.send(client.config.lackPerms)
+    // Import globals
+    let globalVars = require('../events/ready');
+
+    if (message.author.id !== globalVars.ownerID) {
+      return message.channel.send(globalVars.lackPerms)
     };
+
     function getUserFromMention(mention) {
       if (!mention) return;
 

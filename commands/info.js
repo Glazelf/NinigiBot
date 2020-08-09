@@ -1,5 +1,8 @@
 module.exports.run = async (client, message) => {
     try {
+        // Import globals
+        let globalVars = require('../events/ready');
+
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
@@ -70,9 +73,6 @@ module.exports.run = async (client, message) => {
         let multiSeconds = "";
         if (seconds !== 1) { multiSeconds = "s" };
 
-        // Import totals
-        let globalVars = require('../events/ready');
-
         // Reset hours
         while (hours >= 24) {
             hours = hours - 24;
@@ -91,7 +91,7 @@ module.exports.run = async (client, message) => {
             .setAuthor(client.config.botName, bot.avatarURL())
             .setThumbnail(bot.avatarURL())
             .addField("Full account:", `<@${client.config.botID}>`, true)
-            .addField("Owner:", `<@${client.config.ownerID}>`, true)
+            .addField("Owner:", `<@${globalVars.ownerID}>`, true)
             // WIP fix activity
             // .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Bot ID:", client.config.botID, true)

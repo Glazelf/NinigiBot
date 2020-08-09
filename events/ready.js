@@ -18,7 +18,14 @@ module.exports = (client) => {
   };
 };
 
-module.exports.totalMessages = 0;
+
+
+module.exports.starboardLimit = 3;
+module.exports.lackPerms = `> You do not have the required permissions to do this.`;
+module.exports.ownerAccount = `Glaze#6669`;
+module.exports.ownerID = `232875725898645504`;
+module.exports.ownerName = `Glaze`;
+module.exports.sysbotID = `696086046685003786`
 module.exports.totalCommands = 0;
 module.exports.totalLogs = 0;
-module.exports.starboardLimit = 3;
+module.exports.totalMessages = 0;

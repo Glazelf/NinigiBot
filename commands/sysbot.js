@@ -1,15 +1,18 @@
 module.exports.run = async (client, message) => {
     try {
-        if (message.guild.id !== client.config.botServerID) {
-            return;
-        };
+        // Import globals
+        let globalVars = require('../events/ready');
 
         let ACNHbotID = "739823632267608135";
-        let Konohana = client.users.cache.get(client.config.sysbotID);
+        let Konohana = client.users.cache.get(globalVars.sysbotID);
         let Ribbot = client.users.cache.get(ACNHbotID);
 
         let KonohanaStatus = "Offline";
         let queueStatus = "Closed";
+
+        if (message.guild.id !== client.config.botServerID) {
+            return;
+        };
 
         switch (Konohana.presence.status) {
             case "online":
@@ -40,7 +43,7 @@ module.exports.run = async (client, message) => {
         };
 
         return message.channel.send(`> Hey, <@${message.author.id}>.
-> <@${client.config.sysbotID}> (Pokémon Bot) is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
+> <@${globalVars.sysbotID}> (Pokémon Bot) is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
 > <@${ACNHbotID}> (ACNH Bot) is currently **${RibbotStatus}**!
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);
 

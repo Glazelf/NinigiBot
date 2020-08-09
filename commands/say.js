@@ -1,5 +1,8 @@
 exports.run = (client, message) => {
     try {
+        // Import globals
+        let globalVars = require('../events/ready');
+
         // Split off command
         let textMessage = message.content.slice(5);
         let split = textMessage.split(` `, 1);
@@ -12,7 +15,7 @@ exports.run = (client, message) => {
         };
 
         // Owner only function to send messages in different channels
-        if (message.author.id == client.config.ownerID) {
+        if (message.author.id == globalVars.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
@@ -27,8 +30,8 @@ exports.run = (client, message) => {
             return message.channel.send(textMessage);
         } else {
             // Prevent using bot to go around ping permissions
-            if(textMessage.includes("@")){return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, <@${message.author.id}>.`)};
-            
+            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, <@${message.author.id}>.`) };
+
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `> "${textMessage}"
     > -<@${message.author.id}>`;

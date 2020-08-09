@@ -1,13 +1,13 @@
 exports.run = (client, message) => {
     try {
-        // Import totals
+        // Import globals
         let globalVars = require('../events/ready');
 
         let starLimit = message.content.slice(11);
 
         if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, <@${message.author.id}>.`);
 
-        if (message.author.id !== client.config.ownerID) {
+        if (message.author.id !== globalVars.ownerID) {
             return message.channel.send(client.config.lackPerms)
         };
 
