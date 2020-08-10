@@ -1,5 +1,10 @@
-module.exports = (client) => {
+const {bank} = require('../bank');
+const {Users} = require('../storeObjects');
+
+module.exports = async (client) => {
   try {
+    const storedBalances = await Users.findAll();
+	  storedBalances.forEach(b => bank.currency.set(b.user_id, b)); 
     console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
     console.log(`Connected as ${client.user.tag}.`);
 

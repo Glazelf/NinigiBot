@@ -1,3 +1,5 @@
+const {bank} = require('../bank');
+
 module.exports = (client, message) => {
   try {
     const Discord = require("discord.js");
@@ -5,10 +7,11 @@ module.exports = (client, message) => {
 
     // Import globals
     let globalVars = require('./ready');
-
+    
     // Ignore all bots
     if (message.author.bot) return;
-
+    // Adding Currency 
+    bank.currency.add(message.author.id, 1);
     // +1 messages count
     globalVars.totalMessages += 1;
 
@@ -47,6 +50,8 @@ ${Attachment.url}`;
 
       return DMChannel.send(dmEmbed);
     };
+
+    //Shop functionality 
 
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 86400000 }).then(collected => {
