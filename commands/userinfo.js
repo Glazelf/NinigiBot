@@ -3,6 +3,8 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
 
         const Discord = require("discord.js");
+        const {bank} = require('../bank');
+        
 
         let memberFetch = await message.guild.members.fetch();
         let userID = message.content.slice(10);
@@ -101,9 +103,10 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Roles:", rolesSorted)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`)
-            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`)
+            .addField("Balance:", `${bank.currency.getBalance(userCache.id)}💰`, true)
+            .addField("Roles:", rolesSorted, false)
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true)
+            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, true)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
