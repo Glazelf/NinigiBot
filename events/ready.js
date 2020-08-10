@@ -18,8 +18,6 @@ module.exports = (client) => {
   };
 };
 
-
-
 module.exports.starboardLimit = 3;
 module.exports.lackPerms = `> You do not have the required permissions to do this.`;
 module.exports.ownerAccount = `Glaze#6669`;
