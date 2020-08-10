@@ -16,3 +16,4 @@ init
 .channels
 *.bak
 *.db
+database.sqlite

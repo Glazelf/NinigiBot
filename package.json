@@ -10,7 +10,8 @@
     "enmap": "^5.2.4",
     "lodash": "^4.17.19",
     "minimist": "^1.2.5",
-    "sqlite3": "^4.1.1"
+    "sequelize": "^6.3.4",
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "mocha": "^6.2.3"
