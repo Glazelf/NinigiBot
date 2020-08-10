@@ -5,13 +5,6 @@ exports.run = (client, message) => {
       return this[Math.floor(Math.random() * this.length)];
     };
 
-    const Discord = require("discord.js");
-    let user = message.mentions.users.first();
-    let gifArgumentUncased = message.content.split(` `, 3);
-    let gifArgument = gifArgumentUncased[1].toLowerCase();
-    let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-    let gifString = `Here's your gif, <@${message.author.id}>`;
-
     let helpText = `> **Pokémon:**
     > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
 
@@ -21,13 +14,24 @@ exports.run = (client, message) => {
     > **Interactions/Emotions:**
     > Hug`;
 
-    const gif = search(gifArgument);
-
-    if (gifArgument.length < 1) {
+    const Discord = require("discord.js");
+    let user = message.mentions.users.first();
+    let gifArgumentUncased = message.content.split(` `, 3);
+    if (!gifArgumentUncased[1]) {
       return message.channel.send(`> You didn't provide a gif argument, so instead here's a list of the available ones, <@${message.author.id}>:
 
 ${helpText}`);
-    } else if (gifArgument == "help") {
+    }
+    let gifArgument = gifArgumentUncased[1].toLowerCase();
+    let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
+    let gifString = `Here's your gif, <@${message.author.id}>`;
+
+    
+
+    const gif = search(gifArgument);
+
+    
+    if (gifArgument == "help") {
       return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
 
 ${helpText}`);
