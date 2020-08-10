@@ -27,6 +27,8 @@ module.exports.run = async (client, message) => {
         let memberCache = memberFetch.get(user.id);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
+        let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
+
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
@@ -103,7 +105,7 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Balance:", `${Math.floor(bank.currency.getBalance(userCache.id))}💰`, true)
+            .addField("Balance:", userBalance, true)
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, true)
