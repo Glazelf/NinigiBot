@@ -9,7 +9,7 @@ exports.run = (client, message) => {
     > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
-    > **Interactions/Emotions:**
+    > **Interactions:**
     > Hug`;
 
     const Discord = require("discord.js");
@@ -30,8 +30,7 @@ exports.run = (client, message) => {
 
     
     if (gifArgument == "help") {
-      return message.channel.send(`> Here's a list for all arguments that can return gifs, <@${message.author.id}>:
-
+      return message.channel.send(`> Here's a list for all gif arguments, <@${message.author.id}>:
 ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
       return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
