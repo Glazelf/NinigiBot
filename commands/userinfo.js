@@ -4,7 +4,7 @@ module.exports.run = async (client, message) => {
 
         const Discord = require("discord.js");
         const {bank} = require('../bank');
-        
+        const { Users } = require('../storeObjects');
 
         let memberFetch = await message.guild.members.fetch();
         let userID = message.content.slice(10);
@@ -27,7 +27,13 @@ module.exports.run = async (client, message) => {
         let memberCache = memberFetch.get(user.id);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
+        //balance and inventory
         let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
+        const target = message.mentions.users.first() || message.author;
+        const userDB = await Users.findOne({ where: { user_id: target.id } });
+        const items = await userDB.getItems();
+        let itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
+        if (!items.length) itemField = "Empty";
 
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
@@ -106,6 +112,7 @@ module.exports.run = async (client, message) => {
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
+            .addField("Inventory:", itemField, false)
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, true)
