@@ -1,6 +1,4 @@
-
 const Sequelize = require('sequelize');
-
 
 const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
@@ -30,6 +28,7 @@ sequelize.sync({ force }).then(async () => {
 		CurrencyShop.upsert({ name: 'C.C. figure', cost: 2000 }),
 		CurrencyShop.upsert({ name: 'Skaidus poster', cost: 2500 }),
 		CurrencyShop.upsert({ name: 'Skinnix dakimakura', cost: 5000 }),
+		CurrencyShop.upsert({ name: 'Yoomking crown replica', cost: 10000 }),
 	];
 	await Promise.all(shop);
 	console.log('Store updated');
