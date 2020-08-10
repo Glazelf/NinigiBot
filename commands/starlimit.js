@@ -15,7 +15,7 @@ exports.run = (client, message) => {
 
         globalVars.starboardLimit = starLimit;
 
-        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, <@${message.author.id}>`);
+        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, <@${message.author.id}>.`);
 
     } catch (e) {
         // log error
