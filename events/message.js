@@ -32,16 +32,18 @@ ${Attachment.url}`;
       };
 
       // Send message contents to dm channel
-      let DMChannel = client.channels.find('id', NinigiDMChannelID);
+      let DMChannel = client.channels.cache.get(NinigiDMChannelID);
+      let messageImage = null;
+      if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-      const dmEmbed = new Discord.RichEmbed()
+      const dmEmbed = new Discord.MessageEmbed()
         .setColor("#219DCD")
-        .setAuthor(`DM`, message.author.avatarURL)
-        .setThumbnail(message.author.avatarURL)
-        .addField(`Author account:`, message.author, false)
+        .setAuthor(`DM Message`, message.author.avatarURL())
+        .setThumbnail(message.author.avatarURL())
+        .addField(`Author Account:`, message.author, false)
         .addField(`Author ID:`, message.author.id, false)
         .addField(`Message content:`, message.content, false)
-        // .addField(`Attachment(s):`, AttachmentString, false)
+        .setImage(messageImage)
         .setFooter(`DM passed through by ${client.config.botName}.`)
         .setTimestamp();
 
