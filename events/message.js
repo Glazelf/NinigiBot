@@ -1,18 +1,20 @@
-const {bank} = require('../bank');
-
 module.exports = (client, message) => {
   try {
     const Discord = require("discord.js");
+    const { bank } = require('../bank');
     let NinigiDMChannelID = "674371091006881832";
+    let secondCharacter = message.content.charAt(1)
 
     // Import globals
     let globalVars = require('./ready');
-    
+
     // Ignore all bots
     if (message.author.bot) return;
-    // Adding Currency 
-    bank.currency.add(message.author.id, 1);
-    // +1 messages count
+
+    // Add currency if message doesn't start with prefix
+    if (message.content.indexOf(client.config.prefix) !== 0) bank.currency.add(message.author.id, 0.1);
+
+    // Add message count
     globalVars.totalMessages += 1;
 
     // Ignore commands in DMs
@@ -101,7 +103,6 @@ ${Attachment.url}`;
     if (message.content === client.config.prefix) return;
 
     // Ignore messages that start with prefix double or prefix space
-    let secondCharacter = message.content.charAt(1);
     if (secondCharacter == client.config.prefix || secondCharacter == ` `) return;
 
     // Standard definition
