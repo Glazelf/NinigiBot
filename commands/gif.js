@@ -7,20 +7,18 @@ exports.run = (client, message) => {
 
     let helpText = `> **Pokémon:**
     > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
-
     > **Not Pokémon:**
     > Dango, Jojo, Stitch
-
     > **Interactions/Emotions:**
     > Hug`;
 
     const Discord = require("discord.js");
     let user = message.mentions.users.first();
     let gifArgumentUncased = message.content.split(` `, 3);
+    let missingGifString = `> You didn't provide a valid gif argument, <@${message.author.id}>.
+> For a list of gif arguments, use "${client.config.prefix}gif help".`
     if (!gifArgumentUncased[1]) {
-      return message.channel.send(`> You didn't provide a gif argument, so instead here's a list of the available ones, <@${message.author.id}>:
-
-${helpText}`);
+      return message.channel.send(missingGifString);
     }
     let gifArgument = gifArgumentUncased[1].toLowerCase();
     let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
@@ -62,9 +60,7 @@ ${helpText}`);
       return message.channel.send(gifEmbed);
 
     } else {
-      return message.channel.send(`> This argument has no gifs bound to it, so instead here's a list of the available arguments, <@${message.author.id}>:
-
-${helpText}`);
+      return message.channel.send(missingGifString);
     };
 
   } catch (e) {
