@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
+		use: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		}
 	}, {
 		timestamps: false,
 	});
