@@ -1,6 +1,7 @@
-const { search }  = require('../gifs/search');
 exports.run = (client, message) => {
   try {
+    const { search }  = require('../gifs/search');
+
     Array.prototype.pick = function () {
       return this[Math.floor(Math.random() * this.length)];
     };
