@@ -27,8 +27,10 @@ module.exports.run = async (client, message) => {
         let memberCache = memberFetch.get(user.id);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
-        //balance and inventory
+        //balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
+
+        // inventory check
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });
         const items = await userDB.getItems();
