@@ -11,7 +11,6 @@ exports.run = async (client, message) => {
 
         if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
         if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
-        console.log(`${transferAmount} ${currentAmount}`)
         if (transferAmount > currentAmount) return message.channel.send(`> You don't have enough money to transfer that much, you only have ${userBalance}.`);
         if (transferAmount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}`);
 
