@@ -11,7 +11,7 @@ exports.run = (client, message) => {
 
         // Catch empty argument
         if (textMessage.length < 1) {
-            return message.channel.send(`> You need to specify text for me to say, <@${message.author.id}>.`);
+            return message.channel.send(`> You need to specify text for me to say, ${message.author}.`);
         };
 
         // Owner only function to send messages in different channels
@@ -20,7 +20,7 @@ exports.run = (client, message) => {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
                 targetChannel.send(remoteMessage);
-                return message.channel.send(`Message succesfully sent to specified channel, <@${message.author.id}>.`);
+                return message.channel.send(`Message succesfully sent to specified channel, ${message.author}.`);
             } catch (e) {
                 // If error: execute regular quoteless say
                 return message.channel.send(textMessage);
@@ -30,11 +30,11 @@ exports.run = (client, message) => {
             return message.channel.send(textMessage);
         } else {
             // Prevent using bot to go around ping permissions
-            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, <@${message.author.id}>.`) };
+            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, ${message.author}.`) };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `> "${textMessage}"
-    > -<@${message.author.id}>`;
+    > -${message.author}`;
             return message.channel.send(textMessage);
         };
 

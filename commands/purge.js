@@ -4,7 +4,7 @@ exports.run = (client, message,args) => {
         let globalVars = require('../events/ready');
 
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(globalVars.lackPerms);
-        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, <@${message.author.id}>.`);
+        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, ${message.author}.`);
 
         let numberFromMessage = args[0];
         let numberFromMessagestoNumber = Number(numberFromMessage);
@@ -31,15 +31,15 @@ exports.run = (client, message,args) => {
             messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
             
             message.channel.bulkDelete(messages)
-            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, <@${message.author.id}>.`));
+            .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
             });
 
         }else{
             message.channel.messages.fetch({ limit: amount })
             .then(messages => message.channel.bulkDelete(messages))
-            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, <@${message.author.id}>.`));
-        }
+            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, ${message.author}.`));
         return;
+        };
 
     } catch (e) {
         // log error

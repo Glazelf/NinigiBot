@@ -7,16 +7,16 @@ exports.run = (client, message) => {
         if (!user) {
             let textTarget = message.content.slice(7);
             if (!textTarget) {
-                return message.channel.send(`> You shoot wildly, <@${message.author.id}>, but you can't seem to hit anything.`);
+                return message.channel.send(`> You shoot wildly, ${message.author}, but you can't seem to hit anything.`);
             };
-            return message.channel.send(`> You shoot wildly, <@${message.author.id}>. Through a lucky shot you hit ${textTarget}.`);
+            return message.channel.send(`> You shoot wildly, ${message.author}. Through a lucky shot you hit ${textTarget}.`);
         };
 
         if (user.id == message.author.id) {
-            return message.channel.send(`> <@${message.author.id}> shot themself.`)
+            return message.channel.send(`> ${message.author} shot themself.`)
         };
 
-        return message.channel.send(`> Boom, <@${message.author.id}> made a headshot right through <@${user.id}>'s skull.`);
+        return message.channel.send(`> Boom, ${message.author} made a headshot right through ${user}'s skull.`);
 
     } catch (e) {
         // log error
