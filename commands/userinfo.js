@@ -81,11 +81,11 @@ module.exports.run = async (client, message) => {
         let activityLog = '';
         const activities = memberCache.presence.activities;
         for(const act in activities){
-            if(activities[act].name==='Custom Status'){
-                activityLog+=activities[act].state
-            }else{
-                activityLog+=activities[act].name
-            }
+            activityLog+=activities[act].name;
+            if(activities[act].details||activities[act].state) activityLog+=': ';
+            if(activities[act].details) activityLog+=activities[act].details;
+            if(activities[act].details&&activities[act].state) activityLog+=', ';
+            if(activities[act].state) activityLog+=activities[act].state;
             activityLog+='\n'
         }
 
