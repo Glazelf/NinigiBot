@@ -1,38 +1,16 @@
 module.exports.run = async (client, message, args) => {
   try {
-    // Import globals
-    let globalVars = require('../events/ready');
-
-    if (message.author.id !== globalVars.ownerID) {
-      return message.channel.send(globalVars.lackPerms)
-    };
-
-    function getUserFromMention(mention) {
-      if (!mention) return;
-
-      if (mention.startsWith('<@') && mention.endsWith('>')) {
-        mention = mention.slice(2, -1);
-
-        if (mention.startsWith('!')) {
-          mention = mention.slice(1);
-        };
-        return client.users.get(mention);
-      };
-    };
+    //Second the user is muted
+    const seconds = 10;
 
     if (args[0]) {
-      const user = getUserFromMention(args[0]);
-      let roleMute = msg.guild.roles.find("name", "Muted");
-
-      if (!user) {
-        return message.reply(`> Please use a proper mention if you want to mute someone, <@${message.author.id}.`);
-      };
-
-      // this assign the role
-      user.addRole(roleMute);
+      const member = message.mentions.members.first();
+      if (!member) return message.reply(`> Please use a proper mention if you want to mute someone, <@${message.author.id}.`);
+      const role= member.guild.roles.cache.find(role => role.name === "Muted");
+      await member.roles.add(role);
 
       // sets a timeout to unmute the user.
-      setTimeout(() => { user.removeRole(roleMute); }, 60 * 1000);
+      setTimeout(async () => { await member.roles.remove(role) }, seconds * 1000);
     };
 
   } catch (e) {
