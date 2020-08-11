@@ -15,11 +15,10 @@ module.exports.run = async (client, message) => {
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`;
 
         if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
-        parseFloat(transferAmount);
 
-        bank.currency.add(transferTarget.id, transferAmount);
+        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`);
 
-        return message.channel.send(`> Successfully added ${transferAmount}💰 to ${transferTarget.tag}.`)
+        return message.channel.send(`> Successfully added ${transferAmount}💰 to ${transferTarget.tag}. They now have ${userBalance}.`)
 
     } catch (e) {
         // log error

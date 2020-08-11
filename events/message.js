@@ -12,7 +12,7 @@ module.exports = (client, message) => {
     if (message.author.bot) return;
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0) bank.currency.add(message.author.id, 0.1);
+    if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0) bank.currency.add(message.author.id, +0.1);
 
     // Add message count
     globalVars.totalMessages += 1;
