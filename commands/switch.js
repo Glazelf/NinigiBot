@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
         const input = message.content.slice(1).trim();
         const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
         if (arguments.length<1) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
-        let switchcode = /^(?:SW)?-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})$/.exec(arguments);
+        let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(arguments);
         if (!switchcode) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
         switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
         bank.currency.switchCode(message.author.id, switchcode);
