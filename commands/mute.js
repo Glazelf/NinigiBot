@@ -25,7 +25,7 @@ module.exports.run = async (client, message, args) => {
       let roleMute = msg.guild.roles.find("name", "Muted");
 
       if (!user) {
-        return message.reply(`> Please use a proper mention if you want to mute someone, <@${message.author.id}.`);
+        return message.reply(`> Please use a proper mention if you want to mute someone, ${message.author}.`);
       };
 
       // this assign the role

@@ -4,7 +4,7 @@ exports.run = (client, message) => {
         let globalVars = require('../events/ready');
 
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(globalVars.lackPerms);
-        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, <@${message.author.id}>.`);
+        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, ${message.author}.`);
 
         let numberFromMessage = message.content.slice(7);
         let numberFromMessagestoNumber = Number(numberFromMessage);
@@ -22,7 +22,7 @@ exports.run = (client, message) => {
 
         message.channel.messages.fetch({ limit: messageCount })
             .then(messages => message.channel.bulkDelete(messages))
-            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, <@${message.author.id}>.`));
+            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, ${message.author}.`));
         return;
 
     } catch (e) {

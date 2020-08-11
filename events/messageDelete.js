@@ -21,7 +21,7 @@ module.exports = async (client, message) => {
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
-            .setDescription(`Message sent by ${message.author} deleted in <#${message.channel.id}>.`)
+            .setDescription(`Message sent by ${message.author} deleted from ${message.channel}.`)
             .addField(`Content:`, message.content, false)
             // WIP log attachments
             // .setImage(image)

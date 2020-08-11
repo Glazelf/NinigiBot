@@ -7,7 +7,7 @@ exports.run = (client, message) => {
             return message.channel.send(globalVars.lackPerms)
         };
 
-        let baseMessage = `> This bot is in ${client.guilds.cache.size} servers, <@${message.author.id}>:`;
+        let baseMessage = `> This bot is in ${client.guilds.cache.size} servers, ${message.author}:`;
 
         client.guilds.cache.forEach((guild) => {
             baseMessage = `${baseMessage}

@@ -21,7 +21,7 @@ module.exports = async (client, message, oldMessage) => {
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
-            .setDescription(`Message sent by ${message.author} edited in <#${message.channel.id}>.`)
+            .setDescription(`Message sent by ${message.author} edited in ${message.channel}.`)
             //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
             .addField(`Before:`, message.content, false)
             .addField(`After:`, oldMessage.content, false)

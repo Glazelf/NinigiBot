@@ -5,17 +5,17 @@ exports.run = (client, message) => {
 
         let starLimit = message.content.slice(11);
 
-        if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, <@${message.author.id}>.`);
+        if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, ${message.author}.`);
 
         if (message.author.id !== globalVars.ownerID) {
             return message.channel.send(client.config.lackPerms)
         };
 
-        if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, <@${message.author.id}>.`);
+        if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, ${message.author}.`);
 
         globalVars.starboardLimit = starLimit;
 
-        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, <@${message.author.id}>.`);
+        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, ${message.author}.`);
 
     } catch (e) {
         // log error

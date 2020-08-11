@@ -10,9 +10,9 @@ exports.run = (client, message) => {
         let guildID = message.content.slice(13);
         let guild = client.guilds.cache.get(guildID);
 
-        if (!guild) return message.channel.send(`> I couldn't find that server, <@${message.author.id}>.`);
+        if (!guild) return message.channel.send(`> I couldn't find that server, ${message.author}.`);
 
-        let baseMessage = `> Here's a list of all channels for ${guild.name}, <@${message.author.id}>:`;
+        let baseMessage = `> Here's a list of all channels for ${guild.name}, ${message.author}:`;
 
         guild.channels.cache.forEach((channel) => {
             baseMessage = `${baseMessage}

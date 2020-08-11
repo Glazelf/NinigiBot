@@ -42,7 +42,7 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
-        return message.channel.send(`> Hey, <@${message.author.id}>.
+        return message.channel.send(`> Hey, ${message.author}.
 > <@${globalVars.sysbotID}> (Pokémon Bot) is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
 > <@${ACNHbotID}> (ACNH Bot) is currently **${RibbotStatus}**!
 > Check the pins in <#${client.config.botChannelID}> for more information, including a FAQ and more!`);

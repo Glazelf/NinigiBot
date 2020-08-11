@@ -20,7 +20,7 @@ module.exports = (client, message) => {
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
       if (message.content.indexOf(client.config.prefix) == 0) {
-        message.author.send(`> Sorry <@${message.author.id}>, you're not allowed to use commands in private messages!`).catch(console.error);
+        message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`).catch(console.error);
       };
 
       let AttachmentString = `None`;
@@ -72,7 +72,7 @@ ${Attachment.url}`;
               .setColor("#219DCD")
               .setAuthor(`⭐ ${message.author.username}`, message.author.avatarURL())
               .setDescription(message.content)
-              .addField(`Sent in:`, `<#${message.channel.id}>`, false)
+              .addField(`Sent in:`, message.channel, false)
               .addField(`Context:`, `[Link](${message.url})`, false)
               .setImage(messageImage)
               .setTimestamp();
@@ -89,12 +89,12 @@ ${Attachment.url}`;
 
       if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
         return message.channel.send(`> The prefix for <@${globalVars.sysbotID}> is "!" and trade commands can only be used in <#${client.config.botChannelID}>.
-> For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
+> For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
       };
 
       if (message.channel.id !== client.config.botChannelID && message.guild.id == client.config.botServerID && lowercaseContent.startsWith("!trade")) {
         return message.channel.send(`> Trade commands for <@${globalVars.sysbotID}> can only be used in <#${client.config.botChannelID}>.
-> For more information ${pinsEmote} in <#${client.config.botChannelID}>, <@${message.author.id}>.`);
+> For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
       };
     };
 
