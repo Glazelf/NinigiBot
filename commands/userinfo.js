@@ -36,7 +36,7 @@ module.exports.run = async (client, message) => {
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });
         let itemField = 'None';
-        if (userDB !== null){
+        if (userDB !== null) {
             const items = await userDB.getItems();
             itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
         };
@@ -80,14 +80,14 @@ module.exports.run = async (client, message) => {
         //Activities to string
         let activityLog = '';
         const activities = memberCache.presence.activities;
-        for(const act in activities){
-            activityLog+=activities[act].name;
-            if(activities[act].details||activities[act].state) activityLog+=': ';
-            if(activities[act].details) activityLog+=activities[act].details;
-            if(activities[act].details&&activities[act].state) activityLog+=', ';
-            if(activities[act].state) activityLog+=activities[act].state;
-            activityLog+='\n'
-        }
+        for (const act in activities) {
+            activityLog += activities[act].name;
+            if (activities[act].details || activities[act].state) activityLog += ': ';
+            if (activities[act].details) activityLog += activities[act].details;
+            if (activities[act].details && activities[act].state) activityLog += ', ';
+            if (activities[act].state) activityLog += activities[act].state;
+            activityLog += '\n';
+        };
 
 
         const profileEmbed = new Discord.MessageEmbed()
@@ -97,10 +97,10 @@ module.exports.run = async (client, message) => {
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
+        if (activityLog.length >= 1) profileEmbed.addField("Activity:", `${activityLog}`, false)
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
-        if (itemField && itemField != 'None' ) profileEmbed.addField("Inventory:", itemField, false);
-        if(activityLog.length>=1) profileEmbed.addField("Activity:", `${activityLog}`, false)
+        if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
