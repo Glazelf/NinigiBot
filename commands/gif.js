@@ -15,14 +15,14 @@ exports.run = (client, message) => {
     const Discord = require("discord.js");
     let user = message.mentions.users.first();
     let gifArgumentUncased = message.content.split(` `, 3);
-    let missingGifString = `> You didn't provide a valid gif argument, <@${message.author.id}>.
+    let missingGifString = `> You didn't provide a valid gif argument, ${message.author}>.
 > For a list of gif arguments, use "${client.config.prefix}gif help".`
     if (!gifArgumentUncased[1]) {
       return message.channel.send(missingGifString);
     }
     let gifArgument = gifArgumentUncased[1].toLowerCase();
     let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-    let gifString = `Here's your gif, <@${message.author.id}>`;
+    let gifString = `Here's your gif, ${message.author}>`;
 
     
 
@@ -30,21 +30,21 @@ exports.run = (client, message) => {
 
     
     if (gifArgument == "help") {
-      return message.channel.send(`> Here's a list for all gif arguments, <@${message.author.id}>:
+      return message.channel.send(`> Here's a list for all gif arguments, ${message.author}>:
 ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
-      return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, <@${message.author.id}>.`);
+      return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}>.`);
     } else if (gif) {
       let randomGif = gif.pick();
 
       if (gifArgument == "hug") {
         if (user) {
-          gifString = `<@${message.author.id}> gave <@${user.id}> a tight hug!`;
+          gifString = `${message.author}> gave ${user} a tight hug!`;
           if (user == message.author) {
-            gifString = `<@${user.id}> is hugging themselves... This is kind of sad...`;
+            gifString = `${user} is hugging themselves... This is kind of sad...`;
           };
         } else {
-          gifString = `It seems <@${message.author.id}> wants to hug...`;
+          gifString = `It seems ${message.author}> wants to hug...`;
         };
       };
 

@@ -13,7 +13,7 @@ module.exports = (client, member) => {
             .setColor("#219DCD")
             .setAuthor(`Member left 💔`, user.avatarURL())
             .setThumbnail(user.avatarURL())
-            .addField(`User:`, `<@${user.id}>`)
+            .addField(`User:`, user)
             .setFooter(`We'll miss you, ${user.username}!`)
             .setTimestamp();
 

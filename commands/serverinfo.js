@@ -1,6 +1,6 @@
 module.exports.run = async (client, message) => {
     try {
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
+        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
         let memberFetch = await message.guild.members.fetch();
@@ -47,7 +47,7 @@ module.exports.run = async (client, message) => {
             .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL())
             .setThumbnail(message.guild.iconURL())
-            .addField("Owner:", `<@${message.guild.owner.user.id}>`, true)
+            .addField("Owner:", message.guild.owner.user, true)
             .addField("Region:", region[message.guild.region], true)
             .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
             .addField("ID:", message.guild.id, true)

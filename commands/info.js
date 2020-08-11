@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
         // Import globals
         let globalVars = require('../events/ready');
 
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, <@${message.author.id}>.`);
+        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
         let bot = await client.users.cache.get(client.config.botID);
@@ -98,8 +98,8 @@ module.exports.run = async (client, message) => {
             .addField("Messages read:", globalVars.totalMessages, true)
             .addField("Commands used:", globalVars.totalCommands, true)
             .addField("Logs made:", globalVars.totalLogs, true)
-            .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot')", true)
-            .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=368438486 'Invite Link')", true)
+            .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'NinigiBot Github')", true)
+            .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=368438486 'Discord Invite')", true)
             .addField("Uptime:", `${uptime}.`)
             .addField("Created at:", `${bot.createdAt.toUTCString().substr(0, 16)}, ${checkDays(bot.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)

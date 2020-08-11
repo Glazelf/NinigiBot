@@ -4,8 +4,8 @@ exports.run = (client, message) => {
         let conversionType = split[1];
         let conversionValue = split[2];
 
-        if (!conversionValue) return message.channel.send(`> You need to provide a number to calculate, <@${message.author.id}>.`);
-        if (isNaN(conversionValue)) return message.channel.send(`> What you provided isn't a number, <@${message.author.id}>.`);
+        if (!conversionValue) return message.channel.send(`> You need to provide a number to calculate, ${message.author}.`);
+        if (isNaN(conversionValue)) return message.channel.send(`> What you provided isn't a number, ${message.author}.`);
         parseFloat(conversionValue);
 
         conversionType = conversionType.toLowerCase();
@@ -27,11 +27,11 @@ exports.run = (client, message) => {
                 typeReturn = "kilos";
                 break;
             default:
-                return message.channel.send(`> You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs, <@${message.author.id}>.`);
+                return message.channel.send(`> You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs, ${message.author}.`);
         };
         conversionReturn = Math.round(conversionReturn * 100) / 100;
 
-        return message.channel.send(`> ${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}, <@${message.author.id}>.`);
+        return message.channel.send(`> ${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}, ${message.author}.`);
 
     } catch (e) {
         // log error
