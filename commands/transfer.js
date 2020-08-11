@@ -1,5 +1,6 @@
 exports.run = async (client, message) => {
     try {
+        const { bank } = require('../bank');
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         const currentAmount = bank.currency.getBalance(message.author.id);
@@ -15,7 +16,7 @@ exports.run = async (client, message) => {
         bank.currency.add(message.author.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return message.channel.send(`> Successfully transferred ${transferAmount}💰 to ${transferTarget.tag}. Your new balance is ${userBalance}`);
+        return message.channel.send(`> Successfully transferred ${transferAmount}💰 to ${transferTarget.tag}. Your new balance is ${userBalance}.`);
 
     } catch (e) {
         // log error
