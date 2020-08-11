@@ -31,7 +31,7 @@ exports.run = (client, message,args) => {
             messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
             
             message.channel.bulkDelete(messages)
-            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, <@${message.author.id}>.`));
+            .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
             });
 
         }else{
