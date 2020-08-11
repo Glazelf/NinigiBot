@@ -1,4 +1,4 @@
-exports.run = (client, message) => {
+exports.run = (client, message,args) => {
     try {
         // Import globals
         let globalVars = require('../events/ready');
@@ -6,7 +6,7 @@ exports.run = (client, message) => {
         if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(globalVars.lackPerms);
         if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, <@${message.author.id}>.`);
 
-        let numberFromMessage = message.content.slice(7);
+        let numberFromMessage = args[0];
         let numberFromMessagestoNumber = Number(numberFromMessage);
         let numberOfMessages = numberFromMessagestoNumber + 1;
 
@@ -18,11 +18,27 @@ exports.run = (client, message) => {
             return message.channel.send(`> Sorry, but Discord does not allow more than 100 messages to be deleted at once.`);
         };
 
-        let messageCount = parseInt(numberOfMessages);
+        let amount = parseInt(numberOfMessages);
 
-        message.channel.messages.fetch({ limit: messageCount })
+        const user = message.mentions.users.first();
+        // Fetch 100 messages (will be filtered and lowered up to max amount requested)
+        if(user){
+            message.channel.messages.fetch({
+            limit: 100,
+            }).then((messages) => {
+        
+            const filterBy = user ? user.id : Client.user.id;
+            messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
+            
+            message.channel.bulkDelete(messages)
+            .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
+            });
+
+        }else{
+            message.channel.messages.fetch({ limit: amount })
             .then(messages => message.channel.bulkDelete(messages))
             .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, <@${message.author.id}>.`));
+        }
         return;
 
     } catch (e) {
