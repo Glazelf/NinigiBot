@@ -23,7 +23,7 @@ module.exports = async (client) => {
 };
 
 module.exports.starboardLimit = 3;
-module.exports.lackPerms = `> You do not have the required permissions to do this.`;
+module.exports.lackPerms = `You do not have the required permissions to do this.`;
 module.exports.ownerAccount = `Glaze#6669`;
 module.exports.ownerID = `232875725898645504`;
 module.exports.ownerName = `Glaze`;

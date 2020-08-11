@@ -1,6 +1,12 @@
 module.exports.run = async (client, message, args) => {
   try {
-    //Second the user is muted
+    // Import globals
+    let globalVars = require('../events/ready');
+    
+    if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(globalVars.lackPerms);
+    if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_ROLES")) return message.channel.send(`> To mute people I need permission to manage roles, ${message.author}.`);
+
+    // Minutes the user is muted
     let muteTime = 60;
     let split = message.content.split(` `, 3);
 
