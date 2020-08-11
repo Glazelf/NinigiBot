@@ -115,9 +115,12 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Balance:", userBalance, true);
 
         if (switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
+
+        profileEmbed
+            .addField("Balance:", userBalance, true);
+
         if (biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField !== 'Empty') profileEmbed.addField("Inventory:", itemField, false);
 

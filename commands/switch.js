@@ -6,12 +6,12 @@ module.exports.run = async (client, message) => {
         const { bank } = require('../bank');
         const input = message.content.slice(1).trim();
         const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (arguments.length<1) return message.channel.send('> Please specify a valid switch code');
+        if (arguments.length<1) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
         let switchcode = /^(?:SW)?-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})$/.exec(arguments);
-        if (!switchcode) return message.channel.send('> Please specify a valid switch code');
+        if (!switchcode) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
         switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
         bank.currency.switchCode(message.author.id, switchcode);
-        return message.channel.send(`> Successfully updated your Nintendo Switch code.`)
+        return message.channel.send(`> Successfully updated your Nintendo Switch friend code, ${message.author}.`)
 
     } catch (e) {
         // log error
