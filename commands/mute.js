@@ -11,8 +11,9 @@ module.exports.run = async (client, message, args) => {
 
     if (args[0]) {
       const member = message.mentions.members.first();
-      if (!member) return message.reply(`> Please use a proper mention if you want to mute someone, ${message.author}.`);
+      if (!member) return message.channel.send(`> Please use a proper mention if you want to mute someone, ${message.author}.`);
       const role = member.guild.roles.cache.find(role => role.name === "Muted");
+      if (!role) return message.channel.send(`> There is no muet role. In order to mute someone, you need to create a role called "Muted", ${message.author}.`);
       await member.roles.add(role);
 
       message.channel.send(`> ${member} has been muted for ${muteTime} minute(s), ${message.author}.`)
