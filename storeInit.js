@@ -19,7 +19,7 @@ sequelize.sync({ force }).then(async () => {
 		CurrencyShop.upsert({ name: 'Juice', cost: 20, use:'> You drank the juice. You can feel the vitamins.'}),
 		CurrencyShop.upsert({ name: 'Pokéball', cost: 50, use:`> You used the pokeball. Gotta catch 'em all!`}),
 		CurrencyShop.upsert({ name: 'Chocolate', cost: 75, use:'> You ate the chocolate. So tasty.'}),
-		CurrencyShop.upsert({ name: 'Keysss', cost: 200, use:'> You used the keys. KEEEEYS. KEEEYS.' }),
+		CurrencyShop.upsert({ name: 'Keysss', cost: 200, use:'> You used the keys to obtain a giant fighting robot for no explicable reason. KEEEEYS. KEEEYS.' }),
 		CurrencyShop.upsert({ name: 'Shinx shirt', cost: 500, use:'> You put on the Shinx shirt. Cute!' }),
 		CurrencyShop.upsert({ name: 'Gilgamesh nudes', cost: 750, use:'> You look at the Gilgamesh nudes. Now you kinda horny...' }),
 		CurrencyShop.upsert({ name: 'Konohana figure', cost: 1000, use:'> You look at the konohana figure. Please upload a .pkm file.'}),
