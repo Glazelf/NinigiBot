@@ -4,15 +4,16 @@ module.exports.run = async (client, message) => {
         let globalVars = require('../events/ready');
 
         if (message.author.id !== globalVars.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
+            return message.channel.send(globalVars.lackPerms);
         };
 
         const { bank } = require('../bank');
         const member = message.mentions.members.first();
+        
         if (!member) return message.channel.send(`> Please use a proper mention if you want to reset someones bio, ${message.author}.`);
         bank.currency.biography(member.id, "None");
 
-        return message.channel.send(`> Biography reset!, ${message.author}.`)
+        return message.channel.send(`> Biography reset, ${message.author}.`);
 
     } catch (e) {
         // log error
