@@ -3,6 +3,7 @@ module.exports = (client, message) => {
     const Discord = require("discord.js");
     const { bank } = require('../bank');
     let NinigiDMChannelID = "674371091006881832";
+    let sysbotID = `696086046685003786`;
     let secondCharacter = message.content.charAt(1);
     let Konohana = client.users.cache.get(sysbotID);
 
@@ -87,12 +88,12 @@ ${Attachment.url}`;
       let pinsEmote = "<a:checkthepins:712296040455471185>";
 
       if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
-        return message.channel.send(`> The prefix for <@${sysbotID}> is "!" and trade commands can only be used in <#${client.config.botChannelID}>.
+        return message.channel.send(`> The prefix for ${Konohana} is "!" and trade commands can only be used in <#${client.config.botChannelID}>.
 > For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
       };
 
       if (message.channel.id !== client.config.botChannelID && message.guild.id == client.config.botServerID && lowercaseContent.startsWith("!trade")) {
-        return message.channel.send(`> Trade commands for <@${sysbotID}> can only be used in <#${client.config.botChannelID}>.
+        return message.channel.send(`> Trade commands for ${Konohana} can only be used in <#${client.config.botChannelID}>.
 > For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
       };
     };
