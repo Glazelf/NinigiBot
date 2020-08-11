@@ -3,8 +3,9 @@ module.exports.run = async (client, message) => {
         // Import globals
         let globalVars = require('../events/ready');
 
+        let sysbotID = `696086046685003786`;
         let ACNHbotID = "739823632267608135";
-        let Konohana = client.users.cache.get(globalVars.sysbotID);
+        let Konohana = client.users.cache.get(sysbotID);
         let Ribbot = client.users.cache.get(ACNHbotID);
 
         let KonohanaStatus = "Offline";
