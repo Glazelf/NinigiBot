@@ -54,38 +54,6 @@ module.exports.run = async (client, message) => {
             return days + (days == 1 ? " day" : " days") + " ago";
         };
 
-        // Name presence type
-        let presenceType = "Playing";
-        if (userCache.presence.game) {
-            switch (userCache.presence.game.type) {
-                case 0:
-                    presenceType = "Playing";
-                    break;
-                case 1:
-                    presenceType = "Streaming";
-                    break;
-                case 2:
-                    presenceType = "Listening to";
-                    break;
-                case 3:
-                    presenceType = "Watching";
-                    break;
-                default:
-                    presenceType = "Playing";
-                    break;
-            };
-        } else {
-            presenceType = "Playing";
-        };
-
-        // Define presence name
-        let presenceName = "";
-        if (!userCache.presence.game) {
-            presenceName = "nothing";
-        } else {
-            presenceName = userCache.presence.game;
-        };
-
         // Clear up status wording
         let userStatus = "Error?";
         switch (userCache.presence.status) {
@@ -109,19 +77,31 @@ module.exports.run = async (client, message) => {
                 break;
         };
 
+        //Activities to string
+        let activityLog = '';
+        const activities = memberCache.presence.activities;
+        for(const act in activities){
+            if(activities[act].name==='Custom Status'){
+                activityLog+=activities[act].state
+            }else{
+                activityLog+=activities[act].name
+            }
+            activityLog+='\n'
+        }
+
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(userCache.username, userCache.avatarURL())
             .setThumbnail(userCache.avatarURL())
             .addField("Account:", user, true)
-            // WIP fix
-            // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None' ) profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
+            .addField("Activity:", `${activityLog}`, false)
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, false)
