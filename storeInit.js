@@ -8,12 +8,13 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 });
 
 const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
-require('./models/Users')(sequelize, Sequelize.DataTypes);
-require('./models/UserItems')(sequelize, Sequelize.DataTypes);
+const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
+const UserItems = require('./models/UserItems')(sequelize, Sequelize.DataTypes);
 
-const force = process.argv.includes('--force') || process.argv.includes('-f');
 
-sequelize.sync({ force }).then(async () => {
+Users.sync();
+UserItems.sync({ force : true });
+CurrencyShop.sync({ force : true }).then(async () => {
 	const shop = [
 		CurrencyShop.upsert({ name: 'Water', cost: 10, use:'> You drank the water. You are no longer thirsty.' }),
 		CurrencyShop.upsert({ name: 'Juice', cost: 20, use:'> You drank the juice. You can feel the vitamins.'}),
