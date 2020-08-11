@@ -113,8 +113,7 @@ module.exports.run = async (client, message) => {
             .setColor("#219DCD")
             .setAuthor(userCache.username, userCache.avatarURL())
             .setThumbnail(userCache.avatarURL())
-            .addField("Full account:", user, true)
-            .addField("ID:", userCache.id, true)
+            .addField("Account:", user, true)
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
