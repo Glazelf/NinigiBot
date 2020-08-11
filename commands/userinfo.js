@@ -100,8 +100,8 @@ module.exports.run = async (client, message) => {
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None' ) profileEmbed.addField("Inventory:", itemField, false);
+        if(activityLog.length>=1) profileEmbed.addField("Activity:", `${activityLog}`, false)
         profileEmbed
-            .addField("Activity:", `${activityLog}`, false)
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, false)
