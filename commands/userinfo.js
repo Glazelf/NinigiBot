@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
-        const {bank} = require('../bank');
+        const { bank } = require('../bank');
         const { Users } = require('../storeObjects');
 
         let memberFetch = await message.guild.members.fetch();
@@ -29,6 +29,8 @@ module.exports.run = async (client, message) => {
 
         //balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
+        let switchCode = bank.currency.getSwitchCode(userCache.id);
+        let biography = bank.currency.getBiography(userCache.id);
 
         // inventory check
         const target = message.mentions.users.first() || message.author;
@@ -113,8 +115,13 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-            .addField("Balance:", userBalance, true)
-            .addField("Inventory:", itemField, false)
+            .addField("Balance:", userBalance, true);
+
+        if (switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
+        if (biography !== 'None') profileEmbed.addField("Biography:", biography, false);
+        if (itemField !== 'Empty') profileEmbed.addField("Inventory:", itemField, false);
+
+        profileEmbed
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, true)

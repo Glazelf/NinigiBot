@@ -10,6 +10,16 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: 0,
 			allowNull: false,
 		},
+		swcode: {
+			type: DataTypes.STRING,
+			defaultValue: "None",
+			allowNull: false,
+		},
+		biography: {
+			type: DataTypes.STRING,
+			defaultValue: "None",
+			allowNull: false,
+		},
 	}, {
 		timestamps: false,
 	});
