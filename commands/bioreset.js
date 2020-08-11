@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
         // Import globals
         let globalVars = require('../events/ready');
 
-        if (message.author.id !== globalVars.ownerID) {
+        if (!message.member.hasPermission("ADMINISTRATOR")) {
             return message.channel.send(globalVars.lackPerms);
         };
 
