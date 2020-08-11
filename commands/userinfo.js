@@ -35,8 +35,8 @@ module.exports.run = async (client, message) => {
         // inventory check
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });
-        let itemField = "Empty";
-        if (userDB) {
+        let itemField = 'None';
+        if (userDB !== null){
             const items = await userDB.getItems();
             itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
         };
@@ -118,19 +118,14 @@ module.exports.run = async (client, message) => {
             // WIP fix
             // .addField("Activity:", `${memberCache.presence.activities}`, true)
             .addField("Availability:", userStatus, true)
-
-        if (switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
-
-        profileEmbed
-            .addField("Balance:", userBalance, true);
-
-        if (biography !== 'None') profileEmbed.addField("Biography:", biography, false);
-        if (itemField !== 'Empty') profileEmbed.addField("Inventory:", itemField, false);
-
+            .addField("Balance:", userBalance, true)
+        if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
+        if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
+        if (itemField && itemField != 'None' ) profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true)
-            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, true)
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
+            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, false)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
