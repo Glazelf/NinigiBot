@@ -35,10 +35,11 @@ module.exports.run = async (client, message) => {
         // inventory check
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });
+        let itemField = "Empty";
         if (userDB) {
             const items = await userDB.getItems();
-            let itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
-        } else itemField = "Empty";
+            itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
+        };
 
 
         let rolesSorted = "None";
