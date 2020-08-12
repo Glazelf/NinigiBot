@@ -83,9 +83,11 @@ module.exports.run = async (client, message) => {
         for (const act in activities) {
             activityLog += activities[act].name;
             if (activities[act].details || activities[act].state) activityLog += ': ';
+            if (activities[act].emoji) activityLog += (activities[act].emoji.toString() + ' ');
             if (activities[act].details) activityLog += activities[act].details;
             if (activities[act].details && activities[act].state) activityLog += ', ';
             if (activities[act].state) activityLog += activities[act].state;
+
             activityLog += '\n';
         };
 
