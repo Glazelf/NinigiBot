@@ -1,5 +1,6 @@
 module.exports = async (client) => {
   try {
+    const stan = require('../stan')(client);
     const { bank } = require('../bank');
     const { Users } = require('../storeObjects');
     const storedBalances = await Users.findAll();
@@ -30,3 +31,4 @@ module.exports.ownerName = `Glaze`;
 module.exports.totalCommands = 0;
 module.exports.totalLogs = 0;
 module.exports.totalMessages = 0;
+module.exports.stanRole = "stan";
