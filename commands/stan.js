@@ -10,10 +10,10 @@ module.exports.run = async (client, message, args) => {
 
     if (member.roles.cache.has(role.id)) {
       await member.roles.remove(role);
-      message.reply(`> Now you will not be stanned, ${message.author}. *Booo*`);
+      message.channel.send(`> Now you will not be stanned, ${message.author}. *Booo*`);
     } else {
       await member.roles.add(role);
-      message.reply(`> Now you will be stanned, ${message.author}! Yay!`);
+      message.channel.send(`> Now you will be stanned, ${message.author}! Yay!`);
     };
 
   } catch (e) {
