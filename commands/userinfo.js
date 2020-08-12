@@ -79,16 +79,21 @@ module.exports.run = async (client, message) => {
 
         //Activities to string
         let activityLog = '';
+        let customStatus = '';
         const activities = memberCache.presence.activities;
         for (const act in activities) {
-            activityLog += activities[act].name;
-            if (activities[act].details || activities[act].state) activityLog += ': ';
-            if (activities[act].emoji) activityLog += (activities[act].emoji.toString() + ' ');
-            if (activities[act].details) activityLog += activities[act].details;
-            if (activities[act].details && activities[act].state) activityLog += ', ';
-            if (activities[act].state) activityLog += activities[act].state;
-
-            activityLog += '\n';
+            if (activities[act].name === 'Custom Status') {
+                let emoji = '';
+                if (activities[act].emoji) emoji = activities[act].emoji.toString() + ' ';
+                customStatus = emoji + activities[act].state;
+            } else {
+                activityLog += activities[act].name;
+                if (activities[act].details || activities[act].state) activityLog += ': ';
+                if (activities[act].details) activityLog += activities[act].details;
+                if (activities[act].details && activities[act].state) activityLog += ', ';
+                if (activities[act].state) activityLog += activities[act].state;
+                activityLog += '\n';
+            };
         };
 
         const profileEmbed = new Discord.MessageEmbed()
@@ -98,7 +103,8 @@ module.exports.run = async (client, message) => {
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
-        if (activityLog.length >= 1) profileEmbed.addField("Activity:", `${activityLog}`, false)
+        if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        if (activityLog.length >= 1) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
