@@ -81,7 +81,6 @@ module.exports.run = async (client, message) => {
         let activityLog = '';
         let customStatus = '';
         const activities = memberCache.presence.activities;
-        console.log(activities);
         for (const act in activities) {
             if(activities[act].name==='Custom Status'){
                 let emoji = ''
