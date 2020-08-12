@@ -7,7 +7,6 @@ const channelName = 'supersecretbotchat'
 const gifTags = ['pokemon', 'lelouch']
 const Discord = require("discord.js");
 const config = require("./config.json");
-client.config = config;
 
 module.exports = async (client) => {
     new cron.CronJob(time, async () => {
