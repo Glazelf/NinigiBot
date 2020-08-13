@@ -82,11 +82,12 @@ module.exports.run = async (client, message) => {
         let customStatus = '';
         const activities = memberCache.presence.activities;
         for (const act in activities) {
-            if (activities[act].name === 'Custom Status') {
-                let emoji = '';
-                if (activities[act].emoji) emoji = activities[act].emoji.toString() + ' ';
-                customStatus = emoji + activities[act].state;
-            } else {
+            if(activities[act].name==='Custom Status'){
+                let emoji = null
+                if(activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
+                if(emoji) customStatus = emoji.toString()+' ';
+                customStatus += activities[act].state;
+            }else{
                 activityLog += activities[act].name;
                 if (activities[act].details || activities[act].state) activityLog += ': ';
                 if (activities[act].details) activityLog += activities[act].details;
