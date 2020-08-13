@@ -20,10 +20,10 @@ module.exports.run = async (client, message) => {
 
     if (roleName) {
       await roleName.destroy();
-      return message.channel.send(`The role ${role.name} is no longer eligible to be selfassigned, ${message.author}.`);
+      return message.channel.send(`The role **${role.name}** is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
       await EligibleRoles.upsert({ name: role.name });
-      return message.channel.send(`The role ${role.name} is now eligible to be selfassigned, ${message.author}.`);
+      return message.channel.send(`The role **${role.name}** is now eligible to be selfassigned, ${message.author}.`);
     };
 
   } catch (e) {

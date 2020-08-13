@@ -29,10 +29,10 @@ module.exports.run = async (client, message, args) => {
     const role = member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
     if (member.roles.cache.has(role.id)) {
       await member.roles.remove(role);
-      return message.channel.send(`> You no longer have the ${role.name}, ${member}. *booo*`);
+      return message.channel.send(`> You no longer have the **${role.name}**, ${member}. *booo*`);
     } else {
       await member.roles.add(role);
-      return message.channel.send(`> You now have the ${role.name} role, ${member}! Yay!`);
+      return message.channel.send(`> You now have the **${role.name}** role, ${member}! Yay!`);
     };
 
   } catch (e) {
