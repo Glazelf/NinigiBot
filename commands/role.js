@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args) => {
 
     const requestRole = arguments.join(' ');
 
-    if (requestRole.length < 1) return message.channel.send(`> Please provide a role, use \`!role  help\` to see the available roles, ${message.author}.`);
+    if (requestRole.length < 1) return message.channel.send(`> Please provide a role, use \`!role help\` to see the available roles, ${message.author}.`);
 
     const db = await EligibleRoles.findAll();
     const roles = db.map(role => role.name);

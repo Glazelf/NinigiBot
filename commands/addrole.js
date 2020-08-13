@@ -10,7 +10,7 @@ module.exports.run = async (client, message) => {
     const input = message.content.slice(1).trim();
     const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
 
-    if (arguments.length < 1) return message.channel.send(`> Please provide a role, use \`!role  help\` to see the available roles, ${message.author}.`);
+    if (arguments.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
 
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === arguments.toLowerCase());
 
