@@ -94,8 +94,7 @@ module.exports.run = async (client, message) => {
                 if (activities[act].details && activities[act].state) activityLog += ', ';
                 if (activities[act].state) activityLog += activities[act].state;
                 activityLog += '\n';
-            }
-            
+            };
         };
 
         const profileEmbed = new Discord.MessageEmbed()
@@ -105,8 +104,8 @@ module.exports.run = async (client, message) => {
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
-        if (activityLog.length >= 1) profileEmbed.addField("Activities:", `${activityLog}`, false)
-        if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true)
+        if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        if (activityLog.length >= 1) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
