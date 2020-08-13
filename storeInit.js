@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 
+
 const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
@@ -10,9 +11,11 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
 const UserItems = require('./models/UserItems')(sequelize, Sequelize.DataTypes);
+const EligibleRoles = require('./models/EligibleRoles')(sequelize,Sequelize.DataTypes);
 
-
+//Run force : true ONLY IF YOU WANT TO RESET THE SAVED ITEMS
 Users.sync();
+EligibleRoles.sync();
 UserItems.sync({ force : true });
 CurrencyShop.sync({ force : true }).then(async () => {
 	const shop = [
