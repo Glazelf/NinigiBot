@@ -4,7 +4,7 @@ module.exports.run = async (client, message) => {
         let globalVars = require('../events/ready');
 
         if (message.author.id !== globalVars.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
+            return message.reply(globalVars.lackPerms)
         };
         const { bank } = require('../bank');
         const input = message.content.slice(1).trim();

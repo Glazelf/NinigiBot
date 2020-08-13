@@ -4,7 +4,7 @@ module.exports.run = async (client, message) => {
         let globalVars = require('../events/ready');
 
         if (!message.member.hasPermission("ADMINISTRATOR")) {
-            return message.channel.send(globalVars.lackPerms);
+            return message.reply(globalVars.lackPerms);
         };
 
         const { bank } = require('../bank');

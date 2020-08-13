@@ -4,7 +4,7 @@ exports.run = (client, message) => {
         let globalVars = require('../events/ready');
 
         if (message.author.id !== globalVars.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
+            return message.reply(globalVars.lackPerms)
         };
 
         let baseMessage = `> This bot is in ${client.guilds.cache.size} servers, ${message.author}:`;
