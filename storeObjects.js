@@ -26,7 +26,6 @@ Users.prototype.addItem = async function(item) {
 	return UserItems.create({ user_id: this.user_id, item_id: item.id, amount: 1 });
 };
 
-
 Users.prototype.getItems = function() {
 	return UserItems.findAll({
 		where: { user_id: this.user_id },
