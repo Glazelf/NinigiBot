@@ -22,7 +22,8 @@ module.exports.run = async (client, message, args) => {
 
     if (roles.length < 1) return message.channel.send(`> There are no eligible roles to assign to yourself in this server, ${message.author}.`);
     if (requestRole.toLowerCase() === 'help') {
-      return message.channel.send('> **List of available roles:**\n' + roles.join(', '));
+      return message.channel.send(`> **List of available roles:** 
+> ${roles.join(', ')}`)
     };
     if (!roles.map(a => a.toLowerCase()).includes(requestRole.toLowerCase())) return message.channel.send(`> Invalid role, use \`!role help\` to see the available roles, ${message.author}.`);
 
