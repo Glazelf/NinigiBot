@@ -1,6 +1,6 @@
 module.exports.run = async (client, message, args) => {
   try {
-    const { EligibleRoles } = require('../storeObjects')
+    const { EligibleRoles } = require('../database/dbObjects')
 
     // Import globals
     let globalVars = require('../events/ready');
@@ -18,16 +18,26 @@ module.exports.run = async (client, message, args) => {
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role, use \`!role help\` to see the available roles, ${message.author}.`);
 
     const db = await EligibleRoles.findAll();
-    const roles = db.map(role => role.name);
+    const roles = db.map(role => role.role_id);
 
     if (roles.length < 1) return message.channel.send(`> There are no eligible roles to assign to yourself in this server, ${message.author}.`);
     if (requestRole.toLowerCase() === 'help') {
+      let roleText = []
+      member.guild.roles.cache.each(role=>{
+        if(roles.includes(role.id)){
+          roleText.push(role)
+        }
+      })
+      roleText.sort((r, r2) => r2.position - r.position).join(", ");
+      roleText = roleText.map(role=>role.name)
       return message.channel.send(`> **List of available roles:** 
-> ${roles.join(', ')}`)
+> ${roleText.join(', ')}`)
     };
-    if (!roles.map(a => a.toLowerCase()).includes(requestRole.toLowerCase())) return message.channel.send(`> Invalid role, use \`!role help\` to see the available roles, ${message.author}.`);
+    const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
+    if (!role) return message.reply('That role does not exist.');
+    
+    if (!roles.includes(role.id)) return message.channel.send(`> Invalid role, use \`!role help\` to see the available roles, ${message.author}.`);
 
-    const role = member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
     if (member.roles.cache.has(role.id)) {
       await member.roles.remove(role);
       return message.channel.send(`> You no longer have the **${role.name}**, ${member}. *booo*`);
