@@ -1,7 +1,7 @@
 exports.run = async (client, message) => {
     try {
-        const { bank } = require('../bank');
-        const { Users, CurrencyShop } = require('../storeObjects');
+        const { bank } = require('../database/bank');
+        const { Users, CurrencyShop } = require('../database/dbObjects');
         const { Op } = require('sequelize');
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);

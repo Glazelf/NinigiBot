@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Users } = require('./storeObjects');
+const { Users } = require('./dbObjects');
 module.exports = {
     bank: {
         _currency: null,

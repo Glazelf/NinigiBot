@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
             return message.reply(globalVars.lackPerms);
         };
 
-        const { bank } = require('../bank');
+        const { bank } = require('../database/bank');
         const member = message.mentions.members.first();
         
         if (!member) return message.channel.send(`> Please use a proper mention if you want to reset someones bio, ${message.author}.`);

@@ -1,6 +1,6 @@
 exports.run = async (client, message) => {
     try {
-        const { Users } = require('../storeObjects');
+        const { Users } = require('../database/dbObjects');
 
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });

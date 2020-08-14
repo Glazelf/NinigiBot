@@ -1,7 +1,7 @@
 module.exports = (client, message) => {
   try {
     const Discord = require("discord.js");
-    const { bank } = require('../bank');
+    const { bank } = require('../database/bank');
     let NinigiDMChannelID = "674371091006881832";
     let sysbotID = `696086046685003786`;
     let secondCharacter = message.content.charAt(1);

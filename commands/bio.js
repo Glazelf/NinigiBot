@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
         // Import globals
         let globalVars = require('../events/ready');
 
-        const { bank } = require('../bank');
+        const { bank } = require('../database/bank');
         const input = message.content.slice(1).trim();
         const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
 

@@ -1,6 +1,6 @@
 exports.run = async (client, message) => {
     try {
-        const { bank } = require('../bank');
+        const { bank } = require('../database/bank');
         return message.channel.send(
             bank.currency.sort((a, b) => b.balance - a.balance)
                 .filter(user => client.users.cache.has(user.user_id))

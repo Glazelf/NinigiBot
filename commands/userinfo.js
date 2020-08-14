@@ -3,8 +3,8 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
-        const { bank } = require('../bank');
-        const { Users } = require('../storeObjects');
+        const { bank } = require('../database/bank');
+        const { Users } = require('../database/dbObjects');
 
         let memberFetch = await message.guild.members.fetch();
         let userID = message.content.slice(10);

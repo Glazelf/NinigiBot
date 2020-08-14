@@ -4,17 +4,17 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
 	logging: false,
-	storage: 'database.sqlite',
+	storage: 'database/database.sqlite',
 });
 
-const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
-const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
-const UserItems = require('./models/UserItems')(sequelize, Sequelize.DataTypes);
-const EligibleRoles = require('./models/EligibleRoles')(sequelize,Sequelize.DataTypes);
+const CurrencyShop = require('./database/models/CurrencyShop')(sequelize, Sequelize.DataTypes);
+const Users = require('./database/models/Users')(sequelize, Sequelize.DataTypes);
+const UserItems = require('./database/models/UserItems')(sequelize, Sequelize.DataTypes);
+const EligibleRoles = require('./database/models/EligibleRoles')(sequelize,Sequelize.DataTypes);
 
 //Run force : true ONLY IF YOU WANT TO RESET THE SAVED ITEMS
 Users.sync();
-EligibleRoles.sync();
+EligibleRoles.sync({ force : true });
 UserItems.sync({ force : true });
 CurrencyShop.sync({ force : true }).then(async () => {
 	const shop = [
