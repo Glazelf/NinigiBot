@@ -9,7 +9,7 @@ exports.run = (client, message) => {
     let helpText = `> **Pokémon:**
     > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
     > **Not Pokémon:**
-    > Dango, Jojo, Stitch
+    > Dango, Jojo, Stitch, Kuzco
     > **Interactions:**
     > Hug`;
 
@@ -23,7 +23,7 @@ exports.run = (client, message) => {
     }
     let gifArgument = gifArgumentUncased[1].toLowerCase();
     let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-    let gifString = `Here's your gif, ${message.author}>`;
+    let gifString = `Here's your gif, ${message.author}`;
 
     
 
@@ -31,7 +31,7 @@ exports.run = (client, message) => {
 
     
     if (gifArgument == "help") {
-      return message.channel.send(`> Here's a list for all gif arguments, ${message.author}>:
+      return message.channel.send(`> Here's a list for all gif arguments, ${message.author}:
 ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
       return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}>.`);
