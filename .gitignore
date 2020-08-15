@@ -1,5 +1,6 @@
 /node_modules
 /.idea
+/.vs
 config.json
 README.md
 log*
@@ -16,4 +17,4 @@ init
 .channels
 *.bak
 *.db
-database.sqlite
+*sqlite
