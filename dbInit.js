@@ -14,7 +14,7 @@ const EligibleRoles = require('./database/models/EligibleRoles')(sequelize,Seque
 
 //Run force : true ONLY IF YOU WANT TO RESET THE SAVED ITEMS
 Users.sync();
-EligibleRoles.sync({ force : true });
+EligibleRoles.sync({ force : false });
 UserItems.sync({ force : true });
 CurrencyShop.sync({ force : true }).then(async () => {
 	const shop = [

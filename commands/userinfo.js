@@ -41,7 +41,6 @@ module.exports.run = async (client, message) => {
             itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
         };
 
-
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
