@@ -81,12 +81,12 @@ module.exports.run = async (client, message) => {
         let customStatus = '';
         const activities = memberCache.presence.activities;
         for (const act in activities) {
-            if(activities[act].name==='Custom Status'){
+            if (activities[act].name === 'Custom Status') {
                 let emoji = null
-                if(activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
-                if(emoji) customStatus = emoji.toString()+' ';
+                if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
+                if (emoji) customStatus = emoji.toString() + ' ';
                 customStatus += activities[act].state;
-            }else{
+            } else {
                 activityLog += activities[act].name;
                 if (activities[act].details || activities[act].state) activityLog += ': ';
                 if (activities[act].details) activityLog += activities[act].details;
@@ -96,7 +96,12 @@ module.exports.run = async (client, message) => {
             };
         };
 
-        return console.log(activityLog)
+        let actBool = new Boolean(activities[0]);
+        if (actBool == true) {
+            if (activities[0].name === 'Custom Status') {
+                actBool = new Boolean(activities[1]);
+            };
+        };
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
@@ -106,7 +111,7 @@ module.exports.run = async (client, message) => {
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
         if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true);
-        if (activityLog.length >= 1) profileEmbed.addField("Activities:", `${activityLog}`, false);
+        if (actBool == true) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
