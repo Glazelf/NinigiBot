@@ -33,7 +33,7 @@ module.exports = {
                             user.biography = text;
                             return user.save();
                         }
-                        const newUser = await Users.create({ user_id: id, biograhy: text});
+                        const newUser = await Users.create({ user_id: id, biography: text});
                         money.set(id, newUser);
                         return newUser;
                     }
@@ -43,6 +43,27 @@ module.exports = {
                     value: function getBiography(id) {
                         const user = money.get(id);
                         return user ? user.biography : 'None';
+                    },
+                });
+
+                Reflect.defineProperty(money, 'birthday', {
+                    value: async function biography(id, birthday) {
+                        const user = money.get(id);
+                        if (user) {
+                            user.birthday = birthday
+                            console.log(user.birthday)
+                            return user.save();
+                        }
+                        const newUser = await Users.create({ user_id: id, birthday: birthday});
+                        money.set(id, newUser);
+                        return newUser;
+                    }
+                });
+
+                Reflect.defineProperty(money, 'getBirthday', {
+                    value: function getBiography(id) {
+                        const user = money.get(id);
+                        return user ? user.birthday : null;
                     },
                 });
 

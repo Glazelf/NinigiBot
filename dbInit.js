@@ -13,10 +13,10 @@ const UserItems = require('./database/models/UserItems')(sequelize, Sequelize.Da
 const EligibleRoles = require('./database/models/EligibleRoles')(sequelize,Sequelize.DataTypes);
 
 //Run force : true ONLY IF YOU WANT TO RESET THE SAVED ITEMS
-Users.sync();
-EligibleRoles.sync({ force : false });
-UserItems.sync({ force : true });
-CurrencyShop.sync({ force : true }).then(async () => {
+Users.sync({ alter : true });
+EligibleRoles.sync({ alter : true });
+UserItems.sync({ alter : true });
+CurrencyShop.sync({ alter : true }).then(async () => {
 	const shop = [
 		CurrencyShop.upsert({ name: 'Water', cost: 10, use:'> You drank the water. You are no longer thirsty.' }),
 		CurrencyShop.upsert({ name: 'Juice', cost: 20, use:'> You drank the juice. You can feel the vitamins.'}),

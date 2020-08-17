@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: "None",
 			allowNull: false,
 		},
+		birthday: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 	}, {
 		timestamps: false,
 	});
