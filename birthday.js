@@ -11,8 +11,8 @@ module.exports = async (client) => {
     new cron.CronJob(time, async () => {
         let globalVars = require('./events/ready');
         let guild = client.guilds.cache.get(guildID);
-        const birthdayRole =  guild.roles.cache.find(role => role.name === globalVars.birthRole)
-        if(!birthdayRole) return;
+        const birthdayRole = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.birthRole);
+        if (!birthdayRole) return;
         let yesterdayCuties = birthdayRole.members;
         yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole))
         const cuties = [];
@@ -30,7 +30,7 @@ module.exports = async (client) => {
 
         if (cuties.length < 1) return;
 
-        let channel = guild.channels.cache.find(channel => channel.name === 'casual');
+        let channel = guild.channels.cache.find(channel => channel.id === channelID);
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
