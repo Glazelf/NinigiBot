@@ -11,7 +11,7 @@ module.exports = async (client) => {
     new cron.CronJob(time, async () => {
         let globalVars = require('./events/ready');
         let guild = client.guilds.cache.get(guildID)
-        let candidates = guild.roles.cache.find(role => role.name === globalVars.stanRole).members.map(m => m.user);
+        let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
         if (candidates.length < 1) return;
 
         const giphyRandom = require("giphy-random");
