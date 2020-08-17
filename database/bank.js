@@ -12,11 +12,11 @@ module.exports = {
                         if (user) {
                             user.swcode = code
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, swcode:code });
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getSwitchCode', {
@@ -32,11 +32,11 @@ module.exports = {
                         if (user) {
                             user.biography = text;
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, biography: text});
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getBiography', {
@@ -51,13 +51,12 @@ module.exports = {
                         const user = money.get(id);
                         if (user) {
                             user.birthday = birthday
-                            console.log(user.birthday)
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, birthday: birthday});
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getBirthday', {
@@ -73,11 +72,11 @@ module.exports = {
                         if (user) {
                             user.balance += Number(amount);
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, balance: amount });
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getBalance', {
@@ -88,7 +87,7 @@ module.exports = {
                 });
                 this._currency = money;
 
-            }
+            };
             return this._currency;
         }
     }
