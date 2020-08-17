@@ -2,10 +2,6 @@ exports.run = (client, message) => {
   try {
     const { search }  = require('../gifs/search');
 
-    Array.prototype.pick = function () {
-      return this[Math.floor(Math.random() * this.length)];
-    };
-
     let helpText = `> **Pokémon:**
     > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Reshiram, Lurantis, Dracovish
     > **Not Pokémon:**
@@ -36,7 +32,6 @@ ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
       return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}>.`);
     } else if (gif) {
-      let randomGif = gif.pick();
 
       if (gifArgument == "hug") {
         if (user) {
@@ -53,7 +48,7 @@ ${helpText}`);
         .setColor("#219DCD")
         .setAuthor(`${gifArgumentCapitalized} Gif`, message.author.avatarURL())
         .setDescription(gifString)
-        .setImage(randomGif)
+        .setImage(gif)
         .setFooter(`Requested by ${message.author.tag}`)
         .setTimestamp();
 
