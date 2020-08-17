@@ -12,11 +12,11 @@ module.exports = {
                         if (user) {
                             user.swcode = code
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, swcode:code });
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getSwitchCode', {
@@ -32,11 +32,11 @@ module.exports = {
                         if (user) {
                             user.biography = text;
                             return user.save();
-                        }
-                        const newUser = await Users.create({ user_id: id, biograhy: text});
+                        };
+                        const newUser = await Users.create({ user_id: id, biography: text});
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getBiography', {
@@ -46,17 +46,37 @@ module.exports = {
                     },
                 });
 
+                Reflect.defineProperty(money, 'birthday', {
+                    value: async function biography(id, birthday) {
+                        const user = money.get(id);
+                        if (user) {
+                            user.birthday = birthday
+                            return user.save();
+                        };
+                        const newUser = await Users.create({ user_id: id, birthday: birthday});
+                        money.set(id, newUser);
+                        return newUser;
+                    },
+                });
+
+                Reflect.defineProperty(money, 'getBirthday', {
+                    value: function getBiography(id) {
+                        const user = money.get(id);
+                        return user ? user.birthday : null;
+                    },
+                });
+
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);
                         if (user) {
                             user.balance += Number(amount);
                             return user.save();
-                        }
+                        };
                         const newUser = await Users.create({ user_id: id, balance: amount });
                         money.set(id, newUser);
                         return newUser;
-                    }
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getBalance', {
@@ -67,7 +87,7 @@ module.exports = {
                 });
                 this._currency = money;
 
-            }
+            };
             return this._currency;
         }
     }

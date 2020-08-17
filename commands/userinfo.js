@@ -31,6 +31,7 @@ module.exports.run = async (client, message) => {
         let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
         let switchCode = bank.currency.getSwitchCode(userCache.id);
         let biography = bank.currency.getBiography(userCache.id);
+        let birthday = bank.currency.getBirthday(userCache.id);
 
         // inventory check
         const target = message.mentions.users.first() || message.author;
@@ -111,6 +112,7 @@ module.exports.run = async (client, message) => {
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
         if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        if (birthday) profileEmbed.addField("Birthday:", `${require('../parseDate')(birthday)}`, true);
         if (actBool == true) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
