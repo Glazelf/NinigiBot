@@ -82,22 +82,6 @@ ${Attachment.url}`;
       };
     });
 
-    if (message.guild.id == client.config.botServerID) {
-      // Correct Sysbot prefix
-      let lowercaseContent = message.content.toLowerCase();
-      let pinsEmote = "<a:checkthepins:712296040455471185>";
-
-      if (lowercaseContent.startsWith("?trade") || lowercaseContent.startsWith(".trade") || lowercaseContent.startsWith("$trade") || lowercaseContent.startsWith("&trade")) {
-        return message.channel.send(`> The prefix for ${Konohana} is "!" and trade commands can only be used in <#${client.config.botChannelID}>.
-> For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
-      };
-
-      if (message.channel.id !== client.config.botChannelID && message.guild.id == client.config.botServerID && lowercaseContent.startsWith("!trade")) {
-        return message.channel.send(`> Trade commands for ${Konohana} can only be used in <#${client.config.botChannelID}>.
-> For more information ${pinsEmote} in <#${client.config.botChannelID}>, ${message.author}.`);
-      };
-    };
-
     // Ignore messages not starting with the prefix
     if (message.content.indexOf(client.config.prefix) !== 0) return;
 
