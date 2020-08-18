@@ -7,7 +7,7 @@ module.exports = async (reaction, client, message) => {
         // };
 
         return;
-        
+
     } catch (e) {
         // log error
         console.log(e);

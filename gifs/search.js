@@ -7,8 +7,8 @@ Array.prototype.pick = function () {
 };
 
 module.exports = {
-    search : gifArgument =>{
-        const candidates = pokemon[gifArgument]||reactions[gifArgument]||others[gifArgument]
+    search: gifArgument => {
+        const candidates = pokemon[gifArgument] || reactions[gifArgument] || others[gifArgument]
         if (candidates) return candidates.pick();
     }
 }

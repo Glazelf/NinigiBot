@@ -10,7 +10,7 @@ module.exports = async (client) => {
 
     new cron.CronJob(time, async () => {
         let globalVars = require('./events/ready');
-        let guild = client.guilds.cache.get(guildID)
+        let guild = client.guilds.cache.get(guildID);
         let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
         if (candidates.length < 1) return;
 
@@ -21,7 +21,7 @@ module.exports = async (client) => {
             const { data } = await giphyRandom(config.giphy, {
                 tag: randomElement
             });
-            return data.image_url
+            return data.image_url;
         };
 
         const randomGif = await getRandomGif();

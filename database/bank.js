@@ -13,7 +13,7 @@ module.exports = {
                             user.swcode = code
                             return user.save();
                         };
-                        const newUser = await Users.create({ user_id: id, swcode:code });
+                        const newUser = await Users.create({ user_id: id, swcode: code });
                         money.set(id, newUser);
                         return newUser;
                     },
@@ -33,7 +33,7 @@ module.exports = {
                             user.biography = text;
                             return user.save();
                         };
-                        const newUser = await Users.create({ user_id: id, biography: text});
+                        const newUser = await Users.create({ user_id: id, biography: text });
                         money.set(id, newUser);
                         return newUser;
                     },
@@ -53,7 +53,7 @@ module.exports = {
                             user.birthday = birthday
                             return user.save();
                         };
-                        const newUser = await Users.create({ user_id: id, birthday: birthday});
+                        const newUser = await Users.create({ user_id: id, birthday: birthday });
                         money.set(id, newUser);
                         return newUser;
                     },
