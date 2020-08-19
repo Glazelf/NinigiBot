@@ -61,6 +61,7 @@ ${Attachment.url}`;
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
       const starboard = message.guild.channels.cache.find(channel => channel.name === "starboard");
       if (starboard) {
+        if (!collected.first()) return;
         if (collected.first().count == globalVars.starboardLimit) {
           if (message.channel !== starboard) {
             let messageImage = null;
