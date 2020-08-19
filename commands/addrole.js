@@ -14,16 +14,19 @@ module.exports.run = async (client, message) => {
 
     let roleId = await EligibleRoles.findOne({ where: { name: arguments } });
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === arguments.toLowerCase());
-    if (!role&&!roleId) return message.reply('That role does not exist.');
-    if (!roleId) roleId = await EligibleRoles.findOne({ where: { role_id: role.id} });
+
+    if (!role && !roleId) return message.reply(`> That role does not exist, ${message.author}.`);
+    if (!roleId) roleId = await EligibleRoles.findOne({ where: { role_id: role.id } });
+    if (role.managed == true) return message.channel.send(`> I can't manage this role because it is being automatically managed by an integration, ${message.author}.`);
+    if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage this role because it is above my highest role, ${message.author}.`);
 
     if (roleId) {
       await roleId.destroy();
-      return message.channel.send(`The role **${arguments}** is no longer eligible to be selfassigned, ${message.author}.`);
+      return message.channel.send(`> The role **${arguments}** is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
-      
-      await EligibleRoles.upsert({ role_id: role.id, name: arguments.toLowerCase()});
-      return message.channel.send(`The role **${role.name}** is now eligible to be selfassigned, ${message.author}.`);
+
+      await EligibleRoles.upsert({ role_id: role.id, name: arguments.toLowerCase() });
+      return message.channel.send(`> The role **${role.name}** is now eligible to be selfassigned, ${message.author}.`);
     };
 
   } catch (e) {
