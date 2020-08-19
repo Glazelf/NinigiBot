@@ -5,7 +5,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
 
-    if (!message.member.hasPermission("ADMINISTRATOR")) return message.reply(globalVars.lackPerms);
+    if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(globalVars.lackPerms);
 
     const input = message.content.slice(1).trim();
     const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
