@@ -37,7 +37,7 @@ module.exports.run = async (client, message, args) => {
 
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
 
-    if (!role) return message.reply(`> That role does not exist, ${message.author}.`);
+    if (!role) return message.channel.send(`> That role does not exist, ${message.author}.`);
     if (!roles.includes(role.id)) return message.channel.send(`> Invalid role, use \`${client.config.prefix}role help\` to see the available roles, ${message.author}.`);
     if (role.managed == true) return message.channel.send(`> I can't manage this role because it is being automatically managed by an integration, ${message.author}.`);
     if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage this role because it is above my highest role, ${message.author}.`);
