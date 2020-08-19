@@ -111,7 +111,8 @@ module.exports.run = async (client, message) => {
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
-        if (customStatus.length >= 1) profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        if (customStatus.length >= 1 && customStatus!=='null') profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        console.log(customStatus+'|');
         if (birthday) profileEmbed.addField("Birthday:", `${require('../parseDate')(birthday)}`, true);
         if (actBool == true) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
