@@ -39,12 +39,12 @@ module.exports.run = async (client, message, args) => {
 
     if (!role) return message.channel.send(`> That role does not exist, ${message.author}.`);
     if (!roles.includes(role.id)) return message.channel.send(`> Invalid role, use \`${client.config.prefix}role help\` to see the available roles, ${message.author}.`);
-    if (role.managed == true) return message.channel.send(`> I can't manage this role because it is being automatically managed by an integration, ${message.author}.`);
-    if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage this role because it is above my highest role, ${message.author}.`);
+    if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
+    if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
 
     if (member.roles.cache.has(role.id)) {
       await member.roles.remove(role);
-      return message.channel.send(`> You no longer have the **${role.name}**, ${member}. *booo*`);
+      return message.channel.send(`> You no longer have the **${role.name}** role, ${member}. *booo*`);
     } else {
       await member.roles.add(role);
       return message.channel.send(`> You now have the **${role.name}** role, ${member}! Yay!`);
