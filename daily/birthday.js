@@ -5,11 +5,11 @@ module.exports = async (client) => {
     const guildID = client.config.botServerID;
     const channelID = client.config.botChannelID;
     const Discord = require("discord.js");
-    const { bank } = require('./database/bank');
-    const { search } = require('./gifs/search');
+    const { bank } = require('../database/bank');
+    const { search } = require('../gifs/search');
 
     new cron.CronJob(time, async () => {
-        let globalVars = require('./events/ready');
+        let globalVars = require('../events/ready');
         let guild = client.guilds.cache.get(guildID);
         const birthdayRole = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.birthRole);
         if (!birthdayRole) return;
@@ -35,7 +35,7 @@ module.exports = async (client) => {
         const gifEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setDescription(`> Today's is ${cuties.join(' and ')} birthday, everyone!\n `)
-            .setImage(search("birthday"))
+            .setImage(search("lottery"))
             .setTimestamp();
         channel.send(gifEmbed);
     }, timeZone = timezone, start = true);
