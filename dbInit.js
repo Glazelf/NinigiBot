@@ -16,7 +16,7 @@ const EligibleRoles = require('./database/models/EligibleRoles')(sequelize, Sequ
 Users.sync({ alter: true });
 EligibleRoles.sync({ alter: true });
 UserItems.sync({ alter: true });
-CurrencyShop.sync({ alter: true }).then(async () => {
+CurrencyShop.sync({ force: true }).then(async () => {
 	const shop = [
 		CurrencyShop.upsert({ name: 'Water', cost: 10, use: '> You drank the water. You are no longer thirsty.' }),
 		CurrencyShop.upsert({ name: 'Juice', cost: 20, use: '> You drank the juice. You can feel the vitamins.' }),
