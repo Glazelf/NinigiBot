@@ -1,3 +1,5 @@
+const talkedRecently = new Set();
+
 module.exports = (client, message) => {
   try {
     const Discord = require("discord.js");
@@ -14,7 +16,15 @@ module.exports = (client, message) => {
     if (message.author.bot) return;
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0) bank.currency.add(message.author.id, +0.1);
+    
+    if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0 && !talkedRecently.has(message.author.id)) {
+      bank.currency.add(message.author.id, 0.1);
+      talkedRecently.add(message.author.id);
+      setTimeout(() => {
+        talkedRecently.delete(message.author.id);
+      }, 60000);
+}
+    
 
     // Add message count
     globalVars.totalMessages += 1;
