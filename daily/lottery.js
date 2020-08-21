@@ -41,7 +41,7 @@ module.exports = async (client) => {
 
         if (winersLength < 1) return;
 
-        let channel = guild.channels.cache.find(channel => channel.name === 'casual');
+        let channel = guild.channels.cache.find(channel => channel.id === channelID);
         const results = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setTitle('Lottery results')
