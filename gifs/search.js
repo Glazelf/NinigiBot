@@ -11,5 +11,5 @@ module.exports = {
         const candidates = pokemon[gifArgument] || reactions[gifArgument] || others[gifArgument]
         if (candidates) return candidates.pick();
     }
-}
+};
 

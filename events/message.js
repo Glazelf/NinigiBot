@@ -16,15 +16,13 @@ module.exports = (client, message) => {
     if (message.author.bot) return;
 
     // Add currency if message doesn't start with prefix
-    
     if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0 && !talkedRecently.has(message.author.id)) {
-      bank.currency.add(message.author.id, 0.1);
+      bank.currency.add(message.author.id, 1);
       talkedRecently.add(message.author.id);
       setTimeout(() => {
         talkedRecently.delete(message.author.id);
       }, 60000);
-}
-    
+    };
 
     // Add message count
     globalVars.totalMessages += 1;
