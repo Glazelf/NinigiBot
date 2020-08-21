@@ -20,7 +20,7 @@ CurrencyShop.sync({ alter: true }).then(async () => {
 	const shop = [
 		CurrencyShop.upsert({ name: 'Water', cost: 10, use: '> You drank the water. You are no longer thirsty.' }),
 		CurrencyShop.upsert({ name: 'Juice', cost: 20, use: '> You drank the juice. You can feel the vitamins.' }),
-		CurrencyShop.upsert({ name: 'Lottery ticket', cost: 20, use: '> A lottery ticket from Shinx server. Let\'s see what happens this Sunday!' }),
+		CurrencyShop.upsert({ name: 'Lottery ticket', cost: 20, use: '> A lottery ticket!. Let\'s see what happens this Sunday!' }),
 		CurrencyShop.upsert({ name: 'Pokéball', cost: 50, use: `> You used the pokeball. Gotta catch 'em all!` }),
 		CurrencyShop.upsert({ name: 'Chocolate', cost: 75, use: '> You ate the chocolate. So tasty.' }),
 		CurrencyShop.upsert({ name: 'Keysss', cost: 200, use: '> You used the keys to obtain a giant fighting robot for no explicable reason. KEEEEYS. KEEEYS.' }),
