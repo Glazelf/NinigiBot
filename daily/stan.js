@@ -6,10 +6,10 @@ module.exports = async (client) => {
     const channelName = 'stan-everyone';
     const gifTags = ['pokemon', 'lelouch'];
     const Discord = require("discord.js");
-    const config = require("./config.json");
+    const config = require("../config.json");
 
     new cron.CronJob(time, async () => {
-        let globalVars = require('./events/ready');
+        let globalVars = require('../events/ready');
         let guild = client.guilds.cache.get(guildID);
         let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
         if (candidates.length < 1) return;
