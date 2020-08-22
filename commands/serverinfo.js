@@ -45,7 +45,7 @@ module.exports.run = async (client, message) => {
             "india": ":flag_in: India"
         };
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL())
             .setThumbnail(message.guild.iconURL())
@@ -62,7 +62,7 @@ module.exports.run = async (client, message) => {
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return message.channel.send(serverEmbed);
 
     } catch (e) {
         // log error

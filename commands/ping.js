@@ -1,7 +1,7 @@
 exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
-    try {
+    try {        
         let PongString = `> Pong!'ed back at ${message.author} in`;
         return message.channel.send(`${PongString} (hold on, processing latency...)`).then(m => m.edit(`${PongString} ${m.createdTimestamp - message.createdTimestamp}ms.`));
 
