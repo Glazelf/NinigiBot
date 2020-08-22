@@ -11,7 +11,7 @@ exports.run = async (client, message) => {
         if (!item) return message.channel.send(`> That item doesn't exist, ${message.author}.`);
         if (item.cost > bank.currency.getBalance(message.author.id)) {
             return message.channel.send(`> You don't have enough currency, ${message.author}.
-The ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+> The ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
         };
 
         const user = await Users.findOne({ where: { user_id: message.author.id } });

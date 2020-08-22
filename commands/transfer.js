@@ -11,11 +11,12 @@ exports.run = async (client, message) => {
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`;
 
         if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
+        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> You need to specify a valid number to transfer, ${message.author}.`);
         if (transferAmount > currentAmount) return message.channel.send(`> You don't have enough money to transfer that much, you only have ${userBalance}.`);
-        if (transferAmount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}`);
+        if (transferAmount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}.`);
 
         bank.currency.add(message.author.id, -transferAmount);
+        bank.currency.add(transferTarget.id, transferAmount);
 
         return message.channel.send(`> Successfully transferred ${transferAmount}💰 to ${transferTarget.tag}, ${message.author}.`);
 
