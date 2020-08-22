@@ -6,7 +6,7 @@ exports.run = (client, message) => {
         const input = message.content.split(` `, 2);
         let amount = input[1];
 
-        if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to transfer, ${message.author}.`);
+        if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
         if (amount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}.`);
 
         if (amount > bank.currency.getBalance(message.author.id)) {
