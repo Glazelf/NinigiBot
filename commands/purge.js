@@ -1,4 +1,4 @@
-exports.run = (client, message,args) => {
+exports.run = (client, message, args) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
@@ -20,24 +20,31 @@ exports.run = (client, message,args) => {
         let amount = parseInt(numberOfMessages);
 
         const user = message.mentions.users.first();
+
+        if (!user) {
+            const input = message.content.split(` `, 3);
+            let userID = input[2];
+            user = client.users.cache.get(userID);
+        };
+
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
-        if(user){
+        if (user) {
             message.channel.messages.fetch({
-            limit: 100,
+                limit: 100,
             }).then((messages) => {
-        
-            const filterBy = user ? user.id : Client.user.id;
-            messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
-            
-            message.channel.bulkDelete(messages)
-            .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
+
+                const filterBy = user ? user.id : Client.user.id;
+                messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
+
+                message.channel.bulkDelete(messages)
+                    .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
             });
 
-        }else{
+        } else {
             message.channel.messages.fetch({ limit: amount })
-            .then(messages => message.channel.bulkDelete(messages))
-            .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, ${message.author}.`));
-        return;
+                .then(messages => message.channel.bulkDelete(messages))
+                .then(message.channel.send(`> ${numberFromMessage} messages have been deleted, ${message.author}.`));
+            return;
         };
 
     } catch (e) {

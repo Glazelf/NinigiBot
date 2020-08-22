@@ -6,6 +6,7 @@ module.exports.run = async (client, message) => {
 
         const Discord = require("discord.js");
         let memberFetch = await message.guild.members.fetch();
+        const input = message.content.split(` `, 2);
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;

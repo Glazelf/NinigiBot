@@ -2,7 +2,8 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
-        let starLimit = message.content.slice(11);
+        const input = message.content.split(` `, 2);
+        let starLimit = input[1];
 
         if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, ${message.author}.`);
 

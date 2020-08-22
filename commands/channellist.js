@@ -6,7 +6,8 @@ exports.run = (client, message) => {
             return message.reply(globalVars.lackPerms)
         };
 
-        let guildID = message.content.slice(13);
+        const input = message.content.split(` `, 2);
+        let guildID = input[1];
         let guild = client.guilds.cache.get(guildID);
 
         if (!guild) return message.channel.send(`> I couldn't find that server, ${message.author}.`);

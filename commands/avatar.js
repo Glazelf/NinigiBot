@@ -9,7 +9,8 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
 
         if (!user) {
-            let userID = message.content.slice(8);
+            const input = message.content.split(` `, 2);
+            let userID = input[1];
             user = client.users.cache.get(userID);
         };
 

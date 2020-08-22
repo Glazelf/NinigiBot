@@ -5,8 +5,10 @@ exports.run = async (client, message) => {
         const { bank } = require('../database/bank');
         const { Users, CurrencyShop } = require('../database/dbObjects');
         const { Op } = require('sequelize');
+
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+
         const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: commandArgs } } });
         if (!item) return message.channel.send(`> That item doesn't exist, ${message.author}.`);
         if (item.cost > bank.currency.getBalance(message.author.id)) {
