@@ -1,9 +1,12 @@
 module.exports = async (client) => {
+    // Import globals
+    let globalVars = require('../events/ready');
+    
     const cron = require("cron");
     const timezone = 'cest';
     const time = '00 20 22 * * 6'; //Sec Min Hour 
     const guildID = client.config.botServerID;
-    const channelID = client.config.botChannelID;
+    const channelID = globalVars.botChannelID;
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
     const { search } = require('../gifs/search');

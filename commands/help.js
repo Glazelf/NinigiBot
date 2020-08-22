@@ -5,11 +5,10 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
-        let bot = await client.users.cache.get(client.config.botID);
 
         const helpEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`Help`, bot.avatarURL())
+            .setAuthor(`Help`, client.user.avatarURL())
             .addField("Commands:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands')`, false)
             .addField("Features:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Features 'Features')`, false)
             .addField("Home Discord:", `[Link](https://discord.gg/2gkybyu 'Discord Invite')`, false)
