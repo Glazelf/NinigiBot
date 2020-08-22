@@ -12,20 +12,11 @@ module.exports = async (client, message) => {
             message.content = "None";
         };
 
-        // WIP log attachments
-        // if (message.attachments[0]){
-        // const image = message.attachments[0];
-        // console.log(image)
-        // }
-
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(`Message deleted ❌`, message.author.avatarURL())
             .setDescription(`Message sent by ${message.author} deleted from ${message.channel}.`)
             .addField(`Content:`, message.content, false)
-            // WIP log attachments
-            // .setImage(image)
-            // WIP fix executor sometime
             .setFooter(`Deleted at`)
             .setTimestamp();
 
