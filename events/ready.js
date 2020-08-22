@@ -27,7 +27,7 @@ module.exports = async (client) => {
 
 module.exports.birthRole = "birthday";
 module.exports.botChannelID = "593014621095329812";
-module.exports.lackPerms = `You do not have the required permissions to do this.`;
+module.exports.lackPerms = `you do not have the required permissions to do this.`;
 module.exports.prefix = "?";
 module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
