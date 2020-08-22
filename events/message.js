@@ -16,7 +16,7 @@ module.exports = (client, message) => {
     if (message.author.bot) return;
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(client.config.prefix || "!" || "$") !== 0 && !talkedRecently.has(message.author.id)) {
+    if (message.content.indexOf(globalVars.prefix || "!" || "$") !== 0 && !talkedRecently.has(message.author.id)) {
       bank.currency.add(message.author.id, 1);
       talkedRecently.add(message.author.id);
       setTimeout(() => {
@@ -29,7 +29,7 @@ module.exports = (client, message) => {
 
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
-      if (message.content.indexOf(client.config.prefix) == 0) {
+      if (message.content.indexOf(globalVars.prefix) == 0) {
         message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`).catch(console.error);
       };
 
@@ -92,16 +92,16 @@ ${Attachment.url}`;
     });
 
     // Ignore messages not starting with the prefix
-    if (message.content.indexOf(client.config.prefix) !== 0) return;
+    if (message.content.indexOf(globalVars.prefix) !== 0) return;
 
     // Ignore messages that are just prefix
-    if (message.content === client.config.prefix) return;
+    if (message.content === globalVars.prefix) return;
 
     // Ignore messages that start with prefix double or prefix space
-    if (secondCharacter == client.config.prefix || secondCharacter == ` `) return;
+    if (secondCharacter == globalVars.prefix || secondCharacter == ` `) return;
 
     // Standard definition
-    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(globalVars.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
     // Grab the command data from the client.commands Enmap

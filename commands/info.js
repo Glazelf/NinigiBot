@@ -1,8 +1,7 @@
 module.exports.run = async (client, message) => {
+    // Import globals
+    let globalVars = require('../events/ready');
     try {
-        // Import globals
-        let globalVars = require('../events/ready');
-
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
@@ -87,11 +86,12 @@ module.exports.run = async (client, message) => {
             .setAuthor(client.config.botName, bot.avatarURL())
             .setThumbnail(bot.avatarURL())
             .addField("Full account:", `<@${client.config.botID}>`, true)
-            .addField("Owner:", `<@${globalVars.ownerID}>`, true)
+            .addField("Owner:", "<@232875725898645504>, Glaze#6669", true)
+            .addField("Host:", `<@${globalVars.ownerID}>`, true)
             // WIP fix activity
             // .addField("Activity:", `${presenceType} ${presenceName}`, true)
             .addField("Bot ID:", client.config.botID, true)
-            .addField("Prefix:", client.config.prefix, true)
+            .addField("Prefix:", globalVars.prefix, true)
             // .addField("Users:", userCount.length, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Channels:", client.channels.cache.size, true)
@@ -113,6 +113,6 @@ module.exports.run = async (client, message) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
     };
 };

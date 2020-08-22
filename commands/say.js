@@ -1,8 +1,7 @@
 exports.run = (client, message) => {
+    // Import globals
+    let globalVars = require('../events/ready');
     try {
-        // Import globals
-        let globalVars = require('../events/ready');
-
         // Split off command
         let textMessage = message.content.slice(5);
         let split = textMessage.split(` `, 1);
@@ -30,7 +29,7 @@ exports.run = (client, message) => {
             return message.channel.send(textMessage);
         } else {
             // Prevent using bot to go around ping permissions
-            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${client.config.prefix}say, ${message.author}.`) };
+            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${globalVars.prefix}say, ${message.author}.`) };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `> "${textMessage}"
@@ -43,6 +42,6 @@ exports.run = (client, message) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
     };
 };
