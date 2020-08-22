@@ -2,7 +2,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
-        if (message.author.id !== globalVars.ownerID) {
+        if (message.author.id !== client.config.ownerID) {
             return message.reply(globalVars.lackPerms)
         };
 

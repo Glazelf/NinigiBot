@@ -6,7 +6,7 @@ exports.run = (client, message) => {
 
         if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, ${message.author}.`);
 
-        if (message.author.id !== globalVars.ownerID) {
+        if (message.author.id !== client.config.ownerID) {
             return message.channel.send(globalVars.lackPerms)
         };
 

@@ -14,7 +14,7 @@ exports.run = (client, message) => {
         };
 
         // Owner only function to send messages in different channels
-        if (message.author.id == globalVars.ownerID) {
+        if (message.author.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
