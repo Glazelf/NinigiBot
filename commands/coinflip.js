@@ -14,6 +14,7 @@ exports.run = (client, message) => {
 > You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
         };
 
+        amount = Math.floor(amount);
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}💰.`;
 
         // Coinflip randomization
