@@ -1,9 +1,8 @@
 exports.run = (client, message, args) => {
+  // Import globals
+  let globalVars = require('../events/ready');
   try {
-    // Import globals
-    let globalVars = require('../events/ready');
-
-    if (message.author.id !== globalVars.ownerID) {
+    if (message.author.id !== client.config.ownerID) {
       return message.channel.send(globalVars.lackPerms)
     };
 
@@ -21,13 +20,13 @@ exports.run = (client, message, args) => {
     client.commands.delete(commandName);
     const props = require(`./${commandName}.js`);
     client.commands.set(commandName, props);
-    return message.channel.send(`> The command "${client.config.prefix}${commandName}" has been reloaded, ${message.author}.`);
+    return message.channel.send(`> The command "${globalVars.prefix}${commandName}" has been reloaded, ${message.author}.`);
 
   } catch (e) {
     // log error
     console.log(e);
 
     // return confirmation
-    return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+    return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
   };
 };

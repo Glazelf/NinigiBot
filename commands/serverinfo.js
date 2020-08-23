@@ -1,9 +1,12 @@
 module.exports.run = async (client, message) => {
+    // Import globals
+    let globalVars = require('../events/ready');
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
         let memberFetch = await message.guild.members.fetch();
+        const input = message.content.split(` `, 2);
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
@@ -43,7 +46,7 @@ module.exports.run = async (client, message) => {
             "india": ":flag_in: India"
         };
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setAuthor(message.guild.name, message.guild.iconURL())
             .setThumbnail(message.guild.iconURL())
@@ -60,13 +63,13 @@ module.exports.run = async (client, message) => {
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return message.channel.send(serverEmbed);
 
     } catch (e) {
         // log error
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
     };
 };

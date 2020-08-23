@@ -1,9 +1,9 @@
 module.exports.run = async (client, message, args) => {
+  // Import globals
+  let globalVars = require('../events/ready');
   try {
     const { EligibleRoles } = require('../database/dbObjects')
 
-    // Import globals
-    let globalVars = require('../events/ready');
     let member = message.member;
     let arguments = args;
 
@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args) => {
 
     const requestRole = arguments.join(' ');
 
-    if (requestRole.length < 1) return message.channel.send(`> Please provide a role, use \`${client.config.prefix}role help\` to see the available roles, ${message.author}.`);
+    if (requestRole.length < 1) return message.channel.send(`> Please provide a role, use \`${globalVars.prefix}role help\` to see the available roles, ${message.author}.`);
 
     const db = await EligibleRoles.findAll();
     const roles = db.map(role => role.role_id);
@@ -38,7 +38,7 @@ module.exports.run = async (client, message, args) => {
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
 
     if (!role) return message.channel.send(`> That role does not exist, ${message.author}.`);
-    if (!roles.includes(role.id)) return message.channel.send(`> Invalid role, use \`${client.config.prefix}role help\` to see the available roles, ${message.author}.`);
+    if (!roles.includes(role.id)) return message.channel.send(`> Invalid role, use \`${globalVars.prefix}role help\` to see the available roles, ${message.author}.`);
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
     if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
 
@@ -55,7 +55,7 @@ module.exports.run = async (client, message, args) => {
     console.log(e);
 
     // return confirmation
-    return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+    return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
 
   };
 };

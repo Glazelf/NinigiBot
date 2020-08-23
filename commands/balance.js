@@ -2,14 +2,20 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
+        const { bank } = require('../database/bank');
+        let target = message.mentions.users.first();
+
+        if (!target) {
+            const input = message.content.split(` `, 2);
+            let userID = input[1];
+            target = client.users.cache.get(userID);
         };
 
-        // send channel a message that you're killing bot [optional]
-        message.channel.send(`> Shutting down for ${message.author}...`)
-            .then(msg => client.destroy());
-        return;
+        if (!target) {
+            target = message.author;
+        };
+
+        return message.channel.send(`> ${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}💰.`);
 
     } catch (e) {
         // log error

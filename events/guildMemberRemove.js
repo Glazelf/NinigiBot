@@ -9,10 +9,13 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
+        avatar = null;
+        if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`Member left 💔`, user.avatarURL())
-            .setThumbnail(user.avatarURL())
+            .setAuthor(`Member left 💔`,avatar)
+            .setThumbnail(avatar)
             .addField(`User:`, user)
             .setFooter(`We'll miss you, ${user.username}!`)
             .setTimestamp();

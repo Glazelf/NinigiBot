@@ -1,4 +1,6 @@
 module.exports.run = async (client, message) => {
+    // Import globals
+    let globalVars = require('../events/ready');
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
@@ -7,11 +9,12 @@ module.exports.run = async (client, message) => {
         const { Users } = require('../database/dbObjects');
 
         let memberFetch = await message.guild.members.fetch();
-        let userID = message.content.slice(10);
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
         if (!user) {
+            const input = message.content.split(` `, 2);
+            let userID = input[1];
             user = client.users.cache.get(userID);
         };
 
@@ -104,14 +107,17 @@ module.exports.run = async (client, message) => {
             };
         };
 
+        avatar = null;
+        if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(userCache.username, userCache.avatarURL())
-            .setThumbnail(userCache.avatarURL())
+            .setAuthor(userCache.username, avatar)
+            .setThumbnail(avatar)
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
-        if (customStatus.length >= 1 && customStatus!=='null') profileEmbed.addField("Custom Status:", `${customStatus}`, true);
+        if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", `${customStatus}`, true);
         if (birthday) profileEmbed.addField("Birthday:", `${require('../util/parseDate')(birthday)}`, true);
         if (actBool == true) profileEmbed.addField("Activities:", `${activityLog}`, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
@@ -131,6 +137,6 @@ module.exports.run = async (client, message) => {
         console.log(e);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${client.config.prefix}info.`);
+        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
     };
 };

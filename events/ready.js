@@ -25,13 +25,13 @@ module.exports = async (client) => {
   };
 };
 
+module.exports.birthRole = "birthday";
+module.exports.botChannelID = "593014621095329812";
+module.exports.lackPerms = `you do not have the required permissions to do this.`;
+module.exports.prefix = "?";
+module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
-module.exports.lackPerms = `You do not have the required permissions to do this.`;
-module.exports.ownerAccount = `Glaze#6669`;
-module.exports.ownerID = `232875725898645504`;
-module.exports.ownerName = `Glaze`;
+
 module.exports.totalCommands = 0;
 module.exports.totalLogs = 0;
 module.exports.totalMessages = 0;
-module.exports.stanRole = "stan";
-module.exports.birthRole = "birthday";
