@@ -3,7 +3,6 @@ module.exports = async (client) => {
     const timezone = 'cest';
     const time = '00 00 20 * * *'; //Sec Min Hour 
     const guildID = client.config.botServerID;
-    const channelName = 'stan-everyone';
     const gifTags = ['pokemon', 'lelouch'];
     const Discord = require("discord.js");
     const config = require("../config.json");
@@ -26,7 +25,7 @@ module.exports = async (client) => {
 
         const randomGif = await getRandomGif();
         let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
-        let channel = guild.channels.cache.find(channel => channel.name === channelName);
+        let channel = guild.channels.cache.find(channel => channel.id === globalVars.stanChannel);
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")

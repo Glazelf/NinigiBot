@@ -9,8 +9,8 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
-        avatar = null;
-        if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+        let avatar = null;
+        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
 
         const joinEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")

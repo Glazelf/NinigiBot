@@ -7,12 +7,19 @@ module.exports.run = async (client, message) => {
         };
 
         const { bank } = require('../database/bank');
-        const member = message.mentions.members.first();
+        let user = message.mentions.users.first();
 
-        if (!member) return message.channel.send(`> Please use a proper mention if you want to reset someones bio, ${message.author}.`);
-        bank.currency.biography(member.id, "None");
+        if (!user) {
+            const input = message.content.split(` `, 2);
+            let userID = input[1];
+            user = client.users.cache.get(userID);
+        };
 
-        return message.channel.send(`> Biography reset, ${message.author}.`);
+        if (!user) return message.channel.send(`> Please use a proper mention if you want to reset someones bio, ${message.author}.`);
+
+        bank.currency.biography(user.id, "None");
+
+        return message.channel.send(`> Successfully reset ${user.tag}'s bio, ${message.author}.`);
 
     } catch (e) {
         // log error

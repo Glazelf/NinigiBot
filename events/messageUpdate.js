@@ -11,14 +11,13 @@ module.exports = async (client, message, oldMessage) => {
 
         if (message.content == "") return;
         if (message.content === oldMessage.content) return;
-        if (message.channel.id == "549220763341815808") return; //Glazesdump
 
         if (!log) return;
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-        avatar = null;
+        let avatar = null;
         if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
         const updateEmbed = new Discord.MessageEmbed()
