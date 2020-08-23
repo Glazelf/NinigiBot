@@ -50,10 +50,13 @@ ${Attachment.url}`;
       let messageImage = null;
       if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
+      let avatar = null;
+      if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+
       const dmEmbed = new Discord.MessageEmbed()
         .setColor("#219DCD")
-        .setAuthor(`DM Message`, message.author.avatarURL())
-        .setThumbnail(message.author.avatarURL())
+        .setAuthor(`DM Message`, avatar)
+        .setThumbnail(avatar)
         .addField(`Author Account:`, message.author, false)
         .addField(`Author ID:`, message.author.id, false)
         .addField(`Message content:`, message.content, false)
@@ -76,9 +79,12 @@ ${Attachment.url}`;
 
             if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
 
+            avatar = null;
+            if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+
             const starEmbed = new Discord.MessageEmbed()
               .setColor("#219DCD")
-              .setAuthor(`⭐ ${message.author.username}`, message.author.avatarURL())
+              .setAuthor(`⭐ ${message.author.username}`, avatar)
               .setDescription(message.content)
               .addField(`Sent in:`, message.channel, false)
               .addField(`Context:`, `[Link](${message.url})`, false)
