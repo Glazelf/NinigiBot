@@ -10,7 +10,7 @@ module.exports = (client, member) => {
         user = client.users.cache.get(member.id);
 
         avatar = null;
-        if (message.author.avatarURL()) avatar = message.author.avatarURL({ dynamic: true });
+        if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")

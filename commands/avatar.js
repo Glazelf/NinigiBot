@@ -22,7 +22,7 @@ module.exports.run = async (client, message) => {
         let totalMessage = `Here you go, ${message.author}, ${user.tag}'s avatar.`;
 
         avatar = null;
-        if (userCache.avatarURL()) avatar = userCache.avatarURL({ dynamic: true });
+        if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
 
         return message.channel.send(totalMessage, {
             files: [avatar]

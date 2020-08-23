@@ -108,7 +108,7 @@ module.exports.run = async (client, message) => {
         };
 
         avatar = null;
-        if (userCache.avatarURL()) avatar = userCache.avatarURL({ dynamic: true });
+        if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
