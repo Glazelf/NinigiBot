@@ -11,7 +11,6 @@ module.exports = async (client, message, oldMessage) => {
 
         if (message.content == "") return;
         if (message.content === oldMessage.content) return;
-        if (message.channel.id == "549220763341815808") return; //Glazesdump
 
         if (!log) return;
 

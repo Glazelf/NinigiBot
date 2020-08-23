@@ -7,7 +7,6 @@ module.exports = (client, message) => {
     let NinigiDMChannelID = "674371091006881832";
     let sysbotID = `696086046685003786`;
     let secondCharacter = message.content.charAt(1);
-    let Konohana = client.users.cache.get(sysbotID);
 
     // Import globals
     let globalVars = require('./ready');
