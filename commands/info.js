@@ -80,10 +80,13 @@ module.exports.run = async (client, message) => {
             uptime = `${days} day${multiDays}, ${uptime}`;
         };
 
+        let avatar = null;
+        if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(client.user.username, client.user.avatarURL())
-            .setThumbnail(client.user.avatarURL())
+            .setAuthor(client.user.username, avatar)
+            .setThumbnail(avatar)
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
             .addField("Host:", `<@${client.config.ownerID}>`, true)
@@ -99,7 +102,6 @@ module.exports.run = async (client, message) => {
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(client.user.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
-
         return message.channel.send(profileEmbed);
 
     } catch (e) {

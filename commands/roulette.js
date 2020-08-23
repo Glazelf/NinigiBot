@@ -9,6 +9,9 @@ exports.run = async (client, message) => {
         const Discord = require("discord.js");
         let process = null;
 
+        let avatar = null;
+        if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png"});
+
         roulette.shift()
         if (roulette.on) {
             process = setInterval(() => {
@@ -34,7 +37,7 @@ exports.run = async (client, message) => {
 
                 const results = new Discord.MessageEmbed()
                     .setColor("#219DCD")
-                    .setAuthor(`Roulette`, client.user.avatarURL())
+                    .setAuthor(`Roulette`, avatar)
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... **${result}**!`)
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
@@ -44,7 +47,7 @@ exports.run = async (client, message) => {
 
             const welcome = new Discord.MessageEmbed()
                 .setColor("#219DCD")
-                .setAuthor(`Ninigi`)
+                .setAuthor(`Roulette`, avatar)
                 .setDescription('Welcome to the roulette! We hope to see you here!')
                 .addField("Rules:", 'You bet money on the roulette numbers, from 0 to 36.\nThe syntax is `?bet <money>, <numbers or intervals with whitespaces>`\n For example, `?bet 50, 1 2 4-6` bets 50 coins on 1, 2, 4, 5 and 6\nAfter some time, the roulette spins and we get the winer(s), who gets 36x the bet money', false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
