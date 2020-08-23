@@ -4,7 +4,7 @@ module.exports = async (client) => {
     
     const cron = require("cron");
     const timezone = 'cest';
-    const time = '00 20 22 * * 6'; //Sec Min Hour 
+    const time = '00 00 22 * * 6'; //Sec Min Hour 
     const guildID = client.config.botServerID;
     const channelID = globalVars.botChannelID;
     const Discord = require("discord.js");
@@ -14,7 +14,6 @@ module.exports = async (client) => {
     const { CurrencyShop } = require('../database/dbObjects');
 
     new cron.CronJob(time, async () => {
-        let globalVars = require('../events/ready');
         let guild = client.guilds.cache.get(guildID);
         const number = toString(Math.floor(Math.random() * 9999));
         const winers = [[], [], [], []];
