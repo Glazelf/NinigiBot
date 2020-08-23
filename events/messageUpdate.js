@@ -17,7 +17,7 @@ module.exports = async (client, message, oldMessage) => {
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-        avatar = null;
+        let avatar = null;
         if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
         const updateEmbed = new Discord.MessageEmbed()

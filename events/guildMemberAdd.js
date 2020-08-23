@@ -9,7 +9,7 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
-        avatar = null;
+        let avatar = null;
         if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
         const joinEmbed = new Discord.MessageEmbed()

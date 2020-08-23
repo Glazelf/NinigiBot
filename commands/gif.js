@@ -1,6 +1,6 @@
 exports.run = (client, message) => {
-          // Import globals
-          let globalVars = require('../events/ready');
+  // Import globals
+  let globalVars = require('../events/ready');
   try {
     const { search } = require('../gifs/search');
 
@@ -43,9 +43,12 @@ ${helpText}`);
         };
       };
 
+      let avatar = null;
+      if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
+
       const gifEmbed = new Discord.MessageEmbed()
         .setColor("#219DCD")
-        .setAuthor(`${gifArgumentCapitalized} Gif`, message.author.avatarURL())
+        .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
         .setDescription(gifString)
         .setImage(gif)
         .setFooter(`Requested by ${message.author.tag}`)

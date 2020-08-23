@@ -12,7 +12,7 @@ module.exports = async (client, message) => {
             message.content = "None";
         };
 
-        avatar = null;
+        let avatar = null;
         if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
         const deleteEmbed = new Discord.MessageEmbed()
