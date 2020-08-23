@@ -15,14 +15,14 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return message.channel.send('> No one wants to play anymore? Well, see you next time!');
+                    return message.channel.send('> No one wants to play any more Roulette? Well, see you next time!');
                 };
 
                 const result = Math.floor(Math.random() * 37);
                 let resultAnnouncement = '';
                 let winners = roulette.spin(result);
 
-                if (!winners) resultAnnouncement = '> The house wins! Woops!';
+                if (!winners) resultAnnouncement = 'The house wins! Woops!';
                 else {
                     winners = winners.sort((a, b) => b[1] - a[1]);
                     for (let i = 0; i < winners.length; i++) {
