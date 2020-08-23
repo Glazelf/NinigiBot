@@ -46,10 +46,13 @@ module.exports.run = async (client, message) => {
             "india": ":flag_in: India"
         };
 
+        let icon = null;
+        if (message.guild.iconURL()) icon = message.guild.iconURL({ format: "png", dynamic: true });
+
         const serverEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(message.guild.name, message.guild.iconURL())
-            .setThumbnail(message.guild.iconURL())
+            .setAuthor(message.guild.name, icon)
+            .setThumbnail(icon)
             .addField("Owner:", message.guild.owner.user, true)
             .addField("Region:", region[message.guild.region], true)
             .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
