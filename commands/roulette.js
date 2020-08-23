@@ -15,7 +15,7 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return message.channel.send('> No one? Well, see you next time!');
+                    return message.channel.send('> No one wants to play anymore? Well, see you next time!');
                 };
 
                 const result = Math.floor(Math.random() * 37);

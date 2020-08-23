@@ -1,8 +1,4 @@
-
-
 const Discord = require('discord.js');
-
-
 module.exports = {
     on: false,
     bets: new Map(),
@@ -12,15 +8,13 @@ module.exports = {
     },
     addBet: function(bet, id, reward) {
         if(!this.bets.has(bet)) this.bets.set(bet, [[id, reward]]);
-        else this.bets.set(bet, this.bets.get(bet).push([id, reward]))
+        else this.bets.set(bet, this.bets.get(bet).push([id, reward]));
     },
 
     spin: function(result) {
         const winners = this.bets.get(`${result}`); 
-        console.log(winners)
         this.bets.clear();
         this.players = [];
-        console.log(winners)
         return winners;
     },
     hadBet: function(id){
@@ -29,4 +23,4 @@ module.exports = {
     closeTime: function() {
         return this.bets.size === 0;
     }
-}
+};
