@@ -25,7 +25,7 @@ module.exports = async (client) => {
 
         const randomGif = await getRandomGif();
         let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
-        let channel = guild.channels.cache.find(channel => channel.id === globalVars.stanChannel);
+        let channel = guild.channels.cache.find(channel => channel.id === globalVars.stanChannelID);
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
