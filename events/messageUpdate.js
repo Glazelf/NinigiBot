@@ -18,9 +18,12 @@ module.exports = async (client, message, oldMessage) => {
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
+        avatar = null;
+        if (message.author.avatarURL()) avatar = message.author.avatarURL({ dynamic: true });
+
         const updateEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`Message edited ⚒️`, message.author.avatarURL())
+            .setAuthor(`Message edited ⚒️`, avatar)
             .setDescription(`Message sent by ${message.author} edited in ${message.channel}.`)
             //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
             .addField(`Before:`, message.content, false)

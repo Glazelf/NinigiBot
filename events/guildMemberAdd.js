@@ -9,10 +9,13 @@ module.exports = (client, member) => {
         if (!log) return;
         user = client.users.cache.get(member.id);
 
+        avatar = null;
+        if (message.author.avatarURL()) avatar = message.author.avatarURL({ dynamic: true });
+
         const joinEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(`Member joined ❤️`, user.avatarURL())
-            .setThumbnail(user.avatarURL())
+            .setAuthor(`Member joined ❤️`, avatar)
+            .setThumbnail(avatar)
             .addField(`User:`, user)
             .setFooter(`Welcome, ${user.username}!`)
             .setTimestamp();

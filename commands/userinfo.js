@@ -107,10 +107,13 @@ module.exports.run = async (client, message) => {
             };
         };
 
+        avatar = null;
+        if (userCache.avatarURL()) avatar = userCache.avatarURL({ dynamic: true });
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor("#219DCD")
-            .setAuthor(userCache.username, userCache.avatarURL())
-            .setThumbnail(userCache.avatarURL())
+            .setAuthor(userCache.username, avatar)
+            .setThumbnail(avatar)
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)

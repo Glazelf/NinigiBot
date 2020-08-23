@@ -21,12 +21,11 @@ module.exports.run = async (client, message) => {
         let userCache = client.users.cache.get(user.id);
         let totalMessage = `Here you go, ${message.author}, ${user.tag}'s avatar.`;
 
-        // let avatarWebp = userCache.avatarURL();
-        // let splitAvatar = avatarWebp.split(`.webp`, 1);
-        // let avatarPNG = `${splitAvatar[0]}.png`;
+        avatar = null;
+        if (userCache.avatarURL()) avatar = userCache.avatarURL({ dynamic: true });
 
         return message.channel.send(totalMessage, {
-            files: [userCache.avatarURL()]
+            files: [avatar]
         });
 
     } catch (e) {
