@@ -43,7 +43,7 @@ exports.run = async (client, message) => {
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
                 message.channel.send(results);
-            }, 13000);
+            }, 20000);
 
             const welcome = new Discord.MessageEmbed()
                 .setColor("#219DCD")
