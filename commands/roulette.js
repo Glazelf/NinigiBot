@@ -8,7 +8,6 @@ exports.run = async (client, message) => {
         const { bank } = require('../database/bank');
         const Discord = require("discord.js");
         let process = null;
-        const channel = message.guild.channels.cache.find(channel => channel.id === globalVars.botChannelID);
 
         roulette.shift()
         if (roulette.on) {
@@ -16,7 +15,7 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return channel.send('> No one? Well, see you next time!');
+                    return message.channel.send('> No one? Well, see you next time!');
                 };
 
                 const result = Math.floor(Math.random() * 37);
@@ -28,7 +27,7 @@ exports.run = async (client, message) => {
                     winners = winners.sort((a, b) => b[1] - a[1]);
                     for (let i = 0; i < winners.length; i++) {
                         const winner = winners[i];
-                        resultAnnouncement += (i + 1) + ') ' + channel.guild.members.cache.find(member => member.user.id === winner[0]).user.username + ` wins ${winner[1]}💰!\n`;
+                        resultAnnouncement += (i + 1) + ') ' + message.channel.guild.members.cache.find(member => member.user.id === winner[0]).user.username + ` wins ${winner[1]}💰!\n`;
                         bank.currency.add(message.author.id, winner[1]);
                     };
                 };
