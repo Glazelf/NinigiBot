@@ -1,7 +1,6 @@
 exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
-
     try {
         const { set } = require('lodash');
         const roulette = require('../affairs/roulette')
