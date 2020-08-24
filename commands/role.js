@@ -22,6 +22,7 @@ module.exports.run = async (client, message, args) => {
     const roles = db.map(role => role.role_id);
 
     if (roles.length < 1) return message.channel.send(`> There are no eligible roles to assign to yourself in this server, ${message.author}.`);
+
     if (requestRole.toLowerCase() === 'help') {
       let roleText = []
       member.guild.roles.cache.each(role => {
@@ -34,9 +35,6 @@ module.exports.run = async (client, message, args) => {
       roleText.sort((r, r2) => r2.position - r.position).join(", ");
       roleText = roleText.map(role => role.id);
 
-      let avatar = null;
-      if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
-
       // Role help embed and logic
       let roleHelpMessage = '';
 
@@ -44,6 +42,9 @@ module.exports.run = async (client, message, args) => {
         roleHelpMessage = `${roleHelpMessage}
 > <@&${roleText[i]}>`;
       };
+
+      let avatar = null;
+      if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
 
       const rolesHelp = new Discord.MessageEmbed()
         .setColor(globalVars.embedColor)

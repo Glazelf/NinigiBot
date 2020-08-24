@@ -111,7 +111,7 @@ module.exports.run = async (client, message) => {
         if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
 
         const profileEmbed = new Discord.MessageEmbed()
-            .setColor(client.config.embedColor)
+            .setColor(globalVars.embedColor)
             .setAuthor(userCache.username, avatar)
             .setThumbnail(avatar)
             .addField("Account:", user, true)
