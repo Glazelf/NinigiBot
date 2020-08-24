@@ -15,7 +15,7 @@ module.exports = async (client) => {
 
     new cron.CronJob(time, async () => {
         let guild = client.guilds.cache.get(guildID);
-        const number = toString(Math.floor(Math.random() * 9999));
+        const number = toString(Math.floor(Math.random() * 10000));
         const winers = [[], [], [], []];
         const ticket = await CurrencyShop.findOne({ where: { name: 'Lottery ticket' } });
         let participants = await UserItems.findAll({ include: ['item'] });
@@ -41,16 +41,19 @@ module.exports = async (client) => {
             winersLength += winers[i].length;
         };
 
-        if (winersLength < 1) return;
-
-        let channel = guild.channels.cache.find(channel => channel.id === channelID);
+        let channel = guild.channels.cache.find(channel =>  channel.id === channelID);
         const results = new Discord.MessageEmbed()
             .setColor("#219DCD")
             .setTitle('Lottery results')
-            .setDescription(`> Welcome back! Here are the results of this week's lottery! Good luck next time!`)
-        for (let i = 0; i < 4; i++) {
-            if (winers[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winers[i].join(", ")}`, false);
-        };
+            .setDescription(`> Welcome back! And the winning number is **${number}**! Here are the winners of this week's lottery! Good luck next time!`)
+            if(winersLength < 1){
+                results.addField('Results:', 'No one won anything! Well more luck next time!')
+            }else{
+                for (let i = 0; i < 4; i++) {
+                    if (winers[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winers[i].join(", ")}`, false);
+                };
+            }
+        
         results.setImage(search("lottery"))
             .setTimestamp();
         channel.send(results);
