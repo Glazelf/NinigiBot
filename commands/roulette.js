@@ -49,7 +49,7 @@ exports.run = async (client, message) => {
                 .setColor("#219DCD")
                 .setAuthor(`Roulette`, avatar)
                 .setDescription('Welcome to the roulette! We hope to see you here!')
-                .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${globalVars.prefix}bet <money>, <numbers or intervals with whitespaces>\`
+                .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${globalVars.prefix}bet <money>, <numbers or intervals>\`
 For example, \`${globalVars.prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
 After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')

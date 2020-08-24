@@ -11,7 +11,7 @@ module.exports = async (client) => {
     console.log(`Connected as ${client.user.tag}.`);
 
     // Set bot status
-    client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' })
+    client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
     // List servers the bot is connected to
     console.log("Servers:")
