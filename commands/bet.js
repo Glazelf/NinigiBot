@@ -14,9 +14,7 @@ exports.run = (client, message) => {
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(input)) return message.react('❌');
         const money = parseInt(input.slice(0, input.indexOf(',')).trim())
         input = input.slice(input.indexOf(',') + 1).trim();
-        console.log(input)
         const betRequests = new Set(input.split(/\s+/));
-        console.log(betRequests)
         const bets = new Set();
         betRequests.forEach(request => {
             const slice = request.indexOf('-')
@@ -26,8 +24,6 @@ exports.run = (client, message) => {
                 for (let i = minimum; i <= maximum; i++) bets.add(`${i}`);
             } else bets.add(request);
         });
-        console.log(bets.size)
-        console.log(bets)
         if (bets.size * money > bank.currency.getBalance(message.author.id)) {
             return message.channel.send(`> You don't have enough currency, ${message.author}.
 > You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
