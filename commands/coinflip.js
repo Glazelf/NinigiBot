@@ -7,6 +7,7 @@ exports.run = (client, message) => {
         let amount = input[1];
 
         if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
+        amount = Math.floor(amount);
         if (amount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}.`);
 
         if (amount > bank.currency.getBalance(message.author.id)) {
@@ -14,7 +15,6 @@ exports.run = (client, message) => {
 > You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
         };
 
-        amount = Math.floor(amount);
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}💰.`;
 
         // Coinflip randomization
