@@ -43,7 +43,7 @@ module.exports = async (client) => {
 
         let channel = guild.channels.cache.find(channel =>  channel.id === channelID);
         const results = new Discord.MessageEmbed()
-            .setColor("#219DCD")
+            .setColor(globalVars.embedColor)
             .setTitle('Lottery results')
             .setDescription(`> Welcome back! And the winning number is **${number}**! Here are the winners of this week's lottery! Good luck next time!`)
             if(winersLength < 1){

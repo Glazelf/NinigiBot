@@ -47,7 +47,7 @@ ${helpText}`);
       if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
 
       const gifEmbed = new Discord.MessageEmbed()
-        .setColor("#219DCD")
+        .setColor(globalVars.embedColor)
         .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
         .setDescription(gifString)
         .setImage(gif)

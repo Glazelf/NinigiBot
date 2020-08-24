@@ -13,7 +13,7 @@ module.exports = (client, member) => {
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
 
         const joinEmbed = new Discord.MessageEmbed()
-            .setColor("#219DCD")
+            .setColor(globalVars.embedColor)
             .setAuthor(`Member joined ❤️`, avatar)
             .setThumbnail(avatar)
             .addField(`User:`, user)

@@ -27,6 +27,7 @@ module.exports = async (client) => {
 
 module.exports.birthRole = "birthday";
 module.exports.botChannelID = "614979959156375567";
+module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = `you do not have the required permissions to do this.`;
 module.exports.prefix = "?";
 module.exports.stanChannelID = "665274079397281835"

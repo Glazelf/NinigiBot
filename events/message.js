@@ -54,7 +54,7 @@ ${Attachment.url}`;
       if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
       const dmEmbed = new Discord.MessageEmbed()
-        .setColor("#219DCD")
+        .setColor(globalVars.embedColor)
         .setAuthor(`DM Message`, avatar)
         .setThumbnail(avatar)
         .addField(`Author Account:`, message.author, false)
@@ -83,7 +83,7 @@ ${Attachment.url}`;
             if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
 
             const starEmbed = new Discord.MessageEmbed()
-              .setColor("#219DCD")
+              .setColor(globalVars.embedColor)
               .setAuthor(`⭐ ${message.author.username}`, avatar)
               .setDescription(message.content)
               .addField(`Sent in:`, message.channel, false)

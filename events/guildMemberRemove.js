@@ -13,7 +13,7 @@ module.exports = (client, member) => {
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
 
         const leaveEmbed = new Discord.MessageEmbed()
-            .setColor("#219DCD")
+            .setColor(globalVars.embedColor)
             .setAuthor(`Member left 💔`,avatar)
             .setThumbnail(avatar)
             .addField(`User:`, user)

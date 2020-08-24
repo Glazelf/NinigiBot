@@ -50,7 +50,7 @@ module.exports.run = async (client, message) => {
         if (message.guild.iconURL()) icon = message.guild.iconURL({ format: "png", dynamic: true });
 
         const serverEmbed = new Discord.MessageEmbed()
-            .setColor("#219DCD")
+            .setColor(globalVars.embedColor)
             .setAuthor(message.guild.name, icon)
             .setThumbnail(icon)
             .addField("Owner:", message.guild.owner.user, true)

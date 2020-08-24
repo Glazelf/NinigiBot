@@ -36,7 +36,7 @@ exports.run = async (client, message) => {
                 };
 
                 const results = new Discord.MessageEmbed()
-                    .setColor("#219DCD")
+                    .setColor(globalVars.embedColor)
                     .setAuthor(`Roulette`, avatar)
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... **${result}**!`)
                     .addField("Winners:", resultAnnouncement, false)
@@ -46,7 +46,7 @@ exports.run = async (client, message) => {
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
-                .setColor("#219DCD")
+                .setColor(globalVars.embedColor)
                 .setAuthor(`Roulette`, avatar)
                 .setDescription('Welcome to the roulette! We hope to see you here!')
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${globalVars.prefix}bet <money>, <numbers or intervals>\`

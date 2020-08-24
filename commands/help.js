@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
 
         const helpEmbed = new Discord.MessageEmbed()
-            .setColor("#219DCD")
+            .setColor(globalVars.embedColor)
             .setAuthor(`Help`, client.user.avatarURL())
             .addField("Commands:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands')`, false)
             .addField("Features:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Features 'Features')`, false)
