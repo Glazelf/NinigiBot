@@ -4,6 +4,7 @@ exports.run = (client, message) => {
     try {
         const { bank } = require('../database/bank');
         const input = message.content.split(` `, 2);
+        if (input[1] == "all") input[1] = bank.currency.getBalance(message.author.id);
         let amount = input[1];
 
         if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
