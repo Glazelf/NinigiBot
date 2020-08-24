@@ -41,7 +41,6 @@ module.exports.run = async (client, message, args) => {
       let roleHelpMessage = '';
 
       for (let i = 0; i < roleText.length; i++) {
-        console.log(`RoleID: ${roleText[i]}`)
         roleHelpMessage = `${roleHelpMessage}
 > <@&${roleText[i]}>`;
       };
