@@ -8,7 +8,7 @@ module.exports = {
     },
     addBet: function (bet, id, reward) {
         if (!this.bets.has(bet)) this.bets.set(bet, [[id, reward]]);
-        else this.bets.set(bet, this.bets.get(bet).push([id, reward]));
+        else  this.bets.get(bet).push([id, reward]);
     },
 
     spin: function (result) {
