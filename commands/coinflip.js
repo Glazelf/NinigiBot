@@ -20,8 +20,8 @@ exports.run = (client, message) => {
         // Coinflip randomization
         let r = Math.floor((Math.random() * 10) + 1);
         if (r % 2 !== 0) {
+            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}💰.`;
             amount = Math.abs(amount) * -1;
-            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${input[1]}💰.`;
         };
 
         bank.currency.add(message.author.id, amount);
