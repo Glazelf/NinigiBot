@@ -3,6 +3,7 @@ module.exports.run = async (client, message, args) => {
   let globalVars = require('../events/ready');
   try {
     const { EligibleRoles } = require('../database/dbObjects')
+    const Discord = require("discord.js");
 
     let member = message.member;
     let arguments = args;
@@ -29,10 +30,28 @@ module.exports.run = async (client, message, args) => {
         }
       });
 
+      // Role sorting for role help
       roleText.sort((r, r2) => r2.position - r.position).join(", ");
-      roleText = roleText.map(role => role.name)
-      return message.channel.send(`> **List of available roles:** 
-> ${roleText.join(', ')}`)
+      roleText = roleText.map(role => role.id);
+
+      let avatar = null;
+      if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
+
+      // Role help embed and logic
+      let roleHelpMessage = '';
+
+      for (let i = 0; i < roleText.length; i++) {
+        console.log(`RoleID: ${roleText[i]}`)
+        roleHelpMessage = `${roleHelpMessage}
+> <@&${roleText[i]}>`;
+      };
+
+      const rolesHelp = new Discord.MessageEmbed()
+        .setColor(globalVars.embedColor)
+        .setAuthor(`Available roles:`, avatar)
+        .setDescription(roleHelpMessage)
+        .setTimestamp();
+      return message.channel.send(rolesHelp)
     };
 
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
@@ -56,6 +75,5 @@ module.exports.run = async (client, message, args) => {
 
     // return confirmation
     return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
-
   };
 };
