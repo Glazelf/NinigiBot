@@ -11,11 +11,13 @@ const CurrencyShop = require('./database/models/CurrencyShop')(sequelize, Sequel
 const Users = require('./database/models/Users')(sequelize, Sequelize.DataTypes);
 const UserItems = require('./database/models/UserItems')(sequelize, Sequelize.DataTypes);
 const EligibleRoles = require('./database/models/EligibleRoles')(sequelize, Sequelize.DataTypes);
+const Shinx = require('./database/models/Shinx')(sequelize, Sequelize.DataTypes);
 
 //Run force : true ONLY IF YOU WANT TO RESET THE SAVED ITEMS
 Users.sync({ alter: true });
 EligibleRoles.sync({ alter: true });
 UserItems.sync({ alter: true });
+Shinx.sync({alter:true})
 CurrencyShop.sync({ force: true }).then(async () => {
 	const shop = [
 		CurrencyShop.upsert({ name: 'Water', cost: 10, use: '> You drank the water. You are no longer thirsty.' }),
