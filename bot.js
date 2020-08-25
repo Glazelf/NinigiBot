@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 var commando = require('discord.js-commando');
 const Enmap = require("enmap");
 const fs = require("fs");
+const path = require("path");
 
 const client = new Discord.Client({ partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'] });
 const config = require("./config.json");
@@ -30,22 +31,31 @@ fs.readdir("./events/", (err, files) => {
 
 client.commands = new Enmap();
 
-// This loop reads the /commands/ folder and attaches each command file to the appropriate command.
-fs.readdir("./commands/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach(file => {
-    if (!file.endsWith(".js")) return;
-
-    // Load the command file itself
-    let props = require(`./commands/${file}`);
-
-    // Get just the command name from the file name
-    let commandName = file.split(".")[0];
-    console.log(`Attempting to load command ${commandName}`);
-
-    // Store the whole thing in Enmap
-    client.commands.set(commandName, props);
-  });
-});
+walk(`./commands/`);
 
 client.login(config.token)
+
+// This loop reads the /commands/ folder and attaches each command file to the appropriate command.
+function walk(dir, callback) {
+  fs.readdir(dir, function (err, files) {
+    if (err) throw err;
+    
+    files.forEach(function (file) {
+      var filepath = path.join(dir, file);
+      fs.stat(filepath, function (err, stats) {
+        if (stats.isDirectory()) {
+          walk(filepath, callback);
+        } else if (stats.isFile() && file.endsWith('.js')) {
+          let props = require(`./${filepath}`);
+          let commandName = file.split(".")[0];
+          console.log(`Loading Command: ${commandName} ✔ Success! `);
+          client.commands.set(commandName, props);
+          // For if I ever want to add command aliases
+          // props.conf.aliases.forEach(alias => {
+          //   client.aliases.set(alias, commandName);
+          // });
+        };
+      });
+    });
+  });
+};
