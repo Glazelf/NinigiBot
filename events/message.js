@@ -33,7 +33,7 @@ module.exports = (client, message) => {
       };
 
       let AttachmentString = `None`;
-      var Attachment = (message.attachments).array();
+      let Attachment = (message.attachments).array();
       if (message.attachment) {
         let AttachmentString = ``;
         forEach(Attachment)

@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-var commando = require('discord.js-commando');
+let commando = require('discord.js-commando');
 const Enmap = require("enmap");
 const fs = require("fs");
 const path = require("path");
@@ -41,7 +41,7 @@ function walk(dir, callback) {
     if (err) throw err;
     
     files.forEach(function (file) {
-      var filepath = path.join(dir, file);
+      let filepath = path.join(dir, file);
       fs.stat(filepath, function (err, stats) {
         if (stats.isDirectory()) {
           walk(filepath, callback);
