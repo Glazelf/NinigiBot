@@ -8,6 +8,8 @@ module.exports = async (client, message) => {
         // Import totals
         let globalVars = require('./ready');
 
+        if (!message) return;
+        if (!message.author) return;
         if (!message.content) {
             message.content = "None";
         };

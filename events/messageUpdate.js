@@ -9,6 +9,8 @@ module.exports = async (client, message, oldMessage) => {
         // Import totals
         let globalVars = require('./ready');
 
+        if (!message) return;
+        if (!message.author) return;
         if (message.content == "") return;
         if (message.content === oldMessage.content) return;
 

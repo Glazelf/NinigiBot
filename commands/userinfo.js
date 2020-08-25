@@ -28,6 +28,7 @@ module.exports.run = async (client, message) => {
 
         let userCache = client.users.cache.get(user.id);
         let memberCache = memberFetch.get(user.id);
+        if(!memberCache) return;
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         //balance check
