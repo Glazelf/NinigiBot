@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { Users } = require('./dbObjects');
+const { Shinx } = require('./dbObjects');
 module.exports = {
     bank: {
         _currency: null,
@@ -17,6 +18,23 @@ module.exports = {
                         money.set(id, newUser);
                         return newUser;
                     },
+                });
+
+                Reflect.defineProperty(money, 'getShinx', {
+                    value: async function getShinx(id) {
+                        let user = money.get(id);
+                        console.log(user)
+                        if (!user) {
+                            user = await Users.create({ user_id: id });
+                            money.set(id, user)
+                        }
+                        let shinx = await Shinx.findOne({
+                            where: { user_id: id },
+                        });
+                        console.log(shinx)
+                        if (!shinx) shinx = await Shinx.create({ user_id: id });
+                        return shinx
+                    },  
                 });
 
                 Reflect.defineProperty(money, 'getSwitchCode', {
@@ -66,6 +84,7 @@ module.exports = {
                     },
                 });
 
+            
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);
