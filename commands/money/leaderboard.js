@@ -2,7 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { bank } = require('.../database/bank');
+        const { bank } = require('../../database/bank');
         return message.channel.send(
             bank.currency.sort((a, b) => b.balance - a.balance)
                 .filter(user => client.users.cache.has(user.user_id))
