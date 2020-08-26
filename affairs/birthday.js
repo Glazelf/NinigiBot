@@ -6,7 +6,7 @@ module.exports = async (client) => {
     const timezone = 'cest';
     const time = '05 00 00 * * *'; //Sec Min Hour 
     const guildID = client.config.botServerID;
-    const channelID = globalVars.botChannelID;
+    const channelID = globalVars.eventChannelID;
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
     const { search } = require('../gifs/search');
