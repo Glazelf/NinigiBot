@@ -121,7 +121,7 @@ module.exports.run = async (client, message) => {
             .addField("Availability:", userStatus, true)
             .addField("Balance:", userBalance, true)
         if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
-        if (birthday) profileEmbed.addField("Birthday:", birthdayParsed, true);
+        if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
