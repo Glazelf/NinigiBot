@@ -12,11 +12,10 @@ module.exports.run = async (client, message) => {
         if (!guild) return message.channel.send(`> I couldn't find that server, ${message.author}.`);
 
         let member = await guild.members.fetch();
-        let user = client.users.cache.get(member.id);
-
         let baseMessage = `> Here's a list of all users for ${guild.name}, ${message.author}:`;
 
         guild.members.cache.forEach((member) => {
+            let user = client.users.cache.get(member.id);
             baseMessage = `${baseMessage}
 > ${user.tag} - ${member.id}`;
         });
