@@ -17,7 +17,7 @@ module.exports.run = async (client, message) => {
 
         guild.members.cache.forEach((member) => {
             baseMessage = `${baseMessage}
-> - <@${member.id}>`
+> ${member.tag} - ${member.id}`;
         });
 
         return message.channel.send(baseMessage);
