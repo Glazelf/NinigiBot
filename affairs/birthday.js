@@ -14,7 +14,7 @@ module.exports = async (client) => {
     new cron.CronJob(time, async () => {
         let globalVars = require('../events/ready');
         let guild = client.guilds.cache.get(guildID);
-        const birthdayRole = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.birthRole);
+        const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
         if (!birthdayRole) return;
         let yesterdayCuties = birthdayRole.members;
         yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole))
