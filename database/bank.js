@@ -23,17 +23,29 @@ module.exports = {
                 Reflect.defineProperty(money, 'getShinx', {
                     value: async function getShinx(id) {
                         let user = money.get(id);
-                        console.log(user)
+
                         if (!user) {
-                            user = await Users.create({ user_id: id });
+                            user = await Users.create({ user_id: id  });
                             money.set(id, user)
                         }
                         let shinx = await Shinx.findOne({
                             where: { user_id: id },
                         });
-                        console.log(shinx)
-                        if (!shinx) shinx = await Shinx.create({ user_id: id });
+
+                        if (!shinx) {
+                            const now = new Date();
+                            shinx = await Shinx.create({ user_id: id, meetup: require('../util/parseMeetDate')(now.getDate(), now.getMonth(), now.getFullYear()) });
+                        }
                         return shinx
+                    },  
+                });
+
+                Reflect.defineProperty(money, 'updateShinx', {
+                    value: async function updateShinx(shinxBattle) {
+                        let shinx = await Shinx.findOne({
+                            where: { user_id: shinxBattle.owner.id },
+                        });
+                        await shinx.updateData(shinxBattle);
                     },  
                 });
 
