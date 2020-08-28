@@ -43,8 +43,8 @@ module.exports.run = async (client, message) => {
         };
 
         return message.channel.send(`> Hey, ${message.author}.
-> ${Konohana} (Pokémon Bot) is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
-> ${Ribbot} (ACNH Bot) is currently **${RibbotStatus}**!
+> ${Konohana} is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
+> ${Ribbot} is currently **${RibbotStatus}**!
 > Check the pins in <#${globalVars.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
