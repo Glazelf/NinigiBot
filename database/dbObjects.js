@@ -44,6 +44,15 @@ Shinx.prototype.shine = function () {
 	return this.shiny;
 }
 
+Shinx.prototype.updateData = function (shinxBattle) {
+	this.level = shinxBattle.level
+	this.exp = shinxBattle.exp
+	this.hunger = shinxBattle.hunger 
+	this.sleep = shinxBattle.sleep 
+	this.friendship = shinxBattle.friendship 
+	this.save();
+}
+
 Users.prototype.addItem = async function (item) {
 	const useritem = await UserItems.findOne({
 		where: { user_id: this.user_id, item_id: item.id },
