@@ -14,14 +14,14 @@ exports.run = (client, message) => {
     const Discord = require("discord.js");
     let user = message.mentions.users.first();
     let gifArgumentUncased = message.content.split(` `, 3);
-    let missingGifString = `> You didn't provide a valid gif argument, ${message.author}>.
+    let missingGifString = `> You didn't provide a valid gif argument, ${message.author}.
 > For a list of gif arguments, use "${globalVars.prefix}gif help".`
     if (!gifArgumentUncased[1]) {
       return message.channel.send(missingGifString);
     }
     let gifArgument = gifArgumentUncased[1].toLowerCase();
     let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-    let gifString = `Here's your gif, ${message.author}`;
+    let gifString = `Here's your gif, ${message.author}:`;
 
     const gif = search(gifArgument);
 
@@ -29,7 +29,7 @@ exports.run = (client, message) => {
       return message.channel.send(`> Here's a list for all gif arguments, ${message.author}:
 ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
-      return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}>.`);
+      return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}.`);
     } else if (gif) {
 
       if (gifArgument == "hug") {
@@ -39,7 +39,7 @@ ${helpText}`);
             gifString = `${user} is hugging themselves... This is kind of sad...`;
           };
         } else {
-          gifString = `It seems ${message.author}> wants to hug...`;
+          gifString = `It seems ${message.author} wants to hug...`;
         };
       };
 
