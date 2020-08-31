@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
-        
+
 
         let memberFetch = await message.guild.members.fetch();
         let user = message.mentions.users.first();
@@ -29,7 +29,7 @@ module.exports.run = async (client, message) => {
 
         let userCache = client.users.cache.get(user.id);
         let memberCache = memberFetch.get(user.id);
-        if(!memberCache) return;
+        if (!memberCache) return;
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         //balance check
@@ -92,7 +92,8 @@ module.exports.run = async (client, message) => {
                 let emoji = null
                 if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
                 if (emoji) customStatus = emoji.toString() + ' ';
-                customStatus += activities[act].state;
+                // activities[act].state !== null doesn't work, but "null" does. I hate Javascript.
+                if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
             } else {
                 activityLog += activities[act].name;
                 if (activities[act].details || activities[act].state) activityLog += ': ';
