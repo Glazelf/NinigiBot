@@ -3,13 +3,11 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const { bank } = require('../../database/bank');
-        const input = message.content.slice(1).trim();
-        const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+        const input = message.content.split(` `, 3);
         const currentAmount = bank.currency.getBalance(message.author.id);
-        const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
+        let transferAmount = input[2];
         let transferTarget = message.mentions.users.first();
         if (!transferTarget) {
-            const input = message.content.split(` `, 3);
             let userID = input[1];
             transferTarget = client.users.cache.get(userID);
         };
