@@ -19,7 +19,7 @@ exports.run = (client, message, args) => {
 
         let amount = parseInt(numberOfMessages);
 
-        const user = message.mentions.users.first();
+        let user = message.mentions.users.first();
 
         if (!user) {
             const input = message.content.split(` `, 3);
