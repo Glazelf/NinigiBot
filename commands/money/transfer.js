@@ -8,6 +8,12 @@ exports.run = async (client, message) => {
         const currentAmount = bank.currency.getBalance(message.author.id);
         const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
         const transferTarget = message.mentions.users.first();
+        if (!transferTarget) {
+            const input = message.content.split(` `, 2);
+            let userID = input[1];
+            transferTarget = client.users.cache.get(userID);
+        };
+        if(!transfertarget) return;
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`;
 
         if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
