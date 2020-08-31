@@ -92,8 +92,8 @@ module.exports.run = async (client, message) => {
                 let emoji = null
                 if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
                 if (emoji) customStatus = emoji.toString() + ' ';
-                // activities[act].state !== null doesn't work, but "null" does. I hate Javascript.
-                if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
+                // activities[act].state !== null doesn't work, but "null" does. Added regular null just for completion's sake. I hate Javascript.
+                if (activities[act].state && activities[act].state !== null && activities[act].state !== "null") customStatus += activities[act].state;
             } else {
                 activityLog += activities[act].name;
                 if (activities[act].details || activities[act].state) activityLog += ': ';
