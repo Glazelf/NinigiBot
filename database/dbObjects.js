@@ -26,11 +26,6 @@ Shinx.prototype.changeNick = function (newNick) {
 	return this.nick;
 }
 
-Shinx.prototype.sleeping = function (sleep) {
-	this.sleep = Math.max(Math.min(100, this.sleep + sleep), 0);
-	this.save();
-	return this.sleep;
-}
 
 Shinx.prototype.eat = function (food) {
 	this.hunger = Math.max(Math.min(100, this.hunger + food), 0);
@@ -42,6 +37,12 @@ Shinx.prototype.shine = function () {
 	this.shiny = !this.shiny
 	this.save();
 	return this.shiny;
+}
+
+Shinx.prototype.trans = function () {
+	this.user_male = !this.user_male
+	this.save();
+	return this.user_male;
 }
 
 Shinx.prototype.updateData = function (shinxBattle) {
