@@ -15,9 +15,9 @@ const buffs =
 [
     //[chance, [name, attack, knockout]],
     ['feels more alive than even', 1, 1, 1, 0, 3, false],
-    ['just wants to sleep', 1, 1.5, 1, 0, 0, true],
-    ['feels a bit hungry now', 0.9, 1, 1, 0, 0, false],
-    ['got hit by a rock bruh', 1, 1, 1, 0.15, 0, true],
+    //['just wants to sleep', 1, 1.5, 1, 0, 0, true],
+    ['feels a bit hungry now', 0.9, 1, 1, 0, 0, false]
+    //['got hit by a rock bruh', 1, 1, 1, 0.15, 0, true],
 ]
 
 const getMove = (number)=> {
