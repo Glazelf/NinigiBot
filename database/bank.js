@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const { Users } = require('./dbObjects');
 const { Shinx } = require('./dbObjects');
+const Sequelize = require('sequelize');
+const {ne} = Sequelize.Op;
 module.exports = {
     bank: {
         _currency: null,
@@ -39,6 +41,13 @@ module.exports = {
                         return shinx
                     },  
                 });
+
+                Reflect.defineProperty(money, 'getRandomShinx', {
+                    value: async function getRandomShinx(amount, exclude) {
+                        const results = await Shinx.findAll({where:{user_id:{[ne]:exclude}}, order:Sequelize.fn( 'RANDOM' ), limit: amount })                        
+                        return results.map(res=>res.dataValues);
+                    }
+                })
 
                 Reflect.defineProperty(money, 'updateShinx', {
                     value: async function updateShinx(shinxBattle) {
