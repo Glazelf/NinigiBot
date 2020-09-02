@@ -20,8 +20,7 @@ exports.run = (client, message) => {
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}💰.`;
 
         // Coinflip randomization
-        let r = Math.floor((Math.random() * 10) + 1);
-        if (r % 2 !== 0) {
+        if (Math.random() >= 0.5) {
             returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}💰.`;
             amount = Math.abs(amount) * -1;
         };
