@@ -50,6 +50,7 @@ module.exports.run = async (client, message, args) => {
         .setColor(globalVars.embedColor)
         .setAuthor(`Available roles:`, avatar)
         .setDescription(roleHelpMessage)
+        .setFooter(`Requested by ${message.author.tag}`)
         .setTimestamp();
       return message.channel.send(rolesHelp)
     };

@@ -53,6 +53,7 @@ exports.run = async (client, message) => {
 For example, \`${globalVars.prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
 After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
+                .setFooter(`Requested by ${message.author.tag}`)
                 .setTimestamp();
             message.channel.send(welcome);
         } else {
