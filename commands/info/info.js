@@ -89,7 +89,6 @@ module.exports.run = async (client, message) => {
             .setThumbnail(avatar)
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
-            .addField("Host:", `<@${client.config.ownerID}>`, true)
             .addField("Prefix:", globalVars.prefix, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Channels:", client.channels.cache.size, true)
