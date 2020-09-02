@@ -47,8 +47,9 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 		},
 		lastmeet: {
-			type: DataTypes.STRING,
-            allowNull: true,
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			defaultValue: Math.floor(Date.now()/(1000*60*60)),
 		},
 		meetup: {
 			type: DataTypes.STRING,
