@@ -3,7 +3,7 @@ const Canvas = require('canvas');
 
 const reactions = [
  
-    ['is sleeping. Shh!', 1, 'a'],
+   
     ['seems to be thinking about something...',8, 1],
     ['got scared for a second!', 8,  1],
     ['woke up! He\'s angry now', 8,  9],
@@ -21,10 +21,11 @@ const eating =
 
 const playing = 
 [
-    ['likes the fresh air here!', 3 ],
-    ['is so happy about seeing his friends!', 2 ],
-    ['seems to be thinking about something...', 1 ],
-    ['doesn\'t want to play...', 8 ],
+    ['Doesn\'t feel prety well...', 8, 0 ],
+    ['likes the fresh air here!', 3, 1 ],
+    ['is so happy about seeing his friends!', 2, 1.2 ],
+    ['seems to be singing something!', 0, 0.9],
+    ['doesn\'t want to play...', 8, 0.4],
 ]
 
 const visitors = [
@@ -44,18 +45,16 @@ module.exports.run = async (client, message) => {
     try {
         const { bank } = require('../database/bank');
         const Discord = require("discord.js");
-        const input = message.content.slice(1).trim();
-        const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
-
+        const args = message.content.slice(1).trim().split(/ +/);
+        args.shift();
         const shinx = await bank.currency.getShinx(message.author.id)
-        let userCache = client.users.cache.get(message.author.id);
+        shinx.see();
         let canvas, ctx, img;
-        if(biography==='shiny') return shinx.shine()? message.channel.send('Now your shinx shines!'):message.channel.send('Your shinx doesn\'t shine anymmore!')
-        if(biography==='trans') return shinx.trans()? message.channel.send('You have dick now~'):message.channel.send('You lost your dick~')
+        const now = new Date();
         
-        if(biography==='level') return message.channel.send(`Shinx levels up to level ${shinx.levelUp(1)}`); 
-        
-        if(biography=='data'){
+        if(args[0]==='shiny') return shinx.shine()? message.channel.send('Now your shinx shines!'):message.channel.send('Your shinx doesn\'t shine anymmore!')
+        if(args[0]==='trans') return shinx.trans()? message.channel.send('You have dick now~'):message.channel.send('You lost your dick~')
+        if(args[0]=='data'){
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/data.png');
@@ -82,8 +81,52 @@ module.exports.run = async (client, message) => {
             ctx.fillText(Math.floor(shinx.sleep*100)+'%', 490, 310);
             ctx.fillText(Math.floor(shinx.friendship*100)+'%', 490, 364);
             ctx.fillText(shinx.meetup, 490, 481);
+            if(shinx.sleeping){
+                img = await Canvas.loadImage('./assets/sleepicon.png');
+                ctx.drawImage(img, 270,162);
+            }
             return message.channel.send(new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
-        }else if(biography=='feed'){
+        }else if(args[0]=='tap'||shinx.sleeping){
+            if(!shinx.sleeping){
+                const fallsAsleep = Math.random()<=Math.max(0, 1-1.5*shinx.sleep)
+                if(fallsAsleep) shinx.rest();
+            }
+            canvas = Canvas.createCanvas(468, 386);
+            ctx = canvas.getContext('2d');
+            img = await Canvas.loadImage('./assets/room.png');
+            ctx.drawImage(img, 0, 0);
+            img = await Canvas.loadImage('./assets/mc.png');
+            ctx.drawImage(img, 51*!shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
+            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            let reaction;
+            if(shinx.sleeping) reaction =  ['is sleeping. Shh!', 1, 'a']
+            else reaction = reactions[Math.floor(Math.random()*reactions.length)]
+            ctx.drawImage(img,57*reaction[1], 48*shinx.shiny,  57, 48, 284, 177,  57, 48); 
+            if(!isNaN(reaction[2])){
+                img = await Canvas.loadImage('./assets/reactions.png');
+                ctx.drawImage(img, 10+30*reaction[2], 8, 30, 32, 289, 147, 30, 32)
+            }
+            if(now.getHours()> 20||now.getHours()<4){
+                img = await Canvas.loadImage('./assets/winNight.png');
+                ctx.drawImage(img, 198, 52);
+            }
+            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+        
+        }
+        else if(args[0]=='feed'){
+            const { Users } = require('../database/dbObjects');
+            args.shift()
+            const foodName = args.join(' ') 
+
+            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const foods = await user.getFoods();
+            if(!foods) return message.channel.send(`> You don't have any food to give, ${message.author}.`);
+            const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
+            if(food.length<1) return message.channel.send(`> You don't have that food, ${message.author}.`);
+            console.log(food)
+            user.removeFood(food[0]);
+            shinx.feed(food[0].food.recovery)
+            
             canvas = Canvas.createCanvas(393, 299);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/dining.png');
@@ -110,7 +153,6 @@ module.exports.run = async (client, message) => {
             const reaction = eating[Math.floor(Math.random()*eating.length)];
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10+30*reaction[1], 8, 30, 32, 202, 115, 30, 32)
-            const now = new Date();
             if(now.getHours()> 20||now.getHours()<6){
                 img = await Canvas.loadImage('./assets/dinNight.png');
                 ctx.drawImage(img, 199, 0);
@@ -119,29 +161,7 @@ module.exports.run = async (client, message) => {
 
 
         
-        }else if(biography=='tap'){
-            canvas = Canvas.createCanvas(468, 386);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/room.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
-            ctx.drawImage(img, 51*!shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            const reaction = reactions[Math.floor(Math.random()*reactions.length)]
-            ctx.drawImage(img,57*reaction[1], 48*shinx.shiny,  57, 48, 284, 177,  57, 48); 
-            if(!isNaN(reaction[2])){
-                img = await Canvas.loadImage('./assets/reactions.png');
-                ctx.drawImage(img, 10+30*reaction[2], 8, 30, 32, 289, 147, 30, 32)
-            }
-            const now = new Date();
-            if(now.getHours()> 20||now.getHours()<4){
-                img = await Canvas.loadImage('./assets/winNight.png');
-                ctx.drawImage(img, 198, 52);
-            }
-            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
-
-        
-        }else if(biography=='play'){
+        }else if(args[0]=='play'){
             canvas = Canvas.createCanvas(578, 398);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/landscapes.png');
@@ -176,9 +196,12 @@ module.exports.run = async (client, message) => {
             for(let i=0; i<guests.length; i++){
                 ctx.drawImage(img, 57*layout[i][1][0], 48*guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
             }
-            const reaction = playing[Math.floor(Math.random()*playing.length)]
+            let reaction;
+            if(shinx.sleep<0.2||shinx.hunger<0.2) reaction = playing[0]
+            else reaction = playing[Math.floor(Math.random()*(playing.length-1))+1]
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10+30*reaction[1], 8, 30, 32, 120, 212, 30, 32)
+            shinx.play(reaction[2])
             return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'park.png'));
 
         
@@ -187,7 +210,6 @@ module.exports.run = async (client, message) => {
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/park.png');
             ctx.drawImage(img, 0, 0);
-            const now = new Date();
             let time;
             if(now.getHours()>= 20||now.getHours()<4){
                 time = 2;
