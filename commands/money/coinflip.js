@@ -5,9 +5,8 @@ exports.run = (client, message) => {
         const { bank } = require('../../database/bank');
         const input = message.content.split(` `, 2);
         let amount = input[1];
-        if (amount.toLowerCase() == "all") input[1] = bank.currency.getBalance(message.author.id);
-        if (amount.toLowerCase() == "half") input[1] = bank.currency.getBalance(message.author.id)/2;
-        amount = input[1];
+        if (amount.toLowerCase() == "all") amount = bank.currency.getBalance(message.author.id);
+        if (amount.toLowerCase() == "half") amount = bank.currency.getBalance(message.author.id)/2;
 
         if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
         amount = Math.floor(amount);
