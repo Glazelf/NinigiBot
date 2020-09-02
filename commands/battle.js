@@ -15,6 +15,12 @@ module.exports.run = async (client, message) => {
         const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
         if(biography.length<1) return message.channel.send('Please specify a user to battle.')
         const trainers = [message.author, message.mentions.users.first()]
+        shinxes = []
+        for(let i = 0; i < 2; i++) {
+            const shinx = await bank.currency.getShinx(trainers[i].id)
+            if(shinx.sleeping) return message.channel.send('At least one of the participants is asleep.');
+            shinxes.push(new ShinxBattle(trainers[i], shinx))
+        } 
         const avatars = [trainers[0].displayAvatarURL({ format: 'jpg' }), trainers[1].displayAvatarURL({ format: 'jpg' })]
         
         let canvas = Canvas.createCanvas(240, 71);
@@ -40,9 +46,9 @@ module.exports.run = async (client, message) => {
         ctx.fillStyle = '#FFFFFF';
         for(let i = 0; i < 2; i++) ctx.fillText(trainers[i].username, 53+49*i, 49+79*i);
         
-        shinxes = []
+        
         const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
-        for(let i = 0; i < 2; i++) shinxes.push(new ShinxBattle(trainers[i], await bank.currency.getShinx(trainers[i].id)))
+        
         for(let i = 0; i < 2; i++) if(shinxes[i].shiny) ctx.drawImage(battleSprite, 39*i, 0, 39, 26, (12+177*i), 24+79*i, 39, 26 );
         //189, 103
         const nicks = []
