@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('key_items', {
+	return sequelize.define('room', {
 		name: {
 			type: DataTypes.STRING,
 			unique: true,
@@ -7,8 +7,11 @@ module.exports = (sequelize, DataTypes) => {
 		cost: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-		}
-		//d
+		},
+		slots: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
 	}, {
 		timestamps: false,
 	});
