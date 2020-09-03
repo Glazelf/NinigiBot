@@ -19,8 +19,7 @@ exports.run = (client, message) => {
             if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
 
             if (amount > bank.currency.getBalance(message.author.id)) {
-                return message.channel.send(`> You don't have enough currency, ${message.author}.
-> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+                return message.channel.send(`> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰, ${message.author}.`);
             };
 
             let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}💰.`;
