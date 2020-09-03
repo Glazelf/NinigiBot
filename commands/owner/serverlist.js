@@ -13,6 +13,8 @@ exports.run = (client, message) => {
 > -${guild.name} - ${guild.id}`
         });
 
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + "...";
+
         return message.channel.send(baseMessage);
 
     } catch (e) {

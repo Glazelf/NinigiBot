@@ -19,6 +19,8 @@ exports.run = (client, message) => {
 > -${channel.name} - ${channel.id}`
         });
 
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + "...";
+
         return message.channel.send(baseMessage);
 
     } catch (e) {

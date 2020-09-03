@@ -17,8 +17,10 @@ module.exports.run = async (client, message) => {
         guild.members.cache.forEach((member) => {
             let user = client.users.cache.get(member.id);
             baseMessage = `${baseMessage}
-> ${user.tag} - ${member.id}`;
+> ${user.tag} - ${member.id} - ${user}`;
         });
+
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + "...";
 
         return message.channel.send(baseMessage);
 
