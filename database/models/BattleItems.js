@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 		cost: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			defaultValue: 0
 		},
 		percentage: {
 			type: DataTypes.FLOAT,
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.FLOAT,
 			allowNull: true,
 		},
-		saiyan: {
+		geass: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
 		}
