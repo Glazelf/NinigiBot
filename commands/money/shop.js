@@ -4,7 +4,7 @@ exports.run = async (client, message) => {
     try {
         const { CurrencyShop } = require('../../database/dbObjects');
         const items = await CurrencyShop.findAll();
-        return message.channel.send(items.map(i => `${i.name}: ${i.cost}💰`).join('\n'), { code: true });
+        return message.channel.send(items.map(i => `${i.name}: ${i.cost}${globalVars.currency}`).join('\n'), { code: true });
     } catch (e) {
         // log error
         console.log(e);

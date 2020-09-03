@@ -12,7 +12,7 @@ exports.run = async (client, message) => {
             transferTarget = client.users.cache.get(userID);
         };
         if(!transferTarget) return;
-        let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`;
+        let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}`;
 
         if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
         if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> You need to specify a valid number to transfer, ${message.author}.`);
@@ -22,7 +22,7 @@ exports.run = async (client, message) => {
         bank.currency.add(message.author.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return message.channel.send(`> Successfully transferred ${transferAmount}💰 to ${transferTarget.tag}, ${message.author}.`);
+        return message.channel.send(`> Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}, ${message.author}.`);
 
     } catch (e) {
         // log error

@@ -10,11 +10,12 @@ module.exports.run = async (client, message) => {
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         const currentAmount = bank.currency.getBalance(message.author.id);
+        let currency = globalVars.currency;
 
         const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
         const transferTarget = message.mentions.users.first();
 
-        let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`;
+        let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`;
 
         if (!transferTarget) {
             const input = message.content.split(` `, 3);
@@ -28,9 +29,9 @@ module.exports.run = async (client, message) => {
 
         if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
 
-        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}💰`);
+        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
 
-        return message.channel.send(`> Successfully added ${transferAmount}💰 to ${transferTarget.tag}.`);
+        return message.channel.send(`> Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
 
     } catch (e) {
         // log error

@@ -28,6 +28,7 @@ module.exports = async (client) => {
 
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "614979959156375567";
+module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = `you do not have the required permissions to do this.`;
 module.exports.prefix = "?";

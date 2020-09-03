@@ -33,7 +33,7 @@ module.exports.run = async (client, message) => {
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         //balance check
-        let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}💰`;
+        let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}${globalVars.currency}`;
         let switchCode = bank.currency.getSwitchCode(userCache.id);
         let biography = bank.currency.getBiography(userCache.id);
         let birthday = bank.currency.getBirthday(userCache.id);

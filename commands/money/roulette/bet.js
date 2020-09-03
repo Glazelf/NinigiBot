@@ -25,7 +25,7 @@ exports.run = (client, message) => {
         });
         if (bets.size * money > bank.currency.getBalance(message.author.id)) {
             return message.channel.send(`> You don't have enough currency, ${message.author}.
-> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}.`);
         };
         bets.forEach(bet => {
             roulette.addBet(bet, message.author.id, 36 * money);

@@ -8,6 +8,7 @@ exports.run = (client, message) => {
             return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
         } else {
             const { bank } = require('../../database/bank');
+            let currency = globalVars.currency
             const input = message.content.split(` `, 2);
             let inputText = input[1].toLowerCase();
             if (inputText == "half") input[1] = bank.currency.getBalance(message.author.id) / 2;
@@ -19,14 +20,14 @@ exports.run = (client, message) => {
             if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
 
             if (amount > bank.currency.getBalance(message.author.id)) {
-                return message.channel.send(`> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰, ${message.author}.`);
+                return message.channel.send(`> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}${currency}, ${message.author}.`);
             };
 
-            let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}💰.`;
+            let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
 
             // Coinflip randomization
             if (Math.random() >= 0.5) {
-                returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}💰.`;
+                returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}.`;
                 amount = Math.abs(amount) * -1;
             };
 
