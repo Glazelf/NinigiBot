@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false,
 			allowNull: false,
 		},
+		equipment: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: 'None',
+		},
 		level: {
 			type: DataTypes.INTEGER,
             allowNull: false,
