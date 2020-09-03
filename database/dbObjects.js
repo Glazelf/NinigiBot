@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { now } = require('lodash');
+
 
 const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
@@ -13,22 +13,57 @@ const Shinx = require('./models/Shinx')(sequelize, Sequelize.DataTypes)
 const Equipments = require('./models/Equipments')(sequelize, Sequelize.DataTypes)
 const Foods = require('./models/Foods')(sequelize, Sequelize.DataTypes)
 const KeyItems = require('./models/KeyItems')(sequelize, Sequelize.DataTypes)
-const Room = require('./models/Room')(sequelize, Sequelize.DataTypes)
-const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
+//const Room = require('./models/Room')(sequelize, Sequelize.DataTypes)
+//const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const BattleItems = require('./models/BattleItems')(sequelize, Sequelize.DataTypes);
 
 const UserItems = require('./models/UserItems')(sequelize, Sequelize.DataTypes);
 const UserEquipments = require('./models/UserEquipments')(sequelize, Sequelize.DataTypes);
 const UserFoods = require('./models/UserFoods')(sequelize, Sequelize.DataTypes);
 const UserKeys = require('./models/UserKeys')(sequelize, Sequelize.DataTypes);
-const UserRooms = require('./models/UserRooms')(sequelize, Sequelize.DataTypes);
+//const UserRooms = require('./models/UserRooms')(sequelize, Sequelize.DataTypes);
 const EligibleRoles = require('./models/EligibleRoles')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(BattleItems, { foreignKey: 'item_id', as: 'item' });
 UserEquipments.belongsTo(Equipments, { foreignKey: 'item_id', as: 'equipment' });
 UserFoods.belongsTo(Foods, { foreignKey: 'item_id', as: 'food' });
 UserKeys.belongsTo(KeyItems, { foreignKey: 'item_id', as: 'key' });
-UserRooms.belongsTo(Room, { foreignKey: 'item_id', as: 'room' });
+//UserRooms.belongsTo(Room, { foreignKey: 'item_id', as: 'room' });
+
+
+BattleItems.prototype.toString = function () {
+	let description = `${this.name}: ${this.cost}💰,`
+	if(this.percentage) description+=` recovers ${this.percentage} points,`
+	if(this.food) description+=` +${this.food} food,`
+	if(this.sleep) description+=` +${this.sleep} sleep,`
+	if(this.friendship) description+=` +${this.food} friendship,`
+	if(this.geass) description+=` activates geass,`
+	return description.slice(0, -1);
+}
+
+Equipments.prototype.toString = function () {
+	let description = `${this.name}: ${this.cost}💰,`
+	if(this.regen) description+=` recovers ${this.percentage} points per turn,`
+	if(this.food) description+=` +${this.food} food,`
+	if(this.sleep) description+=` +${this.sleep} sleep,`
+	if(this.friendship) description+=` +${this.food} friendship,`
+	if(this.guard) description+=` blocks one deathblow,`
+	if(this.safeguard) description+=` blocks all deathblows,`
+	if(this.geass) description+=` turn one geass,`
+	if(this.ultrageass) description+=` permanent geass,`
+	return description.slice(0, -1);
+}
+
+KeyItems.prototype.toString = function () {
+	let description =`${this.name}: ${this.cost}💰`
+	return description;
+}
+
+Foods.prototype.toString = function () {
+	let description = `${this.name}: ${this.cost}💰, recovers ${this.recovery*100} points`
+	return description;
+}
+
 
 Shinx.prototype.levelUp = function (experience) {
 	this.level += experience;
@@ -101,12 +136,17 @@ Shinx.prototype.trans = function () {
 	return this.user_male;
 }
 
-Shinx.prototype.updateData = function (shinxBattle, wins) {
+Shinx.prototype.updateData = function (shinxBattle, wins=false) {
 	this.level = shinxBattle.level
 	this.exp = shinxBattle.exp
-	this.varyHunger(-0.1)
-	this.varySleep(-0.1)
-	wins? this.varyFriendship(0.04):this.varyFriendship(-0.02)
+	//this.varyHunger(-0.1)
+	//this.varySleep(-0.1)
+	//wins? this.varyFriendship(0.04):this.varyFriendship(-0.02)
+	this.save();
+}
+
+Shinx.prototype.equip = function (equipment) {
+	this.equipment = equipment
 	this.save();
 }
 
@@ -197,18 +237,6 @@ Users.prototype.addEquipment = async function (equipment) {
 	
 };
 
-Users.prototype.removeEquipment = async function (equipment) {
-	const userequipment = await UserEquipments.findOne({
-		where: { user_id: this.user_id, item_id: equipment.id },
-	});
-
-	if (userequipment) {
-		userequipment.destroy();
-		return true;
-	};
-	return false;
-};
-
 Users.prototype.getEquipments = function () {
 	return UserEquipments.findAll({
 		where: { user_id: this.user_id },
@@ -295,5 +323,5 @@ Users.prototype.getRoom = function () {
 		include: ['room'],
 	});
 };
-module.exports = { Users, CurrencyShop, Equipments, Foods, KeyItems, Room, BattleItems, UserItems,  UserEquipments, UserFoods, UserKeys, UserRooms, EligibleRoles, Shinx };
+module.exports = { Users, Equipments, Foods, KeyItems, BattleItems, UserItems,  UserEquipments, UserFoods, UserKeys, EligibleRoles, Shinx };
 
