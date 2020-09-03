@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
 		cost: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			defaultValue: 0
 		}
-		//d
 	}, {
 		timestamps: false,
 	});
