@@ -2,12 +2,47 @@ const UserItems = require('../database/models/UserItems');
 const Canvas = require('canvas');
 
 const reactions = [
+    //['',0],
+    ['thinks manetric should not exist.',6],
+    ['read the final chapter of the Yoomking and is confused about the ending',2],
+    ['thinks you are cute',14],
+    ['thinks that if you don\'t love yourself how the hell are you gonna love somebody else?',6],
+    ['got this new anime plot, basically...',4],
+    ['is sad because of Yanderedev code',0],
+    ['thinks that you should follow Glaze on Twitch if you don\'t already',6],
+    ['thinks that you should donate to Glaze\'s Paypal',6],
+    ['is worried about how far the sun is',0],
+    ['got hit by a pidgey. Oof!',2],
+    ['got scared of that spinarank on your head!',3],
+    ['is thinking about chocolate. Ahhh sweet',4],
+    ['told a joke. Seems to be funny (?)', 5],
+    ['doesnt\'t want you to have a girlfriend.',6],
+    ['is sad because people on this world are bad.',7],
+    ['wants 500 euros now. Damn.',8],
+    ['watched Bambie tonight and now is crying',9],
+    ['is sorry about biting your shoes',10],
+    ['wants a remake of Pokemon Platinum...',11],
+    ['wants love hes no longer asking',12],
+    ['is trying to solve some equation',13],
+    ['got happy just because you smiled',14],
+    ['is happy to be alive',15],
+    ['thinks you should be doing your homework',6],
+    ['wants you to play The Legend of Heroes: Trails of Cold Steel',15],
+    ['watched Code Geass and is crying about the ending. Again.',7],
+    ['is singing something? ...? What was that? Dango?',14],
+    ['lost on VGC so hes rage quitting like a real japanese player',12],
+    ['looks a bit horny. Ohh boy, post that on the correct channel! ',3]
+
+
+]
+
+const taping = [
  
-   
-    ['seems to be thinking about something...',8, 1],
-    ['got scared for a second!', 8,  1],
-    ['woke up! He\'s angry now', 8,  9],
-    ['is still angry', 8,  8]
+    ['is sleeping. Shh!', 1, 'a'],
+    ['has no energy at all.', 3,  1],
+    ['feels a bit sleepy', 4,  3],
+    ['doesn\'t seem to want to sleep now',8, 4],
+    ['has more energy than ever!', 8,  0]
 
 ]
 
@@ -15,8 +50,8 @@ const eating =
 [
     ['seems to like the food!', 3 ],
     ['is in love with this food!', 2 ],
-    ['seems to be thinking about something...', 1 ],
-    ['doesn\'t want to eat...', 8 ],
+    ['seems to be thinking about something while eating...', 1 ],
+    ['is full. Finish your plate, cutie!', 8 ],
 ]
 
 const playing = 
@@ -25,7 +60,8 @@ const playing =
     ['likes the fresh air here!', 3, 1 ],
     ['is so happy about seeing his friends!', 2, 1.2 ],
     ['seems to be singing something!', 0, 0.9],
-    ['doesn\'t want to play...', 8, 0.4],
+    ['seems a bit shy with those shinxes. Oh boy...', 8, 0.4]
+    //['']
 ]
 
 const visitors = [
@@ -52,8 +88,9 @@ module.exports.run = async (client, message) => {
         let canvas, ctx, img;
         const now = new Date();
         
-        if(args[0]==='shiny') return shinx.shine()? message.channel.send('Now your shinx shines!'):message.channel.send('Your shinx doesn\'t shine anymmore!')
+        //if(args[0]==='shiny') return shinx.shine()? message.channel.send('Now your shinx shines!'):message.channel.send('Your shinx doesn\'t shine anymmore!')
         if(args[0]==='trans') return shinx.trans()? message.channel.send('You have dick now~'):message.channel.send('You lost your dick~')
+        if(args[0]==='level') return message.channel.send(`Shinx levels up to level ${shinx.levelUp(1)}`); 
         if(args[0]=='data'){
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
@@ -62,7 +99,7 @@ module.exports.run = async (client, message) => {
             ctx.drawImage(img, 0, 0);
             if(shinx.shiny){
                 const cap = await Canvas.loadImage('./assets/shiny.png');
-                ctx.drawImage(cap, 98, 206);
+                ctx.drawImage(cap, 97, 202);
             }
             img = await Canvas.loadImage('./assets/owner.png');
             ctx.drawImage(img, 48*!shinx.user_male, 0, 47+9*!shinx.user_male , 70, 407, 427, 47+9*!shinx.user_male , 70);
@@ -76,14 +113,15 @@ module.exports.run = async (client, message) => {
             else ctx.fillStyle = 'red'
             ctx.fillText(message.author.username, 490, 190);
             ctx.fillStyle = '#000000'
-            ctx.fillText(shinx.level, 93, 191);
+            ctx.fillText(shinx.level, 93, 180);
             ctx.fillText(Math.floor(shinx.hunger*100)+'%', 490, 251);
             ctx.fillText(Math.floor(shinx.sleep*100)+'%', 490, 310);
             ctx.fillText(Math.floor(shinx.friendship*100)+'%', 490, 364);
             ctx.fillText(shinx.meetup, 490, 481);
+            ctx.fillText(shinx.equipment[0].toUpperCase()+shinx.equipment.slice(1), 15, 530);
             if(shinx.sleeping){
                 img = await Canvas.loadImage('./assets/sleepicon.png');
-                ctx.drawImage(img, 270,162);
+                ctx.drawImage(img, 270,155);
             }
             return message.channel.send(new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
         }else if(args[0]=='tap'||shinx.sleeping){
@@ -99,8 +137,12 @@ module.exports.run = async (client, message) => {
             ctx.drawImage(img, 51*!shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
             img = await Canvas.loadImage('./assets/fieldShinx.png');
             let reaction;
-            if(shinx.sleeping) reaction =  ['is sleeping. Shh!', 1, 'a']
-            else reaction = reactions[Math.floor(Math.random()*reactions.length)]
+            if(shinx.sleeping) reaction = taping[0]
+            else if(shinx.sleep<0.1) reaction = taping[1]
+            else if(shinx.sleep<0.3) reaction = taping[2]
+            else if(shinx.sleep<0.5) reaction = taping[3]
+            else reaction = taping[4]
+
             ctx.drawImage(img,57*reaction[1], 48*shinx.shiny,  57, 48, 284, 177,  57, 48); 
             if(!isNaN(reaction[2])){
                 img = await Canvas.loadImage('./assets/reactions.png');
@@ -113,6 +155,71 @@ module.exports.run = async (client, message) => {
             return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         
         }
+        else if(args[0]==='nick'){
+            args.shift()
+            
+            const nickname = args.join(' ') 
+            if(nickname.length<1||nickname.lenght>10) return  message.channel.send(`Please specify a valid nickname between 1 and 10 characters.`);
+            shinx.changeNick(nickname)
+
+            canvas = Canvas.createCanvas(471, 355);
+            ctx = canvas.getContext('2d');
+            img = await Canvas.loadImage('./assets/nicks.png');
+            ctx.drawImage(img, 0, 0);
+            img = await Canvas.loadImage('./assets/mc.png');
+            ctx.drawImage(img, 51*!shinx.user_male, 72*0, 51, 72, 270, 200, 51, 72);
+            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            ctx.drawImage(img, 57*8, 48*shinx.shiny, 57, 48, 324, 223, 57, 48);
+            img = await Canvas.loadImage('./assets/reactions.png');
+            ctx.drawImage(img, 10+30*4, 8, 30, 32, 335, 192, 30, 32)
+            const text = `Nickname changed to ${nickname}!`;
+            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+
+        }if(args[0]==='shiny'){
+            const { Users } = require('../database/dbObjects'); 
+            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const keys = await user.getKeys();
+            if(!keys) return 
+            const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
+            if(shinyCharm.length<1) return 
+            canvas = Canvas.createCanvas(255, 192);
+            ctx = canvas.getContext('2d');
+            img = await Canvas.loadImage('./assets/sky.png');
+            ctx.drawImage(img, 0, 0);
+            img = await Canvas.loadImage('./assets/sprite.png');
+            ctx.drawImage(img,94*!shinx.shiny, 0,  94, 72, 87, 61,  94, 72); 
+            if(!shinx.shiny){
+                img = await Canvas.loadImage('./assets/sparkle.png');
+                ctx.drawImage(img, 49, 10 ); 
+            }
+            const text = shinx.shine()? 'Now your shinx shines!':'Your shinx doesnt shine anymore';
+            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+        }
+        else if(args[0]=='equip'){
+            const { Users } = require('../database/dbObjects');
+            args.shift()
+            const equipmentName = args.join(' ') 
+
+            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const equipments = await user.getEquipments();
+            if(!equipments) return message.channel.send(`> You don't have any equipment, ${message.author}.`);
+            const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
+            if(equipment.length<1) return message.channel.send(`> You don't have that equipment, ${message.author}.`);
+            shinx.equip(equipment[0].equipment.name)
+
+            canvas = Canvas.createCanvas(428, 310);
+            ctx = canvas.getContext('2d');
+            img = await Canvas.loadImage('./assets/frontier.png');
+            ctx.drawImage(img, 0, 0);
+            img = await Canvas.loadImage('./assets/mc.png');
+            ctx.drawImage(img, 51*!shinx.user_male, 72*0, 51, 72, 162, 123, 51, 72);
+            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            ctx.drawImage(img, 57*8, 48*shinx.shiny, 57, 48, 217, 147, 57, 48);
+            img = await Canvas.loadImage('./assets/reactions.png');
+            ctx.drawImage(img, 10+30*0, 8, 30, 32, 230, 117, 30, 32)
+            const text = `Equipment changed to ${equipmentName}!`;
+            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+        }
         else if(args[0]=='feed'){
             const { Users } = require('../database/dbObjects');
             args.shift()
@@ -123,7 +230,6 @@ module.exports.run = async (client, message) => {
             if(!foods) return message.channel.send(`> You don't have any food to give, ${message.author}.`);
             const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
             if(food.length<1) return message.channel.send(`> You don't have that food, ${message.author}.`);
-            console.log(food)
             user.removeFood(food[0]);
             shinx.feed(food[0].food.recovery)
             
@@ -222,9 +328,9 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/trainer.png');
             ctx.drawImage(img, 172*!shinx.user_male, 0, 129+42*shinx.user_male, 108, 2, 52, 129+42*shinx.user_male, 108);
             img = await Canvas.loadImage('./assets/portraits.png');
-            let reaction = Math.floor(Math.random()*16)
-            ctx.drawImage(img, 64*reaction, 64*shinx.shiny, 64, 64, 173, 68, 64, 64);
-            return message.channel.send(new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
+            let reaction = reactions[Math.floor(Math.random()*reactions.length)]
+            ctx.drawImage(img, 64*reaction[1], 64*shinx.shiny, 64, 64, 173, 68, 64, 64);
+            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
 
         }
         
