@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 		cost: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			defaultValue: 0
 		},
         regen: {
 			type: DataTypes.FLOAT,
@@ -32,11 +33,11 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
 		},
-		saiyan: {
+		geass: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
         },
-        ultrasaiyan: {
+        ultrageass: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
 		}
