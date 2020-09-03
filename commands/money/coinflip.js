@@ -4,7 +4,9 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!cooldown.has(message.author.id)) {
+        if (cooldown.has(message.author.id)) {
+            return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
+        } else {
             const { bank } = require('../../database/bank');
             const input = message.content.split(` `, 2);
             let inputText = input[1].toLowerCase();
@@ -33,12 +35,11 @@ exports.run = (client, message) => {
             message.channel.send(returnString);
 
             cooldown.add(message.author.id);
-        } else {
-            return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
+
+            return setTimeout(() => {
+                cooldown.delete(message.author.id);
+            }, 1500);
         };
-        return setTimeout(() => {
-            cooldown.delete(message.author.id);
-        }, 3000);
 
     } catch (e) {
         // log error
