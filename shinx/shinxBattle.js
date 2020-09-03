@@ -1,27 +1,24 @@
-const { bank } = require('../database/bank');
 
 const battleMoves = 
 [
     //[chance, [name, attack, knockout]],
-    [2, ['Thunder of gods of destruction of eternity', 2, 2]],
-    [5, ['Shinx judgement', 0.6, 0.1]],
-    [10, ['Roar of Shinx', 0.2, 1]],
-    [50, ['Scratch', 0.4, 0.4]],
-    [100, ['Kick', 0.1, 0.1]]
+    [0, ['Judgement Storm', 0.1, 1]],
+    [3, ['Light Thunder', 0.5, 0.4]],
+    [5, ['Dark Thunder', 0.3, 0.4]],
+    [10, ['Bolt Strike', 0.1, 0.4]],
+    [20, ['Volt Tackle', 0.3, 0.15]],
+    [30, ['Thunder', 0.2, 0.2]],
+    [40, ['Wild charge', 0.25, 0.1]],
+    [50, ['Crunch', 0.1, 0.2]],
+    [60, ['Spark', 0.15, 0.1]],
+    [80, ['Bite', 0.12, 0.12]],
+    [90, ['Thunder shock', 0.12, 0.1]],
+    [100, ['Tackle', 0.1, 0.1]]
 
-]
-
-const buffs = 
-[
-    //[chance, [name, attack, knockout]],
-    ['feels more alive than even', 1, 1, 1, 0, 3, false],
-    //['just wants to sleep', 1, 1.5, 1, 0, 0, true],
-    ['feels a bit hungry now', 0.9, 1, 1, 0, 0, false]
-    //['got hit by a rock bruh', 1, 1, 1, 0.15, 0, true],
 ]
 
 const getMove = (number)=> {
-    for(let i = 0; i < battleMoves.length; i++) if(number*100<battleMoves[i][0]) return battleMoves[i][1]
+    for(let i = 0; i < battleMoves.length; i++) if(number*100<=battleMoves[i][0]) return battleMoves[i][1]
 }
 
 const levelExp = (lvl)=> {
@@ -32,31 +29,32 @@ const gainedExp = (lvl)=> {
     return (1.5 * 60 * lvl )/7
 }
 
+
+            
+            
 module.exports = class ShinxBattle {
-    constructor (owner, shinxData) {
-      this.owner = owner;
-      this.nick = shinxData.nick;
-      this.shiny = shinxData.shiny
-      this.level = shinxData.level
-      this.exp = shinxData.exp;
-      this.hunger = shinxData.hunger
-      this.sleep = shinxData.sleep
-      this.friendship = shinxData.friendship
-      this.percent = 0
-      this.saiyan = 0
-      this.knocked = false
-
-    }
-
-    applyRandomBuff (seed) {
-        const buff = buffs[seed%buffs.length]
-        this.hunger*=buff[1]
-        this.sleep*=buff[2]
-        this.friendship*=buff[3]
-        this.percent+=buff[4]
-        this.saiyan+=buff[5]
-        this.knocked=buff[6]
-        return buff[0]
+    constructor (owner, shinxData, equipments) {
+        this.owner = owner;
+        this.nick = shinxData.nick;
+        this.shiny = shinxData.shiny
+        this.percent = 0
+        this.level = shinxData.level
+        this.exp = shinxData.exp;
+        this.hunger = shinxData.hunger
+        this.sleep = shinxData.sleep
+        this.friendship = shinxData.friendship
+        this.geass = 0
+        if(equipments.length>0) { 
+            const equipment = (equipments.filter(i => i.equipment.name.toLowerCase() === shinxData.equipment))[0].equipment;
+            if(equipment.food)this.hunger += equipment.food;
+            if(equipment.sleep)this.sleep += equipment.sleep;
+            if(equipment.friendship)this.friendship += equipment.friendship;
+            if(equipment.geass) this.geass = 3
+            if(equipment.ultrageass)this.ultrageass = equipment.ultrageass;
+            if(equipment.regen)this.regen = equipment.regen;
+            if(equipment.guard) this.guard = equipment.guard;
+            if(equipment.safeguard)this.safeguard = equipment.safeguard;
+        }
     }
 
     gainExperience (enemyLevel) {
@@ -72,29 +70,48 @@ module.exports = class ShinxBattle {
         const evade = Math.random(0,1);
 
         this.percent += move[1];
-        const knockout = this.percent * move[2] * (this.saiyan+1);
+        const knockout = this.percent * move[2] * (1+(this.geass>0)/2);
         const random = Math.random(0,1);
-        return random <= knockout;
+        if(random<=knockout){
+            if(this.safeguard) return false
+            if(this.guard){
+                this.guard = false;
+                return -1;
+            }
+            return true;
+        }
     }
 
     attack () {
         if(this.knocked) return false;
-        const rawMove = getMove(Math.random(0,1))
+        const rawMove = getMove(Math.min(Math.max(0, Math.random(0,1)+0.5-(this.level/100)),1))
         const move = [rawMove[0]]
         move.push(rawMove[1]*(2-this.hunger))
         move.push(rawMove[2]*(1+this.friendship))
         return move;
     }
 
-    checks () {
-        if(this.knocked) this.knocked = false
+    reduceGeass() {
+        if(this.supergeass) return false
+        if(this.geass>0){
+            this.geass--;
+            return this.geass===0
+        }
+        return false;
     }
 
-    saiyanMode () {
-        if(this.saiyan<1){
+    applyRegen(){
+        if(this.regen){
+            this.percent = Max(0, this.percent-this.regen);
+        }
+        return this.regen
+    }
+
+    geassMode () {
+        if(!this.supergeass&&this.geass<1){
             const sai = Math.random(0,1);
             if(sai < 0.2*(this.friendship+0.2)) {
-                this.saiyan = 2
+                this.geass = 3
                 return true;
             }
             return false;
