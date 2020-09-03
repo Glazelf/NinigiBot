@@ -22,7 +22,6 @@ module.exports = async (client, message) => {
             .setAuthor(`Message deleted ❌`, avatar)
             .setDescription(`Message sent by ${message.author} deleted from ${message.channel}.`)
             .addField(`Content:`, message.content, false)
-            .setFooter(`Deleted at`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
