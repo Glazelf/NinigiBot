@@ -10,7 +10,8 @@ exports.run = (client, message) => {
             const { bank } = require('../../database/bank');
             let currency = globalVars.currency
             const input = message.content.split(` `, 2);
-            let inputText = input[1].toLowerCase();
+            let inputText = "";
+            if (input[1]) inputText = input[1].toLowerCase();
             if (inputText == "half") input[1] = bank.currency.getBalance(message.author.id) / 2;
             if (inputText == "all") input[1] = bank.currency.getBalance(message.author.id);
             amount = input[1];
