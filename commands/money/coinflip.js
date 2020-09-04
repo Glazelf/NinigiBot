@@ -9,19 +9,20 @@ exports.run = (client, message) => {
         } else {
             const { bank } = require('../../database/bank');
             let currency = globalVars.currency
+            let balance = bank.currency.getBalance(message.author.id);
             const input = message.content.split(` `, 2);
             let inputText = "";
             if (input[1]) inputText = input[1].toLowerCase();
-            if (inputText == "half") input[1] = bank.currency.getBalance(message.author.id) / 2;
-            if (inputText == "all") input[1] = bank.currency.getBalance(message.author.id);
+            if (inputText == "half") input[1] = balance / 2;
+            if (inputText == "all") input[1] = balance;
             amount = input[1];
 
             if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
             amount = Math.floor(amount);
-            if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
+            if (balance <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
 
-            if (amount > bank.currency.getBalance(message.author.id)) {
-                return message.channel.send(`> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}${currency}, ${message.author}.`);
+            if (amount > balance) {
+                return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
             };
 
             let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
