@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.FLOAT,
 			allowNull: true,
 		},
+		heal: {
+			type: DataTypes.FLOAT,
+			allowNull: true,
+		},
 		food: {
 			type: DataTypes.FLOAT,
 			allowNull: true,
