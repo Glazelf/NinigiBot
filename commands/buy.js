@@ -3,9 +3,9 @@ exports.run = async (client, message) => {
     let globalVars = require('../events/ready');
     try {
         const { bank } = require('../database/bank');
-        const { Users, Equipments, Foods, KeyItems, Room, BattleItems } = require('../database/dbObjects');
+        const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../database/dbObjects');
         const { Op } = require('sequelize');
-        const shops = [Equipments, Foods, KeyItems, BattleItems, Room]
+        const shops = [Equipments, Foods, KeyItems, CurrencyShop]
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         for(let i=0; i < shops.length; i++){
