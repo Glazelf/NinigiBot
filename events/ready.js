@@ -33,7 +33,7 @@ module.exports.prefix = "?";
 module.exports.stanChannelID = "665274079397281835"
 module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
-
+module.exports.battling = {yes:false};
 module.exports.totalCommands = 0;
 module.exports.totalLogs = 0;
 module.exports.totalMessages = 0;
