@@ -5,10 +5,10 @@ exports.run = async (client, message) => {
         const { bank } = require('../../database/bank');
         const input = message.content.split(` `, 3);
         const currentAmount = bank.currency.getBalance(message.author.id);
-        let transferAmount = input[2];
+        let transferAmount = input[1];
         let transferTarget = message.mentions.users.first();
         if (!transferTarget) {
-            let userID = input[1];
+            let userID = input[2];
             transferTarget = client.users.cache.get(userID);
         };
         if(!transferTarget) return;
