@@ -2,6 +2,12 @@ const { Users } = require('../database/dbObjects');
 const ShinxBattle = require('../shinx/shinxBattle')
 const colors = ['green', 'yellow', 'orange', 'red', 'purple']
 
+const addLine = (line) =>{
+    return (line+'\n')
+}
+
+const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
+
 module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../events/ready');
@@ -11,9 +17,11 @@ module.exports.run = async (client, message) => {
         const { bank } = require('../database/bank');
         const Discord = require("discord.js");
         const input = message.content.slice(1).trim();
-        const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
-        if(biography.length<1) return message.channel.send('Please specify a user to battle.')
+        const [, , target] = input.match(/(\w+)\s*([\s\S]*)/);
+        if(target.length<1) return message.channel.send('Please specify a user to battle.')
         const trainers = [message.author, message.mentions.users.first()]
+        if(trainers[0].id===trainers[1].id) return message.channel.send('You cannot battle yourself!')
+        if(globalVars.battling.yes) return message.channel.send('Theres already a battle on course.')
         shinxes = []
         for(let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id)
@@ -23,6 +31,12 @@ module.exports.run = async (client, message) => {
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments))
         } 
+        await message.channel.send(`${trainers[1]} do you accept the challenge? (y\\n)`)
+        const accepts = await message.channel.awaitMessages(m=>m.author.id==trainers[1].id,{max:1, time:10000})
+        if(!accepts.first()||!'yes'.includes(accepts.first().content.toLowerCase())) return message.channel.send(`Battle cancelled.`)
+        if(globalVars.battling.yes) return message.channel.send('Theres already a battle on course.')
+        globalVars.battling.yes = true;
+        let text='';
         const avatars = [trainers[0].displayAvatarURL({ format: 'jpg' }), trainers[1].displayAvatarURL({ format: 'jpg' })]
         
         let canvas = Canvas.createCanvas(240, 71);
@@ -59,14 +73,49 @@ module.exports.run = async (client, message) => {
         const geassoff =await Canvas.loadImage('./assets/geassoff.png');
         for(let i = 0; i<2; i++){
             if(shinxes[i].supergeass||shinxes[i].geass>0){
-                await message.channel.send(`**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**`)
+                text += addLine(`**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**` )
                 ctx.drawImage(geasson, 52+35*i, 20+79*i);
                 ctx.font = 'normal bolder 14px Arial';
                 ctx.fillStyle = '#fc03c2';
                 ctx.fillText(trainers[i].username, 53+49*i, 49+79*i);
             }
         }
+        if(text.length>0) message.channel.send(text)
         while(true){
+            text = '';            
+            for(let i = 0; i < 2; i++){
+                const attackMove = shinxes[i].attack();
+                text += addLine( `${nicks[i]} uses ${attackMove[0]}!` )
+                const result = shinxes[(i+1)%2].takeDamage(attackMove)    
+                if (result===true){
+                    canvas = Canvas.createCanvas(240, 130);
+                    ctx = canvas.getContext('2d');
+                    background = await Canvas.loadImage('./assets/results.png');
+                    ctx.drawImage(background, 0, 0);
+                    ctx.beginPath();
+                    for(let i = 0; i < 2; i++) ctx.arc(58+134*i, 83, 40, 0, Math.PI * 2, false);
+                    ctx.closePath();
+                    ctx.clip();
+                    for(let i = 0; i < 2; i++) {
+                        const avatar = await Canvas.loadImage(avatars[(i+1)%2]);
+                        ctx.drawImage(avatar, 18+134*i, 43, 80, 80);
+                    }
+                    text += addLine( `${nicks[(i+1)%2]} fainted!`)
+                    if(shinxes[i].gainExperience(shinxes[(i+1)%2].level)) {
+                        text += addLine(`${nicks[i]} grew to level ${shinxes[i].level}!`)
+                        const reward = await require('../shinx/levelRewards')(shinxes[i]);
+                        if(reward)  text +=  addLine( `You got a new ${reward[0]}: ${reward[1]}!`)
+                    }
+                    for(let i = 0; i < 2; i++) await bank.currency.updateShinx(shinxes[i])
+                    globalVars.battling.yes = false;
+                    return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()))
+                } else{
+                    if(result===-1){
+                        text += addLine(`${nicks[i]} lost his shield by blocking a deathblow!`)
+                    }   
+                }
+            }
+
             const hps = [hp(shinxes[0].percent), hp(shinxes[1].percent)]
             for(let i = 0; i<2; i++){
                 if(!isNaN(hps[i][0])){
@@ -80,61 +129,30 @@ module.exports.run = async (client, message) => {
                     prevColors[i] = color
                 }
                 if(shinxes[i].geassMode()){
-                    await message.channel.send(`**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**`)
+                    text += addLine( `**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**` )
                     ctx.drawImage(geasson, 52+35*i*i, 20+79*i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#fc03c2';
                     ctx.fillText(trainers[i].username, 53+49*i, 49+79*i);
                 } 
                 if(shinxes[i].reduceGeass()) {
-                    await message.channel.send(`**${nicks[i]} no longer has geass mode!**`)
+                    text += addLine( `**${nicks[i]} no longer has geass mode!**` )
                     ctx.drawImage(geassoff, 52+35*i*i, 20+79*i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#ffffff';
                     ctx.fillText(trainers[i].username, 53+49*i, 49+79*i);
                 }
                 if(shinxes[i].applyRegen()){
-                    await message.channel.send(`${nicks[i]} recovered some health!`)
+                    text += addLine( `${nicks[i]} recovered some health!`)
                 }
             }
-
-            await message.channel.send(new Discord.MessageAttachment(canvas.toBuffer()));
-            for(let i = 0; i < 2; i++){
-                
-
-                const attackMove = shinxes[i].attack();
-                await message.channel.send(`${nicks[i]} uses ${attackMove[0]}!`)
-                const result = shinxes[(i+1)%2].takeDamage(attackMove)
-                if(result===-1){
-                    message.channel.send(`${nicks[i]} lost his shield by blocking a critical hit!`)
-                }else if (result){
-                    canvas = Canvas.createCanvas(240, 130);
-                    ctx = canvas.getContext('2d');
-                    background = await Canvas.loadImage('./assets/results.png');
-                    ctx.drawImage(background, 0, 0);
-                    ctx.beginPath();
-                    for(let i = 0; i < 2; i++) ctx.arc(58+134*i, 83, 40, 0, Math.PI * 2, false);
-                    ctx.closePath();
-                    ctx.clip();
-                    for(let i = 0; i < 2; i++) {
-                        const avatar = await Canvas.loadImage(avatars[(i+1)%2]);
-                        ctx.drawImage(avatar, 18+134*i, 43, 80, 80);
-                    }
-                    message.channel.send(`${nicks[(i+1)%2]} fainted!`)
-                    if(shinxes[i].gainExperience(shinxes[(i+1)%2].level)) {
-                        message.channel.send(`${nicks[i]} grew to level ${shinxes[i].level}!`)
-                        const reward = await require('../shinx/levelRewards')(shinxes[i]);
-                        if(reward) message.channel.send(`You got a new ${reward[0]}: ${reward[1]}!`)
-                    }
-                    for(let i = 0; i < 2; i++) await bank.currency.updateShinx(shinxes[i])
-                    return  message.channel.send(new Discord.MessageAttachment(canvas.toBuffer()))
-                } 
-            
-            }
+            message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
+            await wait();
         }
     } catch (e) {
         // log error
         console.log(e);
+        globalVars.battling.yes = false;
 
         // return confirmation
         return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
