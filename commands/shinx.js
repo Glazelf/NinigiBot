@@ -1,4 +1,3 @@
-const UserItems = require('../database/models/UserItems');
 const Canvas = require('canvas');
 
 const reactions = [
@@ -87,9 +86,8 @@ module.exports.run = async (client, message) => {
         shinx.see();
         let canvas, ctx, img;
         const now = new Date();
-        
-        //if(args[0]==='shiny') return shinx.shine()? message.channel.send('Now your shinx shines!'):message.channel.send('Your shinx doesn\'t shine anymmore!')
-        if(args[0]==='trans') return shinx.trans()? message.channel.send('You have dick now~'):message.channel.send('You lost your dick~')
+    
+        if(args[0]==='gender') return shinx.trans()? message.channel.send('Now you are Lucas!'):message.channel.send('Now you are Dawn!')
         if(args[0]==='level') return message.channel.send(`Shinx levels up to level ${shinx.levelUp(1)}`); 
         if(args[0]=='data'){
             canvas = Canvas.createCanvas(791, 541);
