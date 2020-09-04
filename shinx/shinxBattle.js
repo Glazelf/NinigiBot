@@ -2,18 +2,18 @@
 const battleMoves = 
 [
     //[chance, [name, attack, knockout]],
-    [0, ['Judgement Storm', 0.1, 1]],
-    [3, ['Light Thunder', 0.5, 0.4]],
-    [5, ['Dark Thunder', 0.3, 0.4]],
-    [10, ['Bolt Strike', 0.1, 0.4]],
-    [20, ['Volt Tackle', 0.3, 0.15]],
-    [30, ['Thunder', 0.2, 0.2]],
-    [40, ['Wild charge', 0.25, 0.1]],
-    [50, ['Crunch', 0.1, 0.2]],
-    [60, ['Spark', 0.15, 0.1]],
-    [80, ['Bite', 0.12, 0.12]],
-    [90, ['Thunder shock', 0.12, 0.1]],
-    [100, ['Tackle', 0.1, 0.1]]
+    [0, ['Judgement Storm', 2, 2]],
+    [3, ['Light Thunder', 1, 0.4]],
+    [5, ['Dark Thunder', 0.6, 0.4]],
+    [10, ['Bolt Strike', 0.3, 0.5]],
+    [20, ['Volt Tackle', 0.6, 0.15]],
+    [30, ['Thunder', 0.4, 0.25]],
+    [40, ['Wild charge', 0.5, 0.1]],
+    [50, ['Crunch', 0.2, 0.25]],
+    [60, ['Spark', 0.30, 0.1]],
+    [80, ['Bite', 0.24, 0.12]],
+    [90, ['Thunder shock', 0.24, 0.1]],
+    [100, ['Tackle', 0.2, 0.1]]
 
 ]
 
@@ -69,7 +69,7 @@ module.exports = class ShinxBattle {
     takeDamage (move) {
         const evade = Math.random(0,1);
 
-        this.percent += move[1];
+        this.percent = Math.max(0, this.percent+(move[1]-this.sleep/10)); 
         const knockout = this.percent * move[2] * (1+(this.geass>0)/2);
         const random = Math.random(0,1);
         if(random<=knockout){
