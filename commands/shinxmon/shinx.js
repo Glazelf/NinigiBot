@@ -71,7 +71,23 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const args = message.content.slice(1).trim().split(/ +/);
         args.shift();
-        const shinx = await bank.currency.getShinx(message.author.id);
+        let shinx;
+        let master;
+        if(message.mentions.members.first()) {
+            if (message.author.id !== client.config.ownerID) {
+                return message.reply(globalVars.lackPerms)
+            };
+            const expectedId = /<@!(\d+)/.exec(args[0])
+            const targetId = message.mentions.members.first().id
+            if(expectedId&&expectedId[1]==targetId){
+                shinx = await bank.currency.getShinx(targetId);
+                master = message.mentions.members.first().user
+                args.splice(0,1);
+            }else return message.channel.send(`The syntax is ?shinx <target> <usual command>, master.`);
+        }else{
+            master = message.author
+            shinx = await bank.currency.getShinx(master.id);
+        }
         shinx.see();
         let canvas, ctx, img;
         const now = new Date();
@@ -80,10 +96,13 @@ module.exports.run = async (client, message) => {
             if (message.author.id !== client.config.ownerID) {
                 return message.reply(globalVars.lackPerms)
             };
-            return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(level)}`);
+            let level;
+            if(args[1]&&!isNaN(args[1])) level = args[1]
+            else return message.channel.send(`Please specify a valid number.`);
+            return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(parseInt(level))}`);
 
         }
-        if (args[0] === 'gender') return shinx.trans() ? message.channel.send(`> Your character is now male, ${message.author}!`) : message.channel.send(`> Your character is now female, ${message.author}!`);
+        if (args[0] === 'gender') return shinx.trans() ? message.channel.send(`> Your character is now male, ${master}!`) : message.channel.send(`> Your character is now female, ${master}!`);
         if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
@@ -104,7 +123,7 @@ module.exports.run = async (client, message) => {
             ctx.font = 'normal bolder 35px Arial';
             if (shinx.user_male) ctx.fillStyle = '#0073FF';
             else ctx.fillStyle = 'red';
-            ctx.fillText(message.author.username, 490, 190);
+            ctx.fillText(master.username, 490, 190);
             ctx.fillStyle = '#000000';
             ctx.fillText(shinx.level, 93, 180);
             ctx.fillText(Math.floor(shinx.hunger * 100) + '%', 490, 251);
@@ -145,9 +164,8 @@ module.exports.run = async (client, message) => {
             return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
         } else if (args[0] === 'nick') {
             args.shift()
-
             const nickname = args.join(' ');
-            if (nickname.length < 1 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${message.author}.`);
+            if (nickname.length < 1 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${master}.`);
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
@@ -165,7 +183,7 @@ module.exports.run = async (client, message) => {
 
         } if (args[0] === 'shiny') {
             const { Users } = require('../../database/dbObjects');
-            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const user = await Users.findOne({ where: { user_id: master.id } });
             const keys = await user.getKeys();
             if (!keys) return
             const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
@@ -180,18 +198,18 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/sparkle.png');
                 ctx.drawImage(img, 49, 10);
             }
-            const text = shinx.shine() ? `> Now your Shinx shines, ${message.author}!` : `> Your Shinx doesnt shine anymore, ${message.author}`;
+            const text = shinx.shine() ? `> Now your Shinx shines, ${master}!` : `> Your Shinx doesnt shine anymore, ${master}`;
             return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
             args.shift()
             const equipmentName = args.join(' ')
 
-            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const user = await Users.findOne({ where: { user_id: master.id } });
             const equipments = await user.getEquipments();
-            if (!equipments) return message.channel.send(`> You don't have any equipment, ${message.author}.`);
+            if (!equipments) return message.channel.send(`> You don't have any equipment, ${master}.`);
             const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
-            if (equipment.length < 1) return message.channel.send(`> You don't have that equipment, ${message.author}.`);
+            if (equipment.length < 1) return message.channel.send(`> You don't have that equipment, ${master}.`);
             shinx.equip(equipment[0].equipment.name)
 
             canvas = Canvas.createCanvas(428, 310);
@@ -211,11 +229,11 @@ module.exports.run = async (client, message) => {
             args.shift()
             const foodName = args.join(' ')
 
-            const user = await Users.findOne({ where: { user_id: message.author.id } });
+            const user = await Users.findOne({ where: { user_id: master.id } });
             const foods = await user.getFoods();
-            if (!foods) return message.channel.send(`> You don't have any food to give, ${message.author}.`);
+            if (!foods) return message.channel.send(`> You don't have any food to give, ${master}.`);
             const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
-            if (food.length < 1) return message.channel.send(`> You don't have that food, ${message.author}.`);
+            if (food.length < 1) return message.channel.send(`> You don't have that food, ${master}.`);
             user.removeFood(food[0]);
             shinx.feed(food[0].food.recovery)
 
