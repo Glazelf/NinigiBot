@@ -1,12 +1,12 @@
 let rewards = new Map([
     [2, 'Fried seedot'],
-    [4, 'Sweet poffin'],
+    [4, 'Purple poffin'],
     [6, 'Fried seedot'],
     [100, 'Shiny charm'],
 ]);
 
 const { Users, Equipments, Foods, KeyItems, Room } = require('../database/dbObjects');
-const shops = [Equipments, Foods, KeyItems, Room];
+const shops = [Equipments, Foods, KeyItems];
 
 module.exports = async (shinxBattle) => {
     const reward = rewards.get(shinxBattle.level);
