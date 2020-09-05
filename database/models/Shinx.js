@@ -2,18 +2,18 @@ module.exports = (sequelize, DataTypes) => {
 	return sequelize.define('shinx', {
 		user_id: DataTypes.STRING,
 		user_male: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
 			allowNull: false,
 		},
 		nick: {
-            type: DataTypes.STRING,
-            defaultValue: "Shinx",
+			type: DataTypes.STRING,
+			defaultValue: "Shinx",
 			allowNull: false,
 		},
 		shiny: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
 			allowNull: false,
 		},
 		equipment: {
@@ -23,42 +23,42 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		level: {
 			type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1,
+			allowNull: false,
+			defaultValue: 1,
 		},
 		exp: {
 			type: DataTypes.FLOAT,
-            allowNull: false,
-            defaultValue: -54,
+			allowNull: false,
+			defaultValue: -54,
 		},
 		hunger: {
 			type: DataTypes.FLOAT,
-            allowNull: false,
-            defaultValue: 0.5,
+			allowNull: false,
+			defaultValue: 0.5,
 		},
 		sleep: {
 			type: DataTypes.FLOAT,
-            allowNull: false,
-            defaultValue: 0.5,
+			allowNull: false,
+			defaultValue: 0.5,
 		},
 		friendship: {
 			type: DataTypes.FLOAT,
-            allowNull: false,
-            defaultValue: 0,
+			allowNull: false,
+			defaultValue: 0,
 		},
 		sleeping: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
 			allowNull: false,
 		},
 		lastmeet: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			defaultValue: Math.floor(Date.now()/(1000*60*60)),
+			defaultValue: Math.floor(Date.now() / (1000 * 60 * 60)),
 		},
 		meetup: {
 			type: DataTypes.STRING,
-            allowNull: true,
+			allowNull: true,
 		},
 	}, {
 		timestamps: false,

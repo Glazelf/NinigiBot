@@ -36,24 +36,24 @@ CurrencyShop.prototype.toString = function () {
 
 Equipments.prototype.toString = function () {
 	let description = `${this.name}: ${this.cost}💰,`;
-	if(this.regen) description+=` recovers ${this.regen*100}% points per turn,`;
-	if(this.food) description+=` ${numberParser(this.food*100)}% food,`;
-	if(this.sleep) description+=` ${numberParser(this.sleep*100)}% sleep,`;
-	if(this.friendship) description+=` ${numberParser(this.friendship*100)}% friendship,`;
-	if(this.guard) description+=` blocks one deathblow,`;
-	if(this.safeguard) description+=` blocks all deathblows,`;
-	if(this.geass) description+=` turn one geass,`;
-	if(this.ultrageass) description+=` permanent geass,`;
+	if (this.regen) description += ` recovers ${this.regen * 100}% points per turn,`;
+	if (this.food) description += ` ${numberParser(this.food * 100)}% food,`;
+	if (this.sleep) description += ` ${numberParser(this.sleep * 100)}% sleep,`;
+	if (this.friendship) description += ` ${numberParser(this.friendship * 100)}% friendship,`;
+	if (this.guard) description += ` blocks one deathblow,`;
+	if (this.safeguard) description += ` blocks all deathblows,`;
+	if (this.geass) description += ` turn one geass,`;
+	if (this.ultrageass) description += ` permanent geass,`;
 	return description.slice(0, -1);
 };
 
 KeyItems.prototype.toString = function () {
-	let description =`${this.name}: ${this.cost}💰`;
+	let description = `${this.name}: ${this.cost}💰`;
 	return description;
 };
 
 Foods.prototype.toString = function () {
-	let description = `${this.name}: ${this.cost}💰, recovers ${this.recovery*100} points`;
+	let description = `${this.name}: ${this.cost}💰, recovers ${this.recovery * 100} points`;
 	return description;
 };
 
@@ -70,7 +70,7 @@ Shinx.prototype.changeNick = function (newNick) {
 };
 
 Shinx.prototype.play = function (amount) {
-	this.varyFriendship(0.05*amount);
+	this.varyFriendship(0.05 * amount);
 	this.varySleep(-0.15);
 	this.varyHunger(-0.15);
 	this.save();
@@ -106,16 +106,16 @@ Shinx.prototype.rest = function () {
 };
 
 Shinx.prototype.see = function () {
-	const currentHour = Math.floor(Date.now()/(1000*60*60));
+	const currentHour = Math.floor(Date.now() / (1000 * 60 * 60));
 	const hoursPassed = currentHour - this.lastmeet;
-	if(this.sleep === 0) this.sleeping = true;
-	if(hoursPassed===0) return;
-	if(this.sleeping) this.varySleep(hoursPassed*0.25);
-	else this.varySleep(-hoursPassed*0.02);
-	if(this.sleep === 1) this.sleeping = false;
-	if(this.sleep === 0) this.sleeping = true;
-	this.varyHunger(-hoursPassed*0.01);
-	if(hoursPassed>=7*24) this.varyFriendship(-0.1*Math.trunc(hoursPassed/7*24));
+	if (this.sleep === 0) this.sleeping = true;
+	if (hoursPassed === 0) return;
+	if (this.sleeping) this.varySleep(hoursPassed * 0.25);
+	else this.varySleep(-hoursPassed * 0.02);
+	if (this.sleep === 1) this.sleeping = false;
+	if (this.sleep === 0) this.sleeping = true;
+	this.varyHunger(-hoursPassed * 0.01);
+	if (hoursPassed >= 7 * 24) this.varyFriendship(-0.1 * Math.trunc(hoursPassed / 7 * 24));
 	this.lastmeet = currentHour;
 	this.save();
 	return this.sleeping;
@@ -127,12 +127,12 @@ Shinx.prototype.trans = function () {
 	return this.user_male;
 };
 
-Shinx.prototype.updateData = function (shinxBattle, wins=false) {
+Shinx.prototype.updateData = function (shinxBattle, wins = false) {
 	this.level = shinxBattle.level;
 	this.exp = shinxBattle.exp;
 	this.varyHunger(-0.1);
 	this.varySleep(-0.1);
-	wins? this.varyFriendship(0.04):this.varyFriendship(-0.02);
+	wins ? this.varyFriendship(0.04) : this.varyFriendship(-0.02);
 	this.save();
 };
 
@@ -222,7 +222,7 @@ Users.prototype.addEquipment = async function (equipment) {
 		return UserEquipments.create({ user_id: this.user_id, item_id: equipment.id, amount: 1 });
 	};
 
-	
+
 };
 
 Users.prototype.getEquipments = function () {
@@ -237,7 +237,7 @@ Users.prototype.addKey = async function (key) {
 	});
 
 	if (!userkey) {
-		return UserKeys.create({ user_id: this.user_id, item_id: key.id});
+		return UserKeys.create({ user_id: this.user_id, item_id: key.id });
 	};
 };
 
@@ -265,7 +265,7 @@ Users.prototype.changeRoom = async function (room) {
 		where: { user_id: this.user_id },
 	});
 	if (!userequipment) {
-		return UserEquipments.create({ user_id: this.user_id, item_id: room.id});
+		return UserEquipments.create({ user_id: this.user_id, item_id: room.id });
 	};
 	useroom.item_id = room.id;
 	useroom.items = '';
@@ -278,4 +278,4 @@ Users.prototype.getRoom = function () {
 		include: ['room'],
 	});
 };
-module.exports = { Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems,  UserEquipments, UserFoods, UserKeys, EligibleRoles, Shinx };
+module.exports = { Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, Shinx };
