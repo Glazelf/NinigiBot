@@ -116,4 +116,3 @@ module.exports = class ShinxBattle {
         return false;
     };
 };
-

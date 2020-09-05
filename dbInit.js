@@ -50,13 +50,12 @@ const syncDatabase = async () => {
 			Equipments.upsert({ name: 'Leftovers', cost: 1500, regen: 0.2 }),
 			Equipments.upsert({ name: 'Life Orb', cost: 1500, regen: -0.1, food: 0.3 }),
 
-			Foods.upsert({ name: 'Fried seedot', cost: 80, recovery: 0.2 }),
-			Foods.upsert({ name: 'Sweet pokeblock', cost: 150, recovery: 0.4 }),
+			Foods.upsert({ name: 'Fried Seedot', cost: 80, recovery: 0.2 }),
+			Foods.upsert({ name: 'Sweet Pokéblock', cost: 150, recovery: 0.4 }),
 			Foods.upsert({ name: 'Purple poffin', cost: 220, recovery: 0.6 }),
 			Foods.upsert({ name: 'Chocolate dango', cost: 360, recovery: 1 }),
 
 			/* KeyItems.upsert({ name: 'Skaidus poster', cost: 999999 }),
-			KeyItems.upsert({ name: 'Glazes dick', cost: 0 }),
 			KeyItems.upsert({ name: 'Shiny charm', cost: 0 }) */
 
 			//Room.upsert({ name: 'Chalice chamber', cost: 999999, slots: 5 })

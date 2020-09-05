@@ -1,44 +1,41 @@
 const Canvas = require('canvas');
 
 const reactions = [
-    //['',0],
+    // ['',0], number is index in portraits.png
     ['thinks manetric should not exist.', 6],
-    ['read the final chapter of the Yoomking and is confused about the ending', 2],
-    ['thinks you are cute', 14],
-    ['thinks that if you don\'t love yourself how the hell are you gonna love somebody else?', 6],
+    ['read the final chapter of the Yoomking and is confused about the ending.', 2],
+    ['thinks you are cute!', 14],
+    ['thinks that if you don\'t love yourself how are you gonna love somebody else?', 6],
     ['got this new anime plot, basically...', 4],
-    ['is sad because of Yanderedev code', 0],
-    ['thinks that you should follow Glaze on Twitch if you don\'t already', 6],
-    ['thinks that you should donate to Glaze\'s Paypal', 6],
-    ['is worried about how far the sun is', 0],
-    ['got hit by a pidgey. Oof!', 2],
-    ['got scared of that spinarank on your head!', 3],
-    ['is thinking about chocolate. Ahhh sweet', 4],
-    ['told a joke. Seems to be funny (?)', 5],
+    ['is sad because of Yanderedev code.', 0],
+    ['thinks that you should Nitro boost Glaze\'s server if you don\'t already', 6],
+    ['is worried about how far the sun is.', 0],
+    ['got hit by a Pidgey. Oof!', 2],
+    ['got scared of that Spinarank on your head!', 3],
+    ['is thinking about chocolate. Ahhh sweet.', 4],
+    ['told a joke. Seems to be funny...?', 5],
     ['doesnt\'t want you to have a girlfriend.', 6],
     ['is sad because people on this world are bad.', 7],
     ['wants 500 euros now. Damn.', 8],
-    ['watched Bambie tonight and now is crying', 9],
+    ['watched Bambie tonight and is now crying.', 9],
     ['is sorry about biting your shoes', 10],
-    ['wants a remake of Pokemon Platinum...', 11],
-    ['wants love hes no longer asking', 12],
-    ['is trying to solve some equation', 13],
-    ['got happy just because you smiled', 14],
-    ['is happy to be alive', 15],
-    ['thinks you should be doing your homework', 6],
+    ['wants a remake of Pokémon Platinum...', 11],
+    ['wants love, hes no longer asking.', 12],
+    ['is trying to solve some equation.', 13],
+    ['got happy just because you smiled!', 14],
+    ['is happy to be alive!', 15],
+    ['thinks you should be doing your homework...', 6],
     ['wants you to play The Legend of Heroes: Trails of Cold Steel', 15],
     ['watched Code Geass and is crying about the ending. Again.', 7],
     ['is singing something? ...? What was that? Dango?', 14],
-    ['lost on VGC so hes rage quitting like a real japanese player', 12],
-    ['looks a bit horny. Ohh boy, post that on the correct channel! ', 3]
+    ['lost on VGC so he\'s rage quitting like a real japanese player!', 12],
 ];
 
-const taping = [
-
+const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
-    ['has no energy at all.', 3, 1],
-    ['feels a bit sleepy', 4, 3],
-    ['doesn\'t seem to want to sleep now', 8, 4],
+    ['has no energy left at all...', 3, 1],
+    ['feels a bit sleepy...', 4, 3],
+    ['doesn\'t seem to want to sleep now.', 8, 4],
     ['has more energy than ever!', 8, 0]
 ];
 
@@ -52,11 +49,11 @@ const eating =
 
 const playing =
     [
-        ['Doesn\'t feel prety well...', 8, 0],
+        ['doesn\'t feel well...', 8, 0],
         ['likes the fresh air here!', 3, 1],
         ['is so happy about seeing his friends!', 2, 1.2],
         ['seems to be singing something!', 0, 0.9],
-        ['seems a bit shy with those shinxes. Oh boy...', 8, 0.4]
+        ['seems a bit shy with those other Shinxes. Oh boy...', 8, 0.4]
         //['']
     ];
 
@@ -81,8 +78,8 @@ module.exports.run = async (client, message) => {
         let canvas, ctx, img;
         const now = new Date();
 
-        if (args[0] === 'gender') return shinx.trans() ? message.channel.send('Now you are Lucas!') : message.channel.send('Now you are Dawn!');
-        if (args[0] === 'level') return message.channel.send(`Shinx levels up to level ${shinx.levelUp(1)}`);
+        if (args[0] === 'gender') return shinx.trans() ? message.channel.send('Your character is now male!') : message.channel.send('Your character is now female!');
+        if (args[0] === 'level') return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(1)}`);
         if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
@@ -129,11 +126,11 @@ module.exports.run = async (client, message) => {
             ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
             img = await Canvas.loadImage('./assets/fieldShinx.png');
             let reaction;
-            if (shinx.sleeping) reaction = taping[0];
-            else if (shinx.sleep < 0.1) reaction = taping[1];
-            else if (shinx.sleep < 0.3) reaction = taping[2];
-            else if (shinx.sleep < 0.5) reaction = taping[3];
-            else reaction = taping[4];
+            if (shinx.sleeping) reaction = tapping[0];
+            else if (shinx.sleep < 0.1) reaction = tapping[1];
+            else if (shinx.sleep < 0.3) reaction = tapping[2];
+            else if (shinx.sleep < 0.5) reaction = tapping[3];
+            else reaction = tapping[4];
 
             ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
             if (!isNaN(reaction[2])) {

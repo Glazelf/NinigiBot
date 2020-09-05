@@ -21,7 +21,7 @@ module.exports.run = async (client, message) => {
         if (target.length < 1) return message.channel.send('Please specify a user to battle.');
         const trainers = [message.author, message.mentions.users.first()];
         if (trainers[0].id === trainers[1].id) return message.channel.send('You cannot battle yourself!');
-        if (globalVars.battling.yes) return message.channel.send('Theres already a battle on course.');
+        if (globalVars.battling.yes) return message.channel.send('Theres already a battle going on.');
         shinxes = [];
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
@@ -34,7 +34,7 @@ module.exports.run = async (client, message) => {
         await message.channel.send(`${trainers[1]} do you accept the challenge? (y\\n)`);
         const accepts = await message.channel.awaitMessages(m => m.author.id == trainers[1].id, { max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return message.channel.send(`Battle cancelled.`);
-        if (globalVars.battling.yes) return message.channel.send('Theres already a battle on course.');
+        if (globalVars.battling.yes) return message.channel.send('Theres already a battle going on.');
         globalVars.battling.yes = true;
         let text = '';
         const avatars = [trainers[0].displayAvatarURL({ format: 'jpg' }), trainers[1].displayAvatarURL({ format: 'jpg' })];
@@ -66,7 +66,7 @@ module.exports.run = async (client, message) => {
         for (let i = 0; i < 2; i++) if (shinxes[i].shiny) ctx.drawImage(battleSprite, 39 * i, 0, 39, 26, (12 + 177 * i), 24 + 79 * i, 39, 26);
         const nicks = [];
         const prevColors = [0, 0];
-        for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s shinx`) : nicks.push(shinxes[i].nick);
+        for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nick);
         const geasson = await Canvas.loadImage('./assets/geasson.png');
         const geassoff = await Canvas.loadImage('./assets/geassoff.png');
         for (let i = 0; i < 2; i++) {
@@ -132,14 +132,14 @@ module.exports.run = async (client, message) => {
                     prevColors[i] = color;
                 };
                 if (shinxes[i].geassMode()) {
-                    text += addLine(`**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**`);
+                    text += addLine(`**...?**\nThe power of love remains!\n**${nicks[i]} entered Geass mode!**`);
                     ctx.drawImage(geasson, 52 + 35 * i * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#fc03c2';
                     ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
                 };
                 if (shinxes[i].reduceGeass()) {
-                    text += addLine(`**${nicks[i]} no longer has geass mode!**`);
+                    text += addLine(`**${nicks[i]} no longer has Geass mode!**`);
                     ctx.drawImage(geassoff, 52 + 35 * i * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#ffffff';
