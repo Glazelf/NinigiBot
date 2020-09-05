@@ -39,7 +39,7 @@ exports.run = async (client, message) => {
                 return message.channel.send(description);
             };
         };
-        return message.channel.send(`> Please specify a possible object: items, food, equipment`);
+        return message.channel.send(`> ${message.author}, please specify a category: items, food or equipment.`);
 
     } catch (e) {
         // log error

@@ -78,7 +78,7 @@ module.exports.run = async (client, message) => {
         let canvas, ctx, img;
         const now = new Date();
 
-        if (args[0] === 'gender') return shinx.trans() ? message.channel.send('Your character is now male!') : message.channel.send('Your character is now female!');
+        if (args[0] === 'gender') return shinx.trans() ? message.channel.send(`> Your character is now male, ${message.author}!`) : message.channel.send(`> Your character is now female, ${message.author}!`);
         if (args[0] === 'level') return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(1)}`);
         if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
@@ -146,7 +146,7 @@ module.exports.run = async (client, message) => {
             args.shift()
 
             const nickname = args.join(' ');
-            if (nickname.length < 1 || nickname.lenght > 10) return message.channel.send(`Please specify a valid nickname between 1 and 10 characters.`);
+            if (nickname.length < 1 || nickname.lenght > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${message.author}.`);
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
@@ -179,7 +179,7 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/sparkle.png');
                 ctx.drawImage(img, 49, 10);
             }
-            const text = shinx.shine() ? 'Now your Shinx shines!' : 'Your Shinx doesnt shine anymore';
+            const text = shinx.shine() ? `> Now your Shinx shines, ${message.author}!` : `> Your Shinx doesnt shine anymore, ${message.author}`;
             return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         }
         else if (args[0] == 'equip') {
