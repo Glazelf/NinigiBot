@@ -7,6 +7,10 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database/database.sqlite',
 });
 
+const levelExp = (lvl) => {
+    return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
+};
+
 const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
 const Shinx = require('./models/Shinx')(sequelize, Sequelize.DataTypes)
 const Equipments = require('./models/Equipments')(sequelize, Sequelize.DataTypes)
@@ -58,6 +62,7 @@ Foods.prototype.toString = function () {
 
 Shinx.prototype.levelUp = function (levels) {
 	this.level = Math.max(1, this.level+ levels);
+	this.exp = levelExp(this.level)
 	this.save();
 	return this.level;
 };
