@@ -33,7 +33,6 @@ module.exports = class ShinxBattle {
         this.nick = shinxData.nick;
         this.shiny = shinxData.shiny;
         this.percent = 0;
-        if(shinxData.level > 100) shinxData.level == 100;
         this.level = shinxData.level;
         this.exp = shinxData.exp;
         this.hunger = shinxData.hunger;
