@@ -2,7 +2,7 @@ const Canvas = require('canvas');
 
 const reactions = [
     // ['',0], number is index in portraits.png
-    ['thinks manetric should not exist.', 6],
+    ['thinks Manectric should not exist.', 6],
     ['read the final chapter of the Yoomking and is confused about the ending.', 2],
     ['thinks you are cute!', 14],
     ['thinks that if you don\'t love yourself how are you gonna love somebody else?', 6],
