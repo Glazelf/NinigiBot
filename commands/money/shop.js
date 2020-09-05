@@ -24,7 +24,7 @@ exports.run = async (client, message) => {
             const items = await Room.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return message.channel.send('That is not a correct shop. Please use `?shop` followed by one of the available shops: items, equipment, food');
+        return message.channel.send(`That is not an existing shop. Please use \`${globalVars.prefix}shop\` followed by a category: items, equipment, food`);
     } catch (e) {
         // log error
         console.log(e);

@@ -44,11 +44,11 @@ const syncDatabase = async () => {
 		const shop = [
 			CurrencyShop.upsert({ name: 'Lottery ticket', cost: 50, usage: 'allows to participate on Mondays weekly lottery' }),
 
-			Equipments.upsert({ name: 'Geass Orb', cost: 2500, geass: true }),
 			Equipments.upsert({ name: 'Choice Band', cost: 1500, food: 0.5, sleep: -0.1 }),
 			Equipments.upsert({ name: 'Focus Sash', cost: 1500, guard: true }),
 			Equipments.upsert({ name: 'Leftovers', cost: 1500, regen: 0.2 }),
 			Equipments.upsert({ name: 'Life Orb', cost: 1500, regen: -0.1, food: 0.3 }),
+			Equipments.upsert({ name: 'Geass Orb', cost: 2500, geass: true }),
 
 			Foods.upsert({ name: 'Fried Seedot', cost: 80, recovery: 0.2 }),
 			Foods.upsert({ name: 'Sweet Pokéblock', cost: 150, recovery: 0.4 }),
