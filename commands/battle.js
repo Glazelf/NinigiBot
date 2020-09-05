@@ -101,12 +101,15 @@ module.exports.run = async (client, message) => {
                         ctx.drawImage(avatar, 18+134*i, 43, 80, 80);
                     }
                     text += addLine( `${nicks[(i+1)%2]} fainted!`)
-                    if(shinxes[i].gainExperience(shinxes[(i+1)%2].level)) {
-                        text += addLine(`${nicks[i]} grew to level ${shinxes[i].level}!`)
-                        const reward = await require('../shinx/levelRewards')(shinxes[i]);
-                        if(reward)  text +=  addLine( `You got a new ${reward[0]}: ${reward[1]}!`)
+                    for(let h = 0; h < 2; h++) {
+                        if(shinxes[h].gainExperience(shinxes[(h+1)%2].level, i!==h)) {
+                            text += addLine(`${nicks[h]} grew to level ${shinxes[h].level}!`)
+                            const reward = await require('../shinx/levelRewards')(shinxes[h]);
+                            if(reward)  text +=  addLine( `You got a new ${reward[0]}: ${reward[1]}!`)
+                        }
                     }
-                    for(let i = 0; i < 2; i++) await bank.currency.updateShinx(shinxes[i])
+                    
+                    for(let p = 0; p < 2; p++) await bank.currency.updateShinx(shinxes[p], p===i)
                     globalVars.battling.yes = false;
                     return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()))
                 } else{
