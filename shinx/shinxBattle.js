@@ -45,7 +45,7 @@ module.exports = class ShinxBattle {
         this.friendship = shinxData.friendship
         this.geass = 0
         if(equipments.length>0) { 
-            const equipment = (equipments.filter(i => i.equipment.name.toLowerCase() === shinxData.equipment))[0].equipment;
+            const equipment = (equipments.filter(i => i.equipment.name.toLowerCase() === shinxData.equipment.toLowerCase()))[0].equipment;
             if(equipment.food)this.hunger += equipment.food;
             if(equipment.sleep)this.sleep += equipment.sleep;
             if(equipment.friendship)this.friendship += equipment.friendship;
@@ -58,12 +58,13 @@ module.exports = class ShinxBattle {
     }
 
     gainExperience (enemyLevel, loses) {
-        this.exp += gainedExp(enemyLevel) * (1+this.friendship) *((1/2)**(loses))
+        const experience = gainedExp(enemyLevel) * (1+this.friendship) *((1/2)**(loses))
+        this.exp += experience
         if(this.exp >= levelExp(this.level+1)){
             this.level += 1;  
-            return true;
+            return [Math.floor(experience), true];
         } ;
-        return false;
+        return [Math.floor(experience),false];
     }
 
     takeDamage (move) {
@@ -103,7 +104,7 @@ module.exports = class ShinxBattle {
 
     applyRegen(){
         if(this.regen){
-            this.percent = Max(0, this.percent-this.regen);
+            this.percent = Math.max(0, this.percent-this.regen);
         }
         return this.regen
     }
