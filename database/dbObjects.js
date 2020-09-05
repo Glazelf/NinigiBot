@@ -100,7 +100,7 @@ Shinx.prototype.shine = function () {
 };
 
 Shinx.prototype.rest = function () {
-	this.sleeping = true;
+	this.sleeping = !this.sleeping;
 	this.save();
 };
 
@@ -109,7 +109,7 @@ Shinx.prototype.see = function () {
 	const hoursPassed = currentHour - this.lastmeet;
 	if (this.sleep === 0) this.sleeping = true;
 	if (hoursPassed === 0) return;
-	if (this.sleeping) this.varySleep(hoursPassed * 0.25);
+	if (this.sleeping) this.varySleep(hoursPassed * 0.5);
 	else this.varySleep(-hoursPassed * 0.02);
 	if (this.sleep === 1) this.sleeping = false;
 	if (this.sleep === 0) this.sleeping = true;
