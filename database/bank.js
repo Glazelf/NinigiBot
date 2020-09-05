@@ -50,11 +50,11 @@ module.exports = {
                 })
 
                 Reflect.defineProperty(money, 'updateShinx', {
-                    value: async function updateShinx(shinxBattle) {
+                    value: async function updateShinx(shinxBattle, wins) {
                         let shinx = await Shinx.findOne({
                             where: { user_id: shinxBattle.owner.id },
                         });
-                        await shinx.updateData(shinxBattle);
+                        await shinx.updateData(shinxBattle, wins);
                     },  
                 });
 
