@@ -20,7 +20,7 @@ const reactions = [
     ['watched Bambie tonight and is now crying.', 9],
     ['is sorry about biting your shoes', 10],
     ['wants a remake of Pokémon Platinum...', 11],
-    ['wants love, hes no longer asking.', 12],
+    ['wants love, he\'s no longer asking.', 12],
     ['is trying to solve some equation.', 13],
     ['got happy just because you smiled!', 14],
     ['is happy to be alive!', 15],
