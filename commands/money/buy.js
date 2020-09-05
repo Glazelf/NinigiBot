@@ -2,8 +2,8 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { bank } = require('../database/bank');
-        const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../database/dbObjects');
+        const { bank } = require('../../database/bank');
+        const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
         const input = message.content.slice(1).trim();

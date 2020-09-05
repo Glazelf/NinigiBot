@@ -4,7 +4,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../database/dbObjects');
+        const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const input = message.content.slice(1).trim();
         const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
