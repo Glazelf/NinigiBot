@@ -29,7 +29,7 @@ const syncDatabase = async () => {
 
 		await EligibleRoles.sync({ alter: true });
 
-		await UserItems.sync({ force: true });
+		await UserItems.sync({ alter: true });
 		await UserFoods.sync({ alter: true });
 		await UserEquipments.sync({ alter: true });
 		await UserKeys.sync({ alter: true });
