@@ -55,8 +55,7 @@ const syncDatabase = async () => {
 			Foods.upsert({ name: 'Purple poffin', cost: 220, recovery: 0.6 }),
 			Foods.upsert({ name: 'Chocolate dango', cost: 360, recovery: 1 }),
 
-			/* KeyItems.upsert({ name: 'Skaidus poster', cost: 999999 }),
-			KeyItems.upsert({ name: 'Shiny charm', cost: 0 }) */
+			KeyItems.upsert({ name: 'Shiny charm', cost: 0 }) 
 
 			//Room.upsert({ name: 'Chalice chamber', cost: 999999, slots: 5 })
 		]
