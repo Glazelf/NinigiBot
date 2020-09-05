@@ -33,10 +33,8 @@ const reactions = [
 
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
-    ['has no energy left at all...', 3, 1],
-    ['feels a bit sleepy...', 4, 3],
-    ['doesn\'t seem to want to sleep now.', 8, 4],
-    ['has more energy than ever!', 8, 0]
+    ['woke up! He wanted to sleep more...', 4, 8],
+    ['! Time to wake up!', 8, 4]
 ];
 
 const eating =
@@ -78,6 +76,13 @@ module.exports.run = async (client, message) => {
         let canvas, ctx, img;
         const now = new Date();
 
+        if (args[0] === 'level') {
+            if (message.author.id !== client.config.ownerID) {
+                return message.reply(globalVars.lackPerms)
+            };
+            return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(level)}`);
+
+        }
         if (args[0] === 'gender') return shinx.trans() ? message.channel.send(`> Your character is now male, ${message.author}!`) : message.channel.send(`> Your character is now female, ${message.author}!`);
         if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
@@ -113,10 +118,9 @@ module.exports.run = async (client, message) => {
             };
             return message.channel.send(new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
         } else if (args[0] == 'tap' || shinx.sleeping) {
-            if (!shinx.sleeping) {
-                const fallsAsleep = Math.random() <= Math.max(0, 1 - 1.5 * shinx.sleep);
-                if (fallsAsleep) shinx.rest();
-            };
+            if(args[0]=='tap'){
+                shinx.rest();
+            }
             canvas = Canvas.createCanvas(468, 386);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/room.png');
@@ -126,10 +130,8 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/fieldShinx.png');
             let reaction;
             if (shinx.sleeping) reaction = tapping[0];
-            else if (shinx.sleep < 0.1) reaction = tapping[1];
-            else if (shinx.sleep < 0.3) reaction = tapping[2];
-            else if (shinx.sleep < 0.5) reaction = tapping[3];
-            else reaction = tapping[4];
+            else if (shinx.sleep < 0.5) reaction = tapping[1];
+            else reaction = tapping[2];
 
             ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
             if (!isNaN(reaction[2])) {
@@ -145,7 +147,7 @@ module.exports.run = async (client, message) => {
             args.shift()
 
             const nickname = args.join(' ');
-            if (nickname.length < 1 || nickname.lenght > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${message.author}.`);
+            if (nickname.length < 1 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${message.author}.`);
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
