@@ -7,6 +7,7 @@ module.exports = async (client) => {
     const { Users } = require('../database/dbObjects');
     const storedBalances = await Users.findAll();
     storedBalances.forEach(b => bank.currency.set(b.user_id, b));
+    console.log(`Loaded a total of ${client.commands.size} commands!`);
     console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
     console.log(`Connected as ${client.user.tag}.`);
 
@@ -25,12 +26,13 @@ module.exports = async (client) => {
   };
 };
 
-module.exports.birthRole = "birthday";
+module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "614979959156375567";
+module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = `you do not have the required permissions to do this.`;
 module.exports.prefix = "?";
-module.exports.stanChannelID = "665274079397281835"
+module.exports.eventChannelID = "665274079397281835";
 module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
 module.exports.battling = {yes:false};

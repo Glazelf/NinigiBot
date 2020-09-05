@@ -17,7 +17,7 @@ module.exports = (client, member) => {
             .setAuthor(`Member joined ❤️`, avatar)
             .setThumbnail(avatar)
             .addField(`User:`, user)
-            .setFooter(`Welcome, ${user.username}!`)
+            .setFooter(`Welcome, ${user.tag}!`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;

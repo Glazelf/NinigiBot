@@ -9,6 +9,8 @@ module.exports = async (client, message, oldMessage) => {
         // Import totals
         let globalVars = require('./ready');
 
+        if (!message) return;
+        if (!message.author) return;
         if (message.content == "") return;
         if (message.content === oldMessage.content) return;
 
@@ -29,7 +31,6 @@ module.exports = async (client, message, oldMessage) => {
             .addField(`After:`, oldMessage.content, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
-            .setFooter(`Edited by ${message.author.tag} at`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;

@@ -14,10 +14,10 @@ module.exports = (client, member) => {
 
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member left 💔`,avatar)
+            .setAuthor(`Member left 💔`, avatar)
             .setThumbnail(avatar)
             .addField(`User:`, user)
-            .setFooter(`We'll miss you, ${user.username}!`)
+            .setFooter(`We'll miss you, ${user.tag}!`)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
