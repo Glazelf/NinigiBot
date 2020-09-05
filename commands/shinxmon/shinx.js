@@ -117,7 +117,7 @@ module.exports.run = async (client, message) => {
             if (!shinx.sleeping) {
                 const fallsAsleep = Math.random() <= Math.max(0, 1 - 1.5 * shinx.sleep);
                 if (fallsAsleep) shinx.rest();
-            }
+            };
             canvas = Canvas.createCanvas(468, 386);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/room.png');
@@ -181,8 +181,7 @@ module.exports.run = async (client, message) => {
             }
             const text = shinx.shine() ? `> Now your Shinx shines, ${message.author}!` : `> Your Shinx doesnt shine anymore, ${message.author}`;
             return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
-        }
-        else if (args[0] == 'equip') {
+        } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
             args.shift()
             const equipmentName = args.join(' ')
@@ -206,8 +205,7 @@ module.exports.run = async (client, message) => {
             ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32)
             const text = `Equipment changed to ${equipmentName}!`;
             return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
-        }
-        else if (args[0] == 'feed') {
+        } else if (args[0] == 'feed') {
             const { Users } = require('../../database/dbObjects');
             args.shift()
             const foodName = args.join(' ')
