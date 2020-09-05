@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const { Users } = require('./dbObjects');
+const { Shinx } = require('./dbObjects');
+const Sequelize = require('sequelize');
+const {ne} = Sequelize.Op;
 module.exports = {
     bank: {
         _currency: null,
@@ -17,6 +20,42 @@ module.exports = {
                         money.set(id, newUser);
                         return newUser;
                     },
+                });
+
+                Reflect.defineProperty(money, 'getShinx', {
+                    value: async function getShinx(id) {
+                        let user = money.get(id);
+
+                        if (!user) {
+                            user = await Users.create({ user_id: id  });
+                            money.set(id, user)
+                        }
+                        let shinx = await Shinx.findOne({
+                            where: { user_id: id },
+                        });
+
+                        if (!shinx) {
+                            const now = new Date();
+                            shinx = await Shinx.create({ user_id: id, meetup: require('../util/parseMeetDate')(now.getDate(), now.getMonth(), now.getFullYear()) });
+                        }
+                        return shinx
+                    },  
+                });
+
+                Reflect.defineProperty(money, 'getRandomShinx', {
+                    value: async function getRandomShinx(amount, exclude) {
+                        const results = await Shinx.findAll({where:{user_id:{[ne]:exclude}}, order:Sequelize.fn( 'RANDOM' ), limit: amount })                        
+                        return results.map(res=>res.dataValues);
+                    }
+                })
+
+                Reflect.defineProperty(money, 'updateShinx', {
+                    value: async function updateShinx(shinxBattle, wins) {
+                        let shinx = await Shinx.findOne({
+                            where: { user_id: shinxBattle.owner.id },
+                        });
+                        await shinx.updateData(shinxBattle, wins);
+                    },  
                 });
 
                 Reflect.defineProperty(money, 'getSwitchCode', {
@@ -66,6 +105,7 @@ module.exports = {
                     },
                 });
 
+            
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);

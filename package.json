@@ -5,6 +5,7 @@
   "main": "bot.js",
   "dependencies": {
     "@discordjs/uws": "^10.149.0",
+    "canvas": "^2.6.1",
     "cron": "^1.8.2",
     "discord.js": "^12.2.0",
     "discord.js-commando": "^0.10.0",

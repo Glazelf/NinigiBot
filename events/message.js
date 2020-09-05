@@ -11,6 +11,7 @@ module.exports = (client, message) => {
     // Import globals
     let globalVars = require('./ready');
 
+
     // Ignore all bots
     if (message.author.bot) return;
 

@@ -1,10 +1,30 @@
+const Sequelize = require('sequelize');
+const { ne } = Sequelize.Op;
 exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { CurrencyShop } = require('../../database/dbObjects');
-        const items = await CurrencyShop.findAll();
-        return message.channel.send(items.map(i => `${i.name}: ${i.cost}${globalVars.currency}`).join('\n'), { code: true });
+        const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../database/dbObjects');
+        const input = message.content.slice(1).trim();
+        const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
+        const condition = { where: { cost: { [ne]: 0 } } };
+        if (biography === 'items') {
+            const items = await CurrencyShop.findAll(condition);
+            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+        } if (biography === 'equipment') {
+            const items = await Equipments.findAll(condition);
+            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+        } if (biography === 'food') {
+            const items = await Foods.findAll(condition);
+            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+        }/* if(biography === 'key'){
+            const items = await KeyItems.findAll(condition);
+            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+        } *//* if(biography === 'rooms'){
+            const items = await Room.findAll(condition);
+            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+        } */
+        return message.channel.send('That is not a correct shop. Please use `?shop` followed by one of the available shops: items, equipment, food');
     } catch (e) {
         // log error
         console.log(e);
