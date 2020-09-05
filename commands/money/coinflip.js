@@ -19,7 +19,7 @@ exports.run = (client, message) => {
 
             if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
             amount = Math.floor(amount);
-            if (balance <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
+            if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
 
             if (amount > balance) {
                 return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
