@@ -225,7 +225,7 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/dining.png');
             ctx.drawImage(img, 0, 0);
             img = await Canvas.loadImage('./assets/mc.png');
-            const guests = await bank.currency.getRandomShinx(2, shinx.user_id);
+            const guests = await bank.currency.getRandomShinx(2, shinx.user_id, message.guild);
             const userFinder = message.guild.members.cache;
             ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
             ctx.font = 'normal bold 16px Arial';
@@ -267,7 +267,7 @@ module.exports.run = async (client, message) => {
             };
             ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
             const layout = visitors[Math.floor(Math.random() * visitors.length)];
-            const guests = await bank.currency.getRandomShinx(layout.length, shinx.user_id);
+            const guests = await bank.currency.getRandomShinx(layout.length, shinx.user_id, message.guild);
             const userFinder = message.guild.members.cache;
             img = await Canvas.loadImage('./assets/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
