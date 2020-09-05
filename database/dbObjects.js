@@ -56,8 +56,8 @@ Foods.prototype.toString = function () {
 	return description;
 };
 
-Shinx.prototype.levelUp = function (experience) {
-	this.level += experience;
+Shinx.prototype.levelUp = function (levels) {
+	this.level = Math.max(1, this.level+ levels);
 	this.save();
 	return this.level;
 };
