@@ -58,7 +58,6 @@ Foods.prototype.toString = function () {
 
 Shinx.prototype.levelUp = function (experience) {
 	this.level += experience;
-	if(this.level > 100) this.level == 100;
 	this.save();
 	return this.level;
 };

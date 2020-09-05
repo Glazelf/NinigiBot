@@ -79,7 +79,6 @@ module.exports.run = async (client, message) => {
         const now = new Date();
 
         if (args[0] === 'gender') return shinx.trans() ? message.channel.send(`> Your character is now male, ${message.author}!`) : message.channel.send(`> Your character is now female, ${message.author}!`);
-        if (args[0] === 'level') return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(1)}`);
         if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
