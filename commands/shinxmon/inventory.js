@@ -1,4 +1,3 @@
-
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 exports.run = async (client, message) => {
