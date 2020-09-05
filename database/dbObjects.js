@@ -112,12 +112,12 @@ Shinx.prototype.see = function () {
 	const hoursPassed = currentHour - this.lastmeet
 	if(this.sleep === 0) this.sleeping = true;
 	if(hoursPassed===0) return;
-	if(this.sleeping) this.sleep = Math.min(1, this.sleep+hoursPassed*0.1);
-	else this.sleep = Math.max(0, this.sleep-hoursPassed*0.01);
+	if(this.sleeping) this.varySleep(hoursPassed*0.25)
+	else this.varySleep(-hoursPassed*0.02)
 	if(this.sleep === 1) this.sleeping = false;
 	if(this.sleep === 0) this.sleeping = true;
-	this.hunger = Math.max(0, this.hunger-hoursPassed*0.01);
-	if(hoursPassed>=7*24) this.friendship = Math.max(0, this.friendship - 0.1*Math.trunc(hoursPassed/7*24))
+	this.varyHunger(-hoursPassed*0.01)
+	if(hoursPassed>=7*24) this.varyFriendship(-0.1*Math.trunc(hoursPassed/7*24))
 	this.lastmeet = currentHour;
 	this.save();
 	return this.sleeping;
@@ -132,9 +132,9 @@ Shinx.prototype.trans = function () {
 Shinx.prototype.updateData = function (shinxBattle, wins=false) {
 	this.level = shinxBattle.level
 	this.exp = shinxBattle.exp
-	//this.varyHunger(-0.1)
-	//this.varySleep(-0.1)
-	//wins? this.varyFriendship(0.04):this.varyFriendship(-0.02)
+	this.varyHunger(-0.1)
+	this.varySleep(-0.1)
+	wins? this.varyFriendship(0.04):this.varyFriendship(-0.02)
 	this.save();
 }
 
