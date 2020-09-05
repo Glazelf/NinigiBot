@@ -12,6 +12,7 @@ module.exports.run = async (client, message) => {
             .addField("Commands:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands')`, false)
             .addField("Features:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Features 'Features')`, false)
             .addField("Home Discord:", `[Link](https://discord.gg/2gkybyu 'Discord Invite')`, false)
+            .addField("Shinxmon:", `[Link](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon')`, false)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
