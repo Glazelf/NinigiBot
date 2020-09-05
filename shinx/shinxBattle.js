@@ -57,8 +57,8 @@ module.exports = class ShinxBattle {
         }
     }
 
-    gainExperience (enemyLevel) {
-        this.exp += gainedExp(enemyLevel) * (1+this.friendship)
+    gainExperience (enemyLevel, loses) {
+        this.exp += gainedExp(enemyLevel) * (1+this.friendship) *((1/2)**(loses))
         if(this.exp >= levelExp(this.level+1)){
             this.level += 1;  
             return true;
@@ -70,7 +70,7 @@ module.exports = class ShinxBattle {
         const evade = Math.random(0,1);
 
         this.percent = Math.max(0, this.percent+(move[1]-this.sleep/10)); 
-        const knockout = this.percent * move[2] * (1+(this.geass>0)/2);
+        const knockout = this.percent * move[2];
         const random = Math.random(0,1);
         if(random<=knockout){
             if(this.safeguard) return false
@@ -80,6 +80,7 @@ module.exports = class ShinxBattle {
             }
             return true;
         }
+        return false;
     }
 
     attack () {
@@ -87,7 +88,7 @@ module.exports = class ShinxBattle {
         const rawMove = getMove(Math.min(Math.max(0, Math.random(0,1)+0.5-(this.level/100)),1))
         const move = [rawMove[0]]
         move.push(rawMove[1]*(2-this.hunger))
-        move.push(rawMove[2]*(1+this.friendship))
+        move.push(rawMove[2]*(1+this.friendship)*(1+(this.geass>0)/2))
         return move;
     }
 
