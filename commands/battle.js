@@ -96,13 +96,15 @@ module.exports.run = async (client, message) => {
                     for(let i = 0; i < 2; i++) ctx.arc(58+134*i, 83, 40, 0, Math.PI * 2, false);
                     ctx.closePath();
                     ctx.clip();
-                    for(let i = 0; i < 2; i++) {
-                        const avatar = await Canvas.loadImage(avatars[(i+1)%2]);
-                        ctx.drawImage(avatar, 18+134*i, 43, 80, 80);
+                    for(let q = 0; q < 2; q++) {
+                        const avatar = await Canvas.loadImage(avatars[(q+1)%2]);
+                        ctx.drawImage(avatar, 18+134*(q===i), 43, 80, 80);
                     }
                     text += addLine( `${nicks[(i+1)%2]} fainted!`)
                     for(let h = 0; h < 2; h++) {
-                        if(shinxes[h].gainExperience(shinxes[(h+1)%2].level, i!==h)) {
+                        const exp = shinxes[h].gainExperience(shinxes[(h+1)%2].level, i!==h)
+                        text += addLine(`${nicks[h]} won ${exp[0]} exp. points!`)
+                        if(exp[1]) {
                             text += addLine(`${nicks[h]} grew to level ${shinxes[h].level}!`)
                             const reward = await require('../shinx/levelRewards')(shinxes[h]);
                             if(reward)  text +=  addLine( `You got a new ${reward[0]}: ${reward[1]}!`)
@@ -145,8 +147,10 @@ module.exports.run = async (client, message) => {
                     ctx.fillStyle = '#ffffff';
                     ctx.fillText(trainers[i].username, 53+49*i, 49+79*i);
                 }
-                if(shinxes[i].applyRegen()){
-                    text += addLine( `${nicks[i]} recovered some health!`)
+                const regen = shinxes[i].applyRegen() 
+                if(regen){
+                    let verb = regen>0? 'recovered':'lost'
+                    text += addLine( `${nicks[i]} ${verb} some health!`)
                 }
             }
             message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
