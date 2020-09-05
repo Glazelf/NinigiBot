@@ -44,6 +44,22 @@ const eating =
         ['seems to be thinking about something while eating...', 1],
         ['is full. Finish your plate, cutie!', 8],
     ];
+const applyText = (canvas, text, baseSize, limit) => {
+    const ctx = canvas.getContext('2d');
+
+    // Declare a base size of the font
+    let fontSize = baseSize+5;
+
+    do {
+        // Assign the font to the context and decrement it so it can be measured again
+        ctx.font = `normal bolder ${fontSize -= 4}px Arial`;
+        // Compare pixel width of the text to the canvas minus the approximate avatar size
+    } while (ctx.measureText(text).width > limit);
+
+    // Return the result to use in the actual canvas
+    return ctx.font;
+};
+    
 
 const playing =
     [
@@ -116,14 +132,15 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/owner.png');
             ctx.drawImage(img, 48 * !shinx.user_male, 0, 47 + 9 * !shinx.user_male, 70, 407, 427, 47 + 9 * !shinx.user_male, 70);
             ctx.drawImage(img, 59 * !shinx.user_male, 71, 59 - 5 * !shinx.user_male, 49, 398, 156, 59 - 5 * !shinx.user_male, 49);
-            ctx.font = 'normal bolder 45px Arial';
+            ctx.font = applyText(canvas, shinx.nick, 45, 266 );
             ctx.fillStyle = '#FFFFFF';
 
             ctx.fillText(shinx.nick, 88, 133);
-            ctx.font = 'normal bolder 35px Arial';
+            ctx.font = applyText(canvas, master.username, 35, 228 );
             if (shinx.user_male) ctx.fillStyle = '#0073FF';
             else ctx.fillStyle = 'red';
             ctx.fillText(master.username, 490, 190);
+            ctx.font = 'normal bolder 35px Arial';
             ctx.fillStyle = '#000000';
             ctx.fillText(shinx.level, 93, 180);
             ctx.fillText(Math.floor(shinx.hunger * 100) + '%', 490, 251);
@@ -165,11 +182,7 @@ module.exports.run = async (client, message) => {
         } else if (args[0] === 'nick') {
             args.shift()
             const nickname = args.join(' ');
-<<<<<<< HEAD
             if (nickname.length < 1 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${master}.`);
-=======
-            if (nickname.length < 2 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 2 and 10 characters, ${message.author}.`);
->>>>>>> 9a2dd979e957865a40fd704aa50da4fbb08a9f84
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
@@ -255,6 +268,7 @@ module.exports.run = async (client, message) => {
                 const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
                 ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
                 for (let k = nick.length - 1; 0 <= k; k--) {
+                    ctx.font = applyText(canvas, nick[k], 16, 51);
                     ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
                 };
             };
@@ -298,6 +312,7 @@ module.exports.run = async (client, message) => {
                 const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
                 ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
                 for (let k = nick.length - 1; 0 <= k; k--) {
+                    ctx.font = applyText(canvas, nick[k], 18, 51 );
                     ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
                 };
             };
