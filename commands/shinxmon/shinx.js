@@ -165,11 +165,7 @@ module.exports.run = async (client, message) => {
         } else if (args[0] === 'nick') {
             args.shift()
             const nickname = args.join(' ');
-<<<<<<< HEAD
-            if (nickname.length < 1 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 1 and 10 characters, ${master}.`);
-=======
             if (nickname.length < 2 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 2 and 10 characters, ${message.author}.`);
->>>>>>> 9a2dd979e957865a40fd704aa50da4fbb08a9f84
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
