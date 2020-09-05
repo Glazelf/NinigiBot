@@ -15,7 +15,7 @@ module.exports = async (client) => {
 
     new cron.CronJob(time, async () => {
         let guild = client.guilds.cache.get(guildID);
-        const number = toString(Math.floor(Math.random() * 10000));
+        const number = `${Math.floor(Math.random() * 10000)}`;
         const winers = [[], [], [], []];
         const ticket = await CurrencyShop.findOne({ where: { name: 'Lottery ticket' } });
         let participants = await UserItems.findAll({ include: ['item'] });
