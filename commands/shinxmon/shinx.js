@@ -203,7 +203,7 @@ module.exports.run = async (client, message) => {
             const keys = await user.getKeys();
             if (!keys) return
             const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
-            if (shinyCharm.length < 1) return
+            if (shinyCharm.length < 1) return message.channel.send(`> You need a Shiny Charm to do this, ${message.author}.`);
             canvas = Canvas.createCanvas(255, 192);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/sky.png');
