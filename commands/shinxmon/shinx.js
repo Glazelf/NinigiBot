@@ -29,8 +29,8 @@ const reactions = [
     ['watched Code Geass and is crying about the ending. Again.', 7],
     ['is singing something? ...? What was that? Dango?', 14],
     ['lost on VGC so he\'s rage quitting like a real japanese player!', 12],
-    ['got voted off even though they did a medbay scan!', 13],
-    ['is confused as to how the 3rd tribute died in the Yoomking story.', 1]
+    ['got voted off even though they did a medbay scan!', 12],
+    ['is confused as to how the 3rd tribute died in the Yoomking story.', 0]
 ];
 
 const tapping = [
