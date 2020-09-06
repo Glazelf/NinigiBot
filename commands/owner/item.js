@@ -9,20 +9,21 @@ exports.run = async (client, message) => {
         const args = message.content.slice(1).trim().split(/ +/);
         args.shift();
 
+        // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
-        if(message.mentions.members.first()) {
+        if (message.mentions.members.first()) {
             if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms)
+                return message.reply(globalVars.lackPerms);
             };
-            const expectedId = /<@!(\d+)/.exec(args[0])
-            const targetId = message.mentions.members.first().id
-            if(expectedId&&expectedId[1]==targetId){
-                target = message.mentions.members.first().user
-                args.splice(0,1);
-            }else return message.channel.send(`The syntax is ?item <target> <item name>, master.`);
-        }else{
-            target = message.author
-        }
+            const expectedId = /<@!(\d+)/.exec(args[0]);
+            const targetId = message.mentions.members.first().id;
+            if (expectedId && expectedId[1] == targetId) {
+                target = message.mentions.members.first().user;
+                args.splice(0, 1);
+            } else return message.channel.send(`The syntax is ${globalVars.prefix}item <target> <item name>, master.`);
+        } else {
+            target = message.author;
+        };
         const itemName = args.join(' ')
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: itemName } } });
@@ -38,8 +39,8 @@ exports.run = async (client, message) => {
                         } else {
                             await user.addEquipment(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addEquipment(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -48,13 +49,13 @@ exports.run = async (client, message) => {
                     if (foods) {
                         const food = foods.filter(i => i.food.name.toLowerCase() === itemName.toLowerCase());
                         if (food.length >= 1) {
-                            await user.removeFood(food[0])
+                            await user.removeFood(food[0]);
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addFood(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addFood(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -63,13 +64,13 @@ exports.run = async (client, message) => {
                     if (keys) {
                         const key = keys.filter(i => i.key.name.toLowerCase() === itemName.toLowerCase());
                         if (key.length >= 1) {
-                            await user.removeKey(key[0])
+                            await user.removeKey(key[0]);
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addKey(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addKey(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -78,13 +79,13 @@ exports.run = async (client, message) => {
                     if (items) {
                         const item = items.filter(i => i.item.name.toLowerCase() === itemName.toLowerCase());
                         if (item.length >= 1) {
-                            await user.removeItem(item[0])
+                            await user.removeItem(item[0]);
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addItem(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addItem(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
                 }/* else{
