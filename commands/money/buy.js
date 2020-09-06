@@ -19,21 +19,22 @@ exports.run = async (client, message) => {
                 const user = await Users.findOne({ where: { user_id: message.author.id } });
 
                 bank.currency.add(message.author.id, -item.cost);
-                if (i === 0) {
-                    await user.addEquipment(item);
-
-                } else if (i === 1) {
-                    await user.addFood(item);
-
-                } else if (i === 2) {
-                    await user.addKey(item);
-
-                } else if (i === 3) {
-                    await user.addItem(item);
-                }/* else{
-                    await user.changeRoom(item);
-                    
-                } */
+                switch (i) {
+                    case 0:
+                        await user.addEquipment(item);
+                        break;
+                    case 1:
+                        await user.addFood(item);
+                        break;
+                    case 2:
+                        await user.addKey(item);
+                        break;
+                    case 3:
+                        await user.addItem(item);
+                        break;
+                    // default:
+                    //     await user.changeRoom(item);
+                }
 
                 return message.channel.send(`> You've bought a ${item.name}, ${message.author}.`);
 
@@ -43,17 +44,8 @@ exports.run = async (client, message) => {
 
     } catch (e) {
         // log error
-        console.log(e);
-
-        // log to dev channel
-        let baseMessage = `An error occurred in ${message.channel}!
-\`\`\`
-${e}
-\`\`\``;
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...
-\`\`\``;
-        let devChannel = client.channels.cache.get(client.config.devChannelID);
-        devChannel.send(baseMessage);
+        let {logger} = require('../../events/ready');
+        logger(e, message.channel);
 
         // return confirmation
         return message.channel.send(`> An error has occurred trying to run the command. The error has already been logged, but please also report this as an issue on the Github page or send a message to Glaze#6669. For links and other information use ${globalVars.prefix}info.`);
