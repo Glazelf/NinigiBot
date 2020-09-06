@@ -102,10 +102,10 @@ module.exports.run = async (client, message) => {
                     for (let h = 0; h < 2; h++) {
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`${nicks[h]} won ${exp[0]} exp. points!`);
-                        if (exp[1]) {
+                        if (exp[1]>0) {
                             text += addLine(`${nicks[h]} grew to level ${shinxes[h].level}!`);
-                            const reward = await require('../../shinx/levelRewards')(shinxes[h]);
-                            if (reward) text += addLine(`You got a new ${reward[0]}: ${reward[1]}!`);
+                            const rewards = await require('../../shinx/levelRewards')(shinxes[h], exp[1]);
+                            if (rewards.length>0) for(let c = 0; c < rewards.length; c++) text += addLine(`${trainers[h].username}, you got a new ${rewards[c][0]}: ${rewards[c][1]}!`);
                         };
                     };
 
