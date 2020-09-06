@@ -18,3 +18,4 @@ init
 *.bak
 *.db
 *sqlite
+ffmpeg.exe
