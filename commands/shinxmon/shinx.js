@@ -11,7 +11,7 @@ const reactions = [
     ['thinks that you should Nitro boost Glaze\'s server if you don\'t already', 6],
     ['is worried about how far the sun is.', 0],
     ['got hit by a Pidgey. Oof!', 2],
-    ['got scared of that Spinarank on your head!', 3],
+    ['got scared of that Spinarak on your head!', 3],
     ['is thinking about chocolate. Ahhh sweet.', 4],
     ['told a joke. Seems to be funny...?', 5],
     ['doesnt\'t want you to have a girlfriend.', 6],
