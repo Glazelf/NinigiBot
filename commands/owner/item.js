@@ -9,12 +9,13 @@ exports.run = async (client, message) => {
         const args = message.content.slice(1).trim().split(/ +/);
         args.shift();
 
+        if (message.author.id !== client.config.ownerID) {
+            return message.reply(globalVars.lackPerms);
+        };
+
         // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
         if (message.mentions.members.first()) {
-            if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms);
-            };
             const expectedId = /<@!(\d+)/.exec(args[0]);
             const targetId = message.mentions.members.first().id;
             if (expectedId && expectedId[1] == targetId) {
