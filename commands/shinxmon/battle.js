@@ -95,7 +95,7 @@ module.exports.run = async (client, message) => {
                     ctx.closePath();
                     ctx.clip();
                     for (let q = 0; q < 2; q++) {
-                        const avatar = await Canvas.loadImage(avatars[(q + 1) % 2]);
+                        const avatar = await Canvas.loadImage(avatars[q]);
                         ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
                     }
                     text += addLine(`${nicks[(i + 1) % 2]} fainted!`);
