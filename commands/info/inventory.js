@@ -8,7 +8,7 @@ exports.run = async (client, message) => {
         const args = message.content.slice(1).trim().split(/ +/);
         const target = message.mentions.users.first() || message.author;
 
-        if (args[1] === 'items' || args[1] === 'food' || args[1] === 'equipment' || !args[1]) {
+        if (args[1] === 'items' || args[1] === 'food' || args[1] === 'equipment' || args[1] === 'keys' || !args[1]) {
             const user = await Users.findOne({ where: { user_id: target.id } });
 
             let items;
@@ -25,6 +25,10 @@ exports.run = async (client, message) => {
                 items = await user.getEquipments();
                 if (!items.length) return message.channel.send(`${target.toString()} has no equipment!`);
                 return message.channel.send(`${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
+            } else if (args[1] === 'keys') {
+                items = await user.getKeys();
+                if (!items.length) return message.channel.send(`${target.toString()} has no key items!`);
+                return message.channel.send(`${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
                 let description = `${target.toString()}'s inventory`;
                 const length = description.length;
@@ -34,6 +38,8 @@ exports.run = async (client, message) => {
                 if (items.length) description += `\n**Food**\n${items.map(t => `${t.amount} ${t.food.name}`)}`;
                 items = await user.getEquipments();
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
+                items = await user.getKeys();
+                if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
                 if (description.length === length) if (!items.length) return message.channel.send(`${target.toString()} has nothing!`);
                 return message.channel.send(description);
             };
