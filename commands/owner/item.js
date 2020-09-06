@@ -9,20 +9,22 @@ exports.run = async (client, message) => {
         const args = message.content.slice(1).trim().split(/ +/);
         args.shift();
 
+        if (message.author.id !== client.config.ownerID) {
+            return message.reply(globalVars.lackPerms);
+        };
+
+        // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
-        if(message.mentions.members.first()) {
-            if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms)
-            };
-            const expectedId = /<@!(\d+)/.exec(args[0])
-            const targetId = message.mentions.members.first().id
-            if(expectedId&&expectedId[1]==targetId){
-                target = message.mentions.members.first().user
-                args.splice(0,1);
-            }else return message.channel.send(`The syntax is ?item <target> <item name>, master.`);
-        }else{
-            target = message.author
-        }
+        if (message.mentions.members.first()) {
+            const expectedId = /<@!(\d+)/.exec(args[0]);
+            const targetId = message.mentions.members.first().id;
+            if (expectedId && expectedId[1] == targetId) {
+                target = message.mentions.members.first().user;
+                args.splice(0, 1);
+            } else return message.channel.send(`The syntax is ${globalVars.prefix}item <target> <item name>, master.`);
+        } else {
+            target = message.author;
+        };
         const itemName = args.join(' ')
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: itemName } } });
@@ -38,8 +40,8 @@ exports.run = async (client, message) => {
                         } else {
                             await user.addEquipment(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addEquipment(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -53,8 +55,8 @@ exports.run = async (client, message) => {
                         } else {
                             await user.addFood(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addFood(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -68,8 +70,8 @@ exports.run = async (client, message) => {
                         } else {
                             await user.addKey(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addKey(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
 
@@ -83,8 +85,8 @@ exports.run = async (client, message) => {
                         } else {
                             await user.addItem(item);
                             return message.channel.send(`> Added ${itemName} to ${target}!`);
-                        } 
-                    }
+                        };
+                    };
                     await user.addItem(item);
                     return message.channel.send(`> Added ${itemName} to ${target}!`);
                 }/* else{

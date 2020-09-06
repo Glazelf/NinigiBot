@@ -1,8 +1,8 @@
 let rewards = new Map([
-    [2, 'Fried seedot'],
+    [2, 'Fried Seedot'],
     [4, 'Purple poffin'],
-    [6, 'Fried seedot'],
-    [100, 'Shiny charm'],
+    [6, 'Fried Seedot'],
+    [100, 'Shiny Charm'],
 ]);
 
 const { Users, Equipments, Foods, KeyItems, Room } = require('../database/dbObjects');
