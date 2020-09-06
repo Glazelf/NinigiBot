@@ -52,14 +52,19 @@ module.exports = class ShinxBattle {
         };
     };
 
+
     gainExperience(enemyLevel, loses) {
         const experience = gainedExp(enemyLevel) * (1 + this.friendship) * ((1 / 2) ** (loses));
         this.exp += experience;
+        let increasedLevels = 0;
         if (this.exp >= levelExp(this.level + 1)) {
-            this.level += 1;
-            return [Math.floor(experience), true];
+            while(this.exp>=levelExp(this.level + 1)) {
+                this.level +=1
+                increasedLevels +=1
+            }
+            return [Math.floor(experience), increasedLevels];
         };
-        return [Math.floor(experience), false];
+        return [Math.floor(experience), increasedLevels];
     };
 
     takeDamage(move) {
