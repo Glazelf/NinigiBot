@@ -6,7 +6,7 @@ exports.run = async (client, message) => {
         const Discord = require('discord.js');
 
         const play = async (connection, url) => {
-            connection.play(await ytdl(url), { type: 'opus' });
+            connection.play(await ytdl(url), { type: 'opus', bitrate: 192000});
         };
         const input = message.content.split(` `);
 
