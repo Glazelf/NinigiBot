@@ -214,7 +214,7 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/sparkle.png');
                 ctx.drawImage(img, 49, 10);
             };
-            const text = shinx.shine() ? `> Now your Shinx shines, ${master}!` : `> Your Shinx doesnt shine anymore, ${master}`;
+            const text = shinx.shine() ? `> Now your Shinx shines, ${master}!` : `> Your Shinx doesnt shine anymore, ${master}.`;
             return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
