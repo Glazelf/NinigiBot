@@ -102,10 +102,10 @@ module.exports.run = async (client, message) => {
                     for (let h = 0; h < 2; h++) {
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`${nicks[h]} won ${exp[0]} exp. points!`);
-                        if (exp[1]>0) {
+                        if (exp[1] > 0) {
                             text += addLine(`${nicks[h]} grew to level ${shinxes[h].level}!`);
                             const rewards = await require('../../shinx/levelRewards')(shinxes[h], exp[1]);
-                            if (rewards.length>0) for(let c = 0; c < rewards.length; c++) text += addLine(`${trainers[h].username}, you got a new ${rewards[c][0]}: ${rewards[c][1]}!`);
+                            if (rewards.length > 0) for (let c = 0; c < rewards.length; c++) text += addLine(`${trainers[h].username}, you got a new ${rewards[c][0]}: ${rewards[c][1]}!`);
                         };
                     };
 
@@ -153,13 +153,23 @@ module.exports.run = async (client, message) => {
             };
             message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
             await wait();
-        }
+        };
+        
     } catch (e) {
         // log error
         console.log(e);
-        globalVars.battling.yes = false;
+
+        // log to dev channel
+        let baseMessage = `An error occurred in ${message.channel}!
+\`\`\`
+${e}
+\`\`\``;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...
+\`\`\``;
+        let devChannel = client.channels.cache.get(client.config.devChannelID);
+        devChannel.send(baseMessage);
 
         // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
+        return message.channel.send(`> An error has occurred trying to run the command. The error has already been logged, but please also report this as an issue on the Github page or send a message to Glaze#6669. For links and other information use ${globalVars.prefix}info.`);
     };
 };

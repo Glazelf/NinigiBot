@@ -4,8 +4,6 @@ module.exports = (client, message) => {
   try {
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
-    let NinigiDMChannelID = "674371091006881832";
-    let sysbotID = `696086046685003786`;
     let secondCharacter = message.content.charAt(1);
 
     // Import globals
@@ -47,7 +45,7 @@ ${Attachment.url}`;
       };
 
       // Send message contents to dm channel
-      let DMChannel = client.channels.cache.get(NinigiDMChannelID);
+      let DMChannel = client.channels.cache.get(client.config.devChannelID);
       let messageImage = null;
       if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
