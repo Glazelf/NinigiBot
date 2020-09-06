@@ -26,6 +26,18 @@ module.exports = async (client) => {
   };
 };
 
+const logger = (event, channel = null) => {
+  // log error
+  console.log(e);
+
+  // log to dev channel
+  let baseMessage = channel ? `An error occurred in ${channel}!\n\`\`\`${e}\`\`\`` : `An error occurred!\n\`\`\`${e}\`\`\``;
+  if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
+  let devChannel = client.channels.cache.get(client.config.devChannelID);
+  devChannel.send(baseMessage);
+}
+
+module.exports.logger = logger;
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "614979959156375567";
 module.exports.currency = "💰";
