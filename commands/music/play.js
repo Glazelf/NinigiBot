@@ -6,12 +6,16 @@ exports.run = async (client, message) => {
         const Discord = require('discord.js');
 
         const play = async (connection, url) => {
-            connection.play(await ytdl(url), { type: 'opus', bitrate: 192000});
+            connection.play(await ytdl(url), {
+                type: 'opus',
+                filter: 'audioonly',
+                quality: 'highestaudio'
+            });
         };
         const input = message.content.split(` `);
 
         const voiceConnection = await message.member.voice.channel;
-        if(!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
+        if (!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
 
         voiceConnection.join().then(async connection => {
 
