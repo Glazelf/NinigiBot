@@ -20,7 +20,7 @@ const reactions = [
     ['watched Bambie tonight and is now crying.', 9],
     ['is sorry about biting your shoes', 10],
     ['wants a remake of Pokémon Platinum...', 11],
-    ['wants love, he\'s no longer asking.', 12],
+    ['wants love, they\'re no longer asking.', 12],
     ['is trying to solve some equation.', 13],
     ['got happy just because you smiled!', 14],
     ['is happy to be alive!', 15],
@@ -29,6 +29,8 @@ const reactions = [
     ['watched Code Geass and is crying about the ending. Again.', 7],
     ['is singing something? ...? What was that? Dango?', 14],
     ['lost on VGC so he\'s rage quitting like a real japanese player!', 12],
+    ['got voted off even though they did a medbay scan!', 13],
+    ['is confused as to how the 3rd tribute died in the Yoomking story.', 1]
 ];
 
 const tapping = [
