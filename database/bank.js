@@ -27,7 +27,7 @@ module.exports = {
                         let user = money.get(id);
 
                         if (!user) {
-                            user = await Users.create({ user_id: id  });
+                            user = await Users.create({ user_id: id });
                             money.set(id, user)
                         }
                         let shinx = await Shinx.findOne({
@@ -39,13 +39,13 @@ module.exports = {
                             shinx = await Shinx.create({ user_id: id, meetup: require('../util/parseMeetDate')(now.getDate(), now.getMonth(), now.getFullYear()) });
                         }
                         return shinx
-                    },  
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getRandomShinx', {
                     value: async function getRandomShinx(amount, exclude, guild) {
-                        const results = await Shinx.findAll({where:{user_id:{[Op.ne]:exclude, [Op.in]:guild.members.cache.keyArray()}}, order:Sequelize.fn( 'RANDOM' ), limit: amount })                        
-                        return results.map(res=>res.dataValues);
+                        const results = await Shinx.findAll({ where: { user_id: { [Op.ne]: exclude, [Op.in]: guild.members.cache.keyArray() } }, order: Sequelize.fn('RANDOM'), limit: amount })
+                        return results.map(res => res.dataValues);
                     }
                 })
 
@@ -55,7 +55,7 @@ module.exports = {
                             where: { user_id: shinxBattle.owner.id },
                         });
                         await shinx.updateData(shinxBattle, wins);
-                    },  
+                    },
                 });
 
                 Reflect.defineProperty(money, 'getSwitchCode', {
@@ -105,7 +105,7 @@ module.exports = {
                     },
                 });
 
-            
+
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);

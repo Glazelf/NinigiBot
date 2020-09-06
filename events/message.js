@@ -126,7 +126,7 @@ ${Attachment.url}`;
     console.log(e);
 
     // log error
-    let {logger} = require('./ready');
+    let { logger } = require('./ready');
     logger(e);
   };
 };

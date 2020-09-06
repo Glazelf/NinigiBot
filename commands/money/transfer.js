@@ -11,7 +11,7 @@ exports.run = async (client, message) => {
             let userID = input[2];
             transferTarget = client.users.cache.get(userID);
         };
-        if(!transferTarget) return;
+        if (!transferTarget) return;
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}`;
 
         if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
@@ -26,7 +26,7 @@ exports.run = async (client, message) => {
 
     } catch (e) {
         // log error
-        let {logger} = require('../../events/ready');
+        let { logger } = require('../../events/ready');
         logger(e, message.channel);
 
         // return confirmation

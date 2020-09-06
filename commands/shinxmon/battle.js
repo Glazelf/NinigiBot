@@ -154,10 +154,10 @@ module.exports.run = async (client, message) => {
             message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
             await wait();
         };
-        
+
     } catch (e) {
         // log error
-        let {logger} = require('../../events/ready');
+        let { logger } = require('../../events/ready');
         logger(e, message.channel);
 
         // return confirmation

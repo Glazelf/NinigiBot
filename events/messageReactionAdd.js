@@ -10,7 +10,7 @@ module.exports = (reaction, client, message) => {
 
     } catch (e) {
         // log error
-        let {logger} = require('./ready');
+        let { logger } = require('./ready');
         logger(e);
     };
 };

@@ -17,7 +17,7 @@ module.exports.run = async (client, message) => {
 
     } catch (e) {
         // log error
-        let {logger} = require('../../events/ready');
+        let { logger } = require('../../events/ready');
         logger(e, message.channel);
 
         // return confirmation

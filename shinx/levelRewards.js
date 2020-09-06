@@ -10,7 +10,7 @@ const shops = [Equipments, Foods, KeyItems];
 
 module.exports = async (shinxBattle, increasedLevels) => {
     let userRewards = []
-    for(let i = shinxBattle.level-increasedLevels; i <=shinxBattle.level;i++){
+    for (let i = shinxBattle.level - increasedLevels; i <= shinxBattle.level; i++) {
         const reward = rewards.get(i);
         if (reward) {
             for (let i = 0; i < shops.length; i++) {
@@ -19,7 +19,7 @@ module.exports = async (shinxBattle, increasedLevels) => {
                     const user = await Users.findOne({ where: { user_id: shinxBattle.owner.id } });
                     if (i === 0) {
                         await user.addEquipment(item);
-                        userRewards.push(['equipment', reward]) ;
+                        userRewards.push(['equipment', reward]);
                     } else if (i === 1) {
                         await user.addFood(item);
                         userRewards.push(['food', reward]);

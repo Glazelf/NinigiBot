@@ -7,7 +7,7 @@ exports.run = (client, message) => {
         return message.channel.send(`${PongString} (hold on, processing latency...)`).then(m => m.edit(`${PongString} ${m.createdTimestamp - message.createdTimestamp}ms.`));
     } catch (e) {
         // log error
-        let {logger} = require('../../events/ready');
+        let { logger } = require('../../events/ready');
         logger(e, message.channel);
 
         // return confirmation

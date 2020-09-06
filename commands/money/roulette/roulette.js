@@ -8,7 +8,7 @@ exports.run = async (client, message) => {
         let process = null;
 
         let avatar = null;
-        if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png"});
+        if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
 
         roulette.shift()
         if (roulette.on) {
@@ -61,7 +61,7 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
 
     } catch (e) {
         // log error
-        let {logger} = require('../../../events/ready');
+        let { logger } = require('../../../events/ready');
         logger(e, message.channel);
 
         // return confirmation

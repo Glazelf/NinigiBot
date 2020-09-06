@@ -38,7 +38,7 @@ module.exports = async (client, message, oldMessage) => {
 
     } catch (e) {
         // log error
-        let {logger} = require('./ready');
+        let { logger } = require('./ready');
         logger(e);
     };
 };

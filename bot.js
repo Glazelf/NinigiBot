@@ -39,7 +39,7 @@ client.login(config.token)
 function walk(dir, callback) {
   fs.readdir(dir, function (err, files) {
     if (err) throw err;
-    
+
     files.forEach(function (file) {
       let filepath = path.join(dir, file);
       fs.stat(filepath, function (err, stats) {

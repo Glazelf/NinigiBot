@@ -1,7 +1,7 @@
 module.exports = async (client) => {
     // Import globals
     let globalVars = require('../events/ready');
-    
+
     const cron = require("cron");
     const timezone = 'cest';
     const time = '00 00 22 * * 6'; //Sec Min Hour 
@@ -41,19 +41,19 @@ module.exports = async (client) => {
             winersLength += winers[i].length;
         };
 
-        let channel = guild.channels.cache.find(channel =>  channel.id === channelID);
+        let channel = guild.channels.cache.find(channel => channel.id === channelID);
         const results = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setTitle('Lottery results')
             .setDescription(`> Welcome back! And the winning number is **${number}**! Here are the winners of this week's lottery! Good luck next time!`)
-            if(winersLength < 1){
-                results.addField('Results:', 'No one won anything! Well more luck next time!')
-            }else{
-                for (let i = 0; i < 4; i++) {
-                    if (winers[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winers[i].join(", ")}`, false);
-                };
-            }
-        
+        if (winersLength < 1) {
+            results.addField('Results:', 'No one won anything! Well more luck next time!')
+        } else {
+            for (let i = 0; i < 4; i++) {
+                if (winers[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winers[i].join(", ")}`, false);
+            };
+        }
+
         results.setImage(search("lottery"))
             .setTimestamp();
         channel.send(results);

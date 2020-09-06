@@ -58,9 +58,9 @@ module.exports = class ShinxBattle {
         this.exp += experience;
         let increasedLevels = 0;
         if (this.exp >= levelExp(this.level + 1)) {
-            while(this.exp>=levelExp(this.level + 1)) {
-                this.level +=1
-                increasedLevels +=1
+            while (this.exp >= levelExp(this.level + 1)) {
+                this.level += 1
+                increasedLevels += 1
             }
             return [Math.floor(experience), increasedLevels];
         };
