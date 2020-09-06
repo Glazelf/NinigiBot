@@ -33,7 +33,7 @@ exports.run = async (client, message) => {
                     if (equipments) {
                         const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === itemName.toLowerCase());
                         if (equipment.length >= 1) {
-                            await user.removeEquipment(equipment[0])
+                            await user.removeEquipment(item)
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addEquipment(item);
@@ -48,7 +48,7 @@ exports.run = async (client, message) => {
                     if (foods) {
                         const food = foods.filter(i => i.food.name.toLowerCase() === itemName.toLowerCase());
                         if (food.length >= 1) {
-                            await user.removeFood(food[0])
+                            await user.removeFood(item)
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addFood(item);
@@ -63,7 +63,7 @@ exports.run = async (client, message) => {
                     if (keys) {
                         const key = keys.filter(i => i.key.name.toLowerCase() === itemName.toLowerCase());
                         if (key.length >= 1) {
-                            await user.removeKey(key[0])
+                            await user.removeKey(item)
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addKey(item);
@@ -78,7 +78,7 @@ exports.run = async (client, message) => {
                     if (items) {
                         const item = items.filter(i => i.item.name.toLowerCase() === itemName.toLowerCase());
                         if (item.length >= 1) {
-                            await user.removeItem(item[0])
+                            await user.removeItem(item)
                             return message.channel.send(`> Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addItem(item);
