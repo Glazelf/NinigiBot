@@ -2,7 +2,7 @@ module.exports = async (client) => {
   try {
     const stan = require('../affairs/stan')(client);
     const birthday = require('../affairs/birthday')(client);
-    const lotery = require('../affairs/lottery')(client);
+    const lottery = require('../affairs/lottery')(client);
     const { bank } = require('../database/bank');
     const { Users } = require('../database/dbObjects');
     const storedBalances = await Users.findAll();
@@ -26,24 +26,12 @@ module.exports = async (client) => {
   };
 };
 
-const logger = (event, channel = null) => {
-  // log error
-  console.log(e);
-
-  // log to dev channel
-  let baseMessage = channel ? `An error occurred in ${channel}!\n\`\`\`${e}\`\`\`` : `An error occurred!\n\`\`\`${e}\`\`\``;
-  if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
-  let devChannel = client.channels.cache.get(client.config.devChannelID);
-  devChannel.send(baseMessage);
-}
-
-module.exports.logger = logger;
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "614979959156375567";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = `you do not have the required permissions to do this.`;
-module.exports.prefix = "!";
+module.exports.prefix = "?";
 module.exports.eventChannelID = "665274079397281835";
 module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;

@@ -32,13 +32,10 @@ module.exports.run = async (client, message) => {
         bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
 
         return message.channel.send(`> Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
-
     } catch (e) {
         // log error
-        let { logger } = require('../../events/ready');
-        logger(e, message.channel);
+        const logger = require('../../util/logger');
 
-        // return confirmation
-        return message.channel.send(`> An error has occurred trying to run the command, please report this as an issue on the Github page or send a message to the bot owner. For links and other information use ${globalVars.prefix}info.`);
+        logger(e, client, message);
     };
 };

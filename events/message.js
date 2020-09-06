@@ -1,14 +1,12 @@
 const talkedRecently = new Set();
 
 module.exports = (client, message) => {
+  // Import globals
+  let globalVars = require('./ready');
   try {
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
     let secondCharacter = message.content.charAt(1);
-
-    // Import globals
-    let globalVars = require('./ready');
-
 
     // Ignore all bots
     if (message.author.bot) return;
@@ -123,10 +121,8 @@ ${Attachment.url}`;
 
   } catch (e) {
     // log error
-    console.log(e);
+    const logger = require('../util/logger');
 
-    // log error
-    let { logger } = require('./ready');
-    logger(e);
+    logger(e, client, message);
   };
 };

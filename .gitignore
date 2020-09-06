@@ -3,7 +3,6 @@
 /.vs
 config.json
 README.md
-log*
 *.log
 npm-debug.log*
 pids
