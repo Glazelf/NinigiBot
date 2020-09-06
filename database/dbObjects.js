@@ -217,6 +217,18 @@ Users.prototype.getFoods = function () {
 	});
 };
 
+Users.prototype.removeEquipment = async function (equipment) {
+	const userequipment = await UserEquipments.findOne({
+		where: { user_id: this.user_id, item_id: equipment.id },
+	});
+
+	if (userequipment) {
+		return userequipment.destroy();
+	};
+
+
+};
+
 Users.prototype.addEquipment = async function (equipment) {
 	const userequipment = await UserEquipments.findOne({
 		where: { user_id: this.user_id, item_id: equipment.id },
