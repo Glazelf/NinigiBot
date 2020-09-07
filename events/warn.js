@@ -1,4 +1,4 @@
-module.exports = (info) => {
-    // // log info
-    // console.log(info);
+module.exports = (client, info) => {
+    // log info
+    onsole.log(info);
 };
