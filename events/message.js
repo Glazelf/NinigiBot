@@ -12,7 +12,7 @@ module.exports = (client, message) => {
     if (message.author.bot) return;
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(globalVars.prefix || "!" || "$") !== 0 && !talkedRecently.has(message.author.id)) {
+    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id)) {
       bank.currency.add(message.author.id, 1);
       talkedRecently.add(message.author.id);
       setTimeout(() => {
