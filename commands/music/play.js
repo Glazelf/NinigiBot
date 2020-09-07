@@ -12,15 +12,14 @@ exports.run = async (client, message) => {
                 quality: 'highestaudio'
             });
         };
+
         const input = message.content.split(` `);
 
         const voiceConnection = await message.member.voice.channel;
         if (!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
 
         voiceConnection.join().then(async connection => {
-
             play(connection, input[1].toString());
-
             await message.channel.send(`> Now playing for ${message.author}!`);
         });
 
