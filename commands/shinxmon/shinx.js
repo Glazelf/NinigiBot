@@ -101,7 +101,7 @@ module.exports.run = async (client, message) => {
                 shinx = await bank.currency.getShinx(targetId);
                 master = message.mentions.members.first().user
                 args.splice(0, 1);
-            } else return message.channel.send(`The syntax is ?shinx <target> <usual command>, master.`);
+            } else return message.channel.send(`The syntax is ${globalVars.prefix}shinx <target> <usual command>, ${message.author}.`);
         } else {
             master = message.author
             shinx = await bank.currency.getShinx(master.id);
