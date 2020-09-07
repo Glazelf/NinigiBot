@@ -225,8 +225,6 @@ Users.prototype.removeEquipment = async function (equipment) {
 	if (userequipment) {
 		return userequipment.destroy();
 	};
-
-
 };
 
 Users.prototype.addEquipment = async function (equipment) {
@@ -237,8 +235,6 @@ Users.prototype.addEquipment = async function (equipment) {
 	if (!userequipment) {
 		return UserEquipments.create({ user_id: this.user_id, item_id: equipment.id, amount: 1 });
 	};
-
-
 };
 
 Users.prototype.getEquipments = function () {

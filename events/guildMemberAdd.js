@@ -25,7 +25,7 @@ module.exports = (client, member) => {
 
     } catch (e) {
         // log error
-        const logger = require('../../util/logger');
+        const logger = require('../util/logger');
 
         logger(e, client, message);
     };
