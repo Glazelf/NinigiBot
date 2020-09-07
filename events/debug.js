@@ -1,4 +1,4 @@
-module.exports = (client, info) => {
+module.exports = (info) => {
     // log info
     console.log(info);
 };
