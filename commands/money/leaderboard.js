@@ -4,18 +4,26 @@ exports.run = async (client, message) => {
     try {
         const { bank } = require('../../database/bank');
         let args = message.content.split(` `);
+        let memberFetch = await message.guild.members.fetch();
 
-        if (args[1].toLowerCase() == "global") {
-            return message.channel.send(
-                bank.currency.sort((a, b) => b.balance - a.balance)
-                    .filter(user => client.users.cache.has(user.user_id))
-                    .first(10)
-                    .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
-                    .join('\n'),
-                { code: true }
-            );
+        if (args[1]) {
+            if (args[1].toLowerCase() == "global") {
+                return message.channel.send(
+                    bank.currency.sort((a, b) => b.balance - a.balance)
+                        .filter(user => client.users.cache.has(user.user_id))
+                        .first(10)
+                        .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
+                        .join('\n'),
+                    { code: true }
+                );
+            } else {
+                serverLeaderboard();
+            };
         } else {
-            let memberFetch = await message.guild.members.fetch();
+            serverLeaderboard();
+        };
+
+        function serverLeaderboard() {
             return message.channel.send(
                 bank.currency.sort((a, b) => b.balance - a.balance)
                     .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
@@ -23,7 +31,7 @@ exports.run = async (client, message) => {
                     .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
                     .join('\n'),
                 { code: true }
-            )
+            );
         };
 
     } catch (e) {
