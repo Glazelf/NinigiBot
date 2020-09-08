@@ -18,10 +18,11 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const input = message.content.slice(1).trim();
         const [, , target] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (target.length < 1) return message.channel.send(`Please specify a user to battle, ${message.author}.`);
+        if (target.length < 1) return message.channel.send(`> Please specify a user to battle, ${message.author}.`);
         const trainers = [message.author, message.mentions.users.first()];
+        if(!trainers[1]) return message.channel.send(`> Please tag a valid person to battle, ${message.author}.`)
         if (trainers[0].id === trainers[1].id) return message.channel.send(`> You cannot battle yourself, ${message.author}!`);
-        if (globalVars.battling.yes) return message.channel.send(`Theres already a battle going on, ${message.author}.`);
+        if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
         shinxes = [];
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
@@ -34,7 +35,7 @@ module.exports.run = async (client, message) => {
         await message.channel.send(`> Do you accept the challenge, ${trainers[1]}? (y\\n)`);
         const accepts = await message.channel.awaitMessages(m => m.author.id == trainers[1].id, { max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return message.channel.send(`> Battle has been cancelled, ${message.author}.`);
-        if (globalVars.battling.yes) return message.channel.send(`Theres already a battle going on, ${message.author}.`);
+        if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
         globalVars.battling.yes = true;
         let text = '';
         const avatars = [trainers[0].displayAvatarURL({ format: 'jpg' }), trainers[1].displayAvatarURL({ format: 'jpg' })];
