@@ -1,6 +1,4 @@
 exports.run = (client, message) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         let split = message.content.split(` `, 3);
         let conversionType = split[1];

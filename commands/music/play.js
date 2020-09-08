@@ -1,9 +1,6 @@
 exports.run = async (client, message) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const ytdl = require('ytdl-core-discord');
-        const Discord = require('discord.js');
 
         // Prepare play function so that it only requires a voice channel and url as arguments
         const play = async (connection, url) => {

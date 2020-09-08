@@ -1,6 +1,4 @@
 module.exports.run = async (client, message) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) return message.channel.send(`> I can't send you files because I don't have permissions to attach files to my messages, ${message.author}.`);
 

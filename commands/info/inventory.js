@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 exports.run = async (client, message) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         //items, food, equipment
         const args = message.content.slice(1).trim().split(/ +/);

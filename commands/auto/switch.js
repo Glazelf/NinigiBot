@@ -1,6 +1,4 @@
 module.exports.run = async (client, message) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const { bank } = require('../../database/bank');
         const input = message.content.slice(1).trim();
