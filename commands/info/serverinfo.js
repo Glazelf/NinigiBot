@@ -5,8 +5,13 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
-        let memberFetch = await message.guild.members.fetch();
-        const input = message.content.split(` `, 2);
+
+        args = message.content.split(' ');
+        let guildID = args[1];
+        let guild = client.guilds.cache.get(guildID);
+        if (!guild) guild = message.guild;
+
+        let memberFetch = await guild.members.fetch();
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
@@ -47,22 +52,24 @@ module.exports.run = async (client, message) => {
         };
 
         let icon = null;
-        if (message.guild.iconURL()) icon = message.guild.iconURL({ format: "png", dynamic: true });
+        if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(message.guild.name, icon)
+            .setAuthor(guild.name, icon)
             .setThumbnail(icon)
-            .addField("Owner:", message.guild.owner.user, true)
-            .addField("Region:", region[message.guild.region], true)
-            .addField("Verification Level:", verifLevels[message.guild.verificationLevel], true)
-            .addField("ID:", message.guild.id, true)
+            .addField("Owner:", guild.owner.user, true)
+            .addField("Region:", region[guild.region], true)
+            .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
+            .addField("ID:", guild.id, true)
             .addField("Users:", realMembers, true)
             .addField("Online users:", onlineMembers, true)
             .addField("Bots:", bots, true)
-            .addField("Channels:", message.guild.channels.cache.size, true)
-            .addField("Roles:", message.guild.roles.cache.size, true)
-            .addField("Created at:", `${message.channel.guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(message.channel.guild.createdAt)}.`)
+            .addField("Channels:", guild.channels.cache.size, true)
+            .addField("Roles:", guild.roles.cache.size, true)
+        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}<:nitroboost:753268592081895605>`, true)
+        serverEmbed
+            .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
 
