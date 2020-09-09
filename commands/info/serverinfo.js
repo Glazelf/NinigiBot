@@ -54,11 +54,14 @@ module.exports.run = async (client, message) => {
         let icon = null;
         if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
 
+        let ownerTag = guild.owner.user.tag;
+        if (guild == message.guild) ownerTag = guild.owner.user;
+
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(guild.name, icon)
             .setThumbnail(icon)
-            .addField("Owner:", guild.owner.user.tag, true)
+            .addField("Owner:", ownerTag, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("ID:", guild.id, true)
