@@ -20,7 +20,7 @@ exports.run = async (client, message) => {
 
         // Check if input is a valid yt video
         let youtubeLink = args[1].toString();
-        if (!youtubeLink.startsWith("https://www.youtube.com/watch?v=")) return message.channel.send(`> The text you entered isn't a valid Youtube link, ${message.author}.`);
+        if (!youtubeLink.startsWith("https://www.youtube.com/watch?v=") && !youtubeLink.startsWith("https://youtu.be/")) return message.channel.send(`> The text you entered isn't a valid Youtube link, ${message.author}.`);
 
         // Run play with the provided channel and url
         voiceConnection.join().then(async connection => {
