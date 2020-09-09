@@ -58,7 +58,7 @@ module.exports.run = async (client, message) => {
             .setColor(globalVars.embedColor)
             .setAuthor(guild.name, icon)
             .setThumbnail(icon)
-            .addField("Owner:", guild.owner.user, true)
+            .addField("Owner:", guild.owner.user.tag, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("ID:", guild.id, true)
