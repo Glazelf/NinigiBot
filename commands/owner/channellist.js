@@ -6,11 +6,10 @@ exports.run = (client, message) => {
             return message.reply(globalVars.lackPerms)
         };
 
-        const input = message.content.split(` `, 2);
-        let guildID = input[1];
+        args = message.content.split(' ');
+        let guildID = args[1];
         let guild = client.guilds.cache.get(guildID);
-
-        if (!guild) return message.channel.send(`> I couldn't find that server, ${message.author}.`);
+        if (!guild) guild = message.guild;
 
         let baseMessage = `> Here's a list of all channels for ${guild.name}, ${message.author}:`;
 

@@ -6,10 +6,10 @@ module.exports.run = async (client, message) => {
             return message.channel.send(globalVars.lackPerms)
         };
 
-        let guildID = message.content.slice(10);
+        args = message.content.split(' ');
+        let guildID = args[1];
         let guild = client.guilds.cache.get(guildID);
-
-        if (!guild) return message.channel.send(`> I couldn't find that server, ${message.author}.`);
+        if (!guild) guild = message.guild;
 
         let member = await guild.members.fetch();
         let baseMessage = `> Here's a list of all users for ${guild.name}, ${message.author}:`;
