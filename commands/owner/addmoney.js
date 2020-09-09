@@ -9,11 +9,10 @@ module.exports.run = async (client, message) => {
         const { bank } = require('../../database/bank');
         const input = message.content.slice(1).trim();
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
-        const currentAmount = bank.currency.getBalance(message.author.id);
         let currency = globalVars.currency;
 
         const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
-        const transferTarget = message.mentions.users.first();
+        let transferTarget = message.mentions.users.first();
 
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`;
 
@@ -32,6 +31,7 @@ module.exports.run = async (client, message) => {
         bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
 
         return message.channel.send(`> Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
+
     } catch (e) {
         // log error
         const logger = require('../../util/logger');
