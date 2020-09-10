@@ -6,14 +6,13 @@ module.exports.run = async (client, message) => {
 
         const { DisabledChannels } = require('../../database/dbObjects');
 
-        const input = message.content.slice(1).trim();
-        const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
+        const args = message.content.split(' ');
 
-        if (arguments.length < 1) return message.channel.send(`> Please provide a channel, ${message.author}.`);
+        if (!args[1]) return message.channel.send(`> Please provide a channel to toggle, ${message.author}.`);
 
-        let channelID = await DisabledChannels.findOne({ where: { name: arguments } });
-        const channel = message.member.guild.channels.cache.find(channel => channel.id === arguments);
-        if(!channel) channel = message.member.guild.channels.cache.find(channel => channel.name.toLowerCase() === arguments.toLowerCase());
+        let channelID = await DisabledChannels.findOne({ where: { name: args[1] } });
+        let channel = message.member.guild.channels.cache.find(channel => channel.id === args[1]);
+        if (!channel) channel = message.member.guild.channels.cache.find(channel => channel.name.toLowerCase() === args[1].toLowerCase());
 
         if (!channel && !channelID) return message.channel.send(`> That channel does not exist in this server, ${message.author}.`);
         if (!channelID) channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });
@@ -23,7 +22,7 @@ module.exports.run = async (client, message) => {
             await channelID.destroy();
             return message.channel.send(`> Commands can now be used in ${channelTag} again, ${message.author}.`);
         } else {
-            await DisabledChannels.upsert({ channel_id: channel.id, name: arguments.toLowerCase() });
+            await DisabledChannels.upsert({ channel_id: channel.id, name: args[1].toLowerCase() });
             return message.channel.send(`> Commands can no longer be used in ${channel}, ${message.author}.`);
         };
 
