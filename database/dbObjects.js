@@ -7,25 +7,32 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database/database.sqlite',
 });
 
+const attatchments = new Sequelize('attatchments', 'username', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	storage: 'database/models/attachments/attachments.sqlite',
+});
+
 const levelExp = (lvl) => {
 	return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
 };
+const shinxQuotes = require('./models/attachments/shinxQuotes')(attatchments, Sequelize.DataTypes);
+const Users = require('./models/userdata/Users')(sequelize, Sequelize.DataTypes);
+const Shinx = require('./models/userdata/Shinx')(sequelize, Sequelize.DataTypes)
+const Equipments = require('./models/data/Equipments')(sequelize, Sequelize.DataTypes)
+const Foods = require('./models/data/Foods')(sequelize, Sequelize.DataTypes)
+const KeyItems = require('./models/data/KeyItems')(sequelize, Sequelize.DataTypes)
+//const Room = require('./models/data/Room')(sequelize, Sequelize.DataTypes)
+const CurrencyShop = require('./models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
 
-const Users = require('./models/Users')(sequelize, Sequelize.DataTypes);
-const Shinx = require('./models/Shinx')(sequelize, Sequelize.DataTypes)
-const Equipments = require('./models/Equipments')(sequelize, Sequelize.DataTypes)
-const Foods = require('./models/Foods')(sequelize, Sequelize.DataTypes)
-const KeyItems = require('./models/KeyItems')(sequelize, Sequelize.DataTypes)
-//const Room = require('./models/Room')(sequelize, Sequelize.DataTypes)
-const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
-
-const UserItems = require('./models/UserItems')(sequelize, Sequelize.DataTypes);
-const UserEquipments = require('./models/UserEquipments')(sequelize, Sequelize.DataTypes);
-const UserFoods = require('./models/UserFoods')(sequelize, Sequelize.DataTypes);
-const UserKeys = require('./models/UserKeys')(sequelize, Sequelize.DataTypes);
-//const UserRooms = require('./models/UserRooms')(sequelize, Sequelize.DataTypes);
-const EligibleRoles = require('./models/EligibleRoles')(sequelize, Sequelize.DataTypes);
-const DisabledChannels = require('./models/DisabledChannels')(sequelize, Sequelize.DataTypes);
+const UserItems = require('./models/userdata/UserItems')(sequelize, Sequelize.DataTypes);
+const UserEquipments = require('./models/userdata/UserEquipments')(sequelize, Sequelize.DataTypes);
+const UserFoods = require('./models/userdata/UserFoods')(sequelize, Sequelize.DataTypes);
+const UserKeys = require('./models/userdata/UserKeys')(sequelize, Sequelize.DataTypes);
+//const UserRooms = require('./models/userdata/UserRooms')(sequelize, Sequelize.DataTypes);
+const EligibleRoles = require('./models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
+const DisabledChannels = require('./models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
 UserEquipments.belongsTo(Equipments, { foreignKey: 'item_id', as: 'equipment' });
@@ -291,4 +298,6 @@ Users.prototype.getRoom = function () {
 		include: ['room'],
 	});
 };
-module.exports = { Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, Shinx };
+
+
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, Shinx };
