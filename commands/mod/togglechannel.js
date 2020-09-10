@@ -12,7 +12,8 @@ module.exports.run = async (client, message) => {
         if (arguments.length < 1) return message.channel.send(`> Please provide a channel, ${message.author}.`);
 
         let channelID = await DisabledChannels.findOne({ where: { name: arguments } });
-        const channel = message.member.guild.channels.cache.find(channel => channel.name.toLowerCase() === arguments.toLowerCase());
+        const channel = message.member.guild.channels.cache.find(channel => channel.id === arguments);
+        if(!channel) channel = message.member.guild.channels.cache.find(channel => channel.name.toLowerCase() === arguments.toLowerCase());
 
         if (!channel && !channelID) return message.channel.send(`> That channel does not exist in this server, ${message.author}.`);
         if (!channelID) channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });
