@@ -117,7 +117,7 @@ ${Attachment.url}`;
     if (!cmd) return;
 
     // Ignore messages sent in a disabled channel
-    if (channels.includes(message.channel.id)) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
+    if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
 
     // +1 command count and drop message count
     globalVars.totalCommands += 1;
