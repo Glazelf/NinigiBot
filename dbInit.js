@@ -7,22 +7,25 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database/database.sqlite',
 });
 
-const Users = require('./database/models/Users')(sequelize, Sequelize.DataTypes);
+//Initialize other databases
+require('./database/models/attachments/attachmentInit')()
 
-const UserItems = require('./database/models/UserItems')(sequelize, Sequelize.DataTypes);
-const UserFoods = require('./database/models/UserFoods')(sequelize, Sequelize.DataTypes);
-const UserEquipments = require('./database/models/UserEquipments')(sequelize, Sequelize.DataTypes);
-const UserKeys = require('./database/models/UserKeys')(sequelize, Sequelize.DataTypes);
+const Users = require('./database/models/userdata/Users')(sequelize, Sequelize.DataTypes);
+
+const UserItems = require('./database/models/userdata/UserItems')(sequelize, Sequelize.DataTypes);
+const UserFoods = require('./database/models/userdata/UserFoods')(sequelize, Sequelize.DataTypes);
+const UserEquipments = require('./database/models/userdata/UserEquipments')(sequelize, Sequelize.DataTypes);
+const UserKeys = require('./database/models/userdata/UserKeys')(sequelize, Sequelize.DataTypes);
 //const UserRooms = require('./database/models/UserRooms')(sequelize, Sequelize.DataTypes);
 
-const EligibleRoles = require('./database/models/EligibleRoles')(sequelize, Sequelize.DataTypes);
-const DisabledChannels = require('./database/models/DisabledChannels')(sequelize, Sequelize.DataTypes);
-const CurrencyShop = require('./database/models/CurrencyShop')(sequelize, Sequelize.DataTypes);
-const Equipments = require('./database/models/Equipments')(sequelize, Sequelize.DataTypes);
-const Foods = require('./database/models/Foods')(sequelize, Sequelize.DataTypes);
-const KeyItems = require('./database/models/KeyItems')(sequelize, Sequelize.DataTypes);
+const EligibleRoles = require('./database/models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
+const DisabledChannels = require('./database/models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
+const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
+const Equipments = require('./database/models/data/Equipments')(sequelize, Sequelize.DataTypes);
+const Foods = require('./database/models/data/Foods')(sequelize, Sequelize.DataTypes);
+const KeyItems = require('./database/models/data/KeyItems')(sequelize, Sequelize.DataTypes);
 //const Room  = require('./database/models/Room')(sequelize, Sequelize.DataTypes);
-const Shinx = require('./database/models/Shinx')(sequelize, Sequelize.DataTypes);
+const Shinx = require('./database/models/userdata/Shinx')(sequelize, Sequelize.DataTypes);
 
 const syncDatabase = async () => {
 	try {
