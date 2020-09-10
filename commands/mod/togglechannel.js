@@ -2,9 +2,9 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { DisabledChannels } = require('../../database/dbObjects');
-
         if (!message.member.hasPermission("MANAGE_CHANNELS")) return message.reply(globalVars.lackPerms);
+
+        const { DisabledChannels } = require('../../database/dbObjects');
 
         const input = message.content.slice(1).trim();
         const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
