@@ -11,16 +11,16 @@ module.exports.run = async (client, message) => {
 
     if (arguments.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
 
-    let roleId = await EligibleRoles.findOne({ where: { name: arguments } });
+    let roleID = await EligibleRoles.findOne({ where: { name: arguments } });
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === arguments.toLowerCase());
 
-    if (!role && !roleId) return message.channel.send(`> That role does not exist, ${message.author}.`);
-    if (!roleId) roleId = await EligibleRoles.findOne({ where: { role_id: role.id } });
+    if (!role && !roleID) return message.channel.send(`> That role does not exist, ${message.author}.`);
+    if (!roleID) roleID = await EligibleRoles.findOne({ where: { role_id: role.id } });
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
     if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
 
-    if (roleId) {
-      await roleId.destroy();
+    if (roleID) {
+      await roleID.destroy();
       return message.channel.send(`> The **${arguments}** role is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
 

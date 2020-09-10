@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: 0
 		},
-        regen: {
+		regen: {
 			type: DataTypes.FLOAT,
 			allowNull: true,
 		},
@@ -28,20 +28,20 @@ module.exports = (sequelize, DataTypes) => {
 		friendship: {
 			type: DataTypes.FLOAT,
 			allowNull: true,
-        },
-        guard: {
+		},
+		guard: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
-        },
-        safeguard: {
+		},
+		safeguard: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
 		},
 		geass: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
-        },
-        ultrageass: {
+		},
+		ultrageass: {
 			type: DataTypes.BOOLEAN,
 			allowNull: true,
 		}
