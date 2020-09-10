@@ -25,6 +25,7 @@ const UserFoods = require('./models/UserFoods')(sequelize, Sequelize.DataTypes);
 const UserKeys = require('./models/UserKeys')(sequelize, Sequelize.DataTypes);
 //const UserRooms = require('./models/UserRooms')(sequelize, Sequelize.DataTypes);
 const EligibleRoles = require('./models/EligibleRoles')(sequelize, Sequelize.DataTypes);
+const DisabledChannels = require('./models/DisabledChannels')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
 UserEquipments.belongsTo(Equipments, { foreignKey: 'item_id', as: 'equipment' });
@@ -290,4 +291,4 @@ Users.prototype.getRoom = function () {
 		include: ['room'],
 	});
 };
-module.exports = { Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, Shinx };
+module.exports = { Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, Shinx };

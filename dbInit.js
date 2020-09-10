@@ -16,6 +16,7 @@ const UserKeys = require('./database/models/UserKeys')(sequelize, Sequelize.Data
 //const UserRooms = require('./database/models/UserRooms')(sequelize, Sequelize.DataTypes);
 
 const EligibleRoles = require('./database/models/EligibleRoles')(sequelize, Sequelize.DataTypes);
+const DisabledChannels = require('./database/models/DisabledChannels')(sequelize, Sequelize.DataTypes);
 const CurrencyShop = require('./database/models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Equipments = require('./database/models/Equipments')(sequelize, Sequelize.DataTypes);
 const Foods = require('./database/models/Foods')(sequelize, Sequelize.DataTypes);
@@ -28,6 +29,7 @@ const syncDatabase = async () => {
 		await Users.sync({ alter: true });
 
 		await EligibleRoles.sync({ alter: true });
+		await DisabledChannels.sync({ alter: true });
 
 		await UserItems.sync({ alter: true });
 		await UserFoods.sync({ alter: true });
@@ -35,12 +37,13 @@ const syncDatabase = async () => {
 		await UserKeys.sync({ alter: true });
 		//await UserRooms.sync({ alter: true });
 
-		await Shinx.sync({ alter: true })
-		await CurrencyShop.sync({ force: true })
-		await Equipments.sync({ force: true })
-		await Foods.sync({ force: true })
-		await KeyItems.sync({ force: true })
+		await Shinx.sync({ alter: true });
+		await CurrencyShop.sync({ force: true });
+		await Equipments.sync({ force: true });
+		await Foods.sync({ force: true });
+		await KeyItems.sync({ force: true });
 		//await Room.sync({ force: true })
+
 		const shop = [
 			CurrencyShop.upsert({ name: 'Lottery ticket', cost: 50, usage: 'allows to participate on Mondays weekly lottery' }),
 
@@ -65,7 +68,6 @@ const syncDatabase = async () => {
 	} catch (e) {
 		console.log(e)
 	};
-
 };
 
 syncDatabase();

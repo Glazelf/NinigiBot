@@ -1,12 +1,16 @@
 const talkedRecently = new Set();
 
-module.exports = (client, message) => {
+module.exports = async (client, message) => {
   // Import globals
   let globalVars = require('./ready');
   try {
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
     let secondCharacter = message.content.charAt(1);
+
+    const { DisabledChannels } = require('../database/dbObjects');
+    const dbChannels = await DisabledChannels.findAll();
+    const channels = dbChannels.map(channel => channel.channel_id);
 
     // Ignore all bots
     if (message.author.bot) return;
@@ -31,7 +35,7 @@ module.exports = (client, message) => {
 
       let AttachmentString = `None`;
       let Attachment = (message.attachments).array();
-      if (message.attachment) {
+      if (message.attachments.size > 0) {
         let AttachmentString = ``;
         forEach(Attachment)
         AttachmentString = `${AttachmentString}
@@ -39,7 +43,7 @@ ${Attachment.url}`;
       };
 
       if (!message.content) {
-        message.content = `None`
+        message.content = `None`;
       };
 
       // Send message contents to dm channel
@@ -111,6 +115,9 @@ ${Attachment.url}`;
 
     // If that command doesn't exist, exit
     if (!cmd) return;
+
+    // Ignore messages sent in a disabled channel
+    if (channels.includes(message.channel.id)) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
 
     // +1 command count and drop message count
     globalVars.totalCommands += 1;
