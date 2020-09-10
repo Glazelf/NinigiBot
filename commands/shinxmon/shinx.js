@@ -1,38 +1,5 @@
 const Canvas = require('canvas');
 
-const reactions = [
-    // ['',0], number is index in portraits.png
-    ['thinks Manectric should not exist.', 6],
-    ['read the final chapter of the Yoomking and is confused about the ending.', 2],
-    ['thinks you are cute!', 14],
-    ['thinks that if you don\'t love yourself how are you gonna love somebody else?', 6],
-    ['got this new anime plot, basically...', 4],
-    ['is sad because of Yanderedev code.', 0],
-    ['thinks that you should Nitro boost Glaze\'s server if you don\'t already', 6],
-    ['is worried about how far the sun is.', 0],
-    ['got hit by a Pidgey. Oof!', 2],
-    ['got scared of that Spinarak on your head!', 3],
-    ['is thinking about chocolate. Ahhh sweet.', 4],
-    ['told a joke. Seems to be funny...?', 5],
-    ['doesnt\'t want you to have a girlfriend.', 6],
-    ['is sad because people on this world are bad.', 7],
-    ['wants 500 euros now. Damn.', 8],
-    ['watched Bambie tonight and is now crying.', 9],
-    ['is sorry about biting your shoes', 10],
-    ['wants a remake of Pokémon Platinum...', 11],
-    ['wants love, they\'re no longer asking.', 12],
-    ['is trying to solve some equation.', 13],
-    ['got happy just because you smiled!', 14],
-    ['is happy to be alive!', 15],
-    ['thinks you should be doing your homework...', 6],
-    ['wants you to play The Legend of Heroes: Trails of Cold Steel', 15],
-    ['watched Code Geass and is crying about the ending. Again.', 7],
-    ['is singing something? ...? What was that? Dango?', 14],
-    ['lost on VGC so he\'s rage quitting like a real japanese player!', 12],
-    ['got voted off even though they did a medbay scan!', 12],
-    ['is confused as to how the 3rd tribute died in the Yoomking story.', 0]
-];
-
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
     ['woke up! He wanted to sleep more...', 4, 8],
@@ -347,9 +314,9 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/trainer.png');
             ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
             img = await Canvas.loadImage('./assets/portraits.png');
-            let reaction = reactions[Math.floor(Math.random() * reactions.length)];
-            ctx.drawImage(img, 64 * reaction[1], 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
-            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
+            let conversation = await bank.currency.getRandomReaction();
+            ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
+            return message.channel.send(`${shinx.nick} ${conversation.quote}`, new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
         };
 
     } catch (e) {
