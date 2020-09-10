@@ -24,7 +24,7 @@ module.exports = {
 
                 Reflect.defineProperty(money, 'payBattle', {
                     value: function payBattle(from, to) {
-                        const paidMoney = Math.floor(this.getBalance(from) * 0.1);
+                        const paidMoney = Math.min(Math.floor(this.getBalance(from) * 0.1), Math.floor(this.getBalance(to) * 0.1)) ;
                         if (paidMoney === 0) return 0;
                         this.add(from, -paidMoney);
                         this.add(to, paidMoney);
