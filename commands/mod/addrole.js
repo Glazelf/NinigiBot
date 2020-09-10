@@ -33,5 +33,5 @@ module.exports.run = async (client, message) => {
     const logger = require('../../util/logger');
 
     logger(e, client, message);
-};
+  };
 };
