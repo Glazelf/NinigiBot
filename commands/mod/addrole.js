@@ -20,8 +20,9 @@ module.exports.run = async (client, message) => {
     if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
 
     if (roleID) {
+      let roleTag = role.name;
       await roleID.destroy();
-      return message.channel.send(`> The **${arguments}** role is no longer eligible to be selfassigned, ${message.author}.`);
+      return message.channel.send(`> The **${roleTag}** role is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
 
       await EligibleRoles.upsert({ role_id: role.id, name: arguments.toLowerCase() });
