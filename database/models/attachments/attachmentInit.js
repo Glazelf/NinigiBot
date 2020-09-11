@@ -46,7 +46,7 @@ module.exports = async () => {
             //ShinxQuotes.upsert({ quote: "", reaction: }),
         ]
 		await Promise.all(quotes);
-		console.log('Attatchments updated');
+		console.log('Attachments updated');
 		sequelize.close();
 	} catch (e) {
 		console.log(e)
