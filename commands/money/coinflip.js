@@ -13,6 +13,7 @@ exports.run = (client, message) => {
             const input = message.content.split(` `, 2);
             let inputText = "";
             if (input[1]) inputText = input[1].toLowerCase();
+            if (inputText == "quarter") input[1] = balance / 4;
             if (inputText == "half") input[1] = balance / 2;
             if (inputText == "all") input[1] = balance;
             amount = input[1];
