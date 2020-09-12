@@ -17,38 +17,6 @@ module.exports.run = async (client, message) => {
             return days + (days == 1 ? " day" : " days") + " ago";
         };
 
-        // Name presence type
-        let presenceType = "Playing";
-        if (client.user.presence.game) {
-            switch (client.user.presence.game.type) {
-                case 0:
-                    presenceType = "Playing";
-                    break;
-                case 1:
-                    presenceType = "Streaming";
-                    break;
-                case 2:
-                    presenceType = "Listening to";
-                    break;
-                case 3:
-                    presenceType = "Watching";
-                    break;
-                default:
-                    presenceType = "Playing";
-                    break;
-            };
-        } else {
-            presenceType = "Playing";
-        };
-
-        // Define presence name
-        let presenceName = "";
-        if (!client.user.presence.game) {
-            presenceName = "nothing";
-        } else {
-            presenceName = client.user.presence.game;
-        };
-
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
         let days = Math.floor(totalSeconds / 86400);
