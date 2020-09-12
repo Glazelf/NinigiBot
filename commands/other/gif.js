@@ -16,9 +16,7 @@ exports.run = (client, message) => {
     let gifArgumentUncased = message.content.split(` `, 3);
     let missingGifString = `> You didn't provide a valid gif argument, ${message.author}.
 > For a list of gif arguments, use "${globalVars.prefix}gif help".`
-    if (!gifArgumentUncased[1]) {
-      return message.channel.send(missingGifString);
-    }
+    if (!gifArgumentUncased[1]) return message.channel.send(missingGifString);
     let gifArgument = gifArgumentUncased[1].toLowerCase();
     let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
     let gifString = `Here's your gif, ${message.author}:`;

@@ -12,7 +12,7 @@ module.exports = async (client, message) => {
     const dbChannels = await DisabledChannels.findAll();
     const channels = dbChannels.map(channel => channel.channel_id);
 
-    const automod = require('../util/automod');
+    const autoMod = require('../util/autoMod');
 
     // Ignore all bots
     if (message.author.bot) return;
@@ -72,7 +72,7 @@ ${Attachment.url}`;
 
     // Automod
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
-    if (memberRoles.size == 0) automod(message);
+    if (memberRoles.size == 0) autoMod(message);
 
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
