@@ -11,6 +11,8 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
         if (!member) return message.channel.send(`> Please mention someone to kick, ${message.author}.`);
 
+        if (!member.kickable) return message.channel.send(`> I lack the required permission to kick the specified member, ${message.author}.`);
+
         let reason = "Not specified.";
         if (args[2]) {
             reason = args.slice(2, args.length + 1);

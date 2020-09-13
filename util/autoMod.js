@@ -4,6 +4,9 @@ module.exports = async (message) => {
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
+        if (!member.kickable) return;
+        if (!member.bannable) return;
+
         let reason = "Unspecified.";
 
         if (memberRoles.size == 0) {
