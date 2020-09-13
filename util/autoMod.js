@@ -9,16 +9,16 @@ module.exports = async (message) => {
             await message.member.ban({ days: 1, reason: reason })
             await message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
-            return message.channel.send(`> Successfully autobanned ${message.author}.`);
+            return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
         };
     };
 
-    if (message.content.includes("nigger") || message.content.includes("nigger")) {
+    if (message.content.includes("nigger") || message.content.includes("nigga") || message.content.includes("triceratops")) {
         let reason = "Using offensive slurs.";
         await message.delete();
+        await message.member.kick([reason]);
         await message.author.send(`> You've been autokicked for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
-        return message.channel.send(`> Successfully autokicked ${message.author} for the following reason:
-\`${reason}\``);
+        return message.channel.send(`> Successfully autokicked ${message.author} for the following reason: \`${reason}\``);
     };
 };
