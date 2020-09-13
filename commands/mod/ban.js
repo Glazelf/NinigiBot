@@ -8,7 +8,8 @@ module.exports.run = async (client, message) => {
         const args = message.content.split(' ');
 
         const member = message.mentions.members.first();
-        if (!member) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
+        let user = message.mentions.users.first();
+        if (!member || !user) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
 
         let reason = "Not specified.";
         if (args[2]) {
@@ -16,8 +17,9 @@ module.exports.run = async (client, message) => {
             reason = reason.join(' ');
         };
 
-        await member.ban({ days: 0, reason: reason })
-        return message.channel.send(`> Successfully kicked ${args[1]} for reason: \`${reason}\`, ${message.author}.`);
+        await member.ban({ days: 0, reason: reason });
+        await user.send(`> You've been banned for the following reason: \`${reason}\``);
+        return message.channel.send(`> Successfully kicked ${args[1]} for the following reason: \`${reason}\`, ${message.author}.`);
 
     } catch (e) {
         // log error

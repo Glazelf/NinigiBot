@@ -8,6 +8,7 @@ module.exports.run = async (client, message) => {
         const args = message.content.split(' ');
 
         const member = message.mentions.members.first();
+        let user = message.mentions.users.first();
         if (!member) return message.channel.send(`> Please mention someone to kick, ${message.author}.`);
 
         let reason = "Not specified.";
@@ -17,6 +18,7 @@ module.exports.run = async (client, message) => {
         };
 
         await member.kick([reason]);
+        await user.send(`> You've been kicked for the following reason: \`${reason}\``);
         return message.channel.send(`> Successfully kicked ${args[1]} for reason: \`${reason}\`, ${message.author}.`);
 
     } catch (e) {
