@@ -3,12 +3,9 @@ module.exports = async (message) => {
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
-    if (!message.member.kickable) return;
-    if (!message.member.bannable) return;
-
     let reason = "Unspecified.";
 
-    if (memberRoles.size == 0) {
+    if (message.member.bannable && memberRoles.size == 0) {
         if (message.content.includes("https://glorysocial.com/profile/")) {
             reason = "Posting scam links.";
             await message.member.ban({ days: 1, reason: reason })
@@ -18,7 +15,7 @@ module.exports = async (message) => {
         };
     };
 
-    if (message.content.includes("nigger") || message.content.includes("nigga")) {
+    if (message.member.kickable && (message.content.includes("nigger") || message.content.includes("nigga"))) {
         let reason = "Using offensive slurs.";
         await message.delete();
         await message.member.kick([reason]);
@@ -26,4 +23,5 @@ module.exports = async (message) => {
 \`\`\`${message.content}\`\`\``);
         return message.channel.send(`> Successfully autokicked ${message.author} for the following reason: \`${reason}\``);
     };
+    return;
 };
