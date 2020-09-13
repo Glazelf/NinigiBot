@@ -3,8 +3,8 @@ module.exports = async (message) => {
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
-    if (!member.kickable) return;
-    if (!member.bannable) return;
+    if (!message.member.kickable) return;
+    if (!message.member.bannable) return;
 
     let reason = "Unspecified.";
 
