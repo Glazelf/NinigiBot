@@ -13,8 +13,7 @@ module.exports = async (message) => {
         };
     };
 
-    if (message.content.includes("nigger" || "nigga")) {
-        console.log("apple")
+    if (message.content.includes("nigger") || message.content.includes("nigger")) {
         let reason = "Using offensive slurs.";
         await message.delete();
         await message.author.send(`> You've been autokicked for the following reason: \`${reason}\`
