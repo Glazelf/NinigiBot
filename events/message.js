@@ -71,8 +71,7 @@ ${Attachment.url}`;
     };
 
     // Automod
-    let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
-    if (memberRoles.size == 0) autoMod(message);
+    autoMod(message);
 
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
