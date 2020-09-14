@@ -16,6 +16,7 @@ module.exports = async (message) => {
         "niqqer",
         "nigga",
         "niqqa",
+        "nlgger",
         "nlgga"
     ];
     // const testArray = ["triceratops"];
