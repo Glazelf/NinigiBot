@@ -1,5 +1,5 @@
 module.exports = async (message) => {
-    // if (message.member.hasPermission("KICK_MEMBERS")) return;
+    if (message.member.hasPermission("KICK_MEMBERS")) return;
     if (!message.content) return;
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
