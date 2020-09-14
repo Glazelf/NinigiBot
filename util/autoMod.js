@@ -23,9 +23,11 @@ module.exports = async (message) => {
         "tranny"
     ];
     const exceptions = [
-        "retardation", // thanks mom
+        "retardation" // thanks mom
     ];
-    const testArray = ["triceratops"];
+    const testArray = [
+        "triceratops"
+    ];
 
     // Scam links
     if (scamLinks.some(v => messageNormalized.includes(v)) &&
