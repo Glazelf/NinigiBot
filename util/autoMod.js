@@ -11,17 +11,17 @@ module.exports = async (message) => {
     const offensiveSlurs = ["nigger", "niqqer", "nigga", "niqqa"];
     // const testArray = ["triceratops"];
 
-    if (message.member.bannable && memberRoles.size == 0) {
-        if (scamLinks.some(v => messageNormalized.includes(v))) {
-            reason = "Posting scam links.";
-            await message.member.ban({ days: 1, reason: reason })
-            await message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
+    // Scam links
+    if (scamLinks.some(v => messageNormalized.includes(v)) && message.member.bannable && memberRoles.size == 0) {
+        reason = "Posting scam links.";
+        await message.member.ban({ days: 1, reason: reason })
+        await message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
-            return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
-        };
+        return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
     };
 
-    if (message.member.kickable && offensiveSlurs.some(v => messageNormalized.includes(v))) {
+    // Offensive slurs
+    if (offensiveSlurs.some(v => messageNormalized.includes(v)) && message.member.kickable) {
         reason = "Using offensive slurs.";
         await message.delete();
         await message.member.kick([reason]);
