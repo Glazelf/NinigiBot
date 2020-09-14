@@ -22,16 +22,22 @@ module.exports = async (message) => {
         "faggot",
         "tranny"
     ];
+    const exceptions = [
+        "retardation", // thanks mom
+    ];
     const testArray = ["triceratops"];
 
     // Scam links
-    if (scamLinks.some(v => messageNormalized.includes(v)) && message.member.bannable && memberRoles.size == 0) {
+    if (scamLinks.some(v => messageNormalized.includes(v)) &&
+        message.member.bannable && memberRoles.size == 0) {
         reason = "Posting scam links.";
         ban();
     };
 
     // Offensive slurs
-    if (offensiveSlurs.some(v => messageNormalized.includes(v)) && message.member.kickable) {
+    if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
+        !exceptions.some(v => messageNormalized.includes(v)) &&
+        message.member.kickable) {
         reason = "Using offensive slurs.";
         kick();
     };
@@ -56,7 +62,7 @@ module.exports = async (message) => {
         return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
     };
 
-    function test(){
+    function test() {
         return message.channel.send(`banned lol`);
     };
 
