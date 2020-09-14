@@ -6,7 +6,7 @@ module.exports = async (message) => {
 
     let reason = "Unspecified.";
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    let messageNormalized = messageNormalized.toLowerCase()
+    let messageNormalized = messageNormalized.toLowerCase();
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
@@ -24,7 +24,7 @@ module.exports = async (message) => {
     // Scam links
     if (scamLinks.some(v => messageNormalized.includes(v)) && message.member.bannable && memberRoles.size == 0) {
         reason = "Posting scam links.";
-        await message.member.ban({ days: 1, reason: reason })
+        await message.member.ban({ days: 1, reason: reason });
         await message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
         return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
