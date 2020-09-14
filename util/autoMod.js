@@ -8,7 +8,7 @@ module.exports = async (message) => {
     messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     const scamLinks = ["https://glorysocial.com/profile/"];
-    const offensiveSlurs = ["nigger", "nigga", "niqqa"];
+    const offensiveSlurs = ["nigger", "niqqer", "nigga", "niqqa"];
     // const testArray = ["triceratops"];
 
     if (message.member.bannable && memberRoles.size == 0) {
