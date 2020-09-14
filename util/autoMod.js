@@ -6,9 +6,18 @@ module.exports = async (message) => {
 
     let reason = "Unspecified.";
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let messageNormalized = messageNormalized.toLowerCase()
 
-    const scamLinks = ["https://glorysocial.com/profile/"];
-    const offensiveSlurs = ["nigger", "niqqer", "nigga", "niqqa"];
+    const scamLinks = [
+        "https://glorysocial.com/profile/"
+    ];
+    const offensiveSlurs = [
+        "nigger",
+        "niqqer",
+        "nigga",
+        "niqqa",
+        "nlgga"
+    ];
     // const testArray = ["triceratops"];
 
     // Scam links
