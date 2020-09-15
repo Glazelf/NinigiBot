@@ -14,6 +14,8 @@ exports.run = async (client, message) => {
         // Read out message arguments
         const args = message.content.split(` `);
 
+        if (!args[1]) return message.channel.send(`> You need to provide a link to play, ${message.author}.`);
+
         // Get user's voice channel
         const voiceConnection = await message.member.voice.channel;
         if (!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
