@@ -10,7 +10,7 @@ module.exports = (exception, client, message = null) => {
 Link: ${message.url}
 Error:
 \`\`\`${exception}\`\`\`
-Message:
+Message by ${message.author.tag}:
 \`\`\`${message.content}\`\`\`` : `An error occurred:
 \`\`\`${exception}\`\`\``;
     if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
