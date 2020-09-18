@@ -22,7 +22,11 @@ module.exports.run = async (client, message) => {
 
         let avatar = null;
         if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
+        let avatarFormat = avatar.substr(avatar.length - 3);
 
+        // if (avatarFormat == "gif") {
+        //     Code to execute to invert gifs while keeping the gif format goes here
+        // } else {
         let startOffset = 0;
         let avatarSize = 128;
         let canvas = Canvas.createCanvas(avatarSize, avatarSize);
@@ -46,6 +50,7 @@ module.exports.run = async (client, message) => {
         ctx.putImageData(imageData, startOffset, startOffset);
         ctx.closePath();
         ctx.clip();
+        // };
 
         return message.channel.send(totalMessage, {
             files: [canvas.toBuffer()]
