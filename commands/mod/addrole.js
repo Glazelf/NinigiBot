@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
   // Import globals
   let globalVars = require('../../events/ready');
   try {
@@ -6,12 +6,12 @@ module.exports.run = async (client, message) => {
 
     if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(globalVars.lackPerms);
 
-    const args = message.content.split(' ');
+    const requestRole = args.join(' ');
 
-    if (args[1].length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
+    if (requestRole.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
 
-    let roleID = await EligibleRoles.findOne({ where: { name: args[1] } });
-    const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === args[1].toLowerCase());
+    let roleID = await EligibleRoles.findOne({ where: { name: requestRole } });
+    const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
 
     if (!role && !roleID) return message.channel.send(`> That role does not exist, ${message.author}.`);
     if (!roleID) roleID = await EligibleRoles.findOne({ where: { role_id: role.id } });
@@ -24,7 +24,7 @@ module.exports.run = async (client, message) => {
       return message.channel.send(`> The **${roleTag}** role is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
 
-      await EligibleRoles.upsert({ role_id: role.id, name: args[1].toLowerCase() });
+      await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
       return message.channel.send(`> The **${role.name}** role is now eligible to be selfassigned, ${message.author}.`);
     };
 
