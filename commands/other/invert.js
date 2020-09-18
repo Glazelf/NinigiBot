@@ -23,14 +23,14 @@ module.exports.run = async (client, message) => {
         let avatar = null;
         if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
 
-        let x = 0;
-        let y = 0;
-        let canvas = Canvas.createCanvas(128, 128);
+        let startOffset = 0;
+        let avatarSize = 128;
+        let canvas = Canvas.createCanvas(avatarSize, avatarSize);
         let ctx = canvas.getContext('2d');
         let drawAvatar = await Canvas.loadImage(avatar);
-        ctx.drawImage(drawAvatar, 0, 0);
+        ctx.drawImage(drawAvatar, startOffset, startOffset);
         ctx.beginPath();
-        let imageData = ctx.getImageData(x, y, 128, 128);
+        let imageData = ctx.getImageData(startOffset, startOffset, avatarSize, avatarSize);
         let data = imageData.data;
 
         for (let i = 0; i < data.length; i += 4) {
@@ -43,7 +43,7 @@ module.exports.run = async (client, message) => {
         };
 
         // Overwrite image
-        ctx.putImageData(imageData, x, y);
+        ctx.putImageData(imageData, startOffset, startOffset);
         ctx.closePath();
         ctx.clip();
 
