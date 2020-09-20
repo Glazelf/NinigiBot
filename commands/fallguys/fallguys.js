@@ -6,7 +6,6 @@ module.exports.run = async (client, message) => {
 
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to embed messages, ${message.author}.`);
         let daily = await fallguys.getDaily();
-        let articles = await fallguys.getArticles();
         let pcDaily = daily.pcStore;
         // let ps4Daily = daily.ps4Store;
         let dailyStore;
@@ -25,7 +24,6 @@ module.exports.run = async (client, message) => {
 
         if (arg1 == "store") {
             dailyStore = pcDaily;
-            console.log(arg2)
             if (dailyStore[arg2]) {
                 const dailyEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
@@ -35,7 +33,9 @@ module.exports.run = async (client, message) => {
                     .setImage(dailyStore[arg2].lowerImg)
                     .setFooter(`Requested by ${message.author.tag}`)
                     .setTimestamp();
+
                 return message.channel.send(dailyEmbed);
+
             } else {
                 const dailyEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
@@ -47,6 +47,7 @@ module.exports.run = async (client, message) => {
                     // .setImage(articles.articles[0].thumbnail)
                     .setFooter(`Requested by ${message.author.tag}`)
                     .setTimestamp();
+
                 return message.channel.send(dailyEmbed);
             };
         };
