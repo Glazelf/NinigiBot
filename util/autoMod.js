@@ -18,7 +18,7 @@ module.exports = async (message) => {
         "niqqa",
         "nlgger",
         "nlgga",
-        "retard",
+        //"retard",
         "faggot",
         "tranny"
     ];
