@@ -30,7 +30,8 @@ module.exports.run = async (client, message) => {
                     .setAuthor(`${dailyStore[arg2].name}`, fallguys.crownIcon)
                     .addField("Rarity:", dailyStore[arg2].rarity, false)
                     .addField("Price:", `${dailyStore[arg2].price} ${dailyStore[arg2].currency}`, false)
-                    .setImage(dailyStore[arg2].lowerImg)
+                    // Why is this link returning 404 lmfao
+                    // .setImage(dailyStore[arg2].icon)
                     .setFooter(`Requested by ${message.author.tag}`)
                     .setTimestamp();
 
