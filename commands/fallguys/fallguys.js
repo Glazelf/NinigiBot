@@ -7,6 +7,7 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to embed messages, ${message.author}.`);
         let daily = await fallguys.getDaily();
         let pcDaily = daily.pcStore;
+        // ps4Store returns an empty array
         // let ps4Daily = daily.ps4Store;
         let dailyStore;
 
@@ -41,8 +42,8 @@ module.exports.run = async (client, message) => {
                 const dailyEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor("PC Featured Store:", fallguys.crownIcon)
-                    .addField(`${dailyStore[0].name} top`, `${dailyStore[0].rarity} item for ${dailyStore[0].price} ${dailyStore[0].currency} `, false)
-                    .addField(`${dailyStore[1].name} bottom`, `${dailyStore[1].rarity} item for ${dailyStore[1].price} ${dailyStore[1].currency} `, false)
+                    .addField(`${dailyStore[0].name} Top`, `${dailyStore[0].rarity} item for ${dailyStore[0].price} ${dailyStore[0].currency} `, false)
+                    .addField(`${dailyStore[1].name} Bottom`, `${dailyStore[1].rarity} item for ${dailyStore[1].price} ${dailyStore[1].currency} `, false)
                     .addField(dailyStore[2].name, `${dailyStore[2].rarity} item for ${dailyStore[2].price} ${dailyStore[2].currency}`, false)
                     // Sadly articles aren't properly maintained, just returns 1.1 patchnotes banner
                     // .setImage(articles.articles[0].thumbnail)
@@ -52,19 +53,6 @@ module.exports.run = async (client, message) => {
                 return message.channel.send(dailyEmbed);
             };
         };
-
-        // I wish the icons wouldnt return 404
-        // if (pcDaily[dailyNumber]) {
-        //     const dailyEmbed = new Discord.MessageEmbed()
-        //         .setColor(globalVars.embedColor)
-        //         .setAuthor(pcDaily[dailyNumber].name, pcDaily[dailyNumber].icon)
-        //         .setDescription(`Rarity: ${pcDaily[dailyNumber].rarity}`)
-        //         .addField("Price:", `${pcDaily[dailyNumber].price} ${pcDaily[dailyNumber].currency}`, true)
-        //         .setImage(pcDaily[dailyNumber].icon)
-        //         .setFooter(`Requested by ${message.author.tag}`)
-        //         .setTimestamp();
-
-        //     return message.channel.send(dailyEmbed);
 
     } catch (e) {
         // log error
