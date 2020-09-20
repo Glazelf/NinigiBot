@@ -28,6 +28,8 @@ exports.run = (client, message) => {
 ${helpText}`);
     } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
       return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}.`);
+    } else if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+      return message.channel.send(`> I can't send you gifs because I don't have permissions to embed messages, ${message.author}.`);
     } else if (gif) {
 
       if (gifArgument == "hug") {
