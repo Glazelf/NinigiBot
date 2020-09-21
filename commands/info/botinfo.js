@@ -80,6 +80,6 @@ module.exports.run = async (client, message) => {
 };
 
 module.exports = {
-    name: "info",
-    aliases: ["info", "botinfo"]
+    name: "botinfo",
+    aliases: ["bot", "info"]
 };
