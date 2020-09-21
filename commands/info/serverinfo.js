@@ -88,5 +88,5 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["serverinfo", "server"]
+    aliases: ["server"]
 };

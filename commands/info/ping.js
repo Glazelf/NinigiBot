@@ -16,5 +16,5 @@ module.exports.config = {
     name: "ping",
     description: "Pings bot",
     category: "info",
-    aliases: ["ping", "pong"]
+    aliases: ["pong"]
 };

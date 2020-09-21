@@ -43,5 +43,5 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "convert",
-    aliases: ["convert"]
+    aliases: ["conv"]
 };

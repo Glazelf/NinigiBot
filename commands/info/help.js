@@ -27,5 +27,5 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "help",
-    aliases: ["help"]
+    aliases: []
 };

@@ -27,5 +27,5 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "starlimit",
-    aliases: []
+    aliases: ["sl"]
 };

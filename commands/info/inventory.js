@@ -54,5 +54,5 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "inventory",
-    aliases: ["inventory", "inv", "items"]
+    aliases: ["inv", "items"]
 };
