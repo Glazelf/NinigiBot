@@ -30,7 +30,7 @@ exports.run = (client, message, args) => {
   };
 };
 
-module.exports = {
+module.exports.names = {
   name: "reload",
   aliases: []
 };

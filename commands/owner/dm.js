@@ -32,7 +32,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "dm",
     aliases: []
 };

@@ -55,7 +55,7 @@ module.exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "sysbot",
     aliases: []
 };

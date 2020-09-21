@@ -144,7 +144,7 @@ module.exports.run = async (client, message) => {
     };
 };
 
-module.exports.conf = {
+module.exports.names = {
     name: "userinfo",
     aliases: ["userinfo", "user"]
 };

@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "switch",
     aliases: ["switch", "friendcode"]
 };

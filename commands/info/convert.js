@@ -41,7 +41,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "convert",
     aliases: ["convert"]
 };

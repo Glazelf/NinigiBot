@@ -34,7 +34,7 @@ exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "shop",
     aliases: ["store"]
 };

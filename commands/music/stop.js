@@ -15,7 +15,7 @@ exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "stop",
     aliases: []
 };

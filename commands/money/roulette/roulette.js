@@ -67,7 +67,7 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
     };
 };
 
-module.exports = {
+module.exports.names = {
     name: "roulette",
     aliases: []
 };

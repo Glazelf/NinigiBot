@@ -44,3 +44,8 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports.names = {
+    name: "say",
+    aliases: []
+};
