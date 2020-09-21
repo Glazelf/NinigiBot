@@ -18,5 +18,5 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "magicconch",
-    aliases: []
+    aliases: ["mc"]
 };
