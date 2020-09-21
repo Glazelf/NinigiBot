@@ -35,3 +35,8 @@ module.exports.run = async (client, message, args) => {
     logger(e, client, message);
   };
 };
+
+module.exports = {
+  name: "addrole",
+  aliases: []
+};

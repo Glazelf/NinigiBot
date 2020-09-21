@@ -29,3 +29,8 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "channellist",
+    aliases: ["channels"]
+};

@@ -55,3 +55,7 @@ exports.run = (client, message, args) => {
     };
 };
 
+module.exports = {
+    name: "purge",
+    aliases: ["purge"]
+};

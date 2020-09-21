@@ -116,9 +116,10 @@ ${Attachment.url}`;
     const commandName = args.shift().toLowerCase();
 
     // Grab the command data from the client.commands Enmap
-    let cmd;
-    if (client.commands.has(commandName) || client.aliases.has(commandName)) {
-      cmd = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
+    if (client.commands.has(commandName)) {
+      cmd = client.commands.get(commandName);
+    } else if (client.aliases.has(commandName)) {
+      cmd = client.commands.get(client.aliases.get(commandName));
     } else return;
 
     // Ignore messages sent in a disabled channel
@@ -129,7 +130,7 @@ ${Attachment.url}`;
     globalVars.totalMessages -= 1;
 
     // Run the command
-    if (cmd !== null) {
+    if (cmd) {
       cmd.run(client, message, args);
     } else return;
 

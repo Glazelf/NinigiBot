@@ -49,3 +49,8 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "coinflip",
+    aliases: ["cf"]
+};

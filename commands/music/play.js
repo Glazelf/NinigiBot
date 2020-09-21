@@ -38,3 +38,7 @@ exports.run = async (client, message) => {
     };
 };
 
+module.exports = {
+    name: "play",
+    aliases: []
+};

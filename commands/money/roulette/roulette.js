@@ -66,3 +66,8 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "roulette",
+    aliases: []
+};

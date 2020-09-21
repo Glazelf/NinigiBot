@@ -30,7 +30,7 @@ fs.readdir("./events/", (err, files) => {
 });
 
 client.commands = new Enmap();
-client.aliases = new Enmap();
+client.aliases = new Discord.Collection();
 
 walk(`./commands/`);
 
@@ -51,11 +51,12 @@ function walk(dir, callback) {
           let commandName = file.split(".")[0];
           console.log(`Loading Command: ${commandName} ✔ Success! `);
           client.commands.set(commandName, props);
-          if (client.aliases) {
-            for (const alias of commandName.aliases) {
-                client.aliases.set(alias, commandName.name);
-            };
-        };
+          if (commandName.aliases && typeof (commandName.aliases) === "object") {
+            commandName.aliases.forEach(alias => {
+              if (client.aliases.get(alias)) return console.log("Warning: Two commands share an alias name!");
+              client.aliases.set(alias, commandName);
+            });
+          };
         };
       });
     });

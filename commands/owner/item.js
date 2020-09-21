@@ -108,3 +108,8 @@ exports.run = async (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "item",
+    aliases: []
+};

@@ -29,3 +29,8 @@ exports.run = (client, message, args) => {
     logger(e, client, message);
   };
 };
+
+module.exports = {
+  name: "reload",
+  aliases: []
+};
