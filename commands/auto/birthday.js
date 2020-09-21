@@ -20,3 +20,8 @@ module.exports.run = async (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "birthday",
+    aliases: ["birthday", "birth"]
+};

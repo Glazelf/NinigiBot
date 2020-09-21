@@ -30,6 +30,7 @@ fs.readdir("./events/", (err, files) => {
 });
 
 client.commands = new Enmap();
+client.aliases = new Enmap();
 
 walk(`./commands/`);
 
@@ -50,10 +51,11 @@ function walk(dir, callback) {
           let commandName = file.split(".")[0];
           console.log(`Loading Command: ${commandName} ✔ Success! `);
           client.commands.set(commandName, props);
-          // For if I ever want to add command aliases
-          // props.conf.aliases.forEach(alias => {
-          //   client.aliases.set(alias, commandName);
-          // });
+          if (client.aliases) {
+            for (const alias of commandName.aliases) {
+                client.aliases.set(alias, commandName.name);
+            };
+        };
         };
       });
     });

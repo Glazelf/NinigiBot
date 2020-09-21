@@ -51,3 +51,8 @@ exports.run = async (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "inventory",
+    aliases: ["inventory", "inv", "items"]
+};

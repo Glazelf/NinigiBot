@@ -113,13 +113,13 @@ ${Attachment.url}`;
 
     // Standard definition
     const args = message.content.slice(globalVars.prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
     // Grab the command data from the client.commands Enmap
-    const cmd = client.commands.get(command);
-
-    // If that command doesn't exist, exit
-    if (!cmd) return;
+    let cmd;
+    if (client.commands.has(commandName) || client.aliases.has(commandName)) {
+      cmd = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
+    } else return;
 
     // Ignore messages sent in a disabled channel
     if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
@@ -129,7 +129,9 @@ ${Attachment.url}`;
     globalVars.totalMessages -= 1;
 
     // Run the command
-    cmd.run(client, message, args);
+    if (cmd !== null) {
+      cmd.run(client, message, args);
+    } else return;
 
   } catch (e) {
     // log error

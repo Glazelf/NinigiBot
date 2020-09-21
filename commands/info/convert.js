@@ -40,3 +40,8 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "convert",
+    aliases: ["convert"]
+};

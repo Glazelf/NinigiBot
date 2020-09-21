@@ -11,3 +11,10 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports = {
+    name: "ping",
+    description: "Pings bot",
+    category: "info",
+    aliases: ["ping", "pong"]
+};
