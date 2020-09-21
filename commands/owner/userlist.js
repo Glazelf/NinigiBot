@@ -32,7 +32,7 @@ module.exports.run = async (client, message) => {
     };
 };
 
-module.exports.names = {
+module.exports.config = {
     name: "userlist",
     aliases: ["users"]
 };

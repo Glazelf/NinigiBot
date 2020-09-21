@@ -35,7 +35,7 @@ module.exports.run = async (client, message, args) => {
   };
 };
 
-module.exports.names = {
+module.exports.config = {
   name: "mute",
   aliases: ["mute"]
 };

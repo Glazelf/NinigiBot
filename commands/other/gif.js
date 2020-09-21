@@ -68,7 +68,7 @@ ${helpText}`);
   };
 };
 
-module.exports.names = {
+module.exports.config = {
   name: "gif",
   aliases: []
 };

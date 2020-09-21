@@ -51,8 +51,8 @@ function walk(dir, callback) {
           let commandName = file.split(".")[0];
           console.log(`Loading Command: ${commandName} ✔ Success! `);
           client.commands.set(commandName, props);
-          if (props.names.aliases) {
-            props.names.aliases.forEach(alias => {
+          if (props.config.aliases) {
+            props.config.aliases.forEach(alias => {
               if (client.aliases.get(alias)) return console.log("Warning: Two commands share an alias name!");
               client.aliases.set(alias, commandName);
             });

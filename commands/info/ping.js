@@ -12,7 +12,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports.names = {
+module.exports.config = {
     name: "ping",
     description: "Pings bot",
     category: "info",
