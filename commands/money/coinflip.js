@@ -52,5 +52,5 @@ exports.run = (client, message) => {
 
 module.exports = {
     name: "coinflip",
-    aliases: ["cf"]
+    aliases: ["cf", "flip"]
 };
