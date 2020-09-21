@@ -61,7 +61,7 @@ module.exports = {
                 Reflect.defineProperty(money, 'getRandomReaction', {
                     value: async function getRandomReaction() {
                         const result = await shinxQuotes.findOne({ order: Sequelize.fn('RANDOM') })
-                        console.log(result)
+                        // console.log(result)
                         return result
                     }
                 })
