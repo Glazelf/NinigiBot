@@ -21,7 +21,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.config = {
     name: "restart",
     aliases: []
 };

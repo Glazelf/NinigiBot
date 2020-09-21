@@ -50,7 +50,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.config = {
     name: "coinflip",
     aliases: ["cf", "flip"]
 };

@@ -24,3 +24,8 @@ exports.run = (client, message) => {
         logger(e, client, message);
     };
 };
+
+module.exports.config = {
+    name: "starlimit",
+    aliases: []
+};

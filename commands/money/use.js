@@ -21,7 +21,7 @@ exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.config = {
     name: "use",
     aliases: []
 };

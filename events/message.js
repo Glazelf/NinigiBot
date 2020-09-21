@@ -116,8 +116,10 @@ ${Attachment.url}`;
     const commandName = args.shift().toLowerCase();
 
     // Grab the command data from the client.commands Enmap
+    let cmd;
     if (client.commands.has(commandName)) {
       cmd = client.commands.get(commandName);
+      console.log(cmd)
     } else if (client.aliases.has(commandName)) {
       cmd = client.commands.get(client.aliases.get(commandName));
     } else return;

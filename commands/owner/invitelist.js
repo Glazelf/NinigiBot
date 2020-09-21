@@ -24,7 +24,7 @@ exports.run = (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.config = {
     name: "invitelist",
     aliases: ["invites"]
 };

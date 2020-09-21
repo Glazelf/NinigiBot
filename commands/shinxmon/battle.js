@@ -166,7 +166,7 @@ module.exports.run = async (client, message) => {
     };
 };
 
-module.exports = {
+module.exports.config = {
     name: "battle",
     aliases: ["challenge"]
 };

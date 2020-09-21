@@ -67,3 +67,8 @@ ${helpText}`);
     logger(e, client, message);
   };
 };
+
+module.exports.config = {
+  name: "gif",
+  aliases: []
+};
