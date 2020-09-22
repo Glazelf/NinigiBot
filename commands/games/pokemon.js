@@ -1,3 +1,5 @@
+const { basename } = require('path');
+
 module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
@@ -61,37 +63,46 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "joris") pokemonName = "charjabug";
 
                 P.getPokemonByName(pokemonName)
-                    .then(function (response) {
+                    .then(async function (response) {
                         // add pkm embed here
                         console.log(response);
 
+                        var pokemonID = leadingZeros(response.id.toString());
+                        if (pokemonName.endsWith("alola")) {
+                            let baseName = pokemonName.substring(0,pokemonName.length-6);
+                            await P.getPokemonByName(baseName)
+                                .then(function (responseAlola) {
+                                    let AlolaID = leadingZeros(responseAlola.id.toString());
+                                    pokemonID = `${AlolaID}-a`;
+                                });
+                        };
                         pokemonName = capitalizeString(pokemonName);
-                        let banner = `https://www.serebii.net/pokemon/art/${response.id}.png`;
-                        let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${response.id}.png`;
+                        let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+                        let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
                         let abilityString = ``;
                         if (response.abilities[0]) {
                             abilityString = `${response.abilities[0].ability.name}`;
                             if (response.abilities[1]) {
                                 if (response.abilities[1].is_hidden == true) {
-                                    abilityString += `, (H) ${response.abilities[1].ability.name}`;
+                                    abilityString += `\n${response.abilities[1].ability.name} (Hidden)`;
+                                    abilit
                                 } else {
-                                    abilityString += `, ${response.abilities[1].ability.name}`;
+                                    abilityString += `\n${response.abilities[1].ability.name}`;
                                 };
                             };
                             if (response.abilities[2]) {
                                 if (response.abilities[2].is_hidden == true) {
-                                    abilityString += `, (H) ${response.abilities[2].ability.name}`;
+                                    abilityString += `\n${response.abilities[2].ability.name} (Hidden)`;
                                 } else {
-                                    abilityString += `, ${response.abilities[2].ability.name}`;
+                                    abilityString += `\n${response.abilities[2].ability.name}`;
                                 };
                             };
                             abilityString = capitalizeString(abilityString);
                         };
-                        console.log(response.abilities)
 
                         const pkmEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(`${response.id}: ${pokemonName}`, banner)
+                            .setAuthor(`${pokemonID}: ${pokemonName}`, banner)
                             .setThumbnail(spriteShiny)
                             .addField("Typing:", `a`, false)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityString, false)
@@ -127,6 +138,15 @@ Speed: ${response.stats[5].base_stat}`, false)
             returnStr = splitStr.join(' ');
             if (returnStr == "Type Null") returnStr = "Type: Null";
             return returnStr;
+        };
+
+        function leadingZeros(str) {
+            var i = str.length;
+            while (i < 3) {
+                str = "0" + str;
+                i++;
+            };
+            return str;
         };
 
     } catch (e) {
