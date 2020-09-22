@@ -55,27 +55,53 @@ module.exports.run = async (client, message) => {
                 let pokemonName = subCommand;
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
+                // "joke" name aliases
+                if (pokemonName == "smogonbird") pokemonName = "talonflame";
+                if (pokemonName == "glaze") pokemonName = "shinx";
+                if (pokemonName == "joris") pokemonName = "charjabug";
+
                 P.getPokemonByName(pokemonName)
                     .then(function (response) {
                         // add pkm embed here
                         console.log(response);
 
                         pokemonName = capitalizeString(pokemonName);
-
-                        let banner = response.sprites.other["official-artwork"].front_default;
-                        if (!banner) banner = response.sprites.front_default;
+                        let banner = `https://www.serebii.net/pokemon/art/${response.id}.png`;
+                        let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${response.id}.png`;
+                        let abilityString = ``;
+                        if (response.abilities[0]) {
+                            abilityString = `${response.abilities[0].ability.name}`;
+                            if (response.abilities[1]) {
+                                if (response.abilities[1].is_hidden == true) {
+                                    abilityString += `, (H) ${response.abilities[1].ability.name}`;
+                                } else {
+                                    abilityString += `, ${response.abilities[1].ability.name}`;
+                                };
+                            };
+                            if (response.abilities[2]) {
+                                if (response.abilities[2].is_hidden == true) {
+                                    abilityString += `, (H) ${response.abilities[2].ability.name}`;
+                                } else {
+                                    abilityString += `, ${response.abilities[2].ability.name}`;
+                                };
+                            };
+                            abilityString = capitalizeString(abilityString);
+                        };
+                        console.log(response.abilities)
 
                         const pkmEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(`${response.id}: ${pokemonName}`, response.sprites.front_default)
-                            .setThumbnail(response.sprites.front_shiny)
-                            .addField("Typing:", `a`, true)
+                            .setAuthor(`${response.id}: ${pokemonName}`, banner)
+                            .setThumbnail(spriteShiny)
+                            .addField("Typing:", `a`, false)
+                        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityString, false)
+                        pkmEmbed
                             .addField("Stats:", `HP: ${response.stats[0].base_stat}
-                            Attack: ${response.stats[1].base_stat}
-                            Defense: ${response.stats[2].base_stat}
-                            Sp. Attack: ${response.stats[3].base_stat}
-                            Sp. Defense: ${response.stats[4].base_stat}
-                            Speed: ${response.stats[5].base_stat}`, false)
+Attack: ${response.stats[1].base_stat}
+Defense: ${response.stats[2].base_stat}
+Sp. Attack: ${response.stats[3].base_stat}
+Sp. Defense: ${response.stats[4].base_stat}
+Speed: ${response.stats[5].base_stat}`, false)
                             .setImage(banner)
                             .setFooter(`Requested by ${message.author.tag}`)
                             .setTimestamp();
@@ -91,7 +117,7 @@ module.exports.run = async (client, message) => {
 
         function capitalizeString(str) {
             str = str.replace("-", " ");
-            var splitStr = str.toLowerCase().split(' ');
+            var splitStr = str.split(' ');
             for (var i = 0; i < splitStr.length; i++) {
                 // You do not need to check if i is larger than splitStr length, as your for does that for you
                 // Assign it back to the array
