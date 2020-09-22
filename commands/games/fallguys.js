@@ -28,7 +28,7 @@ module.exports.run = async (client, message) => {
             if (dailyStore[arg2]) {
                 const dailyEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setAuthor(`${dailyStore[arg2].name}`, fallguys.crownIcon)
+                    .setAuthor(dailyStore[arg2].name, fallguys.crownIcon)
                     .addField("Rarity:", dailyStore[arg2].rarity, false)
                     .addField("Price:", `${dailyStore[arg2].price} ${dailyStore[arg2].currency}`, false)
                     // Why is this link returning 403 lmfao
