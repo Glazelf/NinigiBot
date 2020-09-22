@@ -20,11 +20,13 @@ module.exports.run = async (client, message) => {
                     .then(function (response) {
                         // add ability embed here
                         return console.log(response);
-                        
+
                     }).catch(function (error) {
+                        console.log(error)
                         return message.channel.send(`> Could not find the specified ability, ${message.author}.`);
                     });
                 break;
+
             case "item":
                 P.getItemByName(subArgument)
                     .then(function (response) {
@@ -32,9 +34,11 @@ module.exports.run = async (client, message) => {
                         return console.log(response);
 
                     }).catch(function (error) {
+                        console.log(error)
                         return message.channel.send(`> Could not find the specified item, ${message.author}.`);
                     });
                 break;
+
             case "move":
                 P.getMoveByName(subArgument)
                     .then(function (response) {
@@ -42,9 +46,11 @@ module.exports.run = async (client, message) => {
                         return console.log(response);
 
                     }).catch(function (error) {
+                        console.log(error)
                         return message.channel.send(`> Could not find the specified move, ${message.author}.`);
                     });
                 break;
+
             default:
                 let pokemonName = subCommand;
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
@@ -52,12 +58,49 @@ module.exports.run = async (client, message) => {
                 P.getPokemonByName(pokemonName)
                     .then(function (response) {
                         // add pkm embed here
-                        return console.log(response);
+                        console.log(response);
+
+                        pokemonName = capitalizeString(pokemonName);
+
+                        let banner = response.sprites.other["official-artwork"].front_default;
+                        if (!banner) banner = response.sprites.front_default;
+
+                        const pkmEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor(`${response.id}: ${pokemonName}`, response.sprites.front_default)
+                            .setThumbnail(response.sprites.front_shiny)
+                            .addField("Typing:", `a`, true)
+                            .addField("Stats:", `HP: ${response.stats[0].base_stat}
+                            Attack: ${response.stats[1].base_stat}
+                            Defense: ${response.stats[2].base_stat}
+                            Sp. Attack: ${response.stats[3].base_stat}
+                            Sp. Defense: ${response.stats[4].base_stat}
+                            Speed: ${response.stats[5].base_stat}`, false)
+                            .setImage(banner)
+                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setTimestamp();
+
+                        return message.channel.send(pkmEmbed)
 
                     }).catch(function (error) {
+                        console.log(error)
                         return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                     });
                 break;
+        };
+
+        function capitalizeString(str) {
+            str = str.replace("-", " ");
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                // You do not need to check if i is larger than splitStr length, as your for does that for you
+                // Assign it back to the array
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+            };
+            // Return the joined string
+            returnStr = splitStr.join(' ');
+            if (returnStr == "Type Null") returnStr = "Type: Null";
+            return returnStr;
         };
 
     } catch (e) {
