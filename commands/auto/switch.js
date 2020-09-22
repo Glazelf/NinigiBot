@@ -28,5 +28,5 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "switch",
-    aliases: ["friendcode"]
+    aliases: ["fc", "friendcode"]
 };

@@ -27,5 +27,5 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "balance",
-    aliases: ["money"]
+    aliases: ["bal", "money"]
 };
