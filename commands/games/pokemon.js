@@ -114,7 +114,7 @@ module.exports.run = async (client, message) => {
 
                         const pkmEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(`${pokemonID}: ${pokemonName}`, banner)
+                            .setAuthor(`${pokemonID}: ${pokemonName}`, icon)
                             .setThumbnail(spriteShiny)
                             .addField("Typing:", typeString, false)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
@@ -213,7 +213,6 @@ Speed: ${response.stats[5].base_stat}`, false)
                     "typeEmote": "<:fairy:758002386114707597>"
                 }
             ];
-            console.log(type1)
             let type1Emote = typeEmoteArray.find(type => type.typeName == type1).typeEmote;
             let type1Name = capitalizeString(type1);
             let typeString = `${type1Emote} ${type1Name}`;
