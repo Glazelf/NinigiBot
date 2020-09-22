@@ -56,7 +56,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
                 // edgecase corrections
-                if(pokemonName == "farfetch'd") pokemonName = "farfetchd";
+                if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
                 // "joke" name aliases
                 if (pokemonName == "smogonbird") pokemonName = "talonflame";
                 if (pokemonName == "glaze") pokemonName = "shinx";
@@ -90,6 +90,7 @@ module.exports.run = async (client, message) => {
 
                         pokemonName = capitalizeString(pokemonName);
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+                        let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`
                         let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
                         let abilityString = ``;
                         if (response.abilities[0]) {
