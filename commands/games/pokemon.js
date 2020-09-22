@@ -1,5 +1,3 @@
-const { basename } = require('path');
-
 module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
@@ -69,7 +67,7 @@ module.exports.run = async (client, message) => {
 
                         var pokemonID = leadingZeros(response.id.toString());
                         if (pokemonName.endsWith("alola")) {
-                            let baseName = pokemonName.substring(0,pokemonName.length-6);
+                            let baseName = pokemonName.substring(0, pokemonName.length - 6);
                             await P.getPokemonByName(baseName)
                                 .then(function (responseAlola) {
                                     let AlolaID = leadingZeros(responseAlola.id.toString());
@@ -85,7 +83,6 @@ module.exports.run = async (client, message) => {
                             if (response.abilities[1]) {
                                 if (response.abilities[1].is_hidden == true) {
                                     abilityString += `\n${response.abilities[1].ability.name} (Hidden)`;
-                                    abilit
                                 } else {
                                     abilityString += `\n${response.abilities[1].ability.name}`;
                                 };
@@ -97,15 +94,17 @@ module.exports.run = async (client, message) => {
                                     abilityString += `\n${response.abilities[2].ability.name}`;
                                 };
                             };
-                            abilityString = capitalizeString(abilityString);
                         };
+                        let abilityStringCapitalized = capitalizeAbilities(abilityString);
+                        // abilityStringCapitalized = abilitySplit.join('\n');
 
+                        abilityString = capitalizeString(abilityString);
                         const pkmEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(`${pokemonID}: ${pokemonName}`, banner)
                             .setThumbnail(spriteShiny)
                             .addField("Typing:", `a`, false)
-                        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityString, false)
+                        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
                         pkmEmbed
                             .addField("Stats:", `HP: ${response.stats[0].base_stat}
 Attack: ${response.stats[1].base_stat}
@@ -124,6 +123,17 @@ Speed: ${response.stats[5].base_stat}`, false)
                         return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                     });
                 break;
+        };
+
+        function capitalizeAbilities(str) {
+            let abilitySplit = str.split('\n');
+            let newArray = [];
+            for (var i = 0; i < abilitySplit.length; i++) {
+                newArray.push(capitalizeString(abilitySplit[i]));
+            };
+            capitalizedAbilities = newArray.join('\n');
+            console.log(capitalizeAbilities)
+            return capitalizedAbilities;
         };
 
         function capitalizeString(str) {
