@@ -18,6 +18,7 @@
     "lodash": "^4.17.19",
     "minimist": "^1.2.5",
     "path": "^0.12.7",
+    "pokedex-promise-v2": "^3.2.0",
     "sequelize": "^6.3.4",
     "sqlite3": "^4.2.0",
     "ytdl-core": "^3.2.2",
