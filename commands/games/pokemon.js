@@ -75,6 +75,8 @@ module.exports.run = async (client, message) => {
                         };
 
                         var pokemonID = leadingZeros(response.id.toString());
+
+                        // Fix Alola forms
                         if (pokemonName.endsWith("alola")) {
                             let baseName = pokemonName.substring(0, pokemonName.length - 6);
                             await P.getPokemonByName(baseName)
@@ -83,6 +85,7 @@ module.exports.run = async (client, message) => {
                                     pokemonID = `${AlolaID}-a`;
                                 });
                         };
+
                         pokemonName = capitalizeString(pokemonName);
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
                         let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
@@ -140,7 +143,7 @@ Speed: ${response.stats[5].base_stat}`, false)
                 },
                 {
                     "typeName": "fire",
-                    "typeEmote": "<:normal:758002386189942854>"
+                    "typeEmote": "<:fire:758008473198788628>"
                 },
                 {
                     "typeName": "fighting",
