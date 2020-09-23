@@ -19,7 +19,16 @@ module.exports.run = async (client, message) => {
                 P.getAbilityByName(subArgument)
                     .then(function (response) {
                         // add ability embed here
-                        return console.log(response);
+                        console.log(response);
+
+                        const abilityEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor(capitalizeString(response.name))
+                            .addField("Description:", response.effect_entries[0].short_effect, false)
+                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setTimestamp();
+
+                        return message.channel.send(abilityEmbed);
 
                     }).catch(function (error) {
                         console.log(error)
@@ -31,7 +40,18 @@ module.exports.run = async (client, message) => {
                 P.getItemByName(subArgument)
                     .then(function (response) {
                         // add item embed here
-                        return console.log(response);
+                        console.log(response);
+
+                        const itemEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor(capitalizeString(response.name))
+                            .setThumbnail(response.sprites.default)
+                            .addField("Category:", capitalizeString(response.category.name), false)
+                            .addField("Description:", response.effect_entries[0].short_effect, false)
+                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setTimestamp();
+
+                        return message.channel.send(itemEmbed);
 
                     }).catch(function (error) {
                         console.log(error)
@@ -43,7 +63,22 @@ module.exports.run = async (client, message) => {
                 P.getMoveByName(subArgument)
                     .then(function (response) {
                         // add move embed here
-                        return console.log(response);
+                        console.log(response);
+                        const moveEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor(capitalizeString(response.name))
+                            .addField("Type:", getTypeEmotes(response.type.name), false)
+                            .addField("Category:", capitalizeString(response.damage_class.name), true)
+                        if (response.power) moveEmbed.addField("Power:", response.power, true)
+                        if (response.accuracy) moveEmbed.addField("Accuracy:", response.accuracy, true)
+                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true)
+                        moveEmbed
+                            .addField("Target:", capitalizeString(response.target.name), false)
+                            .addField("Description:", response.effect_entries[0].effect, false)
+                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setTimestamp();
+
+                        return message.channel.send(moveEmbed);
 
                     }).catch(function (error) {
                         console.log(error)
@@ -116,7 +151,7 @@ module.exports.run = async (client, message) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(`${pokemonID}: ${pokemonName}`, icon)
                             .setThumbnail(spriteShiny)
-                            .addField("Typing:", typeString, false)
+                            .addField("Type:", typeString, false)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
                         pkmEmbed
                             .addField("Stats:", `HP: ${response.stats[0].base_stat}
