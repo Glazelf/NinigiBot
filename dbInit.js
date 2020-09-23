@@ -48,7 +48,7 @@ const syncDatabase = async () => {
 		//await Room.sync({ force: true })
 
 		const shop = [
-			CurrencyShop.upsert({ name: 'Lottery ticket', cost: 50, usage: 'allows to participate on Mondays weekly lottery' }),
+			CurrencyShop.upsert({ name: 'Lottery Ticket', cost: 50, usage: 'allows you to participate in the weekly lottery.' }),
 
 			Equipments.upsert({ name: 'Choice Band', cost: 1500, food: 0.5, sleep: -0.1 }),
 			Equipments.upsert({ name: 'Focus Sash', cost: 1500, guard: true }),
