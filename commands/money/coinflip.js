@@ -12,6 +12,7 @@ exports.run = (client, message) => {
         const input = message.content.split(` `);
         let inputText = "";
         if (input[1]) inputText = input[1].toLowerCase();
+        // Shortcuts
         if (inputText == "quarter") input[1] = balance / 4;
         if (inputText == "half") input[1] = balance / 2;
         if (inputText == "all") input[1] = balance;
@@ -26,31 +27,31 @@ exports.run = (client, message) => {
         };
 
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
-        
-        //Coinflip insults
-        let textArray = [
-            "absolute disappointment",
-            "scrawny emo loser",
-            "useless cum guzzler",
-            "loli hentai connoisseur",
-            "utter disgrace",
-            "repulsive mouthbreather",
-            "idiot sandwich",
-            "low testosterone e-boy",
-            "anime god",
-            "beta liberal",
-            "submissive manlet",
-            "bootleg gloryhole",
-            "small dick brian",
-            "sjw soy cuck",
-            "living fleshlight"
-        ];
 
-        let randomIndex = Math.floor(Math.random() * textArray.length);
-        let randomElement = textArray[randomIndex];
-        
-        // Coinflip randomization
+        // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
+            // Loss insults
+            let textArray = [
+                "absolute disappointment",
+                "scrawny emo loser",
+                "useless cum guzzler",
+                "loli hentai connoisseur",
+                "utter disgrace",
+                "repulsive mouthbreather",
+                "idiot sandwich",
+                "low testosterone e-boy",
+                "anime god",
+                "beta liberal",
+                "submissive manlet",
+                "bootleg gloryhole",
+                "small dick brian",
+                "sjw soy cuck",
+                "living fleshlight"
+            ];
+
+            let randomIndex = Math.floor(Math.random() * textArray.length);
+            let randomElement = textArray[randomIndex];
+
             returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}, you ${randomElement}.`;
             amount = Math.abs(amount) * -1;
         };
