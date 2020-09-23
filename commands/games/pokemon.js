@@ -18,9 +18,6 @@ module.exports.run = async (client, message) => {
             case "ability":
                 P.getAbilityByName(subArgument)
                     .then(function (response) {
-                        // add ability embed here
-                        console.log(response);
-
                         const abilityEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
@@ -62,8 +59,6 @@ module.exports.run = async (client, message) => {
             case "move":
                 P.getMoveByName(subArgument)
                     .then(function (response) {
-                        // add move embed here
-                        console.log(response);
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
@@ -99,9 +94,6 @@ module.exports.run = async (client, message) => {
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
-                        // add pkm embed here
-                        console.log(response);
-
                         let typeString = "";
                         let type1 = response.types[0].type.name;
                         if (response.types[1]) {
