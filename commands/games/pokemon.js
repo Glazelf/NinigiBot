@@ -36,9 +36,6 @@ module.exports.run = async (client, message) => {
             case "item":
                 P.getItemByName(subArgument)
                     .then(function (response) {
-                        // add item embed here
-                        console.log(response);
-
                         const itemEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
