@@ -9,7 +9,7 @@ module.exports = async (client) => {
     const channelID = globalVars.eventChannelID;
     const Discord = require("discord.js");
     const { bank } = require('../database/bank');
-    const { search } = require('../gifs/search');
+    const { search } = require('../util/search');
     const { UserItems } = require('../database/dbObjects');
     const { CurrencyShop } = require('../database/dbObjects');
 

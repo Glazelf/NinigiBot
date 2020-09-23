@@ -1,6 +1,6 @@
-const pokemon = require('./pokemon.json');
-const reactions = require('./reactions.json');
-const others = require('./others.json');
+const pokemon = require('../objects/gifs/pokemon.json');
+const reactions = require('../objects/gifs/reactions.json');
+const others = require('../objects/gifs/others.json');
 
 Array.prototype.pick = function () {
     return this[Math.floor(Math.random() * this.length)];
