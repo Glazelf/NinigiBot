@@ -32,21 +32,15 @@ exports.run = (client, message) => {
         if (Math.random() >= 0.5) {
             // Loss insults
             let textArray = [
-                "absolute disappointment",
-                "scrawny emo loser",
-                "useless cum guzzler",
-                "loli hentai connoisseur",
-                "utter disgrace",
-                "repulsive mouthbreather",
+                "idiot",
                 "idiot sandwich",
-                "low testosterone e-boy",
+                "loser",
+                "moron",
+                "disgrace",
                 "anime god",
-                "beta liberal",
-                "submissive manlet",
-                "bootleg gloryhole",
-                "small dick brian",
-                "sjw soy cuck",
-                "living fleshlight"
+                "weeb",
+                "pauper",
+                "manlet"
             ];
 
             let randomIndex = Math.floor(Math.random() * textArray.length);
