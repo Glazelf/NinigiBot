@@ -26,10 +26,32 @@ exports.run = (client, message) => {
         };
 
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
+        
+        //Coinflip insults
+        let textArray = [
+            "absolute disappointment",
+            "scrawny emo loser",
+            "useless cum guzzler",
+            "loli hentai connoisseur",
+            "utter disgrace",
+            "repulsive mouthbreather",
+            "idiot sandwich",
+            "low testosterone e-boy",
+            "anime god",
+            "beta liberal",
+            "submissive manlet",
+            "bootleg gloryhole",
+            "small dick brian",
+            "sjw soy cuck",
+            "living fleshlight"
+        ];
 
+        let randomIndex = Math.floor(Math.random() * textArray.length);
+        let randomElement = textArray[randomIndex];
+        
         // Coinflip randomization
         if (Math.random() >= 0.5) {
-            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}.`;
+            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}, you ${randomElement}.`;
             amount = Math.abs(amount) * -1;
         };
 
