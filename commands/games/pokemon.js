@@ -79,9 +79,6 @@ module.exports.run = async (client, message) => {
                 break;
 
             default:
-                // Log for testing, remove later
-                console.log(response);
-
                 let pokemonName = subCommand;
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
@@ -94,6 +91,8 @@ module.exports.run = async (client, message) => {
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
+                        // Log for testing, remove later
+                        console.log(response);
                         let typeString = "";
                         let type1 = response.types[0].type.name;
                         if (response.types[1]) {
@@ -166,86 +165,13 @@ Speed: ${response.stats[5].base_stat}`, false)
         };
 
         function getTypeEmotes(type1, type2) {
-            let typeEmoteArray = [
-                {
-                    "typeName": "normal",
-                    "typeEmote": "<:normal:758002386189942854>"
-                },
-                {
-                    "typeName": "fire",
-                    "typeEmote": "<:fire:758008473198788628>"
-                },
-                {
-                    "typeName": "fighting",
-                    "typeEmote": "<:fighting:758002386370560041>"
-                },
-                {
-                    "typeName": "water",
-                    "typeEmote": "<:water:758002386110513183>"
-                },
-                {
-                    "typeName": "flying",
-                    "typeEmote": "<:flying:758002385879564380>"
-                },
-                {
-                    "typeName": "grass",
-                    "typeEmote": "<:grass:758002386081153104>"
-                },
-                {
-                    "typeName": "poison",
-                    "typeEmote": "<:poison:758002386148130886>"
-                },
-                {
-                    "typeName": "electric",
-                    "typeEmote": "<:electric:758002386165039114>"
-                },
-                {
-                    "typeName": "ground",
-                    "typeEmote": "<:ground:758002386035015890>"
-                },
-                {
-                    "typeName": "psychic",
-                    "typeEmote": "<:psychic:758002386026627163>"
-                },
-                {
-                    "typeName": "rock",
-                    "typeEmote": "<:rock:758002386047598612>"
-                },
-                {
-                    "typeName": "ice",
-                    "typeEmote": "<:ice:758002385909186561>"
-                },
-                {
-                    "typeName": "bug",
-                    "typeEmote": "<:bug:758002386005655632>"
-                },
-                {
-                    "typeName": "dragon",
-                    "typeEmote": "<:dragon:758002386496127016>"
-                },
-                {
-                    "typeName": "ghost",
-                    "typeEmote": "<:ghost:758002386047467570>"
-                },
-                {
-                    "typeName": "dark",
-                    "typeEmote": "<:dark:758002385829363798>"
-                },
-                {
-                    "typeName": "steel",
-                    "typeEmote": "<:steel:758008473211502673>"
-                },
-                {
-                    "typeName": "fairy",
-                    "typeEmote": "<:fairy:758002386114707597>"
-                }
-            ];
-            let type1Emote = typeEmoteArray.find(type => type.typeName == type1).typeEmote;
+            const typeEmoteList = require('../../objects/pokemonTypes.json');
+            let type1Emote = typeEmoteList[type1];
             let type1Name = capitalizeString(type1);
             let typeString = `${type1Emote} ${type1Name}`;
             if (type2) {
-                type2Emote = typeEmoteArray.find(type => type.typeName == type2).typeEmote;
-                type2Name = capitalizeString(type2);
+                let type2Emote = typeEmoteList[type2];
+                let type2Name = capitalizeString(type2);
                 typeString = `${typeString} / ${type2Emote} ${type2Name}`;
             };
             return typeString;
