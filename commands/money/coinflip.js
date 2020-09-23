@@ -12,6 +12,7 @@ exports.run = (client, message) => {
         const input = message.content.split(` `);
         let inputText = "";
         if (input[1]) inputText = input[1].toLowerCase();
+        // Shortcuts
         if (inputText == "quarter") input[1] = balance / 4;
         if (inputText == "half") input[1] = balance / 2;
         if (inputText == "all") input[1] = balance;
@@ -27,9 +28,25 @@ exports.run = (client, message) => {
 
         let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
 
-        // Coinflip randomization
+        // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}.`;
+            // Loss insults
+            let textArray = [
+                "idiot",
+                "idiot sandwich",
+                "loser",
+                "moron",
+                "disgrace",
+                "anime god",
+                "weeb",
+                "pauper",
+                "manlet"
+            ];
+
+            let randomIndex = Math.floor(Math.random() * textArray.length);
+            let randomElement = textArray[randomIndex];
+
+            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}, you ${randomElement}.`;
             amount = Math.abs(amount) * -1;
         };
 
