@@ -116,14 +116,17 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
 
-                        const alolaBool = pokemonName.endsWith("alola");
-                        const megaBool = pokemonName.endsWith("mega");
-                        const primalBool = pokemonName.endsWith("primal");
+                        const alolaString =  "-alola";
+                        const megaString = "-mega";
+                        const primalString = "-primal";
+                        const alolaBool = pokemonName.endsWith(alolaString);
+                        const megaBool = pokemonName.endsWith(megaString);
+                        const primalBool = pokemonName.endsWith(primalString);
                         let formLength;
 
                         // Catch other forms
                         if (alolaBool) {
-                            formLength = 6;
+                            formLength = alolaString.length;
                             let baseName = pokemonName.substring(0, pokemonName.length - formLength);
                             await P.getPokemonByName(baseName)
                                 .then(function (responseAlola) {
@@ -136,8 +139,8 @@ module.exports.run = async (client, message) => {
                                 });
                         };
                         if (megaBool || primalBool) {
-                            if (megaBool) formLength = 5;
-                            if (primalBool) formLength = 7;
+                            if (megaBool) formLength = megaString.length;
+                            if (primalBool) formLength = primalString.length;
                             let baseName = pokemonName.substring(0, pokemonName.length - formLength);
                             await P.getPokemonByName(baseName)
                                 .then(function (responseMega) {
