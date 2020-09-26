@@ -82,7 +82,9 @@ module.exports.run = async (client, message) => {
                 let pokemonName = subCommand;
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
-                // edgecase corrections
+                // edgecase name corrections
+                if (pokemonName == "giratina") pokemonName = "giratina-altered";
+                if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
                 if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
                 // "joke" name aliases
                 if (pokemonName == "smogonbird") pokemonName = "talonflame";
@@ -103,16 +105,46 @@ module.exports.run = async (client, message) => {
                         };
 
                         var pokemonID = leadingZeros(response.id.toString());
+                        // edgecase ID corrections
+                        if (pokemonName == "giratina-origin") pokemonID = "487-o";
+                        if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
+                        if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
 
-                        // Fix Alola forms
-                        if (pokemonName.endsWith("alola")) {
-                            let baseName = pokemonName.substring(0, pokemonName.length - 6);
+                        const alolaBool = pokemonName.endsWith("alola");
+                        const megaBool = pokemonName.endsWith("mega");
+                        const primalBool = pokemonName.endsWith("primal");
+                        let formLength;
+
+                        // Catch other forms
+                        if (alolaBool) {
+                            formLength = 6;
+                            let baseName = pokemonName.substring(0, pokemonName.length - formLength);
                             await P.getPokemonByName(baseName)
                                 .then(function (responseAlola) {
                                     let AlolaID = leadingZeros(responseAlola.id.toString());
                                     pokemonID = `${AlolaID}-a`;
+                                })
+                                .catch(function (error) {
+                                    console.log(error)
+                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                                 });
                         };
+
+                        if (megaBool || primalBool) {
+                            if(megaBool) formLength = 5;
+                            if(primalBool) formLength = 7;
+                            let baseName = pokemonName.substring(0, pokemonName.length - formLength);
+                            await P.getPokemonByName(baseName)
+                                .then(function (responseMega) {
+                                    let MegaID = leadingZeros(responseMega.id.toString());
+                                    pokemonID = `${MegaID}-m`;
+                                })
+                                .catch(function (error) {
+                                    console.log(error)
+                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                                });
+                        };
+                        
 
                         pokemonName = capitalizeString(pokemonName);
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
@@ -140,7 +172,7 @@ module.exports.run = async (client, message) => {
 
                         const pkmEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(`${pokemonID}: ${pokemonName}`, icon)
+                            .setAuthor(`${pokemonID.toUpperCase()}: ${pokemonName}`, icon)
                             .setThumbnail(spriteShiny)
                             .addField("Type:", typeString, false)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
