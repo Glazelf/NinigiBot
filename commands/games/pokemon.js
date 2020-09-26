@@ -106,7 +106,13 @@ module.exports.run = async (client, message) => {
 
                         var pokemonID = leadingZeros(response.id.toString());
                         // edgecase ID corrections
+                        if (pokemonName == "charizard-mega-x") pokemonID = "006-mx";
+                        if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
+                        if (pokemonName == "mewtwo-mega-x") pokemonID = "150-mx";
+                        if (pokemonName == "mewtwo-mega-y") pokemonID = "150-my";
                         if (pokemonName == "giratina-origin") pokemonID = "487-o";
+                        if (pokemonName == "kyurem-black") pokemonID = "646-b";
+                        if (pokemonName == "kyurem-white") pokemonID = "646-w";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
 
@@ -129,10 +135,9 @@ module.exports.run = async (client, message) => {
                                     return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                                 });
                         };
-
                         if (megaBool || primalBool) {
-                            if(megaBool) formLength = 5;
-                            if(primalBool) formLength = 7;
+                            if (megaBool) formLength = 5;
+                            if (primalBool) formLength = 7;
                             let baseName = pokemonName.substring(0, pokemonName.length - formLength);
                             await P.getPokemonByName(baseName)
                                 .then(function (responseMega) {
@@ -144,9 +149,7 @@ module.exports.run = async (client, message) => {
                                     return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                                 });
                         };
-                        
 
-                        pokemonName = capitalizeString(pokemonName);
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
                         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`
                         let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
@@ -168,6 +171,7 @@ module.exports.run = async (client, message) => {
                                 };
                             };
                         };
+                        pokemonName = capitalizeString(pokemonName);
                         let abilityStringCapitalized = capitalizeAbilities(abilityString);
 
                         const pkmEmbed = new Discord.MessageEmbed()
@@ -220,8 +224,7 @@ Speed: ${response.stats[5].base_stat}`, false)
         };
 
         function capitalizeString(str) {
-            str = str.replace("-", " ");
-            var splitStr = str.split(' ');
+            var splitStr = str.split('-');
             for (var i = 0; i < splitStr.length; i++) {
                 // You do not need to check if i is larger than splitStr length, as your for does that for you
                 // Assign it back to the array
