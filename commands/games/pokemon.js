@@ -108,7 +108,7 @@ module.exports.run = async (client, message) => {
                         };
 
                         var pokemonID = leadingZeros(response.id.toString());
-                        // edgecase ID corrections
+                        // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
                         if (pokemonName == "charizard-mega-x") pokemonID = "006-mx";
                         if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
                         if (pokemonName == "mewtwo-mega-x") pokemonID = "150-mx";
@@ -223,7 +223,7 @@ Speed: ${response.stats[5].base_stat}`, false)
         };
 
         function getTypeEmotes(type1, type2) {
-            const typeEmoteList = require('../../objects/pokemonTypes.json');
+            const typeEmoteList = require('../../objects/pokemon/typeEmotes.json');
             let type1Emote = typeEmoteList[type1];
             let type1Name = capitalizeString(type1);
             let typeString = `${type1Emote} ${type1Name}`;
