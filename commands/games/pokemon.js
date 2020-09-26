@@ -83,9 +83,12 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
                 // edgecase name corrections
+                if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
+                if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
-                if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
+                if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
+                if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
                 // "joke" name aliases
                 if (pokemonName == "smogonbird") pokemonName = "talonflame";
                 if (pokemonName == "glaze") pokemonName = "shinx";
@@ -110,11 +113,27 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
                         if (pokemonName == "mewtwo-mega-x") pokemonID = "150-mx";
                         if (pokemonName == "mewtwo-mega-y") pokemonID = "150-my";
+                        if (pokemonName == "deoxys-attack") pokemonID = "386-a";
+                        if (pokemonName == "deoxys-defense") pokemonID = "386-d";
+                        if (pokemonName == "deoxys-speed") pokemonID = "386-s";
+                        if (pokemonName == "rotom-fan") pokemonID = "479-s";
+                        if (pokemonName == "rotom-frost") pokemonID = "479-f";
+                        if (pokemonName == "rotom-heat") pokemonID = "479-h";
+                        if (pokemonName == "rotom-mow") pokemonID = "479-m";
+                        if (pokemonName == "rotom-wash") pokemonID = "479-w";
                         if (pokemonName == "giratina-origin") pokemonID = "487-o";
+                        if (pokemonName == "shaymin-sky") pokemonID = "492-s";
+                        if (pokemonName == "tornadus-therian") pokemonID = "641-s";
+                        if (pokemonName == "thundurus-therian") pokemonID = "642-s";
+                        if (pokemonName == "landorus-therian") pokemonID = "645-s";
                         if (pokemonName == "kyurem-black") pokemonID = "646-b";
                         if (pokemonName == "kyurem-white") pokemonID = "646-w";
+                        if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
+                        if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
+                        if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
+                        if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
 
                         const alolaString = "-alola";
                         const megaString = "-mega";
