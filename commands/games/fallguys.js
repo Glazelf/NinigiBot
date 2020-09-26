@@ -42,8 +42,8 @@ module.exports.run = async (client, message) => {
                 const dailyEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor("PC Featured Store:", fallguys.crownIcon)
-                    .addField(`${dailyStore[0].name} Top`, `${dailyStore[0].rarity} item for ${dailyStore[0].price} ${dailyStore[0].currency} `, false)
-                    .addField(`${dailyStore[1].name} Bottom`, `${dailyStore[1].rarity} item for ${dailyStore[1].price} ${dailyStore[1].currency} `, false)
+                    .addField(`${dailyStore[0].name}`, `${dailyStore[0].rarity} item for ${dailyStore[0].price} ${dailyStore[0].currency} `, false)
+                    .addField(`${dailyStore[1].name}`, `${dailyStore[1].rarity} item for ${dailyStore[1].price} ${dailyStore[1].currency} `, false)
                     .addField(dailyStore[2].name, `${dailyStore[2].rarity} item for ${dailyStore[2].price} ${dailyStore[2].currency}`, false)
                     // Sadly articles aren't properly maintained, just returns 1.1 patchnotes banner
                     // .setImage(articles.articles[0].thumbnail)

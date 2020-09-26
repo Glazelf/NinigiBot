@@ -116,7 +116,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
 
-                        const alolaString =  "-alola";
+                        const alolaString = "-alola";
                         const megaString = "-mega";
                         const primalString = "-primal";
                         const alolaBool = pokemonName.endsWith(alolaString);
