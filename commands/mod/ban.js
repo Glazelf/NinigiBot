@@ -11,6 +11,8 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
         if (!member || !user) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
 
+        let userTag = user.tag;
+
         if (!member.bannable) return message.channel.send(`> I lack the required permission to ban the specified member, ${message.author}.`);
 
         let reason = "Not specified.";
@@ -20,7 +22,7 @@ module.exports.run = async (client, message) => {
         };
 
         await member.ban({ days: 0, reason: reason });
-        await message.channel.send(`> Successfully kicked ${args[1]} for the following reason: \`${reason}\`, ${message.author}.`);
+        await message.channel.send(`> Successfully kicked ${userTag} for the following reason: \`${reason}\`, ${message.author}.`);
         try {
             return user.send(`> You've been banned for the following reason: \`${reason}\``);
         } catch (e) {
