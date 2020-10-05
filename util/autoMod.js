@@ -50,18 +50,26 @@ module.exports = async (message) => {
     // };
 
     function kick() {
-        message.delete();
-        message.member.kick([reason]);
-        message.author.send(`> You've been autokicked for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``);
-        return message.channel.send(`> Successfully autokicked ${message.author} for the following reason: \`${reason}\``);
+        await message.delete();
+        await message.member.kick([reason]);
+        await message.channel.send(`> Successfully autokicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
+        try {
+            return message.author.send(`> You've been autokicked for the following reason: \`${reason}\`
+        \`\`\`${message.content}\`\`\``);
+        } catch (e) {
+            return;
+        };
     };
 
     function ban() {
-        message.member.ban({ days: 1, reason: reason });
-        message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``);
-        return message.channel.send(`> Successfully autobanned ${message.author} for the following reason: \`${reason}\``);
+        await message.member.ban({ days: 1, reason: reason });
+        await message.channel.send(`> Successfully autobanned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
+        try {
+            return message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
+            \`\`\`${message.content}\`\`\``);
+        } catch (e) {
+            return;
+        };
     };
 
     function test() {
