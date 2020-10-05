@@ -49,7 +49,7 @@ module.exports = async (message) => {
     //     test()
     // };
 
-    function kick() {
+    async function kick() {
         await message.delete();
         await message.member.kick([reason]);
         await message.channel.send(`> Successfully autokicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
@@ -61,7 +61,7 @@ module.exports = async (message) => {
         };
     };
 
-    function ban() {
+    async function ban() {
         await message.member.ban({ days: 1, reason: reason });
         await message.channel.send(`> Successfully autobanned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
         try {
