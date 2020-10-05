@@ -20,8 +20,12 @@ module.exports.run = async (client, message) => {
         };
 
         await member.ban({ days: 0, reason: reason });
-        await user.send(`> You've been banned for the following reason: \`${reason}\``);
-        return message.channel.send(`> Successfully kicked ${args[1]} for the following reason: \`${reason}\`, ${message.author}.`);
+        await message.channel.send(`> Successfully kicked ${args[1]} for the following reason: \`${reason}\`, ${message.author}.`);
+        try {
+            return user.send(`> You've been banned for the following reason: \`${reason}\``);
+        } catch (e) {
+            return;
+        };
 
     } catch (e) {
         // log error
