@@ -11,7 +11,7 @@ module.exports = async (client, message, oldMessage) => {
 
         if (!message) return;
         if (!message.author) return;
-        if (message.content == "") return;
+        if (!message.content.length > 1) return;
         if (message.content === oldMessage.content) return;
 
         if (!log) return;

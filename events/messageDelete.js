@@ -10,9 +10,6 @@ module.exports = async (client, message) => {
 
         if (!message) return;
         if (!message.author) return;
-        if (!message.content) {
-            message.content = "None";
-        };
 
         let avatar = null;
         if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
@@ -21,7 +18,8 @@ module.exports = async (client, message) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Message deleted ❌`, avatar)
             .setDescription(`Message sent by ${message.author} deleted from ${message.channel}.`)
-            .addField(`Content:`, message.content, false)
+        if (message.content.length > 0) deleteEmbed.addField(`Content:`, message.content, false)
+        deleteEmbed
             .setTimestamp();
 
         globalVars.totalLogs += 1;
