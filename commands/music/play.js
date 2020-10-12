@@ -14,14 +14,16 @@ exports.run = async (client, message) => {
         // Read out message arguments
         const args = message.content.split(` `);
 
-        if (!args[1]) return message.channel.send(`> You need to provide a link to play, ${message.author}.`);
+        let argument = args[1];
+        if (argument.startsWith("<") && argument.endsWith(">")) argument = argument.slice(1, -1);
+        if (!argument) return message.channel.send(`> You need to provide a link to play, ${message.author}.`);
 
         // Get user's voice channel
         const voiceConnection = await message.member.voice.channel;
         if (!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
 
         // Check if input is a valid yt video
-        let youtubeLink = args[1].toString();
+        let youtubeLink = argument.toString();
         if (!youtubeLink.startsWith("https://www.youtube.com/watch?v=") && !youtubeLink.startsWith("https://youtu.be/")) return message.channel.send(`> The text you entered isn't a valid Youtube link, ${message.author}.`);
 
         // Run play with the provided channel and url
