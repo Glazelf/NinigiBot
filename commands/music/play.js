@@ -27,7 +27,7 @@ exports.run = async (client, message) => {
         // Run play with the provided channel and url
         voiceConnection.join().then(async connection => {
             play(connection, youtubeLink);
-            await message.channel.send(`> Now playing for ${message.author}!`);
+            await message.channel.send(`> Now playing <${youtubeLink}> for ${message.author}!`);
         });
 
     } catch (e) {
