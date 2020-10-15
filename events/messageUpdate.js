@@ -1,4 +1,6 @@
-module.exports = async (client, message, oldMessage) => {
+const { update } = require("lodash");
+
+module.exports = async (client, message, newMessage) => {
     try {
         const Discord = require("discord.js");
 
@@ -11,8 +13,7 @@ module.exports = async (client, message, oldMessage) => {
 
         if (!message) return;
         if (!message.author) return;
-        if (!message.content.length > 1) return;
-        if (message.content === oldMessage.content) return;
+        if (message.content === newMessage.content) return;
 
         if (!log) return;
 
@@ -26,9 +27,9 @@ module.exports = async (client, message, oldMessage) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Message edited ⚒️`, avatar)
             .setDescription(`Message sent by ${message.author} edited in ${message.channel}.`)
-            //Why does oldMessage return the newMessage, does newMessage not exist and does message return the old message?
-            .addField(`Before:`, message.content, false)
-            .addField(`After:`, oldMessage.content, false)
+        if (message.content) updateEmbed.addField(`Before:`, message.content, false)
+        updateEmbed
+            .addField(`After:`, newMessage.content, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setTimestamp();
