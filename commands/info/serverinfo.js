@@ -15,6 +15,7 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
+        let nitroEmote = "<:nitroboost:753268592081895605>";
 
         function checkDays(date) {
             let now = new Date();
@@ -67,10 +68,11 @@ module.exports.run = async (client, message) => {
             .addField("ID:", guild.id, true)
             .addField("Members:", realMembers, true)
             .addField("Online members:", onlineMembers, true)
-            .addField("Bots:", bots, true)
+            .addField("Bots:", `${bots} 🤖`, true)
             .addField("Channels:", guild.channels.cache.size, true)
             .addField("Roles:", guild.roles.cache.size, true)
-        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}<:nitroboost:753268592081895605>`, true)
+            .addField("Emotes:", `${guild.emojis.cache.size} 😳`, true)
+        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true)
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)
@@ -88,5 +90,5 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["server"]
+    aliases: ["server", "guild", "guildinfo"]
 };
