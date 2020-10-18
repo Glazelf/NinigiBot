@@ -1,6 +1,6 @@
 exports.run = (client, message) => {
     // Import globals
-    let globalVars = require('../events/ready');
+    let globalVars = require('../../events/ready');
     try {
         if (message.author.id !== client.config.ownerID) {
             return message.channel.send(globalVars.lackPerms)
