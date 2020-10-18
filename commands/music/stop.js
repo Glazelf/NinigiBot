@@ -1,5 +1,7 @@
 exports.run = async (client, message) => {
     try {
+        // Disable music commands for now because they're a buggy mess I don't feel like patching up
+        return;
         const voiceConnection = await message.member.voice.channel;
         if(!voiceConnection) return message.channel.send(`> You need to be in a voice channel to use music commands, ${message.author}.`);
 

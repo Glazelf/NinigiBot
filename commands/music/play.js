@@ -1,5 +1,7 @@
 exports.run = async (client, message) => {
     try {
+        // Disable music commands for now because they're a buggy mess I don't feel like patching up
+        return;
         const ytdl = require('ytdl-core-discord');
 
         // Prepare play function so that it only requires a voice channel and url as arguments
