@@ -120,7 +120,7 @@ module.exports.run = async (client, message) => {
             .setThumbnail(avatar)
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true)
-            .addField("Balance:", userBalance, true)
+        if (!user.bot) profileEmbed.addField("Balance:", userBalance, true)
         if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
