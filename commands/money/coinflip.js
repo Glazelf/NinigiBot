@@ -30,23 +30,7 @@ exports.run = (client, message) => {
 
         // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            // Loss insults
-            let textArray = [
-                "idiot",
-                "idiot sandwich",
-                "loser",
-                "moron",
-                "disgrace",
-                "anime god",
-                "weeb",
-                "pauper",
-                "manlet"
-            ];
-
-            let randomIndex = Math.floor(Math.random() * textArray.length);
-            let randomElement = textArray[randomIndex];
-
-            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}, you ${randomElement}.`;
+            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
