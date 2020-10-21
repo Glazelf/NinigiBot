@@ -18,7 +18,7 @@ exports.run = (client, message) => {
 
         targetUser = client.users.cache.get(userID);
         if (!targetUser) {
-            return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, ${message.author}`);
+            return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, ${message.author}.`);
         };
 
         targetUser.send(remoteMessage);

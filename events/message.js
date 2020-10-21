@@ -29,29 +29,18 @@ module.exports = async (client, message) => {
     // Add message count
     globalVars.totalMessages += 1;
 
+    // Call image
+    let messageImage = null;
+    if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
       if (message.content.indexOf(globalVars.prefix) == 0) {
         message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`).catch(console.error);
       };
 
-      let AttachmentString = `None`;
-      let Attachment = (message.attachments).array();
-      if (message.attachments.size > 0) {
-        let AttachmentString = ``;
-        forEach(Attachment)
-        AttachmentString = `${AttachmentString}
-${Attachment.url}`;
-      };
-
-      if (!message.content) {
-        message.content = `None`;
-      };
-
       // Send message contents to dm channel
       let DMChannel = client.channels.cache.get(client.config.devChannelID);
-      let messageImage = null;
-      if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
       let avatar = null;
       if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
@@ -62,7 +51,8 @@ ${Attachment.url}`;
         .setThumbnail(avatar)
         .addField(`Author Account:`, message.author, false)
         .addField(`Author ID:`, message.author.id, false)
-        .addField(`Message content:`, message.content, false)
+      if (message.content) dmEmbed.addField(`Message content:`, message.content, false)
+      dmEmbed
         .setImage(messageImage)
         .setFooter(`DM passed through by ${client.user.tag}.`)
         .setTimestamp();
@@ -80,8 +70,6 @@ ${Attachment.url}`;
         if (!collected.first()) return;
         if (collected.first().count == globalVars.starboardLimit) {
           if (message.channel !== starboard) {
-            let messageImage = null;
-            if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
             if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
 
