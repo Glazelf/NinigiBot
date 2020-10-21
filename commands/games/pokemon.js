@@ -90,6 +90,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
                 if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
+                if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
                 if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
@@ -133,6 +134,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "kyurem-black") pokemonID = "646-b";
                         if (pokemonName == "kyurem-white") pokemonID = "646-w";
                         if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
+                        if (pokemonName == "rockruff-own-tempo") pokemonID = "744";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
