@@ -18,17 +18,21 @@ module.exports.run = async (client, message) => {
             case "ability":
                 P.getAbilityByName(subArgument)
                     .then(function (response) {
+                        // Why are german entries still tagged as English?
+                        // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
+                        // English entries always seem to be either the only or the last entry, so this should work. For now.
+                        let englishEntry = response.effect_entries[response.effect_entries.length - 1];
                         const abilityEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
-                            .addField("Description:", response.effect_entries[0].short_effect, false)
+                            .addField("Description:", englishEntry.short_effect, false)
                             .setFooter(`Requested by ${message.author.tag}`)
                             .setTimestamp();
 
                         return message.channel.send(abilityEmbed);
 
                     }).catch(function (error) {
-                        console.log(error)
+                        console.log(error);
                         return message.channel.send(`> Could not find the specified ability, ${message.author}.`);
                     });
                 break;
@@ -48,7 +52,7 @@ module.exports.run = async (client, message) => {
                         return message.channel.send(itemEmbed);
 
                     }).catch(function (error) {
-                        console.log(error)
+                        console.log(error);
                         return message.channel.send(`> Could not find the specified item, ${message.author}.`);
                     });
                 break;
@@ -73,7 +77,7 @@ module.exports.run = async (client, message) => {
                         return message.channel.send(moveEmbed);
 
                     }).catch(function (error) {
-                        console.log(error)
+                        console.log(error);
                         return message.channel.send(`> Could not find the specified move, ${message.author}.`);
                     });
                 break;
