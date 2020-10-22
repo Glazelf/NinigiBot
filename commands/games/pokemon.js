@@ -92,6 +92,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
                 if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
+                if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
                 if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
                 // "joke" name aliases
@@ -137,6 +138,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "rockruff-own-tempo") pokemonID = "744";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
                         if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
+                        if (pokemonName == "mimikyu-busted") pokemonID = "778";
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
                         if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
                         if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
