@@ -99,6 +99,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "smogonbird") pokemonName = "talonflame";
                 if (pokemonName == "glaze") pokemonName = "shinx";
                 if (pokemonName == "joris") pokemonName = "charjabug";
+                if (pokemonName == "zora") pokemonName = "turtwig";
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
@@ -208,6 +209,11 @@ module.exports.run = async (client, message) => {
                                 };
                             };
                         };
+
+                        //simplify pokemonNames 
+                        if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
+                        if (pokemonName == "mimikyu-busted") pokemonName = "mimikyu";
+
                         pokemonName = capitalizeString(pokemonName);
                         let abilityStringCapitalized = capitalizeAbilities(abilityString);
 
