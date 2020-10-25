@@ -7,44 +7,20 @@ module.exports.run = async (client, message) => {
         let Konohana = client.users.cache.get(sysbotID);
         let Ribbot = client.users.cache.get(ACNHbotID);
 
-        let KonohanaStatus = "Offline";
-        let queueStatus = "Closed";
+        let KonohanaStatus = "Online";
+        let RibbotStatus = "Online";
 
         if (message.guild.id !== client.config.botServerID) {
             return;
         };
 
-        switch (Konohana.presence.status) {
-            case "online":
-                KonohanaStatus = "Online";
-                queueStatus = "Open";
-                break;
-            case "idle":
-                KonohanaStatus = "Online";
-                queueStatus = "Open";
-                break;
-            case "dnd":
-                KonohanaStatus = "Online";
-                break;
-        };
+        if (Konohana.presence.status == "offline") KonohanaStatus = "Offline";
 
-        let RibbotStatus = "Offline";
-
-        switch (Ribbot.presence.status) {
-            case "online":
-                RibbotStatus = "Online";
-                break;
-            case "idle":
-                RibbotStatus = "Online";
-                break;
-            case "dnd":
-                Ribbotstatus = "Online";
-                break;
-        };
+        if (Ribbot.presence.status == "offline") RibbotStatus = "Offline";
 
         return message.channel.send(`> Hey, ${message.author}.
-> ${Konohana} is currently **${KonohanaStatus}** and queue is currently **${queueStatus}**!
-> ${Ribbot} is currently **${RibbotStatus}**!
+> ${Konohana} (Pokémon Bot) is currently **${KonohanaStatus}**!
+> ${Ribbot} (ACNH Bot) is currently **${RibbotStatus}**!
 > Check the pins in <#${globalVars.botChannelID}> for more information, including a FAQ and more!`);
 
     } catch (e) {
