@@ -2,6 +2,10 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        if (message.guild.id !== client.config.botServerID) {
+            return;
+        };
+
         let sysbotID = `696086046685003786`;
         let ACNHbotID = "739823632267608135";
         let Konohana = client.users.cache.get(sysbotID);
@@ -9,10 +13,6 @@ module.exports.run = async (client, message) => {
 
         let KonohanaStatus = "Online";
         let RibbotStatus = "Online";
-
-        if (message.guild.id !== client.config.botServerID) {
-            return;
-        };
 
         if (Konohana.presence.status == "offline") KonohanaStatus = "Offline";
 
