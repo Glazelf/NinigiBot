@@ -90,6 +90,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
                 if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
+                if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
                 if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
                 if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
@@ -120,6 +121,9 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
                         if (pokemonName == "mewtwo-mega-x") pokemonID = "150-mx";
                         if (pokemonName == "mewtwo-mega-y") pokemonID = "150-my";
+                        if (pokemonName == "castform-sunny") pokemonID = "351-s";
+                        if (pokemonName == "castform-rainy") pokemonID = "351-r";
+                        if (pokemonName == "castform-snowy") pokemonID = "351-i";
                         if (pokemonName == "deoxys-attack") pokemonID = "386-a";
                         if (pokemonName == "deoxys-defense") pokemonID = "386-d";
                         if (pokemonName == "deoxys-speed") pokemonID = "386-s";
