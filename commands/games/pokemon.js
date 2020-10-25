@@ -135,6 +135,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "landorus-therian") pokemonID = "645-s";
                         if (pokemonName == "kyurem-black") pokemonID = "646-b";
                         if (pokemonName == "kyurem-white") pokemonID = "646-w";
+                        if (pokemonName == "keldeo-resolute") pokemonID = "647-r";
                         if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
                         if (pokemonName == "rockruff-own-tempo") pokemonID = "744";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
