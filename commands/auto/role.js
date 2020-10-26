@@ -2,6 +2,8 @@ module.exports.run = async (client, message, args) => {
   // Import globals
   let globalVars = require('../../events/ready');
   try {
+    if (!message.guild.me.hasPermission("MANAGE_ROLES")) return message.channel.send(`> Sorry, I don't have permissions to edit roles, ${message.author}.`);
+
     const { EligibleRoles } = require('../../database/dbObjects')
     const Discord = require("discord.js");
 
@@ -65,6 +67,7 @@ module.exports.run = async (client, message, args) => {
     if (member.roles.cache.has(role.id)) {
       await member.roles.remove(role);
       return message.channel.send(`> You no longer have the **${role.name}** role, ${member}. *booo*`);
+
     } else {
       await member.roles.add(role);
       return message.channel.send(`> You now have the **${role.name}** role, ${member}! Yay!`);

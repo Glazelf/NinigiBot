@@ -12,6 +12,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        if (!message.guild.me.hasPermission("ATTACH_FILES")) return message.channel.send(`> Sorry, I don't have permissions to attach files, ${message.author}.`);
+
         const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');

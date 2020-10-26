@@ -52,6 +52,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        if (!message.guild.me.hasPermission("ATTACH_FILES")) return message.channel.send(`> Sorry, I don't have permissions to attach files, ${message.author}.`);
+
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
         const args = message.content.slice(1).trim().split(/ +/);
@@ -60,26 +62,26 @@ module.exports.run = async (client, message) => {
         let master;
         if (message.mentions.members.first()) {
             if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms)
+                return message.reply(globalVars.lackPerms);
             };
             const expectedId = /<@!(\d+)/.exec(args[0])
             const targetId = message.mentions.members.first().id
             if (expectedId && expectedId[1] == targetId) {
                 shinx = await bank.currency.getShinx(targetId);
-                master = message.mentions.members.first().user
+                master = message.mentions.members.first().user;
                 args.splice(0, 1);
             } else return message.channel.send(`The syntax is ${globalVars.prefix}shinx <target> <usual command>, ${message.author}.`);
         } else {
             master = message.author
             shinx = await bank.currency.getShinx(master.id);
-        }
+        };
         shinx.see();
         let canvas, ctx, img;
         const now = new Date();
 
         if (args[0] === 'level') {
             if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms)
+                return message.reply(globalVars.lackPerms);
             };
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
@@ -141,7 +143,7 @@ module.exports.run = async (client, message) => {
             if (!isNaN(reaction[2])) {
                 img = await Canvas.loadImage('./assets/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
-            }
+            };
             if (now.getHours() > 20 || now.getHours() < 4) {
                 img = await Canvas.loadImage('./assets/winNight.png');
                 ctx.drawImage(img, 198, 52);
