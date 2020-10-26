@@ -91,6 +91,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
                 if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
+                if (pokemonName == "zygarde-50") pokemonName = "zygarde";
                 if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
                 if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
@@ -140,6 +141,8 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "kyurem-black") pokemonID = "646-b";
                         if (pokemonName == "kyurem-white") pokemonID = "646-w";
                         if (pokemonName == "keldeo-resolute") pokemonID = "647-r";
+                        if (pokemonName == "zygarde-10") pokemonID = "718-10";
+                        if (pokemonName == "zygarde-complete") pokemonID = "718-c";
                         if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
                         if (pokemonName == "rockruff-own-tempo") pokemonID = "744";
                         if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
