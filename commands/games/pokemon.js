@@ -221,7 +221,22 @@ module.exports.run = async (client, message) => {
                             };
                         };
 
-                        //simplify pokemonNames 
+                        // Stat ranges
+                        let baseHP = response.stats[0].base_stat;
+                        let baseAtk = response.stats[1].base_stat;
+                        let baseDef = response.stats[2].base_stat;
+                        let baseSpA = response.stats[3].base_stat;
+                        let baseSpD = response.stats[4].base_stat;
+                        let baseSpe = response.stats[5].base_stat;
+
+                        let HPstats = calcHP(baseHP);
+                        let Atkstats = calcStat(baseAtk);
+                        let Defstats = calcStat(baseDef);
+                        let SpAstats = calcStat(baseSpA);
+                        let SpDstats = calcStat(baseSpD);
+                        let Spestats = calcStat(baseSpe);
+
+                        // Simplify pokemonNames 
                         if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
                         if (pokemonName == "mimikyu-busted") pokemonName = "mimikyu";
 
@@ -235,12 +250,12 @@ module.exports.run = async (client, message) => {
                             .addField("Type:", typeString, false)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
                         pkmEmbed
-                            .addField("Stats:", `HP: ${response.stats[0].base_stat}
-Attack: ${response.stats[1].base_stat}
-Defense: ${response.stats[2].base_stat}
-Sp. Attack: ${response.stats[3].base_stat}
-Sp. Defense: ${response.stats[4].base_stat}
-Speed: ${response.stats[5].base_stat}`, false)
+                            .addField("Stats: (50) (100)", `HP: **${baseHP}** ${HPstats}
+Atk: **${baseAtk}** ${Atkstats}
+Def: **${baseDef}** ${Defstats}
+SpA: **${baseSpA}** ${SpAstats}
+SpD: **${baseSpD}** ${SpDstats}
+Spe: **${baseSpe}** ${Spestats}`, false)
                             .setImage(banner)
                             .setFooter(`Requested by ${message.author.tag}`)
                             .setTimestamp();
@@ -275,6 +290,26 @@ Speed: ${response.stats[5].base_stat}`, false)
             };
             capitalizedAbilities = newArray.join('\n');
             return capitalizedAbilities;
+        };
+
+        function calcHP(base) {
+            let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+            let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
+            let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+            let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+
+            let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+            return StatText;
+        };
+
+        function calcStat(base) {
+            let min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
+            let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+            let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
+            let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+
+            let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+            return StatText;
         };
 
         function capitalizeString(str) {
