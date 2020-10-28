@@ -228,6 +228,7 @@ module.exports.run = async (client, message) => {
                         let baseSpA = response.stats[3].base_stat;
                         let baseSpD = response.stats[4].base_stat;
                         let baseSpe = response.stats[5].base_stat;
+                        let BST = baseHP + baseAtk + baseDef + baseSpA + baseSpD + baseSpe;
 
                         let HPstats = calcHP(baseHP);
                         let Atkstats = calcStat(baseAtk);
@@ -255,7 +256,8 @@ Atk: **${baseAtk}** ${Atkstats}
 Def: **${baseDef}** ${Defstats}
 SpA: **${baseSpA}** ${SpAstats}
 SpD: **${baseSpD}** ${SpDstats}
-Spe: **${baseSpe}** ${Spestats}`, false)
+Spe: **${baseSpe}** ${Spestats}
+BST: ${BST}`, false)
                             .setImage(banner)
                             .setFooter(`Requested by ${message.author.tag}`)
                             .setTimestamp();
