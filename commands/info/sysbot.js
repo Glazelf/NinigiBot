@@ -23,9 +23,9 @@ module.exports.run = async (client, message) => {
         let Flar3Status = "Online";
         let RibbotStatus = "Online";
 
-        if (Konohana.presence.status = "offline") KonohanaStatus = "Offline";
-        if (Flar3.presence.status = "offline") Flar3Status = "Offline";
-        if (Ribbot.presence.status = "offline") RibbotStatus = "Offline";
+        if (Konohana.presence.status == "offline") KonohanaStatus = "Offline";
+        if (Flar3.presence.status == "offline") Flar3Status = "Offline";
+        if (Ribbot.presence.status == "offline") RibbotStatus = "Offline";
 
         return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
 > **Format:** Bot (prefix): status (Host#0001)
