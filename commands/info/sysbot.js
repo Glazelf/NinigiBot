@@ -19,9 +19,9 @@ module.exports.run = async (client, message) => {
         // ACNH
         let Ribbot = client.users.cache.get("739823632267608135");
 
-        let KonohanaStatus = "Online";
-        let Flar3Status = "Online";
-        let RibbotStatus = "Online";
+        let KonohanaStatus = "**Online**";
+        let Flar3Status = "**Online**";
+        let RibbotStatus = "**Online**";
 
         if (Konohana.presence.status == "offline") KonohanaStatus = "Offline";
         if (Flar3.presence.status == "offline") Flar3Status = "Offline";
@@ -30,10 +30,10 @@ module.exports.run = async (client, message) => {
         return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
 > **Format:** Bot (prefix): status (Host#0001)
 > **Pokémon bots:**
-> ${Konohana} (!): **${KonohanaStatus}** (${Glaze.tag})
-> ${Flar3} (3): **${Flar3Status}** (${Flare.tag})
+> ${Konohana} (!): ${KonohanaStatus} (${Glaze.tag})
+> ${Flar3} (3): ${Flar3Status} (${Flare.tag})
 > **ACNH bots:**
-> ${Ribbot} (!): **${RibbotStatus}** (${Glaze.tag})
+> ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
 > Check the pins in <#${globalVars.botChannelID}> for more information!`);
 
     } catch (e) {
