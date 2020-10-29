@@ -34,7 +34,7 @@ module.exports.run = async (client, message) => {
 > ${Flar3} (3): **${Flar3Status}** (${Flare.tag})
 > **ACNH bots:**
 > ${Ribbot} (!): **${RibbotStatus}** (${Glaze.tag})
-> Check the pins in <#${globalVars.botChannelID}> for more information, including a FAQ and more!`);
+> Check the pins in <#${globalVars.botChannelID}> for more information!`);
 
     } catch (e) {
         // log error
