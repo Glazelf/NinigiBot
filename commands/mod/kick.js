@@ -21,10 +21,10 @@ module.exports.run = async (client, message) => {
             reason = reason.join(' ');
         };
 
-        await member.kick([reason]);
+        await member.kick([`${reason} -${message.author.tag}`]);
         await message.channel.send(`> Successfully kicked ${userTag} for reason: \`${reason}\`, ${message.author}.`);
         try {
-            return user.send(`> You've been kicked for the following reason: \`${reason}\``);
+            return user.send(`> You've been kicked from ${message.guild.name} for the following reason: \`${reason}\``);
         } catch (e) {
             return;
         };
