@@ -110,6 +110,8 @@ module.exports.run = async (client, message) => {
                     .then(async function (response) {
                         // Log for testing, remove later
                         console.log(response);
+
+                        // Typing
                         let typeString = "";
                         let type1 = response.types[0].type.name;
                         if (response.types[1]) {
@@ -118,6 +120,16 @@ module.exports.run = async (client, message) => {
                         } else {
                             typeString = getTypeEmotes(type1);
                         };
+
+                        // Typing matchups
+                        let normalWeak = ["fighting"];
+                        let normalRes =  [];
+                        let normalImmune = ["ghost"];
+
+
+                        // Metrics
+                        let weight = `${response.weight / 10}kg`;
+                        let height = `${response.height / 10}m`;
 
                         var pokemonID = leadingZeros(response.id.toString());
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
@@ -248,7 +260,9 @@ module.exports.run = async (client, message) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(`${pokemonID.toUpperCase()}: ${pokemonName}`, icon)
                             .setThumbnail(sprite)
-                            .addField("Type:", typeString, false)
+                            .addField("Type:", typeString, true)
+                            .addField("Metrics:", `Weight: ${weight}
+Height: ${height}`, true)
                         if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
                         pkmEmbed
                             .addField("Stats: (50) (100)", `HP: **${baseHP}** ${HPstats}
