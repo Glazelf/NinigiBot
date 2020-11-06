@@ -146,11 +146,10 @@ module.exports.run = async (client, message) => {
                         let superEffectives = "";
                         let resistances = "";
                         let immunities = "";
-                        let typeName = "";
 
                         // Check type matchups
                         for (let [key, type] of Object.entries(types)) {
-                            typeName = key;
+                            let typeName = key;
 
                             // Dual type Pokemon
                             if (response.types[1]) {
