@@ -50,8 +50,8 @@ module.exports = async (client, message) => {
         .setAuthor(`DM Message`, avatar)
         .setThumbnail(avatar)
         .addField(`Author Account:`, message.author, false)
-        .addField(`Author ID:`, message.author.id, false)
-      if (message.content) dmEmbed.addField(`Message content:`, message.content, false)
+        .addField(`Author ID:`, message.author.id, false);
+      if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
       dmEmbed
         .setImage(messageImage)
         .setFooter(`DM passed through by ${client.user.tag}.`)

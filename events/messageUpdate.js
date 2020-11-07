@@ -26,8 +26,8 @@ module.exports = async (client, message, newMessage) => {
         const updateEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Message edited ⚒️`, avatar)
-            .setDescription(`Message sent by ${message.author} edited in ${message.channel}.`)
-        if (message.content) updateEmbed.addField(`Before:`, message.content, false)
+            .setDescription(`Message sent by ${message.author} edited in ${message.channel}.`);
+        if (message.content) updateEmbed.addField(`Before:`, message.content, false);
         updateEmbed
             .addField(`After:`, newMessage.content, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)

@@ -71,8 +71,8 @@ module.exports.run = async (client, message) => {
             .addField("Bots:", `${bots} 🤖`, true)
             .addField("Channels:", guild.channels.cache.size, true)
             .addField("Roles:", guild.roles.cache.size, true)
-            .addField("Emotes:", `${guild.emojis.cache.size} 😳`, true)
-        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true)
+            .addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
+        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
             .setFooter(`Requested by ${message.author.tag}`)

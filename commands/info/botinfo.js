@@ -69,6 +69,7 @@ module.exports.run = async (client, message) => {
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(client.user.createdAt)}.`, false)
             .setFooter(`Requested by ${message.author.tag}`)
             .setTimestamp();
+
         return message.channel.send(profileEmbed);
 
     } catch (e) {

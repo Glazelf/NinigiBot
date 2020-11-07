@@ -64,10 +64,10 @@ module.exports.run = async (client, message) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
                             .addField("Type:", getTypeEmotes(response.type.name), false)
-                            .addField("Category:", capitalizeString(response.damage_class.name), true)
-                        if (response.power) moveEmbed.addField("Power:", response.power, true)
-                        if (response.accuracy) moveEmbed.addField("Accuracy:", response.accuracy, true)
-                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true)
+                            .addField("Category:", capitalizeString(response.damage_class.name), true);
+                        if (response.power) moveEmbed.addField("Power:", response.power, true);
+                        if (response.accuracy) moveEmbed.addField("Accuracy:", response.accuracy, true);
+                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
                         moveEmbed
                             .addField("Target:", capitalizeString(response.target.name), false)
                             .addField("Description:", response.effect_entries[0].effect, false)
@@ -347,11 +347,11 @@ module.exports.run = async (client, message) => {
                             .setThumbnail(sprite)
                             .addField("Type:", typeString, true)
                             .addField("Metrics:", `Weight: ${weight}
-Height: ${height}`, true)
-                        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false)
-                        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false)
-                        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false)
-                        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false)
+Height: ${height}`, true);
+                        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false);
+                        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
+                        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
+                        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
                         pkmEmbed
                             .addField("Stats: (50) (100)", `HP: **${baseHP}** ${HPstats}
 Atk: **${baseAtk}** ${Atkstats}
