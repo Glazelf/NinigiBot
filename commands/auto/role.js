@@ -38,12 +38,16 @@ module.exports.run = async (client, message, args) => {
       roleText = roleText.map(role => role.id);
 
       // Role help embed and logic
-      let roleHelpMessage = '';
+      let roleHelpMessage = "";
 
       for (let i = 0; i < roleText.length; i++) {
         roleHelpMessage = `${roleHelpMessage}
 > <@&${roleText[i]}>`;
-      };
+      }
+
+      roleHelpMessage = `${roleHelpMessage}
+Please don't tag these roles, just put the name.
+Example: \`${globalVars.prefix}role rolename\``;
 
       let avatar = null;
       if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
