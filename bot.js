@@ -34,7 +34,7 @@ client.aliases = new Discord.Collection();
 
 walk(`./commands/`);
 
-client.login(config.token)
+client.login(config.token);
 
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 function walk(dir, callback) {
