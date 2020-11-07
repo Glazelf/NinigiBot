@@ -383,7 +383,8 @@ BST: ${BST}`, false)
                 let type2Emote = typeEmoteList[type2];
                 let type2Name = capitalizeString(type2);
                 if (bold == true) type2Name = `**${type2Name}**`;
-                typeString = `${typeString} / ${type2Emote} ${type2Name}`;
+                typeString = `${typeString}
+${type2Emote} ${type2Name}`;
             };
             return typeString;
         };
