@@ -11,20 +11,20 @@ module.exports = async (message) => {
     const scamLinks = [
         "https://glorysocial.com/profile/"
     ];
-    const offensiveSlurs = [
-        "nigger",
-        "niqqer",
-        "nigga",
-        "niqqa",
-        "nlgger",
-        "nlgga",
-        //"retard",
-        "faggot",
-        "tranny"
-    ];
-    const exceptions = [
-        "retardation" // thanks mom
-    ];
+    // const offensiveSlurs = [
+    //     "nigger",
+    //     "niqqer",
+    //     "nigga",
+    //     "niqqa",
+    //     "nlgger",
+    //     "nlgga",
+    //     //"retard",
+    //     "faggot",
+    //     "tranny"
+    // ];
+    // const exceptions = [
+    //     "retardation" // thanks mom
+    // ];
     const testArray = [
         "triceratops"
     ];
@@ -36,13 +36,13 @@ module.exports = async (message) => {
         ban();
     };
 
-    // Offensive slurs
-    if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
-        !exceptions.some(v => messageNormalized.includes(v)) &&
-        message.member.kickable) {
-        reason = "Using offensive slurs.";
-        kick();
-    };
+    // // Offensive slurs
+    // if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
+    //     !exceptions.some(v => messageNormalized.includes(v)) &&
+    //     message.member.kickable) {
+    //     reason = "Using offensive slurs.";
+    //     kick();
+    // };
 
     // Test 
     // if(testArray.some(v => messageNormalized.includes(v))){
