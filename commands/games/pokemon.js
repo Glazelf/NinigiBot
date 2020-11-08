@@ -84,10 +84,18 @@ module.exports.run = async (client, message) => {
 
             default:
                 let pokemonName = subCommand;
+                args.forEach(arg => {
+                    if (arg !== args[0] && arg !== args[1]) {
+                        pokemonName = `${pokemonName} ${arg}`;
+                    };
+                });
+
                 if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
                 // edgecase name corrections
                 if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
+                if (pokemonName == "mime jr") pokemonName = "mime-jr";
+                if (pokemonName == "mr mime" || pokemonName == "mr. mime") pokemonName = "mr-mime";
                 if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
                 if (pokemonName == "tornadus") pokemonName = "tornadus-incarnate";
