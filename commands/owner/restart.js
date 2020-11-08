@@ -2,9 +2,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) {
-            return message.channel.send(client.config.lackPerms)
-        };
+        if (message.author.id !== client.config.ownerID) return message.channel.send(client.config.lackPerms);
 
         // send channel a message that you're resetting bot [optional]
         message.channel.send(`> Restarting for ${message.author}...`)

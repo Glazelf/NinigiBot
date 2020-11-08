@@ -2,9 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
-        };
+        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         args = message.content.split(' ');
         let guildID = args[1];

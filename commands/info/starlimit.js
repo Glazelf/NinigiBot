@@ -7,9 +7,7 @@ exports.run = (client, message) => {
 
         if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, ${message.author}.`);
 
-        if (message.author.id !== client.config.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
-        };
+        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, ${message.author}.`);
 

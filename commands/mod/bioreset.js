@@ -2,9 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("ADMINISTRATOR")) {
-            return message.reply(globalVars.lackPerms);
-        };
+        if (!message.member.hasPermission("ADMINISTRATOR")) return message.reply(globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
         let user = message.mentions.users.first();

@@ -3,9 +3,7 @@ module.exports.run = async (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (message.author.id !== client.config.ownerID) {
-            return message.reply(globalVars.lackPerms);
-        };
+        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         const code = args.join(" ");
         let evaled = eval(code);

@@ -2,9 +2,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) {
-            return message.channel.send(globalVars.lackPerms)
-        };
+        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         // send channel a message that you're killing bot [optional]
         message.channel.send(`> Shutting down for ${message.author}...`)

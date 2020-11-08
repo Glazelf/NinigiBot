@@ -61,9 +61,7 @@ module.exports.run = async (client, message) => {
         let shinx;
         let master;
         if (message.mentions.members.first()) {
-            if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms);
-            };
+            if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
             const expectedId = /<@!(\d+)/.exec(args[0])
             const targetId = message.mentions.members.first().id
             if (expectedId && expectedId[1] == targetId) {
@@ -80,9 +78,7 @@ module.exports.run = async (client, message) => {
         const now = new Date();
 
         if (args[0] === 'level') {
-            if (message.author.id !== client.config.ownerID) {
-                return message.reply(globalVars.lackPerms);
-            };
+            if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
             else return message.channel.send(`Please specify a valid number.`);
