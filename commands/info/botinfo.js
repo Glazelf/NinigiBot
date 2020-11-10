@@ -10,13 +10,6 @@ module.exports.run = async (client, message) => {
         // console.log(userCount)
         // console.log(Object.keys(userCount))
 
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
-
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
         let days = Math.floor(totalSeconds / 86400);
@@ -48,6 +41,13 @@ module.exports.run = async (client, message) => {
             uptime = `${days} day${multiDays}, ${uptime}`;
         };
 
+        // Calculate total user count
+        let userCount = 0;
+        await client.guilds.cache.forEach(guild => {
+            userCount += guild.memberCount;
+        });
+
+        // Avatar
         let avatar = null;
         if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
 
@@ -59,6 +59,7 @@ module.exports.run = async (client, message) => {
             .addField("Owner:", "Glaze#6669", true)
             .addField("Prefix:", globalVars.prefix, true)
             .addField("Servers:", client.guilds.cache.size, true)
+            .addField("Users:", userCount, true)
             .addField("Channels:", client.channels.cache.size, true)
             .addField("Messages read:", globalVars.totalMessages, true)
             .addField("Commands used:", globalVars.totalCommands, true)
@@ -71,6 +72,13 @@ module.exports.run = async (client, message) => {
             .setTimestamp();
 
         return message.channel.send(profileEmbed);
+
+        function checkDays(date) {
+            let now = new Date();
+            let diff = now.getTime() - date.getTime();
+            let days = Math.floor(diff / 86400000);
+            return days + (days == 1 ? " day" : " days") + " ago";
+        };
 
     } catch (e) {
         // log error
