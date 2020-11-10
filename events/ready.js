@@ -8,7 +8,7 @@ module.exports = async (client) => {
     const storedBalances = await Users.findAll();
     storedBalances.forEach(b => bank.currency.set(b.user_id, b));
     console.log(`Loaded a total of ${client.commands.size} commands!`);
-    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
+    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} (cached) users.`);
     console.log(`Connected as ${client.user.tag}.`);
 
     // Set bot status
