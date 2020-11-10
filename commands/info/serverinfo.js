@@ -17,13 +17,6 @@ module.exports.run = async (client, message) => {
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
         let nitroEmote = "<:nitroboost:753268592081895605>";
 
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
-
         let verifLevels = {
             "NONE": "None",
             "LOW": "Low",
@@ -66,7 +59,7 @@ module.exports.run = async (client, message) => {
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("ID:", guild.id, true)
-            .addField("Members:", realMembers, true)
+            .addField("Real members:", realMembers, true)
             .addField("Online members:", onlineMembers, true)
             .addField("Bots:", `${bots} 🤖`, true)
             .addField("Channels:", guild.channels.cache.size, true)
@@ -79,6 +72,13 @@ module.exports.run = async (client, message) => {
             .setTimestamp();
 
         return message.channel.send(serverEmbed);
+
+        function checkDays(date) {
+            let now = new Date();
+            let diff = now.getTime() - date.getTime();
+            let days = Math.floor(diff / 86400000);
+            return days + (days == 1 ? " day" : " days") + " ago";
+        };
 
     } catch (e) {
         // log error

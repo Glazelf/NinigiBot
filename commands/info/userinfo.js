@@ -8,7 +8,6 @@ module.exports.run = async (client, message) => {
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
 
-
         let memberFetch = await message.guild.members.fetch();
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
