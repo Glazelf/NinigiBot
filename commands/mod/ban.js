@@ -2,7 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("BAN_MEMBERS")) return message.reply(globalVars.lackPerms);
+        if (!message.member.hasPermission("BAN_MEMBERS") && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
         if (!message.channel.permissionsFor(message.guild.me).has("BAN_MEMBERS")) return message.channel.send(`> I lack the required permissions to ban members, ${message.author}.`);
 
         const args = message.content.split(' ');
