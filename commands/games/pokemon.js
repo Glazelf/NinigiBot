@@ -119,6 +119,8 @@ module.exports.run = async (client, message) => {
                         // Log for testing, remove later
                         console.log(response);
 
+                        pokemonName = response.forms[0].name;
+
                         // Typing
                         let typeString = "";
                         let type1 = response.types[0].type.name;
