@@ -83,7 +83,7 @@ module.exports.run = async (client, message) => {
                 break;
 
             default:
-                let pokemonName = subCommand;
+                var pokemonName = subCommand;
                 args.forEach(arg => {
                     if (arg !== args[0] && arg !== args[1]) {
                         pokemonName = `${pokemonName} ${arg}`;
