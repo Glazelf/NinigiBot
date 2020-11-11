@@ -6,7 +6,7 @@ module.exports = async (client) => {
         client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
         // Console log status
-        return console.log("Successfully reconnected (resume)!");
+        return console.log("Successfully reconnected (shardResume)!");
 
     } catch (e) {
         // log error
