@@ -417,7 +417,7 @@ ${type2Emote} ${type2Name}`;
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
 
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            if (pokemonName = "shedinja") StatText = `(1-1) (1-1)`;
+            if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
 
