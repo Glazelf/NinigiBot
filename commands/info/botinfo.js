@@ -42,10 +42,7 @@ module.exports.run = async (client, message) => {
         };
 
         // Calculate total user count
-        let userCount = 0;
-        await client.guilds.cache.forEach(guild => {
-            userCount += guild.memberCount;
-        });
+        let userCount = await getUsers();
 
         // Avatar
         let avatar = null;
@@ -78,6 +75,15 @@ module.exports.run = async (client, message) => {
             let diff = now.getTime() - date.getTime();
             let days = Math.floor(diff / 86400000);
             return days + (days == 1 ? " day" : " days") + " ago";
+        };
+
+        async function getUsers() {
+            // Fast but inaccurate method
+            let userCount = 0;
+            await client.guilds.cache.forEach(guild => {
+                userCount += guild.memberCount;
+            });
+            return userCount;
         };
 
     } catch (e) {
