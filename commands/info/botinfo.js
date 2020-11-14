@@ -1,3 +1,5 @@
+const { forEach } = require('lodash');
+
 module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
@@ -79,11 +81,28 @@ module.exports.run = async (client, message) => {
 
         async function getUsers() {
             // Fast but inaccurate method
-            let userCount = 0;
+            var userCount = 0;
+            // await client.guilds.cache.forEach(guild => {
+            //     userCount += guild.memberCount;
+            // });
+
+            // Slow but accurate method
+            // var userList = [];
             await client.guilds.cache.forEach(guild => {
-                userCount += guild.memberCount;
+                guild.members.fetch().then(
+                    guild.members.cache.forEach(member => {
+                        // if (!member.user.bot) userList.push(member.id);
+                        if (!member.user.bot) userCount += 1;
+                    }));
             });
+            // userList = userList.filter(uniqueArray);
+            // let userCount = userList.length;
+
             return userCount;
+        };
+
+        function uniqueArray(value, index, self) {
+            return self.indexOf(value) === index;
         };
 
     } catch (e) {
