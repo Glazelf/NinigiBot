@@ -81,22 +81,21 @@ module.exports.run = async (client, message) => {
 
         async function getUsers() {
             // Fast but inaccurate method
-            var userCount = 0;
+            // var userCount = 0;
             // await client.guilds.cache.forEach(guild => {
             //     userCount += guild.memberCount;
             // });
 
             // Slow but accurate method
-            // var userList = [];
+            var userList = [];
             await client.guilds.cache.forEach(guild => {
                 guild.members.fetch().then(
                     guild.members.cache.forEach(member => {
-                        // if (!member.user.bot) userList.push(member.id);
-                        if (!member.user.bot) userCount += 1;
+                        if (!member.user.bot) userList.push(member.id);
                     }));
             });
-            // userList = userList.filter(uniqueArray);
-            // let userCount = userList.length;
+            userList = userList.filter(uniqueArray);
+            let userCount = userList.length;
 
             return userCount;
         };
