@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
       if (message.content.indexOf(globalVars.prefix) == 0) {
-        message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`).catch(console.error);
+        message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
       };
 
       // Send message contents to dm channel
@@ -49,7 +49,7 @@ module.exports = async (client, message) => {
         .setColor(globalVars.embedColor)
         .setAuthor(`DM Message`, avatar)
         .setThumbnail(avatar)
-        .addField(`Author Account:`, message.author, false)
+        .addField(`Author:`, message.author.tag, false)
         .addField(`Author ID:`, message.author.id, false);
       if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
       dmEmbed
