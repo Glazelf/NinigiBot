@@ -5,7 +5,6 @@ module.exports = async (client, message, newMessage) => {
         const Discord = require("discord.js");
 
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
-
         if (!log) return;
 
         // Import totals
@@ -44,4 +43,3 @@ module.exports = async (client, message, newMessage) => {
         logger(e, client, message);
     };
 };
-
