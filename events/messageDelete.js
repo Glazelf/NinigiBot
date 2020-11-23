@@ -4,6 +4,7 @@ module.exports = async (client, message) => {
 
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
         if (!log) return;
+        if (message.channel == log && message.author == client.user) return;
 
         // Import totals
         let globalVars = require('./ready');
@@ -32,5 +33,3 @@ module.exports = async (client, message) => {
         logger(e, client, message);
     };
 };
-
-
