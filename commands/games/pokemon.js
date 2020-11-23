@@ -300,10 +300,12 @@ module.exports.run = async (client, message) => {
                         };
 
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+
                         // Shuffle icons, only works for pokemon in pokemon shuffle
                         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
                         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
                         //let icon = `https://www.smogon.com/forums//media/minisprites/${pokemonName}.png`;
+
                         // High rest gen 8 sprite but only works for pokemon in swsh
                         let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
                         // Lower Res sprite but works for all pokemon (but different naming convention, fuck smogon)
