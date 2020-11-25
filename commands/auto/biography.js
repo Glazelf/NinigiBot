@@ -8,7 +8,7 @@ module.exports.run = async (client, message) => {
 
         bank.currency.biography(message.author.id, biography);
 
-        return message.channel.send(`> Successfully updated your biography, ${message.author}.`)
+        return message.channel.send(`> Successfully updated your biography, ${message.author}.`);
 
     } catch (e) {
         // log error

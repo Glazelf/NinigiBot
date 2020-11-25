@@ -23,7 +23,6 @@ module.exports.run = async (client, message, args) => {
       await roleID.destroy();
       return message.channel.send(`> The **${roleTag}** role is no longer eligible to be selfassigned, ${message.author}.`);
     } else {
-
       await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
       return message.channel.send(`> The **${role.name}** role is now eligible to be selfassigned, ${message.author}.`);
     };

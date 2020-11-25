@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args) => {
 
     if (split[2]) {
       muteTime = split[2];
-      if (isNaN(muteTime) || 1 > muteTime) return message.channel.send(`> Please provide a valid number, ${message.author}.`)
+      if (isNaN(muteTime) || 1 > muteTime) return message.channel.send(`> Please provide a valid number, ${message.author}.`);
     };
 
     if (args[0]) {
@@ -21,7 +21,7 @@ module.exports.run = async (client, message, args) => {
       if (!role) return message.channel.send(`> There is no mute role. In order to mute someone, you need to create a role called "Muted", ${message.author}.`);
       await member.roles.add(role);
 
-      message.channel.send(`> ${member} has been muted for ${muteTime} minute(s), ${message.author}.`)
+      message.channel.send(`> ${member} has been muted for ${muteTime} minute(s), ${message.author}.`);
 
       // sets a timeout to unmute the user.
       setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);

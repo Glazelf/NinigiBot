@@ -100,7 +100,7 @@ module.exports.run = async (client, message) => {
                     for (let q = 0; q < 2; q++) {
                         const avatar = await Canvas.loadImage(avatars[q]);
                         ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
-                    }
+                    };
                     text += addLine(`${nicks[(i + 1) % 2]} fainted!`);
                     const paidMoney = bank.currency.payBattle(trainers[(i + 1) % 2].id, trainers[i].id);
                     if(paidMoney!==0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}💰 to ${trainers[i].username}.`);
@@ -127,7 +127,7 @@ module.exports.run = async (client, message) => {
             const hps = [hp(shinxes[0].percent), hp(shinxes[1].percent)]
             for (let i = 0; i < 2; i++) {
                 if (!isNaN(hps[i][0])) {
-                    const color = hps[i][0]
+                    const color = hps[i][0];
                     if (color > 2 && prevColors[i] <= color - 1) {
                         ctx.fillStyle = colors[color - 1];
                         ctx.fillRect(38 + 90 * i, 58 + 78 * i, 96, 4);
