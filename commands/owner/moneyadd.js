@@ -16,7 +16,7 @@ module.exports.run = async (client, message) => {
 
         if (!transferTarget) {
             const input = message.content.split(` `, 3);
-            let userID = input[1];
+            let userID = input[2];
             transferTarget = client.users.cache.get(userID);
         };
 
