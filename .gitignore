@@ -1,8 +1,6 @@
 /node_modules
 /.idea
 /.vs
-config.json
-README.md
 *.log
 npm-debug.log*
 pids
@@ -18,3 +16,6 @@ init
 *.db
 *sqlite
 ffmpeg.exe
+README.md
+config.json
+launch.json
