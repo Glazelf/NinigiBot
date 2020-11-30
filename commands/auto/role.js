@@ -10,12 +10,6 @@ module.exports.run = async (client, message, args) => {
     let member = message.member;
     let arguments = args;
 
-    if (message.mentions.members.first()) {
-      if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(globalVars.lackPerms);
-      member = message.mentions.members.first();
-      arguments.pop();
-    };
-
     const requestRole = arguments.join(' ');
 
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role. Use \`${globalVars.prefix}role help\` to see the available roles, ${message.author}.`);
