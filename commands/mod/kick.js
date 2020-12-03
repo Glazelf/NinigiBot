@@ -11,9 +11,11 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
         if (!member) return message.channel.send(`> Please mention someone to kick, ${message.author}.`);
 
-        let userTag = user.tag;
+        if (!member.kickable) return message.channel.send(`> I lack the required permission to kick ${user.tag}, ${message.author}.`);
 
-        if (!member.kickable) return message.channel.send(`> I lack the required permission to kick the specified member, ${message.author}.`);
+        let userRole = message.author.roles.first();
+        let targetRole = member.roles.first();
+        if (targetRole.position >= userRole.position) return message.channel.send(`> You don't have a high enough role to kick ${user.tag}, ${message.author}.`);
 
         let reason = "Not specified.";
         if (args[2]) {
@@ -22,7 +24,7 @@ module.exports.run = async (client, message) => {
         };
 
         await member.kick([`${reason} -${message.author.tag}`]);
-        await message.channel.send(`> Successfully kicked ${userTag} for reason: \`${reason}\`, ${message.author}.`);
+        await message.channel.send(`> Successfully kicked ${user.tag} for reason: \`${reason}\`, ${message.author}.`);
         try {
             return user.send(`> You've been kicked from ${message.guild.name} for the following reason: \`${reason}\``);
         } catch (e) {

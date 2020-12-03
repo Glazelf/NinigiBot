@@ -11,9 +11,11 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
         if (!member || !user) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
 
-        let userTag = user.tag;
+        let userRole = message.author.roles.first();
+        let targetRole = member.roles.first();
+        if (targetRole.position >= userRole.position) return message.channel.send(`> You don't have a high enough role to ban ${user.tag}, ${message.author}.`);
 
-        if (!member.bannable) return message.channel.send(`> I lack the required permission to ban the specified member, ${message.author}.`);
+        if (!member.bannable) return message.channel.send(`> I lack the required permission to ban ${user.tag}, ${message.author}.`);
 
         let reason = "Not specified.";
         if (args[2]) {
@@ -22,7 +24,7 @@ module.exports.run = async (client, message) => {
         };
 
         await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
-        await message.channel.send(`> Successfully banned ${userTag} for the following reason: \`${reason}\`, ${message.author}.`);
+        await message.channel.send(`> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}.`);
         try {
             return user.send(`> You've been banned from ${message.guild.name} for the following reason: \`${reason}\``);
         } catch (e) {
