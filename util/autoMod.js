@@ -48,9 +48,9 @@ module.exports = async (message) => {
     };
 
     // Test
-    if (testArray.some(v => messageNormalized.includes(v))) {
-        test();
-    };
+    // if (testArray.some(v => messageNormalized.includes(v))) {
+    //     test();
+    // };
 
     async function msgDelete() {
         await message.delete();
