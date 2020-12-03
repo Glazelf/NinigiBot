@@ -32,7 +32,6 @@ exports.run = (client, message, args) => {
             message.channel.messages.fetch({
                 limit: 100,
             }).then((messages) => {
-
                 const filterBy = user ? user.id : Client.user.id;
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 

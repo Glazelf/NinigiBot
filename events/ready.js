@@ -1,8 +1,5 @@
 module.exports = async (client) => {
   try {
-    const stan = require('../affairs/stan')(client);
-    const birthday = require('../affairs/birthday')(client);
-    const lottery = require('../affairs/lottery')(client);
     const { bank } = require('../database/bank');
     const { Users } = require('../database/dbObjects');
     const storedBalances = await Users.findAll();

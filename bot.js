@@ -60,6 +60,5 @@ function walk(dir, callback) {
         };
       });
     });
-    
   });
 };
