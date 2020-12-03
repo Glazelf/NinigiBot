@@ -7,7 +7,6 @@ module.exports.run = async (client, message) => {
         const { DisabledChannels } = require('../../database/dbObjects');
 
         const args = message.content.split(' ');
-
         if (!args[1]) return message.channel.send(`> Please provide a channel to toggle, ${message.author}.`);
 
         let channelID = await DisabledChannels.findOne({ where: { name: args[1] } });

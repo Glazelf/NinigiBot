@@ -1,4 +1,9 @@
 module.exports = async (message) => {
+    const { ModEnabledServers } = require('../database/dbObjects');
+    const dbServers = await ModEnabledServers.findAll();
+    const servers = dbServers.map(server => server.server_id);
+    if (!servers.includes(message.guild.id)) return;
+
     if (message.member.hasPermission("KICK_MEMBERS")) return;
     if (!message.content) return;
 
@@ -11,62 +16,67 @@ module.exports = async (message) => {
     const scamLinks = [
         "https://glorysocial.com/profile/"
     ];
-    // const offensiveSlurs = [
-    //     "nigger",
-    //     "niqqer",
-    //     "nigga",
-    //     "niqqa",
-    //     "nlgger",
-    //     "nlgga",
-    //     //"retard",
-    //     "faggot",
-    //     "tranny"
-    // ];
-    // const exceptions = [
-    //     "retardation" // thanks mom
-    // ];
+    const offensiveSlurs = [
+        "nigger",
+        "niqqer",
+        "nigga",
+        "niqqa",
+        "nlgger",
+        "nlgga",
+        "retard",
+        "faggot",
+        "tranny"
+    ];
+    const exceptions = [
+        "retardation" // thanks mom
+    ];
     const testArray = [
         "triceratops"
     ];
 
     // Scam links
-    if (scamLinks.some(v => messageNormalized.includes(v)) &&
-        message.member.bannable && memberRoles.size == 0) {
+    if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
         reason = "Posting scam links.";
         ban();
     };
 
-    // // Offensive slurs
-    // if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
-    //     !exceptions.some(v => messageNormalized.includes(v)) &&
-    //     message.member.kickable) {
-    //     reason = "Using offensive slurs.";
-    //     kick();
-    // };
+    // Offensive slurs
+    if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
+        !exceptions.some(v => messageNormalized.includes(v))) {
+        reason = "Using offensive slurs.";
+        msgDelete();
+    };
 
-    // Test 
-    // if(testArray.some(v => messageNormalized.includes(v))){
-    //     test()
-    // };
+    // Test
+    if (testArray.some(v => messageNormalized.includes(v))) {
+        test();
+    };
+
+    async function msgDelete() {
+        await message.delete();
+        return message.channel.send(`> Deleted a message by ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
+    };
 
     async function kick() {
+        if (!message.member.kickable) return;
         await message.delete();
         await message.member.kick([reason]);
-        await message.channel.send(`> Successfully autokicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
+        await message.channel.send(`> Successfully auto-kicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
         try {
-            return message.author.send(`> You've been autokicked for the following reason: \`${reason}\`
-        \`\`\`${message.content}\`\`\``);
+            return message.author.send(`> You've been automatically kicked for the following reason: \`${reason}\`
+\`\`\`${message.content}\`\`\``);
         } catch (e) {
             return;
         };
     };
 
     async function ban() {
+        if (!message.member.bannable) return;
         await message.member.ban({ days: 1, reason: reason });
-        await message.channel.send(`> Successfully autobanned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
+        await message.channel.send(`> Successfully auto-banned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
         try {
-            return message.author.send(`> You've been autobanned for the following reason: \`${reason}\`
-            \`\`\`${message.content}\`\`\``);
+            return message.author.send(`> You've been automatically banned for the following reason: \`${reason}\`
+\`\`\`${message.content}\`\`\``);
         } catch (e) {
             return;
         };
