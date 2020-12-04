@@ -11,7 +11,7 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
         if (!member || !user) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
 
-        let userRole = message.author.roles.first();
+        let userRole = message.author.member.roles.first();
         let targetRole = member.roles.first();
         if (targetRole.position >= userRole.position) return message.channel.send(`> You don't have a high enough role to ban ${user.tag}, ${message.author}.`);
 
