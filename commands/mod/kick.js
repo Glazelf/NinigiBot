@@ -13,9 +13,9 @@ module.exports.run = async (client, message) => {
 
         if (!member.kickable) return message.channel.send(`> I lack the required permission to kick ${user.tag}, ${message.author}.`);
 
-        let userRole = message.author.member.roles.first();
-        let targetRole = member.roles.first();
-        if (targetRole.position >= userRole.position) return message.channel.send(`> You don't have a high enough role to kick ${user.tag}, ${message.author}.`);
+        let userRole = message.member.roles.highest.position;
+        let targetRole = member.roles.highest.position;
+        if (targetRole.position >= userRole.position && message.author.id !== message.guild.ownerID) return message.channel.send(`> You don't have a high enough role to kick ${user.tag}, ${message.author}.`);
 
         let reason = "Not specified.";
         if (args[2]) {
