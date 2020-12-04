@@ -90,8 +90,8 @@ module.exports.run = async (client, message) => {
                     };
                 });
 
-                if (pokemonName == "tapu" && args[2]) pokemonName = `${args[1]}-${args[2]}`;
-                if (pokemonName == "type:" && args[2]) pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
+                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[1]}-${args[2]}`;
+                if (pokemonName == "type: null") pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
                 // edgecase name corrections
                 if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
                 if (pokemonName == "mime jr") pokemonName = "mime-jr";
@@ -117,7 +117,7 @@ module.exports.run = async (client, message) => {
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
                         // Log for testing, remove later
-                        console.log(response);
+                        // console.log(response);
 
                         // Correct name when searching by ID
                         pokemonName = response.name;
