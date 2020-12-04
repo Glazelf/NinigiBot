@@ -108,6 +108,8 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
                 if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
+                if (pokemonName == "calyrex-ice") pokemonName = "calyrex-ice-rider";
+                if (pokemonName == "calyrex-shadow") pokemonName = "calyrex-shadow-rider";
                 // "joke" name aliases
                 if (pokemonName == "smogonbird") pokemonName = "talonflame";
                 if (pokemonName == "glaze") pokemonName = "shinx";
@@ -261,23 +263,35 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
                         if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
                         if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
+                        if (pokemonName == "calyrex-ice-rider") pokemonID = "898-i";
+                        if (pokemonName == "calyrex-shadow-rider") pokemonID = "898-s";
 
                         const alolaString = "-alola";
+                        const galarString = "-galar";
                         const megaString = "-mega";
                         const primalString = "-primal";
                         const alolaBool = pokemonName.endsWith(alolaString);
+                        const galarBool = pokemonName.endsWith(galarString);
                         const megaBool = pokemonName.endsWith(megaString);
                         const primalBool = pokemonName.endsWith(primalString);
                         let formLength;
+                        let regionalChar;
 
                         // Catch other forms
-                        if (alolaBool) {
-                            formLength = alolaString.length;
+                        if (alolaBool || galarBool) {
+                            if (alolaBool) {
+                                formLength = alolaString.length;
+                                regionalChar = "-a";
+                            };
+                            if (galarBool) {
+                                formLength = galarString.length;
+                                regionalChar = "-g";
+                            };
                             let baseName = pokemonName.substring(0, pokemonName.length - formLength);
                             await P.getPokemonByName(baseName)
-                                .then(function (responseAlola) {
-                                    let AlolaID = leadingZeros(responseAlola.id.toString());
-                                    pokemonID = `${AlolaID}-a`;
+                                .then(function (responseRegional) {
+                                    let RegionalID = leadingZeros(responseRegional.id.toString());
+                                    pokemonID = `${RegionalID}${regionalChar}`;
                                 })
                                 .catch(function (error) {
                                     console.log(error);
