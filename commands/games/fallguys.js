@@ -33,7 +33,7 @@ module.exports.run = async (client, message) => {
                     .addField("Price:", `${dailyStore[arg2].price} ${dailyStore[arg2].currency}`, false)
                     // Why is this link returning 403 lmfao
                     // .setImage(dailyStore[arg2].icon)
-                    .setFooter(`Requested by ${message.author.tag}`)
+                    .setFooter(message.author.tag)
                     .setTimestamp();
 
                 return message.channel.send(dailyEmbed);
@@ -47,7 +47,7 @@ module.exports.run = async (client, message) => {
                     .addField(dailyStore[2].name, `${dailyStore[2].rarity} item for ${dailyStore[2].price} ${dailyStore[2].currency}`, false)
                     // Sadly articles aren't properly maintained, just returns 1.1 patchnotes banner
                     // .setImage(articles.articles[0].thumbnail)
-                    .setFooter(`Requested by ${message.author.tag}`)
+                    .setFooter(message.author.tag)
                     .setTimestamp();
 
                 return message.channel.send(dailyEmbed);

@@ -130,7 +130,7 @@ module.exports.run = async (client, message) => {
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
             .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, false)
-            .setFooter(`Requested by ${message.author.tag}`)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);

@@ -51,7 +51,7 @@ ${helpText}`);
         .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
         .setDescription(gifString)
         .setImage(gif)
-        .setFooter(`Requested by ${message.author.tag}`)
+        .setFooter(message.author.tag)
         .setTimestamp();
 
       return message.channel.send(gifEmbed);

@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return message.channel.send(abilityEmbed);
@@ -46,7 +46,7 @@ module.exports.run = async (client, message) => {
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", capitalizeString(response.category.name), true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
-                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return message.channel.send(itemEmbed);
@@ -71,7 +71,7 @@ module.exports.run = async (client, message) => {
                         moveEmbed
                             .addField("Target:", capitalizeString(response.target.name), true)
                             .addField("Description:", response.effect_entries[0].effect, false)
-                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return message.channel.send(moveEmbed);
@@ -388,7 +388,7 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
                             .setImage(banner)
-                            .setFooter(`Requested by ${message.author.tag}`)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return message.channel.send(pkmEmbed)

@@ -50,7 +50,7 @@ Example: \`${globalVars.prefix}role rolename\``;
         .setColor(globalVars.embedColor)
         .setAuthor(`Available roles:`, avatar)
         .setDescription(roleHelpMessage)
-        .setFooter(`Requested by ${message.author.tag}`)
+        .setFooter(message.author.tag)
         .setTimestamp();
       return message.channel.send(rolesHelp)
     };

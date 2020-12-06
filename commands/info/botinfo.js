@@ -67,7 +67,7 @@ module.exports.run = async (client, message) => {
             .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')", true)
             .addField("Uptime:", `${uptime}.`, false)
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(client.user.createdAt)}.`, false)
-            .setFooter(`Requested by ${message.author.tag}`)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);

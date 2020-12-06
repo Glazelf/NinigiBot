@@ -54,7 +54,7 @@ module.exports = async (client, message) => {
       if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
       dmEmbed
         .setImage(messageImage)
-        .setFooter(`DM passed through by ${client.user.tag}.`)
+        .setFooter(client.user.tag)
         .setTimestamp();
 
       return DMChannel.send(dmEmbed);

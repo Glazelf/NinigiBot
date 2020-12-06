@@ -68,7 +68,7 @@ module.exports.run = async (client, message) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
-            .setFooter(`Requested by ${message.author.tag}`)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return message.channel.send(serverEmbed);
