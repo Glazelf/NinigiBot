@@ -15,6 +15,9 @@ Message by ${message.author.tag}:
 \`\`\`${exception}\`\`\``;
     if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
     let devChannel = client.channels.cache.get(client.config.devChannelID);
-    if (message) message.channel.send(`> An error has occurred trying to run the command. The error has already been logged, but please also report this as an issue on the Github page or send a message to Glaze#6669. For links and other information use ${globalVars.prefix}info.`);
+    if (message) message.channel.send(`> An error has occurred. 
+> The error has already been logged but please also report this as an issue on Github: 
+> <https://github.com/Glazelf/NinigiBot/issues>
+> For more information use \`${globalVars.prefix}info\`.`);
     return devChannel.send(baseMessage);
 };
