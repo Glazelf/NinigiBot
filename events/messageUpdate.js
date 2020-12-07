@@ -31,6 +31,7 @@ module.exports = async (client, message, newMessage) => {
             .addField(`After:`, newMessage.content, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
