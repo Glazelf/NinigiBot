@@ -51,8 +51,10 @@ module.exports.run = async (client, message) => {
         let ownerTag = guild.owner.user.tag;
         if (guild == message.guild) ownerTag = guild.owner.user;
 
-        let rules = guild.rulesChannel;
-        if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
+        if (guild.rulesChannel) {
+            var rules = guild.rulesChannel;
+            if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
+        };
 
         var channelCount = 0;
         guild.channels.cache.forEach(channel => {
@@ -66,6 +68,7 @@ module.exports.run = async (client, message) => {
             .addField("Owner:", ownerTag, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
+        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules, true);
         serverEmbed
             .addField("Real members:", realMembers, true)
