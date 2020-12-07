@@ -29,7 +29,7 @@ exports.run = (client, message) => {
             return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
         };
 
-        let botChoice = rps.pick();
+        let botChoice = rps[Math.floor(Math.random() * rps.length)];
 
         if (botChoice == playerChoice) return message.channel.send(`> It's a tie, ${message.author}. We both picked **${playerChoice}**.`);
 

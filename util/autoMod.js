@@ -53,6 +53,7 @@ module.exports = async (message) => {
     // };
 
     async function msgDelete() {
+        if (!message.guild.me.hasPermission("DELETE_MESSAGES")) return;
         await message.delete();
         return message.channel.send(`> Deleted a message by ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\``);
     };
