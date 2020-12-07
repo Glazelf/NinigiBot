@@ -50,6 +50,12 @@ module.exports.run = async (client, message) => {
         let avatar = null;
         if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
 
+        // Channels
+        var channelCount = 0;
+        client.channels.cache.forEach(channel => {
+            if (channel.type == "voice" || channel.type == "text") channelCount += 1;
+        });
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
@@ -59,10 +65,11 @@ module.exports.run = async (client, message) => {
             .addField("Prefix:", globalVars.prefix, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Users:", userCount, true)
-            .addField("Channels:", client.channels.cache.size, true)
-            .addField("Messages read:", globalVars.totalMessages, true)
-            .addField("Commands used:", globalVars.totalCommands, true)
-            .addField("Logs made:", globalVars.totalLogs, true)
+            .addField("Channels:", channelCount, true);
+        if (globalVars.totalMessages) profileEmbed.addField("Messages read:", globalVars.totalMessages, true);
+        if (globalVars.totalCommands > 0) profileEmbed.addField("Commands used:", globalVars.totalCommands, true);
+        if (globalVars.totalLogs > 0) profileEmbed.addField("Logs made:", globalVars.totalLogs, true);
+        profileEmbed
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'Ninigi Github')", true)
             .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')", true)
             .addField("Uptime:", `${uptime}.`, false)
