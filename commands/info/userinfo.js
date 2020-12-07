@@ -123,7 +123,7 @@ module.exports.run = async (client, message) => {
         if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
-        if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch friend code:", switchCode, true);
+        if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
