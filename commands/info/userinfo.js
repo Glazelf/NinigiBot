@@ -115,7 +115,7 @@ module.exports.run = async (client, message) => {
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(userCache.username, avatar)
+            .setAuthor(`${userCache.tag} (${userCache.id})`, avatar)
             .setThumbnail(avatar)
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true);

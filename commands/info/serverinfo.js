@@ -53,18 +53,20 @@ module.exports.run = async (client, message) => {
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(guild.name, icon)
+            .setAuthor(`${guild.name} (${guild.id})`, icon)
             .setThumbnail(icon)
             .addField("Owner:", ownerTag, true)
             .addField("Region:", region[guild.region], true)
-            .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("ID:", guild.id, true)
+            .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
+        if (guild.rulesChannel) serverEmbed.addField("Rules:", guild.rulesChannel, true);
+        serverEmbed
             .addField("Real members:", realMembers, true)
-            .addField("Online members:", onlineMembers, true)
-            .addField("Bots:", `${bots} 🤖`, true)
-            .addField("Channels:", guild.channels.cache.size, true)
-            .addField("Roles:", guild.roles.cache.size, true)
-            .addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
+            .addField("Online members:", onlineMembers, true);
+        if (bots > 0) serverEmbed.addField("Bots:", `${bots} 🤖`, true);
+        serverEmbed
+            .addField("Channels:", guild.channels.cache.size, true);
+        if (guild.roles.cache.size > 0) serverEmbed.addField("Roles:", guild.roles.cache.size, true);
+        if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
