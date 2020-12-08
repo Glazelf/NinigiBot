@@ -40,7 +40,7 @@ module.exports.run = async (client, message) => {
         if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
         globalVars.battling.yes = true;
         let text = '';
-        const avatars = [trainers[0].displayAvatarURL({ format: 'jpg' }), trainers[1].displayAvatarURL({ format: 'jpg' })];
+        const avatars = [trainers[0].displayAvatarURL({ format: "png", dynamic: true }), trainers[1].displayAvatarURL({ format: "png", dynamic: true })];
 
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');

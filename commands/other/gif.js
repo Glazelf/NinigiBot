@@ -43,8 +43,7 @@ ${helpText}`);
         };
       };
 
-      let avatar = null;
-      if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+      let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
       const gifEmbed = new Discord.MessageEmbed()
         .setColor(globalVars.embedColor)

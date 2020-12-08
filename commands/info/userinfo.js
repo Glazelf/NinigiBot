@@ -88,8 +88,8 @@ module.exports.run = async (client, message) => {
         const activities = memberCache.presence.activities;
         for (const act in activities) {
             if (activities[act].name === 'Custom Status') {
-                let emoji = null
-                if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id)
+                let emoji = null;
+                if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id);
                 if (emoji) customStatus = emoji.toString() + ' ';
                 // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
                 if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
@@ -110,8 +110,7 @@ module.exports.run = async (client, message) => {
             };
         };
 
-        let avatar = null;
-        if (userCache.avatarURL()) avatar = userCache.avatarURL({ format: "png", dynamic: true });
+        let avatar = userCache.displayAvatarURL({ format: "png", dynamic: true });
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

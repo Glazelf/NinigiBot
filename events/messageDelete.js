@@ -12,8 +12,7 @@ module.exports = async (client, message) => {
         if (!message) return;
         if (!message.author) return;
 
-        let avatar = null;
-        if (message.author.avatarURL()) avatar = message.author.avatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

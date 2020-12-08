@@ -7,8 +7,7 @@ exports.run = async (client, message) => {
         const Discord = require("discord.js");
         let process = null;
 
-        let avatar = null;
-        if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
+        let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
         roulette.shift()
         if (roulette.on) {

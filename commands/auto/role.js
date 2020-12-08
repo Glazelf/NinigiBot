@@ -43,8 +43,7 @@ module.exports.run = async (client, message, args) => {
 Please don't tag these roles, just put the name.
 Example: \`${globalVars.prefix}role rolename\``;
 
-      let avatar = null;
-      if (client.user.avatarURL()) avatar = client.user.avatarURL({ format: "png" });
+      let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
       const rolesHelp = new Discord.MessageEmbed()
         .setColor(globalVars.embedColor)

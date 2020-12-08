@@ -8,7 +8,7 @@ module.exports.run = async (client, message) => {
 
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Help`, client.user.avatarURL())
+            .setAuthor(`Help`, client.user.displayAvatarURL({ format: "png", dynamic: true }))
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Discord:", `[Server Invite](https://discord.gg/2gkybyu 'Server Invite')`, false)
