@@ -17,10 +17,9 @@ module.exports.run = async (client, message) => {
             user = message.author;
         };
 
-        let userCache = client.users.cache.get(user.id);
         let totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar.`;
 
-        let avatar = userCache.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         let startOffset = 0;
         let avatarSize = 128;

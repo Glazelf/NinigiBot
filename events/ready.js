@@ -12,7 +12,7 @@ module.exports = async (client) => {
     client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
     // List servers the bot is connected to
-    console.log("Servers:")
+    console.log("Servers:");
     client.guilds.cache.forEach((guild) => {
       console.log(' - ' + guild.name);
     });

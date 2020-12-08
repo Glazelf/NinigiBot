@@ -26,16 +26,15 @@ module.exports.run = async (client, message) => {
             member = message.member;
         };
 
-        let userCache = client.users.cache.get(user.id);
         let memberCache = memberFetch.get(user.id);
-        if (!memberCache) return;
+        if (!memberCache) return message.channel.send(`> No member information could be found for this user, ${message.author}.`);
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
         //balance check
-        let userBalance = `${Math.floor(bank.currency.getBalance(userCache.id))}${globalVars.currency}`;
-        let switchCode = bank.currency.getSwitchCode(userCache.id);
-        let biography = bank.currency.getBiography(userCache.id);
-        let birthday = bank.currency.getBirthday(userCache.id);
+        let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
+        let switchCode = bank.currency.getSwitchCode(user.id);
+        let biography = bank.currency.getBiography(user.id);
+        let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
 
         // inventory check
@@ -61,7 +60,7 @@ module.exports.run = async (client, message) => {
 
         // Clear up status wording
         let userStatus = "Error?";
-        switch (userCache.presence.status) {
+        switch (user.presence.status) {
             case "online":
                 userStatus = "Online";
                 break;
@@ -110,11 +109,11 @@ module.exports.run = async (client, message) => {
             };
         };
 
-        let avatar = userCache.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${userCache.tag} (${userCache.id})`, avatar)
+            .setAuthor(`${user.tag} (${user.id})`, avatar)
             .setThumbnail(avatar)
             .addField("Account:", user, true)
             .addField("Availability:", userStatus, true);
@@ -128,7 +127,7 @@ module.exports.run = async (client, message) => {
         profileEmbed
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
-            .addField("Created at:", `${userCache.createdAt.toUTCString().substr(0, 16)}, ${checkDays(userCache.createdAt)}.`, false)
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
