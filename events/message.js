@@ -42,7 +42,7 @@ module.exports = async (client, message) => {
       // Send message contents to dm channel
       let DMChannel = client.channels.cache.get(client.config.devChannelID);
 
-      let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+      let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
       const dmEmbed = new Discord.MessageEmbed()
         .setColor(globalVars.embedColor)
@@ -72,7 +72,7 @@ module.exports = async (client, message) => {
 
             if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
 
-            let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
             const starEmbed = new Discord.MessageEmbed()
               .setColor(globalVars.embedColor)
