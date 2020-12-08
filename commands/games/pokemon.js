@@ -108,6 +108,8 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
                 if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
+                if (pokemonName == "zacian") pokemonName = "zacian-hero";
+                if (pokemonName == "zamazenta") pokemonName = "zamazenta-hero";
                 if (pokemonName == "calyrex-ice") pokemonName = "calyrex-ice-rider";
                 if (pokemonName == "calyrex-shadow") pokemonName = "calyrex-shadow-rider";
                 // "joke" name aliases
@@ -263,6 +265,8 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
                         if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
                         if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
+                        if (pokemonName == "zacian-crowned") pokemonID = "888-c";
+                        if (pokemonName == "zamazenta-crowned") pokemonID = "889-c";
                         if (pokemonName == "calyrex-ice-rider") pokemonID = "898-i";
                         if (pokemonName == "calyrex-shadow-rider") pokemonID = "898-s";
 
@@ -360,9 +364,11 @@ module.exports.run = async (client, message) => {
                         let SpDstats = calcStat(baseSpD);
                         let Spestats = calcStat(baseSpe);
 
-                        // Simplify pokemonNames 
+                        // Alter display Pokémon names
                         if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
                         if (pokemonName == "mimikyu-busted") pokemonName = "mimikyu";
+                        if (pokemonName == "necrozma-dusk") pokemonName = "necrozma-dusk-mane";
+                        if (pokemonName == "necrozma-dawn") pokemonName = "necrozma-dawn-wings";
 
                         pokemonName = capitalizeString(pokemonName);
                         let abilityStringCapitalized = capitalizeAbilities(abilityString);
