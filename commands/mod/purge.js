@@ -56,5 +56,5 @@ exports.run = (client, message, args) => {
 
 module.exports.config = {
     name: "purge",
-    aliases: []
+    aliases: ["clear"]
 };
