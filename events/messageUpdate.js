@@ -31,7 +31,7 @@ module.exports = async (client, message, newMessage) => {
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setFooter(message.author.tag)
-            .setTimestamp();
+            .setTimestamp(message.createdTimestamp);
 
         globalVars.totalLogs += 1;
         return log.send(updateEmbed);

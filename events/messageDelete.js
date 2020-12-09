@@ -21,7 +21,7 @@ module.exports = async (client, message) => {
         if (message.content.length > 0) deleteEmbed.addField(`Content:`, message.content, false);
         deleteEmbed
             .setFooter(message.author.tag)
-            .setTimestamp();
+            .setTimestamp(message.createdTimestamp);
 
         globalVars.totalLogs += 1;
         return log.send(deleteEmbed);
