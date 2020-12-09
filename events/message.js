@@ -81,6 +81,7 @@ module.exports = async (client, message) => {
               .addField(`Sent in:`, message.channel, false)
               .addField(`Context:`, `[Link](${message.url})`, false)
               .setImage(messageImage)
+              .setFooter(message.author.tag)
               .setTimestamp(message.createdTimestamp);
             starboard.send(starEmbed);
           };
