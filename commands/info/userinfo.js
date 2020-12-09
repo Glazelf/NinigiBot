@@ -128,10 +128,13 @@ module.exports.run = async (client, message) => {
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true);
-        if (memberCache.premiumSince > 0) profileEmbed.addField(`Nitro since:`, `${memberCache.premiumSince.toUTCString().substr(0, 16)}, ${checkDays(memberCache.premiumSince)}.`, true);
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}
+${checkDays(memberCache.joinedAt)}`, true);
+        if (memberCache.premiumSince > 0) profileEmbed.addField(`Nitro since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}
+${checkDays(memberCache.premiumSince)}`, true);
         profileEmbed
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`, true)
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}
+${checkDays(user.createdAt)}`, true)
             .setFooter(message.author.tag)
             .setTimestamp();
 

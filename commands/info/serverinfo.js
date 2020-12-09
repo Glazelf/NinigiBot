@@ -80,7 +80,8 @@ module.exports.run = async (client, message) => {
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
-            .addField("Created at:", `${guild.createdAt.toUTCString().substr(0, 16)}, ${checkDays(guild.createdAt)}.`)
+            .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
+${checkDays(guild.createdAt)}`)
             .setFooter(message.author.tag)
             .setTimestamp();
 

@@ -71,8 +71,9 @@ module.exports.run = async (client, message) => {
         profileEmbed
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'Ninigi Github')", true)
             .addField("Invite:", "[Link](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')", true)
-            .addField("Uptime:", `${uptime}.`, false)
-            .addField("Created at:", `${client.user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(client.user.createdAt)}.`, false)
+            .addField("Uptime:", uptime, false)
+            .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
+${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
