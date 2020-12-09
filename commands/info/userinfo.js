@@ -28,16 +28,15 @@ module.exports.run = async (client, message) => {
 
         let memberCache = memberFetch.get(user.id);
         if (!memberCache) return message.channel.send(`> No member information could be found for this user, ${message.author}.`);
-        let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
 
-        //balance check
+        // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
         let switchCode = bank.currency.getSwitchCode(user.id);
         let biography = bank.currency.getBiography(user.id);
         let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
 
-        // inventory check
+        // Inventory check
         const target = message.mentions.users.first() || message.author;
         const userDB = await Users.findOne({ where: { user_id: target.id } });
         let itemField = 'None';
@@ -46,6 +45,8 @@ module.exports.run = async (client, message) => {
             itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
         };
 
+        // Roles
+        let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
@@ -109,6 +110,7 @@ module.exports.run = async (client, message) => {
             };
         };
 
+        // Avatar
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         const profileEmbed = new Discord.MessageEmbed()
@@ -122,12 +124,14 @@ module.exports.run = async (client, message) => {
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
-        if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, false);
+        if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, false)
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`, false)
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(0, 16)}, ${checkDays(memberCache.joinedAt)}.`, true);
+        if (memberCache.premiumSince > 0) profileEmbed.addField(`Nitro since:`, `${memberCache.premiumSince.toUTCString().substr(0, 16)}, ${checkDays(memberCache.premiumSince)}.`, true);
+        profileEmbed
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(0, 16)}, ${checkDays(user.createdAt)}.`, true)
             .setFooter(message.author.tag)
             .setTimestamp();
 
