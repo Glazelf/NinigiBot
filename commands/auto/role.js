@@ -81,5 +81,5 @@ Example: \`${globalVars.prefix}role rolename\``;
 
 module.exports.config = {
   name: "role",
-  aliases: []
+  aliases: ["rank"]
 };
