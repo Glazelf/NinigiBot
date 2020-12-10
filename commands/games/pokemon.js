@@ -102,7 +102,9 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "thundurus") pokemonName = "thundurus-incarnate";
                 if (pokemonName == "landorus") pokemonName = "landorus-incarnate";
                 if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
-                if (pokemonName == "zygarde-50") pokemonName = "zygarde";
+                if (pokemonName == "zygarde-10%") pokemonName = "zygarde-10";
+                if (pokemonName == "zygarde-50" || pokemonName == "zygarde-50%") pokemonName = "zygarde";
+                if (pokemonName == "zygarde-100" || pokemonName == "zygarde-100%") pokemonName = "zygarde-complete";
                 if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
                 if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
                 if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
