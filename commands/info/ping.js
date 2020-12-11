@@ -5,9 +5,14 @@ exports.run = (client, message) => {
         let pongString = `> Pong!'ed back at ${message.author} in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
 
-        if (message.content.startsWith(`${globalVars.prefix}pig`)) {
+        if (message.content.startsWith(`${globalVars.prefix}pig`) || message.content.startsWith(`${globalVars.prefix}pog`)) {
             pongString = pongString.split("n").join("");
             pauseString = pauseString.split("n").join("");
+        };
+
+        if (message.content[2] == "o") {
+            pongString = pongString.split("o").join("i");
+            pauseString = pauseString.split("o").join("i");
         };
 
         return message.channel.send(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms.`));
@@ -24,5 +29,5 @@ module.exports.config = {
     name: "ping",
     description: "Pings bot",
     category: "info",
-    aliases: ["pong", "pig"]
+    aliases: ["pong", "pig", "pog"]
 };
