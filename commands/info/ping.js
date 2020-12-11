@@ -1,8 +1,16 @@
 exports.run = (client, message) => {
+    // Import globals
+    let globalVars = require('../../events/ready');
     try {
-        let PongString = `> Pong!'ed back at ${message.author} in`;
+        let pongString = `> Pong!'ed back at ${message.author} in`;
+        let pauseString = `${pongString} (hold on, processing latency...)`;
 
-        return message.channel.send(`${PongString} (hold on, processing latency...)`).then(m => m.edit(`${PongString} ${m.createdTimestamp - message.createdTimestamp}ms.`));
+        if (message.content.startsWith(`${globalVars.prefix}pig`)) {
+            pongString = pongString.split("n").join("");
+            pauseString = pauseString.split("n").join("");
+        };
+
+        return message.channel.send(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms.`));
 
     } catch (e) {
         // log error
@@ -16,5 +24,5 @@ module.exports.config = {
     name: "ping",
     description: "Pings bot",
     category: "info",
-    aliases: ["pong"]
+    aliases: ["pong", "pig"]
 };
