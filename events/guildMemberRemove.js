@@ -15,7 +15,7 @@ module.exports = (client, member) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Member left 💔`, avatar)
             .setThumbnail(avatar)
-            .addField(`User:`, user)
+            .addField(`User:`, `${user} (${user.id})`)
             .setFooter(`We'll miss you, ${user.tag}!`)
             .setTimestamp();
 
