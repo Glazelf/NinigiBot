@@ -98,6 +98,9 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "mr mime" || pokemonName == "mr. mime") pokemonName = "mr-mime";
                 if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
                 if (pokemonName == "giratina") pokemonName = "giratina-altered";
+                if (pokemonName == "darmanitan") pokemonName = "darmanitan-standard";
+                if (pokemonName == "darmanitan-galar") pokemonName = "darmanitan-standard-galar";
+                if (pokemonName == "darmanitan-galar-zen") pokemonName = "darmanitan-zen-galar";
                 if (pokemonName == "tornadus") pokemonName = "tornadus-incarnate";
                 if (pokemonName == "thundurus") pokemonName = "thundurus-incarnate";
                 if (pokemonName == "landorus") pokemonName = "landorus-incarnate";
@@ -233,6 +236,53 @@ module.exports.run = async (client, message) => {
                         let height = `${response.height / 10}m`;
 
                         var pokemonID = leadingZeros(response.id.toString());
+
+                        const alolaString = "-alola";
+                        const galarString = "-galar";
+                        const megaString = "-mega";
+                        const primalString = "-primal";
+                        const alolaBool = pokemonName.endsWith(alolaString);
+                        const galarBool = pokemonName.endsWith(galarString);
+                        const megaBool = pokemonName.endsWith(megaString);
+                        const primalBool = pokemonName.endsWith(primalString);
+                        let regionalChar;
+
+                        // Catch other forms
+                        if (alolaBool || galarBool) {
+                            if (alolaBool) {
+                                formLength = alolaString.length;
+                                regionalChar = "-a";
+                            };
+                            if (galarBool) {
+                                formLength = galarString.length;
+                                regionalChar = "-g";
+                            };
+                            let baseName = pokemonName.replace("-galar", "").replace("-alola", "");
+                            await P.getPokemonByName(baseName)
+                                .then(function (responseRegional) {
+                                    let RegionalID = leadingZeros(responseRegional.id.toString());
+                                    pokemonID = `${RegionalID}${regionalChar}`;
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                                });
+                        };
+                        if (megaBool || primalBool) {
+                            if (megaBool) formLength = megaString.length;
+                            if (primalBool) formLength = primalString.length;
+                            let baseName = pokemonName.replace("-mega", "").replace("-primal", "");
+                            await P.getPokemonByName(baseName)
+                                .then(function (responseMega) {
+                                    let MegaID = leadingZeros(responseMega.id.toString());
+                                    pokemonID = `${MegaID}-m`;
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                                });
+                        };
+
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
                         if (pokemonName == "charizard-mega-x") pokemonID = "006-mx";
                         if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
@@ -251,6 +301,8 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "rotom-wash") pokemonID = "479-w";
                         if (pokemonName == "giratina-origin") pokemonID = "487-o";
                         if (pokemonName == "shaymin-sky") pokemonID = "492-s";
+                        if (pokemonName == "darmanitan-zen") pokemonID = "555-z";
+                        if(pokemonName == "darmanitan-zen-galar") pokemonID = "555-gz";
                         if (pokemonName == "tornadus-therian") pokemonID = "641-s";
                         if (pokemonName == "thundurus-therian") pokemonID = "642-s";
                         if (pokemonName == "landorus-therian") pokemonID = "645-s";
@@ -271,53 +323,6 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "zamazenta-crowned") pokemonID = "889-c";
                         if (pokemonName == "calyrex-ice-rider") pokemonID = "898-i";
                         if (pokemonName == "calyrex-shadow-rider") pokemonID = "898-s";
-
-                        const alolaString = "-alola";
-                        const galarString = "-galar";
-                        const megaString = "-mega";
-                        const primalString = "-primal";
-                        const alolaBool = pokemonName.endsWith(alolaString);
-                        const galarBool = pokemonName.endsWith(galarString);
-                        const megaBool = pokemonName.endsWith(megaString);
-                        const primalBool = pokemonName.endsWith(primalString);
-                        let formLength;
-                        let regionalChar;
-
-                        // Catch other forms
-                        if (alolaBool || galarBool) {
-                            if (alolaBool) {
-                                formLength = alolaString.length;
-                                regionalChar = "-a";
-                            };
-                            if (galarBool) {
-                                formLength = galarString.length;
-                                regionalChar = "-g";
-                            };
-                            let baseName = pokemonName.substring(0, pokemonName.length - formLength);
-                            await P.getPokemonByName(baseName)
-                                .then(function (responseRegional) {
-                                    let RegionalID = leadingZeros(responseRegional.id.toString());
-                                    pokemonID = `${RegionalID}${regionalChar}`;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
-                                });
-                        };
-                        if (megaBool || primalBool) {
-                            if (megaBool) formLength = megaString.length;
-                            if (primalBool) formLength = primalString.length;
-                            let baseName = pokemonName.substring(0, pokemonName.length - formLength);
-                            await P.getPokemonByName(baseName)
-                                .then(function (responseMega) {
-                                    let MegaID = leadingZeros(responseMega.id.toString());
-                                    pokemonID = `${MegaID}-m`;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
-                                });
-                        };
 
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
 
@@ -367,6 +372,8 @@ module.exports.run = async (client, message) => {
                         let Spestats = calcStat(baseSpe);
 
                         // Alter display Pokémon names
+                        if (pokemonName == "darmanitan-standard") pokemonName = "darmanitan";
+                        if (pokemonName == "darmanitan-standard-galar") pokemonName = "darmanitan-galar";
                         if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
                         if (pokemonName == "mimikyu-busted") pokemonName = "mimikyu";
                         if (pokemonName == "necrozma-dusk") pokemonName = "necrozma-dusk-mane";
