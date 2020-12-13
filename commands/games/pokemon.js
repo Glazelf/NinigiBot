@@ -302,7 +302,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "giratina-origin") pokemonID = "487-o";
                         if (pokemonName == "shaymin-sky") pokemonID = "492-s";
                         if (pokemonName == "darmanitan-zen") pokemonID = "555-z";
-                        if(pokemonName == "darmanitan-zen-galar") pokemonID = "555-gz";
+                        if (pokemonName == "darmanitan-zen-galar") pokemonID = "555-gz";
                         if (pokemonName == "tornadus-therian") pokemonID = "641-s";
                         if (pokemonName == "thundurus-therian") pokemonID = "642-s";
                         if (pokemonName == "landorus-therian") pokemonID = "645-s";
