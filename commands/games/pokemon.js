@@ -60,6 +60,8 @@ module.exports.run = async (client, message) => {
             case "move":
                 P.getMoveByName(subArgument)
                     .then(function (response) {
+                        let description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
@@ -70,7 +72,7 @@ module.exports.run = async (client, message) => {
                         if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
                         moveEmbed
                             .addField("Target:", capitalizeString(response.target.name), true)
-                            .addField("Description:", response.effect_entries[0].effect, false)
+                            .addField("Description:", description, false)
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
