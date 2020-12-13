@@ -105,6 +105,8 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "thundurus") pokemonName = "thundurus-incarnate";
                 if (pokemonName == "landorus") pokemonName = "landorus-incarnate";
                 if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
+                if (pokemonName == "aegislash") pokemonName = "aegislash-shield";
+                if (pokemonName == "aegislash-sword") pokemonName = "aegislash-blade";
                 if (pokemonName == "zygarde-10%") pokemonName = "zygarde-10";
                 if (pokemonName == "zygarde-50" || pokemonName == "zygarde-50%") pokemonName = "zygarde";
                 if (pokemonName == "zygarde-100" || pokemonName == "zygarde-100%") pokemonName = "zygarde-complete";
@@ -309,6 +311,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "kyurem-black") pokemonID = "646-b";
                         if (pokemonName == "kyurem-white") pokemonID = "646-w";
                         if (pokemonName == "keldeo-resolute") pokemonID = "647-r";
+                        if (pokemonName == "aegislash-blade") pokemonID = "681-b";
                         if (pokemonName == "zygarde-10") pokemonID = "718-10";
                         if (pokemonName == "zygarde-complete") pokemonID = "718-c";
                         if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
