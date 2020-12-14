@@ -308,10 +308,10 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "deoxys-attack") pokemonID = "386-a";
                         if (pokemonName == "deoxys-defense") pokemonID = "386-d";
                         if (pokemonName == "deoxys-speed") pokemonID = "386-s";
-                        if (pokemonName == "burmy-sandy") pokemonID = "412-1";
-                        if (pokemonName == "burmy-trash") pokemonID = "412-2";
-                        if (pokemonName == "wormadam-sandy") pokemonID = "413-1";
-                        if (pokemonName == "wormadam-trash") pokemonID = "413-2";
+                        if (pokemonName == "burmy-sandy") pokemonID = "412-c";
+                        if (pokemonName == "burmy-trash") pokemonID = "412-t";
+                        if (pokemonName == "wormadam-sandy") pokemonID = "413-c";
+                        if (pokemonName == "wormadam-trash") pokemonID = "413-t";
                         if (pokemonName == "rotom-fan") pokemonID = "479-s";
                         if (pokemonName == "rotom-frost") pokemonID = "479-f";
                         if (pokemonName == "rotom-heat") pokemonID = "479-h";
