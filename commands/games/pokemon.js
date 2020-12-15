@@ -333,7 +333,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "meloetta-pirouette") pokemonID = "648-p";
                         if (pokemonName == "greninja-ash") pokemonID = "658-a";
                         if (pokemonName == "floette-eternal") pokemonID = "670-e";
-                        if (pokemonName == "meostic-female") pokemonID = "678-f";
+                        if (pokemonName == "meowstic-female") pokemonID = "678-f";
                         if (pokemonName == "aegislash-blade") pokemonID = "681-b";
                         if (pokemonName == "pumpkaboo-small") pokemonID = "710-s";
                         if (pokemonName == "pumpkaboo-large") pokemonID = "710-l";
@@ -424,7 +424,6 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "oricorio-pau") pokemonName = "oricorio-pa'u";
                         if (pokemonName == "minior-red-meteor") pokemonName = "minior-meteor";
                         if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
-                        if (pokemonName == "mimikyu-busted") pokemonName = "mimikyu";
                         if (pokemonName == "necrozma-dusk") pokemonName = "necrozma-dusk-mane";
                         if (pokemonName == "necrozma-dawn") pokemonName = "necrozma-dawn-wings";
 
