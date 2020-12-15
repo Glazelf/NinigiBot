@@ -108,6 +108,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "tornadus" || pokemonName == "thundurus" || pokemonName == "landorus") pokemonName = `${pokemonName}-incarnate`;
                 if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
                 if (pokemonName == "meloetta") pokemonName = "meloetta-aria";
+                if (pokemonName == "meowstic") pokemonName = "meowstic-male";
                 if (pokemonName == "aegislash") pokemonName = "aegislash-shield";
                 if (pokemonName == "aegislash-sword") pokemonName = "aegislash-blade";
                 if (pokemonName == "pumpkaboo" || pokemonName == "gourgeist") pokemonName = `${pokemonName}-average`;
@@ -126,6 +127,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
                 if (pokemonName == "toxtricity") pokemonName = "toxtricity-amped";
                 if (pokemonName == "eiscue") pokemonName = "eiscue-ice";
+                if (pokemonName == "indeedee") pokemonName = "indeedee-male";
                 if (pokemonName == "zacian") pokemonName = "zacian-hero";
                 if (pokemonName == "zamazenta") pokemonName = "zamazenta-hero";
                 if (pokemonName == "urshifu") pokemonName = "urshifu-single-strike";
@@ -331,6 +333,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "meloetta-pirouette") pokemonID = "648-p";
                         if (pokemonName == "greninja-ash") pokemonID = "658-a";
                         if (pokemonName == "floette-eternal") pokemonID = "670-e";
+                        if (pokemonName == "meostic-female") pokemonID = "678-f";
                         if (pokemonName == "aegislash-blade") pokemonID = "681-b";
                         if (pokemonName == "pumpkaboo-small") pokemonID = "710-s";
                         if (pokemonName == "pumpkaboo-large") pokemonID = "710-l";
@@ -355,12 +358,13 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "minior-red") pokemonID = "774-r";
                         if (pokemonName == "minior-violet") pokemonID = "774-v";
                         if (pokemonName == "minior-yellow") pokemonID = "774-y";
-                        if (pokemonName == "mimikyu-busted") pokemonID = "778";
+                        if (pokemonName == "mimikyu-busted") pokemonID = "778-b";
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
                         if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
                         if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
                         if (pokemonName == "toxtricity-low-key") pokemonID = "849-l";
                         if (pokemonName == "eiscue-noice") pokemonID = "875-n";
+                        if (pokemonName == "indeedee-female") pokemonID = "876-f";
                         if (pokemonName == "zacian-crowned") pokemonID = "888-c";
                         if (pokemonName == "zamazenta-crowned") pokemonID = "889-c";
                         if (pokemonName == "urshifu-rapid-strike") pokemonID = "892-r";
