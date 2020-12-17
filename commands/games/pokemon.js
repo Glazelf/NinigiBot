@@ -454,7 +454,7 @@ BST: ${BST}`, false)
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.channel.send(pkmEmbed)
+                        return message.channel.send(pkmEmbed);
 
                     }).catch(function (error) {
                         console.log(error);
@@ -494,7 +494,6 @@ ${type2Emote} ${type2Name}`;
             let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
-
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
@@ -505,7 +504,6 @@ ${type2Emote} ${type2Name}`;
             let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
             let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
             let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
-
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };

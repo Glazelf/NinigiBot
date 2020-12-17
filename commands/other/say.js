@@ -3,7 +3,8 @@ exports.run = (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         // Split off command
-        let textMessage = message.content.slice(5);
+        const input = message.content.slice(1).trim();
+        const [, , textMessage] = input.match(/(\w+)\s*([\s\S]*)/);
         let split = textMessage.split(` `, 1);
         const channelID = split[0];
         let remoteMessage = textMessage.slice(channelID.length + 1);
