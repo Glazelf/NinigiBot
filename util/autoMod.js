@@ -2,8 +2,8 @@ module.exports = async (message) => {
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
-    if (!servers.includes(message.guild.id)) return;
 
+    if (!servers.includes(message.guild.id)) return;
     if (message.member.hasPermission("KICK_MEMBERS")) return;
     if (!message.content) return;
 
