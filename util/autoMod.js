@@ -10,11 +10,15 @@ module.exports = async (message) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
-    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "");
     messageNormalized = messageNormalized.toLowerCase();
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
+    ];
+    const adLinks = [
+        "discord.gg/",
+        "bit.ly/"
     ];
     const offensiveSlurs = [
         "nigger",
@@ -23,6 +27,7 @@ module.exports = async (message) => {
         "niqqa",
         "nlgger",
         "nlgga",
+        "nibba",
         "retard",
         "faggot",
         "tranny"
@@ -38,6 +43,12 @@ module.exports = async (message) => {
     if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
         reason = "Posting scam links.";
         ban();
+    };
+
+    // Ad links
+    if (adLinks.some(v => messageNormalized.includes(v))) {
+        reason = "Advertisement.";
+        msgDelete();
     };
 
     // Offensive slurs
@@ -86,6 +97,4 @@ module.exports = async (message) => {
     function test() {
         return message.channel.send(`banned lol`);
     };
-
-    // if (testArray.some(v => messageNormalized.includes(v))) return message.channel.send("banned lol");
 };
