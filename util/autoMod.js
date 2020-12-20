@@ -17,8 +17,9 @@ module.exports = async (message) => {
         "https://glorysocial.com/profile/"
     ];
     const adLinks = [
-        "discord.gg/",
-        "bit.ly/"
+        "discord.gg",
+        "bit.ly",
+        "twitch.tv"
     ];
     const offensiveSlurs = [
         "nigger",
@@ -46,7 +47,7 @@ module.exports = async (message) => {
     };
 
     // Ad links
-    if (adLinks.some(v => messageNormalized.includes(v))) {
+    if (adLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
         reason = "Advertisement.";
         msgDelete();
     };
