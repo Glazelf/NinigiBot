@@ -10,8 +10,7 @@ module.exports = async (message) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
-    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "");
-    messageNormalized = messageNormalized.toLowerCase();
+    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "").toLowerCase();
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
