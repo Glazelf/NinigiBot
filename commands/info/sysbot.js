@@ -34,7 +34,9 @@ module.exports.run = async (client, message) => {
 > ${Flar3} (3): ${Flar3Status} (${Flare.tag})
 > **ACNH bots:**
 > ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
-> Check the pins in <#${globalVars.botChannelID}> for more information!`);
+
+> Please don't ask dumb questions like "When will x bot will be online???". Bots will be on when they're on.
+> Check the pins in <#${globalVars.botChannelID}> for more information and ways to support more uptime or donate!`);
 
     } catch (e) {
         // log error
