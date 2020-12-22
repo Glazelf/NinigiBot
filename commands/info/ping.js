@@ -6,7 +6,7 @@ exports.run = async (client, message) => {
         let pauseString = `${pongString} (hold on, processing latency...)`;
 
         // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.
-        if (message.content.startsWith(`${globalVars.prefix}pig`) || message.content.startsWith(`${globalVars.prefix}pog`)) {
+        if (message.content.toLowerCase().startsWith(`${globalVars.prefix}pig`) || message.content.startsWith(`${globalVars.prefix}pog`)) {
             pongString = pongString.split("n").join("");
             pauseString = pauseString.split("n").join("");
         };
