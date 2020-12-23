@@ -362,6 +362,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
                         if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
                         if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
+                        if (pokemonName == "magearna-original") pokemonID = "801-o";
                         if (pokemonName == "toxtricity-low-key") pokemonID = "849-l";
                         if (pokemonName == "eiscue-noice") pokemonID = "875-n";
                         if (pokemonName == "indeedee-female") pokemonID = "876-f";
