@@ -127,6 +127,7 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
                 if (pokemonName == "toxtricity") pokemonName = "toxtricity-amped";
+                if (pokemonName == "toxtricity-gmax" || pokemonName == "toxtricity-low-key-gmax") pokemonName = "toxtricity-amped-gmax";
                 if (pokemonName == "eiscue") pokemonName = "eiscue-ice";
                 if (pokemonName == "indeedee" || pokemonName == "indeedee-m") pokemonName = "indeedee-male";
                 if (pokemonName == "indeedee-f") pokemonName = "indeedee-female";
@@ -422,6 +423,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
                         if (pokemonName == "necrozma-dusk") pokemonName = "necrozma-dusk-mane";
                         if (pokemonName == "necrozma-dawn") pokemonName = "necrozma-dawn-wings";
+                        if (pokemonName == "toxtricity-amped-gmax") pokemonName = "toxtricity-gmax";
 
                         pokemonName = capitalizeString(pokemonName);
                         let abilityStringCapitalized = capitalizeAbilities(abilityString);
