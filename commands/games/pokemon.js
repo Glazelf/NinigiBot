@@ -108,7 +108,8 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "tornadus" || pokemonName == "thundurus" || pokemonName == "landorus") pokemonName = `${pokemonName}-incarnate`;
                 if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
                 if (pokemonName == "meloetta") pokemonName = "meloetta-aria";
-                if (pokemonName == "meowstic") pokemonName = "meowstic-male";
+                if (pokemonName == "meowstic" || pokemonName == "meowstic-m") pokemonName = "meowstic-male";
+                if (pokemonName == "meowstic-f") pokemonName = "meowstic-female";
                 if (pokemonName == "aegislash") pokemonName = "aegislash-shield";
                 if (pokemonName == "aegislash-sword") pokemonName = "aegislash-blade";
                 if (pokemonName == "pumpkaboo" || pokemonName == "gourgeist") pokemonName = `${pokemonName}-average`;
@@ -127,7 +128,8 @@ module.exports.run = async (client, message) => {
                 if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
                 if (pokemonName == "toxtricity") pokemonName = "toxtricity-amped";
                 if (pokemonName == "eiscue") pokemonName = "eiscue-ice";
-                if (pokemonName == "indeedee") pokemonName = "indeedee-male";
+                if (pokemonName == "indeedee" || pokemonName == "indeedee-m") pokemonName = "indeedee-male";
+                if (pokemonName == "indeedee-f") pokemonName = "indeedee-female";
                 if (pokemonName == "zacian") pokemonName = "zacian-hero";
                 if (pokemonName == "zamazenta") pokemonName = "zamazenta-hero";
                 if (pokemonName == "urshifu") pokemonName = "urshifu-single-strike";
@@ -257,41 +259,33 @@ module.exports.run = async (client, message) => {
                         const galarString = "-galar";
                         const megaString = "-mega";
                         const primalString = "-primal";
+                        const gmaxString = "-gmax";
                         const alolaBool = pokemonName.endsWith(alolaString);
                         const galarBool = pokemonName.endsWith(galarString);
                         const megaBool = pokemonName.endsWith(megaString);
                         const primalBool = pokemonName.endsWith(primalString);
-                        let regionalChar;
+                        const gmaxBool = pokemonName.endsWith(gmaxString);
+                        let formChar;
 
-                        // Catch other forms
-                        if (alolaBool || galarBool) {
+                        if (alolaBool || galarBool || megaBool || primalBool || gmaxBool) {
                             if (alolaBool) {
-                                formLength = alolaString.length;
-                                regionalChar = "-a";
+                                formChar = "-a";
                             };
                             if (galarBool) {
-                                formLength = galarString.length;
-                                regionalChar = "-g";
+                                formChar = "-g";
                             };
-                            let baseName = pokemonName.replace("-galar", "").replace("-alola", "");
+                            if (megaBool || primalBool) {
+                                formChar = "-m";
+                            };
+                            if (gmaxBool) {
+                                formChar = "-gi";
+                                weight = "???kg";
+                            };
+                            let baseName = pokemonName.replace("-alola", "").replace("-galar", "").replace("-mega", "").replace("-primal", "").replace("-gmax", "");
                             await P.getPokemonByName(baseName)
-                                .then(function (responseRegional) {
-                                    let RegionalID = leadingZeros(responseRegional.id.toString());
-                                    pokemonID = `${RegionalID}${regionalChar}`;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
-                                });
-                        };
-                        if (megaBool || primalBool) {
-                            if (megaBool) formLength = megaString.length;
-                            if (primalBool) formLength = primalString.length;
-                            let baseName = pokemonName.replace("-mega", "").replace("-primal", "");
-                            await P.getPokemonByName(baseName)
-                                .then(function (responseMega) {
-                                    let MegaID = leadingZeros(responseMega.id.toString());
-                                    pokemonID = `${MegaID}-m`;
+                                .then(function (responseForm) {
+                                    let formID = leadingZeros(responseForm.id.toString());
+                                    pokemonID = `${formID}${formChar}`;
                                 })
                                 .catch(function (error) {
                                     console.log(error);
@@ -369,6 +363,7 @@ module.exports.run = async (client, message) => {
                         if (pokemonName == "zacian-crowned") pokemonID = "888-c";
                         if (pokemonName == "zamazenta-crowned") pokemonID = "889-c";
                         if (pokemonName == "urshifu-rapid-strike") pokemonID = "892-r";
+                        if (pokemonName == "urshifu-rapid-strike-gmax") pokemonID = "892-rgi";
                         if (pokemonName == "calyrex-ice-rider") pokemonID = "898-i";
                         if (pokemonName == "calyrex-shadow-rider") pokemonID = "898-s";
 
@@ -496,6 +491,7 @@ ${type2Emote} ${type2Name}`;
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+            if (pokemonName.endsWith("-gmax")) StatText = `(${min50 * 2}-${max50 * 2}) (${min100 * 2}-${max100 * 2})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
