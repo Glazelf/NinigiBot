@@ -18,7 +18,10 @@ exports.run = async (client, message) => {
         // Role color
         let roleColor = `#${role.color.toString(16)}`;
         let embedColor = roleColor;
-        if (roleColor == 0) embedColor = globalVars.embedColor;
+        if (roleColor == "#0") {
+            roleColor = "Default";
+            embedColor = globalVars.embedColor;
+        };
 
         // Author avatar
         let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
@@ -33,11 +36,10 @@ exports.run = async (client, message) => {
             .setColor(embedColor)
             .setAuthor(`${role.name} (${role.id})`, avatar)
             .addField("Tag:", role, true)
-        if (roleColor !== 0) roleEmbed.addField("Color:", roleColor, true)
-        roleEmbed
-            .addField("Managed by integration:", managed, false)
+            .addField("Color:", roleColor, true)
             .addField("Sorted seperately:", hoist, false)
             .addField("Can be mentioned:", mentionable, false)
+            .addField("Managed by integration:", managed, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
