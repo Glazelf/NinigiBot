@@ -29,10 +29,12 @@ exports.run = async (client, message) => {
         // Author avatar
         let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
-        // Convert true/false to Yes/No
-        let hoist = boolConvert(role.hoist);
-        let managed = boolConvert(role.managed);
-        let mentionable = boolConvert(role.mentionable);
+        // Properties
+        let roleProperties = "";
+        if (role.hoist) roleProperties = `${roleProperties}\nSorted seperately`;
+        if (role.mentionable) roleProperties = `${roleProperties}\nCan be mentioned`;
+        if (role.managed) roleProperties = `${roleProperties}\nManaged by integration`;
+        if (roleProperties.length == 0) roleProperties = "None";
 
         // Embed
         const roleEmbed = new Discord.MessageEmbed()
@@ -41,20 +43,12 @@ exports.run = async (client, message) => {
             .addField("Tag:", role, true)
             .addField("Color:", roleColor, true)
             .addField("Members:", memberCount, true)
-            .addField("Hierarchy position:", role.rawPosition, true)
-            .addField("Sorted seperately:", hoist, false)
-            .addField("Can be mentioned:", mentionable, false)
-            .addField("Managed by integration:", managed, false)
+            .addField("Position:", role.rawPosition, true)
+            .addField("Properties:", roleProperties, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
         return message.channel.send(roleEmbed);
-
-        function boolConvert(input) {
-            if (input == true) input = "Yes";
-            if (input == false) input = "No";
-            return input;
-        };
 
     } catch (e) {
         // log error
