@@ -1,0 +1,273 @@
+{
+    "normal": {
+        "se": [],
+        "res": [
+            "rock",
+            "steel"
+        ],
+        "immune": [
+            "ghost"
+        ],
+        "effect": 0
+    },
+    "fighting": {
+        "se": [
+            "normal",
+            "rock",
+            "steel",
+            "ice",
+            "dark"
+        ],
+        "res": [
+            "flying",
+            "poison",
+            "bug",
+            "psychic",
+            "fairy"
+        ],
+        "immune": [
+            "ghost"
+        ],
+        "effect": 0
+    },
+    "flying": {
+        "se": [
+            "fighting",
+            "bug",
+            "grass"
+        ],
+        "res": [
+            "rock",
+            "steel",
+            "electric"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "poison": {
+        "se": [
+            "grass",
+            "fairy"
+        ],
+        "res": [
+            "poison",
+            "ground",
+            "rock",
+            "ghost"
+        ],
+        "immune": [
+            "steel"
+        ],
+        "effect": 0
+    },
+    "ground": {
+        "se": [
+            "poison",
+            "rock",
+            "steel",
+            "fire",
+            "electric"
+        ],
+        "res": [
+            "bug",
+            "grass"
+        ],
+        "immune": [
+            "flying"
+        ],
+        "effect": 0
+    },
+    "rock": {
+        "se": [
+            "flying",
+            "bug",
+            "fire",
+            "ice"
+        ],
+        "res": [
+            "fighting",
+            "ground",
+            "steel"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "bug": {
+        "se": [
+            "grass",
+            "psychic",
+            "dark"
+        ],
+        "res": [
+            "fighting",
+            "flying",
+            "poison",
+            "ghost",
+            "steel",
+            "fire",
+            "fairy"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "ghost": {
+        "se": [
+            "ghost",
+            "psychic"
+        ],
+        "res": [
+            "dark"
+        ],
+        "immune": [
+            "normal"
+        ],
+        "effect": 0
+    },
+    "steel": {
+        "se": [
+            "rock",
+            "ice",
+            "fairy"
+        ],
+        "res": [
+            "steel",
+            "fire",
+            "water",
+            "electric"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "fire": {
+        "se": [
+            "bug",
+            "steel",
+            "grass",
+            "ice"
+        ],
+        "res": [
+            "rock",
+            "fire",
+            "water",
+            "dragon"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "water": {
+        "se": [
+            "ground",
+            "rock",
+            "fire"
+        ],
+        "res": [
+            "water",
+            "grass",
+            "dragon"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "grass": {
+        "se": [
+            "ground",
+            "rock",
+            "water"
+        ],
+        "res": [
+            "flying",
+            "poison",
+            "bug",
+            "steel",
+            "fire",
+            "grass",
+            "dragon"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "electric": {
+        "se": [
+            "flying",
+            "water"
+        ],
+        "res": [
+            "grass",
+            "electric",
+            "dragon"
+        ],
+        "immune": [
+            "ground"
+        ],
+        "effect": 0
+    },
+    "psychic": {
+        "se": [
+            "fighting",
+            "poison"
+        ],
+        "res": [
+            "steel",
+            "psychic"
+        ],
+        "immune": [
+            "dark"
+        ],
+        "effect": 0
+    },
+    "ice": {
+        "se": [
+            "flying",
+            "ground",
+            "grass",
+            "dragon"
+        ],
+        "res": [
+            "steel",
+            "fire",
+            "water",
+            "ice"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "dragon": {
+        "se": [
+            "dragon"
+        ],
+        "res": [
+            "steel"
+        ],
+        "immune": [
+            "fairy"
+        ],
+        "effect": 0
+    },
+    "dark": {
+        "se": [
+            "ghost",
+            "psychic"
+        ],
+        "res": [
+            "fighting",
+            "dark",
+            "fairy"
+        ],
+        "immune": [],
+        "effect": 0
+    },
+    "fairy": {
+        "se": [
+            "fighting",
+            "dragon",
+            "dark"
+        ],
+        "res": [
+            "poison",
+            "steel",
+            "fire"
+        ],
+        "immune": [],
+        "effect": 0
+    }
+}

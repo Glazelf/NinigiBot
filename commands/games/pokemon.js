@@ -4,6 +4,11 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         var Pokedex = require('pokedex-promise-v2');
         var P = new Pokedex();
+        const correctionDisplay = require('../../objects/pokemon/correctionDisplay.json');
+        const correctionID = require('../../objects/pokemon/correctionID.json');
+        const correctionName = require('../../objects/pokemon/correctionName.json');
+        const easterEggName = require('../../objects/pokemon/easterEggName.json');
+        const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to embed messages, ${message.author}.`);
 
@@ -85,62 +90,23 @@ module.exports.run = async (client, message) => {
                 break;
 
             default:
+                // Public variables
                 var pokemonName = subCommand;
+                var pokemonID;
+
                 args.forEach(arg => {
                     if (arg !== args[0] && arg !== args[1]) {
                         pokemonName = `${pokemonName} ${arg}`;
                     };
                 });
 
+                // Edgecase name corrections
                 if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[1]}-${args[2]}`;
                 if (pokemonName == "type: null") pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
-                // edgecase name corrections
-                if (pokemonName == "farfetch'd") pokemonName = "farfetchd";
-                if (pokemonName == "mime jr") pokemonName = "mime-jr";
-                if (pokemonName == "mr mime" || pokemonName == "mr. mime") pokemonName = "mr-mime";
-                if (pokemonName == "deoxys") pokemonName = "deoxys-normal";
-                if (pokemonName == "burmy" || pokemonName == "wormadam") pokemonName = `${pokemonName}-plant`;
-                if (pokemonName == "giratina") pokemonName = "giratina-altered";
-                if (pokemonName == "basculin") pokemonName = "basculin-red-striped";
-                if (pokemonName == "darmanitan") pokemonName = "darmanitan-standard";
-                if (pokemonName == "darmanitan-galar") pokemonName = "darmanitan-standard-galar";
-                if (pokemonName == "darmanitan-galar-zen") pokemonName = "darmanitan-zen-galar";
-                if (pokemonName == "tornadus" || pokemonName == "thundurus" || pokemonName == "landorus") pokemonName = `${pokemonName}-incarnate`;
-                if (pokemonName == "keldeo") pokemonName = "keldeo-ordinary";
-                if (pokemonName == "meloetta") pokemonName = "meloetta-aria";
-                if (pokemonName == "meowstic" || pokemonName == "meowstic-m") pokemonName = "meowstic-male";
-                if (pokemonName == "meowstic-f") pokemonName = "meowstic-female";
-                if (pokemonName == "aegislash") pokemonName = "aegislash-shield";
-                if (pokemonName == "aegislash-sword") pokemonName = "aegislash-blade";
-                if (pokemonName == "pumpkaboo" || pokemonName == "gourgeist") pokemonName = `${pokemonName}-average`;
-                if (pokemonName == "zygarde-10%") pokemonName = "zygarde-10";
-                if (pokemonName == "zygarde-50" || pokemonName == "zygarde-50%") pokemonName = "zygarde";
-                if (pokemonName == "zygarde-100" || pokemonName == "zygarde-100%") pokemonName = "zygarde-complete";
-                if (pokemonName == "oricorio") pokemonName = "oricorio-baile";
-                if (pokemonName == "oricorio-pa'u") pokemonName = "oricorio-pau";
-                if (pokemonName == "rockruff-dusk") pokemonName = "rockruff-own-tempo";
-                if (pokemonName == "lycanroc") pokemonName = "lycanroc-midday";
-                if (pokemonName == "wishiwashi") pokemonName = "wishiwashi-solo";
-                if (pokemonName == "minior" || pokemonName == "minior-meteor" || pokemonName == "minior-blue-meteor" || pokemonName == "minior-green-meteor" || pokemonName == "minior-indigo-meteor" || pokemonName == "minior-orange-meteor" || pokemonName == "minior-violet-meteor" || pokemonName == "minior-yellow-meteor") pokemonName = "minior-red-meteor";
-                if (pokemonName == "minior-core") pokemonName = "minior-red";
-                if (pokemonName == "mimikyu") pokemonName = "mimikyu-disguised";
-                if (pokemonName == "necrozma-dawn-wings") pokemonName = "necrozma-dawn";
-                if (pokemonName == "necrozma-dusk-mane") pokemonName = "necrozma-dusk";
-                if (pokemonName == "toxtricity") pokemonName = "toxtricity-amped";
-                if (pokemonName == "toxtricity-gmax" || pokemonName == "toxtricity-low-key-gmax") pokemonName = "toxtricity-amped-gmax";
-                if (pokemonName == "eiscue") pokemonName = "eiscue-ice";
-                if (pokemonName == "indeedee" || pokemonName == "indeedee-m") pokemonName = "indeedee-male";
-                if (pokemonName == "indeedee-f") pokemonName = "indeedee-female";
-                if (pokemonName == "zacian") pokemonName = "zacian-hero";
-                if (pokemonName == "zamazenta") pokemonName = "zamazenta-hero";
-                if (pokemonName == "urshifu") pokemonName = "urshifu-single-strike";
-                if (pokemonName == "calyrex-ice") pokemonName = "calyrex-ice-rider";
-                if (pokemonName == "calyrex-shadow") pokemonName = "calyrex-shadow-rider";
-                // "joke" name aliases
-                if (pokemonName == "smogonbird") pokemonName = "talonflame";
-                if (pokemonName == "glaze") pokemonName = "shinx";
-                if (pokemonName == "joris") pokemonName = "charjabug";
-                if (pokemonName == "zora") pokemonName = "turtwig";
+                correctValue(correctionName, pokemonName);
+
+                // Easter egg name aliases
+                correctValue(easterEggName, pokemonName);
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
@@ -160,34 +126,12 @@ module.exports.run = async (client, message) => {
                             typeString = getTypeEmotes(type1);
                         };
 
-                        // Typing matchups
-                        let types = {
-                            "normal": { se: [], res: ["rock", "steel"], immune: ["ghost"], effect: 0 },
-                            "fighting": { se: ["normal", "rock", "steel", "ice", "dark"], res: ["flying", "poison", "bug", "psychic", "fairy"], immune: ["ghost"], effect: 0 },
-                            "flying": { se: ["fighting", "bug", "grass"], res: ["rock", "steel", "electric"], immune: [], effect: 0 },
-                            "poison": { se: ["grass", "fairy"], res: ["poison", "ground", "rock", "ghost"], immune: ["steel"], effect: 0 },
-                            "ground": { se: ["poison", "rock", "steel", "fire", "electric"], res: ["bug", "grass"], immune: ["flying"], effect: 0 },
-                            "rock": { se: ["flying", "bug", "fire", "ice"], res: ["fighting", "ground", "steel"], immune: [], effect: 0 },
-                            "bug": { se: ["grass", "psychic", "dark"], res: ["fighting", "flying", "poison", "ghost", "steel", "fire", "fairy"], immune: [], effect: 0 },
-                            "ghost": { se: ["ghost", "psychic"], res: ["dark"], immune: ["normal"], effect: 0 },
-                            "steel": { se: ["rock", "ice", "fairy"], res: ["steel", "fire", "water", "electric"], immune: [], effect: 0 },
-                            "fire": { se: ["bug", "steel", "grass", "ice"], res: ["rock", "fire", "water", "dragon"], immune: [], effect: 0 },
-                            "water": { se: ["ground", "rock", "fire"], res: ["water", "grass", "dragon"], immune: [], effect: 0 },
-                            "grass": { se: ["ground", "rock", "water"], res: ["flying", "poison", "bug", "steel", "fire", "grass", "dragon"], immune: [], effect: 0 },
-                            "electric": { se: ["flying", "water"], res: ["grass", "electric", "dragon"], immune: ["ground"], effect: 0 },
-                            "psychic": { se: ["fighting", "poison"], res: ["steel", "psychic"], immune: ["dark"], effect: 0 },
-                            "ice": { se: ["flying", "ground", "grass", "dragon"], res: ["steel", "fire", "water", "ice"], immune: [], effect: 0 },
-                            "dragon": { se: ["dragon"], res: ["steel"], immune: ["fairy"], effect: 0 },
-                            "dark": { se: ["ghost", "psychic"], res: ["fighting", "dark", "fairy"], immune: [], effect: 0 },
-                            "fairy": { se: ["fighting", "dragon", "dark"], res: ["poison", "steel", "fire"], immune: [], effect: 0 }
-                        };
-
+                        // Check type matchups
                         let superEffectives = "";
                         let resistances = "";
                         let immunities = "";
 
-                        // Check type matchups
-                        for (let [key, type] of Object.entries(types)) {
+                        for (let [key, type] of Object.entries(typeMatchups)) {
                             let typeName = key;
 
                             // Dual type Pokemon
@@ -254,8 +198,9 @@ module.exports.run = async (client, message) => {
                         let weight = `${response.weight / 10}kg`;
                         let height = `${response.height / 10}m`;
 
-                        var pokemonID = leadingZeros(response.id.toString());
+                        pokemonID = leadingZeros(response.id.toString());
 
+                        // Forms
                         const alolaString = "-alola";
                         const galarString = "-galar";
                         const megaString = "-mega";
@@ -295,78 +240,7 @@ module.exports.run = async (client, message) => {
                         };
 
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
-                        if (pokemonName == "charizard-mega-x") pokemonID = "006-mx";
-                        if (pokemonName == "charizard-mega-y") pokemonID = "006-my";
-                        if (pokemonName == "mewtwo-mega-x") pokemonID = "150-mx";
-                        if (pokemonName == "mewtwo-mega-y") pokemonID = "150-my";
-                        if (pokemonName == "castform-sunny") pokemonID = "351-s";
-                        if (pokemonName == "castform-rainy") pokemonID = "351-r";
-                        if (pokemonName == "castform-snowy") pokemonID = "351-i";
-                        if (pokemonName == "deoxys-attack") pokemonID = "386-a";
-                        if (pokemonName == "deoxys-defense") pokemonID = "386-d";
-                        if (pokemonName == "deoxys-speed") pokemonID = "386-s";
-                        if (pokemonName == "burmy-sandy") pokemonID = "412-c";
-                        if (pokemonName == "burmy-trash") pokemonID = "412-t";
-                        if (pokemonName == "wormadam-sandy") pokemonID = "413-c";
-                        if (pokemonName == "wormadam-trash") pokemonID = "413-t";
-                        if (pokemonName == "rotom-fan") pokemonID = "479-s";
-                        if (pokemonName == "rotom-frost") pokemonID = "479-f";
-                        if (pokemonName == "rotom-heat") pokemonID = "479-h";
-                        if (pokemonName == "rotom-mow") pokemonID = "479-m";
-                        if (pokemonName == "rotom-wash") pokemonID = "479-w";
-                        if (pokemonName == "giratina-origin") pokemonID = "487-o";
-                        if (pokemonName == "shaymin-sky") pokemonID = "492-s";
-                        if (pokemonName == "basculin-blue-striped") pokemonID = "550-b";
-                        if (pokemonName == "darmanitan-zen") pokemonID = "555-z";
-                        if (pokemonName == "darmanitan-zen-galar") pokemonID = "555-gz";
-                        if (pokemonName == "tornadus-therian") pokemonID = "641-s";
-                        if (pokemonName == "thundurus-therian") pokemonID = "642-s";
-                        if (pokemonName == "landorus-therian") pokemonID = "645-s";
-                        if (pokemonName == "kyurem-black") pokemonID = "646-b";
-                        if (pokemonName == "kyurem-white") pokemonID = "646-w";
-                        if (pokemonName == "keldeo-resolute") pokemonID = "647-r";
-                        if (pokemonName == "meloetta-pirouette") pokemonID = "648-p";
-                        if (pokemonName == "greninja-ash") pokemonID = "658-a";
-                        if (pokemonName == "floette-eternal") pokemonID = "670-e";
-                        if (pokemonName == "meowstic-female") pokemonID = "678-f";
-                        if (pokemonName == "aegislash-blade") pokemonID = "681-b";
-                        if (pokemonName == "pumpkaboo-small") pokemonID = "710-s";
-                        if (pokemonName == "pumpkaboo-large") pokemonID = "710-l";
-                        if (pokemonName == "pumpkaboo-super") pokemonID = "710-h";
-                        if (pokemonName == "gourgeist-small") pokemonID = "711-s";
-                        if (pokemonName == "gourgeist-large") pokemonID = "711-l";
-                        if (pokemonName == "gourgeist-super") pokemonID = "711-h";
-                        if (pokemonName == "zygarde-10") pokemonID = "718-10";
-                        if (pokemonName == "zygarde-complete") pokemonID = "718-c";
-                        if (pokemonName == "hoopa-unbound") pokemonID = "720-u";
-                        if (pokemonName == "oricorio-pom-pom") pokemonID = "741-p";
-                        if (pokemonName == "oricorio-pau") pokemonID = "741-pau";
-                        if (pokemonName == "oricorio-sensu") pokemonID = "741-s";
-                        if (pokemonName == "rockruff-own-tempo") pokemonID = "744";
-                        if (pokemonName == "lycanroc-midnight") pokemonID = "745-m";
-                        if (pokemonName == "lycanroc-dusk") pokemonID = "745-d";
-                        if (pokemonName == "wishiwashi-school") pokemonID = "746-s";
-                        if (pokemonName == "minior-blue") pokemonID = "774-b";
-                        if (pokemonName == "minior-green") pokemonID = "774-g";
-                        if (pokemonName == "minior-indigo") pokemonID = "774-i";
-                        if (pokemonName == "minior-orange") pokemonID = "774-o";
-                        if (pokemonName == "minior-red") pokemonID = "774-r";
-                        if (pokemonName == "minior-violet") pokemonID = "774-v";
-                        if (pokemonName == "minior-yellow") pokemonID = "774-y";
-                        if (pokemonName == "mimikyu-busted") pokemonID = "778-b";
-                        if (pokemonName == "necrozma-dawn") pokemonID = "800-dw";
-                        if (pokemonName == "necrozma-dusk") pokemonID = "800-dm";
-                        if (pokemonName == "necrozma-ultra") pokemonID = "800-m";
-                        if (pokemonName == "magearna-original") pokemonID = "801-o";
-                        if (pokemonName == "toxtricity-low-key") pokemonID = "849-l";
-                        if (pokemonName == "eiscue-noice") pokemonID = "875-n";
-                        if (pokemonName == "indeedee-female") pokemonID = "876-f";
-                        if (pokemonName == "zacian-crowned") pokemonID = "888-c";
-                        if (pokemonName == "zamazenta-crowned") pokemonID = "889-c";
-                        if (pokemonName == "urshifu-rapid-strike") pokemonID = "892-r";
-                        if (pokemonName == "urshifu-rapid-strike-gmax") pokemonID = "892-rgi";
-                        if (pokemonName == "calyrex-ice-rider") pokemonID = "898-i";
-                        if (pokemonName == "calyrex-shadow-rider") pokemonID = "898-s";
+                        correctValue(correctionID, pokemonID);
 
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
 
@@ -416,14 +290,7 @@ module.exports.run = async (client, message) => {
                         let Spestats = calcStat(baseSpe);
 
                         // Alter display Pokémon names
-                        if (pokemonName == "darmanitan-standard") pokemonName = "darmanitan";
-                        if (pokemonName == "darmanitan-standard-galar") pokemonName = "darmanitan-galar";
-                        if (pokemonName == "oricorio-pau") pokemonName = "oricorio-pa'u";
-                        if (pokemonName == "minior-red-meteor") pokemonName = "minior-meteor";
-                        if (pokemonName == "mimikyu-disguised") pokemonName = "mimikyu";
-                        if (pokemonName == "necrozma-dusk") pokemonName = "necrozma-dusk-mane";
-                        if (pokemonName == "necrozma-dawn") pokemonName = "necrozma-dawn-wings";
-                        if (pokemonName == "toxtricity-amped-gmax") pokemonName = "toxtricity-gmax";
+                        correctValue(correctionDisplay, pokemonName);
 
                         pokemonName = capitalizeString(pokemonName);
                         let abilityStringCapitalized = capitalizeAbilities(abilityString);
@@ -477,14 +344,14 @@ ${type2Emote} ${type2Name}`;
             return typeString;
         };
 
-        function capitalizeAbilities(str) {
-            let abilitySplit = str.split('\n');
-            let newArray = [];
-            for (var i = 0; i < abilitySplit.length; i++) {
-                newArray.push(capitalizeString(abilitySplit[i]));
-            };
-            capitalizedAbilities = newArray.join('\n');
-            return capitalizedAbilities;
+        async function correctValue(object, input) {
+            var uncorrectedNames = Object.keys(object);
+            uncorrectedNames.forEach(function (key) {
+                if (pokemonName == key) {
+                    if (input == pokemonName) pokemonName = object[key];
+                    if (input == pokemonID) pokemonID = object[key];
+                };
+            });
         };
 
         function calcHP(base) {
@@ -518,6 +385,16 @@ ${type2Emote} ${type2Name}`;
             returnStr = splitStr.join(' ');
             if (returnStr == "Type Null") returnStr = "Type: Null";
             return returnStr;
+        };
+
+        function capitalizeAbilities(str) {
+            let abilitySplit = str.split('\n');
+            let newArray = [];
+            for (var i = 0; i < abilitySplit.length; i++) {
+                newArray.push(capitalizeString(abilitySplit[i]));
+            };
+            capitalizedAbilities = newArray.join('\n');
+            return capitalizedAbilities;
         };
 
         function leadingZeros(str) {
