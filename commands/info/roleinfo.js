@@ -23,6 +23,9 @@ exports.run = async (client, message) => {
             embedColor = globalVars.embedColor;
         };
 
+        // Member count
+        let memberCount = message.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
+
         // Author avatar
         let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
@@ -37,6 +40,8 @@ exports.run = async (client, message) => {
             .setAuthor(`${role.name} (${role.id})`, avatar)
             .addField("Tag:", role, true)
             .addField("Color:", roleColor, true)
+            .addField("Members:", memberCount, true)
+            .addField("Hierarchy position:", role.rawPosition, true)
             .addField("Sorted seperately:", hoist, false)
             .addField("Can be mentioned:", mentionable, false)
             .addField("Managed by integration:", managed, false)
