@@ -14,6 +14,10 @@ module.exports = async (client, message) => {
 
     const autoMod = require('../util/autoMod');
 
+    // Call image
+    let messageImage = null;
+    if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
       if (message.content.indexOf(globalVars.prefix) == 0) {
@@ -77,10 +81,6 @@ module.exports = async (client, message) => {
         talkedRecently.delete(message.author.id);
       }, 60000);
     };
-
-    // Call image
-    let messageImage = null;
-    if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
     // Ignore messages not starting with the prefix
     if (message.content.indexOf(globalVars.prefix) !== 0) return;
