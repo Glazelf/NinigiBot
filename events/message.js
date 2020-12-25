@@ -14,36 +14,14 @@ module.exports = async (client, message) => {
 
     const autoMod = require('../util/autoMod');
 
-    // Ignore all bots
-    if (message.author.bot) return;
-
-    // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id)) {
-      bank.currency.add(message.author.id, 1);
-      talkedRecently.add(message.author.id);
-      setTimeout(() => {
-        talkedRecently.delete(message.author.id);
-      }, 60000);
-    };
-
-    // Add message count
-    globalVars.totalMessages += 1;
-
-    // Call image
-    let messageImage = null;
-    if (message.attachments.size > 0) messageImage = message.attachments.first().url;
-
     // Ignore commands in DMs
     if (message.channel.type == "dm") {
       if (message.content.indexOf(globalVars.prefix) == 0) {
         message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
       };
-
       // Send message contents to dm channel
       let DMChannel = client.channels.cache.get(client.config.devChannelID);
-
       let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
-
       const dmEmbed = new Discord.MessageEmbed()
         .setColor(globalVars.embedColor)
         .setAuthor(`DM Message`, avatar)
@@ -55,12 +33,8 @@ module.exports = async (client, message) => {
         .setImage(messageImage)
         .setFooter(client.user.tag)
         .setTimestamp();
-
       return DMChannel.send(dmEmbed);
     };
-
-    // Automod
-    autoMod(message);
 
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(collected => {
@@ -69,11 +43,8 @@ module.exports = async (client, message) => {
         if (!collected.first()) return;
         if (collected.first().count == globalVars.starboardLimit) {
           if (message.channel !== starboard) {
-
-            if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard.`);
-
+            if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
-
             const starEmbed = new Discord.MessageEmbed()
               .setColor(globalVars.embedColor)
               .setAuthor(`⭐ ${message.author.username}`, avatar)
@@ -88,6 +59,28 @@ module.exports = async (client, message) => {
         };
       };
     });
+
+    // Ignore all bots
+    if (message.author.bot) return;
+
+    // Automod
+    autoMod(message);
+
+    // Add message count
+    globalVars.totalMessages += 1;
+
+    // Add currency if message doesn't start with prefix
+    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id)) {
+      bank.currency.add(message.author.id, 1);
+      talkedRecently.add(message.author.id);
+      setTimeout(() => {
+        talkedRecently.delete(message.author.id);
+      }, 60000);
+    };
+
+    // Call image
+    let messageImage = null;
+    if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
     // Ignore messages not starting with the prefix
     if (message.content.indexOf(globalVars.prefix) !== 0) return;
