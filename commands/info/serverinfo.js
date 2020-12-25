@@ -6,7 +6,7 @@ module.exports.run = async (client, message) => {
 
         const Discord = require("discord.js");
 
-        args = message.content.split(' ');
+        let args = message.content.split(' ');
         let guildID = args[1];
         let guild = client.guilds.cache.get(guildID);
         if (!guild) guild = message.guild;
