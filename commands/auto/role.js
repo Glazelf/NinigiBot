@@ -56,7 +56,7 @@ Example: \`${globalVars.prefix}role rolename\``;
 
     const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
 
-    let invalidRoleText = `> That role does not exist, ${message.author}. Use \`${globalVars.prefix}role help\` to see the available roles.`
+    let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${globalVars.prefix}role help\` to see the available roles.`
     if (!role) return message.channel.send(invalidRoleText);
     if (!roles.includes(role.id)) return message.channel.send(invalidRoleText);
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
