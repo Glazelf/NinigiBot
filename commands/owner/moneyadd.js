@@ -20,10 +20,7 @@ module.exports.run = async (client, message) => {
             transferTarget = client.users.cache.get(userID);
         };
 
-        if (!transferTarget) {
-            transferTarget = message.author;
-        };
-
+        if(!transferTarget) return message.channel.send(`> That's not a valid target, ${message.author}.`);
         if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
 
         bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
