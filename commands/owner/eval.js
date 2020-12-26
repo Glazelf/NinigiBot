@@ -5,8 +5,13 @@ module.exports.run = async (client, message, args) => {
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
-        const code = args.join(" ");
-        let evaled = eval(code);
+        const input = args.join(" ");
+        try {
+            var evaled = eval(input);
+        } catch (e) {
+            console.log(e);
+            return message.channel.send(`> An error occurred and has been logged, ${message.author}.`);
+        };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
 
