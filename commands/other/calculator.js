@@ -18,7 +18,9 @@ exports.run = async (client, message) => {
             return message.channel.send(`> You need to provide a valid input, ${message.author}.`);
         };
 
-        return message.channel.send(evaled, { code: "js" });
+        let rounded = Math.round((evaled + Number.EPSILON) * 100) / 100;
+
+        return message.channel.send(rounded, { code: "js" });
 
     } catch (e) {
         // log error
