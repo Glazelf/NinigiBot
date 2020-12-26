@@ -12,11 +12,22 @@ exports.run = (client, message) => {
         const input = message.content.split(` `);
         let inputText = "";
         if (input[1]) inputText = input[1].toLowerCase();
-        // Shortcuts
-        if (inputText == "quarter") input[1] = balance / 4;
-        if (inputText == "half") input[1] = balance / 2;
-        if (inputText == "all") input[1] = balance;
+
+        // Heads / Tails + Amounts
+        let winSide = "heads";
+        let loseSide = "tails";
         amount = input[1];
+        if (inputText == "heads") amount = input[2];
+        if (inputText == "tails") {
+            amount = input[2];
+            winSide = "tails";
+            loseSide = "heads";
+        };
+
+        // Shortcuts
+        if (amount == "quarter") amount = balance / 4;
+        if (amount == "half") amount = balance / 2;
+        if (amount == "all") amount = balance;
 
         if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
         amount = Math.floor(amount);
@@ -26,11 +37,11 @@ exports.run = (client, message) => {
             return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
         };
 
-        let returnString = `> Congratulations, ${message.author}, you flipped **heads** and won ${amount}${currency}.`;
+        let returnString = `> Congratulations, ${message.author}, you flipped **${winSide}** and won ${amount}${currency}.`;
 
         // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            returnString = `> Sorry, ${message.author}, you flipped **tails** and lost ${amount}${currency}.`;
+            returnString = `> Sorry, ${message.author}, you flipped **${loseSide}** and lost ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
