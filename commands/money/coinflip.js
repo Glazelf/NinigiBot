@@ -17,12 +17,11 @@ exports.run = (client, message) => {
         let winSide = "heads";
         let loseSide = "tails";
         amount = input[1];
-        if (inputText == "heads") amount = input[2];
-        if (inputText == "tails") {
-            amount = input[2];
+        if (inputText == "tails" || input[2] == "tails") {
             winSide = "tails";
             loseSide = "heads";
         };
+        if (isNaN(amount) && !isNaN(input[2])) amount = input[2];
 
         // Shortcuts
         if (amount == "quarter") amount = balance / 4;
