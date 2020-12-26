@@ -21,7 +21,7 @@ exports.run = (client, message) => {
             winSide = "tails";
             loseSide = "heads";
         };
-        if (isNaN(amount) && !isNaN(input[2])) amount = input[2];
+        if (!isNaN(input[2]) || ["quarter", "half", "all"].includes(input[2])) amount = input[2];
 
         // Shortcuts
         if (amount == "quarter") amount = balance / 4;
