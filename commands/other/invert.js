@@ -44,7 +44,6 @@ module.exports.run = async (client, message) => {
         ctx.putImageData(imageData, startOffset, startOffset);
         ctx.closePath();
         ctx.clip();
-        // };
 
         return message.channel.send(totalMessage, {
             files: [canvas.toBuffer()]
