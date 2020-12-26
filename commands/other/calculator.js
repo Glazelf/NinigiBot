@@ -7,7 +7,11 @@ exports.run = async (client, message) => {
         let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
 
         // Sanitize input
-        calcInput = calcInput.replace(/[a-zA-Z]/gm, '').replace(" ", "").replace("'", "").replace(`"`, ``).replace("`", "");
+        let sanitizeValues = [" ", "`", '"', "'", "{", "}", "[", "]"];
+        calcInput = calcInput.replace(/[a-zA-Z]/gm, '');
+        sanitizeValues.forEach(function (value) {
+            calcInput = calcInput.replace(value, "");
+        });
 
         if (!calcInput) return message.channel.send(`> You need to provide something to calculate, ${message.author}.`);
 
