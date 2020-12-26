@@ -167,6 +167,7 @@ module.exports.run = async (client, message) => {
                                         immunities = `${immunities}, ${typeName}`;
                                     };
                                 };
+                                type.effect = 0;
 
                                 // Single type Pokemon
                             } else {
