@@ -244,6 +244,10 @@ module.exports.run = async (client, message) => {
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
                         correctValue(correctionID, pokemonID);
 
+                        // ID and get Species Info, currently unused
+                        // let numericID = pokemonID.replace(/\D/g, '');
+                        // let speciesInfo = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${numericID}/`)).json();
+
                         // Official art
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
 
@@ -274,8 +278,6 @@ module.exports.run = async (client, message) => {
                             };
                         };
 
-                        let numericID = pokemonID.replace(/\D/g, '');
-                        // Stat ranges
                         let statLevels = `(50) (100)`;
                         let baseHP = response.stats[0].base_stat;
                         let baseAtk = response.stats[1].base_stat;
@@ -405,6 +407,10 @@ ${type2Emote} ${type2Name}`;
                 str = "0" + str;
             };
             return str;
+        };
+
+        function getKeyByValue(object, value) {
+            return Object.keys(object).find(key => object[key] === value);
         };
 
     } catch (e) {
