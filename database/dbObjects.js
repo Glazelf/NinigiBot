@@ -33,6 +33,7 @@ const UserKeys = require('./models/userdata/UserKeys')(sequelize, Sequelize.Data
 //const UserRooms = require('./models/userdata/UserRooms')(sequelize, Sequelize.DataTypes);
 const EligibleRoles = require('./models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
 const DisabledChannels = require('./models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
+const PersonalRoles = require('./models/server/PersonalRoles')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
@@ -300,4 +301,4 @@ Users.prototype.getRoom = function () {
 	});
 };
 
-module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, ModEnabledServers, Shinx };
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, ModEnabledServers, Shinx };
