@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args) => {
         let memberFetch = await message.guild.members.fetch();
         let memberCache = memberFetch.get(message.author.id);
 
-        if (memberCache.premiumSince == 0) return message.channel.send(`> You need to be a Nitro Booster to manage a personal role, ${message.author}.`);
+        if (!memberCache.premiumSince) return message.channel.send(`> You need to be a Nitro Booster to manage a personal role, ${message.author}.`);
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
 
