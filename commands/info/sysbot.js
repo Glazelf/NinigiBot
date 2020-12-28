@@ -45,8 +45,8 @@ module.exports.run = async (client, message) => {
 > ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
 > ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag})
 
-> Please don't ask dumb questions like "When will x bot will be online???". Bots will be on when they're on.
-> Check the pins in <#${globalVars.botChannelID}> for more information and ways to support more uptime or donate!`);
+> Before asking a question make sure your question isn't already answered in either <#549220480490536972> or <#${globalVars.botChannelID}>.
+> Check the pins in <#${globalVars.botChannelID}> for ways to support more uptime or donate!`);
 
     } catch (e) {
         // log error
