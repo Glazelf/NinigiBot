@@ -17,6 +17,7 @@
     "giphy-random": "^2.0.8",
     "lodash": "^4.17.19",
     "minimist": "^1.2.5",
+    "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^3.2.0",
     "sequelize": "^6.3.4",
