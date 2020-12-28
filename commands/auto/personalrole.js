@@ -21,13 +21,13 @@ module.exports.run = async (client, message, args) => {
         if (!args[0]) roleColor = 0;
         if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
 
+        // Get Nitro Booster position
+        let boosterRole = message.guild.roles.cache.find(r => r.name == "Booster");
+        let personalRolePosition = boosterRole.position + 1;
+
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
-
-            // Get Nitro Booster position
-            let boosterRole = message.guild.roles.cache.find(r => r.name == "Booster");
-            let personalRolePosition = boosterRole.position + 1;
 
             personalRole.edit({
                 name: message.author.tag,
