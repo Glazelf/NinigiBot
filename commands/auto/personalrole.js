@@ -15,16 +15,17 @@ module.exports.run = async (client, message, args) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
 
+        let subCommand = args[0].toLowerCase();
         // Color catch
-        let roleColor = args[0];
-        if (!args[0]) roleColor = 0;
+        let roleColor = subCommand;
+        if (!subCommand) roleColor = 0;
         if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
 
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
-
-            if (roleColor == 0) return message.channel.send(`> You need to provide a color to change your role to, ${message.author}.`);
+            // Possibly add a function to delete your role later
+            // if (subCommand == "delete") return deleteRole();
 
             personalRole.edit({
                 name: message.author.tag,
