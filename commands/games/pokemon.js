@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const Discord = require("discord.js");
+        const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
         var P = new Pokedex();
         const correctionDisplay = require('../../objects/pokemon/correctionDisplay.json');
@@ -243,6 +244,7 @@ module.exports.run = async (client, message) => {
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
                         correctValue(correctionID, pokemonID);
 
+                        // Official art
                         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
 
                         // Shuffle icons, only works for pokemon in pokemon shuffle
@@ -250,10 +252,8 @@ module.exports.run = async (client, message) => {
                         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
                         //let icon = `https://www.smogon.com/forums//media/minisprites/${pokemonName}.png`;
 
-                        // High rest gen 8 sprite but only works for pokemon in swsh
+                        // High res SwSh sprites
                         let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
-                        // Lower Res sprite but works for all pokemon (but different naming convention, fuck smogon)
-                        //let sprite = `https://play.pokemonshowdown.com/sprites/ani-shiny/${pokemonName}.gif`;
 
                         let abilityString = ``;
                         if (response.abilities[0]) {
@@ -274,7 +274,14 @@ module.exports.run = async (client, message) => {
                             };
                         };
 
+                        let numericID = pokemonID.replace(/\D/g, '');
+                        let LC = false;
+                        let speciesInfo = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${numericID}/`)).json();
+
+                        if (speciesInfo.evolves_from_species == null && speciesInfo.is_legendary == false && speciesInfo.is_mythical == false) LC = true;
                         // Stat ranges
+                        let statLevels = `(50) (100)`;
+                        if (LC == true) statLevels = `(5) (50) (100)`;
                         let baseHP = response.stats[0].base_stat;
                         let baseAtk = response.stats[1].base_stat;
                         let baseDef = response.stats[2].base_stat;
@@ -283,12 +290,12 @@ module.exports.run = async (client, message) => {
                         let baseSpe = response.stats[5].base_stat;
                         let BST = baseHP + baseAtk + baseDef + baseSpA + baseSpD + baseSpe;
 
-                        let HPstats = calcHP(baseHP);
-                        let Atkstats = calcStat(baseAtk);
-                        let Defstats = calcStat(baseDef);
-                        let SpAstats = calcStat(baseSpA);
-                        let SpDstats = calcStat(baseSpD);
-                        let Spestats = calcStat(baseSpe);
+                        let HPstats = calcHP(baseHP, LC);
+                        let Atkstats = calcStat(baseAtk, LC);
+                        let Defstats = calcStat(baseDef, LC);
+                        let SpAstats = calcStat(baseSpA, LC);
+                        let SpDstats = calcStat(baseSpD, LC);
+                        let Spestats = calcStat(baseSpe, LC);
 
                         // Alter display Pokémon names
                         correctValue(correctionDisplay, pokemonName);
@@ -309,7 +316,7 @@ Height: ${height}`, true);
                         if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
                         if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
                         pkmEmbed
-                            .addField("Stats: (50) (100)", `HP: **${baseHP}** ${HPstats}
+                            .addField(`Stats: ${statLevels}`, `HP: **${baseHP}** ${HPstats}
 Atk: **${baseAtk}** ${Atkstats}
 Def: **${baseDef}** ${Defstats}
 SpA: **${baseSpA}** ${SpAstats}
@@ -355,23 +362,29 @@ ${type2Emote} ${type2Name}`;
             });
         };
 
-        function calcHP(base) {
+        function calcHP(base, LC) {
+            let min5 = Math.floor((((2 * base) * 5) / 100) + 5 + 10);
+            let max5 = Math.floor((((2 * base + 31 + (252 / 4)) * 5) / 100) + 5 + 10);
             let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
             let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName.endsWith("-gmax")) StatText = `(${min50 * 2}-${max50 * 2}) (${min100 * 2}-${max100 * 2})`;
+            if (LC == true) StatText = `(${min5}-${max5}) (${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
 
-        function calcStat(base) {
+        function calcStat(base, LC) {
+            let min5 = Math.floor(((((2 * base) * 5) / 100) + 5) * 0.9);
+            let max5 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
             let min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
             let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
             let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
             let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+            if (LC == true) StatText = `(${min5}-${max5}) (${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };
 
