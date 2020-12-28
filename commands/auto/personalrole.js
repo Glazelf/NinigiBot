@@ -72,7 +72,7 @@ module.exports.run = async (client, message, args) => {
             });
             memberCache.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.author.id, role_id: createdRole.id });
-            return message.channel.send(`> You didn't have a personal role so I created one for you, ${message.author}.`);
+            return message.channel.send(`> Created a personal role for you successfully, ${message.author}.`);
         };
 
     } catch (e) {
