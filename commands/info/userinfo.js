@@ -116,7 +116,7 @@ module.exports.run = async (client, message) => {
         // Nitro Boost check
         let nitroEmote = "<:nitroboost:753268592081895605>";
         let userText = user;
-        if(memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
+        if (memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
