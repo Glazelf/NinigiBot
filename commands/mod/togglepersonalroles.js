@@ -25,6 +25,6 @@ module.exports.run = async (client, message, args) => {
 };
 
 module.exports.config = {
-    name: "personalrolemod",
-    aliases: ["prm"]
+    name: "togglepersonalroles",
+    aliases: ["tpr"]
 };
