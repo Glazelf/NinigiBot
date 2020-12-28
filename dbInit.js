@@ -21,6 +21,7 @@ const UserKeys = require('./database/models/userdata/UserKeys')(sequelize, Seque
 const EligibleRoles = require('./database/models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
 const DisabledChannels = require('./database/models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
 const PersonalRoles = require('./database/models/server/PersonalRoles')(sequelize, Sequelize.DataTypes);
+const PersonalRoleServers = require('./database/models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./database/models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Equipments = require('./database/models/data/Equipments')(sequelize, Sequelize.DataTypes);
@@ -36,6 +37,7 @@ const syncDatabase = async () => {
 		await EligibleRoles.sync({ alter: true });
 		await DisabledChannels.sync({ alter: true });
 		await PersonalRoles.sync({ alter: true });
+		await PersonalRoleServers.sync({ alter: true });
 		await ModEnabledServers.sync({ alter: true });
 
 		await UserItems.sync({ alter: true });
