@@ -1,9 +1,10 @@
-const { forEach } = require('lodash');
-
 module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        // Personal Roles can / will only get global support in discord.js v13
+        if (message.guild.id !== "549214833858576395") return message.channel.send(`> Personal Roles can / will only get global support in discord.js v13, ${message.author}.`);
+
         if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_ROLES")) return message.channel.send(`> I don't have permission to manage roles, ${message.author}.`);
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
@@ -15,31 +16,31 @@ module.exports.run = async (client, message, args) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
 
-        let subCommand = args[0].toLowerCase();
         // Color catch
-        let roleColor = subCommand;
-        if (!subCommand) roleColor = 0;
+        let roleColor = args[0];
+        if (!args[0]) roleColor = 0;
         if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
 
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
-            // Possibly add a function to delete your role later
-            // if (subCommand == "delete") return deleteRole();
+
+            // Get Nitro Booster position
+            let boosterRole = message.guild.roles.cache.find(r => r.name == "Booster");
+            let personalRolePosition = boosterRole.position + 1;
 
             personalRole.edit({
                 name: message.author.tag,
-                color: roleColor
+                color: roleColor,
+                position: personalRolePosition
             }).catch(error => {
                 console.log(error);
                 return message.channel.send(`> An error occurred, ${message.author}.`);
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.find(r => r.name == message.author.tag)) memberCache.roles.add(createdRole.id);
+            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(createdRole.id);
 
-            console.log(personalRole);
-            console.log(roleColor);
             return message.channel.send(`> Updated your role successfully, ${message.author}.`);
 
         } else {
@@ -57,6 +58,7 @@ module.exports.run = async (client, message, args) => {
                 data: {
                     name: message.author.tag,
                     color: roleColor,
+                    position: personalRolePosition
                 },
                 reason: `Personal role for ${message.author.tag}.`,
             }).catch(error => {
