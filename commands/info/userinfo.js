@@ -113,11 +113,16 @@ module.exports.run = async (client, message) => {
         // Avatar
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
+        // Nitro Boost check
+        let nitroEmote = "<:nitroboost:753268592081895605>";
+        let userText = user;
+        if(memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.tag} (${user.id})`, avatar)
             .setThumbnail(avatar)
-            .addField("Account:", user, true)
+            .addField("Account:", userText, true)
             .addField("Availability:", userStatus, true);
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
         if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
@@ -130,7 +135,7 @@ module.exports.run = async (client, message) => {
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}
 ${checkDays(memberCache.joinedAt)}`, true);
-        if (memberCache.premiumSince > 0) profileEmbed.addField(`Nitro since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}
+        if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}
 ${checkDays(memberCache.premiumSince)}`, true);
         profileEmbed
             .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}
