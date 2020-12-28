@@ -74,7 +74,7 @@ module.exports.run = async (client, message) => {
                             .addField("Type:", getTypeEmotes(response.type.name), true)
                             .addField("Category:", capitalizeString(response.damage_class.name), true);
                         if (response.power) moveEmbed.addField("Power:", response.power, true);
-                        if (response.accuracy) moveEmbed.addField("Accuracy:", response.accuracy, true);
+                        if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
                         if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
                         moveEmbed
                             .addField("Target:", capitalizeString(response.target.name), true)
