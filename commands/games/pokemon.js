@@ -275,13 +275,8 @@ module.exports.run = async (client, message) => {
                         };
 
                         let numericID = pokemonID.replace(/\D/g, '');
-                        let LC = false;
-                        let speciesInfo = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${numericID}/`)).json();
-
-                        if (speciesInfo.evolves_from_species == null && speciesInfo.is_legendary == false && speciesInfo.is_mythical == false) LC = true;
                         // Stat ranges
                         let statLevels = `(50) (100)`;
-                        if (LC == true) statLevels = `(5) (50) (100)`;
                         let baseHP = response.stats[0].base_stat;
                         let baseAtk = response.stats[1].base_stat;
                         let baseDef = response.stats[2].base_stat;
@@ -290,12 +285,12 @@ module.exports.run = async (client, message) => {
                         let baseSpe = response.stats[5].base_stat;
                         let BST = baseHP + baseAtk + baseDef + baseSpA + baseSpD + baseSpe;
 
-                        let HPstats = calcHP(baseHP, LC);
-                        let Atkstats = calcStat(baseAtk, LC);
-                        let Defstats = calcStat(baseDef, LC);
-                        let SpAstats = calcStat(baseSpA, LC);
-                        let SpDstats = calcStat(baseSpD, LC);
-                        let Spestats = calcStat(baseSpe, LC);
+                        let HPstats = calcHP(baseHP);
+                        let Atkstats = calcStat(baseAtk);
+                        let Defstats = calcStat(baseDef);
+                        let SpAstats = calcStat(baseSpA);
+                        let SpDstats = calcStat(baseSpD);
+                        let Spestats = calcStat(baseSpe);
 
                         // Alter display Pokémon names
                         correctValue(correctionDisplay, pokemonName);
@@ -362,29 +357,23 @@ ${type2Emote} ${type2Name}`;
             });
         };
 
-        function calcHP(base, LC) {
-            let min5 = Math.floor((((2 * base) * 5) / 100) + 5 + 10);
-            let max5 = Math.floor((((2 * base + 31 + (252 / 4)) * 5) / 100) + 5 + 10);
+        function calcHP(base) {
             let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
             let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName.endsWith("-gmax")) StatText = `(${min50 * 2}-${max50 * 2}) (${min100 * 2}-${max100 * 2})`;
-            if (LC == true) StatText = `(${min5}-${max5}) (${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
 
-        function calcStat(base, LC) {
-            let min5 = Math.floor(((((2 * base) * 5) / 100) + 5) * 0.9);
-            let max5 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+        function calcStat(base) {
             let min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
             let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
             let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
             let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            if (LC == true) StatText = `(${min5}-${max5}) (${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };
 
