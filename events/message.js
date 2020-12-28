@@ -19,7 +19,7 @@ module.exports = async (client, message) => {
     if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
     // Ignore commands in DMs
-    if (message.channel.type == "dm") {
+    if (message.channel.type == "dm" && message.author.id !== client.user.id) {
       if (message.content.indexOf(globalVars.prefix) == 0) {
         message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
       };
