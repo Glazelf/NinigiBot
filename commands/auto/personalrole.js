@@ -16,11 +16,10 @@ module.exports.run = async (client, message, args) => {
 
         // Color catch
         let roleColor = args[0];
-        if (!args[0]) roleColor = 0;
         if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
-        if (!memberCache.premiumSince) return noNitro(`Since you stopped Nitro Boosting I cleaned up your old role`, `You need to be a Nitro Booster to manage a personal role`);
+        if (!memberCache.premiumSince) return deleteRole(`Since you stopped Nitro Boosting I cleaned up your old role`, `You need to be a Nitro Booster to manage a personal role`);
 
         // Get Nitro Booster position, should change this for v13 to work globally but for now it's Good Enough TM
         let boosterRole = message.guild.roles.cache.find(r => r.id == "585533578943660152");
@@ -29,6 +28,8 @@ module.exports.run = async (client, message, args) => {
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
+
+            if(!args[0]) roleColor = personalRole.color;
 
             personalRole.edit({
                 name: message.author.tag,
@@ -53,6 +54,8 @@ module.exports.run = async (client, message, args) => {
             // Clean up possible old entry
             let oldEntry = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
             if (oldEntry) await oldEntry.destroy();
+
+            if (!args[0]) roleColor = 0;
 
             // Create role
             await message.guild.roles.create({
