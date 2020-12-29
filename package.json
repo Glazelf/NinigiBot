@@ -6,6 +6,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "@discordjs/uws": "^10.149.0",
+    "bufferutil": "^4.0.2",
     "canvas": "^2.6.1",
     "cron": "^1.8.2",
     "discord.js": "^12.3.1",
@@ -22,6 +23,7 @@
     "pokedex-promise-v2": "^3.2.0",
     "sequelize": "^6.3.4",
     "sqlite3": "^4.2.0",
+    "utf-8-validate": "^5.0.3",
     "ytdl-core": "^3.2.2",
     "ytdl-core-discord": "^1.2.1"
   },
