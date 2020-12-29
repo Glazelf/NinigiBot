@@ -12,14 +12,15 @@ module.exports.run = async (client, message, args) => {
         let memberFetch = await message.guild.members.fetch();
         let memberCache = memberFetch.get(message.author.id);
 
-        if (!memberCache.premiumSince) return message.channel.send(`> You need to be a Nitro Booster to manage a personal role, ${message.author}.`);
-
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
 
         // Color catch
         let roleColor = args[0];
         if (!args[0]) roleColor = 0;
         if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
+
+        if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
+        if (!memberCache.premiumSince) return noNitro(`Since you stopped Nitro Boosting I cleaned up your old role`, `You need to be a Nitro Booster to manage a personal role`);
 
         // Get Nitro Booster position, should change this for v13 to work globally but for now it's Good Enough TM
         let boosterRole = message.guild.roles.cache.find(r => r.id == "585533578943660152");
@@ -73,6 +74,17 @@ module.exports.run = async (client, message, args) => {
             memberCache.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.author.id, role_id: createdRole.id });
             return message.channel.send(`> Created a personal role for you successfully, ${message.author}.`);
+        };
+
+        async function deleteRole(successString, failString) {
+            if (roleDB) {
+                let oldRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
+                if (oldRole) await oldRole.delete();
+                await roleDB.destroy();
+                return message.channel.send(`> ${successString}, ${message.author}.`);
+            } else {
+                return message.channel.send(`> ${failString}, ${message.author}.`);
+            };
         };
 
     } catch (e) {
