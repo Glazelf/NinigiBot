@@ -16,7 +16,9 @@ module.exports.run = async (client, message, args) => {
 
         // Color catch
         let roleColor = args[0];
-        if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
+        if (roleColor) {
+            if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
+        };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
         if (!memberCache.premiumSince) return deleteRole(`Since you stopped Nitro Boosting I cleaned up your old role`, `You need to be a Nitro Booster to manage a personal role`);
@@ -29,7 +31,7 @@ module.exports.run = async (client, message, args) => {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
-            if(!args[0]) roleColor = personalRole.color;
+            if (!args[0]) roleColor = personalRole.color;
 
             personalRole.edit({
                 name: message.author.tag,
