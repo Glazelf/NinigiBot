@@ -9,7 +9,7 @@ exports.run = (client, message) => {
         let guild = client.guilds.cache.get(guildID);
         if (!guild) guild = message.guild;
 
-        let baseMessage = `> Here's a list of all channels for ${guild.name}, ${message.author}:`;
+        let baseMessage = `> Here's a list of all channels for **${guild.name}**, ${message.author}:`;
 
         guild.channels.cache.forEach((channel) => {
             baseMessage = `${baseMessage}

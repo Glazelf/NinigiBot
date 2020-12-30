@@ -63,7 +63,7 @@ module.exports.run = async (client, message) => {
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${guild.name} (${guild.id})`, icon)
+            .setAuthor(`**${guild.name}** (${guild.id})`, icon)
             .setThumbnail(icon)
             .addField("Owner:", ownerTag, true)
             .addField("Region:", region[guild.region], true)
