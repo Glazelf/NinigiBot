@@ -1,4 +1,4 @@
-module.exports = (member, newMember) => {
+module.exports = async (client, member, newMember) => {
     // Import globals
     let globalVars = require('./ready');
     try {
@@ -10,6 +10,7 @@ module.exports = (member, newMember) => {
 
         let updateCase = null;
         let topText = null;
+        let changeText = null;
         if (member.nickname !== newMember.nickname) updateCase = "nickname";
         if (!member.premiumSince && newMember.premiumSince) updateCase = "nitroStart";
         if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
@@ -25,15 +26,25 @@ module.exports = (member, newMember) => {
         switch (updateCase) {
             case "nickname":
                 topText = "Nickname changed ⚒️";
+                if (member.nickname && newMember.nickname) {
+                    changeText = `${member.nickname} => ${newMember.nickname}.`;
+                } else if (newMember.nickname) {
+                    changeText = `New: ${newMember.nickname}.`;
+                } else {
+                    changeText = `Removed: ${member.nickname}.`;
+                };;
                 break;
             case "nitroStart":
                 topText = "Started Nitro Boosting ⚒️";
+                changeText = `${member.guild.name} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                 break;
             case "nitroEnd":
                 topText = "Stopped Nitro Boosting ⚒️";
+                changeText = `${member.guild.name} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                 break;
             default:
                 topText = "Undefined guild member update event.";
+                changeText = "Undefined guild member update event.";
                 break;
         };
 
@@ -41,6 +52,7 @@ module.exports = (member, newMember) => {
             .setColor(globalVars.embedColor)
             .setAuthor(topText, avatar)
             .setThumbnail(avatar)
+            .setDescription(changeText)
             .addField(`User:`, `${user} (${user.id})`)
             .setFooter(user.tag)
             .setTimestamp();
