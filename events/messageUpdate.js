@@ -2,13 +2,12 @@ const { update } = require("lodash");
 
 module.exports = async (client, message, newMessage) => {
     try {
+        // Import globals
+        let globalVars = require('./ready');
         const Discord = require("discord.js");
 
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
         if (!log) return;
-
-        // Import totals
-        let globalVars = require('./ready');
 
         if (!message) return;
         if (!message.author) return;

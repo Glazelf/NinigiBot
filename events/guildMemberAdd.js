@@ -1,10 +1,9 @@
 module.exports = (client, member) => {
+    // Import globals
+    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const log = member.guild.channels.cache.find(channel => channel.name === "log");
-
-        // Import totals
-        let globalVars = require('./ready');
 
         if (!log) return;
         user = client.users.cache.get(member.id);

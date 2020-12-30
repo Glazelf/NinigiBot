@@ -1,13 +1,12 @@
 module.exports = async (client, message) => {
+    // Import globals
+    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
 
         const log = message.guild.channels.cache.find(channel => channel.name === "log");
         if (!log) return;
         if (message.channel == log && message.author == client.user) return;
-
-        // Import totals
-        let globalVars = require('./ready');
 
         if (!message) return;
         if (!message.author) return;
