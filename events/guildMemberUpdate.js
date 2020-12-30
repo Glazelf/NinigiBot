@@ -32,7 +32,7 @@ module.exports = async (client, member, newMember) => {
                     changeText = `New: **${newMember.nickname}**.`;
                 } else {
                     changeText = `Removed: **${member.nickname}**.`;
-                };;
+                };
                 break;
             case "nitroStart":
                 topText = "Started Nitro Boosting ⚒️";
