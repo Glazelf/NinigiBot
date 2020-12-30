@@ -13,10 +13,10 @@ module.exports.run = async (client, message, args) => {
 
         if (serverID) {
             await serverID.destroy();
-            return message.channel.send(`> Personal Roles can no longer be managed by users in ${message.guild.name}, ${message.author}.`);
+            return message.channel.send(`> Personal Roles can no longer be managed by users in **${message.guild.name}**, ${message.author}.`);
         } else {
             await PersonalRoleServers.upsert({ server_id: message.guild.id });
-            return message.channel.send(`> Personal Roles can now be managed by users in ${message.guild.name}, ${message.author}.`);
+            return message.channel.send(`> Personal Roles can now be managed by users in **${message.guild.name}**, ${message.author}.`);
         };
 
     } catch (e) {

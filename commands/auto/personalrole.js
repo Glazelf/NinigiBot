@@ -8,7 +8,7 @@ module.exports.run = async (client, message, args) => {
         if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_ROLES")) return message.channel.send(`> I don't have permission to manage roles, ${message.author}.`);
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
-        if (!serverID) return message.channel.send(`> Personal Roles are disabled in ${message.guild.name}, ${message.author}.`);
+        if (!serverID) return message.channel.send(`> Personal Roles are disabled in **${message.guild.name}**, ${message.author}.`);
         let memberFetch = await message.guild.members.fetch();
         let memberCache = memberFetch.get(message.author.id);
 

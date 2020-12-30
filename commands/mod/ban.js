@@ -25,7 +25,7 @@ module.exports.run = async (client, message) => {
         await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
         await message.channel.send(`> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}.`);
         try {
-            return user.send(`> You've been banned from ${message.guild.name} for the following reason: \`${reason}\``);
+            return user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
         } catch (e) {
             return;
         };

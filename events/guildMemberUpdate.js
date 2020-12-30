@@ -27,20 +27,20 @@ module.exports = async (client, member, newMember) => {
             case "nickname":
                 topText = "Nickname changed ⚒️";
                 if (member.nickname && newMember.nickname) {
-                    changeText = `${member.nickname} => ${newMember.nickname}.`;
+                    changeText = `**${member.nickname}** => **${newMember.nickname}**.`;
                 } else if (newMember.nickname) {
-                    changeText = `New: ${newMember.nickname}.`;
+                    changeText = `New: **${newMember.nickname}**.`;
                 } else {
-                    changeText = `Removed: ${member.nickname}.`;
+                    changeText = `Removed: **${member.nickname}**.`;
                 };;
                 break;
             case "nitroStart":
                 topText = "Started Nitro Boosting ⚒️";
-                changeText = `${member.guild.name} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                changeText = `**${member.guild.name}** now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                 break;
             case "nitroEnd":
                 topText = "Stopped Nitro Boosting ⚒️";
-                changeText = `${member.guild.name} now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                changeText = `**${member.guild.name}** now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
                 break;
             default:
                 topText = "Undefined guild member update event.";
