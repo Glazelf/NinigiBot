@@ -19,7 +19,9 @@ module.exports.run = async (client, message) => {
 
         let totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar.`;
 
-        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = null;
+        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
+        if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
 
         let startOffset = 0;
         let avatarSize = 128;
