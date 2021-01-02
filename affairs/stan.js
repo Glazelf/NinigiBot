@@ -2,6 +2,7 @@ module.exports = async (client) => {
     const cron = require("cron");
     const timezone = 'cest';
     const time = '00 00 20 * * *'; //Sec Min Hour 
+    //const time = '* * * * *'; //Sec Min Hour testing
     const guildID = client.config.botServerID;
     const gifTags = ['pokemon', 'lelouch'];
     const Discord = require("discord.js");
