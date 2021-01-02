@@ -27,13 +27,14 @@ module.exports = async (client) => {
 
         const randomGif = await getRandomGif();
         let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
+        let candidateRandom = candidates[randomPick];
         let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setDescription(`> Today's most stannable person is ${candidates[randomPick].tag}, everyone!`)
+            .setDescription(`> Today's most stannable person is ${candidateRandom.tag}, everyone!`)
             .setImage(randomGif)
             .setTimestamp();
-        channel.send(gifEmbed);
+        channel.send(candidateRandom, { embed: gifEmbed });
     }, timeZone = timezone, start = true)
 };
