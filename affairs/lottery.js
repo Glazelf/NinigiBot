@@ -16,7 +16,7 @@ module.exports = async (client) => {
     new cron.CronJob(time, async () => {
         let guild = client.guilds.cache.get(guildID);
         const number = `${Math.floor(Math.random() * 10000)}`;
-        const winers = [[], [], [], []];
+        const winners = [[], [], [], []];
         const ticket = await CurrencyShop.findOne({ where: { name: 'Lottery ticket' } });
         let participants = await UserItems.findAll({ include: ['item'] });
         participants = participants.filter(lol => lol.item.name === ticket.name);
@@ -29,16 +29,16 @@ module.exports = async (client) => {
             };
             const jackpot = -20 * (score ** 4) + 205 * (score ** 3) - 445 * (score ** 2) + 280 * score;
             if (score > 0) {
-                winers[4 - score].push(member.user.username);
+                winners[4 - score].push(member.user.username);
                 bank.currency.add(member.id, jackpot);
             };
             myTicket.amount -= 1;
             myTicket.amount === 0 ? myTicket.destroy() : myTicket.save();
         });
 
-        let winersLength = 0;
+        let winnersLength = 0;
         for (let i = 0; i < 4; i++) {
-            winersLength += winers[i].length;
+            winnersLength += winners[i].length;
         };
 
         let channel = guild.channels.cache.find(channel => channel.id === channelID);
@@ -46,11 +46,11 @@ module.exports = async (client) => {
             .setColor(globalVars.embedColor)
             .setTitle('Lottery results')
             .setDescription(`> Welcome back! And the winning number is **${number}**! Here are the winners of this week's lottery! Good luck next time!`)
-        if (winersLength < 1) {
+        if (winnersLength < 1) {
             results.addField('Results:', 'No one won anything! Well more luck next time!')
         } else {
             for (let i = 0; i < 4; i++) {
-                if (winers[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winers[i].join(", ")}`, false);
+                if (winners[i].length >= 1) results.addField(`${require('../util/getCardinal')(i + 1)} prize:`, `${winners[i].join(", ")}`, false);
             };
         }
 
