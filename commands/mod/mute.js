@@ -8,6 +8,7 @@ module.exports.run = async (client, message, args) => {
     // Minutes the user is muted
     let muteTime = 60;
     let split = message.content.split(` `, 3);
+    let muteRoleName = "muted";
 
     if (split[2]) {
       muteTime = split[2];
@@ -17,14 +18,19 @@ module.exports.run = async (client, message, args) => {
     if (args[0]) {
       const member = message.mentions.members.first();
       if (!member) return message.channel.send(`> Please use a proper mention if you want to mute someone, ${message.author}.`);
-      const role = member.guild.roles.cache.find(role => role.name === "Muted");
+      const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
       if (!role) return message.channel.send(`> There is no mute role. In order to mute someone, you need to create a role called "Muted", ${message.author}.`);
-      await member.roles.add(role);
 
-      message.channel.send(`> ${member} has been muted for ${muteTime} minute(s), ${message.author}.`);
-
-      // sets a timeout to unmute the user.
-      setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
+      let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
+      if (isMuted) {
+        await member.roles.remove(role);
+        return message.channel.send(`> ${member.user.tag} has been unmuted, ${message.author}.`);
+      } else {
+        await member.roles.add(role);
+        message.channel.send(`> ${member.user.tag} has been muted for ${muteTime} minute(s), ${message.author}.`);
+        // sets a timeout to unmute the user.
+        setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
+      };
     };
 
   } catch (e) {
