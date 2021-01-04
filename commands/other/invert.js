@@ -6,6 +6,7 @@ module.exports.run = async (client, message) => {
         const Canvas = require("canvas");
 
         let user = message.mentions.users.first();
+        let attachment = message.attachments.values().next().value.attachment;
 
         if (!user) {
             const input = message.content.split(` `, 2);
@@ -17,20 +18,36 @@ module.exports.run = async (client, message) => {
             user = message.author;
         };
 
-        let totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar.`;
-
+        let totalMessage = null;
         let avatar = null;
-        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-        if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
+        let targetImage = null;
+        let targetImageWidth = null;
+        let targetImageHeight = null;
+        if (attachment) {
+            targetImage = attachment;
+            targetImageWidth = message.attachments.values().next().value.width;
+            targetImageHeight = message.attachments.values().next().value.height;
+            totalMessage = `> Here you go, ${message.author}, your inverted image`;
+        } else {
+            if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
+            if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
+            targetImage = avatar;
+            targetImageWidth = 128;
+            targetImageHeight = 128;
+            if (user.id == message.author.id) {
+                totalMessage = `> Here you go, ${message.author}, your inverted avatar.`;
+            } else {
+                totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar.`;
+            };
+        };
 
         let startOffset = 0;
-        let avatarSize = 128;
-        let canvas = Canvas.createCanvas(avatarSize, avatarSize);
+        let canvas = Canvas.createCanvas(targetImageWidth, targetImageHeight);
         let ctx = canvas.getContext('2d');
-        let drawAvatar = await Canvas.loadImage(avatar);
-        ctx.drawImage(drawAvatar, startOffset, startOffset);
+        let drawImage = await Canvas.loadImage(targetImage);
+        ctx.drawImage(drawImage, startOffset, startOffset);
         ctx.beginPath();
-        let imageData = ctx.getImageData(startOffset, startOffset, avatarSize, avatarSize);
+        let imageData = ctx.getImageData(startOffset, startOffset, targetImageWidth, targetImageHeight);
         let data = imageData.data;
 
         for (let i = 0; i < data.length; i += 4) {
