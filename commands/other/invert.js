@@ -27,7 +27,7 @@ module.exports.run = async (client, message) => {
             targetImage = attachment;
             targetImageWidth = message.attachments.values().next().value.width;
             targetImageHeight = message.attachments.values().next().value.height;
-            totalMessage = `> Here you go, ${message.author}, your inverted image`;
+            totalMessage = `> Here you go, ${message.author}, your inverted image:`;
         } else {
             if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
             if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
@@ -35,9 +35,9 @@ module.exports.run = async (client, message) => {
             targetImageWidth = 128;
             targetImageHeight = 128;
             if (user.id == message.author.id) {
-                totalMessage = `> Here you go, ${message.author}, your inverted avatar.`;
+                totalMessage = `> Here you go, ${message.author}, your inverted avatar:`;
             } else {
-                totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar.`;
+                totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar:`;
             };
         };
 
