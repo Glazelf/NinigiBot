@@ -6,7 +6,8 @@ module.exports.run = async (client, message) => {
         const Canvas = require("canvas");
 
         let user = message.mentions.users.first();
-        let attachment = message.attachments.values().next().value.attachment;
+        let attachment = null;
+        if (message.attachments.values().next().value) attachment = message.attachments.values().next().value.attachment;
 
         if (!user) {
             const input = message.content.split(` `, 2);
