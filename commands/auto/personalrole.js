@@ -17,8 +17,11 @@ module.exports.run = async (client, message, args) => {
         // Get Nitro Booster position, should change this for v13 to work globally but for now it's Good Enough TM
         let boosterRole = await message.guild.roles.cache.find(r => r.id == "585533578943660152");
         let modRole = await message.guild.roles.cache.find(r => r.id == "549215318153887784");
+
         let personalRolePosition = boosterRole.position + 1;
         if (modRole) personalRolePosition = modRole.position + 1;
+
+        if (message.guild.me.roles.highest.position <= personalRolePosition) return message.channel.send(`> My highest role isn't high enough to manage a personal role for you, ${message.author}.`);
 
         // Color catch
         let roleColor = args[0];
@@ -27,7 +30,7 @@ module.exports.run = async (client, message, args) => {
         };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
-        if (!memberCache.premiumSince && !modRole) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role`, `You need to be a Nitro Booster or Mod to manage a personal role`);
+        if (!memberCache.premiumSince && !message.guild.permissionsFor(message.author).has("MANAGE_ROLES")) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role`, `You need to be a Nitro Booster or Mod to manage a personal role`);
 
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
