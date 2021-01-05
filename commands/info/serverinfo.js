@@ -47,6 +47,8 @@ module.exports.run = async (client, message) => {
 
         let icon = null;
         if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
+        let banner = null;
+        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
         let ownerTag = guild.owner.user.tag;
         if (guild == message.guild) ownerTag = guild.owner.user;
@@ -82,6 +84,7 @@ module.exports.run = async (client, message) => {
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`)
+            .setImage(banner)
             .setFooter(message.author.tag)
             .setTimestamp();
 
