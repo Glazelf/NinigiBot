@@ -25,7 +25,7 @@ module.exports = async (client, member, newMember) => {
 
         switch (updateCase) {
             case "nickname":
-                topText = "Nickname changed ⚒️";
+                topText = "Nickname Changed ⚒️";
                 if (member.nickname && newMember.nickname) {
                     changeText = `**${member.nickname}** => **${newMember.nickname}**.`;
                 } else if (newMember.nickname) {

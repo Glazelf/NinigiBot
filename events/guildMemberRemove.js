@@ -10,7 +10,7 @@ module.exports = async (client, member) => {
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
         avatarExecutor = avatar;
 
-        let embedAuthor = `Member left 💔`;
+        let embedAuthor = `Member Left 💔`;
         let embedFooter = `We'll miss you, ${user.tag}!`;
 
         const fetchedLogs = await member.guild.fetchAuditLogs({
