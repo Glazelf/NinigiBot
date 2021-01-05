@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
 
         let user = message.mentions.users.first();
         let attachment = null;
-        if (message.attachments.values().next().value) attachment = message.attachments.values().next().value.attachment;
+        if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 
         if (!user) {
             const input = message.content.split(` `, 2);
