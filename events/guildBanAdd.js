@@ -2,7 +2,6 @@ module.exports = async (client, guild, user) => {
     // Import globals
     let globalVars = require('./ready');
     try {
-        console.log(guild)
         const Discord = require("discord.js");
         const log = guild.channels.cache.find(channel => channel.name === "log");
         if (!log) return;
