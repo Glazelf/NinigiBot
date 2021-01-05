@@ -7,7 +7,7 @@ module.exports.run = async (client, message) => {
 
         const args = message.content.split(' ');
 
-        const member = message.mentions.members.first();
+        let member = message.mentions.members.first();
         let user = message.mentions.users.first();
         if (!member || !user) return message.channel.send(`> Please mention someone to kick, ${message.author}.`);
         if (!member.kickable) return message.channel.send(`> I lack the required permission to kick ${user.tag}, ${message.author}.`);
@@ -22,13 +22,9 @@ module.exports.run = async (client, message) => {
             reason = reason.join(' ');
         };
 
+        await user.send(`> You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\``);
         await member.kick([`${reason} -${message.author.tag}`]);
-        await message.channel.send(`> Successfully kicked ${user.tag} for reason: \`${reason}\`, ${message.author}.`);
-        try {
-            return user.send(`> You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\``);
-        } catch (e) {
-            return;
-        };
+        return message.channel.send(`> Successfully kicked ${user.tag} for reason: \`${reason}\`, ${message.author}.`);
 
     } catch (e) {
         // log error
