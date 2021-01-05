@@ -18,6 +18,8 @@ module.exports = async (client, message) => {
     let messageImage = null;
     if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
+    let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
+
     // Ignore commands in DMs
     if (message.channel.type == "dm" && message.author.id !== client.user.id) {
       if (message.content.indexOf(globalVars.prefix) == 0) {
@@ -74,7 +76,7 @@ module.exports = async (client, message) => {
     globalVars.totalMessages += 1;
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id)) {
+    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id) && memberRoles.size !== 0) {
       bank.currency.add(message.author.id, 1);
       talkedRecently.add(message.author.id);
       setTimeout(() => {
