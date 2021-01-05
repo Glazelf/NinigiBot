@@ -16,7 +16,7 @@ module.exports.run = async (client, message, args) => {
 
         // Get Nitro Booster position, should change this for v13 to work globally but for now it's Good Enough TM
         let boosterRole = await message.guild.roles.cache.find(r => r.id == "585533578943660152");
-        let modRole = await message.guild.roles.cache.find(r => r.id == "585533578943660152");
+        let modRole = await message.guild.roles.cache.find(r => r.id == "549215318153887784");
         let personalRolePosition = boosterRole.position + 1;
         if (modRole) personalRolePosition = modRole.position + 1;
 
