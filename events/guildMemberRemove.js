@@ -1,4 +1,4 @@
-module.exports = (client, member) => {
+module.exports = async (client, member) => {
     // Import globals
     let globalVars = require('./ready');
     try {
@@ -7,15 +7,33 @@ module.exports = (client, member) => {
         if (!log) return;
 
         let user = client.users.cache.get(member.id);
-
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+        avatarExecutor = avatar;
+
+        let embedAuthor = `Member left 💔`;
+        let embedFooter = `We'll miss you, ${user.tag}!`;
+
+        const fetchedLogs = await member.guild.fetchAuditLogs({
+            limit: 1,
+            type: 'MEMBER_KICK',
+        });
+        const kickLog = fetchedLogs.entries.first();
+
+        if (kickLog) {
+            if (kickLog.createdAt < member.joinedAt) return;
+            const { executor, target } = kickLog;
+            if (target.id !== member.id) return;
+            avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
+            embedAuthor = `Member Kicked 💔`;
+            embedFooter = `${target.tag} got kicked by ${executor.tag}`;
+        };
 
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member left 💔`, avatar)
+            .setAuthor(embedAuthor, avatarExecutor)
             .setThumbnail(avatar)
             .addField(`User:`, `${user} (${user.id})`)
-            .setFooter(`We'll miss you, ${user.tag}!`)
+            .setFooter(embedFooter)
             .setTimestamp();
 
         globalVars.totalLogs += 1;
