@@ -30,7 +30,7 @@ module.exports.run = async (client, message, args) => {
         };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
-        
+
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         if (!boosterRole && !modRole) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role`, `You need to be a Nitro Booster or Mod to manage a personal role`);
 
