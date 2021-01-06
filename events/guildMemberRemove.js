@@ -21,8 +21,9 @@ module.exports = async (client, member) => {
 
         if (kickLog) {
             if (kickLog.createdAt < member.joinedAt) return;
-            const { executor, target } = kickLog;
+            const { executor, target, reason } = kickLog;
             if (target.id !== member.id) return;
+            if (!reason) reason = "Not specified.";
             avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
             embedAuthor = `Member Kicked 💔`;
             embedFooter = `${target.tag} got kicked by ${executor.tag}`;
@@ -32,7 +33,8 @@ module.exports = async (client, member) => {
             .setColor(globalVars.embedColor)
             .setAuthor(embedAuthor, avatarExecutor)
             .setThumbnail(avatar)
-            .addField(`User:`, `${user} (${user.id})`)
+            .addField(`User:`, `${user} (${user.id})`, false)
+            .addField(`Reason:`, reason, false)
             .setFooter(embedFooter)
             .setTimestamp();
 
