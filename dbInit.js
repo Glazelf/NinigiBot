@@ -24,7 +24,7 @@ const PersonalRoles = require('./database/models/server/PersonalRoles')(sequeliz
 const PersonalRoleServers = require('./database/models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./database/models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 const LogChannels = require('./database/models/global/LogChannels')(sequelize, Sequelize.DataTypes);
-const StarboardChannels = require('./database/models/global/Starboardchannels')(sequelize, Sequelize.DataTypes);
+const StarboardChannels = require('./database/models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);

@@ -38,7 +38,7 @@ const PersonalRoles = require('./models/server/PersonalRoles')(sequelize, Sequel
 const PersonalRoleServers = require('./models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 const LogChannels = require('./models/global/LogChannels')(sequelize, Sequelize.DataTypes);
-const StarboardChannels = require('./models/global/Starboardchannels')(sequelize, Sequelize.DataTypes);
+const StarboardChannels = require('./models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
