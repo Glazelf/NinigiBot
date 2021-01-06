@@ -11,7 +11,7 @@ module.exports = async (client, guild, user) => {
         });
         const banLog = fetchedLogs.entries.first();
         const { executor, target, reason } = banLog;
-        if (!reason) let reason = "Not specified.";
+        if (reason == null) reason = "Not specified.";
 
         if (target.id !== user.id) return;
         let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
