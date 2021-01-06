@@ -60,7 +60,8 @@ Example: \`${prefix}role rolename\``;
       return message.channel.send(rolesHelp);
     };
 
-    const role = message.guild.roles.cache.find(role => role.name === requestRole);
+    console.log(requestRole)
+    const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
 
     let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${prefix}role help\` to see the available roles.`;
     if (!role) return message.channel.send(invalidRoleText);
