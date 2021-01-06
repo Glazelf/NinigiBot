@@ -25,7 +25,7 @@ module.exports = async (client, member) => {
             const { executor, target, reason } = kickLog;
             if (target.id !== member.id) return;
             console.log(reason)
-            if (reason == null) reason = "Not specified.";
+            if (!reason) reason = "Not specified.";
             avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
             embedAuthor = `Member Kicked 💔`;
             embedFooter = `${target.tag} got kicked by ${executor.tag}`;
