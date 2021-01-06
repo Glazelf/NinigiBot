@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
 
         await StarboardChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
 
-        return message.channel.send(`> ${targetChannel} is now a starboard, ${message.author}.`);
+        return message.channel.send(`> ${targetChannel} is now **${message.guild.name}**'s starboard, ${message.author}.`);
 
     } catch (e) {
         // log error
