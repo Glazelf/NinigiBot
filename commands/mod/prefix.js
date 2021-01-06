@@ -15,8 +15,8 @@ module.exports.run = async (client, message) => {
             };
             return message.channel.send(`> Please provide a valid string to change the prefix to, ${message.author}.`);
         };
-
         subCommand = subCommand.toLowerCase();
+
         if (oldPrefix) await oldPrefix.destroy();
         if (subCommand == "?" || subCommand == "reset") return message.channel.send(`> Prefix has been reset to \`?\`, ${message.author}.`);
         await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });
