@@ -12,6 +12,7 @@ module.exports = async (client, member) => {
 
         let embedAuthor = `Member Left 💔`;
         let embedFooter = `We'll miss you, ${user.tag}!`;
+        let reasonText = "Not specified.";
 
         const fetchedLogs = await member.guild.fetchAuditLogs({
             limit: 1,
@@ -28,6 +29,7 @@ module.exports = async (client, member) => {
             avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
             embedAuthor = `Member Kicked 💔`;
             embedFooter = `${target.tag} got kicked by ${executor.tag}`;
+            reastonText = reason;
         };
 
         const leaveEmbed = new Discord.MessageEmbed()
@@ -35,7 +37,8 @@ module.exports = async (client, member) => {
             .setAuthor(embedAuthor, avatarExecutor)
             .setThumbnail(avatar)
             .addField(`User:`, `${user} (${user.id})`, false)
-            .addField(`Reason:`, reason, false)
+        if (kickLog) leaveEmbed.addField(`Reason:`, reasonText, false)
+        leaveEmbed
             .setFooter(embedFooter)
             .setTimestamp();
 
