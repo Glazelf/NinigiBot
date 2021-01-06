@@ -24,12 +24,10 @@ module.exports = async (client, member) => {
             if (kickLog.createdAt < member.joinedAt) return;
             const { executor, target, reason } = kickLog;
             if (target.id !== member.id) return;
-            console.log(reason)
-            if (!reason) reason = "Not specified.";
+            if (reason) reasonText = reason;
             avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
             embedAuthor = `Member Kicked 💔`;
             embedFooter = `${target.tag} got kicked by ${executor.tag}`;
-            reastonText = reason;
         };
 
         const leaveEmbed = new Discord.MessageEmbed()
