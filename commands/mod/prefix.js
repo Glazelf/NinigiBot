@@ -6,7 +6,6 @@ module.exports.run = async (client, message) => {
 
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        console.log("sup")
 
         const args = message.content.split(' ');
         let subCommand = args[1];
@@ -22,7 +21,6 @@ module.exports.run = async (client, message) => {
         if (subCommand == "?" || subCommand == "reset") return message.channel.send(`> Prefix has been reset to \`?\`, ${message.author}.`);
         await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });
 
-        console.log("ayonagsn")
         return message.channel.send(`> Prefix has been changed to \`${subCommand}\`, ${message.author}.`);
 
     } catch (e) {
