@@ -7,11 +7,11 @@ module.exports.run = async (client, message) => {
         const { DisabledChannels } = require('../../database/dbObjects');
 
         const args = message.content.split(' ');
-        if (!args[1]) return message.channel.send(`> Please provide a channel to toggle, ${message.author}.`);
+        if (!args[1]) return message.channel.send(`> Please provide a channel to toggle by name, ${message.author}.`);
 
         let channelID = await DisabledChannels.findOne({ where: { name: args[1] } });
-        let channel = message.member.guild.channels.cache.find(channel => channel.id === args[1]);
-        if (!channel) channel = message.member.guild.channels.cache.find(channel => channel.name.toLowerCase() === args[1].toLowerCase());
+        let channel = message.guild.channels.cache.find(channel => channel.id === args[1]);
+        if (!channel) channel = message.guild.channels.cache.find(channel => channel.name.toLowerCase() === args[1].toLowerCase());
 
         if (!channel && !channelID) return message.channel.send(`> That channel does not exist in this server, ${message.author}.`);
         if (!channelID) channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });

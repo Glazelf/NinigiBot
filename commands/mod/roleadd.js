@@ -9,7 +9,7 @@ module.exports.run = async (client, message, args) => {
     const requestRole = args.join(' ').toLowerCase();
 
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
-    const role = message.member.guild.roles.cache.find(role => role.name === requestRole);
+    const role = message.guild.roles.cache.find(role => role.name === requestRole);
     let roleID = await EligibleRoles.findOne({ where: { role_id: role.id, name: requestRole } });
 
     if (!role && !roleID) return message.channel.send(`> That role does not exist, ${message.author}.`);
