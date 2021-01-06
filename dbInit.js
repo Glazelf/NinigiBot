@@ -23,6 +23,10 @@ const DisabledChannels = require('./database/models/server/DisabledChannels')(se
 const PersonalRoles = require('./database/models/server/PersonalRoles')(sequelize, Sequelize.DataTypes);
 const PersonalRoleServers = require('./database/models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./database/models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
+const LogChannels = require('./database/models/global/LogChannels')(sequelize, Sequelize.DataTypes);
+const StarboardChannels = require('./database/models/global/Starboardchannels')(sequelize, Sequelize.DataTypes);
+const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
+
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Equipments = require('./database/models/data/Equipments')(sequelize, Sequelize.DataTypes);
 const Foods = require('./database/models/data/Foods')(sequelize, Sequelize.DataTypes);
@@ -39,6 +43,9 @@ const syncDatabase = async () => {
 		await PersonalRoles.sync({ alter: true });
 		await PersonalRoleServers.sync({ alter: true });
 		await ModEnabledServers.sync({ alter: true });
+		await LogChannels.sync({ alter: true });
+		await StarboardChannels.sync({ alter: true });
+		await Prefixes.sync({ alter: true });
 
 		await UserItems.sync({ alter: true });
 		await UserFoods.sync({ alter: true });

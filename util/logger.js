@@ -17,7 +17,6 @@ Message by ${message.author.tag}:
     let devChannel = client.channels.cache.get(client.config.devChannelID);
     if (message) message.channel.send(`> An error has occurred. 
 > The error has already been logged but please also report this as an issue on Github: 
-> <https://github.com/Glazelf/NinigiBot/issues>
-> For more information use \`${globalVars.prefix}info\`.`);
+> <https://github.com/Glazelf/NinigiBot/issues>`);
     return devChannel.send(baseMessage);
 };

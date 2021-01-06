@@ -1,8 +1,16 @@
-exports.run = (client, message, args) => {
+exports.run = async (client, message, args) => {
   // Import globals
   let globalVars = require('../../events/ready');
   try {
     if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+
+    const { Prefixes } = require('../../database/dbObjects');
+    let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+    if (prefix) {
+      prefix = prefix.prefix;
+    } else {
+      prefix = globalVars.prefix;
+    };
 
     if (!args || args.length < 1) return message.channel.send(`> Must provide a command name to reload, ${message.author}.`);
     const commandName = args[0];
@@ -18,7 +26,7 @@ exports.run = (client, message, args) => {
     client.commands.delete(commandName);
     const props = require(`./${commandName}.js`);
     client.commands.set(commandName, props);
-    return message.channel.send(`> The command "${globalVars.prefix}${commandName}" has been reloaded, ${message.author}.`);
+    return message.channel.send(`> The command \`${prefix}${commandName}\` has been reloaded, ${message.author}.`);
 
   } catch (e) {
     // log error

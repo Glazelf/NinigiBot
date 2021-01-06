@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
             if (expectedId && expectedId[1] == targetId) {
                 target = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return message.channel.send(`The syntax is ${globalVars.prefix}item <target> <item name>, master.`);
+            } else return message.channel.send(`> The syntax is \`${prefix}item <target> <item name>\`, ${message.author}.`);
         } else {
             target = message.author;
         };

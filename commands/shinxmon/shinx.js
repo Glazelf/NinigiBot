@@ -29,7 +29,6 @@ const applyText = (canvas, text, baseSize, limit) => {
     return ctx.font;
 };
 
-
 const playing =
     [
         ['doesn\'t feel well...', 8, 0],
@@ -56,6 +55,13 @@ module.exports.run = async (client, message) => {
 
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
         const args = message.content.slice(1).trim().split(/ +/);
         args.shift();
         let shinx;
@@ -68,7 +74,7 @@ module.exports.run = async (client, message) => {
                 shinx = await bank.currency.getShinx(targetId);
                 master = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return message.channel.send(`The syntax is ${globalVars.prefix}shinx <target> <usual command>, ${message.author}.`);
+            } else return message.channel.send(`The syntax is \`${prefix}shinx <target> <usual command>\`, ${message.author}.`);
         } else {
             master = message.author
             shinx = await bank.currency.getShinx(master.id);

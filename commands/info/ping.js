@@ -2,11 +2,19 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         let pongString = `> Pong!'ed back at ${message.author} in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
 
         // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.
-        if (message.content.toLowerCase().startsWith(`${globalVars.prefix}pig`) || message.content.startsWith(`${globalVars.prefix}pog`)) {
+        if (message.content.toLowerCase().startsWith(`${prefix}pig`) || message.content.startsWith(`${prefix}pog`)) {
             pongString = pongString.split("n").join("");
             pauseString = pauseString.split("n").join("");
         };

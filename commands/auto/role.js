@@ -4,7 +4,13 @@ module.exports.run = async (client, message, args) => {
   try {
     if (!message.guild.me.hasPermission("MANAGE_ROLES")) return message.channel.send(`> Sorry, I don't have permissions to edit roles, ${message.author}.`);
 
-    const { EligibleRoles } = require('../../database/dbObjects')
+    const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
+    let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+    if (prefix) {
+      prefix = prefix.prefix;
+    } else {
+      prefix = globalVars.prefix;
+    };
     const Discord = require("discord.js");
 
     let member = message.member;
@@ -12,7 +18,7 @@ module.exports.run = async (client, message, args) => {
 
     const requestRole = arguments.join(' ').toLowerCase();
 
-    if (requestRole.length < 1) return message.channel.send(`> Please provide a role. Use \`${globalVars.prefix}role help\` to see the available roles, ${message.author}.`);
+    if (requestRole.length < 1) return message.channel.send(`> Please provide a role. Use \`${prefix}role help\` to see the available roles, ${message.author}.`);
 
     const db = await EligibleRoles.findAll();
     const roles = db.map(role => role.role_id);
@@ -41,7 +47,7 @@ module.exports.run = async (client, message, args) => {
 
       roleHelpMessage = `${roleHelpMessage}
 Please don't tag these roles, just put the name.
-Example: \`${globalVars.prefix}role rolename\``;
+Example: \`${prefix}role rolename\``;
 
       let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
@@ -56,7 +62,7 @@ Example: \`${globalVars.prefix}role rolename\``;
 
     const role = message.member.guild.roles.cache.find(role => role.name === requestRole);
 
-    let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${globalVars.prefix}role help\` to see the available roles.`;
+    let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${prefix}role help\` to see the available roles.`;
     if (!role) return message.channel.send(invalidRoleText);
     if (!roles.includes(role.id)) return message.channel.send(invalidRoleText);
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);

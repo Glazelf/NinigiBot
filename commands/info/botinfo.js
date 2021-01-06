@@ -6,6 +6,14 @@ module.exports.run = async (client, message) => {
     try {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         const Discord = require("discord.js");
         // let userCount = await client.users.fetch();
         // let memberFetch = await message.guild.members.fetch();
@@ -61,7 +69,7 @@ module.exports.run = async (client, message) => {
             .setThumbnail(avatar)
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
-            .addField("Prefix:", globalVars.prefix, true)
+            .addField("Prefix:", prefix, true)
             .addField("Servers:", client.guilds.cache.size, true)
             .addField("Users:", userCount, true)
             .addField("Channels:", channelCount, true);

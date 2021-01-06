@@ -1,10 +1,18 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         let args = message.content.split(` `);
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         let commandName = "8ball";
-        if (message.content.toLowerCase().startsWith(`${globalVars.prefix}magicconch`)) commandName = "Magic Conch";
+        if (message.content.toLowerCase().startsWith(`${prefix}magicconch`)) commandName = "Magic Conch";
 
         if (!args[1]) return message.channel.send(`> You need to provide something for the ${commandName} to consider, ${message.author}.`);
 

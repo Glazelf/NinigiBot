@@ -8,9 +8,15 @@ module.exports = async (client, message) => {
     const { bank } = require('../database/bank');
     let secondCharacter = message.content.charAt(1);
 
-    const { DisabledChannels } = require('../database/dbObjects');
+    const { DisabledChannels, Prefixes } = require('../database/dbObjects');
     const dbChannels = await DisabledChannels.findAll();
     const channels = dbChannels.map(channel => channel.channel_id);
+    let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+    if (prefix) {
+      prefix = prefix.prefix;
+    } else {
+      prefix = globalVars.prefix;
+    };
 
     const autoMod = require('../util/autoMod');
 
@@ -20,7 +26,7 @@ module.exports = async (client, message) => {
 
     // Ignore commands in DMs
     if (message.channel.type == "dm" && message.author.id !== client.user.id) {
-      if (message.content.indexOf(globalVars.prefix) == 0) {
+      if (message.content.indexOf(prefix) == 0) {
         message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
       };
       // Send message contents to dm channel
@@ -76,7 +82,7 @@ module.exports = async (client, message) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     // Add currency if message doesn't start with prefix
-    if (message.content.indexOf(globalVars.prefix) !== 0 && !talkedRecently.has(message.author.id) && memberRoles.size !== 0) {
+    if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.author.id) && memberRoles.size !== 0) {
       bank.currency.add(message.author.id, 1);
       talkedRecently.add(message.author.id);
       setTimeout(() => {
@@ -85,16 +91,16 @@ module.exports = async (client, message) => {
     };
 
     // Ignore messages not starting with the prefix
-    if (message.content.indexOf(globalVars.prefix) !== 0) return;
+    if (message.content.indexOf(prefix) !== 0) return;
 
     // Ignore messages that are just prefix
-    if (message.content === globalVars.prefix) return;
+    if (message.content === prefix) return;
 
     // Ignore messages that start with prefix double or prefix space
-    if (secondCharacter == globalVars.prefix || secondCharacter == ` `) return;
+    if (secondCharacter == prefix || secondCharacter == ` `) return;
 
     // Standard definition
-    const args = message.content.slice(globalVars.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
 
     // Grab the command data from the client.commands Enmap

@@ -1,7 +1,15 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         // Split off command
         let input = message.content.slice(1).trim();
         let [, , textMessage] = input.match(/(\w+)\s*([\s\S]*)/);
@@ -30,7 +38,7 @@ exports.run = (client, message) => {
             return message.channel.send(textMessage);
         } else {
             // Prevent using bot to go around ping permissions
-            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using ${globalVars.prefix}say, ${message.author}.`) };
+            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using \`${prefix}say\`, ${message.author}.`) };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `> "${textMessage}"

@@ -1,15 +1,22 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
         const { set } = require('lodash');
         const roulette = require('../../../affairs/roulette')
         if (!roulette.on) return;
+        const { Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
 
         if (roulette.hadBet(message.author.id)) return message.react('✋');
         const { bank } = require('../../../database/bank');
         let input = message.content.slice(5)
-        if (input.includes('help')) return message.channel.send(`The syntax is \`${globalVars.prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`);
+        if (input.includes('help')) return message.channel.send(`The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`);
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(input)) return message.react('❌');
         const money = parseInt(input.slice(0, input.indexOf(',')).trim())
         input = input.slice(input.indexOf(',') + 1).trim();

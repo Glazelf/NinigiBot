@@ -4,7 +4,14 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
+        const { Equipments, Foods, KeyItems, Room, CurrencyShop, Prefixes } = require('../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         const input = message.content.slice(1).trim();
         const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
@@ -24,7 +31,7 @@ exports.run = async (client, message) => {
             const items = await Room.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return message.channel.send(`That is not an existing shop. Please use \`${globalVars.prefix}shop\` followed by a category: items, equipment, food`);
+        return message.channel.send(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: items, equipment, food`);
 
     } catch (e) {
         // log error
