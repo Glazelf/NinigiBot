@@ -23,7 +23,7 @@ module.exports = async (client, member) => {
             if (kickLog.createdAt < member.joinedAt) return;
             const { executor, target, reason } = kickLog;
             if (target.id !== member.id) return;
-            if (!reason) reason = "Not specified.";
+            if (!reason) let reason = "Not specified.";
             avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
             embedAuthor = `Member Kicked 💔`;
             embedFooter = `${target.tag} got kicked by ${executor.tag}`;
