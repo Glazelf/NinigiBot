@@ -6,15 +6,13 @@ module.exports.run = async (client, message, args) => {
 
     if (!message.member.hasPermission("MANAGE_ROLES") && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
-    const requestRole = args.join(' ');
+    const requestRole = args.join(' ').toLowerCase();
 
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
-
-    let roleID = await EligibleRoles.findOne({ where: { name: requestRole } });
-    const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
+    const role = message.member.guild.roles.cache.find(role => role.name === requestRole);
+    let roleID = await EligibleRoles.findOne({ where: { role_id = role.id, name: requestRole } });
 
     if (!role && !roleID) return message.channel.send(`> That role does not exist, ${message.author}.`);
-    if (!roleID) roleID = await EligibleRoles.findOne({ where: { role_id: role.id } });
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
     if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
 

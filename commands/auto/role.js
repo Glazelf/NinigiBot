@@ -10,7 +10,7 @@ module.exports.run = async (client, message, args) => {
     let member = message.member;
     let arguments = args;
 
-    const requestRole = arguments.join(' ');
+    const requestRole = arguments.join(' ').toLowerCase();
 
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role. Use \`${globalVars.prefix}role help\` to see the available roles, ${message.author}.`);
 
@@ -54,9 +54,9 @@ Example: \`${globalVars.prefix}role rolename\``;
       return message.channel.send(rolesHelp);
     };
 
-    const role = message.member.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole.toLowerCase());
+    const role = message.member.guild.roles.cache.find(role => role.name === requestRole);
 
-    let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${globalVars.prefix}role help\` to see the available roles.`
+    let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${globalVars.prefix}role help\` to see the available roles.`;
     if (!role) return message.channel.send(invalidRoleText);
     if (!roles.includes(role.id)) return message.channel.send(invalidRoleText);
     if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
