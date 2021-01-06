@@ -6,7 +6,7 @@ exports.run = async (client, message) => {
         const roulette = require('../../../affairs/roulette')
         if (!roulette.on) return;
         const { Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
             prefix = prefix.prefix;
         } else {

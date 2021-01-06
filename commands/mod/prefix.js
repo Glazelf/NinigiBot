@@ -5,7 +5,7 @@ module.exports.run = async (client, message) => {
         if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
-        let oldPrefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+        let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         console.log("sup")
 
         const args = message.content.split(' ');
@@ -20,7 +20,7 @@ module.exports.run = async (client, message) => {
         subCommand = subCommand.toLowerCase();
         if (oldPrefix) await oldPrefix.destroy();
         if (subCommand == "?" || subCommand == "reset") return message.channel.send(`> Prefix has been reset to \`?\`, ${message.author}.`);
-        await Prefixes.upsert({ server_id: message.member.guild.id, prefix: subCommand });
+        await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });
 
         console.log("ayonagsn")
         return message.channel.send(`> Prefix has been changed to \`${subCommand}\`, ${message.author}.`);

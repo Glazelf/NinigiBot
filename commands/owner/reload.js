@@ -5,7 +5,7 @@ exports.run = async (client, message, args) => {
     if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
     const { Prefixes } = require('../../database/dbObjects');
-    let prefix = await Prefixes.findOne({ where: { server_id: message.member.guild.id } });
+    let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
     if (prefix) {
       prefix = prefix.prefix;
     } else {
