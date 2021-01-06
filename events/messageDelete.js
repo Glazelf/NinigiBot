@@ -4,7 +4,10 @@ module.exports = async (client, message) => {
     try {
         const Discord = require("discord.js");
 
-        const log = message.guild.channels.cache.find(channel => channel.name === "log");
+        const { LogChannels } = require('../database/dbObjects');
+        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        if (!logChannel) return;
+        let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
         if (message.channel == log && message.author == client.user) return;
 

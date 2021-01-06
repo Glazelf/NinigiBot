@@ -1,12 +1,15 @@
 const { update } = require("lodash");
 
 module.exports = async (client, message, newMessage) => {
+    // Import globals
+    let globalVars = require('./ready');
     try {
-        // Import globals
-        let globalVars = require('./ready');
         const Discord = require("discord.js");
 
-        const log = message.guild.channels.cache.find(channel => channel.name === "log");
+        const { LogChannels } = require('../database/dbObjects');
+        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        if (!logChannel) return;
+        let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
         if (!message) return;

@@ -3,8 +3,12 @@ module.exports = async (client, guild, user) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const log = guild.channels.cache.find(channel => channel.name === "log");
+        const { LogChannels } = require('../database/dbObjects');
+        let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
+        if (!logChannel) return;
+        let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
+
         const fetchedLogs = await guild.fetchAuditLogs({
             limit: 1,
             type: 'MEMBER_BAN_ADD',
