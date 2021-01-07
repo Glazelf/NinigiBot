@@ -11,7 +11,8 @@ module.exports = async (client, message) => {
     const { DisabledChannels, StarboardChannels, Prefixes } = require('../database/dbObjects');
     const dbChannels = await DisabledChannels.findAll();
     const channels = dbChannels.map(channel => channel.channel_id);
-    let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
+    let prefix = false;
+    if(message.guild) await Prefixes.findOne({ where: { server_id: message.guild.id } });
     if (prefix) {
       prefix = prefix.prefix;
     } else {
