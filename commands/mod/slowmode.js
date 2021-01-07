@@ -6,8 +6,8 @@ module.exports.run = async (client, message, args) => {
         if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_CHANNELS")) return message.channel.send(`> I don't have permission to manage channels, ${message.author}.`);
 
         let arg = args[0];
-        if (!arg || isNaN(arg)) return message.channel.send(`> You need to provide a valid number (seconds) to change the slowmode to, ${message.author}.`);
-        if (arg < 0) arg = 0;
+        if (!arg) arg = 0;
+        if (isNaN(arg) || arg < 0) return message.channel.send(`> You need to provide a valid number (seconds) to change the slowmode to, ${message.author}.`);
         if (arg > 21600) arg = 21600;
 
         await message.channel.setRateLimitPerUser(arg);
