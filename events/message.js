@@ -49,24 +49,27 @@ module.exports = async (client, message) => {
     // Starboard functionality
     message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
       let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
-      if (!starboardChannel) return;
-      let starboard = message.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
-      if (!starboard) return;
-      if (message.channel == starboard) return;
-      if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
-      if (!collected.first()) return;
-      if (collected.first().count == globalVars.starboardLimit) {
-        let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
-        const starEmbed = new Discord.MessageEmbed()
-          .setColor(globalVars.embedColor)
-          .setAuthor(`⭐ ${message.author.username}`, avatar)
-          .setDescription(message.content)
-          .addField(`Sent in:`, message.channel, false)
-          .addField(`Context:`, `[Link](${message.url})`, false)
-          .setImage(messageImage)
-          .setFooter(message.author.tag)
-          .setTimestamp(message.createdTimestamp);
-        starboard.send(starEmbed);
+      if (starboardChannel) {
+        let starboard = message.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
+        if (starboard) {
+          if (message.channel !== starboard) {
+            if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
+            if (!collected.first()) return;
+            if (collected.first().count == globalVars.starboardLimit) {
+              let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+              const starEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setAuthor(`⭐ ${message.author.username}`, avatar)
+                .setDescription(message.content)
+                .addField(`Sent in:`, message.channel, false)
+                .addField(`Context:`, `[Link](${message.url})`, false)
+                .setImage(messageImage)
+                .setFooter(message.author.tag)
+                .setTimestamp(message.createdTimestamp);
+              starboard.send(starEmbed);
+            };
+          };
+        };
       };
     });
 
