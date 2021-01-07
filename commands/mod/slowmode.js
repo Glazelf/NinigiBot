@@ -7,7 +7,6 @@ module.exports.run = async (client, message, args) => {
 
         let arg = args[0];
         if (!arg) arg = 0;
-        if (arg.toLowerCase() == "max") arg = 21600;
         if (isNaN(arg) || arg < 0) return message.channel.send(`> You need to provide a valid number (seconds) to change the slowmode to, ${message.author}.`);
         if (arg > 21600) arg = 21600;
 
