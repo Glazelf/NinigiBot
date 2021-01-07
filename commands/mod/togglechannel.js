@@ -9,7 +9,12 @@ module.exports.run = async (client, message) => {
         let channel = null;
         let subCommand = null;
         const args = message.content.split(' ');
-        if (args[1]) subCommand = args[1].toLowerCase();
+
+        if (args[1]) {
+            subCommand = args[1].toLowerCase();
+        } else {
+            subCommand = message.channel.id;
+        };
         if (!channel) channel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!channel) channel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!channel) channel = message.channel;
