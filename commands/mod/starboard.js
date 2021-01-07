@@ -11,7 +11,7 @@ module.exports.run = async (client, message) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldChannel) {
-                return message.channel.send(`> The current starboard channel is <#${oldChannel.channel_id}>, ${message.author}.`);
+                return message.channel.send(`> The current starboard channel is <#${oldChannel.channel_id}>, ${message.author}. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
             };
             return message.channel.send(`> Please provide a valid channel or \`disable\`, ${message.author}.`);
         };
@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
 
         await StarboardChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
 
-        return message.channel.send(`> ${targetChannel} is now **${message.guild.name}**'s starboard, ${message.author}.`);
+        return message.channel.send(`> ${targetChannel} is now **${message.guild.name}**'s starboard, ${message.author}. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
 
     } catch (e) {
         // log error

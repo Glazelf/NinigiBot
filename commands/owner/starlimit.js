@@ -4,10 +4,9 @@ exports.run = (client, message) => {
     try {
         const input = message.content.split(` `, 2);
         let starLimit = input[1];
-
-        if (!starLimit || isNaN(starLimit)) return message.channel.send(`> The current starboard star limit is ${globalVars.starboardLimit}, ${message.author}.`);
-
         if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+
+        if (isNaN(starLimit)) return message.channel.send(`> You need to provide a valid number, ${message.author}.`);
 
         if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, ${message.author}.`);
 
