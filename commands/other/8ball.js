@@ -12,7 +12,7 @@ exports.run = async (client, message) => {
         };
 
         let commandName = "8ball";
-        if (message.content.toLowerCase().startsWith(`${prefix}magicconch`)) commandName = "Magic Conch";
+        if (!message.content.toLowerCase().startsWith(`${prefix}8ball`)) commandName = "Magic Conch";
 
         if (!args[1]) return message.channel.send(`> You need to provide something for the ${commandName} to consider, ${message.author}.`);
 
@@ -31,5 +31,5 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "8ball",
-    aliases: ["magicconch"]
+    aliases: ["magicconch", "mc"]
 };
