@@ -7,8 +7,23 @@ exports.run = async (client, message) => {
         let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
 
         // Sanitize input
-        let sanitizeValues = [" ", "`", '"', "'", "{", "}", "[", "]"];
+        let sanitizeValues = [
+            " ",
+            "`",
+            '"',
+            "'",
+            "{",
+            "}",
+            "[",
+            "]",
+            "<",
+            ">",
+            "&",
+            "$",
+            ","
+        ];
         calcInput = calcInput.replace(/[a-zA-Z]/gm, '');
+        if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
         });
