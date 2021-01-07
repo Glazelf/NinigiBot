@@ -12,6 +12,9 @@ module.exports.run = async (client, message) => {
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Discord:", `[Server Invite](https://discord.gg/2gkybyu 'Server Invite')`, false)
+            .addField("Support:", `[Paypal](https://paypal.me/glazelf 'Paypal')
+[Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')
+[Patreon](https://patreon.com/glazelf 'Patreon')`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
