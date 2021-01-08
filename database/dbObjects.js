@@ -39,6 +39,7 @@ const PersonalRoleServers = require('./models/global/PersonalRoleServers')(seque
 const ModEnabledServers = require('./models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 const LogChannels = require('./models/global/LogChannels')(sequelize, Sequelize.DataTypes);
 const StarboardChannels = require('./models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
+const VCTextChannels = require('./models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
@@ -306,4 +307,4 @@ Users.prototype.getRoom = function () {
 	});
 };
 
-module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, Prefixes, ModEnabledServers, Shinx };
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, VCTextChannels, Prefixes, ModEnabledServers, Shinx };

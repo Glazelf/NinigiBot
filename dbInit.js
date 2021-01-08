@@ -25,6 +25,7 @@ const PersonalRoleServers = require('./database/models/global/PersonalRoleServer
 const ModEnabledServers = require('./database/models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
 const LogChannels = require('./database/models/global/LogChannels')(sequelize, Sequelize.DataTypes);
 const StarboardChannels = require('./database/models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
+const VCTextChannels = require('./database/models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
@@ -40,6 +41,7 @@ const syncDatabase = async () => {
 
 		await EligibleRoles.sync({ alter: true });
 		await DisabledChannels.sync({ alter: true });
+		await VCTextChannels.sync({ alter: true });
 		await PersonalRoles.sync({ alter: true });
 		await PersonalRoleServers.sync({ alter: true });
 		await ModEnabledServers.sync({ alter: true });
