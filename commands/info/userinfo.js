@@ -52,13 +52,6 @@ module.exports.run = async (client, message) => {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
         };
 
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
-
         // Clear up status wording
         let userStatus = "Error?";
         switch (user.presence.status) {
@@ -118,6 +111,9 @@ module.exports.run = async (client, message) => {
         let userText = user;
         if (memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
 
+        // JoinRank
+        let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.tag} (${user.id})`, avatar)
@@ -132,6 +128,7 @@ module.exports.run = async (client, message) => {
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
         if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
+            .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
             .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}
 ${checkDays(memberCache.joinedAt)}`, true);
@@ -144,6 +141,24 @@ ${checkDays(user.createdAt)}`, true)
             .setTimestamp();
 
         return message.channel.send(profileEmbed);
+
+        function checkDays(date) {
+            let now = new Date();
+            let diff = now.getTime() - date.getTime();
+            let days = Math.floor(diff / 86400000);
+            return days + (days == 1 ? " day" : " days") + " ago";
+        };
+
+        function getJoinRank(userID, guild) {
+            if (!guild.member(userID)) return;
+            // Sort all users by join time
+            let arr = guild.members.cache.array();
+            arr.sort((a, b) => a.joinedAt - b.joinedAt);
+            // Get provided user
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].id == userID) return i;
+            };
+        };
 
     } catch (e) {
         // log error
