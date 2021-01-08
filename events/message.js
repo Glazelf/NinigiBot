@@ -124,7 +124,9 @@ module.exports = async (client, message) => {
 
     // Run the command
     if (cmd) {
+      message.channel.startTyping();
       cmd.run(client, message, args);
+      message.channel.stopTyping(true);
     } else return;
 
   } catch (e) {
