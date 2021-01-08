@@ -1,6 +1,5 @@
 module.exports = async (client, oldMember, newMember) => {
     try {
-        if(newMember.hasPermission("MANAGE_CHANNELS")) return;
         const { VCTextChannels } = require('../database/dbObjects');
         let oldID = null;
         let newID = null;
