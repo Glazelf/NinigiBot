@@ -21,7 +21,7 @@ module.exports = async (client, oldMember, newMember) => {
                 READ_MESSAGE_HISTORY: true
             });
             //Left VC
-        } else {
+        } else if (oldID) {
             return textChannel.permissionOverwrites.get(newMember.id).delete();
         };
 
