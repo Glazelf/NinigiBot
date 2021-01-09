@@ -22,12 +22,12 @@ module.exports.run = async (client, message) => {
             reason = reason.join(' ');
         };
 
-        let banReturn = `> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}.`;
+        let banReturn = `> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Succeeded)`;
         try {
             await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
         } catch (e) {
             console.log(e);
-            banReturn = `${banReturn} (DM failed)`;
+            banReturn = `> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Failed)`;
         };
         await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
         return message.channel.send(banReturn);
