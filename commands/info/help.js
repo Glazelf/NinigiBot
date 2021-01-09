@@ -9,13 +9,13 @@ module.exports.run = async (client, message) => {
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Help has arrived!`, client.user.displayAvatarURL({ format: "png", dynamic: true }))
-            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')`, true)
-            .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Support:", `[Paypal](https://paypal.me/glazelf 'Paypal')
 [Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')
 [Patreon](https://patreon.com/glazelf 'Patreon')`, false)
+            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')`, true)
+            .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
             .setFooter(message.author.tag)
             .setTimestamp();
 
