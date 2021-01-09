@@ -9,8 +9,8 @@ module.exports.run = async (client, message, args) => {
     const requestRole = args.join(' ').toLowerCase();
 
     if (requestRole.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
-    await message.guild.roles.fetch();
-    const role = message.guild.roles.cache.find(role => role.name === requestRole);
+    let roleFetch = await message.guild.roles.fetch();
+    const role = roleFetch.find(role => role.name === requestRole);
     if (!role) return message.channel.send(`> That role does not exist, ${message.author}.`);
     let roleID = await EligibleRoles.findOne({ where: { role_id: role.id, name: requestRole } });
     if (!roleID) return message.channel.send(`> That role does not exist, ${message.author}.`);
