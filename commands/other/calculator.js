@@ -37,7 +37,11 @@ exports.run = async (client, message) => {
             return message.channel.send(`> You need to provide a valid input, ${message.author}.`);
         };
 
-        let rounded = Math.round((evaled + Number.EPSILON) * 100) / 100;
+        // Test out rounding based on remainder sometime
+        // let remainder = evaled % 1;
+
+        // Amount of 0's is the amount of decimals to round to
+        let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
         return message.channel.send(rounded, { code: "js" });
 
