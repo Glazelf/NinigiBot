@@ -53,7 +53,8 @@ This also includes joining just to advertise your own server (or other platform)
             6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod.`,
             7: ` If you have questions about a topic, read through already documented material first before asking us questions. This includes sources like ${rulesChannel} and relevant channels' pins.`,
             8: `Use common sense, these rules are not exhaustive and punishment can be applied on a moderator's discretion even if your name is DeltaV. Purposefully evading the rules or looking for loopholes is considered to be breaking the rules.`,
-            9: `Have fun, this is mandatory.`
+            9: `Have fun, this is mandatory.`,
+            34: `If it exists, there is NSFW of it. No exceptions.`
         };
         let faqNames = {
             1: "How do I get roles?",
