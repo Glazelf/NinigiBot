@@ -14,7 +14,7 @@ module.exports = async (client, guild, user) => {
             type: 'MEMBER_BAN_ADD',
         });
         const banLog = fetchedLogs.entries.first();
-        const { executor, target, reason } = banLog;
+        let { executor, target, reason } = banLog;
         if (reason == null) reason = "Not specified.";
 
         if (target.id !== user.id) return;
@@ -37,6 +37,6 @@ module.exports = async (client, guild, user) => {
         // log error
         const logger = require('../util/logger');
 
-        logger(e);
+        logger(e, client);
     };
 };

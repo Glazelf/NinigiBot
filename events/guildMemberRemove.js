@@ -26,7 +26,7 @@ module.exports = async (client, member) => {
 
         if (kickLog) {
             if (kickLog.createdAt > member.joinedAt) {
-                const { executor, target, reason } = kickLog;
+                let { executor, target, reason } = kickLog;
                 if (target.id !== member.id) return;
                 kicked = true;
                 if (reason) reasonText = reason;
