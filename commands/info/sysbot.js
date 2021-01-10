@@ -12,6 +12,7 @@ module.exports.run = async (client, message) => {
         let Glaze = client.users.cache.get(client.config.ownerID);
         let Flare = client.users.cache.get("592353588685307914");
         let Shion = client.users.cache.get("685608164506337351");
+        let Betty = client.users.cache.get("465892606417567747");
 
         // Bots
         // PKM
@@ -21,6 +22,7 @@ module.exports.run = async (client, message) => {
         // ACNH
         let Ribbot = client.users.cache.get("739823632267608135");
         let ACFlare = client.users.cache.get("792174299716386867");
+        let MagicDoctor = client.users.cache.get("797553861211586654");
 
         let onlineString = "**Online**";
         let offlineString = "Offline";
@@ -30,12 +32,14 @@ module.exports.run = async (client, message) => {
         let ArkosStatus = onlineString;
         let RibbotStatus = onlineString;
         let ACFlareStatus = onlineString;
+        let MagicDoctorStatus = onlineString;
 
         if (Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
         if (Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
         if (Arkos.presence.status == offlineStatus) ArkosStatus = offlineString;
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
+        if (MagicDoctor.presence.status == offlineStatus) MagicDoctorStatus = offlineString;
 
         return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
 > **Format:** Bot (prefix): status (Host#0001)
@@ -46,6 +50,7 @@ module.exports.run = async (client, message) => {
 > **ACNH bots:**
 > ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
 > ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag})
+> ${MagicDoctor} ($): ${MagicDoctorStatus} (${Betty.tag})
 
 > Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
 > Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
