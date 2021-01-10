@@ -19,10 +19,9 @@ exports.run = async (client, message) => {
             "<",
             ">",
             "&",
-            "$",
-            ","
+            "$"
         ];
-        calcInput = calcInput.replace(/[a-zA-Z]/gm, '');
+        calcInput = calcInput.replace(/[a-zA-Z]/gm, '').replace(",", ".");
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
