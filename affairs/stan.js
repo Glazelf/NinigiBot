@@ -4,7 +4,7 @@ module.exports = async (client) => {
     const time = '00 00 20 * * *'; //Sec Min Hour
     // const time = '* * * * *'; //Sec Min Hour testing
     const guildID = client.config.botServerID;
-    const gifTags = ['pokemon', 'lelouch'];
+    const gifTags = ['pokemon', 'code geass'];
     const Discord = require("discord.js");
     const config = require("../config.json");
 

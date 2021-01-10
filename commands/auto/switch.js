@@ -9,7 +9,7 @@ module.exports.run = async (client, message) => {
         if (arguments.length < 1) {
             if (switchCodeGet && switchCodeGet !== "None") return message.channel.send(`> Your Nintendo Switch friend code is ${switchCodeGet}, ${message.author}.`)
             return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
-        }
+        };
         let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(arguments);
 
         if (!switchcode) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);

@@ -1,29 +1,29 @@
 module.exports = async (client) => {
-  try {
-    const { bank } = require('../database/bank');
-    const { Users } = require('../database/dbObjects');
-    const stan = require('../affairs/stan')(client);	
-    const birthday = require('../affairs/birthday')(client);	
-    const lottery = require('../affairs/lottery')(client);
-    const storedBalances = await Users.findAll();
-    storedBalances.forEach(b => bank.currency.set(b.user_id, b));
-    console.log(`Loaded a total of ${client.commands.size} commands!`);
-    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} (cached) users.`);
-    console.log(`Connected as ${client.user.tag}.`);
+    try {
+        const { bank } = require('../database/bank');
+        const { Users } = require('../database/dbObjects');
+        const stan = require('../affairs/stan')(client);
+        const birthday = require('../affairs/birthday')(client);
+        const lottery = require('../affairs/lottery')(client);
+        const storedBalances = await Users.findAll();
+        storedBalances.forEach(b => bank.currency.set(b.user_id, b));
+        console.log(`Loaded a total of ${client.commands.size} commands!`);
+        console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} (cached) users.`);
+        console.log(`Connected as ${client.user.tag}.`);
 
-    // Set bot status
-    client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
+        // Set bot status
+        client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
-    // List servers the bot is connected to
-    console.log("Servers:");
-    client.guilds.cache.forEach((guild) => {
-      console.log(' - ' + guild.name);
-    });
+        // List servers the bot is connected to
+        console.log("Servers:");
+        client.guilds.cache.forEach((guild) => {
+            console.log(' - ' + guild.name);
+        });
 
-  } catch (e) {
-    // log error
-    console.log(e);
-  };
+    } catch (e) {
+        // log error
+        console.log(e);
+    };
 };
 
 module.exports.birthdayRole = "744719808058228796";

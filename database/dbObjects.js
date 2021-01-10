@@ -1,21 +1,21 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('database', 'username', 'password', {
-	host: 'localhost',
-	dialect: 'sqlite',
-	logging: false,
-	storage: 'database/database.sqlite',
+    host: 'localhost',
+    dialect: 'sqlite',
+    logging: false,
+    storage: 'database/database.sqlite',
 });
 
 const attatchments = new Sequelize('attatchments', 'username', 'password', {
-	host: 'localhost',
-	dialect: 'sqlite',
-	logging: false,
-	storage: 'database/models/attachments/attachments.sqlite',
+    host: 'localhost',
+    dialect: 'sqlite',
+    logging: false,
+    storage: 'database/models/attachments/attachments.sqlite',
 });
 
 const levelExp = (lvl) => {
-	return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
+    return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
 };
 const shinxQuotes = require('./models/attachments/shinxQuotes')(attatchments, Sequelize.DataTypes);
 const Users = require('./models/userdata/Users')(sequelize, Sequelize.DataTypes);
@@ -50,261 +50,261 @@ UserKeys.belongsTo(KeyItems, { foreignKey: 'item_id', as: 'key' });
 
 const numberParser = require('../util/parseInteger')
 CurrencyShop.prototype.toString = function () {
-	return `${this.name}: ${this.cost}💰, ${this.usage}`
+    return `${this.name}: ${this.cost}💰, ${this.usage}`
 };
 
 Equipments.prototype.toString = function () {
-	let description = `${this.name}: ${this.cost}💰,`;
-	if (this.regen) description += ` recovers ${this.regen * 100}% points per turn,`;
-	if (this.food) description += ` ${numberParser(this.food * 100)}% food,`;
-	if (this.sleep) description += ` ${numberParser(this.sleep * 100)}% sleep,`;
-	if (this.friendship) description += ` ${numberParser(this.friendship * 100)}% friendship,`;
-	if (this.guard) description += ` blocks one deathblow,`;
-	if (this.safeguard) description += ` blocks all deathblows,`;
-	if (this.geass) description += ` turn one geass,`;
-	if (this.ultrageass) description += ` permanent geass,`;
-	return description.slice(0, -1);
+    let description = `${this.name}: ${this.cost}💰,`;
+    if (this.regen) description += ` recovers ${this.regen * 100}% points per turn,`;
+    if (this.food) description += ` ${numberParser(this.food * 100)}% food,`;
+    if (this.sleep) description += ` ${numberParser(this.sleep * 100)}% sleep,`;
+    if (this.friendship) description += ` ${numberParser(this.friendship * 100)}% friendship,`;
+    if (this.guard) description += ` blocks one deathblow,`;
+    if (this.safeguard) description += ` blocks all deathblows,`;
+    if (this.geass) description += ` turn one geass,`;
+    if (this.ultrageass) description += ` permanent geass,`;
+    return description.slice(0, -1);
 };
 
 KeyItems.prototype.toString = function () {
-	let description = `${this.name}: ${this.cost}💰`;
-	return description;
+    let description = `${this.name}: ${this.cost}💰`;
+    return description;
 };
 
 Foods.prototype.toString = function () {
-	let description = `${this.name}: ${this.cost}💰, recovers ${this.recovery * 100} points`;
-	return description;
+    let description = `${this.name}: ${this.cost}💰, recovers ${this.recovery * 100} points`;
+    return description;
 };
 
 Shinx.prototype.levelUp = function (levels) {
-	this.level = Math.max(1, this.level + levels);
-	this.exp = levelExp(this.level)
-	this.save();
-	return this.level;
+    this.level = Math.max(1, this.level + levels);
+    this.exp = levelExp(this.level)
+    this.save();
+    return this.level;
 };
 
 Shinx.prototype.changeNick = function (newNick) {
-	this.nick = newNick;
-	this.save();
-	return this.nick;
+    this.nick = newNick;
+    this.save();
+    return this.nick;
 };
 
 Shinx.prototype.play = function (amount) {
-	this.varyFriendship(0.05 * amount);
-	this.varySleep(-0.15);
-	this.varyHunger(-0.15);
-	this.save();
+    this.varyFriendship(0.05 * amount);
+    this.varySleep(-0.15);
+    this.varyHunger(-0.15);
+    this.save();
 };
 
 Shinx.prototype.feed = function (amount) {
-	this.varyHunger(amount);
-	this.varySleep(-0.1);
-	this.save();
+    this.varyHunger(amount);
+    this.varySleep(-0.1);
+    this.save();
 };
 
 Shinx.prototype.varyHunger = function (amount) {
-	this.hunger = Math.max(Math.min(1, this.hunger + amount), 0);
+    this.hunger = Math.max(Math.min(1, this.hunger + amount), 0);
 };
 
 Shinx.prototype.varySleep = function (amount) {
-	this.sleep = Math.max(Math.min(1, this.sleep + amount), 0);
+    this.sleep = Math.max(Math.min(1, this.sleep + amount), 0);
 };
 
 Shinx.prototype.varyFriendship = function (amount) {
-	this.friendship = Math.max(Math.min(1, this.friendship + amount), 0);
+    this.friendship = Math.max(Math.min(1, this.friendship + amount), 0);
 };
 
 Shinx.prototype.shine = function () {
-	this.shiny = !this.shiny;
-	this.save();
-	return this.shiny;
+    this.shiny = !this.shiny;
+    this.save();
+    return this.shiny;
 };
 
 Shinx.prototype.rest = function () {
-	this.sleeping = !this.sleeping;
-	this.save();
+    this.sleeping = !this.sleeping;
+    this.save();
 };
 
 Shinx.prototype.see = function () {
-	const currentHour = Math.floor(Date.now() / (1000 * 60 * 60));
-	const hoursPassed = currentHour - this.lastmeet;
-	if (this.sleep === 0) this.sleeping = true;
-	if (hoursPassed === 0) return;
-	if (this.sleeping) this.varySleep(hoursPassed * 0.5);
-	else this.varySleep(-hoursPassed * 0.02);
-	if (this.sleep === 1) this.sleeping = false;
-	if (this.sleep === 0) this.sleeping = true;
-	this.varyHunger(-hoursPassed * 0.01);
-	if (hoursPassed >= 7 * 24) this.varyFriendship(-0.1 * Math.trunc(hoursPassed / 7 * 24));
-	this.lastmeet = currentHour;
-	this.save();
-	return this.sleeping;
+    const currentHour = Math.floor(Date.now() / (1000 * 60 * 60));
+    const hoursPassed = currentHour - this.lastmeet;
+    if (this.sleep === 0) this.sleeping = true;
+    if (hoursPassed === 0) return;
+    if (this.sleeping) this.varySleep(hoursPassed * 0.5);
+    else this.varySleep(-hoursPassed * 0.02);
+    if (this.sleep === 1) this.sleeping = false;
+    if (this.sleep === 0) this.sleeping = true;
+    this.varyHunger(-hoursPassed * 0.01);
+    if (hoursPassed >= 7 * 24) this.varyFriendship(-0.1 * Math.trunc(hoursPassed / 7 * 24));
+    this.lastmeet = currentHour;
+    this.save();
+    return this.sleeping;
 };
 
 Shinx.prototype.trans = function () {
-	this.user_male = !this.user_male;
-	this.save();
-	return this.user_male;
+    this.user_male = !this.user_male;
+    this.save();
+    return this.user_male;
 };
 
 Shinx.prototype.updateData = function (shinxBattle, wins = false) {
-	this.level = shinxBattle.level;
-	this.exp = shinxBattle.exp;
-	this.varyHunger(-0.1);
-	this.varySleep(-0.1);
-	wins ? this.varyFriendship(0.04) : this.varyFriendship(-0.02);
-	this.save();
+    this.level = shinxBattle.level;
+    this.exp = shinxBattle.exp;
+    this.varyHunger(-0.1);
+    this.varySleep(-0.1);
+    wins ? this.varyFriendship(0.04) : this.varyFriendship(-0.02);
+    this.save();
 };
 
 Shinx.prototype.equip = function (equipment) {
-	this.equipment = equipment;
-	this.save();
+    this.equipment = equipment;
+    this.save();
 };
 
 Users.prototype.addItem = async function (item) {
-	const useritem = await UserItems.findOne({
-		where: { user_id: this.user_id, item_id: item.id },
-	});
-	if (useritem) {
-		useritem.amount += 1;
-		return useritem.save();
-	};
-	return UserItems.create({ user_id: this.user_id, item_id: item.id, amount: 1 });
+    const useritem = await UserItems.findOne({
+        where: { user_id: this.user_id, item_id: item.id },
+    });
+    if (useritem) {
+        useritem.amount += 1;
+        return useritem.save();
+    };
+    return UserItems.create({ user_id: this.user_id, item_id: item.id, amount: 1 });
 };
 
 Users.prototype.removeItem = async function (item) {
-	const useritem = await UserItems.findOne({
-		where: { user_id: this.user_id, item_id: item.id },
-	});
+    const useritem = await UserItems.findOne({
+        where: { user_id: this.user_id, item_id: item.id },
+    });
 
-	if (useritem) {
-		useritem.amount -= 1;
-		if (useritem.amount === 0) {
-			useritem.destroy();
-		} else {
-			useritem.save();
-		};
-		return true;
-	};
-	return false;
+    if (useritem) {
+        useritem.amount -= 1;
+        if (useritem.amount === 0) {
+            useritem.destroy();
+        } else {
+            useritem.save();
+        };
+        return true;
+    };
+    return false;
 };
 
 Users.prototype.getItems = function () {
-	return UserItems.findAll({
-		where: { user_id: this.user_id },
-		include: ['item'],
-	});
+    return UserItems.findAll({
+        where: { user_id: this.user_id },
+        include: ['item'],
+    });
 };
 
 Users.prototype.addFood = async function (food) {
-	const userfood = await UserFoods.findOne({
-		where: { user_id: this.user_id, item_id: food.id },
-	});
+    const userfood = await UserFoods.findOne({
+        where: { user_id: this.user_id, item_id: food.id },
+    });
 
-	if (userfood) {
-		userfood.amount += 1;
-		return userfood.save();
-	};
+    if (userfood) {
+        userfood.amount += 1;
+        return userfood.save();
+    };
 
-	return UserFoods.create({ user_id: this.user_id, item_id: food.id, amount: 1 });
+    return UserFoods.create({ user_id: this.user_id, item_id: food.id, amount: 1 });
 };
 
 Users.prototype.removeFood = async function (food) {
-	const userfood = await UserFoods.findOne({
-		where: { user_id: this.user_id, item_id: food.id },
-	});
+    const userfood = await UserFoods.findOne({
+        where: { user_id: this.user_id, item_id: food.id },
+    });
 
-	if (userfood) {
-		userfood.amount -= 1;
-		if (userfood.amount === 0) {
-			userfood.destroy();
-		} else {
-			userfood.save();
-		};
-		return true;
-	};
-	return false;
+    if (userfood) {
+        userfood.amount -= 1;
+        if (userfood.amount === 0) {
+            userfood.destroy();
+        } else {
+            userfood.save();
+        };
+        return true;
+    };
+    return false;
 };
 
 Users.prototype.getFoods = function () {
-	return UserFoods.findAll({
-		where: { user_id: this.user_id },
-		include: ['food'],
-	});
+    return UserFoods.findAll({
+        where: { user_id: this.user_id },
+        include: ['food'],
+    });
 };
 
 Users.prototype.removeEquipment = async function (equipment) {
-	const userequipment = await UserEquipments.findOne({
-		where: { user_id: this.user_id, item_id: equipment.id },
-	});
+    const userequipment = await UserEquipments.findOne({
+        where: { user_id: this.user_id, item_id: equipment.id },
+    });
 
-	if (userequipment) {
-		return userequipment.destroy();
-	};
+    if (userequipment) {
+        return userequipment.destroy();
+    };
 };
 
 Users.prototype.addEquipment = async function (equipment) {
-	const userequipment = await UserEquipments.findOne({
-		where: { user_id: this.user_id, item_id: equipment.id },
-	});
+    const userequipment = await UserEquipments.findOne({
+        where: { user_id: this.user_id, item_id: equipment.id },
+    });
 
-	if (!userequipment) {
-		return UserEquipments.create({ user_id: this.user_id, item_id: equipment.id, amount: 1 });
-	};
+    if (!userequipment) {
+        return UserEquipments.create({ user_id: this.user_id, item_id: equipment.id, amount: 1 });
+    };
 };
 
 Users.prototype.getEquipments = function () {
-	return UserEquipments.findAll({
-		where: { user_id: this.user_id },
-		include: ['equipment'],
-	});
+    return UserEquipments.findAll({
+        where: { user_id: this.user_id },
+        include: ['equipment'],
+    });
 };
 Users.prototype.addKey = async function (key) {
-	const userkey = await UserKeys.findOne({
-		where: { user_id: this.user_id, item_id: key.id },
-	});
+    const userkey = await UserKeys.findOne({
+        where: { user_id: this.user_id, item_id: key.id },
+    });
 
-	if (!userkey) {
-		return UserKeys.create({ user_id: this.user_id, item_id: key.id });
-	};
+    if (!userkey) {
+        return UserKeys.create({ user_id: this.user_id, item_id: key.id });
+    };
 };
 
 Users.prototype.removeKey = async function (key) {
-	const userkey = await UserKeys.findOne({
-		where: { user_id: this.user_id, item_id: key.id },
-	});
+    const userkey = await UserKeys.findOne({
+        where: { user_id: this.user_id, item_id: key.id },
+    });
 
-	if (userkey) {
-		userkey.destroy();
-		return true;
-	};
-	return false;
+    if (userkey) {
+        userkey.destroy();
+        return true;
+    };
+    return false;
 };
 
 Users.prototype.getKeys = function () {
-	return UserKeys.findAll({
-		where: { user_id: this.user_id },
-		include: ['key'],
-	});
+    return UserKeys.findAll({
+        where: { user_id: this.user_id },
+        include: ['key'],
+    });
 };
 
 Users.prototype.changeRoom = async function (room) {
-	const useroom = await UserRooms.findOne({
-		where: { user_id: this.user_id },
-	});
-	if (!userequipment) {
-		return UserEquipments.create({ user_id: this.user_id, item_id: room.id });
-	};
-	useroom.item_id = room.id;
-	useroom.items = '';
-	useroom.save();
+    const useroom = await UserRooms.findOne({
+        where: { user_id: this.user_id },
+    });
+    if (!userequipment) {
+        return UserEquipments.create({ user_id: this.user_id, item_id: room.id });
+    };
+    useroom.item_id = room.id;
+    useroom.items = '';
+    useroom.save();
 };
 
 Users.prototype.getRoom = function () {
-	return UserRooms.findOne({
-		where: { user_id: this.user_id },
-		include: ['room'],
-	});
+    return UserRooms.findOne({
+        where: { user_id: this.user_id },
+        include: ['room'],
+    });
 };
 
 module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, VCTextChannels, Prefixes, ModEnabledServers, Shinx };
