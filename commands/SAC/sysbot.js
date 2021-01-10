@@ -2,9 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.guild.id !== client.config.botServerID) {
-            return;
-        };
+        if (message.guild.id !== client.config.botServerID) return;
 
         let rulesChannelID = "549220480490536972";
 
