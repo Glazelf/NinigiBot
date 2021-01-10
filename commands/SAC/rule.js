@@ -19,7 +19,7 @@ module.exports.run = async (client, message, args) => {
         // Channels
         let rulesChannel = `<#549220480490536972>`;
         let NSFWChannel = `<#717841246101700709>`;
-        let botChannel = `<#614979959156375567>`;
+        let botChannel = `<#${globalVars.botChannelID}>`;
         // Roles
         let modRole = `<@&549215318153887784>`;
         let starRole = `<@&740021749097431092>`;
@@ -64,8 +64,10 @@ This also includes joining just to advertise your own server (or other platform)
             5: "How do I add my friends to this amazing Discord omg???"
         };
         let faq = {
+            // How do I get roles?
             1: `To get roles just use \`?role <rolename>\` in ${botChannel}. Don't ping, just the name.
 To see all the available roles use \`?role help\`.`,
+            // What do these roles do?
             2: `${modRole}: Moderators!
 username#discriminator roles: These are personal roles for Nitro Boosters to change their name color!
 ${starRole}: This role does nothing. It is granted to users who significantly help the server out or are otherwise pillars of the community.
@@ -75,18 +77,18 @@ ${ventRole}: Opens up #vent-chat. This chat is only for serious topics, abuse of
 ${stanRole}: Takes you into consideration for ${client.user}'s daily random stanning.
 ${botHostRole}: The nice people who host our Sysbots.
 If a role is not listed here it is either useless (aside from the color) or so niche it is not worth displaying here. Ask a mod about these.`,
+            // What benefits do I get for boosting?
             3: `Boosting has a few benefits in return for helping the server maintain level 3 benefits. 
 -You get a special role (${boosterRole}) and the boosting icon next to your name. 
 -You are also able to create your own personal colored role using \`?personalrole <colorhex>\` in ${botChannel}.
 -You should get queue priority in our Pokémon bots. (Experimental)`,
-            4: `Bot channel: ${botChannel}
-Refer to the pins there for command lists, user manuals, prefixes, source code etc. 
-Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on. 
-${pkmBotRole} and/or ${ACNHBotRole}  role will be pinged when bots go online. 
-If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time. 
-${ACNHBotRole} is required to use ACNH bot at all.
-${pkmBotRole} is required to send files in ${botChannel}, people without roles can't do this as to prevent raids.
-You can check yourself what bots are currently online by using \`?sysbot\`.`,
+            // How to use PKM/ACNH Sysbots ("genning bots")?
+            4: `Get either ${pkmBotRole} or ${ACNHBotRole} (or both) from ${botChannel} using \`?role help\`.
+Then go to the channel that unlocks and read the pins there for more instructions.
+Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
+${pkmBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online.
+If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
+            // How do I add my friends to this amazing Discord omg???
             5: `Permanent Discord invite: <https://discord.gg/2gkybyu>
 Vanity URL: https://discord.gg/shinx`
         };
