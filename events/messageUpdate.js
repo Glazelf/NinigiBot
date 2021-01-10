@@ -16,7 +16,10 @@ module.exports = async (client, message, newMessage) => {
         if (!message.author) return;
         if (message.content === newMessage.content) return;
 
-        if (!log) return;
+        let messageContent = message.content;
+        let newMessageContent = newMessage.content
+        if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
+        if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1020)}...`;
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
@@ -27,9 +30,9 @@ module.exports = async (client, message, newMessage) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Message edited ⚒️`, avatar)
             .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);
-        if (message.content) updateEmbed.addField(`Before:`, message.content, false);
+        if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
         updateEmbed
-            .addField(`After:`, newMessage.content, false)
+            .addField(`After:`, newMessageContent, false)
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setFooter(message.author.tag)
