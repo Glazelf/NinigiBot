@@ -24,7 +24,7 @@ module.exports.run = async (client, message) => {
         let targetImage = null;
         let targetImageWidth = null;
         let targetImageHeight = null;
-        if (attachment) {
+        if (attachment && message.author.id == client.config.ownerID) {
             targetImage = attachment;
             targetImageWidth = message.attachments.values().next().value.width;
             targetImageHeight = message.attachments.values().next().value.height;
