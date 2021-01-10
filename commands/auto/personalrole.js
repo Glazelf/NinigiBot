@@ -19,7 +19,7 @@ module.exports.run = async (client, message, args) => {
         let modRole = await message.guild.roles.cache.find(r => r.id == "549215318153887784");
 
         let personalRolePosition = boosterRole.position + 1;
-        if (modRole) personalRolePosition = modRole.position + 1;
+        if (message.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
         if (message.guild.me.roles.highest.position <= personalRolePosition) return message.channel.send(`> My highest role isn't high enough to manage a personal role for you, ${message.author}.`);
 
