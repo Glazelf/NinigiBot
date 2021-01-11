@@ -365,7 +365,7 @@ ${type2Emote} ${type2Name}`;
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            if (pokemonName.endsWith("-gmax") || pokemonName.endsWith("-eternamax")) StatText = `(${min50 * 2}-${max50 * 2}) (${min100 * 2}-${max100 * 2})`;
+            if (pokemonName.endsWith("-gmax") || pokemonName.endsWith("-eternamax")) StatText = `(${min50 * 1.5}-${max50 * 2}) (${min100 * 1.5}-${max100 * 2})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
