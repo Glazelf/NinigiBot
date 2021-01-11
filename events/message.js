@@ -27,6 +27,7 @@ module.exports = async (client, message) => {
 
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
+            if (message.author.bot) return;
             if (message.content.indexOf(prefix) == 0) {
                 message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
             };
