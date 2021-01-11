@@ -26,7 +26,7 @@ module.exports = async (client, message) => {
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
         // Ignore commands in DMs
-        if (message.channel.type == "dm" && message.author.id !== client.user.id) {
+        if (message.channel.type == "dm" || !message.guild) {
             if (message.content.indexOf(prefix) == 0) {
                 message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
             };
@@ -49,6 +49,7 @@ module.exports = async (client, message) => {
 
         // Starboard functionality
         message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
+
             let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
             if (starboardChannel) {
                 let starboard = message.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
