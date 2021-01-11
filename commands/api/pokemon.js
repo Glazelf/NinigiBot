@@ -196,10 +196,6 @@ module.exports.run = async (client, message) => {
                             };
                         };
 
-                        // Metrics
-                        let weight = `${response.weight / 10}kg`;
-                        let height = `${response.height / 10}m`;
-
                         pokemonID = leadingZeros(response.id.toString());
 
                         // Forms
@@ -208,11 +204,13 @@ module.exports.run = async (client, message) => {
                         const megaString = "-mega";
                         const primalString = "-primal";
                         const gmaxString = "-gmax";
+                        const eternamaxString = "-eternamax";
                         const alolaBool = pokemonName.endsWith(alolaString);
                         const galarBool = pokemonName.endsWith(galarString);
                         const megaBool = pokemonName.endsWith(megaString);
                         const primalBool = pokemonName.endsWith(primalString);
                         const gmaxBool = pokemonName.endsWith(gmaxString);
+                        const eternamaxBool = pokemonName.endsWith(eternamaxString);
                         let formChar;
 
                         if (alolaBool || galarBool || megaBool || primalBool || gmaxBool) {
@@ -227,7 +225,6 @@ module.exports.run = async (client, message) => {
                             };
                             if (gmaxBool) {
                                 formChar = "-gi";
-                                weight = "???kg";
                             };
                             let baseName = pokemonName.replace("-alola", "").replace("-galar", "").replace("-mega", "").replace("-primal", "").replace("-gmax", "");
                             await P.getPokemonByName(baseName)
@@ -240,6 +237,11 @@ module.exports.run = async (client, message) => {
                                     return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                                 });
                         };
+
+                        // Metrics
+                        let weight = `${response.weight / 10}kg`;
+                        let height = `${response.height / 10}m`;
+                        if (gmaxBool || eternamaxBool) weight = "???kg";
 
                         // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
                         correctValue(correctionID, pokemonID);
