@@ -6,25 +6,25 @@ exports.run = (client, message, args) => {
         if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_MESSAGES")) return message.channel.send(`> I lack the required permissions to delete messages, ${message.author}.`);
 
         let numberFromMessage = args[0];
+
         let numberFromMessagestoNumber = Number(numberFromMessage);
         let numberOfMessages = numberFromMessagestoNumber + 1;
+        if (isNaN(numberOfMessages)) numberFromMessage = args[1];
+        if (isNaN(numberOfMessages)) return message.channel.send(`> Please provide a valid number, ${message.author}.`);
 
-        if (isNaN(numberOfMessages)) {
-            return message.channel.send(`> Sorry, but "${numberOfMessages}" is not a number, please specify an amount of messages that should be deleted.`);
-        };
-
-        if (numberOfMessages > 100) {
-            return message.channel.send(`> Sorry, but Discord does not allow more than 100 messages to be deleted at once.`);
-        };
+        if (numberOfMessages > 100) numberOfMessages = 100;
 
         let amount = parseInt(numberOfMessages);
 
         let user = message.mentions.users.first();
 
         if (!user) {
-            const input = message.content.split(` `, 3);
-            let userID = input[2];
+            let userID = args[1];
             user = client.users.cache.get(userID);
+            if (!user) {
+                userID = input[0];
+                user = client.users.cache.get(userID);
+            };
         };
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
@@ -36,7 +36,7 @@ exports.run = (client, message, args) => {
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
-                    .then(message.channel.send(`> ${numberFromMessage} messages from ${user} have been deleted, <@${message.author.id}>.`));
+                    .then(message.channel.send(`> ${numberFromMessage} messages from ${user.tag} have been deleted, ${message.author}.`));
             });
 
         } else {
