@@ -15,6 +15,7 @@ module.exports = async (client, message, newMessage) => {
         if (!message) return;
         if (!message.author) return;
         if (message.content === newMessage.content) return;
+        if (!message.content || !newMessage.content) return;
 
         let messageContent = message.content;
         let newMessageContent = newMessage.content
