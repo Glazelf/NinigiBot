@@ -20,6 +20,8 @@ module.exports.run = async (client, message, args) => {
         let rulesChannel = `<#549220480490536972>`;
         let NSFWChannel = `<#717841246101700709>`;
         let botChannel = `<#${globalVars.botChannelID}>`;
+        let ACNHBotChannel = `<#614979959156375567>`;
+        let PKMBotchannel = `<#797885250667282444>`;
         // Roles
         let modRole = `<@&549215318153887784>`;
         let starRole = `<@&740021749097431092>`;
@@ -39,7 +41,7 @@ module.exports.run = async (client, message, args) => {
         let stanRole = `<@&743144948328562729>`;
         let botHostRole = `<@&771092824698519582>`;
         let boosterRole = `<@&585533578943660152>`;
-        let pkmBotRole = `<@&676893346009972746>`;
+        let PKMBotRole = `<@&676893346009972746>`;
         let ACNHBotRole = `<@&739832954351648818>`;
 
         let rules = {
@@ -83,10 +85,10 @@ If a role is not listed here it is either useless (aside from the color) or so n
 -You are also able to create your own personal colored role using \`?personalrole <colorhex>\` in ${botChannel}.
 -You should get queue priority in our Pokémon bots. (Experimental)`,
             // How to use PKM/ACNH Sysbots ("genning bots")?
-            4: `Get either ${pkmBotRole} or ${ACNHBotRole} (or both) from ${botChannel} using \`?role help\`.
-Then go to the channel that unlocks and read the pins there for more instructions.
+            4: `Get either ${PKMBotRole} or ${ACNHBotRole} (or both) from ${botChannel} using \`?role help\`.
+Then go to ${PKMBotchannel} for PKM and to ${ACNHBotChannel} for ACNH and read the pins there for more instructions.
 Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
-${pkmBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
+${PKMBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
 If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
             // How do I add my friends to this amazing Discord omg???
             5: `Permanent Discord invite: <https://discord.gg/2gkybyu>
