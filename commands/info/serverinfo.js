@@ -49,6 +49,23 @@ module.exports.run = async (client, message) => {
             "india": ":flag_in: India"
         };
 
+        // Check emote cap (atm doesn't check server partnership)
+        let emoteMax = "";
+        switch (guild.premiumTier) {
+            case 0:
+                emoteMax = "100";
+                break;
+            case 1:
+                emoteMax = "200";
+                break;
+            case 2:
+                emoteMax = "300";
+                break;
+            case 3:
+                emoteMax = "500";
+                break;
+        };
+
         let icon = null;
         if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
         let banner = null;
@@ -91,7 +108,7 @@ module.exports.run = async (client, message) => {
         serverEmbed
             .addField("Channels:", channelCount, true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", guild.roles.cache.size - 1, true);
-        if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
+        if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
             .addField("Shard:", `${getShard}/${ShardUtil.count}`, true)

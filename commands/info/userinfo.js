@@ -53,7 +53,7 @@ module.exports.run = async (client, message) => {
         };
 
         // Clear up status wording
-        let userStatus = "Error?";
+        let userStatus = "Error";
         switch (user.presence.status) {
             case "online":
                 userStatus = "Online";
@@ -69,9 +69,6 @@ module.exports.run = async (client, message) => {
                 break;
             case "offline":
                 userStatus = "Offline";
-                break;
-            default:
-                userStatus = "Error?";
                 break;
         };
 
