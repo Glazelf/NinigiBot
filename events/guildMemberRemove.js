@@ -47,7 +47,7 @@ module.exports = async (client, member) => {
             .setTimestamp();
 
         globalVars.totalLogs += 1;
-        return log.send(user, { embed: leaveEmbed});
+        return log.send(leaveEmbed);
 
     } catch (e) {
         // log error
