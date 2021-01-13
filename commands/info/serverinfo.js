@@ -1,3 +1,5 @@
+const { forEach } = require('lodash');
+
 module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
@@ -16,11 +18,20 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
-        let shardIDs = await client.shard.fetchClientValues('guilds.cache.id');
+        let guildsByShard = await client.shard.fetchClientValues('guilds.cache');
         let nitroEmote = "<:nitroboost:753268592081895605>";
 
-        console.log(shardIDs)
-        //let shardID = ShardUtil.shardIDForGuildID(guild.id, ShardUtil.count);
+        // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
+        let shardNumber;
+        for (i = 0; i < guildsByShard.length; i++) {
+            guildsByShard.forEach(guildShard => {
+                guildShard.forEach(shardGuild => {
+                    if (shardGuild.id == guild.id) {
+                        shardNumber = i;
+                    };
+                });
+            });
+        };
 
         let verifLevels = {
             "NONE": "None",
@@ -85,14 +96,6 @@ module.exports.run = async (client, message) => {
             if (channel.type == "voice" || channel.type == "text") channelCount += 1;
         });
 
-        const getShard = async (guildID) => {
-            // try to get guild from all the shards
-            const req = await client.shard.broadcastEval(`this.guilds.cache.get("${guildID}")`);
-
-            // return non-null response or false if not found
-            return (req.find((res) => !!res) || false);
-        };
-
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${guild.name} (${guild.id})`, icon)
@@ -112,7 +115,7 @@ module.exports.run = async (client, message) => {
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
-            .addField("Shard:", `${getShard}/${ShardUtil.count}`, true)
+            .addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true)
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false)
             .setImage(banner)
