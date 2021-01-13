@@ -22,7 +22,7 @@ module.exports = async (client, member) => {
             .setTimestamp();
 
         globalVars.totalLogs += 1;
-        return log.send(joinEmbed);
+        return log.send(user, { embed: joinEmbed});
 
     } catch (e) {
         // log error
