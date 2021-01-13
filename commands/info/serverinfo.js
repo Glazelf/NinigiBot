@@ -5,6 +5,7 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
+        const ShardUtil = new Discord.ShardClientUtil(client, "process");
 
         let args = message.content.split(' ');
         let guildID = args[1];
@@ -15,7 +16,10 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
+        let shardID = await client.shard.fetchClientValues('guilds.id');
         let nitroEmote = "<:nitroboost:753268592081895605>";
+
+        //let shardID = ShardUtil.shardIDForGuildID(guild.id, ShardUtil.count);
 
         let verifLevels = {
             "NONE": "None",
@@ -63,6 +67,14 @@ module.exports.run = async (client, message) => {
             if (channel.type == "voice" || channel.type == "text") channelCount += 1;
         });
 
+        const getShard = async (guildID) => {
+            // try to get guild from all the shards
+            const req = await client.shard.broadcastEval(`this.guilds.cache.get("${guildID}")`);
+
+            // return non-null response or false if not found
+            return (req.find((res) => !!res) || false);
+        };
+
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${guild.name} (${guild.id})`, icon)
@@ -82,8 +94,9 @@ module.exports.run = async (client, message) => {
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
+            .addField("Shard:", `${getShard}/${ShardUtil.count}`, true)
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
-${checkDays(guild.createdAt)}`)
+${checkDays(guild.createdAt)}`, false)
             .setImage(banner)
             .setFooter(message.author.tag)
             .setTimestamp();
