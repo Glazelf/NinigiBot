@@ -10,7 +10,7 @@ module.exports.run = async (client, message) => {
         let member = message.mentions.members.first();
         let user = message.mentions.users.first();
         if (!member || !user) return message.channel.send(`> Please mention someone to kick, ${message.author}.`);
-        if (!member.kickable) return message.channel.send(`> I lack the required permission to kick ${user.tag}, ${message.author}.`);
+        if (!member.kickable) return message.channel.send(`> I lack the required permissions to kick ${user.tag}, ${message.author}.`);
 
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
