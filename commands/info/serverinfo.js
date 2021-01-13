@@ -16,9 +16,10 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
-        let shardID = await client.shard.fetchClientValues('guilds.id');
+        let shardIDs = await client.shard.fetchClientValues('guilds.cache.id');
         let nitroEmote = "<:nitroboost:753268592081895605>";
 
+        console.log(shardIDs)
         //let shardID = ShardUtil.shardIDForGuildID(guild.id, ShardUtil.count);
 
         let verifLevels = {
