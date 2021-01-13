@@ -22,7 +22,7 @@ exports.run = (client, message, args) => {
             let userID = args[1];
             user = client.users.cache.get(userID);
             if (!user) {
-                userID = input[0];
+                userID = args[0];
                 user = client.users.cache.get(userID);
             };
         };
