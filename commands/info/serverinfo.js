@@ -23,15 +23,13 @@ module.exports.run = async (client, message) => {
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         let shardNumber;
-        for (i = 0; i < guildsByShard.length; i++) {
-            guildsByShard.forEach(guildShard => {
-                guildShard.forEach(shardGuild => {
-                    if (shardGuild.id == guild.id) {
-                        shardNumber = i;
-                    };
-                });
+        guildsByShard.forEach(function (guildShard, i) {
+            guildShard.forEach(function (shardGuild) {
+                if (shardGuild.id == guild.id) {
+                    shardNumber = i + 1;
+                };
             });
-        };
+        });
 
         let verifLevels = {
             "NONE": "None",
