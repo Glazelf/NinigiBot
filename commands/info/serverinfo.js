@@ -59,7 +59,7 @@ module.exports.run = async (client, message) => {
             "india": ":flag_in: India"
         };
 
-        // Check emote cap (atm doesn't check server partnership)
+        // Check emote cap
         let emoteMax = "";
         switch (guild.premiumTier) {
             case 0:
@@ -75,6 +75,7 @@ module.exports.run = async (client, message) => {
                 emoteMax = "500";
                 break;
         };
+        if (guild.partnered) emoteMax = "500";
 
         let icon = null;
         if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
