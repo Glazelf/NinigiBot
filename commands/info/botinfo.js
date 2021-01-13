@@ -67,7 +67,7 @@ module.exports.run = async (client, message) => {
         };
 
         // Calculate total user count
-        let userCount = await getUsers();
+        // let userCount = await getUsers();
 
         // Avatar
         let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
