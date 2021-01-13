@@ -15,10 +15,25 @@ module.exports.run = async (client, message) => {
         };
 
         const Discord = require("discord.js");
+        const ShardUtil = new Discord.ShardClientUtil(client, "process");
         // let userCount = await client.users.fetch();
         // let memberFetch = await message.guild.members.fetch();
         // console.log(userCount)
         // console.log(Object.keys(userCount))
+
+        const promises = [
+            client.shard.fetchClientValues('guilds.cache.size'),
+            client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
+        ];
+
+        var totalGuilds;
+        var totalMembers
+        await Promise.all(promises)
+            .then(results => {
+                totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+                totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+            })
+            .catch(console.error);
 
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
@@ -70,8 +85,9 @@ module.exports.run = async (client, message) => {
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
             .addField("Prefix:", prefix, true)
-            .addField("Servers:", client.guilds.cache.size, true)
-            .addField("Users:", userCount, true)
+            .addField("Shards:", ShardUtil.count, true)
+            .addField("Servers:", totalGuilds, true)
+            .addField("Users:", totalMembers, true)
             .addField("Channels:", channelCount, true);
         if (globalVars.totalMessages > 0) profileEmbed.addField("Messages:", globalVars.totalMessages, true);
         if (globalVars.totalCommands > 0) profileEmbed.addField("Command Uses:", globalVars.totalCommands, true);

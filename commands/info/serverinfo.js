@@ -1,3 +1,5 @@
+const { forEach } = require('lodash');
+
 module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
@@ -5,6 +7,7 @@ module.exports.run = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
 
         const Discord = require("discord.js");
+        const ShardUtil = new Discord.ShardClientUtil(client, "process");
 
         let args = message.content.split(' ');
         let guildID = args[1];
@@ -15,7 +18,20 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
+        let guildsByShard = await client.shard.fetchClientValues('guilds.cache');
         let nitroEmote = "<:nitroboost:753268592081895605>";
+
+        // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
+        let shardNumber;
+        for (i = 0; i < guildsByShard.length; i++) {
+            guildsByShard.forEach(guildShard => {
+                guildShard.forEach(shardGuild => {
+                    if (shardGuild.id == guild.id) {
+                        shardNumber = i;
+                    };
+                });
+            });
+        };
 
         let verifLevels = {
             "NONE": "None",
@@ -99,8 +115,9 @@ module.exports.run = async (client, message) => {
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
         serverEmbed
+            .addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true)
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
-${checkDays(guild.createdAt)}`)
+${checkDays(guild.createdAt)}`, false)
             .setImage(banner)
             .setFooter(message.author.tag)
             .setTimestamp();
