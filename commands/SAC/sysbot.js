@@ -44,17 +44,16 @@ module.exports.run = async (client, message) => {
         if (MagicDoctor.presence.status == offlineStatus) MagicDoctorStatus = offlineString;
 
         return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
-> **Format:** Bot (prefix): status (Host#0001)
+> **Format:** Bot (prefix): status (Host#0001) (Extra notes)
 > **Pokémon bots:**
 > ${Konohana} (&): ${KonohanaStatus} (${Glaze.tag})
 > ${Flar3} (3): ${Flar3Status} (${Flare.tag})
 > ${Arkos} ($): ${ArkosStatus} (${Shion.tag})
-> ${Miku} (!): ${MikuStatus} (${Xenoseon})
+> ${Miku} (!): ${MikuStatus} (${Xenoseon}) (Public)
 > **ACNH bots:**
 > ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
 > ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag})
-> %${MagicDoctor} ($): ${MagicDoctorStatus} (${Betty.tag})
-> Bots marked with \`%\` aren't always available even when displayed as being online.
+> ${MagicDoctor} ($): ${MagicDoctorStatus} (${Betty.tag}) (Shared)
 
 > Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
 > Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
