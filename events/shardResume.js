@@ -1,4 +1,4 @@
-module.exports = async (client) => {
+module.exports = async (client, id) => {
     try {
         const Discord = require("discord.js");
 
@@ -6,7 +6,7 @@ module.exports = async (client) => {
         client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
         // Console log status
-        return console.log("Successfully reconnected (shardResume)!");
+        return console.log(`Successfully reconnected shard ${id}!`);
 
     } catch (e) {
         // log error
