@@ -60,7 +60,6 @@ module.exports = async (client, member, newMember) => {
             .setFooter(user.tag)
             .setTimestamp();
 
-        globalVars.totalLogs += 1;
         return log.send(updateEmbed);
 
         async function deleteBoosterRole() {

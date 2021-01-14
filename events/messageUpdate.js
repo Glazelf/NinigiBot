@@ -39,7 +39,6 @@ module.exports = async (client, message, newMessage) => {
             .setFooter(message.author.tag)
             .setTimestamp(message.createdTimestamp);
 
-        globalVars.totalLogs += 1;
         return log.send(updateEmbed);
 
     } catch (e) {

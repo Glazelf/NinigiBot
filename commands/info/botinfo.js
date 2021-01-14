@@ -89,10 +89,6 @@ module.exports.run = async (client, message) => {
             .addField("Servers:", totalGuilds, true)
             .addField("Users:", totalMembers, true)
             .addField("Channels:", channelCount, true);
-        if (globalVars.totalMessages > 0) profileEmbed.addField("Messages:", globalVars.totalMessages, true);
-        if (globalVars.totalCommands > 0) profileEmbed.addField("Command Uses:", globalVars.totalCommands, true);
-        if (globalVars.totalLogs > 0) profileEmbed.addField("Logs:", globalVars.totalLogs, true);
-        profileEmbed
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'Ninigi Github')", true)
             .addField("Bot Invite:", "[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')", true)
             .addField("Uptime:", uptime, false)

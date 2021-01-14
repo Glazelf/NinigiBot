@@ -30,7 +30,6 @@ module.exports = async (client, guild, user) => {
             .setFooter(`${target.tag} got banned by ${executor.tag}`)
             .setTimestamp();
 
-        globalVars.totalLogs += 1;
         return log.send(banEmbed);
 
     } catch (e) {

@@ -46,7 +46,6 @@ module.exports = async (client, member) => {
             .setFooter(embedFooter)
             .setTimestamp();
 
-        globalVars.totalLogs += 1;
         return log.send(leaveEmbed);
 
     } catch (e) {

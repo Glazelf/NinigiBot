@@ -21,7 +21,6 @@ module.exports = async (client, member) => {
             .setFooter(`Welcome, ${user.tag}!`)
             .setTimestamp();
 
-        globalVars.totalLogs += 1;
         return log.send(user, { embed: joinEmbed});
 
     } catch (e) {

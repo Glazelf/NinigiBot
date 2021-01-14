@@ -28,7 +28,6 @@ module.exports = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp(message.createdTimestamp);
 
-        globalVars.totalLogs += 1;
         return log.send(deleteEmbed);
 
     } catch (e) {

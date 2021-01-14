@@ -82,9 +82,6 @@ module.exports = async (client, message) => {
         // Automod
         autoMod(message);
 
-        // Add message count
-        globalVars.totalMessages += 1;
-
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
         // Add currency if message doesn't start with prefix
@@ -119,10 +116,6 @@ module.exports = async (client, message) => {
 
         // Ignore messages sent in a disabled channel
         if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
-
-        // +1 command count and drop message count
-        globalVars.totalCommands += 1;
-        globalVars.totalMessages -= 1;
 
         // Run the command
         if (cmd) {
