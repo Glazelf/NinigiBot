@@ -53,7 +53,7 @@ module.exports.run = async (client, message) => {
             console.log(rolesSorted.length)
             for (i = rolesSorted.length; i > 1000; i = rolesSorted.length) {
                 rolesSorted = rolesSorted.split(", ");
-                rolesSorted = await rolesSorted.splice(rolesSorted.length - 1, 1);
+                await rolesSorted.pop()
                 rolesSorted = rolesSorted.join(", ");
                 console.log(i)
                 console.log(rolesSorted.length)
