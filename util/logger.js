@@ -5,6 +5,8 @@ module.exports = (exception, client, message = null) => {
     // log error
     console.log(exception);
 
+    if (message) message.channel.stopTyping(true);
+
     // log to dev channel
     let baseMessage = message ? `An error occurred in ${message.channel}!
 Link: ${message.url}
@@ -15,6 +17,7 @@ Message by ${message.author.tag}:
 \`\`\`${exception}\`\`\``;
     if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
     let devChannel = client.shard.broadcastEval(`client.channels.cache.find("${client.config.devChannelID}")`);
+    console.log(devChannel)
     if (message) message.channel.send(`> An error has occurred. 
 > The error has already been logged but please also report this as an issue on Github: 
 > <https://github.com/Glazelf/NinigiBot/issues>`);
