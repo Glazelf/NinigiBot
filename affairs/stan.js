@@ -12,6 +12,7 @@ module.exports = async (client) => {
         // Import globals
         let globalVars = require('../events/ready');
         let guild = client.guilds.cache.get(guildID);
+        if (!guild) return;
         let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
         if (candidates.length < 1) return;
 
