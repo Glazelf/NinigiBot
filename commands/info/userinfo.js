@@ -49,11 +49,11 @@ module.exports.run = async (client, message) => {
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
-            rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
+            rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
             console.log(rolesSorted.length)
             for (i = rolesSorted.length; i > 1000; i = rolesSorted.length) {
                 rolesSorted = rolesSorted.split(", ");
-                rolesSorted = rolesSorted.splice(-1, 1);
+                rolesSorted = await rolesSorted.splice(rolesSorted.length - 1, 1);
                 rolesSorted = rolesSorted.join(", ");
                 console.log(i)
                 console.log(rolesSorted.length)
