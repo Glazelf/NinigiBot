@@ -47,12 +47,12 @@ module.exports.run = async (client, message) => {
 > **Format:** Bot (prefix): status (Host#0001) (Extra notes)
 > **Pokémon bots:**
 > ${Konohana} (&): ${KonohanaStatus} (${Glaze.tag})
-> ${Flar3} (3): ${Flar3Status} (${Flare.tag})
+> ${Flar3} (3): ${Flar3Status} (${Flare.tag}) (Shared)
 > ${Arkos} ($): ${ArkosStatus} (${Shion.tag})
 > ${Miku} (!): ${MikuStatus} (${Xenoseon}) (Public)
 > **ACNH bots:**
 > ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
-> ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag})
+> ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag}) (Shared)
 > ${MagicDoctor} ($): ${MagicDoctorStatus} (${Betty.tag}) (Shared)
 
 > Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
