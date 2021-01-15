@@ -48,6 +48,7 @@ module.exports.run = async (client, message) => {
         // Roles
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
+        let shortenedRoles = false;
         if (memberRoles.size !== 0) {
             rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
             console.log(rolesSorted.length)
@@ -55,11 +56,9 @@ module.exports.run = async (client, message) => {
                 rolesSorted = rolesSorted.split(", ");
                 await rolesSorted.pop()
                 rolesSorted = rolesSorted.join(", ");
-                console.log(i)
-                console.log(rolesSorted.length)
-                if (rolesSorted >= 1000) rolesSorted = `${rolesSorted} and more!`;
+                shortenedRoles = true;
             };
-            console.log(rolesSorted)
+            if (shortenedRoles) rolesSorted = `${rolesSorted} and more!`;
         };
 
         // Clear up status wording
