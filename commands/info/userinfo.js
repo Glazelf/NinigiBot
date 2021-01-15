@@ -50,12 +50,15 @@ module.exports.run = async (client, message) => {
         let rolesSorted = "None";
         if (memberRoles.size !== 0) {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
+            console.log(rolesSorted)
             for (i = rolesSorted; i < 1000; i = rolesSorted) {
                 rolesSorted = rolesSorted.split(", ");
                 rolesSorted.splice(-1, 1);
                 rolesSorted.join(", ");
+                console.log(rolesSorted)
                 if (rolesSorted >= 1000) rolesSorted = `${rolesSorted} and more!`;
             };
+            console.log(rolesSorted)
         };
 
         // Clear up status wording
