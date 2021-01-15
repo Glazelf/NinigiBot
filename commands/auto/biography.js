@@ -6,6 +6,8 @@ module.exports.run = async (client, message) => {
 
         if (!biography) return message.channel.send(`> Please specify a valid biography, ${message.author}.`);
 
+        if (biography.length > 24) return message.channel.send(`> Your bio must be under 24 characters to keep embeds remotely clean, ${message.author}. The bio you tried to submit was \`${biography.length}\` characters long.`);
+
         bank.currency.biography(message.author.id, biography);
 
         return message.channel.send(`> Successfully updated your biography, ${message.author}.`);
