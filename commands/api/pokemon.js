@@ -46,12 +46,16 @@ module.exports.run = async (client, message) => {
             case "item":
                 P.getItemByName(subArgument)
                     .then(function (response) {
+                        let itemName = response.name.replace("-", "").toLowerCase();
+                        let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
+
                         const itemEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", capitalizeString(response.category.name), true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
+                            .setImage(itemImage)
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
