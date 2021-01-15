@@ -51,7 +51,7 @@ module.exports.run = async (client, message) => {
         if (memberRoles.size !== 0) {
             rolesSorted = memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
             console.log(rolesSorted.length)
-            for (i = rolesSorted.length; i < 1000; i = rolesSorted.length) {
+            for (i = rolesSorted.length; i > 1000; i = rolesSorted.length) {
                 rolesSorted = rolesSorted.split(", ");
                 rolesSorted.splice(-1, 1);
                 rolesSorted.join(", ");
