@@ -23,6 +23,7 @@
     "pokedex-promise-v2": "^3.3.0",
     "sequelize": "^6.3.4",
     "sqlite3": "^4.2.0",
+    "steamapi": "^2.1.2",
     "utf-8-validate": "^5.0.3"
   },
   "devDependencies": {
