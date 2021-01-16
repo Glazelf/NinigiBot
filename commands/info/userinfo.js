@@ -131,7 +131,7 @@ module.exports.run = async (client, message) => {
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
-        if (itemField && itemField != 'None') profileEmbed.addField("Inventory:", itemField, false);
+        if (itemField && itemField !== 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
