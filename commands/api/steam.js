@@ -33,7 +33,7 @@ module.exports.run = async (client, message) => {
                             steamInput = id;
                         });
                     };
-                    // Get data from ID
+                    // Get user data from ID
                     await steam.getUserSummary(steamInput).then(summary => {
                         if (!summary) return;
                         userName = summary.nickname;
@@ -44,14 +44,14 @@ module.exports.run = async (client, message) => {
                             userLastOnline = new Date(summary.lastLogOff * 1000);
                             userLastOnline = userLastOnline.toUTCString().substr(5,);
                         } else {
-                            userLastOnline = "Private";
+                            userLastOnline = null;
                         };
                         if (summary.created) {
                             userCreated = new Date(summary.created * 1000);
                             userCreated = `${userCreated.toUTCString().substr(5,)}
 ${checkDays(userCreated)}`;
                         } else {
-                            userCreated = "Private";
+                            userCreated = null;
                         };
                         getUserAvatar(summary.avatar, "large");
                     });
@@ -69,10 +69,11 @@ ${checkDays(userCreated)}`;
                         .setColor(globalVars.embedColor)
                         .setAuthor(`${userName} (${userID})`, userAvatar)
                         .setThumbnail(userAvatar)
-                        .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true)
-                        .addField("Level:", userLevel, true)
-                        .addField("Last Online:", userLastOnline, true)
-                        .addField("userCreated At:", userCreated, true)
+                        .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true);
+                    if (userLevel) userEmbed.addField("Level:", userLevel, true);
+                    if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
+                    if (userCreated) userEmbed.addField("Created At:", userCreated, true);
+                    userEmbed
                         .setFooter(message.author.tag)
                         .setTimestamp();
 
@@ -83,6 +84,7 @@ ${checkDays(userCreated)}`;
                     return message.channel.send(userFailString);
                 };
             case "game":
+                // Get game info from ID
                 return message.channel.send(`Game info goes here`)
         };
 
@@ -95,7 +97,7 @@ ${checkDays(userCreated)}`;
 
         function checkPrivacy(field) {
             if (!field) {
-                return "Private";
+                return null;
             } else {
                 return field;
             };
