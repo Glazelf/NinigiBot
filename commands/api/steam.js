@@ -69,9 +69,9 @@ ${checkDays(userCreated)}`;
                     // Get game count
                     await steam.getUserOwnedGames(userID).then(games => {
                         userGames = games.length;
-                        games.forEach(game => {
-                            steam.getGameDetails(game.appID).then(gameInfo => {
-                                if (!gameInfo.price_overview) console.log("dab")
+                        games.forEach(async game => {
+                            await steam.getGameDetails(game.appID).then(gameInfo => {
+                                if (!gameInfo.price_overview) userGames = userGames - 1;
                             });
                         });
                     }).catch(function (error) {
