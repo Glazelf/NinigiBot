@@ -5,6 +5,8 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const SteamAPI = require('steamapi');
         const steam = new SteamAPI(`${client.config.steam}`);
+
+        // Sanitize and sort user input
         const input = message.content.slice(2).trim();
         let [, , subCommand] = input.match(/(\w+)\s*([\s\S]*)/);
         if (!subCommand) return message.channel.send(`> Please provide a subCommand of either \`user\` or \`game\`, ${message.author}.`);
@@ -13,9 +15,9 @@ module.exports.run = async (client, message) => {
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
 
+        // init variables
         let userFailString = `> Could not find the specified user, ${message.author}. 
 > Make sure you either provide a userID (example: \`76561198084469073\`) or a custom link ID (check if <https://steamcommunity.com/id/${steamInput}> exists).`;
-
         let userName;
         let userID;
         let userAvatar;
@@ -39,6 +41,7 @@ module.exports.run = async (client, message) => {
                         userName = summary.nickname;
                         userID = summary.steamID;
                         userURL = summary.url;
+                        getUserAvatar(summary.avatar, "large");
                         // I hate dates
                         if (summary.lastLogOff) {
                             userLastOnline = new Date(summary.lastLogOff * 1000);
@@ -53,7 +56,6 @@ ${checkDays(userCreated)}`;
                         } else {
                             userCreated = null;
                         };
-                        getUserAvatar(summary.avatar, "large");
                     });
                     // Get level
                     await steam.getUserLevel(userID).then(Level => {
@@ -65,6 +67,7 @@ ${checkDays(userCreated)}`;
                     userLastOnline = checkPrivacy(userLastOnline);
                     userCreated = checkPrivacy(userCreated);
 
+                    // Build and send user embed
                     const userEmbed = new Discord.MessageEmbed()
                         .setColor(globalVars.embedColor)
                         .setAuthor(`${userName} (${userID})`, userAvatar)
