@@ -25,6 +25,9 @@ module.exports.run = async (client, message) => {
         let userURL;
         let userLastOnline;
         let userCreated;
+        let userGames;
+        let userFriends;
+        let userGroups;
 
         switch (subCommand) {
             case "user":
@@ -57,9 +60,36 @@ ${checkDays(userCreated)}`;
                             userCreated = null;
                         };
                     });
+
                     // Get level
-                    await steam.getUserLevel(userID).then(Level => {
-                        userLevel = Level;
+                    await steam.getUserLevel(userID).then(level => {
+                        userLevel = level;
+                    });
+
+                    // Get game count
+                    await steam.getUserOwnedGames(userID).then(games => {
+                        userGames = games.length;
+                        games.forEach(game => {
+                            steam.getGameDetails(game.appID).then(gameInfo => {
+                                if (!gameInfo.price_overview) console.log("dab")
+                            });
+                        });
+                    }).catch(function (error) {
+                        userGames = null;
+                    });
+
+                    // Get friend count
+                    await steam.getUserFriends(userID).then(friends => {
+                        userFriends = friends.length;
+                    }).catch(function (error) {
+                        userFriends = null;
+                    });
+
+                    // Get group count
+                    await steam.getUserGroups(userID).then(groups => {
+                        userGroups = groups.length;
+                    }).catch(function (error) {
+                        userGroups = null;
                     });
 
                     // Check privacy of variables
@@ -74,6 +104,9 @@ ${checkDays(userCreated)}`;
                         .setThumbnail(userAvatar)
                         .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true);
                     if (userLevel) userEmbed.addField("Level:", userLevel, true);
+                    if (userGames) userEmbed.addField("Games Played:", userGames, true);
+                    if (userFriends) userEmbed.addField("Friends:", userFriends, true);
+                    if (userGroups) userEmbed.addField("Groups:", userGroups, true);
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
@@ -88,7 +121,7 @@ ${checkDays(userCreated)}`;
                 };
             case "game":
                 // Get game info from ID
-                return message.channel.send(`Game info goes here`)
+                return message.channel.send(`Game info goes here, ${message.author}.`);
         };
 
         function checkDays(date) {
