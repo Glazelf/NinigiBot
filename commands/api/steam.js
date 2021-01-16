@@ -12,16 +12,17 @@ module.exports.run = async (client, message) => {
         if (!steamInput) return message.channel.send(`> Please provide a user or game ID, ${message.author}.`);
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
-        let userName;
-        let ID;
-        let avatar;
-        let level;
-        let URL;
-        let lastOnline;
-        let created;
 
         let userFailString = `> Could not find the specified user, ${message.author}. 
-> Make sure you either provide a userID (example: \`76561198084469073\`) or a custom link ID (check if <https://steamcommunity.com/id/${steamInput}> exists).`
+> Make sure you either provide a userID (example: \`76561198084469073\`) or a custom link ID (check if <https://steamcommunity.com/id/${steamInput}> exists).`;
+
+        let userName;
+        let userID;
+        let userAvatar;
+        let userLevel;
+        let userURL;
+        let userLastOnline;
+        let userCreated;
 
         switch (subCommand) {
             case "user":
@@ -30,50 +31,48 @@ module.exports.run = async (client, message) => {
                     if (isNaN(steamInput)) {
                         await steam.resolve(`https://steamcommunity.com/id/${steamInput}`).then(id => {
                             steamInput = id;
-                            console.log(steamInput)
                         });
                     };
                     // Get data from ID
                     await steam.getUserSummary(steamInput).then(summary => {
                         if (!summary) return;
                         userName = summary.nickname;
-                        ID = summary.steamID;
-                        avatar = summary.avatar[2];
-                        URL = summary.url;
+                        userID = summary.steamID;
+                        userURL = summary.url;
                         // I hate dates
                         if (summary.lastLogOff) {
-                            lastOnline = new Date(summary.lastLogOff * 1000);
-                            lastOnline = lastOnline.toUTCString().substr(5,);
+                            userLastOnline = new Date(summary.lastLogOff * 1000);
+                            userLastOnline = userLastOnline.toUTCString().substr(5,);
                         } else {
-                            lastOnline = "Private";
+                            userLastOnline = "Private";
                         };
                         if (summary.created) {
-                            created = new Date(summary.created * 1000);
-                            created = `${created.toUTCString().substr(5,)}
-${checkDays(created)}`;
+                            userCreated = new Date(summary.created * 1000);
+                            userCreated = `${userCreated.toUTCString().substr(5,)}
+${checkDays(userCreated)}`;
                         } else {
-                            created = "Private";
+                            userCreated = "Private";
                         };
-                        getAvatar(summary.avatar, "large");
+                        getUserAvatar(summary.avatar, "large");
                     });
                     // Get level
-                    await steam.getUserLevel(ID).then(Level => {
-                        level = Level;
+                    await steam.getUserLevel(userID).then(Level => {
+                        userLevel = Level;
                     });
 
                     // Check privacy of variables
-                    level = checkPrivacy(level);
-                    lastOnline = checkPrivacy(lastOnline);
-                    created = checkPrivacy(created);
+                    userLevel = checkPrivacy(userLevel);
+                    userLastOnline = checkPrivacy(userLastOnline);
+                    userCreated = checkPrivacy(userCreated);
 
                     const userEmbed = new Discord.MessageEmbed()
                         .setColor(globalVars.embedColor)
-                        .setAuthor(`${userName} (${ID})`, avatar)
-                        .setThumbnail(avatar)
-                        .addField("Profile:", `[Link](${URL} 'Profile URL')`, true)
-                        .addField("Level:", level, true)
-                        .addField("Last Online:", lastOnline, true)
-                        .addField("Created At:", created, true)
+                        .setAuthor(`${userName} (${userID})`, userAvatar)
+                        .setThumbnail(userAvatar)
+                        .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true)
+                        .addField("Level:", userLevel, true)
+                        .addField("Last Online:", userLastOnline, true)
+                        .addField("userCreated At:", userCreated, true)
                         .setFooter(message.author.tag)
                         .setTimestamp();
 
@@ -102,11 +101,11 @@ ${checkDays(created)}`;
             };
         };
 
-        async function getAvatar(object, input) {
+        async function getUserAvatar(object, input) {
             var keyList = Object.keys(object);
             keyList.forEach(function (key) {
                 if (input == key) {
-                    avatar = object[key];
+                    userAvatar = object[key];
                 };
             });
         };
