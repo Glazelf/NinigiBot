@@ -23,7 +23,14 @@ module.exports = async (client, message) => {
 
         // Call image
         let messageImage = null;
-        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+        let messageVideo = null;
+        if (message.attachments.size > 0) {
+            messageImage = message.attachments.first().url;
+            if (messageImage.endsWith(".mp4")) {
+                messageVideo = messageImage;
+                messageImage = null;
+            };
+        };
 
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
@@ -50,8 +57,8 @@ module.exports = async (client, message) => {
 
         // Starboard functionality
         message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
-
             let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
+            // Check various permissions and channel existences
             if (starboardChannel) {
                 let starboard = message.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
                 if (starboard) {
@@ -59,6 +66,7 @@ module.exports = async (client, message) => {
                         if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
                         if (!collected.first()) return;
                         if (collected.first().count == globalVars.starboardLimit) {
+                            // Assemble embed
                             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
                             const starEmbed = new Discord.MessageEmbed()
                                 .setColor(globalVars.embedColor)
@@ -69,7 +77,14 @@ module.exports = async (client, message) => {
                                 .setImage(messageImage)
                                 .setFooter(message.author.tag)
                                 .setTimestamp(message.createdTimestamp);
-                            starboard.send(starEmbed);
+                            // Sending logic
+                            console.log("help")
+                            if (messageVideo) {
+                                await starboard.send(starEmbed);
+                                starboard.send({ files: [messageVideo] });
+                            } else {
+                                starboard.send(starEmbed);
+                            };
                         };
                     };
                 };
