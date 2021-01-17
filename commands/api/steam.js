@@ -66,14 +66,9 @@ ${checkDays(userCreated)}`;
                         userLevel = level;
                     });
 
-                    // Get game count
+                    // Get game count, includes free games since my IP adress will get timed out by Steam for a day or two if I try to fetch ~1000 games per second for their price continually :)
                     await steam.getUserOwnedGames(userID).then(games => {
                         userGames = games.length;
-                        games.forEach(async game => {
-                            await steam.getGameDetails(game.appID).then(gameInfo => {
-                                if (!gameInfo.price_overview) userGames = userGames - 1;
-                            });
-                        });
                     }).catch(function (error) {
                         userGames = null;
                     });
