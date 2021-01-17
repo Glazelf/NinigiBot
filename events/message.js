@@ -78,7 +78,6 @@ module.exports = async (client, message) => {
                                 .setFooter(message.author.tag)
                                 .setTimestamp(message.createdTimestamp);
                             // Sending logic
-                            console.log("help")
                             if (messageVideo) {
                                 await starboard.send(starEmbed);
                                 starboard.send({ files: [messageVideo] });
