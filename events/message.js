@@ -64,7 +64,7 @@ module.exports = async (client, message) => {
                                 .setColor(globalVars.embedColor)
                                 .setAuthor(`⭐ ${message.author.username}`, avatar)
                                 .setDescription(message.content)
-                                .addField(`Sent in:`, message.channel, false)
+                                .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false)
                                 .addField(`Context:`, `[Link](${message.url})`, false)
                                 .setImage(messageImage)
                                 .setFooter(message.author.tag)
