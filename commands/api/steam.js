@@ -25,6 +25,7 @@ module.exports.run = async (client, message) => {
         let userURL;
         let userLastOnline;
         let userCreated;
+        let userBadges;
         let userGames;
         let userFriends;
         let userGroups;
@@ -66,6 +67,13 @@ ${checkDays(userCreated)}`;
                         userLevel = level;
                     });
 
+                    // Get badges
+                    await steam.getUserBadges(userID).then(badges => {
+                        userBadges = badges.badges.length;
+                    }).catch(function (error) {
+                        userBadges = null;
+                    });
+
                     // Get game count, includes free games since my IP adress will get timed out by Steam for a day or two if I try to fetch ~1000 games per second for their price continually :)
                     await steam.getUserOwnedGames(userID).then(games => {
                         userGames = games.length;
@@ -99,6 +107,7 @@ ${checkDays(userCreated)}`;
                         .setThumbnail(userAvatar)
                         .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true);
                     if (userLevel) userEmbed.addField("Level:", userLevel, true);
+                    if (userBadges) userEmbed.addField("Badges:", userBadges, true);
                     if (userGames) userEmbed.addField("Games Played:", userGames, true);
                     if (userFriends) userEmbed.addField("Friends:", userFriends, true);
                     if (userGroups) userEmbed.addField("Groups:", userGroups, true);
