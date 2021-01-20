@@ -2,7 +2,7 @@
   "name": "ninigibot",
   "version": "1.0.0",
   "description": "NinigiBot for Discord",
-  "main": "bot.js",
+  "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@discordjs/uws": "^10.149.0",
