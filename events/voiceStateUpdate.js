@@ -7,6 +7,7 @@ module.exports = async (client, oldMember, newMember) => {
         if (newMember.channelID) newID = newMember.channelID;
 
         let user = client.users.cache.get(newMember.id);
+        if (user.bot) return;
 
         let VCTextChannel = await VCTextChannels.findOne({ where: { server_id: newMember.guild.id } });
         if (!VCTextChannel) return;
