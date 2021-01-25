@@ -87,6 +87,7 @@ If a role is not listed here it is either useless (aside from the color) or so n
             // How to use PKM/ACNH Sysbots ("genning bots")?
             4: `Get either ${PKMBotRole} or ${ACNHBotRole} (or both) from ${botChannel} using \`?role help\`.
 Then go to ${PKMBotchannel} for PKM and to ${ACNHBotChannel} for ACNH and read the pins there for more instructions.
+
 Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
 ${PKMBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
 If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
