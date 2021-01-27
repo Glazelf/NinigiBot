@@ -101,7 +101,7 @@ Vanity URL: https://discord.gg/shinx`
         let relevantObject = rules;
         let faqName = ":shrug:";
 
-        if (message.content.startsWith(`${prefix}faq`)) {
+        if (message.content.toLowerCase().startsWith(`${prefix}faq`)) {
             objectName = "FAQ";
             relevantObject = faq;
             await getFAQName(faqNames, inputNumber);
