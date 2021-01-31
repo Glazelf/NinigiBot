@@ -93,7 +93,7 @@ Please don't ask dumb questions like "When will x bot will be online???". I'm a 
 ${PKMBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
 If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
             // How do I add my friends to this amazing Discord omg???
-            5: `Permanent Discord invite: <https://discord.gg/2gkybyu>
+            5: `Permanent Discord invite: https://discord.gg/2gkybyu
 Vanity URL: https://discord.gg/shinx`
         };
 
