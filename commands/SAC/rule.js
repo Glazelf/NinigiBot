@@ -86,7 +86,7 @@ If a role is not listed here it is either useless (aside from the color) or so n
 -You should get queue priority in our Pokémon bots. (Experimental)`,
             // How to use PKM/ACNH Sysbots ("genning bots")?
             4: `Get either ${PKMBotRole} or ${ACNHBotRole} (or both) from ${botChannel} using \`?role help\`.
-These roles will unlock the bot specific channel (${PKMBotchannel} for PKM and to ${ACNHBotChannel} for ACNH).
+These roles will unlock the bot specific channel (${PKMBotchannel} for PKM ${ACNHBotChannel} for ACNH).
 Go there and read the pins there for more instructions.
 
 Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
