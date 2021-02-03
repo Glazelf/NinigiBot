@@ -90,8 +90,9 @@ module.exports = async (client, message) => {
             };
         });
 
-        // Ignore all bots
+        // Ignore all bots and welcome messages
         if (message.author.bot) return;
+        if (!message.member) return;
 
         // Automod
         autoMod(message);
