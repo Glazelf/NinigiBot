@@ -51,7 +51,7 @@ module.exports.run = async (client, message) => {
 > ${Arkos} ($): ${ArkosStatus} (${Shion.tag})
 > ${Miku} (!): ${MikuStatus} (${Xenoseon}) (Public)
 > **ACNH bots:**
-> ${Ribbot} (!): ${RibbotStatus} (${Glaze.tag})
+> ${Ribbot} (;): ${RibbotStatus} (${Glaze.tag})
 > ${ACFlare} (/): ${ACFlareStatus} (${Flare.tag}) (Shared)
 > ${MagicDoctor} ($): ${MagicDoctorStatus} (${Betty.tag}) (Shared)
 
