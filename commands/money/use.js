@@ -11,7 +11,7 @@ exports.run = async (client, message) => {
         const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         const item = items.filter(i => i.item.name.toLowerCase() === commandArgs.toLowerCase());
         if (item.length < 1) return message.channel.send(`> You don't have that item, ${message.author}.`);
-        return message.channel.send(item[0].item.use);
+        return message.channel.send(`You used the ${item[0].item.dataValues.name}, ${message.author}.`);
 
     } catch (e) {
         // log error
