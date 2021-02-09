@@ -11,11 +11,7 @@ exports.run = async (client, message) => {
 
             let items;
 
-            if (args[1] === 'items') {
-                items = await user.getItems();
-                if (!items.length) return message.channel.send(`${target.toString()} has no items!`);
-                return message.channel.send(`${target.toString()}'s items:\n ${items.map(t => `${t.amount} ${t.item.name}`).join(', ')}`);
-            } else if (args[1] === 'food') {
+            if (args[1] === 'food') {
                 items = await user.getFoods();
                 if (!items.length) return message.channel.send(`${target.toString()} has no food!`);
                 return message.channel.send(`${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
@@ -28,10 +24,15 @@ exports.run = async (client, message) => {
                 if (!items.length) return message.channel.send(`${target.toString()} has no key items!`);
                 return message.channel.send(`${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
-                let description = `${target.toString()}'s inventory`;
+                let description = `${target.toString()}'s inventory:`;
                 const length = description.length;
                 items = await user.getItems();
-                if (items.length) description += `\n**Items**\n${items.map(t => `${t.amount} ${t.item.name}`)}`;
+                let itemsInventoryText = `${items.map(t => {
+                    if (t.item) {
+                        `${t.amount} ${t.item.name}`
+                    }
+                })}`;
+                if (items.length && itemsInventoryText.length) description += `\n**Items**\n` + itemsInventoryText;
                 items = await user.getFoods();
                 if (items.length) description += `\n**Food**\n${items.map(t => `${t.amount} ${t.food.name}`)}`;
                 items = await user.getEquipments();
