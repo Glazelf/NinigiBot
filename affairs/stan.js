@@ -1,7 +1,7 @@
 module.exports = async (client) => {
     const cron = require("cron");
     const timezone = 'cest';
-    const time = '00 00 20 * * *'; //Sec Min Hour
+    const time = '00 00 20 * * *'; //Sec Min Hour, 8pm
     // const time = '* * * * *'; //Sec Min Hour testing
     const guildID = client.config.botServerID;
     const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
@@ -37,5 +37,5 @@ module.exports = async (client) => {
             .setImage(randomGif)
             .setTimestamp();
         channel.send(candidateRandom, { embed: gifEmbed });
-    }, timeZone = timezone, start = true)
+    }, timeZone = timezone, start = true);
 };
