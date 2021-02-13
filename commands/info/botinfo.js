@@ -21,19 +21,25 @@ module.exports.run = async (client, message) => {
         // console.log(userCount)
         // console.log(Object.keys(userCount))
 
-        const promises = [
-            client.shard.fetchClientValues('guilds.cache.size'),
-            client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
-        ];
+        var totalGuilds = 0;
+        var totalMembers = 0;
 
-        var totalGuilds;
-        var totalMembers
-        await Promise.all(promises)
-            .then(results => {
-                totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-                totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-            })
-            .catch(console.error);
+        if (client.shard) {
+            const promises = [
+                client.shard.fetchClientValues('guilds.cache.size'),
+                client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
+            ];
+
+            await Promise.all(promises)
+                .then(results => {
+                    totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+                    totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+                })
+                .catch(console.error);
+        } else {
+            totalGuilds = client.guilds.cache.size;
+            totalMembers = await getUsers();
+        };
 
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
@@ -108,21 +114,21 @@ ${checkDays(client.user.createdAt)}`, false)
 
         async function getUsers() {
             // Fast but inaccurate method
-            // var userCount = 0;
-            // await client.guilds.cache.forEach(guild => {
-            //     userCount += guild.memberCount;
-            // });
+            var userCount = 0;
+            await client.guilds.cache.forEach(guild => {
+                userCount += guild.memberCount;
+            });
 
             // Slow but accurate method
-            var userList = [];
-            await client.guilds.cache.forEach(guild => {
-                guild.members.fetch().then(
-                    guild.members.cache.forEach(member => {
-                        if (!member.user.bot) userList.push(member.id);
-                    }));
-            });
-            userList = userList.filter(uniqueArray);
-            let userCount = userList.length;
+            // var userList = [];
+            // await client.guilds.cache.forEach(guild => {
+            //     guild.members.fetch().then(
+            //         guild.members.cache.forEach(member => {
+            //             if (!member.user.bot) userList.push(member.id);
+            //         }));
+            // });
+            // userList = userList.filter(uniqueArray);
+            // let userCount = userList.length;
 
             return userCount;
         };

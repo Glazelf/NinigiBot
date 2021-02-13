@@ -18,18 +18,23 @@ module.exports.run = async (client, message) => {
         let realMembers = memberFetch.filter(member => !member.user.bot).size;
         let bots = memberFetch.filter(member => member.user.bot).size;
         let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
-        let guildsByShard = await client.shard.fetchClientValues('guilds.cache');
+        let guildsByShard = client.guilds.cache;
+
         let nitroEmote = "<:nitroboost:753268592081895605>";
 
+        var shardNumber = 1;
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
-        let shardNumber;
-        guildsByShard.forEach(function (guildShard, i) {
-            guildShard.forEach(function (shardGuild) {
-                if (shardGuild.id == guild.id) {
-                    shardNumber = i + 1;
-                };
+        if (client.shard) {
+            guildsByShard = await client.shard.fetchClientValues('guilds.cache');
+
+            guildsByShard.forEach(function (guildShard, i) {
+                guildShard.forEach(function (shardGuild) {
+                    if (shardGuild.id == guild.id) {
+                        shardNumber = i + 1;
+                    };
+                });
             });
-        });
+        };
 
         let verifLevels = {
             "NONE": "None",
