@@ -118,8 +118,8 @@ module.exports.run = async (client, message) => {
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", guild.roles.cache.size - 1, true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
+        if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true)
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false)
             .setImage(banner)

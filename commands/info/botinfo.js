@@ -84,14 +84,15 @@ module.exports.run = async (client, message) => {
             if (channel.type == "voice" || channel.type == "text") channelCount += 1;
         });
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
             .setThumbnail(avatar)
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
-            .addField("Prefix:", prefix, true)
-            .addField("Shards:", ShardUtil.count, true)
+            .addField("Prefix:", prefix, true);
+        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count, true);
+        botEmbed
             .addField("Servers:", totalGuilds, true)
             .addField("Users:", totalMembers, true)
             .addField("Channels:", channelCount, true)
@@ -103,7 +104,7 @@ ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return message.channel.send(botEmbed);
 
         function checkDays(date) {
             let now = new Date();
