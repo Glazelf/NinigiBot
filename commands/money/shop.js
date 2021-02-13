@@ -15,23 +15,25 @@ exports.run = async (client, message) => {
         const input = message.content.slice(1).trim();
         const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
-        if (biography === 'items') {
+        // Lottery Tickets are messed up and temporarily removed, so items is empty
+        /*if (biography === 'items') {
             const items = await CurrencyShop.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
-        } if (biography === 'equipment') {
+        }*/ if (biography === 'equipment') {
             const items = await Equipments.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
         } if (biography === 'food') {
             const items = await Foods.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
-        }/* if(biography === 'key'){
+        } // Coming soon, maybe
+        /* if(biography === 'key'){
             const items = await KeyItems.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
         } *//* if(biography === 'rooms'){
             const items = await Room.findAll(condition);
             return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return message.channel.send(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: items, equipment, food`);
+        return message.channel.send(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food`);
 
     } catch (e) {
         // log error
