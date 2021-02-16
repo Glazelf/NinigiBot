@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
         if (split[2]) {
             muteTime = split[2];
             if (isNaN(muteTime) || 1 > muteTime) return message.channel.send(`> Please provide a valid number, ${message.author}.`);
-            if (mutetime > 86400) muteTime = 86400;
+            if (muteTime > 86400) muteTime = 86400;
         };
 
         if (args[0]) {
