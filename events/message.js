@@ -65,7 +65,7 @@ module.exports = async (client, message) => {
                     if (message.channel !== starboard) {
                         if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
                         if (!collected.first()) return;
-                        if (collected.first().count == globalVars.starboardLimit) {
+                        if (collected.first().count >= globalVars.starboardLimit) {
                             // Assemble embed
                             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
                             const starEmbed = new Discord.MessageEmbed()
