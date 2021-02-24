@@ -14,7 +14,7 @@ module.exports.run = async (client, message, args) => {
         if (args[1]) {
             muteTime = args[1];
             if (isNaN(muteTime) || 1 > muteTime) return message.channel.send(`> Please provide a valid number, ${message.author}.`);
-            if (muteTime > 86400) muteTime = 86400;
+            if (muteTime > 10080) muteTime = 10080;
         };
 
         const member = message.mentions.members.first();
