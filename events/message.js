@@ -55,6 +55,8 @@ module.exports = async (client, message) => {
             return DMChannel.send(dmEmbed);
         };
 
+        if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
+
         // Starboard functionality
         message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
             let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
