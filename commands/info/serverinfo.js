@@ -15,21 +15,25 @@ module.exports.run = async (client, message) => {
         if (!guild) guild = message.guild;
 
         let memberFetch = await guild.members.fetch();
-        let realMembers = memberFetch.filter(member => !member.user.bot).size;
-        let bots = memberFetch.filter(member => member.user.bot).size;
-        let onlineMembers = memberFetch.filter(member => !member.user.bot && member.presence.status !== "offline").size;
-        let guildsByShard = await client.shard.fetchClientValues('guilds.cache');
+        let humanMembers = memberFetch.filter(member => !member.user.bot).size;
+        let botMembers = memberFetch.filter(member => member.user.bot).size;
+        let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
+        let guildsByShard = client.guilds.cache;
+
         let nitroEmote = "<:nitroboost:753268592081895605>";
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
-        let shardNumber;
-        guildsByShard.forEach(function (guildShard, i) {
-            guildShard.forEach(function (shardGuild) {
-                if (shardGuild.id == guild.id) {
-                    shardNumber = i + 1;
-                };
+        var shardNumber = 1;
+        if (client.shard) {
+            guildsByShard = await client.shard.fetchClientValues('guilds.cache');
+            guildsByShard.forEach(function (guildShard, i) {
+                guildShard.forEach(function (shardGuild) {
+                    if (shardGuild.id == guild.id) {
+                        shardNumber = i + 1;
+                    };
+                });
             });
-        });
+        };
 
         let verifLevels = {
             "NONE": "None",
@@ -105,16 +109,16 @@ module.exports.run = async (client, message) => {
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules, true);
         serverEmbed
-            .addField("Real members:", realMembers, true)
-            .addField("Online members:", onlineMembers, true);
-        if (bots > 0) serverEmbed.addField("Bots:", `${bots} 🤖`, true);
+            .addField("Total members:", guild.memberCount, true)
+            .addField("Human members:", humanMembers, true);
+        if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
         serverEmbed
             .addField("Channels:", channelCount, true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", guild.roles.cache.size - 1, true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
+        if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true)
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false)
             .setImage(banner)

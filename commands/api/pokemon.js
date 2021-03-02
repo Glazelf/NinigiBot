@@ -18,7 +18,7 @@ module.exports.run = async (client, message) => {
 
         let subCommand = args[1].toLowerCase();
         let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
-        subArgument = subArgument.replace(" ", "-");
+        subArgument = subArgument.split(" ").join("-");
 
         switch (subCommand) {
             case "ability":

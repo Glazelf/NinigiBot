@@ -36,15 +36,6 @@ module.exports.run = async (client, message) => {
         let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
 
-        // Inventory check
-        const target = message.mentions.users.first() || message.author;
-        const userDB = await Users.findOne({ where: { user_id: target.id } });
-        let itemField = 'None';
-        if (userDB !== null) {
-            const items = await userDB.getItems();
-            itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
-        };
-
         // Roles
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
@@ -131,7 +122,6 @@ module.exports.run = async (client, message) => {
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
-        if (itemField && itemField !== 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)

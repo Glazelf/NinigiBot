@@ -47,7 +47,7 @@ module.exports.run = async (client, message, args) => {
 
             roleHelpMessage = `${roleHelpMessage}
 Please don't tag these roles, just put the name.
-Example: \`${prefix}role rolename\``;
+Example: \`${prefix}role Minecraft\``;
 
             let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 

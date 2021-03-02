@@ -20,7 +20,7 @@ exports.run = async (client, message) => {
             pauseString = pauseString.replace("n", "");
             wsLatencyString = wsLatencyString.replace("n", "");
         };
-        if (message.content[2] == "o") {
+        if (message.content[2].toLowerCase() == "o") {
             pongString = pongString.replace("o", "i");
             pauseString = pauseString.replace("o", "i");
             wsLatencyString = wsLatencyString.replace("o", "i");

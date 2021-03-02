@@ -55,6 +55,8 @@ module.exports = async (client, message) => {
             return DMChannel.send(dmEmbed);
         };
 
+        if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
+
         // Starboard functionality
         message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
             let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
@@ -65,7 +67,7 @@ module.exports = async (client, message) => {
                     if (message.channel !== starboard) {
                         if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
                         if (!collected.first()) return;
-                        if (collected.first().count == globalVars.starboardLimit) {
+                        if (collected.first().count >= globalVars.starboardLimit) {
                             // Assemble embed
                             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
                             const starEmbed = new Discord.MessageEmbed()
@@ -90,8 +92,9 @@ module.exports = async (client, message) => {
             };
         });
 
-        // Ignore all bots
+        // Ignore all bots and welcome messages
         if (message.author.bot) return;
+        if (!message.member) return;
 
         // Automod
         autoMod(message);

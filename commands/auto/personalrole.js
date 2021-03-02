@@ -51,7 +51,7 @@ module.exports.run = async (client, message, args) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(createdRole.id);
+            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(personalRole.id);
 
             return message.channel.send(`> Updated your role successfully, ${message.author}.`);
 
