@@ -52,7 +52,7 @@ This includes slurs, no matter who you are. It's unrealistic to expect mods to d
             4: `No piracy, this means no spreading of copyrighted material, like uploading the files here or sharing links to download them. Stuff you made yourself like a patch or mod is still fine as long as you only share the mod and not the entire game with the mod applied.`,
             5: `Don't spam the chat needlessly. For example by sending every word in a seperate message or just trying to flood the chat in general. 
 This also includes joining just to advertise your own server (or other platform) or dming it to people in this server. If you get random advertisement or general spam DMs from people you share this with, please report it to a mod.`,
-            6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod.`,
+            6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod. We don't do "partnerships" / trade advertisements. If you have a small, really unqiue community, feel free to ask for permission to post an invite once but please don't DM mods if your community is *just* "upcoming community on a relatively new thing".`,
             7: ` If you have questions about a topic, read through already documented material first before asking us questions. This includes sources like ${rulesChannel} and relevant channels' pins.`,
             8: `Use common sense, these rules are not exhaustive and punishment can be applied on a moderator's discretion even if your name is DeltaV. Purposefully evading the rules or looking for loopholes is considered to be breaking the rules.`,
             9: `Have fun, this is mandatory.`,
@@ -89,7 +89,7 @@ If a role is not listed here it is either useless (aside from the color) or so n
 These roles will unlock the bot specific channel (${PKMBotchannel} for PKM ${ACNHBotChannel} for ACNH).
 Go there and read the pins there for more instructions.
 
-Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
+Please don't ask dumb questions like "When will x bot will be online???". The bot hosts in this server are doing so in their free time without expecting anything in return (though donations are appreciated), bots are on when available. 
 ${PKMBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
 If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
             // How do I add my friends to this amazing Discord omg???
