@@ -49,7 +49,7 @@ module.exports.run = async (client, message) => {
         if (MagicDoctor.presence.status == offlineStatus) MagicDoctorStatus = offlineString;
 
         return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
-> **Format:** Bot (prefix): status (\`Host#0001\`) (Extra notes)
+> **Format:** Bot (prefix): status (\`Host#0001\`)
 > **Pokémon bots:**
 > ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
 > ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
