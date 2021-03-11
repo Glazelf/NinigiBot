@@ -26,15 +26,15 @@ module.exports.run = async (client, message, args) => {
         let modRole = `<@&549215318153887784>`;
         let starRole = `<@&740021749097431092>`;
         // Game roles, currently unused
-        let VGCRole = `<@&656557701425266699>`;
-        let PokkenRole = `<@&636110404254171136>`;
-        let SplatoonRole = `<@&705372282180206592>`;
-        let ACRole = `<@&728561934148042783>`;
-        let MHRole = `<@&712772118043033632>`;
-        let MCRole = `<@&748873336691359794>`;
-        let GenshinRole = `<@&759807202696757258>`;
-        let ImpostorRole = `<@&751169163778719835>`;
-        let SmashRole = `<@&771431806347903006>`;
+        // let VGCRole = `<@&656557701425266699>`;
+        // let PokkenRole = `<@&636110404254171136>`;
+        // let SplatoonRole = `<@&705372282180206592>`;
+        // let ACRole = `<@&728561934148042783>`;
+        // let MHRole = `<@&712772118043033632>`;
+        // let MCRole = `<@&748873336691359794>`;
+        // let GenshinRole = `<@&759807202696757258>`;
+        // let ImpostorRole = `<@&751169163778719835>`;
+        // let SmashRole = `<@&771431806347903006>`;
         let heRole = `<@&756233543855767753>`;
         let sheRole = `<@&756233720381309001>`;
         let theyRole = `<@&756233802774478858>`;
