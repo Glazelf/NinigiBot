@@ -106,6 +106,7 @@ module.exports.run = async (client, message) => {
         let nitroEmote = "<:nitroboost:753268592081895605>";
         let userText = user;
         if (memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
+        if (user.bot) userText = `${user} 🤖`;
 
         // JoinRank
         let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
