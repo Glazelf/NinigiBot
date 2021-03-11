@@ -25,6 +25,7 @@ module.exports.run = async (client, message, args) => {
         // Roles
         let modRole = `<@&549215318153887784>`;
         let starRole = `<@&740021749097431092>`;
+        // Game roles, currently unused
         let VGCRole = `<@&656557701425266699>`;
         let PokkenRole = `<@&636110404254171136>`;
         let SplatoonRole = `<@&705372282180206592>`;
@@ -34,6 +35,9 @@ module.exports.run = async (client, message, args) => {
         let GenshinRole = `<@&759807202696757258>`;
         let ImpostorRole = `<@&751169163778719835>`;
         let SmashRole = `<@&771431806347903006>`;
+        let heRole = `<@&756233543855767753>`;
+        let sheRole = `<@&756233720381309001>`;
+        let theyRole = `<@&756233802774478858>`;
         let ShinxPlayerRole = `<@&774224860380659722>`;
         let ShinxTORole = `<@&774224367571042315>`;
         let DraftRole = `<@&710802109498654790>`;
@@ -73,12 +77,12 @@ To see all the available roles use \`?role help\`.`,
             2: `${modRole}: Moderators!
 username#discriminator roles: These are personal roles for Nitro Boosters to change their name color!
 ${starRole}: This role does nothing. It is granted to users who significantly help the server out or are otherwise pillars of the community.
-${VGCRole}, ${PokkenRole}, ${SplatoonRole}, ${ACRole}, ${MHRole}, ${MCRole}, ${GenshinRole}, ${ImpostorRole}, ${SmashRole}: Unlock corresponding game text/voice chats and in generally allow you to be pinged if anyone wants to play these games.
 ${ShinxPlayerRole}, ${ShinxTORole}, ${DraftRole}: Correspond to certain Pokémon events we hold here every now and then and open up corresponding channel categories.
 ${ventRole}: Opens up #vent-chat. This chat is only for serious topics, abuse of or ridiculing conversation in this channel will get your ass kicked.
+${heRole}, ${sheRole}, ${theyRole}: Let everyone know your pronouns. These also unlock some general chats like #irl-pics since maintaining a list of all game roles for each of these channels is annoying.
 ${stanRole}: Takes you into consideration for ${client.user}'s daily random stanning.
 ${botHostRole}: The nice people who host our Sysbots.
-If a role is not listed here it is either useless (aside from the color) or so niche it is not worth displaying here. Ask a mod about these.`,
+If a role is not listed here it is either useless (aside from the color), very obvious from the name alone or so niche it is not worth displaying here. Ask a mod about these if you have questions.`,
             // What benefits do I get for boosting?
             3: `Boosting has a few benefits in return for helping the server maintain level 3 benefits. 
 -You get a special role (${boosterRole}) and the boosting icon next to your name. 
