@@ -42,7 +42,7 @@ exports.run = async (client, message) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return message.channel.send(rounded, { code: "js" });
+        return message.channel.send(`${rounded} (${message.author.tag})`, { code: "js" });
 
     } catch (e) {
         // log error

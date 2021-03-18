@@ -16,7 +16,7 @@ exports.run = async (client, message, args) => {
             try {
                 let argHex = `0x${args[0]}`;
                 let hexInt = parseInt(argHex);
-                return message.channel.send(`\`\`\`${hexInt}\`\`\``);
+                return message.channel.send(`${hexInt} (${message.author.tag})`, { code: "js" });
             } catch (e) {
                 return message.channel.send(`> An error occurred trying to convert to decimal. Make sure your input is a valid hex, ${message.author}.`);
             };
@@ -24,7 +24,7 @@ exports.run = async (client, message, args) => {
             if (isNaN(args[0])) return message.channel.send(`> Please provide a valid number to convert to hex, ${message.author}.`);
             let argInt = parseInt(args[0]);
             let hexString = argInt.toString(16).toUpperCase();
-            return message.channel.send(`\`\`\`${hexString}\`\`\``);
+            return message.channel.send(`${hexString} (${message.author.tag})`, { code: "js" });
         };
 
     } catch (e) {
