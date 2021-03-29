@@ -70,7 +70,12 @@ module.exports.run = async (client, message) => {
             case "move":
                 P.getMoveByName(subArgument)
                     .then(function (response) {
-                        let description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+                        let description;
+                        try {
+                            description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+                        } catch (e) {
+                            description = null;
+                        };
 
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
@@ -81,8 +86,9 @@ module.exports.run = async (client, message) => {
                         if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
                         if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
                         moveEmbed
-                            .addField("Target:", capitalizeString(response.target.name), true)
-                            .addField("Description:", description, false)
+                            .addField("Target:", capitalizeString(response.target.name), true);
+                        if (description) moveEmbed.addField("Description:", description, false);
+                        moveEmbed
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
