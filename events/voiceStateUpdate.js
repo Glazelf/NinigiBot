@@ -18,7 +18,6 @@ module.exports = async (client, oldMember, newMember) => {
         if (newID) {
             return textChannel.updateOverwrite(user, {
                 VIEW_CHANNEL: true,
-                SEND_MESSAGES: true,
                 READ_MESSAGE_HISTORY: true
             });
             //Left VC
