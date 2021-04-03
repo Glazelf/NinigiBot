@@ -81,7 +81,7 @@ module.exports.run = async (client, message) => {
         // Channels
         var channelCount = 0;
         client.channels.cache.forEach(channel => {
-            if (channel.type == "voice" || channel.type == "text") channelCount += 1;
+            if (channel.type != "category") channelCount += 1;
         });
 
         const botEmbed = new Discord.MessageEmbed()

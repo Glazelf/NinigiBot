@@ -96,7 +96,7 @@ module.exports.run = async (client, message) => {
 
         var channelCount = 0;
         guild.channels.cache.forEach(channel => {
-            if (channel.type == "voice" || channel.type == "text") channelCount += 1;
+            if (channel.type != "category") channelCount += 1;
         });
 
         const serverEmbed = new Discord.MessageEmbed()
