@@ -54,7 +54,7 @@ module.exports = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
         // Starboard functionality
-        starboard(message);
+        starboard(message, client);
 
         // Ignore all bots and welcome messages
         if (message.author.bot) return;

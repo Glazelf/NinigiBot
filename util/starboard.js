@@ -1,4 +1,4 @@
-module.exports = async (message) => {
+module.exports = async (message, client) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
@@ -16,6 +16,11 @@ module.exports = async (message) => {
             };
         };
 
+        if (message.reference) {
+            let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
+            var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+        };
+
         // Starboard logic
         message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
             let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
@@ -27,13 +32,15 @@ module.exports = async (message) => {
                         if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
                         if (!collected.first()) return;
                         if (collected.first().count >= globalVars.starboardLimit) {
-                            // Assemble embed
                             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+                            // Embed
                             const starEmbed = new Discord.MessageEmbed()
                                 .setColor(globalVars.embedColor)
                                 .setAuthor(`⭐ ${message.author.username}`, avatar)
                                 .setDescription(message.content)
-                                .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false)
+                                .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false);
+                            if (message.reference) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}" -${ReplyMessage.author}.`);
+                            starEmbed
                                 .addField(`Context:`, `[Link](${message.url})`, false)
                                 .setImage(messageImage)
                                 .setFooter(message.author.tag)
