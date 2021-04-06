@@ -20,8 +20,10 @@ Message by ${message.author.tag}:
     // Fix cross-shard logging sometime
     let devChannel = client.channels.cache.get(client.config.devChannelID);
     if (message) {
-        if (baseMessage.includes("Missing Access") || baseMessage.includes("Missing Permissions")) {
+        if (baseMessage.includes("Missing Permissions")) {
             return message.channel.send(`> I lack permissions to perform the requested action, ${message.author}.`);
+        } else if (baseMessage.includes("Missing Access")) {
+            return;
         } else {
             message.channel.send(`> An error has occurred. 
 > The error has already been logged but please also report this as an issue on Github: 
