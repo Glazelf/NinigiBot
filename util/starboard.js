@@ -17,7 +17,7 @@ module.exports = async (message, client) => {
         };
 
         if (message.reference) {
-            let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
+            let ReplyChannel = await client.channels.fetch(message.reference.channelID);
             var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
         };
 
