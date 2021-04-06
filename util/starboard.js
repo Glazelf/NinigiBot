@@ -39,7 +39,7 @@ module.exports = async (message, client) => {
                                 .setAuthor(`⭐ ${message.author.username}`, avatar)
                                 .setDescription(message.content)
                                 .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false);
-                            if (message.reference) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}" -${ReplyMessage.author}.`);
+                            if (message.reference) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}" -${ReplyMessage.author}`);
                             starEmbed
                                 .addField(`Context:`, `[Link](${message.url})`, false)
                                 .setImage(messageImage)
