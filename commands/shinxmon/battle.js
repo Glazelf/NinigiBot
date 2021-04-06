@@ -12,8 +12,6 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.guild.me.hasPermission("ATTACH_FILES")) return message.channel.send(`> Sorry, I don't have permissions to attach files, ${message.author}.`);
-
         const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
@@ -22,7 +20,7 @@ module.exports.run = async (client, message) => {
         const [, , target] = input.match(/(\w+)\s*([\s\S]*)/);
         if (target.length < 1) return message.channel.send(`> Please specify a user to battle, ${message.author}.`);
         const trainers = [message.author, message.mentions.users.first()];
-        if(!trainers[1]) return message.channel.send(`> Please tag a valid person to battle, ${message.author}.`)
+        if (!trainers[1]) return message.channel.send(`> Please tag a valid person to battle, ${message.author}.`)
         if (trainers[0].id === trainers[1].id) return message.channel.send(`> You cannot battle yourself, ${message.author}!`);
         if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
         shinxes = [];
@@ -103,7 +101,7 @@ module.exports.run = async (client, message) => {
                     };
                     text += addLine(`${nicks[(i + 1) % 2]} fainted!`);
                     const paidMoney = bank.currency.payBattle(trainers[(i + 1) % 2].id, trainers[i].id);
-                    if(paidMoney!==0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}💰 to ${trainers[i].username}.`);
+                    if (paidMoney !== 0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}💰 to ${trainers[i].username}.`);
                     for (let h = 0; h < 2; h++) {
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`${nicks[h]} won ${exp[0]} exp. points!`);
