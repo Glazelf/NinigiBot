@@ -2,9 +2,10 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+
         const input = message.content.split(` `, 2);
         let starLimit = input[1];
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         if (isNaN(starLimit)) return message.channel.send(`> You need to provide a valid number, ${message.author}.`);
 

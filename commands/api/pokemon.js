@@ -11,8 +11,6 @@ module.exports.run = async (client, message) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to embed messages, ${message.author}.`);
-
         const args = message.content.split(' ');
         if (!args[1]) return message.channel.send(`> You need to provide either a subcommand or a Pokémon to look up, ${message.author}.`);
 

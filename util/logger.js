@@ -19,8 +19,14 @@ Message by ${message.author.tag}:
     if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
     // Fix cross-shard logging sometime
     let devChannel = client.channels.cache.get(client.config.devChannelID);
-    if (message) message.channel.send(`> An error has occurred. 
+    if (message) {
+        if (baseMessage.includes("Missing Access") || baseMessage.includes("Missing Permissions")) {
+            message.channel.send(`> I lack permissions to perform the requested action, ${message.author}.`);
+        } else {
+            message.channel.send(`> An error has occurred. 
 > The error has already been logged but please also report this as an issue on Github: 
 > <https://github.com/Glazelf/NinigiBot/issues>`);
+        };
+    };
     return devChannel.send(baseMessage);
 };

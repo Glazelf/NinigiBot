@@ -19,7 +19,6 @@ module.exports.run = async (client, message) => {
         if (!channel) channel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!channel) channel = message.channel;
 
-
         let channelName = channel.name.toLowerCase();
         let channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });
 
