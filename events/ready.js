@@ -4,7 +4,6 @@ module.exports = async (client) => {
         const { Users } = require('../database/dbObjects');
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
-        const lottery = require('../affairs/lottery')(client);
         const storedBalances = await Users.findAll();
         storedBalances.forEach(b => bank.currency.set(b.user_id, b));
 

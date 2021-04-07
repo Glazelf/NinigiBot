@@ -11,14 +11,12 @@ module.exports.run = async (client, message) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to embed messages, ${message.author}.`);
-
         const args = message.content.split(' ');
         if (!args[1]) return message.channel.send(`> You need to provide either a subcommand or a Pokémon to look up, ${message.author}.`);
 
         let subCommand = args[1].toLowerCase();
         let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
-        subArgument = subArgument.replace(" ", "-");
+        subArgument = subArgument.split(" ").join("-");
 
         switch (subCommand) {
             case "ability":
@@ -70,7 +68,12 @@ module.exports.run = async (client, message) => {
             case "move":
                 P.getMoveByName(subArgument)
                     .then(function (response) {
-                        let description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+                        let description;
+                        try {
+                            description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+                        } catch (e) {
+                            description = null;
+                        };
 
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
@@ -81,8 +84,9 @@ module.exports.run = async (client, message) => {
                         if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
                         if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
                         moveEmbed
-                            .addField("Target:", capitalizeString(response.target.name), true)
-                            .addField("Description:", description, false)
+                            .addField("Target:", capitalizeString(response.target.name), true);
+                        if (description) moveEmbed.addField("Description:", description, false);
+                        moveEmbed
                             .setFooter(message.author.tag)
                             .setTimestamp();
 

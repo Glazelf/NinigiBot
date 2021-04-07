@@ -13,7 +13,7 @@ exports.run = async (client, message) => {
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
         if (!role) role = message.guild.roles.cache.get(input);
-        if (!role) return message.channel.send(`> I couldn't find that role. Make sure you provide a valid name or ID, ${message.author}`);
+        if (!role) return message.channel.send(`> I couldn't find that role, ${message.author}. Make sure you provide a valid name or ID.`);
 
         // Role color
         let roleColor = `#${role.color.toString(16)}`;

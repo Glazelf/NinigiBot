@@ -33,12 +33,7 @@ exports.run = async (client, message) => {
         if (gifArgument == "help") {
             return message.channel.send(`> Here's a list for all gif arguments, ${message.author}:
 ${helpText}`);
-        } else if (!message.channel.permissionsFor(message.guild.me).has("ATTACH_FILES")) {
-            return message.channel.send(`> I can't send you gifs because I don't have permissions to attach files to my messages, ${message.author}.`);
-        } else if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
-            return message.channel.send(`> I can't send you gifs because I don't have permissions to embed messages, ${message.author}.`);
         } else if (gif) {
-
             if (gifArgument == "hug") {
                 if (user) {
                     gifString = `${message.author} gave ${user} a tight hug!`;

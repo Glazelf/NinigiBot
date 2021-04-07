@@ -25,15 +25,19 @@ module.exports.run = async (client, message, args) => {
         // Roles
         let modRole = `<@&549215318153887784>`;
         let starRole = `<@&740021749097431092>`;
-        let VGCRole = `<@&656557701425266699>`;
-        let PokkenRole = `<@&636110404254171136>`;
-        let SplatoonRole = `<@&705372282180206592>`;
-        let ACRole = `<@&728561934148042783>`;
-        let MHRole = `<@&712772118043033632>`;
-        let MCRole = `<@&748873336691359794>`;
-        let GenshinRole = `<@&759807202696757258>`;
-        let ImpostorRole = `<@&751169163778719835>`;
-        let SmashRole = `<@&771431806347903006>`;
+        // Game roles, currently unused
+        // let VGCRole = `<@&656557701425266699>`;
+        // let PokkenRole = `<@&636110404254171136>`;
+        // let SplatoonRole = `<@&705372282180206592>`;
+        // let ACRole = `<@&728561934148042783>`;
+        // let MHRole = `<@&712772118043033632>`;
+        // let MCRole = `<@&748873336691359794>`;
+        // let GenshinRole = `<@&759807202696757258>`;
+        // let ImpostorRole = `<@&751169163778719835>`;
+        // let SmashRole = `<@&771431806347903006>`;
+        let heRole = `<@&756233543855767753>`;
+        let sheRole = `<@&756233720381309001>`;
+        let theyRole = `<@&756233802774478858>`;
         let ShinxPlayerRole = `<@&774224860380659722>`;
         let ShinxTORole = `<@&774224367571042315>`;
         let DraftRole = `<@&710802109498654790>`;
@@ -52,7 +56,7 @@ This includes slurs, no matter who you are. It's unrealistic to expect mods to d
             4: `No piracy, this means no spreading of copyrighted material, like uploading the files here or sharing links to download them. Stuff you made yourself like a patch or mod is still fine as long as you only share the mod and not the entire game with the mod applied.`,
             5: `Don't spam the chat needlessly. For example by sending every word in a seperate message or just trying to flood the chat in general. 
 This also includes joining just to advertise your own server (or other platform) or dming it to people in this server. If you get random advertisement or general spam DMs from people you share this with, please report it to a mod.`,
-            6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod.`,
+            6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod. We don't do "partnerships" / trade advertisements. If you have a small, really unqiue community, feel free to ask for permission to post an invite once but please don't DM mods if your community is *just* "upcoming community on a relatively new thing".`,
             7: ` If you have questions about a topic, read through already documented material first before asking us questions. This includes sources like ${rulesChannel} and relevant channels' pins.`,
             8: `Use common sense, these rules are not exhaustive and punishment can be applied on a moderator's discretion even if your name is DeltaV. Purposefully evading the rules or looking for loopholes is considered to be breaking the rules.`,
             9: `Have fun, this is mandatory.`,
@@ -73,12 +77,12 @@ To see all the available roles use \`?role help\`.`,
             2: `${modRole}: Moderators!
 username#discriminator roles: These are personal roles for Nitro Boosters to change their name color!
 ${starRole}: This role does nothing. It is granted to users who significantly help the server out or are otherwise pillars of the community.
-${VGCRole}, ${PokkenRole}, ${SplatoonRole}, ${ACRole}, ${MHRole}, ${MCRole}, ${GenshinRole}, ${ImpostorRole}, ${SmashRole}: Unlock corresponding game text/voice chats and in generally allow you to be pinged if anyone wants to play these games.
 ${ShinxPlayerRole}, ${ShinxTORole}, ${DraftRole}: Correspond to certain Pokémon events we hold here every now and then and open up corresponding channel categories.
 ${ventRole}: Opens up #vent-chat. This chat is only for serious topics, abuse of or ridiculing conversation in this channel will get your ass kicked.
+${heRole}, ${sheRole}, ${theyRole}: Let everyone know your pronouns. These also unlock some general chats like #irl-pics since maintaining a list of all game roles for each of these channels is annoying.
 ${stanRole}: Takes you into consideration for ${client.user}'s daily random stanning.
 ${botHostRole}: The nice people who host our Sysbots.
-If a role is not listed here it is either useless (aside from the color) or so niche it is not worth displaying here. Ask a mod about these.`,
+If a role is not listed here it is either useless (aside from the color), very obvious from the name alone or so niche it is not worth displaying here. Ask a mod about these if you have questions.`,
             // What benefits do I get for boosting?
             3: `Boosting has a few benefits in return for helping the server maintain level 3 benefits. 
 -You get a special role (${boosterRole}) and the boosting icon next to your name. 
@@ -89,7 +93,7 @@ If a role is not listed here it is either useless (aside from the color) or so n
 These roles will unlock the bot specific channel (${PKMBotchannel} for PKM ${ACNHBotChannel} for ACNH).
 Go there and read the pins there for more instructions.
 
-Please don't ask dumb questions like "When will x bot will be online???". I'm a single man with a single Switch and my own life, it will be on when it's on.
+Please don't ask dumb questions like "When will x bot will be online???". The bot hosts in this server are doing so in their free time without expecting anything in return (though donations are appreciated), bots are on when available. 
 ${PKMBotRole} and/or ${ACNHBotRole} role will be pinged when bots go online. You can check bot status at any time using \`?sysbot\`.
 If you want more uptime/consistency refer to the paypal links in the pins of ${botChannel} to donate money to me and fund me more hardware to run more bots on at the same time.`,
             // How do I add my friends to this amazing Discord omg???

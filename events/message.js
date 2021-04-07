@@ -8,7 +8,7 @@ module.exports = async (client, message) => {
         const { bank } = require('../database/bank');
         let secondCharacter = message.content.charAt(1);
 
-        const { DisabledChannels, StarboardChannels, Prefixes } = require('../database/dbObjects');
+        const { DisabledChannels, Prefixes } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
         const channels = dbChannels.map(channel => channel.channel_id);
         let prefix = false;
@@ -20,16 +20,12 @@ module.exports = async (client, message) => {
         };
 
         const autoMod = require('../util/autoMod');
+        const starboard = require('../util/starboard');
 
         // Call image
         let messageImage = null;
-        let messageVideo = null;
         if (message.attachments.size > 0) {
             messageImage = message.attachments.first().url;
-            if (messageImage.endsWith(".mp4")) {
-                messageVideo = messageImage;
-                messageImage = null;
-            };
         };
 
         // Ignore commands in DMs
@@ -55,46 +51,17 @@ module.exports = async (client, message) => {
             return DMChannel.send(dmEmbed);
         };
 
-        // Starboard functionality
-        message.awaitReactions(reaction => reaction.emoji.name == "⭐", { max: globalVars.starboardLimit, time: 3600000 }).then(async collected => {
-            let starboardChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
-            // Check various permissions and channel existences
-            if (starboardChannel) {
-                let starboard = message.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
-                if (starboard) {
-                    if (message.channel !== starboard) {
-                        if (!starboard.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I don't have permissions to send embedded message to your starboard, ${message.author}.`);
-                        if (!collected.first()) return;
-                        if (collected.first().count == globalVars.starboardLimit) {
-                            // Assemble embed
-                            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
-                            const starEmbed = new Discord.MessageEmbed()
-                                .setColor(globalVars.embedColor)
-                                .setAuthor(`⭐ ${message.author.username}`, avatar)
-                                .setDescription(message.content)
-                                .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false)
-                                .addField(`Context:`, `[Link](${message.url})`, false)
-                                .setImage(messageImage)
-                                .setFooter(message.author.tag)
-                                .setTimestamp(message.createdTimestamp);
-                            // Sending logic
-                            if (messageVideo) {
-                                await starboard.send(starEmbed);
-                                starboard.send({ files: [messageVideo] });
-                            } else {
-                                starboard.send(starEmbed);
-                            };
-                        };
-                    };
-                };
-            };
-        });
+        if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
-        // Ignore all bots
+        // Starboard functionality
+        starboard(message, client);
+
+        // Ignore all bots and welcome messages
         if (message.author.bot) return;
+        if (!message.member) return;
 
         // Automod
-        autoMod(message);
+        autoMod(message, messageImage);
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 

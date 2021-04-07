@@ -2,8 +2,6 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
-
         const Discord = require("discord.js");
 
         const helpEmbed = new Discord.MessageEmbed()
@@ -12,8 +10,9 @@ module.exports.run = async (client, message) => {
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Support:", `[Paypal](https://paypal.me/glazelf 'Paypal')
-[Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')
-[Patreon](https://patreon.com/glazelf 'Patreon')`, false)
+[Github](https://github.com/sponsors/Glazelf)
+[Patreon](https://patreon.com/glazelf 'Patreon')
+[Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')`, false)
             .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')`, true)
             .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
             .setFooter(message.author.tag)

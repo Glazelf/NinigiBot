@@ -2,8 +2,6 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
-
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
@@ -35,15 +33,6 @@ module.exports.run = async (client, message) => {
         let biography = bank.currency.getBiography(user.id);
         let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
-
-        // Inventory check
-        const target = message.mentions.users.first() || message.author;
-        const userDB = await Users.findOne({ where: { user_id: target.id } });
-        let itemField = 'None';
-        if (userDB !== null) {
-            const items = await userDB.getItems();
-            itemField = items.map(t => `${t.amount} ${t.item.name}`).join(', ');
-        };
 
         // Roles
         let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
@@ -115,6 +104,7 @@ module.exports.run = async (client, message) => {
         let nitroEmote = "<:nitroboost:753268592081895605>";
         let userText = user;
         if (memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
+        if (user.bot) userText = `${user} 🤖`;
 
         // JoinRank
         let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
@@ -131,7 +121,6 @@ module.exports.run = async (client, message) => {
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
-        if (itemField && itemField !== 'None') profileEmbed.addField("Inventory:", itemField, false);
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)

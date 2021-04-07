@@ -7,6 +7,14 @@ exports.run = async (client, message) => {
         const Discord = require("discord.js");
         let process = null;
 
+        const { Prefixes } = require('../../../database/dbObjects');
+        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
+        if (prefix) {
+            prefix = prefix.prefix;
+        } else {
+            prefix = globalVars.prefix;
+        };
+
         let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
         roulette.shift()

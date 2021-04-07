@@ -4,8 +4,6 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.channel.send(`> I can't run this command because I don't have permissions to send embedded messages, ${message.author}.`);
-
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -21,19 +19,25 @@ module.exports.run = async (client, message) => {
         // console.log(userCount)
         // console.log(Object.keys(userCount))
 
-        const promises = [
-            client.shard.fetchClientValues('guilds.cache.size'),
-            client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
-        ];
+        var totalGuilds = 0;
+        var totalMembers = 0;
 
-        var totalGuilds;
-        var totalMembers
-        await Promise.all(promises)
-            .then(results => {
-                totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-                totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-            })
-            .catch(console.error);
+        if (client.shard) {
+            const promises = [
+                client.shard.fetchClientValues('guilds.cache.size'),
+                client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
+            ];
+
+            await Promise.all(promises)
+                .then(results => {
+                    totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+                    totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+                })
+                .catch(console.error);
+        } else {
+            totalGuilds = client.guilds.cache.size;
+            totalMembers = await getUsers();
+        };
 
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
@@ -75,17 +79,18 @@ module.exports.run = async (client, message) => {
         // Channels
         var channelCount = 0;
         client.channels.cache.forEach(channel => {
-            if (channel.type == "voice" || channel.type == "text") channelCount += 1;
+            if (channel.type != "category") channelCount += 1;
         });
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
             .setThumbnail(avatar)
             .addField("Account:", client.user, true)
             .addField("Owner:", "Glaze#6669", true)
-            .addField("Prefix:", prefix, true)
-            .addField("Shards:", ShardUtil.count, true)
+            .addField("Prefix:", prefix, true);
+        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count, true);
+        botEmbed
             .addField("Servers:", totalGuilds, true)
             .addField("Users:", totalMembers, true)
             .addField("Channels:", channelCount, true)
@@ -97,7 +102,7 @@ ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return message.channel.send(botEmbed);
 
         function checkDays(date) {
             let now = new Date();
@@ -108,21 +113,21 @@ ${checkDays(client.user.createdAt)}`, false)
 
         async function getUsers() {
             // Fast but inaccurate method
-            // var userCount = 0;
-            // await client.guilds.cache.forEach(guild => {
-            //     userCount += guild.memberCount;
-            // });
+            var userCount = 0;
+            await client.guilds.cache.forEach(guild => {
+                userCount += guild.memberCount;
+            });
 
             // Slow but accurate method
-            var userList = [];
-            await client.guilds.cache.forEach(guild => {
-                guild.members.fetch().then(
-                    guild.members.cache.forEach(member => {
-                        if (!member.user.bot) userList.push(member.id);
-                    }));
-            });
-            userList = userList.filter(uniqueArray);
-            let userCount = userList.length;
+            // var userList = [];
+            // await client.guilds.cache.forEach(guild => {
+            //     guild.members.fetch().then(
+            //         guild.members.cache.forEach(member => {
+            //             if (!member.user.bot) userList.push(member.id);
+            //         }));
+            // });
+            // userList = userList.filter(uniqueArray);
+            // let userCount = userList.length;
 
             return userCount;
         };

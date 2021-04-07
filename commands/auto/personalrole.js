@@ -5,7 +5,6 @@ module.exports.run = async (client, message, args) => {
         // Personal Roles can / will only get global support in discord.js v13
         if (message.guild.id !== "549214833858576395") return message.channel.send(`> Personal Roles can / will only get global support in discord.js v13, ${message.author}.`);
 
-        if (!message.channel.permissionsFor(message.guild.me).has("MANAGE_ROLES")) return message.channel.send(`> I don't have permission to manage roles, ${message.author}.`);
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
         if (!serverID) return message.channel.send(`> Personal Roles are disabled in **${message.guild.name}**, ${message.author}.`);
@@ -51,7 +50,7 @@ module.exports.run = async (client, message, args) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(createdRole.id);
+            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(personalRole.id);
 
             return message.channel.send(`> Updated your role successfully, ${message.author}.`);
 
