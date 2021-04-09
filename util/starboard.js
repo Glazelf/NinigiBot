@@ -16,10 +16,17 @@ module.exports = async (message, client) => {
             };
         };
 
-        if (message.reference) {
-            let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
-            if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelID);
-            var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+        let isReply = false;
+        if (message.reference) isReply = true;
+
+        if (isReply) {
+            try {
+                let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
+                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelID);
+                var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+            } catch (e) {
+                isReply = false;
+            };
         };
 
         // Starboard logic
@@ -40,7 +47,7 @@ module.exports = async (message, client) => {
                                 .setAuthor(`⭐ ${message.author.username}`, avatar)
                                 .setDescription(message.content)
                                 .addField(`Sent:`, `By ${message.author} in ${message.channel}`, false);
-                            if (message.reference) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+                            if (isReply) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
                             starEmbed
                                 .addField(`Context:`, `[Link](${message.url})`, false)
                                 .setImage(messageImage)
