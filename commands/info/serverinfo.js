@@ -79,8 +79,7 @@ module.exports.run = async (client, message) => {
         };
         if (guild.partnered) emoteMax = "500";
 
-        let icon = null;
-        if (guild.iconURL()) icon = guild.iconURL({ format: "png", dynamic: true });
+        let icon = guild.iconURL({ format: "png", dynamic: true });
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 

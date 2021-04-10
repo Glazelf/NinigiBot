@@ -11,11 +11,12 @@ module.exports = async (client, member) => {
 
         let user = client.users.cache.get(member.id);
 
+        let icon = member.guild.iconURL({ format: "png", dynamic: true });
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         const joinEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member Joined ❤️`, avatar)
+            .setAuthor(`Member Joined ❤️`, icon)
             .setThumbnail(avatar)
             .addField(`User:`, `${user} (${user.id})`)
             .setFooter(`${member.guild.name} now has ${member.guild.memberCount} members!`)

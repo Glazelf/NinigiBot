@@ -11,7 +11,7 @@ module.exports = async (client, member) => {
 
         let user = client.users.cache.get(member.id);
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
-        let icon = avatar;
+        let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
         let embedAuthor = `Member Left 💔`;
         let embedFooter = `${member.guild.name} has ${member.guild.memberCount} members left!`;

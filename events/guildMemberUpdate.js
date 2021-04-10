@@ -24,6 +24,7 @@ module.exports = async (client, member, newMember) => {
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (!newMember.premiumSince && serverID && roleDB && !member.hasPermission("MANAGE_ROLES")) await deleteBoosterRole();
 
+        let icon = member.guild.iconURL({ format: "png", dynamic: true });
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         switch (updateCase) {
@@ -53,7 +54,7 @@ module.exports = async (client, member, newMember) => {
 
         const updateEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(topText, avatar)
+            .setAuthor(topText, icon)
             .setThumbnail(avatar)
             .setDescription(changeText)
             .addField(`User:`, `${user} (${user.id})`)
