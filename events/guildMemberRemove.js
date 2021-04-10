@@ -11,12 +11,13 @@ module.exports = async (client, member) => {
 
         let user = client.users.cache.get(member.id);
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
-        avatarExecutor = avatar;
+        let icon = avatar;
 
         let embedAuthor = `Member Left 💔`;
         let embedFooter = `${member.guild.name} has ${member.guild.memberCount} members left!`;
         let reasonText = "Not specified.";
         let kicked = false;
+        let kickedBy;
 
         const fetchedLogs = await member.guild.fetchAuditLogs({
             limit: 1,
@@ -30,18 +31,19 @@ module.exports = async (client, member) => {
                 if (target.id !== member.id) return;
                 kicked = true;
                 if (reason) reasonText = reason;
-                avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
+                icon = executor.displayAvatarURL({ format: "png", dynamic: true });
                 embedAuthor = `Member Kicked 💔`;
-                embedFooter = `${target.tag} got kicked by ${executor.tag}.`;
+                kickedBy = `${target.tag} got kicked by ${executor.tag}.`;
             };
         };
 
         const leaveEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(embedAuthor, avatarExecutor)
+            .setAuthor(embedAuthor, icon)
             .setThumbnail(avatar)
-            .addField(`User: `, `${user} (${user.id})`, false)
-        if (kickLog && kicked == true) leaveEmbed.addField(`Reason:`, reasonText, false)
+            .addField(`User: `, `${user} (${user.id})`, false);
+        if (kickLog && kicked == true) leaveEmbed.addField(`Kicked:`, reasonText, false);
+        if (kickedBy) leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
         leaveEmbed
             .setFooter(embedFooter)
             .setTimestamp();

@@ -16,6 +16,7 @@ module.exports = async (client, guild, user) => {
         const banLog = fetchedLogs.entries.first();
         let { executor, target, reason } = banLog;
         if (reason == null) reason = "Not specified.";
+        let bannedBy = `${executor.tag} (${executor.id})`;
 
         if (target.id !== user.id) return;
         let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
@@ -27,7 +28,8 @@ module.exports = async (client, guild, user) => {
             .setThumbnail(avatarTarget)
             .addField(`User:`, `${user} (${user.id})`, false)
             .addField(`Reason:`, reason, false)
-            .setFooter(`${target.tag} got banned by ${executor.tag}`)
+            .addField(`Banned by:`, bannedBy, false)
+            .setFooter(`${guild.name} has ${guild.memberCount} members left!`)
             .setTimestamp();
 
         return log.send(banEmbed);
