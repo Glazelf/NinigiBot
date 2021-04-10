@@ -18,10 +18,10 @@ module.exports = async (client, member) => {
             .setAuthor(`Member Joined ❤️`, avatar)
             .setThumbnail(avatar)
             .addField(`User:`, `${user} (${user.id})`)
-            .setFooter(`Welcome, ${user.tag}!`)
+            .setFooter(`${member.guild.name} now has ${member.guild.memberCount} members!`)
             .setTimestamp();
 
-        return log.send(user, { embed: joinEmbed});
+        return log.send(user, { embed: joinEmbed });
 
     } catch (e) {
         // log error

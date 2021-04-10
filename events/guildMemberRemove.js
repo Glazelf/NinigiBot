@@ -14,7 +14,7 @@ module.exports = async (client, member) => {
         avatarExecutor = avatar;
 
         let embedAuthor = `Member Left 💔`;
-        let embedFooter = `We'll miss you, ${user.tag}!`;
+        let embedFooter = `${member.guild.name} has ${member.guild.memberCount} members left!`;
         let reasonText = "Not specified.";
         let kicked = false;
 
@@ -32,7 +32,7 @@ module.exports = async (client, member) => {
                 if (reason) reasonText = reason;
                 avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
                 embedAuthor = `Member Kicked 💔`;
-                embedFooter = `${target.tag} got kicked by ${executor.tag}`;
+                embedFooter = `${target.tag} got kicked by ${executor.tag}.`;
             };
         };
 
@@ -40,7 +40,7 @@ module.exports = async (client, member) => {
             .setColor(globalVars.embedColor)
             .setAuthor(embedAuthor, avatarExecutor)
             .setThumbnail(avatar)
-            .addField(`User:`, `${user} (${user.id})`, false)
+            .addField(`User: `, `${user} (${user.id})`, false)
         if (kickLog && kicked == true) leaveEmbed.addField(`Reason:`, reasonText, false)
         leaveEmbed
             .setFooter(embedFooter)
