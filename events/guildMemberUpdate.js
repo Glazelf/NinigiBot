@@ -43,7 +43,7 @@ module.exports = async (client, member, newMember) => {
                 break;
             case "nitroEnd":
                 topText = "Stopped Nitro Boosting ⚒️";
-                changeText = `**${member.guild.name}** now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                changeText = `**${member.guild.name}** will lose this Nitro Boost in 3 days.`;
                 break;
             default:
                 topText = "Undefined guild member update event.";
