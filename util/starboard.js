@@ -9,7 +9,7 @@ module.exports = async (message, client) => {
         let messageImage = null;
         let messageVideo = null;
         if (message.attachments.size > 0) {
-            messageImage = message.attachments.first().url;
+            messageImage = await message.attachments.first().url;
             if (messageImage.endsWith(".mp4")) {
                 messageVideo = messageImage;
                 messageImage = null;
