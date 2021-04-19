@@ -14,7 +14,7 @@ module.exports = async (client, member) => {
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
         let embedAuthor = `Member Left 💔`;
-        let embedFooter = `${member.guild.name} has ${member.guild.memberCount} members left!`;
+        let embedFooter = `${member.guild.name} now has ${member.guild.memberCount} members`;
         let reasonText = "Not specified.";
         let kicked = false;
         let kickedBy;

@@ -15,6 +15,7 @@ module.exports = async (client, guild, user) => {
         });
         const banLog = fetchedLogs.entries.first();
         let { executor, target, reason } = banLog;
+        let embedFooter = `${guild.name} now has ${guild.memberCount} members`;
         if (reason == null) reason = "Not specified.";
         let bannedBy = `${executor.tag} (${executor.id})`;
 
@@ -29,7 +30,7 @@ module.exports = async (client, guild, user) => {
             .addField(`User:`, `${user} (${user.id})`, false)
             .addField(`Reason:`, reason, false)
             .addField(`Banned by:`, bannedBy, false)
-            .setFooter(`${guild.name} has ${guild.memberCount} members left!`)
+            .setFooter(embedFooter)
             .setTimestamp();
 
         return log.send(banEmbed);
