@@ -17,7 +17,6 @@ module.exports = async (client, member) => {
         let embedFooter = `${member.guild.name} now has ${member.guild.memberCount} members`;
         let reasonText = "Not specified.";
         let kicked = false;
-        let kickedBy;
 
         const fetchedLogs = await member.guild.fetchAuditLogs({
             limit: 1,
@@ -33,7 +32,6 @@ module.exports = async (client, member) => {
                 if (reason) reasonText = reason;
                 icon = executor.displayAvatarURL({ format: "png", dynamic: true });
                 embedAuthor = `Member Kicked 💔`;
-                kickedBy = `${target.tag} got kicked by ${executor.tag}.`;
             };
         };
 
@@ -43,7 +41,7 @@ module.exports = async (client, member) => {
             .setThumbnail(avatar)
             .addField(`User: `, `${user} (${user.id})`, false);
         if (kickLog && kicked == true) leaveEmbed.addField(`Kicked:`, reasonText, false);
-        if (kickedBy) leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
+        if (executor) leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
         leaveEmbed
             .setFooter(embedFooter)
             .setTimestamp();
