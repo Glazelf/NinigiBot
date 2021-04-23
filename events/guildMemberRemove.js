@@ -40,8 +40,11 @@ module.exports = async (client, member) => {
             .setAuthor(embedAuthor, icon)
             .setThumbnail(avatar)
             .addField(`User: `, `${user} (${user.id})`, false);
-        if (kickLog && kicked == true) leaveEmbed.addField(`Kicked:`, reasonText, false);
-        if (executor) leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
+        if (kicked == true) {
+            leaveEmbed
+                .addField(`Kicked:`, reasonText, false)
+                .addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
+        };
         leaveEmbed
             .setFooter(embedFooter)
             .setTimestamp();
