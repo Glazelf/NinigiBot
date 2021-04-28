@@ -6,13 +6,13 @@ module.exports.run = async (client, message) => {
 
         const args = message.content.split(' ');
 
-        const member = message.mentions.members.first();
+        let member = message.mentions.members.first();
         let user = message.mentions.users.first();
-        if (!member || !user) return message.channel.send(`> Please mention someone to ban, ${message.author}.`);
 
-        let userRole = message.member.roles.highest;
-        let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position || member.hasPermission("ADMINISTRATOR")) return message.channel.send(`> You don't have a high enough role to ban ${user.tag}, ${message.author}.`);
+        let banReturn = null;
+        let memberID = null;
+        if (!isNaN(args[1])) memberID = args[1];
+
 
         let reason = "Not specified.";
         if (args[2]) {
@@ -20,14 +20,25 @@ module.exports.run = async (client, message) => {
             reason = reason.join(' ');
         };
 
-        let banReturn = `> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Succeeded)`;
-        try {
-            await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
-        } catch (e) {
-            console.log(e);
-            banReturn = `> Successfully banned ${user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Failed)`;
+        if (member && user) {
+            let userRole = message.member.roles.highest;
+            let targetRole = member.roles.highest;
+            if (targetRole.position >= userRole.position || member.hasPermission("ADMINISTRATOR")) return message.channel.send(`> You don't have a high enough role to ban ${member.tag}, ${message.author}.`);
+
+            try {
+                await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
+                banReturn = `> Successfully banned ${member.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Succeeded)`;
+            } catch (e) {
+                console.log(e);
+                banReturn = `> Successfully banned ${member.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Failed)`;
+            };
+
+            await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
+        } else {
+            banReturn = `> Successfully hackbanned ${memberID} for the following reason: \`${reason}\`, ${message.author}.`;
+            await message.guild.members.ban(memberID);
         };
-        await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
+
         return message.channel.send(banReturn);
 
     } catch (e) {
