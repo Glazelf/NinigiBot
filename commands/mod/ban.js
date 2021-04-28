@@ -10,8 +10,7 @@ module.exports.run = async (client, message) => {
         let user = message.mentions.users.first();
 
         let banReturn = null;
-        let memberID = null;
-        if (!isNaN(args[1])) memberID = args[1];
+        let memberID = args[1];
 
         let reason = "Not specified.";
         if (args[2]) {
