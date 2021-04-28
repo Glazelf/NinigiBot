@@ -13,7 +13,6 @@ module.exports.run = async (client, message) => {
         let memberID = null;
         if (!isNaN(args[1])) memberID = args[1];
 
-
         let reason = "Not specified.";
         if (args[2]) {
             reason = args.slice(2, args.length + 1);
