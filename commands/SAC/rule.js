@@ -58,8 +58,9 @@ This includes slurs, no matter who you are. It's unrealistic to expect mods to d
 This also includes joining just to advertise your own server (or other platform) or dming it to people in this server. If you get random advertisement or general spam DMs from people you share this with, please report it to a mod.`,
             6: `Don't advertise, either your own or someone else's anywhere in this server without permission from a mod. We don't do "partnerships" / trade advertisements. If you have a small, really unqiue community, feel free to ask for permission to post an invite once but please don't DM mods if your community is *just* "upcoming community on a relatively new thing".`,
             7: ` If you have questions about a topic, read through already documented material first before asking us questions. This includes sources like ${rulesChannel} and relevant channels' pins.`,
-            8: `Use common sense, these rules are not exhaustive and punishment can be applied on a moderator's discretion even if your name is DeltaV. Purposefully evading the rules or looking for loopholes is considered to be breaking the rules.`,
-            9: `Have fun, this is mandatory.`,
+            8: `Use common sense, these rules are not exhaustive and punishment can be applied on a moderator's discretion. Purposefully evading the rules or looking for loopholes is considered to be breaking the rules.`,
+            9: `Don't talk in this server about illegal things you do ouside of this server. Especially if they could be sensitive topics. Examples include but are not limited to murder and dealing drugs.`,
+            10: `Have fun, this is mandatory.`,
             34: `If it exists, there is NSFW of it. No exceptions.`
         };
         let faqNames = {
