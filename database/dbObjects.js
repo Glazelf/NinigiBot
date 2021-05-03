@@ -18,7 +18,7 @@ const attatchments = new Sequelize('attatchments', config.dbUsername, config.dbP
 const levelExp = (lvl) => {
     return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
 };
-const shinxQuotes = require('./models/attachments/shinxQuotes')(attatchments, Sequelize.DataTypes);
+const shinxQuotes = require('./models/attachments/shinxQuotes').default(attatchments, Sequelize.DataTypes);
 const Users = require('./models/userdata/Users')(sequelize, Sequelize.DataTypes);
 const Shinx = require('./models/userdata/Shinx')(sequelize, Sequelize.DataTypes)
 const Equipments = require('./models/data/Equipments')(sequelize, Sequelize.DataTypes)

@@ -24,7 +24,7 @@ module.exports.run = async (client, message) => {
         try {
             await user.send(`> You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\``);
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             kickReturn = `> Successfully kicked ${user.tag} for reason: \`${reason}\`, ${message.author}. (DM Failed)`;
         };
         await member.kick([`${reason} -${message.author.tag}`]);

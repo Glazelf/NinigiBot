@@ -36,7 +36,7 @@ module.exports.run = async (client, message) => {
                         return message.channel.send(abilityEmbed);
 
                     }).catch(function (error) {
-                        console.log(error);
+                        // console.log(error);
                         return message.channel.send(`> Could not find the specified ability, ${message.author}.`);
                     });
                 break;
@@ -60,7 +60,7 @@ module.exports.run = async (client, message) => {
                         return message.channel.send(itemEmbed);
 
                     }).catch(function (error) {
-                        console.log(error);
+                        // console.log(error);
                         return message.channel.send(`> Could not find the specified item, ${message.author}.`);
                     });
                 break;
@@ -93,7 +93,7 @@ module.exports.run = async (client, message) => {
                         return message.channel.send(moveEmbed);
 
                     }).catch(function (error) {
-                        console.log(error);
+                        // console.log(error);
                         return message.channel.send(`> Could not find the specified move, ${message.author}.`);
                     });
                 break;
@@ -241,7 +241,7 @@ module.exports.run = async (client, message) => {
                                     pokemonID = `${formID}${formChar}`;
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    // console.log(error);
                                     return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                                 });
                         };
@@ -337,7 +337,7 @@ BST: ${BST}`, false)
                         return message.channel.send(pkmEmbed);
 
                     }).catch(function (error) {
-                        console.log(error);
+                        // console.log(error);
                         return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
                     });
                 break;

@@ -45,7 +45,7 @@ module.exports.run = async (client, message, args) => {
                 color: roleColor,
                 position: personalRolePosition
             }).catch(error => {
-                console.log(error);
+                // console.log(error);
                 return message.channel.send(`> An error occurred, ${message.author}.`);
             });
 
@@ -75,7 +75,7 @@ module.exports.run = async (client, message, args) => {
                 },
                 reason: `Personal role for ${message.author.tag}.`,
             }).catch(error => {
-                console.log(error);
+                // console.log(error);
                 return message.channel.send(`> An error occurred, ${message.author}.`);
             });
 

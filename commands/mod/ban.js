@@ -27,7 +27,7 @@ module.exports.run = async (client, message) => {
                 await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
                 banReturn = `> Successfully banned ${member.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Succeeded)`;
             } catch (e) {
-                console.log(e);
+                // console.log(e);
                 banReturn = `> Successfully banned ${member.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Failed)`;
             };
 
@@ -37,7 +37,7 @@ module.exports.run = async (client, message) => {
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.author.tag}` });
             } catch (e) {
-                console.log(e);
+                // console.log(e);
                 return message.channel.send(`> Could not find a user by that ID, ${message.author}.`);
             }
         };

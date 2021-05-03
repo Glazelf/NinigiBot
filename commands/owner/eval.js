@@ -9,7 +9,7 @@ module.exports.run = async (client, message, args) => {
         try {
             var evaled = eval(input);
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             return message.channel.send(`> An error occurred and has been logged, ${message.author}.`);
         };
 

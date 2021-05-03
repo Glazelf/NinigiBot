@@ -32,7 +32,7 @@ exports.run = async (client, message) => {
         try {
             var evaled = eval(calcInput);
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             return message.channel.send(`> You need to provide a valid input, ${message.author}.`);
         };
 
