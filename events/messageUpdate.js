@@ -24,6 +24,19 @@ module.exports = async (client, message, newMessage) => {
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
         if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1020)}...`;
 
+        let isReply = false;
+        if (message.reference) isReply = true;
+
+        if (isReply) {
+            try {
+                let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
+                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelID);
+                var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+            } catch (e) {
+                isReply = false;
+            };
+        };
+
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
@@ -36,6 +49,8 @@ module.exports = async (client, message, newMessage) => {
         if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
         updateEmbed
             .addField(`After:`, newMessageContent, false)
+        if (isReply) updateEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+        updateEmbed
             .addField(`Jump to message:`, `[Link](${message.url})`, false)
             .setImage(messageImage)
             .setFooter(message.author.tag)

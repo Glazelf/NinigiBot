@@ -19,6 +19,19 @@ module.exports = async (client, message) => {
         let messageContent = message.content;
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
 
+        let isReply = false;
+        if (message.reference) isReply = true;
+
+        if (isReply) {
+            try {
+                let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
+                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelID);
+                var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+            } catch (e) {
+                isReply = false;
+            };
+        };
+
         let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
         const deleteEmbed = new Discord.MessageEmbed()
@@ -26,6 +39,7 @@ module.exports = async (client, message) => {
             .setAuthor(`Message deleted ❌`, avatar)
             .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`);
         if (messageContent.length > 0) deleteEmbed.addField(`Content:`, messageContent, false);
+        if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
         deleteEmbed
             .setFooter(message.author.tag)
             .setTimestamp(message.createdTimestamp);
