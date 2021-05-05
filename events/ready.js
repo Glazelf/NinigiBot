@@ -7,10 +7,6 @@ module.exports = async (client) => {
         const storedBalances = await Users.findAll();
         storedBalances.forEach(b => bank.currency.set(b.user_id, b));
 
-        console.log(`Loaded a total of ${client.commands.size} commands!`);
-        console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} (cached) users.`);
-        console.log(`Connected as ${client.user.tag}.`);
-
         // Set bot status
         client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
 
@@ -19,6 +15,13 @@ module.exports = async (client) => {
         client.guilds.cache.forEach((guild) => {
             console.log(`-${guild.name} (${guild.id})`);
         });
+
+        console.log(`Commands: ${client.commands.size}`);
+        console.log(`Guilds: ${client.guilds.cache.size}`);
+        console.log(`Channels: ${client.channels.cache.size}`);
+        console.log(`Users: ${client.users.cache.size} (cached)`);
+
+        console.log(`Successfully connected as ${client.user.tag}.`);
 
     } catch (e) {
         // log error
