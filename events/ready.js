@@ -17,7 +17,7 @@ module.exports = async (client) => {
         // List servers the bot is connected to
         console.log("Servers:");
         client.guilds.cache.forEach((guild) => {
-            console.log(' - ' + guild.name);
+            console.log(`-${guild.name} (${guild.id})`);
         });
 
     } catch (e) {
