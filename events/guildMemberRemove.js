@@ -13,7 +13,7 @@ module.exports = async (client, member) => {
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
-        let embedAuthor = `Member Left 💔`;
+        let embedAuthor = `${user.username} left 💔`;
         let embedFooter = `${member.guild.name} now has ${member.guild.memberCount} members`;
         let reasonText = "Not specified.";
         let kicked = false;
@@ -26,12 +26,12 @@ module.exports = async (client, member) => {
 
         if (kickLog) {
             if (kickLog.createdAt > member.joinedAt) {
-                let { executor, target, reason } = kickLog;
+                var { executor, target, reason } = kickLog;
                 if (target.id !== member.id) return;
                 kicked = true;
                 if (reason) reasonText = reason;
                 icon = executor.displayAvatarURL({ format: "png", dynamic: true });
-                embedAuthor = `Member Kicked 💔`;
+                embedAuthor = `${target.username} kicked 💔`;
             };
         };
 
@@ -41,11 +41,11 @@ module.exports = async (client, member) => {
             .setThumbnail(avatar)
             .addField(`User: `, `${user} (${user.id})`, false);
         if (kicked == true) {
-            leaveEmbed.addField(`Kicked:`, reasonText, false)
+            leaveEmbed.addField(`Reason:`, reasonText, false)
             try {
-                leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${execturo.id})`, false);
+                leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${executor.id})`, false);
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             };
         };
         leaveEmbed

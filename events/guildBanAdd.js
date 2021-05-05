@@ -25,9 +25,9 @@ module.exports = async (client, guild, user) => {
 
         const banEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member Banned 💔`, avatarExecutor)
+            .setAuthor(`${target.username} banned 💔`, avatarExecutor)
             .setThumbnail(avatarTarget)
-            .addField(`User:`, `${user} (${user.id})`, false)
+            .addField(`User:`, `${target} (${target.id})`, false)
             .addField(`Reason:`, reason, false)
             .addField(`Banned by:`, bannedBy, false)
             .setFooter(embedFooter)

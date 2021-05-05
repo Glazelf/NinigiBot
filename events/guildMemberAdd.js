@@ -18,7 +18,7 @@ module.exports = async (client, member) => {
 
         const joinEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member Joined ❤️`, icon)
+            .setAuthor(`${user.username} joined ❤️`, icon)
             .setThumbnail(avatar)
             .addField(`User:`, `${user} (${user.id})`)
             .setFooter(embedFooter)
