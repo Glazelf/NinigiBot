@@ -41,6 +41,6 @@ module.exports = async (client) => {
             .setDescription(`> Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
             .setImage(search("birthday"))
             .setTimestamp();
-        channel.send(cuties.join(' '), { embed: gifEmbed });
+        channel.send({ embed: gifEmbed });
     }, timeZone = timezone, start = true);
 };

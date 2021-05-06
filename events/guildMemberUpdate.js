@@ -31,7 +31,7 @@ module.exports = async (client, member, newMember) => {
             case "nickname":
                 topText = "Nickname Changed ⚒️";
                 if (member.nickname && newMember.nickname) {
-                    changeText = `**${member.nickname}** => **${newMember.nickname}**.`;
+                    changeText = `Old: **${member.nickname}**\nNew:**${newMember.nickname}**.`;
                 } else if (newMember.nickname) {
                     changeText = `New: **${newMember.nickname}**.`;
                 } else {
