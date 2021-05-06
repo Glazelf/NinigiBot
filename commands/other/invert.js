@@ -4,6 +4,7 @@ module.exports.run = async (client, message) => {
         const Canvas = require("canvas");
 
         let user = message.mentions.users.first();
+        let member = message.mentions.members.first();
         let attachment = null;
         if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 
@@ -11,9 +12,10 @@ module.exports.run = async (client, message) => {
             const input = message.content.split(` `, 2);
             let userID = input[1];
             user = client.users.cache.get(userID);
+            member = message.guild.members.cache.get(userID);
         };
 
-        if (!user) {
+        if (!user || !member) {
             user = message.author;
         };
 

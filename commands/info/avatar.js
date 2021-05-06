@@ -4,14 +4,16 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
 
         let user = message.mentions.users.first();
+        let member = message.mentions.members.first();
 
         if (!user) {
             const input = message.content.split(` `, 2);
             let userID = input[1];
             user = client.users.cache.get(userID);
+            member = message.guild.members.cache.get(userID);
         };
 
-        if (!user) {
+        if (!user || !member) {
             user = message.author;
         };
 
