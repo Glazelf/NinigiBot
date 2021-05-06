@@ -7,10 +7,7 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
 
-        let args = message.content.split(' ');
-        let guildID = args[1];
-        let guild = client.guilds.cache.get(guildID);
-        if (!guild) guild = message.guild;
+        let guild = message.guild;
 
         let memberFetch = await guild.members.fetch();
         let humanMembers = memberFetch.filter(member => !member.user.bot).size;
