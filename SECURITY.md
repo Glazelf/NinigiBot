@@ -2,10 +2,13 @@
 
 ## Supported Versions
 
-| Version | Supported          |
+| Discord Version | Supported |
 | ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| Other   | :x:                |
+| Stable  | :white_check_mark: |
+| Beta (Either desktop or mobile) | :white_check_mark: |
+| Canary | :white_check_mark: |
+| Extensions (e.g. BetterDiscord) | :x: |
+| Other (e.g. older versions) | :x: |
 
 
 ## Reporting a Vulnerability
