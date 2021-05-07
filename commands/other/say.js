@@ -3,6 +3,8 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const { Prefixes } = require('../../database/dbObjects');
+        const isAdmin = require('../../util/isAdmin');
+
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
             prefix = prefix.prefix;
@@ -33,7 +35,7 @@ exports.run = async (client, message) => {
                 // If error: execute regular quoteless say
                 return message.channel.send(textMessage);
             };
-        } else if (message.member.hasPermission("ADMINISTRATOR")) {
+        } else if (isAdmin(message.member, client)) {
             // Return plain message if member is admin
             return message.channel.send(textMessage);
         } else {

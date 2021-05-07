@@ -5,7 +5,8 @@ module.exports.run = async (client, message, args) => {
         // Personal Roles can / will only get global support in discord.js v13
         if (message.guild.id !== "549214833858576395") return message.channel.send(`> Personal Roles can / will only get global support in discord.js v13, ${message.author}.`);
 
-        if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const { PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });

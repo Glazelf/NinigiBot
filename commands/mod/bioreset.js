@@ -2,7 +2,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("ADMINISTRATOR") && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!message.member.hasPermission("MANAGE_MEMBERS") && !isAdmin(message.member, client) && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
         let user = message.mentions.users.first();

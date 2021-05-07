@@ -2,7 +2,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("BAN_MEMBERS")) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!message.member.hasPermission("BAN_MEMBERS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const args = message.content.split(' ');
 
@@ -21,7 +22,7 @@ module.exports.run = async (client, message) => {
         if (member && user) {
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position || member.hasPermission("ADMINISTRATOR")) return message.channel.send(`> You don't have a high enough role to ban ${member.tag}, ${message.author}.`);
+            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.author.id) return message.channel.send(`> You don't have a high enough role to ban ${member.tag}, ${message.author}.`);
 
             try {
                 await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);

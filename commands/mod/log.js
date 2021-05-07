@@ -2,7 +2,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("MANAGE_CHANNELS")) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!message.member.hasPermission("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const { LogChannels } = require('../../database/dbObjects');
         let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });

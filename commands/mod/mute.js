@@ -2,7 +2,8 @@ module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!message.member.hasPermission("MANAGE_ROLES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         // Minutes the user is muted
         let muteTime = 60;

@@ -2,7 +2,8 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (!message.member.hasPermission("ADMINISTRATOR")) return message.reply(globalVars.lackPerms);
+        const isAdmin = require('../../util/isAdmin');
+        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
