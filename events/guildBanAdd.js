@@ -27,7 +27,7 @@ module.exports = async (client, guild, user) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Member Banned 💔`, avatarExecutor)
             .setThumbnail(avatarTarget)
-            .setDescription(`${guild.name} now has ${guild.memberCount} members`)
+            .setDescription(`${guild.name} now has ${guild.memberCount} members.`)
             .addField(`User:`, `${target} (${target.id})`, false)
             .addField(`Reason:`, reason, false)
             .addField(`Banned by:`, bannedBy, false)
