@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
 
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Message deleted ❌`, avatar)
+            .setAuthor(`Message Deleted ❌`, avatar)
             .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`);
         if (messageContent.length > 0) deleteEmbed.addField(`Content:`, messageContent, false);
         if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
