@@ -20,7 +20,7 @@ module.exports = async (client, member) => {
             .setThumbnail(avatar)
             .setDescription(`${member.guild.name} now has ${member.guild.memberCount} members`)
             .addField(`User: `, `${user}(${user.id})`)
-            .setFooter(member.tag)
+            .setFooter(member.user.tag)
             .setTimestamp();
 
         return log.send(user, { embed: joinEmbed });

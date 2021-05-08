@@ -49,7 +49,7 @@ module.exports = async (client, member) => {
             };
         };
         leaveEmbed
-            .setFooter(member.tag)
+            .setFooter(member.user.tag)
             .setTimestamp();
 
         return log.send(leaveEmbed);
