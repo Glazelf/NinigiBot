@@ -9,8 +9,6 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let embedFooter = `${member.guild.name} now has ${member.guild.memberCount} members`;
-
         let user = client.users.cache.get(member.id);
 
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
@@ -18,10 +16,11 @@ module.exports = async (client, member) => {
 
         const joinEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${user.username} joined ❤️`, icon)
+            .setAuthor(`Member Joined ❤️`, icon)
             .setThumbnail(avatar)
-            .addField(`User:`, `${user} (${user.id})`)
-            .setFooter(embedFooter)
+            .setDescription(`${member.guild.name} now has ${member.guild.memberCount} members`)
+            .addField(`User: `, `${user}(${user.id})`)
+            .setFooter(member.tag)
             .setTimestamp();
 
         return log.send(user, { embed: joinEmbed });

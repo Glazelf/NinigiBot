@@ -13,8 +13,7 @@ module.exports = async (client, member) => {
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
-        let embedAuthor = `${user.username} left 💔`;
-        let embedFooter = `${member.guild.name} now has ${member.guild.memberCount} members`;
+        let embedAuthor = `Member Left 💔`;
         let reasonText = "Not specified.";
         let kicked = false;
 
@@ -31,7 +30,7 @@ module.exports = async (client, member) => {
                 kicked = true;
                 if (reason) reasonText = reason;
                 icon = executor.displayAvatarURL({ format: "png", dynamic: true });
-                embedAuthor = `${target.username} kicked 💔`;
+                embedAuthor = `Member Kicked 💔`;
             };
         };
 
@@ -39,6 +38,7 @@ module.exports = async (client, member) => {
             .setColor(globalVars.embedColor)
             .setAuthor(embedAuthor, icon)
             .setThumbnail(avatar)
+            .setDescription(`${member.guild.name} now has ${member.guild.memberCount} members`)
             .addField(`User: `, `${user} (${user.id})`, false);
         if (kicked == true) {
             leaveEmbed.addField(`Reason:`, reasonText, false)
@@ -49,7 +49,7 @@ module.exports = async (client, member) => {
             };
         };
         leaveEmbed
-            .setFooter(embedFooter)
+            .setFooter(member.tag)
             .setTimestamp();
 
         return log.send(leaveEmbed);
