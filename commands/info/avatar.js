@@ -1,8 +1,5 @@
 module.exports.run = async (client, message) => {
     try {
-
-        const Discord = require("discord.js");
-
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
