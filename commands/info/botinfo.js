@@ -95,7 +95,7 @@ module.exports.run = async (client, message) => {
             .addField("Users:", totalMembers, true)
             .addField("Channels:", channelCount, true)
             .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'Ninigi Github')", true)
-            .addField("Bot Invite:", "[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')", true)
+            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8 'Bot Invite')`, true)
             .addField("Uptime:", uptime, false)
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
 ${checkDays(client.user.createdAt)}`, false)
