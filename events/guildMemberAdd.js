@@ -19,7 +19,7 @@ module.exports = async (client, member) => {
             .setAuthor(`Member Joined ❤️`, icon)
             .setThumbnail(avatar)
             .setDescription(`${member.guild.name} now has ${member.guild.memberCount} members.`)
-            .addField(`User: `, `${user}(${user.id})`)
+            .addField(`User: `, `${user} (${user.id})`)
             .setFooter(member.user.tag)
             .setTimestamp();
 
