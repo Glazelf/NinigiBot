@@ -6,7 +6,7 @@ module.exports = async (client, id) => {
         let timestamp = await getTime();
 
         // Console log status
-        return console.log(`Laucnhed shard ${id}. (${timestamp})`);
+        return console.log(`Launched shard ${id}. (${timestamp})`);
 
     } catch (e) {
         // log error
