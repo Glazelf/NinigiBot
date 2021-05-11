@@ -88,10 +88,21 @@ module.exports.run = async (client, message) => {
             if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
         };
 
-        var channelCount = 0;
+        let channelCount = 0;
         guild.channels.cache.forEach(channel => {
             if (channel.type != "category") channelCount += 1;
         });
+
+        let boostGoal;
+        if (guild.premiumSubscriptionCount < 2) {
+            boostGoal = "/2";
+        } else if (guild.premiumSubscriptionCount < 15) {
+            boostGoal = "/15";
+        } else if (guild.premiumSubscriptionCount < 30) {
+            boostGoal = "/30";
+        } else {
+            boostGoal = "";
+        };
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -110,7 +121,7 @@ module.exports.run = async (client, message) => {
             .addField("Channels:", channelCount, true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", guild.roles.cache.size - 1, true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
-        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${nitroEmote}`, true);
+        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
