@@ -1,9 +1,12 @@
 module.exports = async (client, id) => {
     try {
         const Discord = require("discord.js");
+        const getTime = require('../util/getTime');
+
+        let timestamp = await getTime();
 
         // Console log status
-        return console.log(`Finished launching shard ${id}`);
+        return console.log(`Laucnhed shard ${id}. (${timestamp})`);
 
     } catch (e) {
         // log error

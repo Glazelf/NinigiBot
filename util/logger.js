@@ -1,9 +1,12 @@
 module.exports = (exception, client, message = null) => {
     // Import globals
     let globalVars = require('../events/ready');
+    const getTime = require('./getTime');
+
+    let timestamp = await getTime();
 
     // log error
-    console.log(exception);
+    console.log(`${timestamp}\n${exception}`);
 
     // Stop typing
     if (message) message.channel.stopTyping(true);

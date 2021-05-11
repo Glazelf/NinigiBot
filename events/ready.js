@@ -6,6 +6,7 @@ module.exports = async (client) => {
         const birthday = require('../affairs/birthday')(client);
         const storedBalances = await Users.findAll();
         storedBalances.forEach(b => bank.currency.set(b.user_id, b));
+        const getTime = require('../util/getTime');
 
         // Set bot status
         client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
@@ -16,12 +17,13 @@ module.exports = async (client) => {
             console.log(`-${guild.name}`);
         });
 
-        console.log(`Commands: ${client.commands.size}`);
-        console.log(`Guilds: ${client.guilds.cache.size}`);
-        console.log(`Channels: ${client.channels.cache.size}`);
-        console.log(`Users: ${client.users.cache.size} (cached)`);
+        let timestamp = await getTime();
 
-        console.log(`Successfully connected as ${client.user.tag}.`);
+        console.log(`Commands: ${client.commands.size}
+Guilds: ${client.guilds.cache.size}
+Channels: ${client.channels.cache.size}
+Users: ${client.users.cache.size} (cached)
+Connected as ${client.user.tag}. (${timestamp})`);
 
     } catch (e) {
         // log error
