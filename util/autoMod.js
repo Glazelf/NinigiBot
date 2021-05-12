@@ -28,12 +28,13 @@ module.exports = async (message) => {
         "nlgger",
         "nlgga",
         "nibba",
+        "neger", // Thanks Ewok
         "retard",
         "faggot",
         "tranny"
     ];
     const exceptions = [
-        "retardation" // thanks mom
+        "retardation" // Thanks Pokémom
     ];
     const testArray = [
         "triceratops"
