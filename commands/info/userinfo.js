@@ -40,7 +40,7 @@ module.exports.run = async (client, message) => {
         let shortenedRoles = false;
         if (memberRoles.size !== 0) {
             rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
-            for (i = rolesSorted.length; i > 1000; i = rolesSorted.length) {
+            for (i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
                 rolesSorted = rolesSorted.split(", ");
                 await rolesSorted.pop();
                 rolesSorted = rolesSorted.join(", ");
