@@ -67,6 +67,6 @@ exports.run = async (client, message) => {
 };
 
 module.exports.config = {
-    name: "calculator",
-    aliases: ["calc"]
+    name: "hexcolor",
+    aliases: ["hexcolour"]
 };
