@@ -21,6 +21,7 @@
     "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^3.3.0",
+    "pureimage": "^0.3.2",
     "sequelize": "^6.3.4",
     "sqlite3": "^4.2.0",
     "steamapi": "^2.1.2",
