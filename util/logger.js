@@ -1,4 +1,4 @@
-module.exports = (exception, client, message = null) => {
+module.exports = async (exception, client, message = null) => {
     // Import globals
     let globalVars = require('../events/ready');
     const getTime = require('./getTime');
@@ -6,7 +6,8 @@ module.exports = (exception, client, message = null) => {
     let timestamp = await getTime();
 
     // log error
-    console.log(`${timestamp}\n${exception}`);
+    console.log(`Error at ${timestamp}:`);
+    console.log(exception);
 
     // Stop typing
     if (message) message.channel.stopTyping(true);
