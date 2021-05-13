@@ -16,8 +16,8 @@ module.exports = async (message) => {
     let isSlur = false;
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "").toLowerCase();
 
-    // Currently checks for top 3 languages only, can be changed based on effectiveness
-    let detectedLanguages = lngDetector.detect(message.content, 3);
+    // Currently checks for top 1 language(s) only, can be changed based on effectiveness
+    let detectedLanguages = lngDetector.detect(message.content, 1);
     languageArray = detectedLanguages.map(function (x) {
         return x[0];
     });
