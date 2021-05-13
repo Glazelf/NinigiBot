@@ -16,7 +16,7 @@ exports.run = async (client, message) => {
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return message.channel.send(`> Please provide a valid hex, ${message.author}.`);
+        if (!rgb) return message.channel.send(`> Please provide a valid hex, ${message.author}. Color hexes are 6 characters long including 0-9 and A-F.`);
 
         let imgWidth = 225;
         let imgHeight = 100;
