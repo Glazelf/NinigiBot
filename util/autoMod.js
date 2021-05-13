@@ -6,8 +6,8 @@ module.exports = async (message) => {
     const LanguageDetect = require('languagedetect');
     const lngDetector = new LanguageDetect();
 
-    //if (!servers.includes(message.guild.id)) return;
-    //if (message.member.hasPermission("MANAGE_MESSAGES")) return;
+    if (!servers.includes(message.guild.id)) return;
+    if (message.member.hasPermission("MANAGE_MESSAGES")) return;
     if (!message.content) return;
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
