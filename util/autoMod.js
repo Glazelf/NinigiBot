@@ -3,6 +3,9 @@ module.exports = async (message) => {
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
 
+    const LanguageDetect = require('languagedetect');
+    const lngDetector = new LanguageDetect();
+
     if (!servers.includes(message.guild.id)) return;
     if (message.member.hasPermission("MANAGE_MESSAGES")) return;
     if (!message.content) return;
@@ -10,7 +13,14 @@ module.exports = async (message) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
+    let isSlur = false;
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "").toLowerCase();
+
+    // Currently checks for top 3 languages only, can be changed based on effectiveness
+    let detectedLanguages = lngDetector.detect(message.content, 3);
+    languageArray = detectedLanguages.map(function (x) {
+        return x[0];
+    });
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
@@ -20,7 +30,7 @@ module.exports = async (message) => {
         "bit.ly",
         "twitch.tv"
     ];
-    const offensiveSlurs = [
+    const globalSlurs = [
         "nigger",
         "niqqer",
         "nigga",
@@ -29,9 +39,11 @@ module.exports = async (message) => {
         "nlgga",
         "nibba",
         "neger", // Thanks Ewok
-        "retard",
         "faggot",
         "tranny"
+    ];
+    const frenchSlurs = [
+        "retard"
     ];
     const exceptions = [
         "retardation" // Thanks Pokémom
@@ -39,6 +51,8 @@ module.exports = async (message) => {
     const testArray = [
         "triceratops"
     ];
+
+    if (globalSlurs.some(v => messageNormalized.includes(v)) || frenchSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
 
     // Scam links
     if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
@@ -52,10 +66,10 @@ module.exports = async (message) => {
         msgDelete();
     };
 
-    // Offensive slurs
-    if (offensiveSlurs.some(v => messageNormalized.includes(v)) &&
-        !exceptions.some(v => messageNormalized.includes(v))) {
-        reason = "Using offensive slurs.";
+    // Slurs
+    if (isSlur && !exceptions.some(v => messageNormalized.includes(v))) {
+        if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
+        reason = "Using slurs.";
         msgDelete();
     };
 
