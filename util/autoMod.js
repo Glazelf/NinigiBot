@@ -6,8 +6,8 @@ module.exports = async (message) => {
     const LanguageDetect = require('languagedetect');
     const lngDetector = new LanguageDetect();
 
-    if (!servers.includes(message.guild.id)) return;
-    if (message.member.hasPermission("MANAGE_MESSAGES")) return;
+    //if (!servers.includes(message.guild.id)) return;
+    //if (message.member.hasPermission("MANAGE_MESSAGES")) return;
     if (!message.content) return;
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
@@ -15,12 +15,6 @@ module.exports = async (message) => {
     let reason = "Unspecified.";
     let isSlur = false;
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "").toLowerCase();
-
-    // Currently checks for top 1 language(s) only, can be changed based on effectiveness
-    let detectedLanguages = lngDetector.detect(message.content, 1);
-    languageArray = detectedLanguages.map(function (x) {
-        return x[0];
-    });
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
@@ -69,6 +63,12 @@ module.exports = async (message) => {
 
     // Slurs
     if (isSlur && !exceptions.some(v => messageNormalized.includes(v))) {
+        // Currently checks for top 1 language(s) only, can be changed based on effectiveness
+        let detectedLanguages = lngDetector.detect(message.content, 1);
+        languageArray = detectedLanguages.map(function (x) {
+            return x[0];
+        });
+
         if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
         reason = "Using slurs.";
         msgDelete();
