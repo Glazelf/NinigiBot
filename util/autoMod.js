@@ -39,6 +39,7 @@ module.exports = async (message) => {
         "nlgga",
         "nibba",
         "neger", // Thanks Ewok
+        "fag",
         "faggot",
         "tranny"
     ];
