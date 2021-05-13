@@ -61,7 +61,7 @@ module.exports = async (client, message) => {
         if (!message.member) return;
 
         // Automod
-        autoMod(message, messageImage);
+        autoMod(message);
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
