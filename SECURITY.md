@@ -4,9 +4,8 @@
 
 | Discord Version | Supported |
 | ------- | ------------------ |
-| Stable  | :white_check_mark: |
-| Beta (Either desktop or mobile) | :white_check_mark: |
-| Canary | :white_check_mark: |
+| Stable (Desktop and mobile) | :white_check_mark: |
+| Canary (Desktop and mobile) | :white_check_mark: |
 | Extensions (e.g. BetterDiscord) | :x: |
 | Other (e.g. older versions) | :x: |
 
