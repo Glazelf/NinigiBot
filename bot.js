@@ -9,7 +9,8 @@ intents.add(Discord.Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS');
 
 const client = new Discord.Client({
     intents: intents,
-    partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']
+    partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'],
+    allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
 });
 const config = require("./config.json");
 client.config = config;
