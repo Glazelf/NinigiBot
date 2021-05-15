@@ -120,7 +120,7 @@ ${checkDays(userCreated)}`;
                     return message.channel.send(userEmbed);
 
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                     return message.channel.send(userFailString);
                 };
             case "game":

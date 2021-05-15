@@ -33,17 +33,19 @@ exports.run = async (client, message) => {
                 return message.channel.send(`Message succesfully sent to specified channel, ${message.author}.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return message.channel.send(textMessage);
+                return message.channel.send(`\`${textMessage}\``);
             };
         } else if (isAdmin(message.member, client)) {
             // Return plain message if member is admin
-            return message.channel.send(textMessage);
+            return message.channel.send(`\`${textMessage}\``);
         } else {
             // Prevent using bot to go around ping permissions
-            if (textMessage.includes("@")) { return message.channel.send(`> You need to have Administrator permissions to tag people using \`${prefix}say\`, ${message.author}.`) };
+            if (textMessage.includes("@")) {
+                return message.channel.send(`> You need to have Administrator permissions to tag people using \`${prefix}say\`, ${message.author}.`)
+            };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
-            textMessage = `> "${textMessage}"
+            textMessage = `> "\`${textMessage}\`"
     > -${message.author}`;
             return message.channel.send(textMessage);
         };
