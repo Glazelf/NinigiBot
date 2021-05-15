@@ -6,7 +6,6 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@discordjs/uws": "^10.149.0",
-    "axios": "^0.21.1",
     "bufferutil": "^4.0.3",
     "canvas": "^2.6.1",
     "cron": "^1.8.2",
