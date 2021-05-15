@@ -13,11 +13,11 @@ exports.run = async (client, message) => {
         };
 
         let helpText = `**Pokémon:**
-    > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
-    > **Not Pokémon:**
-    > Dango, Jojo, Stitch, Kuzco
-    > **Interactions:**
-    > Hug`;
+    Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
+    **Not Pokémon:**
+    Dango, Jojo, Stitch, Kuzco
+    **Interactions:**
+    Hug`;
 
         let user = message.mentions.users.first();
         let gifArgumentUncased = message.content.split(` `, 3);

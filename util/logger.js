@@ -25,13 +25,13 @@ Message by ${message.author.tag}:
     let devChannel = client.channels.cache.get(client.config.devChannelID);
     if (message) {
         if (baseMessage.includes("Missing Permissions")) {
-            return message.channel.send(`> I lack permissions to perform the requested action, ${message.author}.`);
+            return message.channel.send(`I lack permissions to perform the requested action, ${message.author}.`);
         } else if (baseMessage.includes("Missing Access")) {
             return;
         } else {
-            message.channel.send(`> An error has occurred. 
-> The error has already been logged but please also report this as an issue on Github: 
-> <https://github.com/Glazelf/NinigiBot/issues>`);
+            message.channel.send(`An error has occurred. 
+The error has already been logged but please also report this as an issue on Github: 
+<https://github.com/Glazelf/NinigiBot/issues>`);
             return devChannel.send(baseMessage);
         };
     };
