@@ -4,7 +4,7 @@ module.exports = async (client) => {
         const getTime = require('../util/getTime');
 
         // Set bot status
-        client.user.setPresence({ activity: { name: 'in Sinnoh' }, status: 'idle' });
+        client.user.setPresence({ activities: [{ name: 'in Sinnoh', status: 'idle' }] });
 
         let timestamp = await getTime();
 
