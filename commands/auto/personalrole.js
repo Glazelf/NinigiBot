@@ -2,9 +2,6 @@ module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        // Personal Roles can / will only get global support in discord.js v13
-        if (message.guild.id !== "549214833858576395") return message.reply(`Personal Roles can / will only get global support in discord.js v13.`);
-
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
         if (!serverID) return message.reply(`Personal Roles are disabled in **${message.guild.name}**.`);
@@ -13,9 +10,8 @@ module.exports.run = async (client, message, args) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
 
-        // Get Nitro Booster position, should change this for v13 to work globally but for now it's Good Enough TM
-        let boosterRole = await message.guild.roles.cache.find(r => r.id == "585533578943660152");
-        let modRole = await message.guild.roles.cache.find(r => r.id == "549215318153887784");
+        // Get Nitro Booster position
+        let boosterRole = await message.guild.roles.premiumSubscriberRole;
 
         let personalRolePosition = boosterRole.position + 1;
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
@@ -32,7 +28,7 @@ module.exports.run = async (client, message, args) => {
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry`, `Your personal role isn't in my database so I can't delete it`);
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
-        if (!boosterRole && !modRole) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role`, `You need to be a Nitro Booster or Mod to manage a personal role`);
+        if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES")) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role`, `You need to be a Nitro Booster or Mod to manage a personal role.`);
 
         if (roleDB) {
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
