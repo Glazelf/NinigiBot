@@ -80,8 +80,7 @@ module.exports.run = async (client, message) => {
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
-        let ownerTag = guild.owner.user.tag;
-        if (guild == message.guild) ownerTag = guild.owner.user;
+        let guildOwner = await guild.fetchOwner()
 
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
@@ -108,7 +107,7 @@ module.exports.run = async (client, message) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`${guild.name} (${guild.id})`, icon)
             .setThumbnail(icon)
-            .addField("Owner:", ownerTag, true)
+            .addField("Owner:", guildOwner, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
