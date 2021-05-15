@@ -14,12 +14,12 @@ exports.run = async (client, message) => {
         let commandName = "8ball";
         if (!message.content.toLowerCase().startsWith(`${prefix}8ball`)) commandName = "Magic Conch";
 
-        if (!args[1]) return message.channel.send(`> You need to provide something for the ${commandName} to consider, ${message.author}.`);
+        if (!args[1]) return message.channel.send(`> You need to provide something for the ${commandName} to consider.`);
 
         const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
 
-        return message.channel.send(`> The ${commandName} says: "${randomAnswer}.", ${message.author}.`);
+        return message.channel.send(`> The ${commandName} says: "${randomAnswer}.".`);
 
     } catch (e) {
         // log error

@@ -10,14 +10,14 @@ module.exports.run = async (client, message, args) => {
             var evaled = eval(input);
         } catch (e) {
             // console.log(e);
-            return message.channel.send(`> An error occurred and has been logged, ${message.author}.`);
+            return message.reply(`An error occurred and has been logged.`);
         };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
 
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
 
-        return message.channel.send(clean(evaled), { code: "js" });
+        return message.reply(clean(evaled), { code: "js" });
 
         function clean(text) {
             if (typeof (text) === "string")

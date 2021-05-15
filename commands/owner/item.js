@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
             if (expectedId && expectedId[1] == targetId) {
                 target = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return message.channel.send(`> The syntax is \`${prefix}item <target> <item name>\`, ${message.author}.`);
+            } else return message.reply(`The syntax is \`${prefix}item <target> <item name>\`.`);
         } else {
             target = message.author;
         };
@@ -34,14 +34,14 @@ exports.run = async (client, message) => {
                         const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === itemName.toLowerCase());
                         if (equipment.length >= 1) {
                             await user.removeEquipment(item)
-                            return message.channel.send(`> Removed ${itemName} from ${target}!`);
+                            return message.reply(`Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addEquipment(item);
-                            return message.channel.send(`> Added ${itemName} to ${target}!`);
+                            return message.reply(`Added ${itemName} to ${target}!`);
                         };
                     };
                     await user.addEquipment(item);
-                    return message.channel.send(`> Added ${itemName} to ${target}!`);
+                    return message.reply(`Added ${itemName} to ${target}!`);
 
                 } else if (i === 1) {
                     const foods = await user.getFoods();
@@ -49,14 +49,14 @@ exports.run = async (client, message) => {
                         const food = foods.filter(i => i.food.name.toLowerCase() === itemName.toLowerCase());
                         if (food.length >= 1) {
                             await user.removeFood(item)
-                            return message.channel.send(`> Removed ${itemName} from ${target}!`);
+                            return message.reply(`Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addFood(item);
-                            return message.channel.send(`> Added ${itemName} to ${target}!`);
+                            return message.reply(`Added ${itemName} to ${target}!`);
                         };
                     };
                     await user.addFood(item);
-                    return message.channel.send(`> Added ${itemName} to ${target}!`);
+                    return message.reply(`Added ${itemName} to ${target}!`);
 
                 } else if (i === 2) {
                     const keys = await user.getKeys();
@@ -64,14 +64,14 @@ exports.run = async (client, message) => {
                         const key = keys.filter(i => i.key.name.toLowerCase() === itemName.toLowerCase());
                         if (key.length >= 1) {
                             await user.removeKey(item)
-                            return message.channel.send(`> Removed ${itemName} from ${target}!`);
+                            return message.reply(`Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addKey(item);
-                            return message.channel.send(`> Added ${itemName} to ${target}!`);
+                            return message.reply(`Added ${itemName} to ${target}!`);
                         };
                     };
                     await user.addKey(item);
-                    return message.channel.send(`> Added ${itemName} to ${target}!`);
+                    return message.reply(`Added ${itemName} to ${target}!`);
 
                 } else if (i === 3) {
                     const items = await user.getItems();
@@ -79,24 +79,24 @@ exports.run = async (client, message) => {
                         const item = items.filter(i => i.item.name.toLowerCase() === itemName.toLowerCase());
                         if (item.length >= 1) {
                             await user.removeItem(item)
-                            return message.channel.send(`> Removed ${itemName} from ${target}!`);
+                            return message.reply(`Removed ${itemName} from ${target}!`);
                         } else {
                             await user.addItem(item);
-                            return message.channel.send(`> Added ${itemName} to ${target}!`);
+                            return message.reply(`Added ${itemName} to ${target}!`);
                         };
                     };
                     await user.addItem(item);
-                    return message.channel.send(`> Added ${itemName} to ${target}!`);
+                    return message.reply(`Added ${itemName} to ${target}!`);
                 }/* else{
                     await user.changeRoom(item);
                     
                 } */
 
-                return message.channel.send(`> You've bought a ${item.name}, ${message.author}.`);
+                return message.reply(`You've bought a ${item.name}.`);
 
             };
         };
-        return message.channel.send(`> That item doesn't exist, ${message.author}.`);
+        return message.reply(`That item doesn't exist.`);
 
 
     } catch (e) {

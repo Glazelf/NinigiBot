@@ -7,13 +7,13 @@ exports.run = (client, message) => {
         const input = message.content.split(` `, 2);
         let starLimit = input[1];
 
-        if (isNaN(starLimit)) return message.channel.send(`> You need to provide a valid number, ${message.author}.`);
+        if (isNaN(starLimit)) return message.reply(`You need to provide a valid number.`);
 
-        if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, ${message.author}.`);
+        if (starLimit === globalVars.starboardLimit) return message.reply(`The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}.`);
 
         globalVars.starboardLimit = starLimit;
 
-        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, ${message.author}.`);
+        return message.reply(`The starboard star limit was changed to ${starLimit}.`);
 
     } catch (e) {
         // log error

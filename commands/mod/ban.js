@@ -22,28 +22,28 @@ module.exports.run = async (client, message) => {
         if (member && user) {
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.author.id) return message.channel.send(`> You don't have a high enough role to ban ${member.user.tag}, ${message.author}.`);
+            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.author.id) return message.reply(`You don't have a high enough role to ban ${member.user.tag}.`);
 
             try {
-                await user.send(`> You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
-                banReturn = `> Successfully banned ${member.user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Succeeded)`;
+                await user.send(`You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
+                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Succeeded)`;
             } catch (e) {
                 // console.log(e);
-                banReturn = `> Successfully banned ${member.user.tag} for the following reason: \`${reason}\`, ${message.author}. (DM Failed)`;
+                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Failed)`;
             };
 
             await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
         } else {
-            banReturn = `> Successfully banned ${memberID} for the following reason: \`${reason}\`, ${message.author}.`;
+            banReturn = `Successfully banned ${memberID} for the following reason: \`${reason}\`.`;
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.author.tag}` });
             } catch (e) {
                 // console.log(e);
-                return message.channel.send(`> Could not find a user by that ID, ${message.author}.`);
+                return message.reply(`Could not find a user by that ID.`);
             }
         };
 
-        return message.channel.send(banReturn);
+        return message.reply(banReturn);
 
     } catch (e) {
         // log error

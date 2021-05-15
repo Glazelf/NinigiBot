@@ -14,13 +14,13 @@ module.exports.run = async (client, message) => {
             user = message.author;
         };
 
-        let totalMessage = `> Here you go, ${message.author}, ${user.tag}'s avatar.`;
+        let totalMessage = `${user.tag}'s avatar.`;
 
         let avatar = null;
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-        if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
+        if (!avatar) return message.reply(`${user.tag} doesn't have an avatar.`);
 
-        return message.channel.send(totalMessage, {
+        return message.reply(totalMessage, {
             files: [avatar]
         });
 

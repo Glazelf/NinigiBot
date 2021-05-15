@@ -15,7 +15,7 @@ exports.run = (client, message) => {
             target = message.author;
         };
 
-        return message.channel.send(`> ${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
+        return message.reply(`${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
 
     } catch (e) {
         // log error

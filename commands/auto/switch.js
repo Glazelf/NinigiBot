@@ -7,16 +7,16 @@ module.exports.run = async (client, message) => {
         let switchCodeGet = bank.currency.getSwitchCode(message.author.id);
 
         if (arguments.length < 1) {
-            if (switchCodeGet && switchCodeGet !== "None") return message.channel.send(`> Your Nintendo Switch friend code is ${switchCodeGet}, ${message.author}.`)
-            return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
+            if (switchCodeGet && switchCodeGet !== "None") return message.reply(`Your Nintendo Switch friend code is ${switchCodeGet}.`)
+            return message.reply(`Please specify a valid Nintendo Switch friend code.`);
         };
         let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(arguments);
 
-        if (!switchcode) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
+        if (!switchcode) return message.reply(`Please specify a valid Nintendo Switch friend code.`);
 
         switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
         bank.currency.switchCode(message.author.id, switchcode);
-        return message.channel.send(`> Successfully updated your Nintendo Switch friend code, ${message.author}.`)
+        return message.reply(`Successfully updated your Nintendo Switch friend code.`)
 
     } catch (e) {
         // log error

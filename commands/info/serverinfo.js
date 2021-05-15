@@ -130,7 +130,7 @@ ${checkDays(guild.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(serverEmbed);
+        return message.reply(serverEmbed);
 
         function checkDays(date) {
             let now = new Date();

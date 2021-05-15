@@ -10,10 +10,10 @@ module.exports.run = async (client, message) => {
 
         if (serverID) {
             await serverID.destroy();
-            return message.channel.send(`> **${message.guild.name}** will no longer be automatically moderated, ${message.author}.`);
+            return message.reply(`**${message.guild.name}** will no longer be automatically moderated.`);
         } else {
             await ModEnabledServers.upsert({ server_id: message.guild.id });
-            return message.channel.send(`> **${message.guild.name}** will now be automatically moderated, ${message.author}.`);
+            return message.reply(`**${message.guild.name}** will now be automatically moderated.`);
         };
 
     } catch (e) {

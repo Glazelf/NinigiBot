@@ -102,7 +102,7 @@ ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(botEmbed);
+        return message.reply(botEmbed);
 
         function checkDays(date) {
             let now = new Date();

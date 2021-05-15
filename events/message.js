@@ -32,7 +32,7 @@ module.exports = async (client, message) => {
         if (message.channel.type == "dm" || !message.guild) {
             if (message.author.bot) return;
             if (message.content.indexOf(prefix) == 0) {
-                message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
+                message.reply(`Sorry, you're not allowed to use commands in private messages!`);
             };
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
@@ -96,7 +96,7 @@ module.exports = async (client, message) => {
         } else return;
 
         // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
+        if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.reply(`Commands have been disabled in this channel.`);
 
         // Run the command
         if (cmd) {

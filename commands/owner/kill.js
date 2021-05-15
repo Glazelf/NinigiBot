@@ -5,7 +5,7 @@ exports.run = (client, message) => {
         if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
         // send channel a message that you're killing bot [optional]
-        message.channel.send(`> Shutting down for ${message.author}...`)
+        message.reply(`Shutting down...`)
             .then(msg => client.destroy());
         return;
 

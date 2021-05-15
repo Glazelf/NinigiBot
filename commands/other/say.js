@@ -21,7 +21,7 @@ exports.run = async (client, message) => {
 
         // Catch empty argument
         if (textMessage.length < 1) {
-            return message.channel.send(`> You need to specify text for me to say, ${message.author}.`);
+            return message.reply(`You need to specify text for me to say.`);
         };
 
         // Owner only function to send messages in different channels
@@ -30,24 +30,24 @@ exports.run = async (client, message) => {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
                 targetChannel.send(remoteMessage);
-                return message.channel.send(`Message succesfully sent to specified channel, ${message.author}.`);
+                return message.reply(`Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return message.channel.send(textMessage);
+                return message.reply(textMessage);
             };
         } else if (isAdmin(message.member, client)) {
             // Return plain message if member is admin
-            return message.channel.send(textMessage);
+            return message.reply(textMessage);
         } else {
             // Prevent using bot to go around ping permissions
             if (textMessage.includes("@")) {
-                return message.channel.send(`> You need to have Administrator permissions to tag people using \`${prefix}say\`, ${message.author}.`)
+                return message.reply(`You need to have Administrator permissions to tag people using \`${prefix}say\`.`)
             };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
-            textMessage = `> "\`${textMessage}\`"
+            textMessage = `"\`${textMessage}\`"
     > -${message.author}`;
-            return message.channel.send(textMessage);
+            return message.reply(textMessage);
         };
 
     } catch (e) {

@@ -12,17 +12,17 @@ module.exports.run = async (client, message) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldPrefix) {
-                return message.channel.send(`> The current prefix is: \`${oldPrefix.prefix}\`, ${message.author}.`);
+                return message.reply(`The current prefix is: \`${oldPrefix.prefix}\`.`);
             };
-            return message.channel.send(`> Please provide a valid string to change the prefix to, ${message.author}.`);
+            return message.reply(`Please provide a valid string to change the prefix to.`);
         };
         subCommand = subCommand.toLowerCase();
 
         if (oldPrefix) await oldPrefix.destroy();
-        if (subCommand == "?" || subCommand == "reset") return message.channel.send(`> Prefix has been reset to \`?\`, ${message.author}.`);
+        if (subCommand == "?" || subCommand == "reset") return message.reply(`Prefix has been reset to \`?\`.`);
         await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });
 
-        return message.channel.send(`> Prefix has been changed to \`${subCommand}\`, ${message.author}.`);
+        return message.reply(`Prefix has been changed to \`${subCommand}\`.`);
 
     } catch (e) {
         // log error

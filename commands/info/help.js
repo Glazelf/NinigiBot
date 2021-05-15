@@ -18,7 +18,7 @@ module.exports.run = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(helpEmbed);
+        return message.reply(helpEmbed);
 
     } catch (e) {
         // log error

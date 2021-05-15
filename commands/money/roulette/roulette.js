@@ -60,7 +60,7 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setFooter(message.author.tag)
                 .setTimestamp();
-            message.channel.send(welcome);
+            message.reply(welcome);
         } else {
             clearInterval(process);
             message.channel.send('> Roulette closed! Hope to see you all again!');

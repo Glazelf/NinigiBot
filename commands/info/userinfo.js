@@ -134,7 +134,7 @@ ${checkDays(user.createdAt)}`, true)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return message.reply(profileEmbed);
 
         function checkDays(date) {
             let now = new Date();

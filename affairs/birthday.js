@@ -38,7 +38,7 @@ module.exports = async (client) => {
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setDescription(`> Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
+            .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
             .setImage(search("birthday"))
             .setTimestamp();
         channel.send({ embed: gifEmbed });

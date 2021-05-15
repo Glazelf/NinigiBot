@@ -16,12 +16,12 @@ module.exports.run = async (client, message, args) => {
 
         const requestRole = arguments.join(' ').toLowerCase();
 
-        if (requestRole.length < 1) return message.channel.send(`> Please provide a role. Use \`${prefix}role help\` to see the available roles, ${message.author}.`);
+        if (requestRole.length < 1) return message.reply(`Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
 
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
-        if (roles.length < 1) return message.channel.send(`> There are no eligible roles to assign to yourself in this server, ${message.author}.`);
+        if (roles.length < 1) return message.reply(`There are no eligible roles to assign to yourself in this server.`);
 
         if (requestRole.toLowerCase() === 'help') {
             let roleText = [];
@@ -47,7 +47,7 @@ module.exports.run = async (client, message, args) => {
 Please don't tag these roles, just put the name.
 Example: \`${prefix}role Minecraft\``;
 
-            if (roleHelpMessage.length > 1024) return message.channel.send(`> Your list of self-assignable roles is too long to fit in a single message. Consider removing some, ${message.author}.`);
+            if (roleHelpMessage.length > 1024) return message.reply(`Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
 
             let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
@@ -57,24 +57,24 @@ Example: \`${prefix}role Minecraft\``;
                 .setDescription(roleHelpMessage)
                 .setFooter(message.author.tag)
                 .setTimestamp();
-            return message.channel.send(rolesHelp);
+            return message.reply(rolesHelp);
         };
 
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
 
-        let invalidRoleText = `> That role does not exist or isn't selfassignable, ${message.author}. Use \`${prefix}role help\` to see the available roles.`;
-        if (!role) return message.channel.send(invalidRoleText);
-        if (!roles.includes(role.id)) return message.channel.send(invalidRoleText);
-        if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
-        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.channel.send(`> I can't manage the **${role.name}** role because it is above my highest role, ${message.author}.`);
+        let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
+        if (!role) return message.reply(invalidRoleText);
+        if (!roles.includes(role.id)) return message.reply(invalidRoleText);
+        if (role.managed == true) return message.reply(`I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
+        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.reply(`I can't manage the **${role.name}** role because it is above my highest role.`);
 
         if (member.roles.cache.has(role.id)) {
             await member.roles.remove(role);
-            return message.channel.send(`> You no longer have the **${role.name}** role, ${member}. *booo*`);
+            return message.reply(`You no longer have the **${role.name}** role, ${member}. *booo*`);
 
         } else {
             await member.roles.add(role);
-            return message.channel.send(`> You now have the **${role.name}** role, ${member}! Yay!`);
+            return message.reply(`You now have the **${role.name}** role, ${member}! Yay!`);
         };
 
     } catch (e) {

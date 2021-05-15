@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
             prefix = globalVars.prefix;
         };
         let inputNumber = args[0];
-        if (isNaN(inputNumber)) return message.channel.send(`> You must provide a valid number, ${message.author}.`);
+        if (isNaN(inputNumber)) return message.reply(`You must provide a valid number.`);
         let titleNumber = inputNumber;
 
         // Channels
@@ -113,7 +113,7 @@ Vanity URL: https://discord.gg/shinx`
             titleNumber = `${inputNumber}: ${faqName}`;
         };
 
-        let objectText = `That rule or FAQ point doesn't seem to exist, ${message.author}.`;
+        let objectText = `That rule or FAQ point doesn't seem to exist.`;
         await getRule(relevantObject, inputNumber);
 
         // Avatar
@@ -126,7 +126,7 @@ Vanity URL: https://discord.gg/shinx`
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(ruleEmbed);
+        return message.reply(ruleEmbed);
 
         async function getRule(object, input) {
             var keyList = Object.keys(object);

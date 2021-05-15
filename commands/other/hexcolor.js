@@ -9,14 +9,14 @@ exports.run = async (client, message) => {
         let timestamp = await getTime();
 
         let args = message.content.split(` `);
-        if (!args[1]) return message.channel.send(`> Please provide a hex to convert, ${message.author}.`);
+        if (!args[1]) return message.reply(`Please provide a hex to convert.`);
 
         let hex = args[1];
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return message.channel.send(`> Please provide a valid hex, ${message.author}. Color hexes are 6 characters long including 0-9 and A-F.`);
+        if (!rgb) return message.reply(`Please provide a valid hex. Color hexes are 6 characters long including 0-9 and A-F.`);
 
         let imgWidth = 225;
         let imgHeight = 100;
@@ -35,7 +35,7 @@ exports.run = async (client, message) => {
             console.log(`Failed to create ${imgPath}. (${timestamp})`);
         });
 
-        await message.channel.send(`> Here's the color for ${formattingHash}${hex}:`, {
+        await message.reply(`Here's the color for ${formattingHash}${hex}:`, {
             files: [imgPath]
         });
 

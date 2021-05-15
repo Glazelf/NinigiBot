@@ -10,7 +10,7 @@ exports.run = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        let pongString = `> Pong!'ed back at ${message.author} in`;
+        let pongString = `Pong!'ed back in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
 
@@ -27,7 +27,7 @@ exports.run = async (client, message) => {
         };
 
         // Send message then edit message to reflect difference in creation timestamps
-        return message.channel.send(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
+        return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
 
     } catch (e) {
         // log error

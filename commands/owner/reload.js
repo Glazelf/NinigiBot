@@ -12,12 +12,12 @@ exports.run = async (client, message, args) => {
             prefix = globalVars.prefix;
         };
 
-        if (!args || args.length < 1) return message.channel.send(`> Must provide a command name to reload, ${message.author}.`);
+        if (!args || args.length < 1) return message.reply(`Must provide a command name to reload.`);
         const commandName = args[0];
 
         // Check if the command exists and is valid
         if (!client.commands.has(commandName)) {
-            return message.channel.send(`> That command does not exist, ${message.author}.`);
+            return message.reply(`That command does not exist.`);
         };
 
         delete require.cache[require.resolve(`./${commandName}.js`)];
@@ -26,7 +26,7 @@ exports.run = async (client, message, args) => {
         client.commands.delete(commandName);
         const props = require(`./${commandName}.js`);
         client.commands.set(commandName, props);
-        return message.channel.send(`> The command \`${prefix}${commandName}\` has been reloaded, ${message.author}.`);
+        return message.reply(`The command \`${prefix}${commandName}\` has been reloaded.`);
 
     } catch (e) {
         // log error

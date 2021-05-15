@@ -8,7 +8,7 @@ exports.run = async (client, message) => {
 
         if (args[1]) {
             if (args[1].toLowerCase() == "global") {
-                return message.channel.send(
+                return message.reply(
                     bank.currency.sort((a, b) => b.balance - a.balance)
                         .filter(user => client.users.cache.has(user.user_id))
                         .first(10)
@@ -24,7 +24,7 @@ exports.run = async (client, message) => {
         };
 
         function serverLeaderboard() {
-            return message.channel.send(
+            return message.reply(
                 bank.currency.sort((a, b) => b.balance - a.balance)
                     .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                     .first(10)

@@ -9,14 +9,14 @@ module.exports.run = async (client, message) => {
         // Sanitize and sort user input
         const input = message.content.slice(2).trim();
         let [, , subCommand] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (!subCommand) return message.channel.send(`> Please provide a subCommand of either \`user\` or \`game\`, ${message.author}.`);
+        if (!subCommand) return message.reply(`Please provide a subCommand of either \`user\` or \`game\`.`);
         let [, , steamInput] = subCommand.match(/(\w+)\s*([\s\S]*)/);
-        if (!steamInput) return message.channel.send(`> Please provide a user or game ID, ${message.author}.`);
+        if (!steamInput) return message.reply(`Please provide a user or game ID.`);
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
 
         // init variables
-        let userFailString = `> Could not find the specified user, ${message.author}. 
+        let userFailString = `Could not find the specified user. 
 > Make sure you either provide a userID (example: \`76561198084469073\`) or a custom link ID (check if <https://steamcommunity.com/id/${steamInput}> exists).`;
         let userName;
         let userID;
@@ -117,15 +117,15 @@ ${checkDays(userCreated)}`;
                         .setFooter(message.author.tag)
                         .setTimestamp();
 
-                    return message.channel.send(userEmbed);
+                    return message.reply(userEmbed);
 
                 } catch (e) {
                     // console.log(e);
-                    return message.channel.send(userFailString);
+                    return message.reply(userFailString);
                 };
             case "game":
                 // Get game info from ID
-                return message.channel.send(`Game info goes here, ${message.author}.`);
+                return message.reply(`Game info goes here.`);
         };
 
         function checkDays(date) {

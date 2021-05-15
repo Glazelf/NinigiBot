@@ -14,11 +14,11 @@ module.exports.run = async (client, message) => {
             user = client.users.cache.get(userID);
         };
 
-        if (!user) return message.channel.send(`> Please use a proper mention if you want to reset someones bio, ${message.author}.`);
+        if (!user) return message.reply(`Please use a proper mention if you want to reset someones bio.`);
 
         bank.currency.biography(user.id, "None");
 
-        return message.channel.send(`> Successfully reset ${user.tag}'s bio, ${message.author}.`);
+        return message.reply(`Successfully reset ${user.tag}'s bio.`);
 
     } catch (e) {
         // log error

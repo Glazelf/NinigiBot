@@ -12,7 +12,7 @@ module.exports.run = async (client, message) => {
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
         const args = message.content.split(' ');
-        if (!args[1]) return message.channel.send(`> You need to provide either a subcommand or a Pokémon to look up, ${message.author}.`);
+        if (!args[1]) return message.reply(`You need to provide either a subcommand or a Pokémon to look up.`);
 
         let subCommand = args[1].toLowerCase();
         let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
@@ -33,11 +33,11 @@ module.exports.run = async (client, message) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.channel.send(abilityEmbed);
+                        return message.reply(abilityEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified ability, ${message.author}.`);
+                        return message.reply(`Could not find the specified ability.`);
                     });
                 break;
 
@@ -57,11 +57,11 @@ module.exports.run = async (client, message) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.channel.send(itemEmbed);
+                        return message.reply(itemEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified item, ${message.author}.`);
+                        return message.reply(`Could not find the specified item.`);
                     });
                 break;
 
@@ -90,11 +90,11 @@ module.exports.run = async (client, message) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.channel.send(moveEmbed);
+                        return message.reply(moveEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified move, ${message.author}.`);
+                        return message.reply(`Could not find the specified move.`);
                     });
                 break;
 
@@ -242,7 +242,7 @@ module.exports.run = async (client, message) => {
                                 })
                                 .catch(function (e) {
                                     // console.log(e);
-                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                                    return message.reply(`Could not find the specified Pokémon.`);
                                 });
                         };
 
@@ -334,11 +334,11 @@ BST: ${BST}`, false)
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.channel.send(pkmEmbed);
+                        return message.reply(pkmEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                        return message.reply(`Could not find the specified Pokémon.`);
                     });
                 break;
         };

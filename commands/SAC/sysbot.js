@@ -44,7 +44,7 @@ module.exports.run = async (client, message) => {
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
-        return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
+        return message.reply(`Hey, here's a list of Sysbots and their status:
 > **Format:** Bot (prefix): status (\`Host#0001\`)
 > **Pokémon bots:**
 > ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)

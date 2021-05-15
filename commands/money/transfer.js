@@ -14,15 +14,15 @@ exports.run = async (client, message) => {
         if (!transferTarget) return;
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}`;
 
-        if (transferTarget == message.author) return message.channel.send(`> You can't transfer money to yourself, ${message.author}.`)
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> You need to specify a valid number to transfer, ${message.author}.`);
-        if (transferAmount > currentAmount) return message.channel.send(`> You don't have enough money to transfer that much, you only have ${userBalance}.`);
-        if (transferAmount <= 0) return message.channel.send(`> Please enter an amount greater than zero, ${message.author}.`);
+        if (transferTarget == message.author) return message.reply(`You can't transfer money to yourself.`)
+        if (!transferAmount || isNaN(transferAmount)) return message.reply(`You need to specify a valid number to transfer.`);
+        if (transferAmount > currentAmount) return message.reply(`You don't have enough money to transfer that much, you only have ${userBalance}.`);
+        if (transferAmount <= 0) return message.reply(`Please enter an amount greater than zero.`);
 
         bank.currency.add(message.author.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return message.channel.send(`> Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}, ${message.author}.`);
+        return message.reply(`Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}.`);
 
     } catch (e) {
         // log error

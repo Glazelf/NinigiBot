@@ -20,12 +20,12 @@ module.exports.run = async (client, message) => {
             transferTarget = client.users.cache.get(userID);
         };
 
-        if (!transferTarget) return message.channel.send(`> That's not a valid target, ${message.author}.`);
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
+        if (!transferTarget) return message.reply(`That's not a valid target.`);
+        if (!transferAmount || isNaN(transferAmount)) return message.reply(`That's not a valid number.`);
 
         bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
 
-        return message.channel.send(`> Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
+        return message.reply(`Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
 
     } catch (e) {
         // log error

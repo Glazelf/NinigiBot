@@ -27,13 +27,13 @@ exports.run = async (client, message) => {
             calcInput = calcInput.replace(value, "");
         });
 
-        if (!calcInput) return message.channel.send(`> You need to provide something to calculate, ${message.author}.`);
+        if (!calcInput) return message.reply(`You need to provide something to calculate.`);
 
         try {
             var evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
-            return message.channel.send(`> You need to provide a valid input, ${message.author}.`);
+            return message.reply(`You need to provide a valid input.`);
         };
 
         // Test out rounding based on remainder sometime
@@ -42,7 +42,7 @@ exports.run = async (client, message) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return message.channel.send(`${rounded} (${message.author.tag})`, { code: "js" });
+        return message.reply(`${rounded} (${message.author.tag})`, { code: "js" });
 
     } catch (e) {
         // log error

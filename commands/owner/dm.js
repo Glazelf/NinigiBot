@@ -11,16 +11,16 @@ exports.run = async (client, message) => {
         let remoteMessage = textMessage.slice(userID.length + 1);
 
         if (remoteMessage.length < 1) {
-            return message.channel.send(`> You need to provide a message to send, ${message.author}.`);
+            return message.reply(`You need to provide a message to send.`);
         };
 
         targetUser = client.users.cache.get(userID);
         if (!targetUser) {
-            return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, ${message.author}.`);
+            return message.reply(`I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
         };
 
         await targetUser.send(remoteMessage);
-        return message.channel.send(`> Message succesfully sent to ${targetUser.tag}, ${message.author}.`);
+        return message.reply(`Message succesfully sent to ${targetUser.tag}.`);
 
     } catch (e) {
         // log error

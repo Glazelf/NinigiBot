@@ -18,22 +18,22 @@ exports.run = async (client, message) => {
         // Lottery Tickets are messed up and temporarily removed, so items is empty
         /*if (biography === 'items') {
             const items = await CurrencyShop.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return message.reply(items.map(i => i.toString()).join('\n'), { code: true });
         }*/ if (biography === 'equipment') {
             const items = await Equipments.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return message.reply(items.map(i => i.toString()).join('\n'), { code: true });
         } if (biography === 'food') {
             const items = await Foods.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return message.reply(items.map(i => i.toString()).join('\n'), { code: true });
         } // Coming soon, maybe
         /* if(biography === 'key'){
             const items = await KeyItems.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return message.reply(items.map(i => i.toString()).join('\n'), { code: true });
         } *//* if(biography === 'rooms'){
             const items = await Room.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return message.reply(items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return message.channel.send(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food`);
+        return message.reply(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food`);
 
     } catch (e) {
         // log error

@@ -4,7 +4,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (cooldown.has(message.author.id)) return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
+        if (cooldown.has(message.author.id)) return message.reply(`You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
@@ -19,31 +19,31 @@ exports.run = (client, message) => {
         amount = input[2];
 
         let rps = ["rock", "paper", "scissor"];
-        if (!rps.includes(playerChoice)) return message.channel.send(`> You need to choose between \`rock\`, \`paper\` and \`scissor\`, ${message.author}.`);
+        if (!rps.includes(playerChoice)) return message.reply(`You need to choose between \`rock\`, \`paper\` and \`scissor\`.`);
 
-        if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
+        if (!amount || isNaN(amount)) return message.reply(`You need to specify a valid number to gamble.`);
         amount = Math.floor(amount);
-        if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
+        if (amount <= 0) return message.reply(`Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
-            return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
+            return message.reply(`You only have ${Math.floor(balance)}${currency}.`);
         };
 
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
 
-        if (botChoice == playerChoice) return message.channel.send(`> It's a tie, ${message.author}. We both picked **${playerChoice}**.`);
+        if (botChoice == playerChoice) return message.reply(`It's a tie. We both picked **${playerChoice}**.`);
 
-        let returnString = `> Congratulations, ${message.author}. You picked **${playerChoice}** while I picked **${botChoice}**.
+        let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
 > You win ${amount}${currency}.`;
 
         if ((playerChoice == rps[0] && botChoice == rps[1]) || (playerChoice == rps[1] && botChoice == rps[2]) || (playerChoice == rps[2] && botChoice == rps[0])) {
-            returnString = `> Sorry, ${message.author}. You picked **${playerChoice}** while I picked **${botChoice}**.
+            returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
 > You lose ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
         bank.currency.add(message.author.id, amount);
-        message.channel.send(returnString);
+        message.reply(returnString);
 
         cooldown.add(message.author.id);
 

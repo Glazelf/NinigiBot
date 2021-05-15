@@ -7,11 +7,11 @@ module.exports.run = async (client, message, args) => {
 
         let arg = args[0];
         if (!arg) arg = 0;
-        if (isNaN(arg) || arg < 0) return message.channel.send(`> You need to provide a valid number (seconds) to change the slowmode to, ${message.author}.`);
+        if (isNaN(arg) || arg < 0) return message.reply(`You need to provide a valid number (seconds) to change the slowmode to.`);
         if (arg > 21600) arg = 21600;
 
         await message.channel.setRateLimitPerUser(arg);
-        return message.channel.send(`> Slowmode changed to ${arg} seconds, ${message.author}.`);
+        return message.reply(`Slowmode changed to ${arg} seconds.`);
 
     } catch (e) {
         // log error

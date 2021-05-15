@@ -33,10 +33,10 @@ exports.run = async (client, message) => {
                 .setFooter(message.author.tag)
                 .setTimestamp();
 
-            return message.channel.send(noRoleEmbed);
+            return message.reply(noRoleEmbed);
         };
 
-        if (!role) return message.channel.send(`> I couldn't find that role, ${message.author}. Make sure you provide a valid name or ID.`);
+        if (!role) return message.reply(`I couldn't find that role. Make sure you provide a valid name or ID.`);
 
         // Role color
         let roleColor = `#${role.color.toString(16)}`;
@@ -68,7 +68,7 @@ exports.run = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.channel.send(roleEmbed);
+        return message.reply(roleEmbed);
 
     } catch (e) {
         // log error

@@ -26,10 +26,10 @@ module.exports.run = async (client, message) => {
 
         if (channelID) {
             await channelID.destroy();
-            return message.channel.send(`> Commands can now be used in ${channel} again, ${message.author}.`);
+            return message.reply(`Commands can now be used in ${channel} again.`);
         } else {
             await DisabledChannels.upsert({ channel_id: channel.id, name: channelName });
-            return message.channel.send(`> Commands can no longer be used in ${channel}, ${message.author}.`);
+            return message.reply(`Commands can no longer be used in ${channel}.`);
         };
 
     } catch (e) {

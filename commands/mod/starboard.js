@@ -12,22 +12,22 @@ module.exports.run = async (client, message) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldChannel) {
-                return message.channel.send(`> The current starboard channel is <#${oldChannel.channel_id}>, ${message.author}. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
+                return message.reply(`The current starboard channel is <#${oldChannel.channel_id}>. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
             };
-            return message.channel.send(`> Please provide a valid channel or \`disable\`, ${message.author}.`);
+            return message.reply(`Please provide a valid channel or \`disable\`.`);
         };
         subCommand = subCommand.toLowerCase();
 
         let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
-        if (!targetChannel && subCommand !== "disable") return message.channel.send(`> That channel does not exist in this server, ${message.author}.`);
+        if (!targetChannel && subCommand !== "disable") return message.reply(`That channel does not exist in this server.`);
 
         if (oldChannel) await oldChannel.destroy();
-        if (subCommand == "disable") return message.channel.send(`> Disabled starboard functionality in **${message.guild.name}**, ${message.author}.`);
+        if (subCommand == "disable") return message.reply(`Disabled starboard functionality in **${message.guild.name}**.`);
 
         await StarboardChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
 
-        return message.channel.send(`> ${targetChannel} is now **${message.guild.name}**'s starboard, ${message.author}. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
+        return message.reply(`${targetChannel} is now **${message.guild.name}**'s starboard. ${globalVars.starboardLimit} stars are required for a message to appear there.`);
 
     } catch (e) {
         // log error

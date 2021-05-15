@@ -3,7 +3,7 @@ module.exports.run = async (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
         // Personal Roles can / will only get global support in discord.js v13
-        if (message.guild.id !== "549214833858576395") return message.channel.send(`> Personal Roles can / will only get global support in discord.js v13, ${message.author}.`);
+        if (message.guild.id !== "549214833858576395") return message.reply(`Personal Roles can / will only get global support in discord.js v13.`);
 
         const isAdmin = require('../../util/isAdmin');
         if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
@@ -13,10 +13,10 @@ module.exports.run = async (client, message, args) => {
 
         if (serverID) {
             await serverID.destroy();
-            return message.channel.send(`> Personal Roles can no longer be managed by users in **${message.guild.name}**, ${message.author}.`);
+            return message.reply(`Personal Roles can no longer be managed by users in **${message.guild.name}**.`);
         } else {
             await PersonalRoleServers.upsert({ server_id: message.guild.id });
-            return message.channel.send(`> Personal Roles can now be managed by users in **${message.guild.name}**, ${message.author}.`);
+            return message.reply(`Personal Roles can now be managed by users in **${message.guild.name}**.`);
         };
 
     } catch (e) {

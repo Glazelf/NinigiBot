@@ -4,7 +4,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (cooldown.has(message.author.id)) return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
+        if (cooldown.has(message.author.id)) return message.reply(`You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
@@ -28,24 +28,24 @@ exports.run = (client, message) => {
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
 
-        if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
+        if (!amount || isNaN(amount)) return message.reply(`You need to specify a valid number to gamble.`);
         amount = Math.floor(amount);
-        if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
+        if (amount <= 0) return message.reply(`Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
-            return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
+            return message.reply(`You only have ${Math.floor(balance)}${currency}.`);
         };
 
-        let returnString = `> Congratulations, ${message.author}, you flipped **${winSide}** and won ${amount}${currency}.`;
+        let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}.`;
 
         // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            returnString = `> Sorry, ${message.author}, you flipped **${loseSide}** and lost ${amount}${currency}.`;
+            returnString = `Sorry, you flipped **${loseSide}** and lost ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
         bank.currency.add(message.author.id, amount);
-        message.channel.send(returnString);
+        message.reply(returnString);
 
         cooldown.add(message.author.id);
 
