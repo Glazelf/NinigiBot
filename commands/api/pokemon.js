@@ -443,7 +443,6 @@ module.exports.config = {
             name: "ability-name",
             type: "STRING",
             description: "Get ability info by English name.",
-            required: true
         }]
     }, {
         name: "item",
@@ -453,7 +452,6 @@ module.exports.config = {
             name: "item-name",
             type: "STRING",
             description: "Get item info by English name.",
-            required: true
         }]
     }, {
         name: "move",
@@ -463,7 +461,6 @@ module.exports.config = {
             name: "move-name",
             type: "STRING",
             description: "Get move info by English name.",
-            required: true
         }]
     }, {
         name: "pokemon",

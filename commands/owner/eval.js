@@ -39,7 +39,7 @@ module.exports.config = {
     aliases: ["js"],
     description: "Execute JS.",
     options: [{
-        name: "js",
+        name: "input",
         type: "STRING",
         description: "JS to execute."
     }]

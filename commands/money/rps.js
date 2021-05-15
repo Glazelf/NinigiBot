@@ -71,7 +71,6 @@ module.exports.config = {
             name: "bet-amount",
             type: "INTEGER",
             description: "The amount of money you want to bet.",
-            required: true
         }]
     }, {
         name: "paper",
@@ -81,7 +80,6 @@ module.exports.config = {
             name: "bet-amount",
             type: "INTEGER",
             description: "The amount of money you want to bet.",
-            required: true
         }]
     }, {
         name: "scissors",
@@ -91,7 +89,6 @@ module.exports.config = {
             name: "bet-amount",
             type: "INTEGER",
             description: "The amount of money you want to bet.",
-            required: true
         }]
     }]
 };

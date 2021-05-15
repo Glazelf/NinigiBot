@@ -172,7 +172,6 @@ module.exports.config = {
             name: "user-id",
             type: "STRING",
             description: "Target user's ID.",
-            required: true
         }]
     }, {
         name: "game",
@@ -182,7 +181,6 @@ module.exports.config = {
             name: "game-id",
             type: "STRING",
             description: "Target game's ID.",
-            required: true
         }]
     }]
 };

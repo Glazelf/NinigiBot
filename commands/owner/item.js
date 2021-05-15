@@ -123,6 +123,5 @@ module.exports.config = {
         name: "item",
         type: "STRING",
         description: "Item to use.",
-        required: true
     }]
 };

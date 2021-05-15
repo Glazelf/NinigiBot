@@ -34,7 +34,7 @@ module.exports.config = {
     aliases: ["magicconch", "mc"],
     description: "Ask the magic 8ball for knowledge.",
     options: [{
-        name: "Question.",
+        name: "input",
         type: "STRING",
         description: "Your burning question.",
         required: true
