@@ -60,7 +60,7 @@ function walk(dir, callback) {
                     client.commands.set(commandName, props);
                     if (props.config.aliases) {
                         props.config.aliases.forEach(alias => {
-                            if (client.aliases.get(alias)) return console.log("Warning: Two commands share an alias name!");
+                            if (client.aliases.get(alias)) return console.log(`Warning: Two commands share an alias name: ${alias}`);
                             client.aliases.set(alias, commandName);
                         });
                     };
