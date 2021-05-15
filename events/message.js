@@ -96,7 +96,7 @@ module.exports = async (client, message) => {
         } else return;
 
         // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.reply(`Commands have been disabled in this channel.`);
+        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return message.reply(`Commands have been disabled in this channel.`);
 
         // Run the command
         if (cmd) {

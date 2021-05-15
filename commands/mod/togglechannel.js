@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const { DisabledChannels } = require('../../database/dbObjects');
 

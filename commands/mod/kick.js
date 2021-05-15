@@ -3,7 +3,7 @@ module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("KICK_MEMBERS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("KICK_MEMBERS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         const args = message.content.split(' ');
 

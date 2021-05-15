@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("MANAGE_MESSAGES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_MESSAGES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
 
         let numberFromMessage = args[0];
 
