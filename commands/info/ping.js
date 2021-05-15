@@ -14,20 +14,26 @@ exports.run = async (client, message) => {
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
 
-        // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.
-        if (message.content.toLowerCase().startsWith(`${prefix}pig`) || message.content.startsWith(`${prefix}pog`)) {
-            pongString = pongString.replace("n", "");
-            pauseString = pauseString.replace("n", "");
-            wsLatencyString = wsLatencyString.replace("n", "");
-        };
-        if (message.content[2].toLowerCase() == "o") {
-            pongString = pongString.replace("o", "i");
-            pauseString = pauseString.replace("o", "i");
-            wsLatencyString = wsLatencyString.replace("o", "i");
+        // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.\
+        if (message.content) {
+            if (message.content.toLowerCase().startsWith(`${prefix}pig`) || message.content.startsWith(`${prefix}pog`)) {
+                pongString = pongString.replace("n", "");
+                pauseString = pauseString.replace("n", "");
+                wsLatencyString = wsLatencyString.replace("n", "");
+            };
+            if (message.content[2].toLowerCase() == "o") {
+                pongString = pongString.replace("o", "i");
+                pauseString = pauseString.replace("o", "i");
+                wsLatencyString = wsLatencyString.replace("o", "i");
+            };
         };
 
         // Send message then edit message to reflect difference in creation timestamps
-        return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
+        if (message.content) {
+            return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
+        } else {
+            return message.reply(`Pong! ${wsLatencyString}.`);
+        };
 
     } catch (e) {
         // log error
