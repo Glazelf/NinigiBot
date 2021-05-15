@@ -14,10 +14,10 @@ exports.run = async (client, message) => {
 
         let helpText = `**Pokémon:**
     Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
-    **Not Pokémon:**
-    Dango, Jojo, Stitch, Kuzco
     **Interactions:**
-    Hug`;
+    Hug
+    **Other:**
+    Dango, Jojo, Stitch, Kuzco`;
 
         let user = message.mentions.users.first();
         let gifArgumentUncased = message.content.split(` `, 3);
@@ -100,5 +100,162 @@ ${helpText}`);
 
 module.exports.config = {
     name: "gif",
-    aliases: []
+    aliases: [],
+    description: "Returns a gif.",
+    options: [{
+        name: "pokemon",
+        type: "SUB_COMMAND_GROUP",
+        description: "Pokémon gifs.",
+        options: [{
+            name: "squirtle",
+            type: "SUB_COMMAND",
+            description: "Squirtle gif."
+        }, {
+            name: "jigglypuff",
+            type: "SUB_COMMAND",
+            description: "Jigglypuff gif."
+        }, {
+            name: "slowpoke",
+            type: "SUB_COMMAND",
+            description: "Slowpoke gif."
+        }, {
+            name: "flareon",
+            type: "SUB_COMMAND",
+            description: "Flareon gif."
+        }, {
+            name: "snorlax",
+            type: "SUB_COMMAND",
+            description: "Snorlax gif."
+        }, {
+            name: "mewtwo",
+            type: "SUB_COMMAND",
+            description: "Mewtwo gif."
+        }, {
+            name: "mew",
+            type: "SUB_COMMAND",
+            description: "Mew gif."
+        }, {
+            name: "wooper",
+            type: "SUB_COMMAND",
+            description: "Wooper gif."
+        }, {
+            name: "espeon",
+            type: "SUB_COMMAND",
+            description: "Espeon gif."
+        }, {
+            name: "scizor",
+            type: "SUB_COMMAND",
+            description: "Scizor gif."
+        }, {
+            name: "heracross",
+            type: "SUB_COMMAND",
+            description: "Heracross gif."
+        }, {
+            name: "celebi",
+            type: "SUB_COMMAND",
+            description: "Celebi gif."
+        }, {
+            name: "torchic",
+            type: "SUB_COMMAND",
+            description: "Torchic gif."
+        }, {
+            name: "lotad",
+            type: "SUB_COMMAND",
+            description: "Lotad gif."
+        }, {
+            name: "turtwig",
+            type: "SUB_COMMAND",
+            description: "Turtwig gif."
+        }, {
+            name: "chimchar",
+            type: "SUB_COMMAND",
+            description: "Chimchar gif."
+        }, {
+            name: "piplup",
+            type: "SUB_COMMAND",
+            description: "Piplup gif."
+        }, {
+            name: "shinx",
+            type: "SUB_COMMAND",
+            description: "Shinx gif."
+        }, {
+            name: "pachirisu",
+            type: "SUB_COMMAND",
+            description: "Pachirisu gif."
+        }, {
+            name: "gible",
+            type: "SUB_COMMAND",
+            description: "Gible gif."
+        }, {
+            name: "glaceon",
+            type: "SUB_COMMAND",
+            description: "Glaceon gif."
+        }, {
+            name: "gliscor",
+            type: "SUB_COMMAND",
+            description: "Gliscor gif."
+        }, {
+            name: "gallade",
+            type: "SUB_COMMAND",
+            description: "Gallade gif."
+        }, {
+            name: "azelf",
+            type: "SUB_COMMAND",
+            description: "Azelf gif."
+        }, {
+            name: "oshawott",
+            type: "SUB_COMMAND",
+            description: "Oshawott gif."
+        }, {
+            name: "maractus",
+            type: "SUB_COMMAND",
+            description: "Maractus gif."
+        }, {
+            name: "zweilous",
+            type: "SUB_COMMAND",
+            description: "Zweilous gif."
+        }, {
+            name: "reshiram",
+            type: "SUB_COMMAND",
+            description: "Reshiram gif."
+        }, {
+            name: "lurantis",
+            type: "SUB_COMMAND",
+            description: "Lurantis gif."
+        }, {
+            name: "dracovish",
+            type: "SUB_COMMAND",
+            description: "Dracovish gif."
+        }]
+    }, {
+        name: "Interactions",
+        type: "SUB_COMMAND_GROUP",
+        description: "Interaction gifs.",
+        options: [{
+            name: "interaction",
+            type: "SUB_COMMAND",
+            description: "Hug gif."
+        }]
+    }, {
+        name: "Other",
+        type: "SUB_COMMAND_GROUP",
+        description: "Other gifs.",
+        options: [{
+            name: "dango",
+            type: "SUB_COMMAND",
+            description: "Dango gif."
+        }, {
+            name: "jojo",
+            type: "SUB_COMMAND",
+            description: "Jojo gif."
+        }, {
+            name: "stitch",
+            type: "SUB_COMMAND",
+            description: "Stitch gif."
+        }, {
+            name: "kuzco",
+            type: "SUB_COMMAND",
+            description: "Kuzco gif."
+        }]
+    },]
 };

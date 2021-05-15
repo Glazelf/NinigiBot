@@ -28,5 +28,11 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "switch",
-    aliases: ["fc", "friendcode"]
+    aliases: ["fc", "friendcode"],
+    description: "Updates your Switch friend code.",
+    options: [{
+        name: "switch-fc",
+        type: "STRING",
+        description: "SW-1234-1234-1234"
+    }]
 };

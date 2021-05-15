@@ -36,5 +36,11 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "eval",
-    aliases: ["js"]
+    aliases: ["js"],
+    description: "Execute JS.",
+    options: [{
+        name: "js",
+        type: "STRING",
+        description: "JS to execute."
+    }]
 };

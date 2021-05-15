@@ -34,5 +34,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "prefix",
-    aliases: []
+    aliases: [],
+    description: "Change the prefix for this bot in this server."
 };

@@ -21,5 +21,6 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "restart",
-    aliases: []
+    aliases: [],
+    description: "Restart bot and reload all files."
 };

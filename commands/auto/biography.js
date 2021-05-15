@@ -22,5 +22,12 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "biography",
-    aliases: ["bio"]
+    aliases: ["bio"],
+    description: "Updates your biography",
+    options: [{
+        name: "biography",
+        type: "STRING",
+        description: "Biography body.",
+        required: true
+    }]
 };

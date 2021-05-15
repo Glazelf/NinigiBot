@@ -39,7 +39,6 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "ping",
-    description: "Pings bot",
-    category: "info",
-    aliases: ["pong", "pig", "pog"]
+    aliases: ["pong", "pig", "pog"],
+    description: `Pings bot.`
 };

@@ -31,5 +31,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "8ball",
-    aliases: ["magicconch", "mc"]
+    aliases: ["magicconch", "mc"],
+    description: "Ask the magic 8ball for knowledge.",
+    options: [{
+        name: "Question.",
+        type: "STRING",
+        description: "Your burning question.",
+        required: true
+    }]
 };

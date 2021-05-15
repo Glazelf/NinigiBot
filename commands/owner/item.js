@@ -109,5 +109,20 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "item",
-    aliases: []
+    aliases: [],
+    description: "Use an item on someone.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by id."
+    }, {
+        name: "item",
+        type: "STRING",
+        description: "Item to use.",
+        required: true
+    }]
 };

@@ -37,5 +37,20 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "moneyadd",
-    aliases: ["addmoney"]
+    aliases: ["addmoney"],
+    description: "Add money to a user.",
+    options: [{
+        name: "amount",
+        type: "INTEGER",
+        description: "Amount of money to add.",
+        required: true
+    }, {
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

@@ -63,5 +63,12 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "coinflip",
-    aliases: ["cf", "flip"]
+    aliases: ["cf", "flip"],
+    description: "Bet money on a coinflip.",
+    options: [{
+        name: "bet-amount",
+        type: "INTEGER",
+        description: "The amount of money you want to bet.",
+        required: true
+    }]
 };

@@ -76,5 +76,6 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
 
 module.exports.config = {
     name: "roulette",
-    aliases: []
+    aliases: [],
+    description: "Initiate a roulette."
 };

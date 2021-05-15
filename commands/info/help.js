@@ -30,5 +30,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "help",
-    aliases: []
+    aliases: [],
+    description: "Sends information to guide bot usage."
 };

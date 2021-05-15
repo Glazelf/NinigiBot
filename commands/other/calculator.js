@@ -54,5 +54,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "calculator",
-    aliases: ["calc"]
+    aliases: ["calc"],
+    description: "Calculate.",
+    options: [{
+        name: "calculation",
+        type: "STRING",
+        description: "Calculation.",
+        required: true
+    }]
 };

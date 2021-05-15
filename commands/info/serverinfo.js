@@ -148,5 +148,6 @@ ${checkDays(guild.createdAt)}`, false)
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["server", "guild", "guildinfo"]
+    aliases: ["server", "guild", "guildinfo"],
+    description: "Sends info about the server."
 };

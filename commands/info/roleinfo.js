@@ -80,5 +80,6 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "roleinfo",
-    aliases: []
+    aliases: [],
+    description: "Sends info about a specified role."
 };

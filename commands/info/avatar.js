@@ -34,5 +34,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "avatar",
-    aliases: ["avi", "pfp"]
+    aliases: ["avi", "pfp"],
+    description: "Updates your biography.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

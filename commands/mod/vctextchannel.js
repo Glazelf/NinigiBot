@@ -39,5 +39,19 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "vctextchannel",
-    aliases: ["vtc", "voicetext", "vcchannel"]
+    aliases: ["vtc", "voicetext", "vcchannel"],
+    description: "Choose a channel to be linked to vc's.",
+    options: [{
+        name: "channel-tag",
+        type: "CHANNEL",
+        description: "Specify channel by mention."
+    }, {
+        name: "channel-name",
+        type: "STRING",
+        description: "Specify channel by name."
+    }, {
+        name: "channel-id",
+        type: "STRING",
+        description: "Specify channel by ID."
+    }]
 };

@@ -43,5 +43,35 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "convert",
-    aliases: ["conv"]
+    aliases: ["conv"],
+    description: "Converts from dumb American units to epic global units.",
+    options: [{
+        name: "fahrenheit",
+        description: "Convert from Fahrenheit to Celsius.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of Fahrenheits.",
+            type: "INTEGER"
+        }
+        ]
+    }, {
+        name: "feet",
+        description: "Convert from feet to meters.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of feet.",
+            type: "INTEGER"
+        }]
+    }, {
+        name: "lbs",
+        description: "Convert from lbs to kilos",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of lbs.",
+            type: "INTEGER"
+        }]
+    }]
 };

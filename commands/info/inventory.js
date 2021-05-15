@@ -55,5 +55,6 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "inventory",
-    aliases: ["inv", "items"]
+    aliases: ["inv", "items"],
+    description: "Sends a list of items in your inventory."
 };

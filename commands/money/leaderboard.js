@@ -53,5 +53,6 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "leaderboard",
-    aliases: ["lb"]
+    aliases: ["lb"],
+    description: "Displays money leaderboard."
 };

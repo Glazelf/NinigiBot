@@ -19,5 +19,6 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "kill",
-    aliases: ["destroy"]
+    aliases: ["destroy"],
+    description: "Shuts down bot."
 };

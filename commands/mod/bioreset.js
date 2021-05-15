@@ -30,5 +30,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "bioreset",
-    aliases: []
+    aliases: [],
+    description: "Reset the target user's biography.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

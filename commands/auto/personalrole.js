@@ -105,5 +105,11 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "personalrole",
-    aliases: ["pr"]
+    aliases: ["pr"],
+    description: "Updates your personal role color.",
+    options: [{
+        name: "color-hex",
+        type: "STRING",
+        description: "Specify the color you want. Type \"delete\" to delete your role."
+    }]
 };

@@ -146,5 +146,6 @@ ${checkDays(client.user.createdAt)}`, false)
 
 module.exports.config = {
     name: "botinfo",
-    aliases: ["bot", "info"]
+    aliases: ["bot", "info"],
+    description: `Displays info on this bot.`
 };

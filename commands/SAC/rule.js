@@ -156,5 +156,11 @@ Vanity URL: https://discord.gg/shinx`
 
 module.exports.config = {
     name: "rules",
-    aliases: ["faq", "rule"]
+    aliases: ["faq", "rule"],
+    description: "Sends a rule.",
+    options: [{
+        name: "rule-id",
+        type: "INTEGER",
+        description: "Number of the rule to send."
+    }]
 };

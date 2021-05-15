@@ -41,5 +41,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "kick",
-    aliases: []
+    aliases: [],
+    description: "Kick a target user from the server.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

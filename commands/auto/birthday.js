@@ -23,5 +23,12 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "birthday",
-    aliases: ["bday", "birth"]
+    aliases: ["bday", "birth"],
+    description: "Updates your birthday",
+    options: [{
+        name: "birthday",
+        type: "STRING",
+        description: "Birthday in \"dd-mm\" format.",
+        required: true
+    }]
 };

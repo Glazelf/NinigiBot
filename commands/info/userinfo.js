@@ -164,5 +164,15 @@ ${checkDays(user.createdAt)}`, true)
 
 module.exports.config = {
     name: "userinfo",
-    aliases: ["user", "profile"]
+    aliases: ["user", "profile"],
+    description: "Displays information about a specified user.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

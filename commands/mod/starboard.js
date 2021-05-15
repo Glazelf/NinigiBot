@@ -39,5 +39,19 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "starboard",
-    aliases: []
+    aliases: [],
+    description: "Choose a starboard channel.",
+    options: [{
+        name: "channel-tag",
+        type: "CHANNEL",
+        description: "Specify channel by mention."
+    }, {
+        name: "channel-name",
+        type: "STRING",
+        description: "Specify channel by name."
+    }, {
+        name: "channel-id",
+        type: "STRING",
+        description: "Specify channel by ID."
+    }]
 };

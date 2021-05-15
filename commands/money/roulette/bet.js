@@ -52,5 +52,17 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "bet",
-    aliases: []
+    aliases: [],
+    description: "Bet on ongoing roulette.",
+    options: [{
+        name: "slot-amount",
+        type: "INTEGER",
+        description: "The amount of slots you want to bet on.",
+        required: true
+    }, {
+        name: "bet-amount",
+        type: "INTEGER",
+        description: "The amount of money you want to bet on each slot.",
+        required: true
+    }]
 };

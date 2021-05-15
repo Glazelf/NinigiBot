@@ -37,5 +37,11 @@ exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "tohex",
-    aliases: ["todecimal"]
+    aliases: ["todecimal"],
+    description: "Convert a number to hexadecimal.",
+    options: [{
+        name: "input",
+        type: "INTEGER",
+        description: "Input number."
+    }]
 };

@@ -32,5 +32,17 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "dm",
-    aliases: []
+    aliases: [],
+    description: "DMs a user.",
+    options: [{
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID.",
+        required: true
+    }, {
+        name: "input",
+        type: "STRING",
+        description: "Text message to DM.",
+        required: true
+    }]
 };

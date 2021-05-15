@@ -433,5 +433,50 @@ ${type2Emote} ${type2Name}`;
 
 module.exports.config = {
     name: "pokemon",
-    aliases: ["pkm", "pkmn"]
+    aliases: ["pkm", "pkmn"],
+    description: "Shows Pokémon data.",
+    options: [{
+        name: "ability",
+        type: "SUB_COMMAND",
+        description: "Get info on an ability.",
+        options: [{
+            name: "ability-name",
+            type: "STRING",
+            description: "Get ability info by English name.",
+            required: true
+        }]
+    }, {
+        name: "item",
+        type: "SUB_COMMAND",
+        description: "Get info on an item.",
+        options: [{
+            name: "item-name",
+            type: "STRING",
+            description: "Get item info by English name.",
+            required: true
+        }]
+    }, {
+        name: "move",
+        type: "SUB_COMMAND",
+        description: "Get info on a move.",
+        options: [{
+            name: "move-name",
+            type: "STRING",
+            description: "Get move info by English name.",
+            required: true
+        }]
+    }, {
+        name: "pokemon",
+        type: "SUB_COMMAND",
+        description: "Get info on a Pokémon.",
+        options: [{
+            name: "pokemon-name",
+            type: "STRING",
+            description: "Get Pokémon info by English name.",
+        }, {
+            name: "pokemon-id",
+            type: "INTEGER",
+            description: "Get Pokémon info by Pokédex number.",
+        }]
+    }]
 };

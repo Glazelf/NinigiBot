@@ -56,5 +56,11 @@ exports.run = (client, message, args) => {
 
 module.exports.config = {
     name: "purge",
-    aliases: ["clear"]
+    aliases: ["clear"],
+    description: "Bulk delete messages.",
+    options: [{
+        name: "amount",
+        type: "INTEGER",
+        description: "The amount of messages to delete."
+    }]
 };

@@ -55,5 +55,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "ban",
-    aliases: []
+    aliases: [],
+    description: "Bans target user.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

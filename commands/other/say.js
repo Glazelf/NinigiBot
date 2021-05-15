@@ -60,5 +60,11 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "say",
-    aliases: []
+    aliases: [],
+    description: "Makes the bot repeat text.",
+    options: [{
+        name: "input",
+        type: "STRING",
+        description: "Text to make the bot say."
+    }]
 };

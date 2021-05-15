@@ -61,5 +61,37 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "rps",
-    aliases: []
+    aliases: [],
+    description: "Bet money on a game of rock, paper, scissors.",
+    options: [{
+        name: "rock",
+        type: "SUB_COMMAND",
+        description: "Bet on rock.",
+        options: [{
+            name: "bet-amount",
+            type: "INTEGER",
+            description: "The amount of money you want to bet.",
+            required: true
+        }]
+    }, {
+        name: "paper",
+        type: "SUB_COMMAND",
+        description: "Bet on paper.",
+        options: [{
+            name: "bet-amount",
+            type: "INTEGER",
+            description: "The amount of money you want to bet.",
+            required: true
+        }]
+    }, {
+        name: "scissors",
+        type: "SUB_COMMAND",
+        description: "Bet on scissors.",
+        options: [{
+            name: "bet-amount",
+            type: "INTEGER",
+            description: "The amount of money you want to bet.",
+            required: true
+        }]
+    }]
 };

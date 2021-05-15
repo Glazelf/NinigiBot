@@ -38,5 +38,11 @@ exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "reload",
-    aliases: []
+    aliases: [],
+    description: "Reload a command file.",
+    options: [{
+        name: "command",
+        type: "STRING",
+        description: "Name of the command to reload."
+    }]
 };

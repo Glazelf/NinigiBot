@@ -12,5 +12,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "invite",
-    aliases: []
+    aliases: [],
+    description: `Sends an invite to add this bot to your server.`
 };

@@ -45,5 +45,15 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "shop",
-    aliases: ["store"]
+    aliases: ["store"],
+    description: "Displays items in the shop.",
+    options: [{
+        name: "equipment",
+        type: "SUB_COMMAND",
+        description: "Equipment shop."
+    }, {
+        name: "food",
+        type: "SUB_COMMAND",
+        description: "Food shop."
+    }]
 };

@@ -79,5 +79,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "invert",
-    aliases: []
+    aliases: [],
+    description: "Invert a user's profile picture.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

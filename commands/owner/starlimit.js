@@ -25,5 +25,11 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "starlimit",
-    aliases: ["sl"]
+    aliases: ["sl"],
+    description: "Change the star amount to appear on starboard.",
+    options: [{
+        name: "amount",
+        type: "INTEGER",
+        description: "Amount of stars required."
+    }]
 };

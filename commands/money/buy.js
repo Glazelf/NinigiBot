@@ -52,5 +52,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "buy",
-    aliases: []
+    aliases: [],
+    description: "Buy an item from the shop.",
+    optiosn: [{
+        name: "item-name",
+        type: "STRING",
+        description: "The name of the item you want to buy.",
+        required: true
+    }]
 };

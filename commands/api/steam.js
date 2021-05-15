@@ -162,5 +162,27 @@ ${checkDays(userCreated)}`;
 
 module.exports.config = {
     name: "steam",
-    aliases: []
+    aliases: [],
+    description: "Shows Steam data",
+    options: [{
+        name: "user",
+        type: "SUB_COMMAND",
+        description: "Get info on a user.",
+        options: [{
+            name: "user-id",
+            type: "STRING",
+            description: "Target user's ID.",
+            required: true
+        }]
+    }, {
+        name: "game",
+        type: "SUB_COMMAND",
+        description: "Get info on a game.",
+        options: [{
+            name: "game-id",
+            type: "STRING",
+            description: "Target game's ID.",
+            required: true
+        }]
+    }]
 };

@@ -87,5 +87,12 @@ Example: \`${prefix}role Minecraft\``;
 
 module.exports.config = {
     name: "role",
-    aliases: ["roles", "rank"]
+    aliases: ["roles", "rank"],
+    description: "Toggles an eligible role.",
+    options: [{
+        name: "role-name",
+        type: "STRING",
+        description: "Specify the role name. Type \"help\" to see a list of eligible roles.",
+        required: true
+    }]
 };
