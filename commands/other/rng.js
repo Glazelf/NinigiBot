@@ -38,7 +38,7 @@ exports.run = async (client, message) => {
 module.exports.config = {
     name: "rng",
     aliases: ["random", "number"],
-    description: "Generate a random number between two numbers inclusive.",
+    description: "Generate a random number.",
     options: [{
         name: "numbers",
         type: "STRING",
