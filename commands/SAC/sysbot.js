@@ -44,19 +44,19 @@ module.exports.run = async (client, message) => {
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
-        return message.reply(`Hey, here's a list of Sysbots and their status:
-> **Format:** Bot (prefix): status (\`Host#0001\`)
-> **Pokémon bots:**
-> ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
-> ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
-> ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
-> ${Miku} (!): ${MikuStatus} (\`${Xenoseon}\`)
-> **ACNH bots:**
-> ${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
-> ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
+        return message.reply(`Here's a list of Sysbots and their status:
+**Format:** Bot (prefix): status (\`Host#0001\`)
+**Pokémon bots:**
+${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
+${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
+${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
+${Miku} (!): ${MikuStatus} (\`${Xenoseon}\`)
+**ACNH bots:**
+${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
+${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
-> Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
-> Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
+Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
+Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
 
     } catch (e) {
         // log error
