@@ -11,10 +11,10 @@ exports.run = async (client, message) => {
         client.application.commands.set([]);
 
         // Return message then destroy
-        message.reply(`Shutting down...`)
+        await message.reply(`Shutting down...`)
             .then(msg => client.destroy());
         console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
-        return;
+        return process.exit();
 
     } catch (e) {
         // log error
