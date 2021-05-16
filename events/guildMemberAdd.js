@@ -18,7 +18,7 @@ module.exports = async (client, member) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Member Joined ❤️`, icon)
             .setThumbnail(avatar)
-            .setDescription(`${member.guild.name} now has ${member.guild.memberCount} members.`)
+            .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
             .addField(`User: `, `${user} (${user.id})`)
             .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}
 ${checkDays(user.createdAt)}`, true)
