@@ -32,7 +32,7 @@ exports.run = async (client, message) => {
         if (message.content) {
             return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
         } else {
-            return message.reply(`Pong! Slash command latency is ${client.ws.ping}ms.`);
+            return message.reply(`Pong! Slash command latency is ${client.ws.ping}ms.`, { ephimeral: true });
         };
 
     } catch (e) {
