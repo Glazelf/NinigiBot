@@ -82,12 +82,15 @@ module.exports.run = async (client, message) => {
             if (channel.type != "category") channelCount += 1;
         });
 
+        // Owner
+        let owner = client.users.cache.get(client.config.ownerID);
+
         const botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
             .setThumbnail(avatar)
             .addField("Account:", client.user, true)
-            .addField("Owner:", "Glaze#6669", true)
+            .addField("Owner:", owner.tag, true)
             .addField("Prefix:", prefix, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count, true);
         botEmbed
