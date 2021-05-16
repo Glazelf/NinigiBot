@@ -8,6 +8,7 @@ module.exports = async (client) => {
         storedBalances.forEach(b => bank.currency.set(b.user_id, b));
         const getTime = require('../util/getTime');
 
+        // if (client.user.id !== "592760951103684618") {
         // Set slash commands
         if (!client.application?.owner) await client.application?.fetch();
 
@@ -18,6 +19,7 @@ module.exports = async (client) => {
                 console.log(e);
             };
         });
+        // };
 
         // Set bot status
         client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
