@@ -5,6 +5,7 @@ module.exports.run = async (client, message) => {
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
+        const checkDays = require('../../util/checkDays');
 
         let memberFetch = await message.guild.members.fetch();
         let user = message.mentions.users.first();
@@ -109,6 +110,14 @@ module.exports.run = async (client, message) => {
         // JoinRank
         let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
 
+        // Check Days
+        let daysJoined = await checkDays(memberCache.joinedAt);
+        let daysBoosting;
+        if (memberCache.premiumSince > 0) {
+            daysBoosting = await checkDays(memberCache.premiumSince);
+        };
+        let daysCreated = await checkDays(user.createdAt);
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.tag} (${user.id})`, avatar)
@@ -124,27 +133,17 @@ module.exports.run = async (client, message) => {
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}
-${checkDays(memberCache.joinedAt)}`, true);
-        if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}
-${checkDays(memberCache.premiumSince)}`, true);
+            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+        if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         profileEmbed
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}
-${checkDays(user.createdAt)}`, true)
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .setFooter(message.author.tag)
             .setTimestamp();
 
         return message.reply(profileEmbed);
 
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
-
         function getJoinRank(userID, guild) {
-            if (!guild.member(userID)) return;
+            if (!guild.members.cache.get(userID)) return;
             // Sort all users by join time
             let arr = guild.members.cache.array();
             arr.sort((a, b) => a.joinedAt - b.joinedAt);

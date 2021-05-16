@@ -4,6 +4,7 @@ module.exports = async (client, member) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
+        const checkDays = require('../util/checkDays');
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
@@ -14,14 +15,15 @@ module.exports = async (client, member) => {
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
+        let daysCreated = await checkDays(user.createdAt);
+
         const joinEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Member Joined ❤️`, icon)
             .setThumbnail(avatar)
             .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
             .addField(`User: `, `${user} (${user.id})`)
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}
-${checkDays(user.createdAt)}`, true)
+            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .setFooter(member.user.tag)
             .setTimestamp();
 
