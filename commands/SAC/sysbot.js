@@ -12,7 +12,7 @@ module.exports.run = async (client, message) => {
         let Artic = client.users.cache.get("353184551096418316");
         // let Shion = client.users.cache.get("685608164506337351");
         // let Exorcism = client.users.cache.get("465892606417567747");
-        let Xenoseon = "Xenoseon#1604";
+        // let Xenoseon = "Xenoseon#1604"; // 268790953572040704
 
         // Bots
         // PKM
@@ -21,7 +21,7 @@ module.exports.run = async (client, message) => {
         let Glaceon = client.users.cache.get("777555048104067082");
         // let BettyBot = client.users.cache.get("790506481630969869");
         // let Arkos = client.users.cache.get("702604221714923691");
-        let Miku = client.users.cache.get("752902915508666499");
+        // let Miku = client.users.cache.get("752902915508666499");
         // ACNH
         let Ribbot = client.users.cache.get("739823632267608135");
         let ACFlare = client.users.cache.get("792174299716386867");
@@ -33,7 +33,6 @@ module.exports.run = async (client, message) => {
         let KonohanaStatus = onlineString;
         let Flar3Status = onlineString;
         let GlaceonStatus = onlineString;
-        let MikuStatus = onlineString
         let RibbotStatus = onlineString;
         let ACFlareStatus = onlineString;
 
@@ -50,7 +49,6 @@ module.exports.run = async (client, message) => {
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
 ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
 ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
-${Miku} (!): ${MikuStatus} (\`${Xenoseon}\`)
 **ACNH bots:**
 ${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
 ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
