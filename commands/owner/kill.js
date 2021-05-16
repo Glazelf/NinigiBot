@@ -4,9 +4,16 @@ exports.run = (client, message) => {
     try {
         if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
-        // send channel a message that you're killing bot [optional]
+        const getTime = require('../util/getTime');
+        let timestamp = await getTime();
+
+        // Delete all commands incl. slash commands
+        client.application.commands.set([]);
+
+        // Return message then destroy
         message.reply(`Shutting down...`)
             .then(msg => client.destroy());
+        console.log(`Bot killed by ${message.author}. (${timestamp})`);
         return;
 
     } catch (e) {
