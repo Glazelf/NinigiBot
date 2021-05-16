@@ -10,6 +10,9 @@ module.exports = async (exception, client, message = null) => {
         console.log(`Error at ${timestamp}:`);
         console.log(exception);
 
+        let user = message.author
+        if (!message.author) user = message.user
+
         // Stop typing
         if (message) message.channel.stopTyping(true);
 
@@ -18,7 +21,7 @@ module.exports = async (exception, client, message = null) => {
 Link: ${message.url}
 Error:
 \`\`\`${exception}\`\`\`
-Message by ${message.user.tag}:
+Message by ${user.tag}:
 \`\`\`${message.content}\`\`\`` : `An error occurred:
 \`\`\`${exception}\`\`\``;
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
