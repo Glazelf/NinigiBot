@@ -1,10 +1,10 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
 
-        const getTime = require('../util/getTime');
+        const getTime = require('../../util/getTime');
         let timestamp = await getTime();
 
         // Delete all commands incl. slash commands
@@ -13,7 +13,7 @@ exports.run = (client, message) => {
         // Return message then destroy
         message.reply(`Shutting down...`)
             .then(msg => client.destroy());
-        console.log(`Bot killed by ${message.author}. (${timestamp})`);
+        console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
         return;
 
     } catch (e) {
