@@ -46,12 +46,8 @@ module.exports.config = {
         type: "CHANNEL",
         description: "Specify channel by mention."
     }, {
-        name: "channel-name",
-        type: "STRING",
-        description: "Specify channel by name."
-    }, {
         name: "channel-id",
         type: "STRING",
-        description: "Specify channel by ID."
+        description: "Specify channel by name or ID."
     }]
 };
