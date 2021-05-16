@@ -10,8 +10,11 @@ module.exports = async (exception, client, message = null) => {
         console.log(`Error at ${timestamp}:`);
         console.log(exception);
 
-        let user = message.author
-        if (!message.author) user = message.user
+        let user;
+        if (message) {
+            user = message.author;
+            if (!message.author) user = message.user;
+        };
 
         // Stop typing
         if (message) message.channel.stopTyping(true);
