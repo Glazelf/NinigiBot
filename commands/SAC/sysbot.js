@@ -39,7 +39,6 @@ module.exports.run = async (client, message) => {
         if (Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
         if (Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
         if (Glaceon.presence.status == offlineStatus) GlaceonStatus = offlineString;
-        if (Miku.presence.status == offlineStatus) MikuStatus = offlineString;
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
