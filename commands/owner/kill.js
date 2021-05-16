@@ -7,8 +7,10 @@ exports.run = async (client, message) => {
         const getTime = require('../../util/getTime');
         let timestamp = await getTime();
 
-        // Delete all commands incl. slash commands
+        // Delete all global commands
         client.application.commands.set([]);
+        // Delete SAC specific commands
+        client.guilds.cache.get(client.config.botServerID).commands.set([]);
 
         // Return message then destroy
         await message.reply(`Shutting down...`)

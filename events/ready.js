@@ -11,18 +11,19 @@ module.exports = async (client) => {
         // Set slash commands
         if (!client.application?.owner) await client.application?.fetch();
 
-        let PrivateCommands = ["dm", "eval", "item", "kill", "moneyadd", "reload", "restart", "starlimit"];
+        let PrivateCommands = ["dm", "eval", "item", "kill", "moneyadd", "reload", "restart", "starlimit", "battle"];
         let SACCommands = ["rule", "sysbot"];
 
         await client.commands.forEach(command => {
             try {
-                if (PrivateCommands.includes(command.config.name)) {
-                    return;
-                } else if (SACCommands.includes(command.config.name)) {
-                    client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                } else {
-                    client.application?.commands.create(command.config);
-                };
+                client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
+                // if (PrivateCommands.includes(command.config.name)) {
+                //     return;
+                // } else if (SACCommands.includes(command.config.name)) {
+                //     client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
+                // } else {
+                //     client.application?.commands.create(command.config);
+                // };
             } catch (e) {
                 console.log(e);
             };
