@@ -1,6 +1,7 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
+        console.log(args)
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -11,7 +12,7 @@ module.exports.run = async (client, message) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        const args = message.content.split(' ');
+        args = message.content.split(' ');
         if (!args[1]) return message.reply(`You need to provide either a subcommand or a Pokémon to look up.`);
 
         let subCommand = args[1].toLowerCase();
