@@ -8,8 +8,7 @@ module.exports.run = async (client, message) => {
         let top = 10;
         let topMembersFormatted = "";
 
-        message.guild.members.fetch();
-
+        await message.guild.members.fetch();
         await message.guild.members.cache.forEach(member => {
             let joinRank = getJoinRank(member.id, message.guild);
             memberList.push({ joinRank: joinRank, memberTag: member.user.tag });
