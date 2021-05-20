@@ -106,7 +106,9 @@ module.exports.run = async (client, message) => {
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${guild.name} (${guild.id})`, icon)
-            .setThumbnail(icon)
+            .setThumbnail(icon);
+        if (guild.description) serverEmbed.setDescription(guild.description);
+        serverEmbed
             .addField("Owner:", guildOwner, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
