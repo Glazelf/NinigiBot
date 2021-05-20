@@ -20,7 +20,7 @@ module.exports = async (exception, client, message = null) => {
         if (message) message.channel.stopTyping(true);
 
         // log to dev channel
-        let baseMessage = message.content ? `An error occurred in ${message.channel}!
+        let baseMessage = message ? `An error occurred in ${message.channel}!
 Link: ${message.url}
 Error:
 \`\`\`${exception}\`\`\`
