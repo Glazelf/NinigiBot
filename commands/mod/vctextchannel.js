@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args = null) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldChannel) {
-                return message.reply(`The current VC text channel is <#${oldChannel.channel_id}>. ${globalVars.starboardLimit}.`);
+                return message.reply(`The current VC text channel is <#${oldChannel.channel_id}>.`);
             };
             return message.reply(`Please provide a valid channel or \`disable\`.`);
         };
