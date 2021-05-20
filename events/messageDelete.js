@@ -6,7 +6,14 @@ module.exports = async (client, message) => {
 
         if (!message.guild) return;
 
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels, StarboardMessages } = require('../database/dbObjects');
+
+        let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
+        if (messageDB) {
+            let starboardMessage = client.channels.cache.get(messageDB.starboard_channel_id).messages.cache.fetch(messageDB.starboard_message_id);
+            if (starboardMessage) starboardMessage.delete();
+        };
+
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);

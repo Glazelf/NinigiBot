@@ -20,7 +20,6 @@ module.exports = async (client, message) => {
         };
 
         const autoMod = require('../util/autoMod');
-        const starboard = require('../util/starboard');
 
         // Call image
         let messageImage = null;
@@ -52,9 +51,6 @@ module.exports = async (client, message) => {
         };
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
-
-        // Starboard functionality
-        starboard(message, client);
 
         // Ignore all bots and welcome messages
         if (message.author.bot) return;
