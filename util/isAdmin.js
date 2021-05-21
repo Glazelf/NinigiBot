@@ -8,7 +8,7 @@ module.exports = async (member, client) => {
 
     } catch (e) {
         // log error
-        const logger = require('../util/logger');
+        const logger = require('./logger');
 
         logger(e, client);
     };

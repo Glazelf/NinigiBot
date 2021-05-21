@@ -9,7 +9,7 @@ module.exports = async (date, client) => {
 
     } catch (e) {
         // log error
-        const logger = require('../util/logger');
+        const logger = require('./logger');
 
         logger(e, client);
     };
