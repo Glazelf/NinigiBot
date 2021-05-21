@@ -37,7 +37,6 @@ exports.run = async (client, message) => {
                 }
 
                 return sendMessage(client, message, `You've bought a ${item.name}.`);
-
             };
         };
         return sendMessage(client, message, `That item doesn't exist.`);
