@@ -9,9 +9,6 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        await member.guild.members.fetch(member.id);
-        await client.users.fetch(member.id);
-
         let user = client.users.cache.get(member.id);
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
