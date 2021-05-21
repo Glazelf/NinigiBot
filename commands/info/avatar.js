@@ -1,5 +1,8 @@
+const sendMessage = require('../../util/sendMessage');
+
 module.exports.run = async (client, message) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
@@ -18,11 +21,9 @@ module.exports.run = async (client, message) => {
 
         let avatar = null;
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-        if (!avatar) return message.reply(`${user.tag} doesn't have an avatar.`);
+        if (!avatar) return sendMessage(client, message, `${user.tag} doesn't have an avatar.`);
 
-        return message.reply(totalMessage, {
-            files: [avatar]
-        });
+        return sendMessage(client, message, totalMessage, true, [avatar]);
 
     } catch (e) {
         // log error

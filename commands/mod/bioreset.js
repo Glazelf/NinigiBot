@@ -2,8 +2,9 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_MEMBERS") && !isAdmin(message.member, client) && message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_MEMBERS") && !isAdmin(message.member, client) && message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
         let user = message.mentions.users.first();
@@ -14,11 +15,11 @@ module.exports.run = async (client, message) => {
             user = client.users.cache.get(userID);
         };
 
-        if (!user) return message.reply(`Please use a proper mention if you want to reset someones bio.`);
+        if (!user) return sendMessage(client, message, `Please use a proper mention if you want to reset someones bio.`);
 
         bank.currency.biography(user.id, "None");
 
-        return message.reply(`Successfully reset ${user.tag}'s bio.`);
+        return sendMessage(client, message, `Successfully reset ${user.tag}'s bio.`);
 
     } catch (e) {
         // log error

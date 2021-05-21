@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
@@ -26,7 +27,7 @@ module.exports.run = async (client, message) => {
         };
 
         let memberCache = memberFetch.get(user.id);
-        if (!memberCache) return message.channel.send(`> No member information could be found for this user, ${message.author}.`);
+        if (!memberCache) return sendMessage(client, message, `No member information could be found for this user.`);
 
         // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
@@ -140,7 +141,7 @@ module.exports.run = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(profileEmbed);
+        return sendMessage(client, message, profileEmbed);
 
         function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;

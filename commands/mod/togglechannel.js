@@ -2,8 +2,9 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { DisabledChannels } = require('../../database/dbObjects');
 
@@ -26,10 +27,10 @@ module.exports.run = async (client, message) => {
 
         if (channelID) {
             await channelID.destroy();
-            return message.reply(`Commands can now be used in ${channel} again.`);
+            return sendMessage(client, message, `Commands can now be used in ${channel} again.`);
         } else {
             await DisabledChannels.upsert({ channel_id: channel.id, name: channelName });
-            return message.reply(`Commands can no longer be used in ${channel}.`);
+            return sendMessage(client, message, `Commands can no longer be used in ${channel}.`);
         };
 
     } catch (e) {

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 exports.run = async (client, message) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
         const args = message.content.slice(1).trim().split(/ +/);
         const target = message.mentions.users.first() || message.author;
@@ -13,16 +14,16 @@ exports.run = async (client, message) => {
 
             if (args[1] === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return message.reply(`${target.toString()} has no food!`);
-                return message.reply(`${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);
+                return sendMessage(client, message, `${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
             } else if (args[1] === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return message.reply(`${target.toString()} has no equipment!`);
-                return message.reply(`${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no equipment!`);
+                return sendMessage(client, message, `${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
             } else if (args[1] === 'keys') {
                 items = await user.getKeys();
-                if (!items.length) return message.reply(`${target.toString()} has no key items!`);
-                return message.reply(`${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no key items!`);
+                return sendMessage(client, message, `${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
                 let description = `${target.toString()}'s inventory:`;
                 const length = description.length;
@@ -39,11 +40,11 @@ exports.run = async (client, message) => {
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return message.reply(`${target.toString()} has nothing!`);
-                return message.reply(description);
+                if (description.length === length) if (!items.length) return sendMessage(client, message, `${target.toString()} has nothing!`);
+                return sendMessage(client, message, description);
             };
         };
-        return message.reply(`Please specify a category: items, food or equipment.`);
+        return sendMessage(client, message, `Please specify a category: items, food or equipment.`);
 
     } catch (e) {
         // log error

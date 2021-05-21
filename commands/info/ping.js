@@ -31,11 +31,11 @@ exports.run = async (client, message) => {
         };
 
         // Send message then edit message to reflect difference in creation timestamps
-        if (message.type == 'text') {
+        if (message.type == 'DEFAULT') {
             return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
         } else {
             let replyText = `Pong! Slash command latency is ${client.ws.ping}ms.`;
-            return sendMessage(client, message, replyText, true);
+            return sendMessage(client, message, replyText);
         };
 
     } catch (e) {

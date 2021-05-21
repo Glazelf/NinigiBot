@@ -2,7 +2,8 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const getTime = require('../../util/getTime');
         let timestamp = await getTime();
@@ -13,9 +14,9 @@ exports.run = async (client, message) => {
         client.guilds.cache.get(client.config.botServerID).commands.set([]);
 
         // Return message then destroy
-        await message.reply(`Shutting down...`)
-            .then(msg => client.destroy());
+        await sendMessage(client, message, `Shutting down...`);
         console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
+        await client.destroy()
         return process.exit();
 
     } catch (e) {

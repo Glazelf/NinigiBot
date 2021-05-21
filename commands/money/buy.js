@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
@@ -11,10 +12,9 @@ exports.run = async (client, message) => {
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });
             if (item) {
-                if (item.cost === 0) return message.reply(`That item doesn't exist.`);
+                if (item.cost === 0) return sendMessage(client, message, `That item doesn't exist.`);
                 if (item.cost > bank.currency.getBalance(message.author.id)) {
-                    return message.reply(`You don't have enough currency.
-> The ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+                    return sendMessage(client, message, `You don't have enough currency.\nThe ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
                 };
                 const user = await Users.findOne({ where: { user_id: message.author.id } });
 
@@ -36,11 +36,11 @@ exports.run = async (client, message) => {
                     //     await user.changeRoom(item);
                 }
 
-                return message.reply(`You've bought a ${item.name}.`);
+                return sendMessage(client, message, `You've bought a ${item.name}.`);
 
             };
         };
-        return message.reply(`That item doesn't exist.`);
+        return sendMessage(client, message, `That item doesn't exist.`);
 
     } catch (e) {
         // log error

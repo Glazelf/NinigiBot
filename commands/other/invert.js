@@ -1,5 +1,6 @@
 module.exports.run = async (client, message) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const Canvas = require("canvas");
 
@@ -65,9 +66,7 @@ module.exports.run = async (client, message) => {
         ctx.closePath();
         ctx.clip();
 
-        return message.reply(totalMessage, {
-            files: [canvas.toBuffer()]
-        });
+        return sendMessage(client, message, totalMessage, true, [canvas.toBuffer()]);
 
     } catch (e) {
         // log error

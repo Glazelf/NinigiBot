@@ -51,6 +51,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
         const { Prefixes } = require('../../database/dbObjects');
@@ -65,14 +66,14 @@ module.exports.run = async (client, message) => {
         let shinx;
         let master;
         if (message.mentions.members.first()) {
-            if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+            if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             const expectedId = /<@!(\d+)/.exec(args[0])
             const targetId = message.mentions.members.first().id
             if (expectedId && expectedId[1] == targetId) {
                 shinx = await bank.currency.getShinx(targetId);
                 master = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return message.channel.send(`The syntax is \`${prefix}shinx <target> <usual command>\`, ${message.author}.`);
+            } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
         } else {
             master = message.author
             shinx = await bank.currency.getShinx(master.id);
@@ -82,13 +83,13 @@ module.exports.run = async (client, message) => {
         const now = new Date();
 
         if (args[0] === 'level') {
-            if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+            if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
-            else return message.channel.send(`Please specify a valid number.`);
-            return message.channel.send(`Shinx leveled up to level ${shinx.levelUp(parseInt(level))}`);
+            else return sendMessage(client, message, `Please specify a valid number.`);
+            return sendMessage(client, message, `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}`);
         } else if (args[0] === 'gender') {
-            return shinx.trans() ? message.channel.send(`> Your character is now male, ${master}!`) : message.channel.send(`> Your character is now female, ${master}!`);
+            return shinx.trans() ? sendMessage(client, message, `Your character is now male, ${master}!`) : sendMessage(client, message, `Your character is now female, ${master}!`);
         } else if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
@@ -122,7 +123,7 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/sleepicon.png');
                 ctx.drawImage(img, 270, 155);
             };
-            return message.channel.send(new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
+            return sendMessage(client, message, new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
         } else if (args[0] == 'tap' || shinx.sleeping) {
             if (args[0] == 'tap') {
                 shinx.rest();
@@ -148,11 +149,11 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/winNight.png');
                 ctx.drawImage(img, 198, 52);
             };
-            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
+            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
         } else if (args[0] === 'nick') {
             args.shift()
             const nickname = args.join(' ');
-            if (nickname.length < 2 || nickname.length > 10) return message.channel.send(`> Please specify a valid nickname between 2 and 10 characters, ${message.author}.`);
+            if (nickname.length < 2 || nickname.length > 10) return sendMessage(client, message, `Please specify a valid nickname between 2 and 10 characters.`);
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
@@ -166,7 +167,7 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
             const text = `Nickname changed to ${nickname}!`;
-            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
+            return sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
 
         } else if (args[0] === 'shiny') {
             const { Users } = require('../../database/dbObjects');
@@ -174,7 +175,7 @@ module.exports.run = async (client, message) => {
             const keys = await user.getKeys();
             if (!keys) return
             const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
-            if (shinyCharm.length < 1) return message.channel.send(`> You need a Shiny Charm to do this, ${message.author}.`);
+            if (shinyCharm.length < 1) return sendMessage(client, message, `You need a Shiny Charm to do this.`);
             canvas = Canvas.createCanvas(255, 192);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/sky.png');
@@ -185,8 +186,8 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/sparkle.png');
                 ctx.drawImage(img, 49, 10);
             };
-            const text = shinx.shine() ? `> Now your Shinx shines, ${master}!` : `> Your Shinx doesnt shine anymore, ${master}.`;
-            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+            const text = shinx.shine() ? `Now your Shinx shines, ${master}!` : `Your Shinx doesnt shine anymore, ${master}.`;
+            return sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
             args.shift();
@@ -194,9 +195,9 @@ module.exports.run = async (client, message) => {
 
             const user = await Users.findOne({ where: { user_id: master.id } });
             const equipments = await user.getEquipments();
-            if (!equipments) return message.channel.send(`> You don't have any equipment, ${master}.`);
+            if (!equipments) return sendMessage(client, message, `You don't have any equipment, ${master}.`);
             const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
-            if (equipment.length < 1) return message.channel.send(`> You don't have that equipment, ${master}.`);
+            if (equipment.length < 1) return sendMessage(client, message, `You don't have that equipment, ${master}.`);
             shinx.equip(equipment[0].equipment.name)
 
             canvas = Canvas.createCanvas(428, 310);
@@ -210,7 +211,7 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32)
             const text = `Equipment changed to ${equipmentName}!`;
-            return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
+            return sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'))
         } else if (args[0] == 'feed') {
             const { Users } = require('../../database/dbObjects');
             args.shift()
@@ -218,9 +219,9 @@ module.exports.run = async (client, message) => {
 
             const user = await Users.findOne({ where: { user_id: master.id } });
             const foods = await user.getFoods();
-            if (!foods) return message.channel.send(`> You don't have any food to give, ${master}.`);
+            if (!foods) return sendMessage(client, message, `You don't have any food to give, ${master}.`);
             const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
-            if (food.length < 1) return message.channel.send(`> You don't have that food, ${master}.`);
+            if (food.length < 1) return sendMessage(client, message, `You don't have that food, ${master}.`);
             user.removeFood(food[0]);
             shinx.feed(food[0].food.recovery)
 
@@ -254,7 +255,7 @@ module.exports.run = async (client, message) => {
                 img = await Canvas.loadImage('./assets/dinNight.png');
                 ctx.drawImage(img, 199, 0);
             };
-            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
+            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
 
         } else if (args[0] == 'play') {
             canvas = Canvas.createCanvas(578, 398);
@@ -297,7 +298,7 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.play(reaction[2]);
-            return message.channel.send(`${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'park.png'));
+            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'park.png'));
 
         } else {
             canvas = Canvas.createCanvas(256, 160);
@@ -318,7 +319,7 @@ module.exports.run = async (client, message) => {
             img = await Canvas.loadImage('./assets/portraits.png');
             let conversation = await bank.currency.getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
-            return message.channel.send(`${shinx.nick} ${conversation.quote}`, new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
+            return sendMessage(client, message, `${shinx.nick} ${conversation.quote}`, new Discord.MessageAttachment(canvas.toBuffer(), 'talking.png'));
         };
 
     } catch (e) {

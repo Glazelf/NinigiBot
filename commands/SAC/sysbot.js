@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         if (message.guild.id !== client.config.botServerID) return;
 
         let rulesChannelID = "549220480490536972";
@@ -42,7 +43,7 @@ module.exports.run = async (client, message) => {
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
-        return message.reply(`Here's a list of Sysbots and their status:
+        return sendMessage(client, message, `Here's a list of Sysbots and their status:
 **Format:** Bot (prefix): status (\`Host#0001\`)
 **Pokémon bots:**
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)

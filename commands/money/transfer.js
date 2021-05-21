@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const input = message.content.split(` `, 3);
         const currentAmount = bank.currency.getBalance(message.author.id);
@@ -14,15 +15,15 @@ exports.run = async (client, message) => {
         if (!transferTarget) return;
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}`;
 
-        if (transferTarget == message.author) return message.reply(`You can't transfer money to yourself.`)
-        if (!transferAmount || isNaN(transferAmount)) return message.reply(`You need to specify a valid number to transfer.`);
-        if (transferAmount > currentAmount) return message.reply(`You don't have enough money to transfer that much, you only have ${userBalance}.`);
-        if (transferAmount <= 0) return message.reply(`Please enter an amount greater than zero.`);
+        if (transferTarget == message.author) return sendMessage(client, message, `You can't transfer money to yourself.`)
+        if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `You need to specify a valid number to transfer.`);
+        if (transferAmount > currentAmount) return sendMessage(client, message, `You don't have enough money to transfer that much, you only have ${userBalance}.`);
+        if (transferAmount <= 0) return sendMessage(client, message, `Please enter an amount greater than zero.`);
 
         bank.currency.add(message.author.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return message.reply(`Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}.`);
+        return sendMessage(client, message, `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}.`);
 
     } catch (e) {
         // log error

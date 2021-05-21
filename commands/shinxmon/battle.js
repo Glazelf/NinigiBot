@@ -12,30 +12,31 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         // const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
         const input = message.content.slice(1).trim();
         const [, , target] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (target.length < 1) return message.channel.send(`> Please specify a user to battle, ${message.author}.`);
+        if (target.length < 1) return sendMessage(client, message, `Please specify a user to battle.`);
         const trainers = [message.author, message.mentions.users.first()];
-        if (!trainers[1]) return message.channel.send(`> Please tag a valid person to battle, ${message.author}.`)
-        if (trainers[0].id === trainers[1].id) return message.channel.send(`> You cannot battle yourself, ${message.author}!`);
-        if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
+        if (!trainers[1]) return sendMessage(client, message, `Please tag a valid person to battle.`)
+        if (trainers[0].id === trainers[1].id) return sendMessage(client, message, `You cannot battle yourself!`);
+        if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
         shinxes = [];
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
             shinx.see();
-            if (shinx.sleeping) return message.channel.send(`> At least one of your the participating Shinxes is asleep, ${message.author}.`);
+            if (shinx.sleeping) return sendMessage(client, message, `At least one of your the participating Shinxes is asleep.`);
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
-        await message.channel.send(`> Do you accept the challenge, ${trainers[1]}? (y\\n)`);
+        await sendMessage(client, message, `Do you accept the challenge, ${trainers[1]}? (y\\n)`);
         const accepts = await message.channel.awaitMessages(m => m.author.id == trainers[1].id, { max: 1, time: 10000 });
-        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return message.channel.send(`> Battle has been cancelled, ${message.author}.`);
-        if (globalVars.battling.yes) return message.channel.send(`> Theres already a battle going on, ${message.author}.`);
+        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage(client, message, `Battle has been cancelled.`);
+        if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
         globalVars.battling.yes = true;
         let text = '';
         const avatars = [trainers[0].displayAvatarURL({ format: "png", dynamic: true }), trainers[1].displayAvatarURL({ format: "png", dynamic: true })];
@@ -52,7 +53,7 @@ module.exports.run = async (client, message) => {
             const avatar = await Canvas.loadImage(avatars[i]);
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
         };
-        await message.channel.send(new Discord.MessageAttachment(canvas.toBuffer()));
+        await sendMessage(client, message, new Discord.MessageAttachment(canvas.toBuffer()));
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -79,7 +80,7 @@ module.exports.run = async (client, message) => {
                 ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
             };
         };
-        if (text.length > 0) message.channel.send(text);
+        if (text.length > 0) sendMessage(client, message, text);
         while (true) {
             text = '';
             for (let i = 0; i < 2; i++) {
@@ -114,7 +115,7 @@ module.exports.run = async (client, message) => {
 
                     for (let p = 0; p < 2; p++) await bank.currency.updateShinx(shinxes[p], p === i);
                     globalVars.battling.yes = false;
-                    return message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
+                    return sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer()));
                 } else {
                     if (result === -1) {
                         text += addLine(`${nicks[i]} lost his shield by blocking a deathblow!`);
@@ -154,7 +155,7 @@ module.exports.run = async (client, message) => {
                     text += addLine(`${nicks[i]} ${verb} some health!`);
                 };
             };
-            message.channel.send(text, new Discord.MessageAttachment(canvas.toBuffer()));
+            sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer()));
             await wait();
         };
 

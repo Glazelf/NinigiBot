@@ -2,6 +2,7 @@ module.exports.run = async (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         if (message.guild.id !== client.config.botServerID) return;
 
         const Discord = require("discord.js");
@@ -13,7 +14,7 @@ module.exports.run = async (client, message, args = null) => {
             prefix = globalVars.prefix;
         };
         let inputNumber = args[0];
-        if (isNaN(inputNumber)) return message.reply(`You must provide a valid number.`);
+        if (isNaN(inputNumber)) return sendMessage(client, message, `You must provide a valid number.`);
         let titleNumber = inputNumber;
 
         // Channels
@@ -126,7 +127,7 @@ Vanity URL: https://discord.gg/shinx`
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(ruleEmbed);
+        return sendMessage(client, message, ruleEmbed);
 
         async function getRule(object, input) {
             var keyList = Object.keys(object);

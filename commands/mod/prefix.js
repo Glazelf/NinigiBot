@@ -2,8 +2,9 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -12,17 +13,17 @@ module.exports.run = async (client, message) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldPrefix) {
-                return message.reply(`The current prefix is: \`${oldPrefix.prefix}\`.`);
+                return sendMessage(client, message, `The current prefix is: \`${oldPrefix.prefix}\`.`);
             };
-            return message.reply(`Please provide a valid string to change the prefix to.`);
+            return sendMessage(client, message, `Please provide a valid string to change the prefix to.`);
         };
         subCommand = subCommand.toLowerCase();
 
         if (oldPrefix) await oldPrefix.destroy();
-        if (subCommand == "?" || subCommand == "reset") return message.reply(`Prefix has been reset to \`?\`.`);
+        if (subCommand == "?" || subCommand == "reset") return sendMessage(client, message, `Prefix has been reset to \`?\`.`);
         await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });
 
-        return message.reply(`Prefix has been changed to \`${subCommand}\`.`);
+        return sendMessage(client, message, `Prefix has been changed to \`${subCommand}\`.`);
 
     } catch (e) {
         // log error

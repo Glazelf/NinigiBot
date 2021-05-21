@@ -2,8 +2,9 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { LogChannels } = require('../../database/dbObjects');
         let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
@@ -12,22 +13,22 @@ module.exports.run = async (client, message) => {
         let subCommand = args[1];
         if (!subCommand) {
             if (oldChannel) {
-                return message.reply(`The current logging channel is <#${oldChannel.channel_id}>.`);
+                return sendMessage(client, message, `The current logging channel is <#${oldChannel.channel_id}>.`);
             };
-            return message.reply(`Please provide a valid channel or \`disable\`.`);
+            return sendMessage(client, message, `Please provide a valid channel or \`disable\`.`);
         };
         subCommand = subCommand.toLowerCase();
 
         let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
-        if (!targetChannel && subCommand !== "disable") return message.reply(`That channel does not exist in this server.`);
+        if (!targetChannel && subCommand !== "disable") return sendMessage(client, message, `That channel does not exist in this server.`);
 
         if (oldChannel) await oldChannel.destroy();
-        if (subCommand == "disable") return message.reply(`Disabled logging functionality in **${message.guild.name}**.`);
+        if (subCommand == "disable") return sendMessage(client, message, `Disabled logging functionality in **${message.guild.name}**.`);
 
         await LogChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
 
-        return message.reply(`Logging has been added to ${targetChannel}.`);
+        return sendMessage(client, message, `Logging has been added to ${targetChannel}.`);
 
     } catch (e) {
         // log error

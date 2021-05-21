@@ -1,7 +1,7 @@
 module.exports.run = async (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
-        console.log(args)
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
         args = message.content.split(' ');
-        if (!args[1]) return message.reply(`You need to provide either a subcommand or a Pokémon to look up.`);
+        if (!args[1]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`, true);
 
         let subCommand = args[1].toLowerCase();
         let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
@@ -34,11 +34,11 @@ module.exports.run = async (client, message, args) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.reply(abilityEmbed);
+                        return sendMessage(client, message, abilityEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.reply(`Could not find the specified ability.`);
+                        return sendMessage(client, message, `Could not find the specified ability.`);
                     });
                 break;
 
@@ -58,11 +58,11 @@ module.exports.run = async (client, message, args) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.reply(itemEmbed);
+                        return sendMessage(client, message, itemEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.reply(`Could not find the specified item.`);
+                        return sendMessage(client, message, `Could not find the specified item.`);
                     });
                 break;
 
@@ -91,11 +91,11 @@ module.exports.run = async (client, message, args) => {
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.reply(moveEmbed);
+                        return sendMessage(client, message, moveEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.reply(`Could not find the specified move.`);
+                        return sendMessage(client, message, `Could not find the specified move.`);
                     });
                 break;
 
@@ -243,7 +243,7 @@ module.exports.run = async (client, message, args) => {
                                 })
                                 .catch(function (e) {
                                     // console.log(e);
-                                    return message.reply(`Could not find the specified Pokémon.`);
+                                    return sendMessage(client, message, `Could not find the specified Pokémon.`, true);
                                 });
                         };
 
@@ -335,11 +335,11 @@ BST: ${BST}`, false)
                             .setFooter(message.author.tag)
                             .setTimestamp();
 
-                        return message.reply(pkmEmbed);
+                        return sendMessage(client, message, pkmEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.reply(`Could not find the specified Pokémon.`);
+                        return sendMessage(client, message, `Could not find the specified Pokémon.`);
                     });
                 break;
         };

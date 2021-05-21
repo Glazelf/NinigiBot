@@ -2,14 +2,14 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(client.config.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, client.config.lackPerms);
 
         // send channel a message that you're resetting bot [optional]
-        message.reply(`Restarting...`)
-            .then(msg => client.destroy())
-            .then(() => client.login(client.config.token))
-            .then(message.reply(`Successfully restarted!`));
-        return;
+        await sendMessage(client, message, `Restarting...`);
+        await client.destroy();
+        await client.login(client.config.token);
+        return sendMessage(client, message, `Successfully restarted!`);
 
     } catch (e) {
         // log error

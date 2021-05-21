@@ -2,22 +2,23 @@ module.exports.run = async (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const input = args.join(" ");
         try {
             var evaled = eval(input);
         } catch (e) {
             // console.log(e);
-            return message.reply(`An error occurred and has been logged.`);
+            return sendMessage(client, message, `An error occurred and has been logged.`);
         };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
 
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
 
-        return message.reply(clean(evaled), { code: "js" });
+        return sendMessage(client, message, clean(evaled), true, [], "js");
 
         function clean(text) {
             if (typeof (text) === "string")

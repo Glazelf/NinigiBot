@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
         let memberList = [];
@@ -21,7 +22,7 @@ module.exports.run = async (client, message) => {
             topMembersFormatted += `${member.joinRank + 1}. ${member.memberTag}\n`;
         });
 
-        return message.channel.send(topMembersFormatted, { code: true });
+        return sendMessage(client, message, topMembersFormatted, false, null, true);
 
         function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;

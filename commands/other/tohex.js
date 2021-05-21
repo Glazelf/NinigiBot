@@ -2,6 +2,7 @@ exports.run = async (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -10,21 +11,21 @@ exports.run = async (client, message, args = null) => {
             prefix = globalVars.prefix;
         };
 
-        if (!args[0]) return message.reply(`Please provid an argument.`);
+        if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
 
         if (message.content.toLowerCase().startsWith(`${prefix}todecimal`)) {
             try {
                 let argHex = `0x${args[0]}`;
                 let hexInt = parseInt(argHex);
-                return message.reply(`${hexInt} (${message.author.tag})`, { code: "js" });
+                return sendMessage(client, message, `${hexInt} (${message.author.tag})`, true, [], "js");
             } catch (e) {
-                return message.reply(`An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
+                return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
             };
         } else {
-            if (isNaN(args[0])) return message.reply(`Please provide a valid number to convert to hex.`);
+            if (isNaN(args[0])) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
             let argInt = parseInt(args[0]);
             let hexString = argInt.toString(16).toUpperCase();
-            return message.reply(`${hexString} (${message.author.tag})`, { code: "js" });
+            return sendMessage(client, message, `${hexString} (${message.author.tag})`, true, [], "js");
         };
 
     } catch (e) {

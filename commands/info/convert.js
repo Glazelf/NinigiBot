@@ -1,11 +1,12 @@
 exports.run = (client, message) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         let split = message.content.split(` `, 3);
         let conversionType = split[1];
         let conversionValue = split[2];
 
-        if (!conversionValue) return message.reply(`You need to provide a number to calculate.`);
-        if (isNaN(conversionValue)) return message.reply(`What you provided isn't a number.`);
+        if (!conversionValue) return sendMessage(client, message, `You need to provide a number to calculate.`);
+        if (isNaN(conversionValue)) return sendMessage(client, message, `What you provided isn't a number.`);
         parseFloat(conversionValue);
 
         conversionType = conversionType.toLowerCase();
@@ -27,11 +28,11 @@ exports.run = (client, message) => {
                 typeReturn = "kilos";
                 break;
             default:
-                return message.reply(`You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs.`);
+                return sendMessage(client, message, `You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs.`);
         };
         conversionReturn = Math.round(conversionReturn * 100) / 100;
 
-        return message.reply(`${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}.`);
+        return sendMessage(client, message, `${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}.`);
 
     } catch (e) {
         // log error

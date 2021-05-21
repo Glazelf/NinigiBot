@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
         const helpEmbed = new Discord.MessageEmbed()
@@ -18,7 +19,7 @@ module.exports.run = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(helpEmbed);
+        return sendMessage(client, message, helpEmbed);
 
     } catch (e) {
         // log error

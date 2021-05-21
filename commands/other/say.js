@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
 
@@ -21,7 +22,7 @@ exports.run = async (client, message) => {
 
         // Catch empty argument
         if (textMessage.length < 1) {
-            return message.reply(`You need to specify text for me to say.`);
+            return sendMessage(client, message, `You need to specify text for me to say.`);
         };
 
         // Owner only function to send messages in different channels
@@ -30,24 +31,24 @@ exports.run = async (client, message) => {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
                 targetChannel.send(remoteMessage);
-                return message.reply(`Message succesfully sent to specified channel.`);
+                return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return message.reply(textMessage);
+                return sendMessage(client, message, textMessage);
             };
         } else if (isAdmin(message.member, client)) {
             // Return plain message if member is admin
-            return message.reply(textMessage);
+            return sendMessage(client, message, textMessage);
         } else {
             // Prevent using bot to go around ping permissions
             if (textMessage.includes("@")) {
-                return message.reply(`You need to have Administrator permissions to tag people using \`${prefix}say\`.`)
+                return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`)
             };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `"\`${textMessage}\`"
     > -${message.author}`;
-            return message.reply(textMessage);
+            return sendMessage(client, message, textMessage);
         };
 
     } catch (e) {

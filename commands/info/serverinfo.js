@@ -4,6 +4,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
 
@@ -131,7 +132,7 @@ ${checkDays(guild.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(serverEmbed);
+        return sendMessage(client, message, serverEmbed);
 
         function checkDays(date) {
             let now = new Date();

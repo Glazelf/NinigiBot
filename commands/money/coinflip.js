@@ -4,7 +4,8 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (cooldown.has(message.author.id)) return message.reply(`You are currently on cooldown from using this command.`);
+        const sendMessage = require('../../util/sendMessage');
+        if (cooldown.has(message.author.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
@@ -28,12 +29,12 @@ exports.run = (client, message) => {
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
 
-        if (!amount || isNaN(amount)) return message.reply(`You need to specify a valid number to gamble.`);
+        if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
         amount = Math.floor(amount);
-        if (amount <= 0) return message.reply(`Please enter an amount that's equal to or larger than 1.`);
+        if (amount <= 0) return sendMessage(client, message, `Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
-            return message.reply(`You only have ${Math.floor(balance)}${currency}.`);
+            return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
         };
 
         let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}.`;
@@ -45,7 +46,7 @@ exports.run = (client, message) => {
         };
 
         bank.currency.add(message.author.id, amount);
-        message.reply(returnString);
+        sendMessage(client, message, returnString);
 
         cooldown.add(message.author.id);
 

@@ -2,7 +2,8 @@ exports.run = async (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -12,12 +13,12 @@ exports.run = async (client, message, args = null) => {
             prefix = globalVars.prefix;
         };
 
-        if (!args || args.length < 1) return message.reply(`Must provide a command name to reload.`);
+        if (!args || args.length < 1) return sendMessage(client, message, `Must provide a command name to reload.`);
         const commandName = args[0];
 
         // Check if the command exists and is valid
         if (!client.commands.has(commandName)) {
-            return message.reply(`That command does not exist.`);
+            return sendMessage(client, message, `That command does not exist.`);
         };
 
         delete require.cache[require.resolve(`./${commandName}.js`)];
@@ -26,7 +27,7 @@ exports.run = async (client, message, args = null) => {
         client.commands.delete(commandName);
         const props = require(`./${commandName}.js`);
         client.commands.set(commandName, props);
-        return message.reply(`The command \`${prefix}${commandName}\` has been reloaded.`);
+        return sendMessage(client, message, `The command \`${prefix}${commandName}\` has been reloaded.`);
 
     } catch (e) {
         // log error

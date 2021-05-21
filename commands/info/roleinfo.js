@@ -1,8 +1,10 @@
+const sendMessage = require('../../util/sendMessage');
 
 exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         let DefaultEmbedColor = "#99AB5";
 
@@ -33,10 +35,10 @@ exports.run = async (client, message) => {
                 .setFooter(message.author.tag)
                 .setTimestamp();
 
-            return message.reply(noRoleEmbed);
+            return sendMessage(client, message, noRoleEmbed);
         };
 
-        if (!role) return message.reply(`I couldn't find that role. Make sure you provide a valid name or ID.`);
+        if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
 
         // Role color
         let roleColor = `#${role.color.toString(16)}`;
@@ -68,7 +70,7 @@ exports.run = async (client, message) => {
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(roleEmbed);
+        return sendMessage(client, message, roleEmbed);
 
     } catch (e) {
         // log error

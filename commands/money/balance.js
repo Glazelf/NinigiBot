@@ -2,6 +2,7 @@ exports.run = (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         let target = message.mentions.users.first();
 
@@ -15,7 +16,7 @@ exports.run = (client, message) => {
             target = message.author;
         };
 
-        return message.reply(`${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
+        return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
 
     } catch (e) {
         // log error

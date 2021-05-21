@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
+        const sendMessage = require('../../../util/sendMessage');
         const roulette = require('../../../affairs/roulette');
         const { bank } = require('../../../database/bank');
         const Discord = require("discord.js");
@@ -23,7 +24,7 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return message.channel.send('> No one wants to play any more Roulette? Well, see you next time!');
+                    return sendMessage(client, message, `No one wants to play any more Roulette? Well, see you next time!`, false);
                 };
 
                 const result = Math.floor(Math.random() * 37);
@@ -43,11 +44,11 @@ exports.run = async (client, message) => {
                 const results = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor(`Roulette`, avatar)
-                    .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... **${result}**!`)
+                    .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... ** ${result} ** !`)
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
-                message.channel.send(results);
+                sendMessage(client, message, results, false);
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
@@ -60,10 +61,10 @@ After some time, the roulette spins and we get the winer(s), who gets 36x the be
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setFooter(message.author.tag)
                 .setTimestamp();
-            message.reply(welcome);
+            sendMessage(client, message, welcome, false);
         } else {
             clearInterval(process);
-            message.channel.send('> Roulette closed! Hope to see you all again!');
+            sendMessage(client, message, `Roulette closed! Hope to see you all again!`, false);
         };
 
     } catch (e) {

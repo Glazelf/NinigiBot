@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { search } = require('../../util/search');
         const { Prefixes } = require('../../database/dbObjects');
@@ -13,17 +14,16 @@ exports.run = async (client, message) => {
         };
 
         let helpText = `**Pokémon:**
-    Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
-    **Interactions:**
-    Hug
-    **Other:**
-    Dango, Jojo, Stitch, Kuzco`;
+Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
+**Interactions:**
+Hug
+**Other:**
+Dango, Jojo, Stitch, Kuzco`;
 
         let user = message.mentions.users.first();
         let gifArgumentUncased = message.content.split(` `, 3);
-        let missingGifString = `You didn't provide a valid gif argument, ${message.author}.
-> For a list of gif arguments, use \`${prefix}gif help\`.`;
-        if (!gifArgumentUncased[1]) return message.reply(missingGifString);
+        let missingGifString = `You didn't provide a valid gif argument, ${message.author}.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
+        if (!gifArgumentUncased[1]) return sendMessage(client, message, missingGifString);
         let gifArgument = gifArgumentUncased[1].toLowerCase();
         let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
         let gifString = `Here's your gif, ${message.author}:`;
@@ -31,8 +31,7 @@ exports.run = async (client, message) => {
         const gif = search(gifArgument);
 
         if (gifArgument == "help") {
-            return message.reply(`Here's a list for all gif arguments, ${message.author}:
-${helpText}`);
+            return sendMessage(client, message, `Here's a list for all gif arguments, ${message.author}:\n${helpText}`);
         } else if (gif) {
             if (gifArgument == "hug") {
                 if (user) {
@@ -55,10 +54,10 @@ ${helpText}`);
                 .setFooter(message.author.tag)
                 .setTimestamp();
 
-            return message.reply(gifEmbed);
+            return sendMessage(client, message, gifEmbed);
 
         } else {
-            return message.reply(missingGifString);
+            return sendMessage(client, message, missingGifString);
         };
 
         // Using random giphy requests, but the matching is horrible if you even get a match at all
@@ -88,7 +87,7 @@ ${helpText}`);
         //     .setFooter(message.author.tag)
         //     .setTimestamp();
 
-        // return message.reply(gifEmbed);
+        // return sendMessage(client, message, gifEmbed);
 
     } catch (e) {
         // log error

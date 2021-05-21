@@ -2,6 +2,7 @@ module.exports.run = async (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -16,12 +17,12 @@ module.exports.run = async (client, message, args = null) => {
 
         const requestRole = arguments.join(' ').toLowerCase();
 
-        if (requestRole.length < 1) return message.reply(`Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
+        if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`, true);
 
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
-        if (roles.length < 1) return message.reply(`There are no eligible roles to assign to yourself in this server.`);
+        if (roles.length < 1) return sendMessage(client, message, `There are no eligible roles to assign to yourself in this server.`, true);
 
         if (requestRole.toLowerCase() === 'help') {
             let roleText = [];
@@ -47,7 +48,7 @@ module.exports.run = async (client, message, args = null) => {
 Please don't tag these roles, just put the name.
 Example: \`${prefix}role Minecraft\``;
 
-            if (roleHelpMessage.length > 1024) return message.reply(`Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
+            if (roleHelpMessage.length > 1024) return sendMessage(client, message, `Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
 
             let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
@@ -57,24 +58,24 @@ Example: \`${prefix}role Minecraft\``;
                 .setDescription(roleHelpMessage)
                 .setFooter(message.author.tag)
                 .setTimestamp();
-            return message.reply(rolesHelp);
+            return sendMessage(client, message, rolesHelp);
         };
 
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
 
         let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
-        if (!role) return message.reply(invalidRoleText);
-        if (!roles.includes(role.id)) return message.reply(invalidRoleText);
-        if (role.managed == true) return message.reply(`I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return message.reply(`I can't manage the **${role.name}** role because it is above my highest role.`);
+        if (!role) return sendMessage(client, message, invalidRoleText);
+        if (!roles.includes(role.id)) return sendMessage(client, message, invalidRoleText);
+        if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
+        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
 
         if (member.roles.cache.has(role.id)) {
             await member.roles.remove(role);
-            return message.reply(`You no longer have the **${role.name}** role, ${member}. *booo*`);
+            return sendMessage(client, message, `You no longer have the **${role.name}** role, ${member}. *booo*`);
 
         } else {
             await member.roles.add(role);
-            return message.reply(`You now have the **${role.name}** role, ${member}! Yay!`);
+            return sendMessage(client, message, `You now have the **${role.name}** role, ${member}! Yay!`);
         };
 
     } catch (e) {

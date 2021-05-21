@@ -2,15 +2,16 @@ exports.run = (client, message, args = null) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_MESSAGES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_MESSAGES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         let numberFromMessage = args[0];
 
         let numberFromMessagestoNumber = Number(numberFromMessage);
         let numberOfMessages = numberFromMessagestoNumber + 1;
         if (isNaN(numberOfMessages)) numberFromMessage = args[1];
-        if (isNaN(numberOfMessages)) return message.reply(`Please provide a valid number.`);
+        if (isNaN(numberOfMessages)) return sendMessage(client, message, `Please provide a valid number.`);
 
         if (numberOfMessages > 100) numberOfMessages = 100;
 
@@ -36,13 +37,13 @@ exports.run = (client, message, args = null) => {
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
-                    .then(message.reply(`${numberFromMessage} messages from ${user.tag} have been deleted.`));
+                    .then(sendMessage(client, message, `${numberFromMessage} messages from ${user.tag} have been deleted.`));
             });
 
         } else {
             message.channel.messages.fetch({ limit: amount })
                 .then(messages => message.channel.bulkDelete(messages))
-                .then(message.reply(`${numberFromMessage} messages have been deleted.`));
+                .then(sendMessage(client, message, `${numberFromMessage} messages have been deleted.`));
             return;
         };
 

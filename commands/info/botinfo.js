@@ -4,6 +4,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -105,7 +106,7 @@ ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.author.tag)
             .setTimestamp();
 
-        return message.reply(botEmbed);
+        return sendMessage(client, message, botEmbed);
 
         function checkDays(date) {
             let now = new Date();

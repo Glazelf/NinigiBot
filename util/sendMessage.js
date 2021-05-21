@@ -1,11 +1,12 @@
-module.exports = async (client, message, replyText, ephimeral = false) => {
+module.exports = async (client, message, replyText, ephimeral = true, files = [], code = false) => {
     try {
-        if (message.type == 'text' && editText) {
-            return message.reply(replyText).then(m => m.edit(editText));
-        } else if (message.type == 'text') {
+        // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
+        if (message.type == 'DEFAULT') {
+            if (files.length > 0) return message.reply(replyText, { files: files });
             return message.reply(replyText);
         } else if (message.type == 'APPLICATION_COMMAND') {
-            return message.reply(replyText, { ephimeral: ephimeral });
+            if (files.length > 0) return message.reply(replyText, { ephimeral: ephimeral, code: code, files: files })
+            return message.reply(replyText, { ephimeral: ephimeral, code: code });
         } else {
             return message.reply(`Unknown message type.`);
         };

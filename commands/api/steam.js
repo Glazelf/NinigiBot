@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const SteamAPI = require('steamapi');
         const steam = new SteamAPI(`${client.config.steam}`);
@@ -9,9 +10,9 @@ module.exports.run = async (client, message) => {
         // Sanitize and sort user input
         const input = message.content.slice(2).trim();
         let [, , subCommand] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (!subCommand) return message.reply(`Please provide a subCommand of either \`user\` or \`game\`.`);
+        if (!subCommand) return sendMessage(client, message, `Please provide a subCommand of either \`user\` or \`game\`.`);
         let [, , steamInput] = subCommand.match(/(\w+)\s*([\s\S]*)/);
-        if (!steamInput) return message.reply(`Please provide a user or game ID.`);
+        if (!steamInput) return sendMessage(client, message, `Please provide a user or game ID.`);
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
 
@@ -117,15 +118,15 @@ ${checkDays(userCreated)}`;
                         .setFooter(message.author.tag)
                         .setTimestamp();
 
-                    return message.reply(userEmbed);
+                    return sendMessage(client, message, userEmbed);
 
                 } catch (e) {
                     // console.log(e);
-                    return message.reply(userFailString);
+                    return sendMessage(client, message, userFailString);
                 };
             case "game":
                 // Get game info from ID
-                return message.reply(`Game info goes here.`);
+                return sendMessage(client, message, `Game info goes here.`);
         };
 
         function checkDays(date) {

@@ -2,6 +2,7 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
+        const sendMessage = require('../../../util/sendMessage');
         const { set } = require('lodash');
         const roulette = require('../../../affairs/roulette')
         if (!roulette.on) return;
@@ -16,7 +17,7 @@ exports.run = async (client, message) => {
         if (roulette.hadBet(message.author.id)) return message.react('✋');
         const { bank } = require('../../../database/bank');
         let input = message.content.slice(5)
-        if (input.includes('help')) return message.reply(`The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`);
+        if (input.includes('help')) return sendMessage(client.message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, false);
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(input)) return message.react('❌');
         const money = parseInt(input.slice(0, input.indexOf(',')).trim())
         input = input.slice(input.indexOf(',') + 1).trim();
@@ -31,8 +32,7 @@ exports.run = async (client, message) => {
             } else bets.add(request);
         });
         if (bets.size * money > bank.currency.getBalance(message.author.id)) {
-            return message.reply(`You don't have enough currency}.
-> You only have ${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}.`);
+            return sendMessage(client.message, `You don't have enough currency}.\nYou only have ${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}.`, false);
         };
         bets.forEach(bet => {
             roulette.addBet(bet, message.author.id, 36 * money);
