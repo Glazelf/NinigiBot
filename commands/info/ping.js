@@ -2,6 +2,8 @@ exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        console.log(message)
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -29,10 +31,11 @@ exports.run = async (client, message) => {
         };
 
         // Send message then edit message to reflect difference in creation timestamps
-        if (message.content) {
+        if (message.type == 'text') {
             return message.reply(pauseString).then(m => m.edit(`${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`));
         } else {
-            return message.reply(`Pong! Slash command latency is ${client.ws.ping}ms.`, { ephimeral: true });
+            let replyText = `Pong! Slash command latency is ${client.ws.ping}ms.`;
+            return sendMessage(client, message, replyText, true);
         };
 
     } catch (e) {

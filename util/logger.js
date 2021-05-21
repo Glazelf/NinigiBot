@@ -42,6 +42,7 @@ The error has already been logged but please also report this as an issue on Git
                 return devChannel.send(baseMessage);
             };
         };
+
     } catch (e) {
         console.log(e);
     };
