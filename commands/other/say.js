@@ -23,7 +23,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Owner only function to send messages in different channels
-        if (message.author.id == client.config.ownerID) {
+        if (message.member.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID)
@@ -44,7 +44,7 @@ exports.run = async (client, message, args = []) => {
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `"\`${textMessage}\`"
-    > -${message.author}`;
+    > -${message.member}`;
             return sendMessage(client, message, textMessage);
         };
 

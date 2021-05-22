@@ -12,7 +12,7 @@ exports.run = async (client, message, args = []) => {
         let input = args[0].match(/(\w+)\s*([\s\S]*)/);
 
         // Author avatar
-        let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
@@ -30,7 +30,7 @@ exports.run = async (client, message, args = []) => {
                 .setColor(DefaultEmbedColor)
                 .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
                 .addField("Members:", noRoleMembers, true)
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
 
             return sendMessage(client, message, noRoleEmbed);
@@ -65,7 +65,7 @@ exports.run = async (client, message, args = []) => {
             .addField("Members:", memberCount, true)
             .addField("Position:", role.rawPosition, true)
             .addField("Properties:", roleProperties, false)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, roleEmbed);

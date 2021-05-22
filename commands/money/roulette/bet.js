@@ -14,7 +14,7 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
-        if (roulette.hadBet(message.author.id)) return message.react('✋');
+        if (roulette.hadBet(message.member.id)) return message.react('✋');
         const { bank } = require('../../../database/bank');
         args = args.join(' ');
         if (args.includes('help')) return sendMessage(client.message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, false);
@@ -31,15 +31,15 @@ exports.run = async (client, message, args = []) => {
                 for (let i = minimum; i <= maximum; i++) bets.add(`${i}`);
             } else bets.add(request);
         });
-        if (bets.size * money > bank.currency.getBalance(message.author.id)) {
-            return sendMessage(client.message, `You don't have enough currency}.\nYou only have ${Math.floor(bank.currency.getBalance(message.author.id))}${globalVars.currency}.`, false);
+        if (bets.size * money > bank.currency.getBalance(message.member.id)) {
+            return sendMessage(client.message, `You don't have enough currency}.\nYou only have ${Math.floor(bank.currency.getBalance(message.member.id))}${globalVars.currency}.`, false);
         };
         bets.forEach(bet => {
-            roulette.addBet(bet, message.author.id, 36 * money);
+            roulette.addBet(bet, message.member.id, 36 * money);
         });
 
-        bank.currency.add(message.author.id, -money * bets.size);
-        roulette.players.push(message.author.id);
+        bank.currency.add(message.member.id, -money * bets.size);
+        roulette.players.push(message.member.id);
         return message.react('✔️');
 
     } catch (e) {

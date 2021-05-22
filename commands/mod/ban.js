@@ -21,7 +21,7 @@ module.exports.run = async (client, message, args = []) => {
         if (member && user) {
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.author.id) return sendMessage(client, message, `You don't have a high enough role to ban ${member.user.tag}.`);
+            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban ${member.user.tag}.`);
 
             try {
                 await user.send(`You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
@@ -31,11 +31,11 @@ module.exports.run = async (client, message, args = []) => {
                 banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Failed)`;
             };
 
-            await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
+            await member.ban({ days: 0, reason: `${reason} -${message.member.user.tag}` });
         } else {
             banReturn = `Successfully banned ${memberID} for the following reason: \`${reason}\`.`;
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.author.tag}` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.member.user.tag}` });
             } catch (e) {
                 // console.log(e);
                 return sendMessage(client, message, `Could not find a user by that ID.`);

@@ -4,7 +4,7 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const input = args.join(" ");
         try {

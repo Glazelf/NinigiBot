@@ -26,7 +26,7 @@ exports.run = async (client, message, args = []) => {
         ctx.fillRect(0, 0, imgWidth, imgHeight);
 
         await fs.promises.mkdir('memory/images', { recursive: true });
-        let imgPath = `memory/images/hexcolor-${message.author.id}.png`;
+        let imgPath = `memory/images/hexcolor-${message.member.id}.png`;
 
         await PImage.encodePNGToStream(img, fs.createWriteStream(imgPath)).then(() => {
             // console.log(`Wrote out image ${imgPath}. (${timestamp})`);

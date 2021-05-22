@@ -37,7 +37,7 @@ exports.run = async (client, message) => {
                     for (let i = 0; i < winners.length; i++) {
                         const winner = winners[i];
                         resultAnnouncement += (i + 1) + ') ' + message.channel.guild.members.cache.find(member => member.user.id === winner[0]).user.username + ` wins ${winner[1]}${globalVars.currency}!\n`;
-                        bank.currency.add(message.author.id, winner[1]);
+                        bank.currency.add(message.member.id, winner[1]);
                     };
                 };
 
@@ -59,7 +59,7 @@ exports.run = async (client, message) => {
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
 After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
             sendMessage(client, message, welcome, false);
         } else {

@@ -67,7 +67,7 @@ module.exports.run = async (client, message, args = []) => {
         let master;
 
         if (message.mentions.members.first()) {
-            if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             const expectedId = /<@!(\d+)/.exec(args[0]);
             const targetId = message.mentions.members.first().id;
 
@@ -77,7 +77,7 @@ module.exports.run = async (client, message, args = []) => {
                 args.splice(0, 1);
             } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
         } else {
-            master = message.author;
+            master = message.member.user;
             shinx = await bank.currency.getShinx(master.id);
         };
 
@@ -86,7 +86,7 @@ module.exports.run = async (client, message, args = []) => {
         const now = new Date();
 
         if (args[0] === 'level') {
-            if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
             else return sendMessage(client, message, `Please specify a valid number.`);

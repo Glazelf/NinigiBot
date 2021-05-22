@@ -19,7 +19,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetMessage.author.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = targetmessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
         if (targetMessage.reference) isReply = true;
 
@@ -42,7 +42,7 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetMessage.author.tag)
+            .setFooter(targetmessage.member.user.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count >= globalVars.starboardLimit && messageDB) {

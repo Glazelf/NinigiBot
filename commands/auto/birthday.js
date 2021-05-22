@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args = []) => {
 
         if (!birthday) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
 
-        bank.currency.birthday(message.author.id, birthday[1] + birthday[2]);
+        bank.currency.birthday(message.member.id, birthday[1] + birthday[2]);
         return sendMessage(client, message, `Successfully updated your birthday.`);
 
     } catch (e) {

@@ -5,11 +5,11 @@ exports.run = (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (cooldown.has(message.author.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
+        if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
-        let balance = bank.currency.getBalance(message.author.id);
+        let balance = bank.currency.getBalance(message.member.id);
         let inputText = "";
         if (args[1]) inputText = args[1].toLowerCase();
         if (inputText == "quarter") args[1] = balance / 4;
@@ -42,13 +42,13 @@ exports.run = (client, message, args = []) => {
             amount = Math.abs(amount) * -1;
         };
 
-        bank.currency.add(message.author.id, amount);
+        bank.currency.add(message.member.id, amount);
         sendMessage(client, message, returnString);
 
-        cooldown.add(message.author.id);
+        cooldown.add(message.member.id);
 
         return setTimeout(() => {
-            cooldown.delete(message.author.id);
+            cooldown.delete(message.member.id);
         }, 1500);
 
     } catch (e) {

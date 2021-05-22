@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.author;
+            user = message.member.user;
         };
 
         let totalMessage = `${user.tag}'s avatar.`;

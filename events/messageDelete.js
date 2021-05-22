@@ -18,10 +18,10 @@ module.exports = async (client, message) => {
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-        if (message.channel == log && message.author == client.user) return;
+        if (message.channel == log && message.member.user == client.user) return;
 
         if (!message) return;
-        if (!message.author) return;
+        if (!message.member.user) return;
 
         let messageContent = message.content;
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
@@ -39,16 +39,16 @@ module.exports = async (client, message) => {
             };
         };
 
-        let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Message Deleted ❌`, avatar)
-            .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`);
+            .setDescription(`Message sent by ${message.member} (${message.member.id}) deleted from ${message.channel}.`);
         if (messageContent.length > 0) deleteEmbed.addField(`Content:`, messageContent, false);
         if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
         deleteEmbed
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp(message.createdTimestamp);
 
         return log.send(deleteEmbed);

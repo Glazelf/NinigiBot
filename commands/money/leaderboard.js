@@ -15,7 +15,7 @@ exports.run = async (client, message, args = []) => {
                         .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
                         .join('\n'), true, null, true
                 );
-            } else if (args[0].toLowerCase() == "id" && message.author.id == client.config.ownerID) {
+            } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
                 return sendMessage(client, message,
                     bank.currency.sort((a, b) => b.balance - a.balance)
                         .filter(user => client.users.cache.has(user.user_id))

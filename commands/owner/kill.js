@@ -3,7 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const getTime = require('../../util/getTime');
         let timestamp = await getTime();
@@ -15,7 +15,7 @@ exports.run = async (client, message) => {
 
         // Return message then destroy
         await sendMessage(client, message, `Shutting down...`);
-        console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${message.member.user.tag}. (${timestamp})`);
         await client.destroy()
         return process.exit();
 

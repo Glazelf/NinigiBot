@@ -129,7 +129,7 @@ module.exports.run = async (client, message) => {
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false)
             .setImage(banner)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, serverEmbed);

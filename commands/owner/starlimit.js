@@ -3,7 +3,7 @@ exports.run = (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         let starLimit = args[0];
 

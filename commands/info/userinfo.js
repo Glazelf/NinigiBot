@@ -18,7 +18,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user) {
-            user = message.author;
+            user = message.member.user;
         };
 
         if (!member) {
@@ -137,7 +137,7 @@ module.exports.run = async (client, message, args = []) => {
         if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         profileEmbed
             .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, profileEmbed);

@@ -3,7 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });

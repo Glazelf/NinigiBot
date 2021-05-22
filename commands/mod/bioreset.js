@@ -4,7 +4,7 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_MEMBERS") && !isAdmin(message.member, client) && message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_MEMBERS") && !isAdmin(message.member, client) && message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
         let user = message.mentions.users.first();

@@ -3,7 +3,7 @@ module.exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let switchCodeGet = bank.currency.getSwitchCode(message.author.id);
+        let switchCodeGet = bank.currency.getSwitchCode(message.member.id);
 
         if (args.length < 1) {
             if (switchCodeGet && switchCodeGet !== "None") return sendMessage(client, message, `Your Nintendo Switch friend code is ${switchCodeGet}.`);
@@ -14,7 +14,7 @@ module.exports.run = async (client, message, args = []) => {
         if (!switchcode) return sendMessage(client, message, `Please specify a valid Nintendo Switch friend code.`);
 
         switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
-        bank.currency.switchCode(message.author.id, switchcode);
+        bank.currency.switchCode(message.member.id, switchcode);
         return sendMessage(client, message, `Successfully updated your Nintendo Switch friend code.`);
 
     } catch (e) {

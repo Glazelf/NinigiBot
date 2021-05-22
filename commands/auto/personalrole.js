@@ -7,9 +7,9 @@ module.exports.run = async (client, message, args = []) => {
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
         if (!serverID) return sendMessage(client, message, `Personal Roles are disabled in **${message.guild.name}**.`);
         let memberFetch = await message.guild.members.fetch();
-        let memberCache = memberFetch.get(message.author.id);
+        let memberCache = memberFetch.get(message.member.id);
 
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
+        let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
@@ -40,7 +40,7 @@ module.exports.run = async (client, message, args = []) => {
             if (!args[0]) roleColor = personalRole.color;
 
             personalRole.edit({
-                name: message.author.tag,
+                name: message.member.user.tag,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
@@ -49,7 +49,7 @@ module.exports.run = async (client, message, args = []) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) memberCache.roles.add(personalRole.id);
+            if (!message.member.roles.cache.find(r => r.name == message.member.user.tag)) memberCache.roles.add(personalRole.id);
 
             return sendMessage(client, message, `Updated your role successfully.`);
 
@@ -60,7 +60,7 @@ module.exports.run = async (client, message, args = []) => {
 
         async function createRole() {
             // Clean up possible old entry
-            let oldEntry = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.author.id } });
+            let oldEntry = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
             if (oldEntry) await oldEntry.destroy();
 
             if (!args[0]) roleColor = 0;
@@ -68,11 +68,11 @@ module.exports.run = async (client, message, args = []) => {
             // Create role
             await message.guild.roles.create({
                 data: {
-                    name: message.author.tag,
+                    name: message.member.user.tag,
                     color: roleColor,
                     position: personalRolePosition
                 },
-                reason: `Personal role for ${message.author.tag}.`,
+                reason: `Personal role for ${message.member.user.tag}.`,
             }).catch(error => {
                 // console.log(error);
                 return sendMessage(client, message, `An error occurred.`);
@@ -80,10 +80,10 @@ module.exports.run = async (client, message, args = []) => {
 
             let createdRole;
             await message.guild.roles.cache.forEach(role => {
-                if (role.name == message.author.tag) createdRole = role;
+                if (role.name == message.member.user.tag) createdRole = role;
             });
             memberCache.roles.add(createdRole.id);
-            await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.author.id, role_id: createdRole.id });
+            await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
             return sendMessage(client, message, `Created a personal role for you successfully.`);
         };
 

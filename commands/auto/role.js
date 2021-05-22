@@ -54,7 +54,7 @@ Example: \`${prefix}role Minecraft\``;
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Available roles:`, avatar)
                 .setDescription(roleHelpMessage)
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
             return sendMessage(client, message, rolesHelp);
         };

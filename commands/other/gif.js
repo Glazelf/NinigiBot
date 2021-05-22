@@ -21,36 +21,36 @@ Hug
 Dango, Jojo, Stitch, Kuzco`;
 
         let user = message.mentions.users.first();
-        let missingGifString = `You didn't provide a valid gif argument, ${message.author}.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
+        let missingGifString = `You didn't provide a valid gif argument.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
         if (!args[0]) return sendMessage(client, message, missingGifString);
         let gifArgument = args[0].toLowerCase();
         let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-        let gifString = `Here's your gif, ${message.author}:`;
+        let gifString = `Here's your gif:`;
 
         const gif = search(gifArgument);
 
         if (gifArgument == "help") {
-            return sendMessage(client, message, `Here's a list for all gif arguments, ${message.author}:\n${helpText}`);
+            return sendMessage(client, message, `Here's a list for all gif arguments:\n${helpText}`);
         } else if (gif) {
             if (gifArgument == "hug") {
                 if (user) {
-                    gifString = `${message.author} gave ${user} a tight hug!`;
-                    if (user == message.author) {
+                    gifString = `${message.member} gave ${user} a tight hug!`;
+                    if (user == message.member.user) {
                         gifString = `${user} is hugging themselves... This is kind of sad...`;
                     };
                 } else {
-                    gifString = `It seems ${message.author} wants to hug...`;
+                    gifString = `It seems ${message.member} wants to hug...`;
                 };
             };
 
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
                 .setDescription(gifString)
                 .setImage(gif)
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
 
             return sendMessage(client, message, gifEmbed);
@@ -73,7 +73,7 @@ Dango, Jojo, Stitch, Kuzco`;
 
         // const randomGif = await getRandomGif();
 
-        // let avatar = message.author.displayAvatarURL({
+        // let avatar = message.member.user.displayAvatarURL({
         //     format: "png",
         //     dynamic: true
         // });
@@ -81,9 +81,9 @@ Dango, Jojo, Stitch, Kuzco`;
         // const gifEmbed = new Discord.MessageEmbed()
         //     .setColor(globalVars.embedColor)
         //     .setAuthor(`Gif (${args})`, avatar)
-        //     .setDescription(`Here's your gif, ${message.author}:`)
+        //     .setDescription(`Here's your gif, ${message.member}:`)
         //     .setImage(randomGif)
-        //     .setFooter(message.author.tag)
+        //     .setFooter(message.member.user.tag)
         //     .setTimestamp();
 
         // return sendMessage(client, message, gifEmbed);

@@ -12,12 +12,12 @@ exports.run = async (client, message, args = []) => {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });
             if (item) {
                 if (item.cost === 0) return sendMessage(client, message, `That item doesn't exist.`);
-                if (item.cost > bank.currency.getBalance(message.author.id)) {
-                    return sendMessage(client, message, `You don't have enough currency.\nThe ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+                if (item.cost > bank.currency.getBalance(message.member.id)) {
+                    return sendMessage(client, message, `You don't have enough currency.\nThe ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.member.id))}💰.`);
                 };
-                const user = await Users.findOne({ where: { user_id: message.author.id } });
+                const user = await Users.findOne({ where: { user_id: message.member.id } });
 
-                bank.currency.add(message.author.id, -item.cost);
+                bank.currency.add(message.member.id, -item.cost);
                 switch (i) {
                     case 0:
                         await user.addEquipment(item);

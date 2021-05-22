@@ -16,7 +16,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.author;
+            user = message.member.user;
         };
 
         let totalMessage = null;
@@ -24,7 +24,7 @@ module.exports.run = async (client, message, args = []) => {
         let targetImage = null;
         let targetImageWidth = null;
         let targetImageHeight = null;
-        if (attachment && message.author.id == client.config.ownerID) {
+        if (attachment && message.member.id == client.config.ownerID) {
             targetImage = attachment;
             targetImageWidth = message.attachments.values().next().value.width;
             targetImageHeight = message.attachments.values().next().value.height;
@@ -35,7 +35,7 @@ module.exports.run = async (client, message, args = []) => {
             targetImage = avatar;
             targetImageWidth = 128;
             targetImageHeight = 128;
-            if (user.id == message.author.id) {
+            if (user.id == message.member.id) {
                 totalMessage = `Here you go, your inverted avatar:`;
             } else {
                 totalMessage = `Here you go, ${user.tag}'s inverted avatar:`;
