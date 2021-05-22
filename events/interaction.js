@@ -9,7 +9,22 @@ module.exports = async (client, interaction) => {
 
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
-        const channels = dbChannels.map(channel => channel.channel_id);
+
+        let args = [];
+
+        await interaction.options.forEach(async option => {
+            args.push(option.name);
+            if (option.hasOwnProperty("options")) {
+                await option.options.forEach(async option => {
+                    args.push(option.value);
+                    if (option.hasOwnProperty("options")) {
+                        await option.options.forEach(async option => {
+                            args.push(option.name);
+                        });
+                    };
+                });
+            };
+        });
 
         // Grab the command data from the client.commands Enmap
         let cmd;
@@ -17,14 +32,13 @@ module.exports = async (client, interaction) => {
             cmd = client.commands.get(interaction.commandName);
         } else if (client.aliases.has(interaction.commandName)) {
             cmd = client.commands.get(client.aliases.get(interaction.commandName));
-        } else return;
-
-        // Ignore messages sent in a disabled channel
-        if (channels.includes(interaction.channelID) && !interaction.member.permissions.has("MANAGE_CHANNELS")) return interaction.reply(`Commands have been disabled in this channel.`, { ephemeral: true });
+        } else {
+            return;
+        };
 
         // Run the command
         if (cmd) {
-            return cmd.run(client, interaction);
+            return cmd.run(client, interaction, args);
         } else return;
 
     } catch (e) {
