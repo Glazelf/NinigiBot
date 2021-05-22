@@ -56,7 +56,7 @@ function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = require(`./${filepath}`);
                     let commandName = file.split(".")[0];
-                    console.log(`Loading Command: ${commandName} ✔ Success! `);
+                    console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
                     if (props.config.aliases) {
                         props.config.aliases.forEach(alias => {
