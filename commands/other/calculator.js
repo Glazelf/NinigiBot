@@ -3,6 +3,10 @@ exports.run = async (client, message, args) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+
+        let noInputString = `You need to provide something to calculate`;
+        if (!args[1]) return sendMessage(client, message, noInputString);
+
         // Split input
         const input = args.join(' ');
         let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
@@ -28,7 +32,7 @@ exports.run = async (client, message, args) => {
             calcInput = calcInput.replace(value, "");
         });
 
-        if (!calcInput) return sendMessage(client, message, `You need to provide something to calculate.`);
+        if (!calcInput) return sendMessage(client, message, noInputString);
 
         try {
             var evaled = eval(calcInput);
@@ -55,7 +59,7 @@ exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "calculator",
-    aliases: ["calc"],
+    aliases: ["calc", "calculate"],
     description: "Calculate.",
     options: [{
         name: "calculation",
