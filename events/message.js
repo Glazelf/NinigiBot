@@ -6,6 +6,7 @@ module.exports = async (client, message) => {
     try {
         const Discord = require("discord.js");
         const { bank } = require('../database/bank');
+        const sendMessage = require('../util/sendMessage');
         let secondCharacter = message.content.charAt(1);
 
         const { DisabledChannels, Prefixes } = require('../database/dbObjects');
@@ -31,7 +32,7 @@ module.exports = async (client, message) => {
         if (message.channel.type == "dm" || !message.guild) {
             if (message.author.bot) return;
             if (message.content.indexOf(prefix) == 0) {
-                message.reply(`Sorry, you're not allowed to use commands in private messages!`);
+                sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
             };
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
@@ -92,7 +93,7 @@ module.exports = async (client, message) => {
         } else return;
 
         // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return message.reply(`Commands have been disabled in this channel.`);
+        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
 
         // Run the command
         if (cmd) {
@@ -100,6 +101,8 @@ module.exports = async (client, message) => {
             await cmd.run(client, message, args);
             message.channel.stopTyping(true);
         } else return;
+
+        return;
 
     } catch (e) {
         // log error
