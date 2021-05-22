@@ -103,7 +103,7 @@ module.exports.run = async (client, message) => {
             .addField("Uptime:", uptime, false)
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
 ${checkDays(client.user.createdAt)}`, false)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, botEmbed);

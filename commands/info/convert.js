@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run = (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let conversionType = args[0];

@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,8 +9,7 @@ module.exports.run = async (client, message, args) => {
         const { VCTextChannels } = require('../../database/dbObjects');
         let oldChannel = await VCTextChannels.findOne({ where: { server_id: message.guild.id } });
 
-        const args = message.content.split(' ');
-        let subCommand = args[1];
+        let subCommand = args[0];
         if (!subCommand) {
             if (oldChannel) {
                 return sendMessage(client, message, `The current VC text channel is <#${oldChannel.channel_id}>.`);

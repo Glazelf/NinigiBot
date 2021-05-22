@@ -1,6 +1,6 @@
 const sendMessage = require('../../util/sendMessage');
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,7 +9,7 @@ exports.run = async (client, message, args) => {
         let DefaultEmbedColor = "#99AB5";
 
         // Split off command
-        let input = arg[0].match(/(\w+)\s*([\s\S]*)/);
+        let input = args[0].match(/(\w+)\s*([\s\S]*)/);
 
         // Author avatar
         let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });

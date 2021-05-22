@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
-exports.run = async (client, message, args) => {
+
+exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
