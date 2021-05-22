@@ -1,21 +1,17 @@
-module.exports = async (client, message, replyText, ephimeral = true, files = null, code = false) => {
+module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = false) => {
     try {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
         const channels = dbChannels.map(channel => channel.channel_id);
 
         // Force hidden if disabled channel
-        if (channels.includes(message.channel.id)) ephimeral = true;
+        if (channels.includes(message.channel.id)) ephemeral = true;
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         if (message.type == 'DEFAULT') {
-            if (Array.isArray(files)) return message.reply(replyText, { files: files, code: code });
-            return message.reply(replyText, { code: code });
-
+            return message.reply(replyText, { ephemeral: ephemeral, embed: embed, files: files, code: code });
         } else if (message.type == 'APPLICATION_COMMAND') {
-            if (Array.isArray(files)) return message.reply(replyText, { ephimeral: ephimeral, files: files, code: code })
-            return message.reply(replyText, { ephimeral: ephimeral, code: code });
-
+            return message.reply(replyText, { ephemeral: ephemeral, embeds: [embed], files: files, code: code })
         } else {
             return message.reply(`Unknown message type.`);
         };
