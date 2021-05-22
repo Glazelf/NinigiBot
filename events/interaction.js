@@ -10,8 +10,8 @@ module.exports = async (client, interaction) => {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
 
+        // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
         let args = [];
-
         await interaction.options.forEach(async option => {
             args.push(option.name);
             if (option.hasOwnProperty("options")) {
@@ -39,7 +39,9 @@ module.exports = async (client, interaction) => {
         // Run the command
         if (cmd) {
             return cmd.run(client, interaction, args);
-        } else return;
+        } else {
+            return;
+        };
 
     } catch (e) {
         // log error
