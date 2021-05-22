@@ -5,7 +5,7 @@ exports.run = async (client, message, args) => {
         const sendMessage = require('../../util/sendMessage');
 
         let noInputString = `You need to provide something to calculate`;
-        if (!args[1]) return sendMessage(client, message, noInputString);
+        if (!args[0]) return sendMessage(client, message, noInputString);
 
         // Split input
         const input = args.join(' ');
@@ -47,7 +47,7 @@ exports.run = async (client, message, args) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return sendMessage(client, message, `${rounded} (${message.author.tag})`, { code: "js" });
+        return sendMessage(client, message, rounded, { code: "js" });
 
     } catch (e) {
         // log error
