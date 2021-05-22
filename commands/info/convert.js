@@ -1,11 +1,10 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        let split = message.content.split(` `, 3);
-        let conversionType = split[1];
-        let conversionValue = split[2];
+        let conversionType = args[0];
+        let conversionValue = args[1];
 
-        if (!conversionValue) return sendMessage(client, message, `You need to provide a number to calculate.`);
+        if (args.length < 2) return sendMessage(client, message, `You need to provide a conversion type and a number to convert.`);
         if (isNaN(conversionValue)) return sendMessage(client, message, `What you provided isn't a number.`);
         parseFloat(conversionValue);
 

@@ -1,15 +1,14 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const input = message.content.split(` `, 3);
         const currentAmount = bank.currency.getBalance(message.author.id);
-        let transferAmount = input[1];
+        let transferAmount = args[0];
         let transferTarget = message.mentions.users.first();
         if (!transferTarget) {
-            let userID = input[2];
+            let userID = args[1];
             transferTarget = client.users.cache.get(userID);
         };
         if (!transferTarget) return;

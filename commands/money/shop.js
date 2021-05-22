@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { ne } = Sequelize.Op;
-exports.run = async (client, message) => {
+
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -13,28 +14,27 @@ exports.run = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        const input = message.content.slice(1).trim();
-        const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
+        const [, , input] = args[0].match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
         // Lottery Tickets are messed up and temporarily removed, so items is empty
-        /*if (biography === 'items') {
+        /*if (input == 'items') {
             const items = await CurrencyShop.findAll(condition);
             return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
-        }*/ if (biography === 'equipment') {
+        }*/ if (input == 'equipment') {
             const items = await Equipments.findAll(condition);
             return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
-        } if (biography === 'food') {
+        } if (input == 'food') {
             const items = await Foods.findAll(condition);
             return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
         } // Coming soon, maybe
-        /* if(biography === 'key'){
+        /* if(input == 'key'){
             const items = await KeyItems.findAll(condition);
             return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
-        } *//* if(biography === 'rooms'){
+        } *//* if(input == 'rooms'){
             const items = await Room.findAll(condition);
             return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return sendMessage(client, message, `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food`);
+        return sendMessage(client, message, `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`);
 
     } catch (e) {
         // log error

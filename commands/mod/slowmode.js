@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = null) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -6,13 +6,11 @@ module.exports.run = async (client, message, args = null) => {
         const isAdmin = require('../../util/isAdmin');
         if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
-        let arg = args[0];
-        if (!arg) arg = 0;
-        if (isNaN(arg) || arg < 0) return sendMessage(client, message, `You need to provide a valid number (seconds) to change the slowmode to.`);
-        if (arg > 21600) arg = 21600;
+        if (!args[0] || isNaN(args[0]) || args[0] < 0) return sendMessage(client, message, `You need to provide a valid number (seconds) to change the slowmode to.`);
+        if (args[0] > 21600) args[0] = 21600;
 
-        await message.channel.setRateLimitPerUser(arg);
-        return sendMessage(client, message, `Slowmode changed to ${arg} seconds.`);
+        await message.channel.setRateLimitPerUser(args[0]);
+        return sendMessage(client, message, `Slowmode changed to ${args[0]} seconds.`);
 
     } catch (e) {
         // log error

@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -10,8 +10,7 @@ module.exports.run = async (client, message) => {
         if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 
         if (!user) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+            let userID = args[0];
             user = client.users.cache.get(userID);
             member = message.guild.members.cache.get(userID);
         };

@@ -1,12 +1,10 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         if (!message.member.permissions.has("KICK_MEMBERS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
-
-        const args = message.content.split(' ');
 
         let member = message.mentions.members.first();
         let user = message.mentions.users.first();
@@ -18,7 +16,7 @@ module.exports.run = async (client, message) => {
 
         let reason = "Not specified.";
         if (args[2]) {
-            reason = args.slice(2, args.length + 1);
+            reason = args.slice(1, args.length + 1);
             reason = reason.join(' ');
         };
 

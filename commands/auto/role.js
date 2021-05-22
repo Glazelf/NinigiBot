@@ -1,8 +1,9 @@
-module.exports.run = async (client, message, args = null) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -10,12 +11,9 @@ module.exports.run = async (client, message, args = null) => {
         } else {
             prefix = globalVars.prefix;
         };
-        const Discord = require("discord.js");
 
         let member = message.member;
-        let arguments = args;
-
-        const requestRole = arguments.join(' ').toLowerCase();
+        const requestRole = args.join(' ').toLowerCase();
 
         if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`, true);
 

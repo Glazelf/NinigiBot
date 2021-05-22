@@ -1,11 +1,9 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const input = message.content.slice(1).trim();
-        const [, , inputValues] = input.match(/(\w+)\s*([\s\S]*)/);
-        let inputNumbers = inputValues.replace(", ", " ").split(" ");
+        let inputNumbers = args.join(" ").replace(", ", " ").split(" ");
 
         if (!inputNumbers[1]) return sendMessage(client, message, `You need to provide 2 numbers.`);
         let lowNumber = inputNumbers[0];

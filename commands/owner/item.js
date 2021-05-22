@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -7,8 +7,6 @@ exports.run = async (client, message) => {
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
-        const args = message.content.slice(1).trim().split(/ +/);
-        args.shift();
 
         if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 

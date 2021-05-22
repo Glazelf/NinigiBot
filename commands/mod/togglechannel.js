@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -10,10 +10,9 @@ module.exports.run = async (client, message) => {
 
         let channel = null;
         let subCommand = null;
-        const args = message.content.split(' ');
 
-        if (args[1]) {
-            subCommand = args[1].toLowerCase();
+        if (args[0]) {
+            subCommand = args[0].toLowerCase();
         } else {
             subCommand = message.channel.id;
         };

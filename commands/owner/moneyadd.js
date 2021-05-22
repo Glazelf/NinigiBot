@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -6,18 +6,15 @@ module.exports.run = async (client, message) => {
         if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
-        const input = message.content.slice(1).trim();
-        const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         let currency = globalVars.currency;
 
-        const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
+        const transferAmount = args[1]
         let transferTarget = message.mentions.users.first();
 
         let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`;
 
         if (!transferTarget) {
-            const input = message.content.split(` `, 3);
-            let userID = input[2];
+            let userID = args[0];
             transferTarget = client.users.cache.get(userID);
         };
 

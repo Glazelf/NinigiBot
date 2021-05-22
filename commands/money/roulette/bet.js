@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
@@ -16,12 +16,12 @@ exports.run = async (client, message) => {
 
         if (roulette.hadBet(message.author.id)) return message.react('✋');
         const { bank } = require('../../../database/bank');
-        let input = message.content.slice(5)
-        if (input.includes('help')) return sendMessage(client.message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, false);
-        if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(input)) return message.react('❌');
-        const money = parseInt(input.slice(0, input.indexOf(',')).trim())
-        input = input.slice(input.indexOf(',') + 1).trim();
-        const betRequests = new Set(input.split(/\s+/));
+        args = args.join(' ');
+        if (args.includes('help')) return sendMessage(client.message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, false);
+        if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
+        const money = parseInt(args.slice(0, args.indexOf(',')).trim())
+        args = args.slice(args.indexOf(',') + 1).trim();
+        const betRequests = new Set(args.split(/\s+/));
         const bets = new Set();
         betRequests.forEach(request => {
             const slice = request.indexOf('-')

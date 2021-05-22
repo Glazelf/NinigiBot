@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,10 +9,9 @@ exports.run = async (client, message) => {
 
         let timestamp = await getTime();
 
-        let args = message.content.split(` `);
-        if (!args[1]) return sendMessage(client, message, `Please provide a hex to convert.`);
+        if (!args[0]) return sendMessage(client, message, `Please provide a hex to convert.`);
 
-        let hex = args[1];
+        let hex = args[0];
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";

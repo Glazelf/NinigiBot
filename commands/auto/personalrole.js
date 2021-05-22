@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = null) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -18,7 +18,9 @@ module.exports.run = async (client, message, args = null) => {
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (message.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
-        if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, message, `My highest role isn't high enough to manage a personal role for you.`);
+        if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, message, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
+
+        if (args.length < 1) return sendMessage(client, message, `Please provide a color to change your personal role to.`);
 
         // Color catch
         let roleColor = args[0];

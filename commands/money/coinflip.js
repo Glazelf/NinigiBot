@@ -1,6 +1,6 @@
 const cooldown = new Set();
 
-exports.run = (client, message) => {
+exports.run = (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -10,19 +10,18 @@ exports.run = (client, message) => {
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
         let balance = bank.currency.getBalance(message.author.id);
-        const input = message.content.split(` `);
         let inputText = "";
-        if (input[1]) inputText = input[1].toLowerCase();
+        if (args[0]) inputText = args[0].toLowerCase();
 
         // Heads / Tails + Amounts
         let winSide = "heads";
         let loseSide = "tails";
-        amount = input[1];
-        if (inputText == "tails" || input[2] == "tails") {
+        amount = args[0];
+        if (inputText == "tails" || args[1] == "tails") {
             winSide = "tails";
             loseSide = "heads";
         };
-        if (!isNaN(input[2]) || ["quarter", "half", "all"].includes(input[2])) amount = input[2];
+        if (!isNaN(args[1]) || ["quarter", "half", "all"].includes(args[1])) amount = args[1];
 
         // Shortcuts
         if (amount == "quarter") amount = balance / 4;

@@ -1,12 +1,11 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        const input = message.content.split(` `, 2);
-        let starLimit = input[1];
+        let starLimit = args[0];
 
         if (isNaN(starLimit)) return sendMessage(client, message, `You need to provide a valid number.`);
 

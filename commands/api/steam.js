@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -8,11 +8,10 @@ module.exports.run = async (client, message) => {
         const steam = new SteamAPI(`${client.config.steam}`);
 
         // Sanitize and sort user input
-        const input = message.content.slice(2).trim();
-        let [, , subCommand] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (!subCommand) return sendMessage(client, message, `Please provide a subCommand of either \`user\` or \`game\`.`);
-        let [, , steamInput] = subCommand.match(/(\w+)\s*([\s\S]*)/);
-        if (!steamInput) return sendMessage(client, message, `Please provide a user or game ID.`);
+        if (args.length < 2) return sendMessage(client, message, `Please provide either \`user\` or \`game\` and a valid ID.`);
+        let subCommand = args[0].match(/(\w+)\s*([\s\S]*)/);
+        let steamInput = args[1].match(/(\w+)\s*([\s\S]*)/);
+
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
 

@@ -1,15 +1,13 @@
 const sendMessage = require('../../util/sendMessage');
 
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const input = message.content.slice(1).trim();
-        const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
 
-        if (arguments.length < 1) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
+        if (args.length < 1) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
 
-        let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(arguments);
+        let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(args);
 
         if (!birthday) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
 

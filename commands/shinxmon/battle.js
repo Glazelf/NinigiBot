@@ -8,7 +8,7 @@ const addLine = (line) => {
 
 const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
 
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -17,14 +17,14 @@ module.exports.run = async (client, message) => {
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
-        const input = message.content.slice(1).trim();
-        const [, , target] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (target.length < 1) return sendMessage(client, message, `Please specify a user to battle.`);
+        let target = args[0];
+        if (!target || target.length < 1) return sendMessage(client, message, `Please specify a user to battle.`);
         const trainers = [message.author, message.mentions.users.first()];
         if (!trainers[1]) return sendMessage(client, message, `Please tag a valid person to battle.`)
         if (trainers[0].id === trainers[1].id) return sendMessage(client, message, `You cannot battle yourself!`);
         if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
         shinxes = [];
+
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
             shinx.see();
@@ -33,6 +33,7 @@ module.exports.run = async (client, message) => {
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
+
         await sendMessage(client, message, `Do you accept the challenge, ${trainers[1]}? (y\\n)`);
         const accepts = await message.channel.awaitMessages(m => m.author.id == trainers[1].id, { max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage(client, message, `Battle has been cancelled.`);
@@ -49,10 +50,12 @@ module.exports.run = async (client, message) => {
         for (let i = 0; i < 2; i++) ctx.arc(47 + 147 * i, 36, 29, 0, Math.PI * 2, false);
         ctx.closePath();
         ctx.clip();
+
         for (let i = 0; i < 2; i++) {
             const avatar = await Canvas.loadImage(avatars[i]);
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
         };
+
         await sendMessage(client, message, new Discord.MessageAttachment(canvas.toBuffer()));
 
         canvas = Canvas.createCanvas(240, 168);
@@ -61,16 +64,24 @@ module.exports.run = async (client, message) => {
         ctx.drawImage(background, 0, 0);
         ctx.font = 'normal bolder 14px Arial';
         ctx.fillStyle = '#FFFFFF';
-        for (let i = 0; i < 2; i++) ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
+        for (let i = 0; i < 2; i++) {
+            ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
+        };
 
         const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
 
-        for (let i = 0; i < 2; i++) if (shinxes[i].shiny) ctx.drawImage(battleSprite, 39 * i, 0, 39, 26, (12 + 177 * i), 24 + 79 * i, 39, 26);
+        for (let i = 0; i < 2; i++) {
+            if (shinxes[i].shiny) {
+                ctx.drawImage(battleSprite, 39 * i, 0, 39, 26, (12 + 177 * i), 24 + 79 * i, 39, 26);
+            };
+        };
+
         const nicks = [];
         const prevColors = [0, 0];
         for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nick);
         const geasson = await Canvas.loadImage('./assets/geasson.png');
         const geassoff = await Canvas.loadImage('./assets/geassoff.png');
+
         for (let i = 0; i < 2; i++) {
             if (shinxes[i].supergeass || shinxes[i].geass > 0) {
                 text += addLine(`**...?**\nThe power of love remains!\n**${nicks[i]} entered geass mode!**`);
@@ -80,6 +91,7 @@ module.exports.run = async (client, message) => {
                 ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
             };
         };
+
         if (text.length > 0) sendMessage(client, message, text);
         while (true) {
             text = '';

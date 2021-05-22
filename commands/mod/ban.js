@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -6,17 +6,15 @@ module.exports.run = async (client, message) => {
         const isAdmin = require('../../util/isAdmin');
         if (!message.member.permissions.has("BAN_MEMBERS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
-        const args = message.content.split(' ');
-
         let member = message.mentions.members.first();
         let user = message.mentions.users.first();
 
         let banReturn = null;
-        let memberID = args[1];
+        let memberID = args[0];
 
         let reason = "Not specified.";
-        if (args[2]) {
-            reason = args.slice(2, args.length + 1);
+        if (args[1]) {
+            reason = args.slice(1, args.length + 1);
             reason = reason.join(' ');
         };
 

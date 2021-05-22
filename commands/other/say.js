@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -14,8 +14,7 @@ exports.run = async (client, message) => {
         };
 
         // Split off command
-        let input = message.content.slice(1).trim();
-        let [, , textMessage] = input.match(/(\w+)\s*([\s\S]*)/);
+        let textMessage = input.join(" ").match(/(\w+)\s*([\s\S]*)/);
         let split = textMessage.split(` `, 1);
         let channelID = split[0];
         let remoteMessage = textMessage.slice(channelID.length + 1);

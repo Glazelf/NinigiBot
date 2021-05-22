@@ -1,4 +1,4 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -7,8 +7,7 @@ exports.run = (client, message) => {
         let target = message.mentions.users.first();
 
         if (!target) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+            let userID = args[0];
             target = client.users.cache.get(userID);
         };
 

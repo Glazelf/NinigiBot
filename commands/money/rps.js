@@ -1,6 +1,6 @@
 const cooldown = new Set();
 
-exports.run = (client, message) => {
+exports.run = (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -10,14 +10,13 @@ exports.run = (client, message) => {
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
         let balance = bank.currency.getBalance(message.author.id);
-        const input = message.content.split(` `);
         let inputText = "";
-        if (input[2]) inputText = input[2].toLowerCase();
-        if (inputText == "quarter") input[2] = balance / 4;
-        if (inputText == "half") input[2] = balance / 2;
-        if (inputText == "all") input[2] = balance;
-        let playerChoice = input[1].toLowerCase();
-        amount = input[2];
+        if (args[1]) inputText = args[1].toLowerCase();
+        if (inputText == "quarter") args[1] = balance / 4;
+        if (inputText == "half") args[1] = balance / 2;
+        if (inputText == "all") args[1] = balance;
+        let playerChoice = args[0].toLowerCase();
+        amount = args[1];
 
         let rps = ["rock", "paper", "scissor"];
         if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissor\`.`);

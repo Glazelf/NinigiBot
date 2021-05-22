@@ -1,10 +1,10 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         // Split input
-        const input = message.content.slice(1).trim();
+        const input = args.join(' ');
         let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
 
         // Sanitize input

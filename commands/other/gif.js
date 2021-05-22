@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -21,10 +21,9 @@ Hug
 Dango, Jojo, Stitch, Kuzco`;
 
         let user = message.mentions.users.first();
-        let gifArgumentUncased = message.content.split(` `, 3);
         let missingGifString = `You didn't provide a valid gif argument, ${message.author}.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
-        if (!gifArgumentUncased[1]) return sendMessage(client, message, missingGifString);
-        let gifArgument = gifArgumentUncased[1].toLowerCase();
+        if (!args[0]) return sendMessage(client, message, missingGifString);
+        let gifArgument = args[0].toLowerCase();
         let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
         let gifString = `Here's your gif, ${message.author}:`;
 

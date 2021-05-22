@@ -1,14 +1,13 @@
 const sendMessage = require('../../util/sendMessage');
 
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let user = message.mentions.users.first();
         let member = message.mentions.members.first();
 
-        if (!user) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+        if (!user && args[0]) {
+            let userID = args[0];
             user = client.users.cache.get(userID);
             member = message.guild.members.cache.get(userID);
         };

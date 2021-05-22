@@ -1,26 +1,25 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
-        const args = message.content.slice(1).trim().split(/ +/);
         const target = message.mentions.users.first() || message.author;
 
-        if (args[1] === 'items' || args[1] === 'food' || args[1] === 'equipment' || args[1] === 'keys' || !args[1]) {
+        if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
             const user = await Users.findOne({ where: { user_id: target.id } });
 
             let items;
 
-            if (args[1] === 'food') {
+            if (args[0] === 'food') {
                 items = await user.getFoods();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);
                 return sendMessage(client, message, `${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
-            } else if (args[1] === 'equipment') {
+            } else if (args[0] === 'equipment') {
                 items = await user.getEquipments();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no equipment!`);
                 return sendMessage(client, message, `${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
-            } else if (args[1] === 'keys') {
+            } else if (args[0] === 'keys') {
                 items = await user.getKeys();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no key items!`);
                 return sendMessage(client, message, `${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);

@@ -12,10 +12,9 @@ module.exports.run = async (client, message, args) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        args = message.content.split(' ');
-        if (!args[1]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`, true);
+        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`, true);
 
-        let subCommand = args[1].toLowerCase();
+        let subCommand = args[0].toLowerCase();
         let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
         subArgument = subArgument.split(" ").join("-");
 
@@ -105,14 +104,14 @@ module.exports.run = async (client, message, args) => {
                 var pokemonID;
 
                 args.forEach(arg => {
-                    if (arg !== args[0] && arg !== args[1]) {
+                    if (arg !== args[0]) {
                         pokemonName = `${pokemonName} ${arg}`;
                     };
                 });
 
                 // Edgecase name corrections
-                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[1]}-${args[2]}`;
-                if (pokemonName == "type: null") pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
+                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[0]}-${args[1]}`;
+                if (pokemonName == "type: null") pokemonName = `${args[0].substring(0, args[0].length - 1)}-${args[1]}`;
                 correctValue(correctionName, pokemonName);
 
                 // Easter egg name aliases

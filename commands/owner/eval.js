@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = null) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -18,7 +18,7 @@ module.exports.run = async (client, message, args = null) => {
 
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
 
-        return sendMessage(client, message, clean(evaled), true, [], "js");
+        return sendMessage(client, message, clean(evaled), true, null, "js");
 
         function clean(text) {
             if (typeof (text) === "string")

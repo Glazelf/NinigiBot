@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -7,8 +7,7 @@ exports.run = async (client, message) => {
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
-        const input = message.content.slice(1).trim();
-        const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+        const commandArgs = args[0].match(/(\w+)\s*([\s\S]*)/);
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });
             if (item) {

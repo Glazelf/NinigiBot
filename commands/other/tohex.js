@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = null) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -17,7 +17,7 @@ exports.run = async (client, message, args = null) => {
             try {
                 let argHex = `0x${args[0]}`;
                 let hexInt = parseInt(argHex);
-                return sendMessage(client, message, `${hexInt} (${message.author.tag})`, true, [], "js");
+                return sendMessage(client, message, `${hexInt} (${message.author.tag})`, true, null, "js");
             } catch (e) {
                 return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
             };
@@ -25,7 +25,7 @@ exports.run = async (client, message, args = null) => {
             if (isNaN(args[0])) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
             let argInt = parseInt(args[0]);
             let hexString = argInt.toString(16).toUpperCase();
-            return sendMessage(client, message, `${hexString} (${message.author.tag})`, true, [], "js");
+            return sendMessage(client, message, `${hexString} (${message.author.tag})`, true, null, "js");
         };
 
     } catch (e) {
