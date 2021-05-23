@@ -3,7 +3,8 @@ module.exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const { ModEnabledServers } = require('../../database/dbObjects');
         let serverID = await ModEnabledServers.findOne({ where: { server_id: message.guild.id } });
