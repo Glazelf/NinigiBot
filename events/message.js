@@ -54,7 +54,7 @@ module.exports = async (client, message) => {
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
         // Ignore all bots and welcome messages
-        if (message.member.user.bot) return;
+        if (message.member.user.bot == true) return;
         if (!message.member) return;
 
         // Automod

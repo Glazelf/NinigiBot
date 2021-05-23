@@ -1,4 +1,4 @@
-module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = false) => {
+module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = null) => {
     try {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
@@ -6,6 +6,7 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
 
         // Force hidden if disabled channel
         if (channels.includes(message.channel.id)) ephemeral = true;
+        if (!code) code = false;
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         if (message.type == 'DEFAULT') {

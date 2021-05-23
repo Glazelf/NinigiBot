@@ -12,8 +12,9 @@ module.exports = async (exception, client, message = null) => {
 
         let user;
         if (message) {
-            user = message.member.user;
-            if (!message.member.user) user = message.user;
+            if (message.member) {
+                user = message.member.user;
+            };
         };
 
         // Stop typing
