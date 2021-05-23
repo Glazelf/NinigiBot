@@ -1,4 +1,4 @@
-exports.run = (client, message, args = []) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
