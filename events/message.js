@@ -82,8 +82,8 @@ module.exports = async (client, message) => {
         // Ignore messages that start with prefix double or prefix space
         if (secondCharacter == prefix || secondCharacter == ` `) return;
 
-        const args;
-        const commandName;
+        let args;
+        let commandName;
         // Standard definition
         if (message.content) {
             args = message.content.slice(prefix.length).trim().split(/ +/g);
