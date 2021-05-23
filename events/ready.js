@@ -16,14 +16,13 @@ module.exports = async (client) => {
 
         await client.commands.forEach(command => {
             try {
-                client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                // if (PrivateCommands.includes(command.config.name)) {
-                //     return;
-                // } else if (SACCommands.includes(command.config.name)) {
-                //     client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                // } else {
-                //     client.application?.commands.create(command.config);
-                // };
+                if (PrivateCommands.includes(command.config.name)) {
+                    return;
+                } else if (SACCommands.includes(command.config.name)) {
+                    client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
+                } else {
+                    client.application?.commands.create(command.config);
+                };
                 console.log(`Loaded slash command: ${command.config.name} ✔`);
             } catch (e) {
                 console.log(e);
