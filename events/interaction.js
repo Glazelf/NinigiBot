@@ -13,16 +13,21 @@ module.exports = async (client, interaction) => {
         // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
         let args = [];
         await interaction.options.forEach(async option => {
-            args.push(option.name);
-            if (option.hasOwnProperty("options")) {
-                await option.options.forEach(async option => {
-                    args.push(option.value);
-                    if (option.hasOwnProperty("options")) {
-                        await option.options.forEach(async option => {
-                            args.push(option.name);
-                        });
-                    };
-                });
+
+            if (option.type == 'SUB_COMMAND') {
+                args.push(option.name);
+                if (option.hasOwnProperty("options")) {
+                    await option.options.forEach(async option => {
+                        args.push(option.value);
+                        if (option.hasOwnProperty("options")) {
+                            await option.options.forEach(async option => {
+                                args.push(option.value);
+                            });
+                        };
+                    });
+                };
+            } else {
+                args.push(option.value);
             };
         });
 

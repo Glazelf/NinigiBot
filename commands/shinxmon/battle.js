@@ -56,7 +56,7 @@ module.exports.run = async (client, message, args = []) => {
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
         };
 
-        await sendMessage(client, message, new Discord.MessageAttachment(canvas.toBuffer()));
+        await sendMessage(client, message, null, null, new Discord.MessageAttachment(canvas.toBuffer()));
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -127,7 +127,7 @@ module.exports.run = async (client, message, args = []) => {
 
                     for (let p = 0; p < 2; p++) await bank.currency.updateShinx(shinxes[p], p === i);
                     globalVars.battling.yes = false;
-                    return sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer()));
+                    return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
                 } else {
                     if (result === -1) {
                         text += addLine(`${nicks[i]} lost his shield by blocking a deathblow!`);
@@ -167,7 +167,7 @@ module.exports.run = async (client, message, args = []) => {
                     text += addLine(`${nicks[i]} ${verb} some health!`);
                 };
             };
-            sendMessage(client, message, text, new Discord.MessageAttachment(canvas.toBuffer()));
+            sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
             await wait();
         };
 

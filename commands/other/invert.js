@@ -65,7 +65,7 @@ module.exports.run = async (client, message, args = []) => {
         ctx.closePath();
         ctx.clip();
 
-        return sendMessage(client, message, totalMessage, null, [canvas.toBuffer()]);
+        return sendMessage(client, message, totalMessage, null, canvas.toBuffer());
 
     } catch (e) {
         // log error

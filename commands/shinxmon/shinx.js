@@ -134,7 +134,7 @@ module.exports.run = async (client, message, args = []) => {
                 ctx.drawImage(img, 270, 155);
             };
 
-            return sendMessage(client, message, new Discord.MessageAttachment(canvas.toBuffer(), 'data.png'));
+            return sendMessage(client, message, null, null, new Discord.MessageAttachment(canvas.toBuffer()));
         } else if (args[0] == 'tap' || shinx.sleeping) {
             if (args[0] == 'tap') {
                 shinx.rest();
@@ -336,7 +336,7 @@ module.exports.run = async (client, message, args = []) => {
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.play(reaction[2]);
-            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, new Discord.MessageAttachment(canvas.toBuffer(), 'park.png'));
+            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
 
         } else {
             canvas = Canvas.createCanvas(256, 160);

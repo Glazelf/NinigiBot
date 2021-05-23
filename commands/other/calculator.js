@@ -9,7 +9,6 @@ exports.run = async (client, message, args = []) => {
 
         // Split input
         const input = args.join(' ');
-        let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
 
         // Sanitize input
         let sanitizeValues = [
@@ -26,7 +25,7 @@ exports.run = async (client, message, args = []) => {
             "&",
             "$"
         ];
-        calcInput = calcInput.replace(/[a-zA-Z]/gm, '').replace(",", ".");
+        calcInput = input.replace(/[a-zA-Z]/gm, '').replace(",", ".");
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
@@ -62,9 +61,9 @@ module.exports.config = {
     aliases: ["calc", "calculate"],
     description: "Calculate.",
     options: [{
-        name: "calculation",
+        name: "input",
         type: "STRING",
-        description: "Calculation.",
+        description: "Input to calculate.",
         required: true
     }]
 };
