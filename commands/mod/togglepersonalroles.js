@@ -4,7 +4,8 @@ module.exports.run = async (client, message) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const { PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });

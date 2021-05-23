@@ -5,6 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
+        let adminBool = await isAdmin(message.member, client);
 
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -33,7 +34,7 @@ exports.run = async (client, message, args = []) => {
                 // If error: execute regular quoteless say
                 return sendMessage(client, message, textMessage);
             };
-        } else if (isAdmin(message.member, client)) {
+        } else if (adminBool) {
             // Return plain message if member is admin
             return sendMessage(client, message, textMessage);
         } else {

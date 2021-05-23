@@ -4,7 +4,8 @@ module.exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });

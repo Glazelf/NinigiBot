@@ -4,9 +4,9 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
-
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_ROLES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const requestRole = args.join(' ').toLowerCase();
 
