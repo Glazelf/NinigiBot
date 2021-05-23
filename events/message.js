@@ -82,10 +82,12 @@ module.exports = async (client, message) => {
         // Ignore messages that start with prefix double or prefix space
         if (secondCharacter == prefix || secondCharacter == ` `) return;
 
+        const args;
+        const commandName;
         // Standard definition
         if (message.content) {
-            const args = message.content.slice(prefix.length).trim().split(/ +/g);
-            const commandName = args.shift().toLowerCase();
+            args = message.content.slice(prefix.length).trim().split(/ +/g);
+            commandName = args.shift().toLowerCase();
         };
 
         // Grab the command data from the client.commands Enmap
