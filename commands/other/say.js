@@ -16,6 +16,7 @@ exports.run = async (client, message, args = []) => {
 
         // Split off command
         let channelID = args[0];
+        let textMessage = args.join(" ");
         let remoteMessage = textMessage.slice(channelID.length + 1);
 
         // Catch empty argument
