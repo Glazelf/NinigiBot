@@ -22,7 +22,7 @@ module.exports.run = async (client, message, args = []) => {
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
         if (!avatar) return sendMessage(client, message, `${user.tag} doesn't have an avatar.`);
 
-        return sendMessage(client, message, totalMessage, true, [avatar]);
+        return sendMessage(client, message, totalMessage, null, avatar);
 
     } catch (e) {
         // log error

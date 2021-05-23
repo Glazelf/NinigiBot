@@ -18,7 +18,7 @@ module.exports.run = async (client, message, args = []) => {
 
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
 
-        return sendMessage(client, message, clean(evaled), true, null, "js");
+        return sendMessage(client, message, clean(evaled), null, null, true, "js");
 
         function clean(text) {
             if (typeof (text) === "string")

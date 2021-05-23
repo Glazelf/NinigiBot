@@ -127,7 +127,7 @@ Vanity URL: https://discord.gg/shinx`
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, ruleEmbed);
+        return sendMessage(client, message, null, ruleEmbed);
 
         async function getRule(object, input) {
             var keyList = Object.keys(object);

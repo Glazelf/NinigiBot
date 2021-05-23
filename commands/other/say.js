@@ -26,7 +26,7 @@ exports.run = async (client, message, args = []) => {
         if (message.member.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
-                targetChannel = message.client.channels.cache.get(channelID)
+                targetChannel = message.client.channels.cache.get(channelID);
                 targetChannel.send(remoteMessage);
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
@@ -39,7 +39,7 @@ exports.run = async (client, message, args = []) => {
         } else {
             // Prevent using bot to go around ping permissions
             if (textMessage.includes("@")) {
-                return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`)
+                return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`);
             };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
