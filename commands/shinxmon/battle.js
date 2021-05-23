@@ -13,6 +13,7 @@ module.exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        return sendMessage(client, message, `Shinx commands are currently broken. Check the following issue for more information: https://github.com/Glazelf/NinigiBot/issues/103`);
         // const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
