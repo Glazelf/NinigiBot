@@ -1,10 +1,13 @@
-const sendMessage = require('../../util/sendMessage');
-
 module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const biography = args.join(' ').match(/(\w+)\s*([\s\S]*)/);
+        let biography
+        if (args.length > 1) {
+            biography = args.join(' ').match(/(\w+)\s*([\s\S]*)/);
+        } else {
+            biography = args[0];
+        };
 
         if (!biography || biography.length < 1) return sendMessage(client, message, `Please specify a valid biography.`);
 
