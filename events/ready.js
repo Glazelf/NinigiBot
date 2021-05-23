@@ -24,6 +24,7 @@ module.exports = async (client) => {
                 // } else {
                 //     client.application?.commands.create(command.config);
                 // };
+                console.log(`Loaded slash command: ${command.config.name} ✔`);
             } catch (e) {
                 console.log(e);
             };
@@ -33,9 +34,13 @@ module.exports = async (client) => {
         client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
 
         // List servers the bot is connected to
-        console.log("Servers:");
+
         await client.guilds.cache.forEach(async (guild) => {
             await guild.members.fetch();
+        });
+
+        console.log("Servers:");
+        await client.guilds.cache.forEach(async (guild) => {
             console.log(`-${guild.name}`);
         });
 
