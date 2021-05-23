@@ -21,13 +21,15 @@ module.exports = async (exception, client, message = null) => {
         if (message) message.channel.stopTyping(true);
 
         // log to dev channel
-        let baseMessage = message ? `An error occurred in ${message.channel}!
+        let baseMessage;
+        baseMessage = message && user ? `An error occurred in ${message.channel}!
 Link: ${message.url}
 Error:
 \`\`\`${exception}\`\`\`
 Message by ${user.tag}:
 \`\`\`${message.content}\`\`\`` : `An error occurred:
 \`\`\`${exception}\`\`\``;
+
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
         // Fix cross-shard logging sometime
         let devChannel = client.channels.cache.get(client.config.devChannelID);
