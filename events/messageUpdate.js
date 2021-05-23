@@ -15,8 +15,7 @@ module.exports = async (client, message, newMessage) => {
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        if (!message) return;
-        if (!message.member.user) return;
+        if (!message || !message.member || !message.member.user) return;
         if (message.content === newMessage.content) return;
         if (!message.content || !newMessage.content) return;
 

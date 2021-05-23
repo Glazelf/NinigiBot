@@ -20,8 +20,7 @@ module.exports = async (client, message) => {
         if (!log) return;
         if (message.channel == log && message.member.user == client.user) return;
 
-        if (!message) return;
-        if (!message.member.user) return;
+        if (!message || !message.member || !message.member.user) return;
 
         let messageContent = message.content;
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
