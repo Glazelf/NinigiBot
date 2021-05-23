@@ -10,6 +10,7 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
+        if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
         if (embed) {
             if (message.type == 'APPLICATION_COMMAND') {
                 messageObject['embeds'] = [embed];
@@ -18,13 +19,14 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
             };
         };
         if (files) {
+            // Ephemeral messages don't support attachments
+            ephemeral = false;
             if (Array.isArray(files)) {
                 messageObject['files'] = files
             } else {
                 messageObject['files'] = [files];
             };
         };
-        if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
         messageObject['code'] = code;
         return message.reply(replyText, messageObject)
 
