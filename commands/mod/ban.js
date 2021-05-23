@@ -6,8 +6,12 @@ module.exports.run = async (client, message, args = []) => {
         const isAdmin = require('../../util/isAdmin');
         if (!message.member.permissions.has("BAN_MEMBERS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
-        let member = message.mentions.members.first();
-        let user = message.mentions.users.first();
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
 
         let banReturn = null;
         let memberID = args[0];

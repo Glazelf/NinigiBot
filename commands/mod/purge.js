@@ -17,7 +17,10 @@ exports.run = (client, message, args = []) => {
 
         let amount = parseInt(numberOfMessages);
 
-        let user = message.mentions.users.first();
+        let user;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+        };
 
         if (!user) {
             let userID = args[1];

@@ -12,13 +12,17 @@ exports.run = async (client, message, args = []) => {
 
         // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
-        if (message.mentions.members.first()) {
-            const expectedId = /<@!(\d+)/.exec(args[0]);
-            const targetId = message.mentions.members.first().id;
-            if (expectedId && expectedId[1] == targetId) {
-                target = message.mentions.members.first().user;
-                args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`${prefix}item <target> <item name>\`.`);
+        if (message.mentions) {
+            if (message.mentions.first()) {
+                const expectedId = /<@!(\d+)/.exec(args[0]);
+                const targetId = message.mentions.members.first().id;
+                if (expectedId && expectedId[1] == targetId) {
+                    target = message.mentions.members.first().user;
+                    args.splice(0, 1);
+                } else return sendMessage(client, message, `The syntax is \`${prefix}item <target> <item name>\`.`);
+            } else {
+                target = message.member.user;
+            }
         } else {
             target = message.member.user;
         };

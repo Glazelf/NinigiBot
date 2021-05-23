@@ -4,7 +4,10 @@ exports.run = (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        let target = message.mentions.users.first();
+        let target;
+        if (message.mentions) {
+            target = message.mentions.users.first();
+        };
 
         if (!target) {
             let userID = args[0];

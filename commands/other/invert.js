@@ -4,8 +4,12 @@ module.exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         const Canvas = require("canvas");
 
-        let user = message.mentions.users.first();
-        let member = message.mentions.members.first();
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
         let attachment = null;
         if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 

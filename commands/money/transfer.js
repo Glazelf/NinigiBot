@@ -6,7 +6,10 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
         const currentAmount = bank.currency.getBalance(message.member.id);
         let transferAmount = args[0];
-        let transferTarget = message.mentions.users.first();
+        let transferTarget;
+        if (message.mentions) {
+            transferTarget = message.mentions.users.first();
+        };
         if (!transferTarget) {
             let userID = args[1];
             transferTarget = client.users.cache.get(userID);

@@ -18,7 +18,10 @@ module.exports.run = async (client, message, args = []) => {
             if (muteTime > 10080) muteTime = 10080;
         };
 
-        const member = message.mentions.members.first();
+        let member;
+        if (message.mentions) {
+            member = message.mentions.members.first();
+        };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
         if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);

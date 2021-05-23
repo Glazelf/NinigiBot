@@ -1,10 +1,13 @@
-const sendMessage = require('../../util/sendMessage');
-
 module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        let user = message.mentions.users.first();
-        let member = message.mentions.members.first();
+
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
 
         if (!user && args[0]) {
             let userID = args[0];

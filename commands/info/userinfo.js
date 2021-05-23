@@ -9,8 +9,13 @@ module.exports.run = async (client, message, args = []) => {
         const checkDays = require('../../util/checkDays');
 
         let memberFetch = await message.guild.members.fetch();
-        let user = message.mentions.users.first();
-        let member = message.mentions.members.first();
+
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
 
         if (!user) {
             let userID = args[0];

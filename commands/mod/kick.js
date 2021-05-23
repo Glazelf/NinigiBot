@@ -6,8 +6,12 @@ module.exports.run = async (client, message, args = []) => {
         const isAdmin = require('../../util/isAdmin');
         if (!message.member.permissions.has("KICK_MEMBERS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
-        let member = message.mentions.members.first();
-        let user = message.mentions.users.first();
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
         if (!member || !user) return sendMessage(client, message, `Please mention someone to kick.`);
 
         let userRole = message.member.roles.highest;

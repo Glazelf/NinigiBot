@@ -20,7 +20,10 @@ Hug
 **Other:**
 Dango, Jojo, Stitch, Kuzco`;
 
-        let user = message.mentions.users.first();
+        let user;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+        };
         let missingGifString = `You didn't provide a valid gif argument.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
         if (!args[0]) return sendMessage(client, message, missingGifString);
         let gifArgument = args[0].toLowerCase();
