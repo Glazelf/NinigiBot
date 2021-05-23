@@ -1,7 +1,8 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { search } = require('../../util/search');
         const { Prefixes } = require('../../database/dbObjects');
@@ -12,53 +13,50 @@ exports.run = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        let helpText = `> **Pokémon:**
-    > Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
-    > **Not Pokémon:**
-    > Dango, Jojo, Stitch, Kuzco
-    > **Interactions:**
-    > Hug`;
+        let helpText = `**Pokémon:**
+Squirtle, Jigglypuff, Slowpoke, Flareon, Snorlax, Mewtwo, Mew, Wooper, Espeon, Scizor, Heracross, Celebi, Torchic, Lotad, Turtwig, Chimchar, Piplup, Shinx, Pachirisu, Gible, Glaceon, Gliscor, Gallade, Azelf, Oshawott, Maractus, Zweilous, Reshiram, Lurantis, Dracovish
+**Interactions:**
+Hug
+**Other:**
+Dango, Jojo, Stitch, Kuzco`;
 
         let user = message.mentions.users.first();
-        let gifArgumentUncased = message.content.split(` `, 3);
-        let missingGifString = `> You didn't provide a valid gif argument, ${message.author}.
-> For a list of gif arguments, use \`${prefix}gif help\`.`;
-        if (!gifArgumentUncased[1]) return message.channel.send(missingGifString);
-        let gifArgument = gifArgumentUncased[1].toLowerCase();
+        let missingGifString = `You didn't provide a valid gif argument.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
+        if (!args[0]) return sendMessage(client, message, missingGifString);
+        let gifArgument = args[0].toLowerCase();
         let gifArgumentCapitalized = gifArgument[0].toUpperCase() + gifArgument.substr(1);
-        let gifString = `Here's your gif, ${message.author}:`;
+        let gifString = `Here's your gif:`;
 
         const gif = search(gifArgument);
 
         if (gifArgument == "help") {
-            return message.channel.send(`> Here's a list for all gif arguments, ${message.author}:
-${helpText}`);
+            return sendMessage(client, message, `Here's a list for all gif arguments:\n${helpText}`);
         } else if (gif) {
             if (gifArgument == "hug") {
                 if (user) {
-                    gifString = `${message.author} gave ${user} a tight hug!`;
-                    if (user == message.author) {
+                    gifString = `${message.member} gave ${user} a tight hug!`;
+                    if (user == message.member.user) {
                         gifString = `${user} is hugging themselves... This is kind of sad...`;
                     };
                 } else {
-                    gifString = `It seems ${message.author} wants to hug...`;
+                    gifString = `It seems ${message.member} wants to hug...`;
                 };
             };
 
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
                 .setDescription(gifString)
                 .setImage(gif)
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
 
-            return message.channel.send(gifEmbed);
+            return sendMessage(client, message, gifEmbed);
 
         } else {
-            return message.channel.send(missingGifString);
+            return sendMessage(client, message, missingGifString);
         };
 
         // Using random giphy requests, but the matching is horrible if you even get a match at all
@@ -75,7 +73,7 @@ ${helpText}`);
 
         // const randomGif = await getRandomGif();
 
-        // let avatar = message.author.displayAvatarURL({
+        // let avatar = message.member.user.displayAvatarURL({
         //     format: "png",
         //     dynamic: true
         // });
@@ -83,12 +81,12 @@ ${helpText}`);
         // const gifEmbed = new Discord.MessageEmbed()
         //     .setColor(globalVars.embedColor)
         //     .setAuthor(`Gif (${args})`, avatar)
-        //     .setDescription(`Here's your gif, ${message.author}:`)
+        //     .setDescription(`Here's your gif, ${message.member}:`)
         //     .setImage(randomGif)
-        //     .setFooter(message.author.tag)
+        //     .setFooter(message.member.user.tag)
         //     .setTimestamp();
 
-        // return message.channel.send(gifEmbed);
+        // return sendMessage(client, message, gifEmbed);
 
     } catch (e) {
         // log error
@@ -100,5 +98,19 @@ ${helpText}`);
 
 module.exports.config = {
     name: "gif",
-    aliases: []
+    aliases: [],
+    description: "Returns a gif.",
+    options: [{
+        name: "pokemon",
+        type: "STRING",
+        description: "Pokémon gifs.",
+    }, {
+        name: "interactions",
+        type: "STRING",
+        description: "Interaction gifs.",
+    }, {
+        name: "other",
+        type: "STRING",
+        description: "Other gifs.",
+    }]
 };

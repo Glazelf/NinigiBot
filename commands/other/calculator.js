@@ -1,10 +1,14 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
+
+        let noInputString = `You need to provide something to calculate`;
+        if (!args[0]) return sendMessage(client, message, noInputString);
+
         // Split input
-        const input = message.content.slice(1).trim();
-        let [, , calcInput] = input.match(/(\w+)\s*([\s\S]*)/);
+        const input = args.join(' ');
 
         // Sanitize input
         let sanitizeValues = [
@@ -21,19 +25,19 @@ exports.run = async (client, message) => {
             "&",
             "$"
         ];
-        calcInput = calcInput.replace(/[a-zA-Z]/gm, '').replace(",", ".");
+        calcInput = input.replace(/[a-zA-Z]/gm, '').replace(",", ".");
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
         });
 
-        if (!calcInput) return message.channel.send(`> You need to provide something to calculate, ${message.author}.`);
+        if (!calcInput) return sendMessage(client, message, noInputString);
 
         try {
             var evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
-            return message.channel.send(`> You need to provide a valid input, ${message.author}.`);
+            return sendMessage(client, message, `You need to provide a valid input.`);
         };
 
         // Test out rounding based on remainder sometime
@@ -42,7 +46,7 @@ exports.run = async (client, message) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return message.channel.send(`${rounded} (${message.author.tag})`, { code: "js" });
+        return sendMessage(client, message, rounded, null, null, true, "js");
 
     } catch (e) {
         // log error
@@ -54,5 +58,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "calculator",
-    aliases: ["calc"]
+    aliases: ["calc", "calculate"],
+    description: "Calculate.",
+    options: [{
+        name: "input",
+        type: "STRING",
+        description: "Input to calculate.",
+        required: true
+    }]
 };

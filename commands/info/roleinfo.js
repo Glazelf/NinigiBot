@@ -1,18 +1,18 @@
+const sendMessage = require('../../util/sendMessage');
 
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         let DefaultEmbedColor = "#99AB5";
 
         // Split off command
-        let arg = message.content.slice(1).trim();
-        let [, , textMessage] = arg.match(/(\w+)\s*([\s\S]*)/);
-        let input = textMessage;
+        let input = args[0].match(/(\w+)\s*([\s\S]*)/);
 
         // Author avatar
-        let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
@@ -30,13 +30,13 @@ exports.run = async (client, message) => {
                 .setColor(DefaultEmbedColor)
                 .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
                 .addField("Members:", noRoleMembers, true)
-                .setFooter(message.author.tag)
+                .setFooter(message.member.user.tag)
                 .setTimestamp();
 
-            return message.channel.send(noRoleEmbed);
+            return sendMessage(client, message, null, noRoleEmbed);
         };
 
-        if (!role) return message.channel.send(`> I couldn't find that role, ${message.author}. Make sure you provide a valid name or ID.`);
+        if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
 
         // Role color
         let roleColor = `#${role.color.toString(16)}`;
@@ -65,10 +65,10 @@ exports.run = async (client, message) => {
             .addField("Members:", memberCount, true)
             .addField("Position:", role.rawPosition, true)
             .addField("Properties:", roleProperties, false)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return message.channel.send(roleEmbed);
+        return sendMessage(client, message, null, roleEmbed);
 
     } catch (e) {
         // log error
@@ -80,5 +80,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "roleinfo",
-    aliases: []
+    aliases: [],
+    description: "Sends info about a role.",
+    options: [{
+        name: "role-name",
+        type: "STRING",
+        description: "Specify role by name or ID."
+
+    }]
 };

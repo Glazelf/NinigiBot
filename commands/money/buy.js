@@ -1,24 +1,23 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
-        const input = message.content.slice(1).trim();
-        const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+        const commandArgs = args[0].match(/(\w+)\s*([\s\S]*)/);
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });
             if (item) {
-                if (item.cost === 0) return message.channel.send(`> That item doesn't exist, ${message.author}.`);
-                if (item.cost > bank.currency.getBalance(message.author.id)) {
-                    return message.channel.send(`> You don't have enough currency, ${message.author}.
-> The ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.author.id))}💰.`);
+                if (item.cost === 0) return sendMessage(client, message, `That item doesn't exist.`);
+                if (item.cost > bank.currency.getBalance(message.member.id)) {
+                    return sendMessage(client, message, `You don't have enough currency.\nThe ${item.name} costs ${item.cost}💰 but you only have ${Math.floor(bank.currency.getBalance(message.member.id))}💰.`);
                 };
-                const user = await Users.findOne({ where: { user_id: message.author.id } });
+                const user = await Users.findOne({ where: { user_id: message.member.id } });
 
-                bank.currency.add(message.author.id, -item.cost);
+                bank.currency.add(message.member.id, -item.cost);
                 switch (i) {
                     case 0:
                         await user.addEquipment(item);
@@ -36,11 +35,10 @@ exports.run = async (client, message) => {
                     //     await user.changeRoom(item);
                 }
 
-                return message.channel.send(`> You've bought a ${item.name}, ${message.author}.`);
-
+                return sendMessage(client, message, `You've bought a ${item.name}.`);
             };
         };
-        return message.channel.send(`> That item doesn't exist, ${message.author}.`);
+        return sendMessage(client, message, `That item doesn't exist.`);
 
     } catch (e) {
         // log error
@@ -52,5 +50,12 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "buy",
-    aliases: []
+    aliases: [],
+    description: "Buy an item from the shop.",
+    optiosn: [{
+        name: "item-name",
+        type: "STRING",
+        description: "The name of the item you want to buy.",
+        required: true
+    }]
 };

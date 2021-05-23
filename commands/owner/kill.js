@@ -1,13 +1,23 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        // send channel a message that you're killing bot [optional]
-        message.channel.send(`> Shutting down for ${message.author}...`)
-            .then(msg => client.destroy());
-        return;
+        const getTime = require('../../util/getTime');
+        let timestamp = await getTime();
+
+        // Delete all global commands
+        client.application.commands.set([]);
+        // Delete SAC specific commands
+        client.guilds.cache.get(client.config.botServerID).commands.set([]);
+
+        // Return message then destroy
+        await sendMessage(client, message, `Shutting down...`);
+        console.log(`Bot killed by ${message.member.user.tag}. (${timestamp})`);
+        await client.destroy()
+        return process.exit();
 
     } catch (e) {
         // log error
@@ -19,5 +29,6 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "kill",
-    aliases: ["destroy"]
+    aliases: ["destroy"],
+    description: "Shuts down bot."
 };

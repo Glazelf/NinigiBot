@@ -1,7 +1,8 @@
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         if (message.guild.id !== client.config.botServerID) return;
 
         const Discord = require("discord.js");
@@ -13,7 +14,7 @@ module.exports.run = async (client, message, args) => {
             prefix = globalVars.prefix;
         };
         let inputNumber = args[0];
-        if (isNaN(inputNumber)) return message.channel.send(`> You must provide a valid number, ${message.author}.`);
+        if (isNaN(inputNumber)) return sendMessage(client, message, `You must provide a valid number.`);
         let titleNumber = inputNumber;
 
         // Channels
@@ -113,7 +114,7 @@ Vanity URL: https://discord.gg/shinx`
             titleNumber = `${inputNumber}: ${faqName}`;
         };
 
-        let objectText = `That rule or FAQ point doesn't seem to exist, ${message.author}.`;
+        let objectText = `That rule or FAQ point doesn't seem to exist.`;
         await getRule(relevantObject, inputNumber);
 
         // Avatar
@@ -123,10 +124,10 @@ Vanity URL: https://discord.gg/shinx`
             .setColor(globalVars.embedColor)
             .setAuthor(`${objectName} ${titleNumber}`, avatar)
             .setDescription(objectText)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return message.channel.send(ruleEmbed);
+        return sendMessage(client, message, null, ruleEmbed);
 
         async function getRule(object, input) {
             var keyList = Object.keys(object);
@@ -156,5 +157,11 @@ Vanity URL: https://discord.gg/shinx`
 
 module.exports.config = {
     name: "rules",
-    aliases: ["faq", "rule"]
+    aliases: ["faq", "rule"],
+    description: "Sends a rule.",
+    options: [{
+        name: "rule-id",
+        type: "INTEGER",
+        description: "Number of the rule to send."
+    }]
 };

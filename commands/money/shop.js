@@ -1,9 +1,11 @@
 const Sequelize = require('sequelize');
 const { ne } = Sequelize.Op;
-exports.run = async (client, message) => {
+
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Equipments, Foods, KeyItems, Room, CurrencyShop, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -12,28 +14,27 @@ exports.run = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        const input = message.content.slice(1).trim();
-        const [, , biography] = input.match(/(\w+)\s*([\s\S]*)/);
+        const [, , input] = args[0].match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
         // Lottery Tickets are messed up and temporarily removed, so items is empty
-        /*if (biography === 'items') {
+        /*if (input == 'items') {
             const items = await CurrencyShop.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
-        }*/ if (biography === 'equipment') {
+            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+        }*/ if (input == 'equipment') {
             const items = await Equipments.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
-        } if (biography === 'food') {
+            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
+        } if (input == 'food') {
             const items = await Foods.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
         } // Coming soon, maybe
-        /* if(biography === 'key'){
+        /* if(input == 'key'){
             const items = await KeyItems.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
-        } *//* if(biography === 'rooms'){
+            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+        } *//* if(input == 'rooms'){
             const items = await Room.findAll(condition);
-            return message.channel.send(items.map(i => i.toString()).join('\n'), { code: true });
+            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return message.channel.send(`That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food`);
+        return sendMessage(client, message, `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`);
 
     } catch (e) {
         // log error
@@ -45,5 +46,15 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "shop",
-    aliases: ["store"]
+    aliases: ["store"],
+    description: "Displays items in the shop.",
+    options: [{
+        name: "equipment",
+        type: "SUB_COMMAND",
+        description: "Equipment shop."
+    }, {
+        name: "food",
+        type: "SUB_COMMAND",
+        description: "Food shop."
+    }]
 };

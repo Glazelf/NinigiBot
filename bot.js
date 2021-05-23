@@ -4,8 +4,13 @@ const Enmap = require("enmap");
 const fs = require("fs");
 const path = require("path");
 
+const intents = new Discord.Intents();
+intents.add(Discord.Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS');
+
 const client = new Discord.Client({
-    partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER']
+    intents: intents,
+    partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'],
+    allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
 });
 const config = require("./config.json");
 client.config = config;
@@ -51,11 +56,11 @@ function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = require(`./${filepath}`);
                     let commandName = file.split(".")[0];
-                    console.log(`Loading Command: ${commandName} ✔ Success! `);
+                    console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
                     if (props.config.aliases) {
                         props.config.aliases.forEach(alias => {
-                            if (client.aliases.get(alias)) return console.log("Warning: Two commands share an alias name!");
+                            if (client.aliases.get(alias)) return console.log(`Warning: Two commands share an alias name: ${alias}`);
                             client.aliases.set(alias, commandName);
                         });
                     };

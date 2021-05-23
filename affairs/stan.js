@@ -33,7 +33,7 @@ module.exports = async (client) => {
 
         const gifEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setDescription(`> Today's most stannable person is ${candidateRandom.tag}, everyone!`)
+            .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
             .setImage(randomGif)
             .setTimestamp();
         channel.send(candidateRandom, { embed: gifEmbed });

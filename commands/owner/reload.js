@@ -1,8 +1,9 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -12,12 +13,12 @@ exports.run = async (client, message, args) => {
             prefix = globalVars.prefix;
         };
 
-        if (!args || args.length < 1) return message.channel.send(`> Must provide a command name to reload, ${message.author}.`);
+        if (!args || args.length < 1) return sendMessage(client, message, `Must provide a command name to reload.`);
         const commandName = args[0];
 
         // Check if the command exists and is valid
         if (!client.commands.has(commandName)) {
-            return message.channel.send(`> That command does not exist, ${message.author}.`);
+            return sendMessage(client, message, `That command does not exist.`);
         };
 
         delete require.cache[require.resolve(`./${commandName}.js`)];
@@ -26,7 +27,7 @@ exports.run = async (client, message, args) => {
         client.commands.delete(commandName);
         const props = require(`./${commandName}.js`);
         client.commands.set(commandName, props);
-        return message.channel.send(`> The command \`${prefix}${commandName}\` has been reloaded, ${message.author}.`);
+        return sendMessage(client, message, `The command \`${prefix}${commandName}\` has been reloaded.`);
 
     } catch (e) {
         // log error
@@ -38,5 +39,11 @@ exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "reload",
-    aliases: []
+    aliases: [],
+    description: "Reload a command file.",
+    options: [{
+        name: "command",
+        type: "STRING",
+        description: "Name of the command to reload."
+    }]
 };

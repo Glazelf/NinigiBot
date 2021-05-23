@@ -2,18 +2,19 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { ModEnabledServers } = require('../../database/dbObjects');
         let serverID = await ModEnabledServers.findOne({ where: { server_id: message.guild.id } });
 
         if (serverID) {
             await serverID.destroy();
-            return message.channel.send(`> **${message.guild.name}** will no longer be automatically moderated, ${message.author}.`);
+            return sendMessage(client, message, `**${message.guild.name}** will no longer be automatically moderated.`);
         } else {
             await ModEnabledServers.upsert({ server_id: message.guild.id });
-            return message.channel.send(`> **${message.guild.name}** will now be automatically moderated, ${message.author}.`);
+            return sendMessage(client, message, `**${message.guild.name}** will now be automatically moderated.`);
         };
 
     } catch (e) {
@@ -26,5 +27,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "togglemod",
-    aliases: ["tm"]
+    aliases: ["tm"],
+    description: "Toggle automated moderation features."
 };

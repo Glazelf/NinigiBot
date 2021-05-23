@@ -1,56 +1,56 @@
 const cooldown = new Set();
 
-exports.run = (client, message) => {
+exports.run = (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (cooldown.has(message.author.id)) return message.channel.send(`> You are currently on cooldown from using this command, ${message.author}.`);
+        const sendMessage = require('../../util/sendMessage');
+        if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
-        let balance = bank.currency.getBalance(message.author.id);
-        const input = message.content.split(` `);
+        let balance = bank.currency.getBalance(message.member.id);
         let inputText = "";
-        if (input[1]) inputText = input[1].toLowerCase();
+        if (args[0]) inputText = args[0].toLowerCase();
 
         // Heads / Tails + Amounts
         let winSide = "heads";
         let loseSide = "tails";
-        amount = input[1];
-        if (inputText == "tails" || input[2] == "tails") {
+        amount = args[0];
+        if (inputText == "tails" || args[1] == "tails") {
             winSide = "tails";
             loseSide = "heads";
         };
-        if (!isNaN(input[2]) || ["quarter", "half", "all"].includes(input[2])) amount = input[2];
+        if (!isNaN(args[1]) || ["quarter", "half", "all"].includes(args[1])) amount = args[1];
 
         // Shortcuts
         if (amount == "quarter") amount = balance / 4;
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
 
-        if (!amount || isNaN(amount)) return message.channel.send(`> You need to specify a valid number to gamble, ${message.author}.`);
+        if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
         amount = Math.floor(amount);
-        if (amount <= 0) return message.channel.send(`> Please enter an amount that's equal to or larger than 1, ${message.author}.`);
+        if (amount <= 0) return sendMessage(client, message, `Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
-            return message.channel.send(`> You only have ${Math.floor(balance)}${currency}, ${message.author}.`);
+            return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
         };
 
-        let returnString = `> Congratulations, ${message.author}, you flipped **${winSide}** and won ${amount}${currency}.`;
+        let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}.`;
 
         // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            returnString = `> Sorry, ${message.author}, you flipped **${loseSide}** and lost ${amount}${currency}.`;
+            returnString = `Sorry, you flipped **${loseSide}** and lost ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
-        bank.currency.add(message.author.id, amount);
-        message.channel.send(returnString);
+        bank.currency.add(message.member.id, amount);
+        sendMessage(client, message, returnString);
 
-        cooldown.add(message.author.id);
+        cooldown.add(message.member.id);
 
         return setTimeout(() => {
-            cooldown.delete(message.author.id);
+            cooldown.delete(message.member.id);
         }, 1500);
 
     } catch (e) {
@@ -63,5 +63,12 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "coinflip",
-    aliases: ["cf", "flip"]
+    aliases: ["cf", "flip"],
+    description: "Bet money on a coinflip.",
+    options: [{
+        name: "bet-amount",
+        type: "INTEGER",
+        description: "The amount of money you want to bet.",
+        required: true
+    }]
 };

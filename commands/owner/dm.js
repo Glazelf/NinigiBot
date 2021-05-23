@@ -1,26 +1,23 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+
+        if (!args[1]) return sendMessage(client, message, `You need to provide a message to send.`);
 
         // Split off command
-        let textMessage = message.content.slice(4);
-        let split = textMessage.split(` `, 1);
-        const userID = split[0];
-        let remoteMessage = textMessage.slice(userID.length + 1);
+        let textMessage = args.slice(1).join(" ");
+        const userID = args[0];
 
-        if (remoteMessage.length < 1) {
-            return message.channel.send(`> You need to provide a message to send, ${message.author}.`);
-        };
-
-        targetUser = client.users.cache.get(userID);
+        let targetUser = client.users.cache.get(userID);
         if (!targetUser) {
-            return message.channel.send(`> I could not find that ID, it's likely I don't share a server with them or they don't exist, ${message.author}.`);
+            return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
         };
 
-        await targetUser.send(remoteMessage);
-        return message.channel.send(`> Message succesfully sent to ${targetUser.tag}, ${message.author}.`);
+        await targetUser.send(textMessage);
+        return sendMessage(client, message, `Message succesfully sent to ${targetUser.tag}.`);
 
     } catch (e) {
         // log error
@@ -32,5 +29,17 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "dm",
-    aliases: []
+    aliases: [],
+    description: "DMs a user.",
+    options: [{
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID.",
+        required: true
+    }, {
+        name: "input",
+        type: "STRING",
+        description: "Text message to DM.",
+        required: true
+    }]
 };

@@ -1,28 +1,29 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
-exports.run = async (client, message) => {
-    try {
-        //items, food, equipment
-        const args = message.content.slice(1).trim().split(/ +/);
-        const target = message.mentions.users.first() || message.author;
 
-        if (args[1] === 'items' || args[1] === 'food' || args[1] === 'equipment' || args[1] === 'keys' || !args[1]) {
+exports.run = async (client, message, args = []) => {
+    try {
+        const sendMessage = require('../../util/sendMessage');
+        //items, food, equipment
+        const target = message.mentions.users.first() || message.member.user;
+
+        if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
             const user = await Users.findOne({ where: { user_id: target.id } });
 
             let items;
 
-            if (args[1] === 'food') {
+            if (args[0] === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return message.channel.send(`${target.toString()} has no food!`);
-                return message.channel.send(`${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
-            } else if (args[1] === 'equipment') {
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);
+                return sendMessage(client, message, `${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
+            } else if (args[0] === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return message.channel.send(`${target.toString()} has no equipment!`);
-                return message.channel.send(`${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
-            } else if (args[1] === 'keys') {
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no equipment!`);
+                return sendMessage(client, message, `${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
+            } else if (args[0] === 'keys') {
                 items = await user.getKeys();
-                if (!items.length) return message.channel.send(`${target.toString()} has no key items!`);
-                return message.channel.send(`${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
+                if (!items.length) return sendMessage(client, message, `${target.toString()} has no key items!`);
+                return sendMessage(client, message, `${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
                 let description = `${target.toString()}'s inventory:`;
                 const length = description.length;
@@ -39,11 +40,11 @@ exports.run = async (client, message) => {
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return message.channel.send(`${target.toString()} has nothing!`);
-                return message.channel.send(description);
+                if (description.length === length) if (!items.length) return sendMessage(client, message, `${target.toString()} has nothing!`);
+                return sendMessage(client, message, description);
             };
         };
-        return message.channel.send(`> ${message.author}, please specify a category: items, food or equipment.`);
+        return sendMessage(client, message, `Please specify a category: items, food or equipment.`);
 
     } catch (e) {
         // log error
@@ -55,5 +56,6 @@ exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "inventory",
-    aliases: ["inv", "items"]
+    aliases: ["inv", "items"],
+    description: "Sends a list of items in your inventory."
 };

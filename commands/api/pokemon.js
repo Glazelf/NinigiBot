@@ -1,6 +1,7 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -11,12 +12,13 @@ module.exports.run = async (client, message) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        const args = message.content.split(' ');
-        if (!args[1]) return message.channel.send(`> You need to provide either a subcommand or a Pokémon to look up, ${message.author}.`);
+        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
 
-        let subCommand = args[1].toLowerCase();
-        let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
-        subArgument = subArgument.split(" ").join("-");
+        let subCommand = args[0].toLowerCase();
+        let subArgument;
+        if (args[1]) {
+            subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
+        };
 
         switch (subCommand) {
             case "ability":
@@ -30,14 +32,13 @@ module.exports.run = async (client, message) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
-
-                        return message.channel.send(abilityEmbed);
+                        return sendMessage(client, message, null, abilityEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified ability, ${message.author}.`);
+                        return sendMessage(client, message, `Could not find the specified ability.`);
                     });
                 break;
 
@@ -54,14 +55,14 @@ module.exports.run = async (client, message) => {
                             .addField("Category:", capitalizeString(response.category.name), true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
                             .setImage(itemImage)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return message.channel.send(itemEmbed);
+                        return sendMessage(client, message, null, itemEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified item, ${message.author}.`);
+                        return sendMessage(client, message, `Could not find the specified item.`);
                     });
                 break;
 
@@ -87,31 +88,32 @@ module.exports.run = async (client, message) => {
                             .addField("Target:", capitalizeString(response.target.name), true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return message.channel.send(moveEmbed);
+                        return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified move, ${message.author}.`);
+                        return sendMessage(client, message, `Could not find the specified move.`);
                     });
                 break;
 
             default:
                 // Public variables
-                var pokemonName = subCommand;
+                var pokemonName;
                 var pokemonID;
 
-                args.forEach(arg => {
-                    if (arg !== args[0] && arg !== args[1]) {
-                        pokemonName = `${pokemonName} ${arg}`;
-                    };
-                });
+                // Catch Slash Command structure
+                if (message.type == 'APPLICATION_COMMAND') {
+                    pokemonName = args.slice(1).join(" ");
+                } else {
+                    pokemonName = args.join(" ");
+                };
 
                 // Edgecase name corrections
-                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[1]}-${args[2]}`;
-                if (pokemonName == "type: null") pokemonName = `${args[1].substring(0, args[1].length - 1)}-${args[2]}`;
+                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[0]}-${args[1]}`;
+                if (pokemonName == "type: null") pokemonName = `${args[0].substring(0, args[0].length - 1)}-${args[1]}`;
                 correctValue(correctionName, pokemonName);
 
                 // Easter egg name aliases
@@ -242,7 +244,7 @@ module.exports.run = async (client, message) => {
                                 })
                                 .catch(function (e) {
                                     // console.log(e);
-                                    return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                                    return sendMessage(client, message, `Could not find the specified Pokémon.`, true);
                                 });
                         };
 
@@ -331,14 +333,14 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
                             .setImage(banner)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return message.channel.send(pkmEmbed);
+                        return sendMessage(client, message, null, pkmEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return message.channel.send(`> Could not find the specified Pokémon, ${message.author}.`);
+                        return sendMessage(client, message, `Could not find the specified Pokémon.`);
                     });
                 break;
         };
@@ -433,5 +435,47 @@ ${type2Emote} ${type2Name}`;
 
 module.exports.config = {
     name: "pokemon",
-    aliases: ["pkm", "pkmn"]
+    aliases: ["pkm", "pkmn"],
+    description: "Shows Pokémon data.",
+    options: [{
+        name: "ability",
+        type: "SUB_COMMAND",
+        description: "Get info on an ability.",
+        options: [{
+            name: "ability-name",
+            type: "STRING",
+            description: "Get ability info by English name.",
+        }]
+    }, {
+        name: "item",
+        type: "SUB_COMMAND",
+        description: "Get info on an item.",
+        options: [{
+            name: "item-name",
+            type: "STRING",
+            description: "Get item info by English name.",
+        }]
+    }, {
+        name: "move",
+        type: "SUB_COMMAND",
+        description: "Get info on a move.",
+        options: [{
+            name: "move-name",
+            type: "STRING",
+            description: "Get move info by English name.",
+        }]
+    }, {
+        name: "pokemon",
+        type: "SUB_COMMAND",
+        description: "Get info on a Pokémon.",
+        options: [{
+            name: "pokemon-name",
+            type: "STRING",
+            description: "Get Pokémon info by English name.",
+        }, {
+            name: "pokemon-id",
+            type: "INTEGER",
+            description: "Get Pokémon info by Pokédex number.",
+        }]
+    }]
 };

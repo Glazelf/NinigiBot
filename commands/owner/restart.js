@@ -1,15 +1,15 @@
-exports.run = (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.channel.send(client.config.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, client.config.lackPerms);
 
         // send channel a message that you're resetting bot [optional]
-        message.channel.send(`> Restarting for ${message.author}...`)
-            .then(msg => client.destroy())
-            .then(() => client.login(client.config.token))
-            .then(message.channel.send(`> Successfully restarted!`));
-        return;
+        await sendMessage(client, message, `Restarting...`);
+        await client.destroy();
+        await client.login(client.config.token);
+        return sendMessage(client, message, `Successfully restarted!`);
 
     } catch (e) {
         // log error
@@ -21,5 +21,6 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "restart",
-    aliases: []
+    aliases: [],
+    description: "Restart bot and reload all files."
 };

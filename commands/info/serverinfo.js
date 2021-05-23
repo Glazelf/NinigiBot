@@ -4,6 +4,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
 
@@ -80,8 +81,7 @@ module.exports.run = async (client, message) => {
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
-        let ownerTag = guild.owner.user.tag;
-        if (guild == message.guild) ownerTag = guild.owner.user;
+        let guildOwner = await guild.fetchOwner()
 
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
@@ -107,8 +107,10 @@ module.exports.run = async (client, message) => {
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${guild.name} (${guild.id})`, icon)
-            .setThumbnail(icon)
-            .addField("Owner:", ownerTag, true)
+            .setThumbnail(icon);
+        if (guild.description) serverEmbed.setDescription(guild.description);
+        serverEmbed
+            .addField("Owner:", guildOwner, true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
@@ -127,10 +129,10 @@ module.exports.run = async (client, message) => {
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false)
             .setImage(banner)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return message.channel.send(serverEmbed);
+        return sendMessage(client, message, null, serverEmbed);
 
         function checkDays(date) {
             let now = new Date();
@@ -149,5 +151,6 @@ ${checkDays(guild.createdAt)}`, false)
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["server", "guild", "guildinfo"]
+    aliases: ["server", "guild", "guildinfo"],
+    description: "Sends info about the server.",
 };

@@ -1,28 +1,29 @@
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
 
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("MANAGE_ROLES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_ROLES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const requestRole = args.join(' ').toLowerCase();
 
-        if (requestRole.length < 1) return message.channel.send(`> Please provide a role, ${message.author}.`);
+        if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role.`);
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
-        if (!role) return message.channel.send(`> That role does not exist, ${message.author}.`);
+        if (!role) return sendMessage(client, message, `That role does not exist.`);
         let roleID = await EligibleRoles.findOne({ where: { role_id: role.id, name: requestRole } });
 
-        if (role.managed == true) return message.channel.send(`> I can't manage the **${role.name}** role because it is being automatically managed by an integration, ${message.author}.`);
+        if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
 
         if (roleID) {
             let roleTag = role.name;
             await roleID.destroy();
-            return message.channel.send(`> The **${roleTag}** role is no longer eligible to be selfassigned, ${message.author}.`);
+            return sendMessage(client, message, `The **${roleTag}** role is no longer eligible to be selfassigned.`);
         } else {
             await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
-            return message.channel.send(`> The **${role.name}** role is now eligible to be selfassigned, ${message.author}.`);
+            return sendMessage(client, message, `The **${role.name}** role is now eligible to be selfassigned.`);
         };
 
     } catch (e) {
@@ -35,5 +36,11 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "roleadd",
-    aliases: ["addrole"]
+    aliases: ["addrole"],
+    description: "Toggle a role's eligibility to be selfassigned.",
+    options: [{
+        name: "role-name",
+        type: "STRING",
+        description: "Specify role by name."
+    }]
 };

@@ -2,6 +2,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         if (message.guild.id !== client.config.botServerID) return;
 
         let rulesChannelID = "549220480490536972";
@@ -42,18 +43,18 @@ module.exports.run = async (client, message) => {
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
-        return message.channel.send(`> Hey, ${message.author}, here's a list of Sysbots and their status:
-> **Format:** Bot (prefix): status (\`Host#0001\`)
-> **Pokémon bots:**
-> ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
-> ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
-> ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
-> **ACNH bots:**
-> ${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
-> ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
+        return sendMessage(client, message, `Here's a list of Sysbots and their status:
+**Format:** Bot (prefix): status (\`Host#0001\`)
+**Pokémon bots:**
+${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
+${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
+${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
+**ACNH bots:**
+${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
+${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
-> Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
-> Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
+Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
+Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
 
     } catch (e) {
         // log error
@@ -65,5 +66,6 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "sysbot",
-    aliases: ["sb"]
+    aliases: ["sb"],
+    description: "Sends status of all sysbots."
 };

@@ -1,31 +1,29 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         const { bank } = require('../../database/bank');
-        const input = message.content.slice(1).trim();
-        const [, , commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
         let currency = globalVars.currency;
 
-        const transferAmount = commandArgs.split(/ +/).find(arg => !/<@!?\d+>/.test(arg));
+        const transferAmount = args[1]
         let transferTarget = message.mentions.users.first();
 
-        let userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`;
+        let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${currency}`;
 
         if (!transferTarget) {
-            const input = message.content.split(` `, 3);
-            let userID = input[2];
+            let userID = args[0];
             transferTarget = client.users.cache.get(userID);
         };
 
-        if (!transferTarget) return message.channel.send(`> That's not a valid target, ${message.author}.`);
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`> That's not a valid number, ${message.author}.`);
+        if (!transferTarget) return sendMessage(client, message, `That's not a valid target.`);
+        if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `That's not a valid number.`);
 
-        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.author.id))}${currency}`);
+        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${currency}`);
 
-        return message.channel.send(`> Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
+        return sendMessage(client, message, `Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
 
     } catch (e) {
         // log error
@@ -37,5 +35,20 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "moneyadd",
-    aliases: ["addmoney"]
+    aliases: ["addmoney"],
+    description: "Add money to a user.",
+    options: [{
+        name: "amount",
+        type: "INTEGER",
+        description: "Amount of money to add.",
+        required: true
+    }, {
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

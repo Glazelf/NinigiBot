@@ -1,22 +1,20 @@
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        // Personal Roles can / will only get global support in discord.js v13
-        if (message.guild.id !== "549214833858576395") return message.channel.send(`> Personal Roles can / will only get global support in discord.js v13, ${message.author}.`);
-
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
 
         if (serverID) {
             await serverID.destroy();
-            return message.channel.send(`> Personal Roles can no longer be managed by users in **${message.guild.name}**, ${message.author}.`);
+            return sendMessage(client, message, `Personal Roles can no longer be managed by users in **${message.guild.name}**.`);
         } else {
             await PersonalRoleServers.upsert({ server_id: message.guild.id });
-            return message.channel.send(`> Personal Roles can now be managed by users in **${message.guild.name}**, ${message.author}.`);
+            return sendMessage(client, message, `Personal Roles can now be managed by users in **${message.guild.name}**.`);
         };
 
     } catch (e) {
@@ -29,5 +27,6 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "togglepersonalroles",
-    aliases: ["tpr"]
+    aliases: ["tpr"],
+    description: "Toggle personal roles in this server."
 };

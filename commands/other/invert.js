@@ -1,5 +1,6 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const Canvas = require("canvas");
 
@@ -9,14 +10,13 @@ module.exports.run = async (client, message) => {
         if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 
         if (!user) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+            let userID = args[0];
             user = client.users.cache.get(userID);
             member = message.guild.members.cache.get(userID);
         };
 
         if (!user || !member) {
-            user = message.author;
+            user = message.member.user;
         };
 
         let totalMessage = null;
@@ -24,21 +24,21 @@ module.exports.run = async (client, message) => {
         let targetImage = null;
         let targetImageWidth = null;
         let targetImageHeight = null;
-        if (attachment && message.author.id == client.config.ownerID) {
+        if (attachment && message.member.id == client.config.ownerID) {
             targetImage = attachment;
             targetImageWidth = message.attachments.values().next().value.width;
             targetImageHeight = message.attachments.values().next().value.height;
-            totalMessage = `> Here you go, ${message.author}, your inverted image:`;
+            totalMessage = `Here you go, your inverted image:`;
         } else {
             if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-            if (!avatar) return message.channel.send(`> ${user.tag} doesn't have an avatar, ${message.author}.`);
+            if (!avatar) return message.channel.send(`${user.tag} doesn't have an avatar.`);
             targetImage = avatar;
             targetImageWidth = 128;
             targetImageHeight = 128;
-            if (user.id == message.author.id) {
-                totalMessage = `> Here you go, ${message.author}, your inverted avatar:`;
+            if (user.id == message.member.id) {
+                totalMessage = `Here you go, your inverted avatar:`;
             } else {
-                totalMessage = `> Here you go, ${message.author}, ${user.tag}'s inverted avatar:`;
+                totalMessage = `Here you go, ${user.tag}'s inverted avatar:`;
             };
         };
 
@@ -65,9 +65,7 @@ module.exports.run = async (client, message) => {
         ctx.closePath();
         ctx.clip();
 
-        return message.channel.send(totalMessage, {
-            files: [canvas.toBuffer()]
-        });
+        return sendMessage(client, message, totalMessage, null, canvas.toBuffer());
 
     } catch (e) {
         // log error
@@ -79,5 +77,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "invert",
-    aliases: []
+    aliases: [],
+    description: "Invert a user's profile picture.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

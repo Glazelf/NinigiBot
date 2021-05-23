@@ -1,21 +1,21 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         let target = message.mentions.users.first();
 
         if (!target) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+            let userID = args[0];
             target = client.users.cache.get(userID);
         };
 
         if (!target) {
-            target = message.author;
+            target = message.member.user;
         };
 
-        return message.channel.send(`> ${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
+        return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
 
     } catch (e) {
         // log error
@@ -27,5 +27,6 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "balance",
-    aliases: ["bal", "money"]
+    aliases: ["bal", "money"],
+    description: "Sends how much money you have."
 };

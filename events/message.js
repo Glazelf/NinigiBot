@@ -6,6 +6,7 @@ module.exports = async (client, message) => {
     try {
         const Discord = require("discord.js");
         const { bank } = require('../database/bank');
+        const sendMessage = require('../util/sendMessage');
         let secondCharacter = message.content.charAt(1);
 
         const { DisabledChannels, Prefixes } = require('../database/dbObjects');
@@ -20,7 +21,6 @@ module.exports = async (client, message) => {
         };
 
         const autoMod = require('../util/autoMod');
-        const starboard = require('../util/starboard');
 
         // Call image
         let messageImage = null;
@@ -30,19 +30,19 @@ module.exports = async (client, message) => {
 
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
-            if (message.author.bot) return;
+            if (message.member.user.bot) return;
             if (message.content.indexOf(prefix) == 0) {
-                message.author.send(`> Sorry ${message.author}, you're not allowed to use commands in private messages!`);
+                sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
             };
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.author.tag, false)
-                .addField(`Author ID:`, message.author.id, false);
+                .addField(`Author:`, message.member.user.tag, false)
+                .addField(`Author ID:`, message.member.id, false);
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
@@ -53,12 +53,9 @@ module.exports = async (client, message) => {
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
-        // Starboard functionality
-        starboard(message, client);
-
         // Ignore all bots and welcome messages
-        if (message.author.bot) return;
         if (!message.member) return;
+        if (message.member.user.bot == true) return;
 
         // Automod
         autoMod(message);
@@ -66,11 +63,11 @@ module.exports = async (client, message) => {
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
         // Add currency if message doesn't start with prefix
-        if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.author.id) && memberRoles.size !== 0) {
-            bank.currency.add(message.author.id, 1);
-            talkedRecently.add(message.author.id);
+        if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.member.id) && memberRoles.size !== 0) {
+            bank.currency.add(message.member.id, 1);
+            talkedRecently.add(message.member.id);
             setTimeout(() => {
-                talkedRecently.delete(message.author.id);
+                talkedRecently.delete(message.member.id);
             }, 60000);
         };
 
@@ -96,7 +93,7 @@ module.exports = async (client, message) => {
         } else return;
 
         // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send(`> Commands have been disabled in this channel, ${message.author}.`);
+        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
 
         // Run the command
         if (cmd) {
@@ -104,6 +101,8 @@ module.exports = async (client, message) => {
             await cmd.run(client, message, args);
             message.channel.stopTyping(true);
         } else return;
+
+        return;
 
     } catch (e) {
         // log error

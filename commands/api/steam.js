@@ -1,22 +1,22 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const SteamAPI = require('steamapi');
         const steam = new SteamAPI(`${client.config.steam}`);
 
         // Sanitize and sort user input
-        const input = message.content.slice(2).trim();
-        let [, , subCommand] = input.match(/(\w+)\s*([\s\S]*)/);
-        if (!subCommand) return message.channel.send(`> Please provide a subCommand of either \`user\` or \`game\`, ${message.author}.`);
-        let [, , steamInput] = subCommand.match(/(\w+)\s*([\s\S]*)/);
-        if (!steamInput) return message.channel.send(`> Please provide a user or game ID, ${message.author}.`);
+        if (args.length < 2) return sendMessage(client, message, `Please provide either \`user\` or \`game\` and a valid ID.`);
+        let subCommand = args[0].match(/(\w+)\s*([\s\S]*)/);
+        let steamInput = args[1].match(/(\w+)\s*([\s\S]*)/);
+
         subCommand = subCommand.substring(0, subCommand.indexOf(" ")).toLowerCase();
         steamInput = steamInput.toLowerCase();
 
         // init variables
-        let userFailString = `> Could not find the specified user, ${message.author}. 
+        let userFailString = `Could not find the specified user. 
 > Make sure you either provide a userID (example: \`76561198084469073\`) or a custom link ID (check if <https://steamcommunity.com/id/${steamInput}> exists).`;
         let userName;
         let userID;
@@ -114,18 +114,18 @@ ${checkDays(userCreated)}`;
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
-                        .setFooter(message.author.tag)
+                        .setFooter(message.member.user.tag)
                         .setTimestamp();
 
-                    return message.channel.send(userEmbed);
+                    return sendMessage(client, message, null, userEmbed);
 
                 } catch (e) {
                     // console.log(e);
-                    return message.channel.send(userFailString);
+                    return sendMessage(client, message, userFailString);
                 };
             case "game":
                 // Get game info from ID
-                return message.channel.send(`Game info goes here, ${message.author}.`);
+                return sendMessage(client, message, `Game info goes here.`);
         };
 
         function checkDays(date) {
@@ -162,5 +162,25 @@ ${checkDays(userCreated)}`;
 
 module.exports.config = {
     name: "steam",
-    aliases: []
+    aliases: [],
+    description: "Shows Steam data",
+    options: [{
+        name: "user",
+        type: "SUB_COMMAND",
+        description: "Get info on a user.",
+        options: [{
+            name: "user-id",
+            type: "STRING",
+            description: "Target user's ID.",
+        }]
+    }, {
+        name: "game",
+        type: "SUB_COMMAND",
+        description: "Get info on a game.",
+        options: [{
+            name: "game-id",
+            type: "STRING",
+            description: "Target game's ID.",
+        }]
+    }]
 };

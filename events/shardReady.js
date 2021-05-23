@@ -5,6 +5,8 @@ module.exports = async (client, id) => {
 
         let timestamp = await getTime();
 
+        client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
+
         // Console log status
         return console.log(`Launched shard ${id}. (${timestamp})`);
 

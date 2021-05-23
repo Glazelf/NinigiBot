@@ -1,7 +1,8 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -10,21 +11,21 @@ exports.run = async (client, message, args) => {
             prefix = globalVars.prefix;
         };
 
-        if (!args[0]) return message.channel.send(`> Please provid an argument, ${message.author}.`);
+        if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
 
         if (message.content.toLowerCase().startsWith(`${prefix}todecimal`)) {
             try {
                 let argHex = `0x${args[0]}`;
                 let hexInt = parseInt(argHex);
-                return message.channel.send(`${hexInt} (${message.author.tag})`, { code: "js" });
+                return sendMessage(client, message, `${hexInt} (${message.member.user.tag})`, true, null, "js");
             } catch (e) {
-                return message.channel.send(`> An error occurred trying to convert to decimal. Make sure your input is a valid hex, ${message.author}.`);
+                return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
             };
         } else {
-            if (isNaN(args[0])) return message.channel.send(`> Please provide a valid number to convert to hex, ${message.author}.`);
+            if (isNaN(args[0])) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
             let argInt = parseInt(args[0]);
             let hexString = argInt.toString(16).toUpperCase();
-            return message.channel.send(`${hexString} (${message.author.tag})`, { code: "js" });
+            return sendMessage(client, message, `${hexString} (${message.member.user.tag})`, true, null, "js");
         };
 
     } catch (e) {
@@ -37,5 +38,11 @@ exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "tohex",
-    aliases: ["todecimal"]
+    aliases: ["todecimal"],
+    description: "Convert a number to hexadecimal.",
+    options: [{
+        name: "input",
+        type: "INTEGER",
+        description: "Input number."
+    }]
 };

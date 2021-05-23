@@ -1,19 +1,19 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        if (message.author.id !== client.config.ownerID) return message.reply(globalVars.lackPerms);
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        const input = message.content.split(` `, 2);
-        let starLimit = input[1];
+        let starLimit = args[0];
 
-        if (isNaN(starLimit)) return message.channel.send(`> You need to provide a valid number, ${message.author}.`);
+        if (isNaN(starLimit)) return sendMessage(client, message, `You need to provide a valid number.`);
 
-        if (starLimit === globalVars.starboardLimit) return message.channel.send(`> The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}, ${message.author}.`);
+        if (starLimit === globalVars.starboardLimit) return sendMessage(client, message, `The starboard star limit didn't change since it's equal to the number you provided, ${starLimit}.`);
 
         globalVars.starboardLimit = starLimit;
 
-        return message.channel.send(`> The starboard star limit was changed to ${starLimit}, ${message.author}.`);
+        return sendMessage(client, message, `The starboard star limit was changed to ${starLimit}.`);
 
     } catch (e) {
         // log error
@@ -25,5 +25,11 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "starlimit",
-    aliases: ["sl"]
+    aliases: ["sl"],
+    description: "Change the star amount to appear on starboard.",
+    options: [{
+        name: "amount",
+        type: "INTEGER",
+        description: "Amount of stars required."
+    }]
 };

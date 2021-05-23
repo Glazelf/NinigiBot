@@ -1,34 +1,35 @@
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("MANAGE_ROLES") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_ROLES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         // Minutes the user is muted
         let muteTime = 60;
         let muteRoleName = "muted";
 
-        if (!args[0]) return message.channel.send(`> Please provide a mentioned user as an argument, ${message.author}.`);
+        if (!args[0]) return sendMessage(client, message, `Please provide a mentioned user as an argument.`);
 
         if (args[1]) {
             muteTime = args[1];
-            if (isNaN(muteTime) || 1 > muteTime) return message.channel.send(`> Please provide a valid number, ${message.author}.`);
+            if (isNaN(muteTime) || 1 > muteTime) return sendMessage(client, message, `Please provide a valid number.`);
             if (muteTime > 10080) muteTime = 10080;
         };
 
         const member = message.mentions.members.first();
-        if (!member) return message.channel.send(`> Please use a proper mention if you want to mute someone, ${message.author}.`);
+        if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
-        if (!role) return message.channel.send(`> There is no mute role. In order to mute someone, you need to create a role called "Muted", ${message.author}.`);
+        if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);
 
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
             await member.roles.remove(role);
-            return message.channel.send(`> ${member.user.tag} has been unmuted, ${message.author}.`);
+            return sendMessage(client, message, `${member.user.tag} has been unmuted.`);
         } else {
             await member.roles.add(role);
-            message.channel.send(`> ${member.user.tag} has been muted for ${muteTime} minute(s), ${message.author}.`);
+            sendMessage(client, message, `${member.user.tag} has been muted for ${muteTime} minute(s).`);
             // sets a timeout to unmute the user.
             setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
         };
@@ -43,5 +44,15 @@ module.exports.run = async (client, message, args) => {
 
 module.exports.config = {
     name: "mute",
-    aliases: ["unmute"]
+    aliases: ["unmute"],
+    description: "Mute a specific user.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };

@@ -1,18 +1,18 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.hasPermission("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return message.reply(globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_CHANNELS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
 
         const { DisabledChannels } = require('../../database/dbObjects');
 
         let channel = null;
         let subCommand = null;
-        const args = message.content.split(' ');
 
-        if (args[1]) {
-            subCommand = args[1].toLowerCase();
+        if (args[0]) {
+            subCommand = args[0].toLowerCase();
         } else {
             subCommand = message.channel.id;
         };
@@ -26,10 +26,10 @@ module.exports.run = async (client, message) => {
 
         if (channelID) {
             await channelID.destroy();
-            return message.channel.send(`> Commands can now be used in ${channel} again, ${message.author}.`);
+            return sendMessage(client, message, `Commands can now be used in ${channel} again.`);
         } else {
             await DisabledChannels.upsert({ channel_id: channel.id, name: channelName });
-            return message.channel.send(`> Commands can no longer be used in ${channel}, ${message.author}.`);
+            return sendMessage(client, message, `Commands can no longer be used in ${channel}.`);
         };
 
     } catch (e) {
@@ -42,5 +42,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "togglechannel",
-    aliases: ["tc"]
+    aliases: ["tc"],
+    description: "Toggles commands in a channel.",
+    options: [{
+        name: "channel-tag",
+        type: "CHANNEL",
+        description: "Specify channel by mention."
+    }, {
+        name: "channel-id",
+        type: "STRING",
+        description: "Specify channel by name or ID."
+    }]
 };

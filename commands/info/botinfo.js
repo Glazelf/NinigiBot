@@ -4,6 +4,7 @@ module.exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -102,10 +103,10 @@ module.exports.run = async (client, message) => {
             .addField("Uptime:", uptime, false)
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
 ${checkDays(client.user.createdAt)}`, false)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return message.channel.send(botEmbed);
+        return sendMessage(client, message, null, botEmbed);
 
         function checkDays(date) {
             let now = new Date();
@@ -149,5 +150,6 @@ ${checkDays(client.user.createdAt)}`, false)
 
 module.exports.config = {
     name: "botinfo",
-    aliases: ["bot", "info"]
+    aliases: ["bot", "info"],
+    description: `Displays info on this bot.`
 };

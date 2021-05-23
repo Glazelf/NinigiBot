@@ -1,11 +1,11 @@
-exports.run = (client, message) => {
+exports.run = (client, message, args = []) => {
     try {
-        let split = message.content.split(` `, 3);
-        let conversionType = split[1];
-        let conversionValue = split[2];
+        const sendMessage = require('../../util/sendMessage');
+        let conversionType = args[0];
+        let conversionValue = args[1];
 
-        if (!conversionValue) return message.channel.send(`> You need to provide a number to calculate, ${message.author}.`);
-        if (isNaN(conversionValue)) return message.channel.send(`> What you provided isn't a number, ${message.author}.`);
+        if (args.length < 2) return sendMessage(client, message, `You need to provide a conversion type and a number to convert.`);
+        if (isNaN(conversionValue)) return sendMessage(client, message, `What you provided isn't a number.`);
         parseFloat(conversionValue);
 
         conversionType = conversionType.toLowerCase();
@@ -27,11 +27,11 @@ exports.run = (client, message) => {
                 typeReturn = "kilos";
                 break;
             default:
-                return message.channel.send(`> You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs, ${message.author}.`);
+                return sendMessage(client, message, `You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs.`);
         };
         conversionReturn = Math.round(conversionReturn * 100) / 100;
 
-        return message.channel.send(`> ${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}, ${message.author}.`);
+        return sendMessage(client, message, `${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}.`);
 
     } catch (e) {
         // log error
@@ -43,5 +43,35 @@ exports.run = (client, message) => {
 
 module.exports.config = {
     name: "convert",
-    aliases: ["conv"]
+    aliases: ["conv"],
+    description: "Converts from dumb American units to epic global units.",
+    options: [{
+        name: "fahrenheit",
+        description: "Convert from Fahrenheit to Celsius.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of Fahrenheits.",
+            type: "INTEGER"
+        }
+        ]
+    }, {
+        name: "feet",
+        description: "Convert from feet to meters.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of feet.",
+            type: "INTEGER"
+        }]
+    }, {
+        name: "lbs",
+        description: "Convert from lbs to kilos",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of lbs.",
+            type: "INTEGER"
+        }]
+    }]
 };

@@ -1,22 +1,21 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     try {
+        const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const input = message.content.slice(1).trim();
-        const [, , arguments] = input.match(/(\w+)\s*([\s\S]*)/);
 
-        let switchCodeGet = bank.currency.getSwitchCode(message.author.id);
+        let switchCodeGet = bank.currency.getSwitchCode(message.member.id);
 
-        if (arguments.length < 1) {
-            if (switchCodeGet && switchCodeGet !== "None") return message.channel.send(`> Your Nintendo Switch friend code is ${switchCodeGet}, ${message.author}.`)
-            return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
+        if (args.length < 1) {
+            if (switchCodeGet && switchCodeGet !== "None") return sendMessage(client, message, `Your Nintendo Switch friend code is ${switchCodeGet}.`);
+            return sendMessage(client, message, `Please specify a valid Nintendo Switch friend code.`);
         };
-        let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(arguments);
 
-        if (!switchcode) return message.channel.send(`> Please specify a valid Nintendo Switch friend code, ${message.author}.`);
+        let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(args);
+        if (!switchcode) return sendMessage(client, message, `Please specify a valid Nintendo Switch friend code.`);
 
         switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
-        bank.currency.switchCode(message.author.id, switchcode);
-        return message.channel.send(`> Successfully updated your Nintendo Switch friend code, ${message.author}.`)
+        bank.currency.switchCode(message.member.id, switchcode);
+        return sendMessage(client, message, `Successfully updated your Nintendo Switch friend code.`);
 
     } catch (e) {
         // log error
@@ -28,5 +27,11 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "switch",
-    aliases: ["fc", "friendcode"]
+    aliases: ["fc", "friendcode"],
+    description: "Updates your Switch friend code.",
+    options: [{
+        name: "switch-fc",
+        type: "STRING",
+        description: "SW-1234-1234-1234"
+    }]
 };

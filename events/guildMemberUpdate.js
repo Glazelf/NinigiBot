@@ -22,7 +22,7 @@ module.exports = async (client, member, newMember) => {
         const { PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-        if (!newMember.premiumSince && serverID && roleDB && !member.hasPermission("MANAGE_ROLES")) await deleteBoosterRole();
+        if (!newMember.premiumSince && serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
         let icon = member.guild.iconURL({ format: "png", dynamic: true });
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });

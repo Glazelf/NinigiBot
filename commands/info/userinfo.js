@@ -1,7 +1,8 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
@@ -12,13 +13,12 @@ module.exports.run = async (client, message) => {
         let member = message.mentions.members.first();
 
         if (!user) {
-            const input = message.content.split(` `, 2);
-            let userID = input[1];
+            let userID = args[0];
             user = client.users.cache.get(userID);
         };
 
         if (!user) {
-            user = message.author;
+            user = message.member.user;
         };
 
         if (!member) {
@@ -26,7 +26,7 @@ module.exports.run = async (client, message) => {
         };
 
         let memberCache = memberFetch.get(user.id);
-        if (!memberCache) return message.channel.send(`> No member information could be found for this user, ${message.author}.`);
+        if (!memberCache) return sendMessage(client, message, `No member information could be found for this user.`);
 
         // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
@@ -137,10 +137,10 @@ module.exports.run = async (client, message) => {
         if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         profileEmbed
             .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-            .setFooter(message.author.tag)
+            .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return message.channel.send(profileEmbed);
+        return sendMessage(client, message, null, profileEmbed);
 
         function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;
@@ -163,5 +163,15 @@ module.exports.run = async (client, message) => {
 
 module.exports.config = {
     name: "userinfo",
-    aliases: ["user", "profile"]
+    aliases: ["user", "profile"],
+    description: "Displays information about a specified user.",
+    options: [{
+        name: "user-mention",
+        type: "MENTIONABLE",
+        description: "Specify user by mention."
+    }, {
+        name: "user-id",
+        type: "STRING",
+        description: "Specify user by ID."
+    }]
 };
