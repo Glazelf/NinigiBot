@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,8 +9,7 @@ module.exports.run = async (client, message) => {
         const { LogChannels } = require('../../database/dbObjects');
         let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
 
-        const args = message.content.split(' ');
-        let subCommand = args[1];
+        let subCommand = args[0];
         if (!subCommand) {
             if (oldChannel) {
                 return sendMessage(client, message, `The current logging channel is <#${oldChannel.channel_id}>.`);
