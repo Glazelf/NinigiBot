@@ -106,7 +106,7 @@ ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, botEmbed);
+        return sendMessage(client, message, null, botEmbed);
 
         function checkDays(date) {
             let now = new Date();

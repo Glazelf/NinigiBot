@@ -47,7 +47,7 @@ exports.run = async (client, message, args = []) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return sendMessage(client, message, rounded, { code: "js" });
+        return sendMessage(client, message, rounded, null, null, true, "js");
 
     } catch (e) {
         // log error

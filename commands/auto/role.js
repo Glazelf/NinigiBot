@@ -56,7 +56,7 @@ Example: \`${prefix}role Minecraft\``;
                 .setDescription(roleHelpMessage)
                 .setFooter(message.member.user.tag)
                 .setTimestamp();
-            return sendMessage(client, message, rolesHelp);
+            return sendMessage(client, message, null, rolesHelp);
         };
 
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);

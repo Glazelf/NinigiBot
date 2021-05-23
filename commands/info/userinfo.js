@@ -140,7 +140,7 @@ module.exports.run = async (client, message, args = []) => {
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, profileEmbed);
+        return sendMessage(client, message, null, profileEmbed);
 
         function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;

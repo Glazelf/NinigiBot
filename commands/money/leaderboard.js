@@ -13,7 +13,7 @@ exports.run = async (client, message, args = []) => {
                         .filter(user => client.users.cache.has(user.user_id))
                         .first(10)
                         .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
-                        .join('\n'), true, null, true
+                        .join('\n'), null, null, true, true
                 );
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
                 return sendMessage(client, message,
@@ -21,7 +21,7 @@ exports.run = async (client, message, args = []) => {
                         .filter(user => client.users.cache.has(user.user_id))
                         .first(10)
                         .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)} (${(client.users.cache.get(user.user_id).id)}): ${Math.floor(user.balance)}${globalVars.currency}`)
-                        .join('\n'), true, null, true
+                        .join('\n'), null, null, true, true
                 );
             } else {
                 serverLeaderboard();
@@ -36,7 +36,7 @@ exports.run = async (client, message, args = []) => {
                     .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                     .first(10)
                     .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
-                    .join('\n'), true, null, true
+                    .join('\n'), null, null, true, true
             );
         };
 

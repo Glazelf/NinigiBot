@@ -33,7 +33,7 @@ exports.run = async (client, message, args = []) => {
                 .setFooter(message.member.user.tag)
                 .setTimestamp();
 
-            return sendMessage(client, message, noRoleEmbed);
+            return sendMessage(client, message, null, noRoleEmbed);
         };
 
         if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
@@ -68,7 +68,7 @@ exports.run = async (client, message, args = []) => {
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, roleEmbed);
+        return sendMessage(client, message, null, roleEmbed);
 
     } catch (e) {
         // log error

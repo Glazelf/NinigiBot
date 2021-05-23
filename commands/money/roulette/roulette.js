@@ -24,7 +24,7 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return sendMessage(client, message, `No one wants to play any more Roulette? Well, see you next time!`, false);
+                    return sendMessage(client, message, `No one wants to play any more Roulette? Well, see you next time!`, null, null, false);
                 };
 
                 const result = Math.floor(Math.random() * 37);
@@ -48,7 +48,7 @@ exports.run = async (client, message) => {
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
-                sendMessage(client, message, results, false);
+                sendMessage(client, message, results, null, null, false);
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
@@ -57,14 +57,14 @@ exports.run = async (client, message) => {
                 .setDescription('Welcome to the roulette! We hope to see you here!')
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${prefix}bet <money>, <numbers or intervals>\`
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
-After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, false)
+After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, null, null, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setFooter(message.member.user.tag)
                 .setTimestamp();
-            sendMessage(client, message, welcome, false);
+            sendMessage(client, message, welcome, null, null, false);
         } else {
             clearInterval(process);
-            sendMessage(client, message, `Roulette closed! Hope to see you all again!`, false);
+            sendMessage(client, message, `Roulette closed! Hope to see you all again!`, null, null, false);
         };
 
     } catch (e) {

@@ -117,7 +117,7 @@ ${checkDays(userCreated)}`;
                         .setFooter(message.member.user.tag)
                         .setTimestamp();
 
-                    return sendMessage(client, message, userEmbed);
+                    return sendMessage(client, message, null, userEmbed);
 
                 } catch (e) {
                     // console.log(e);

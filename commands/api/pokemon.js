@@ -12,11 +12,13 @@ module.exports.run = async (client, message, args = []) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`, true);
+        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
 
         let subCommand = args[0].toLowerCase();
-        let subArgument = message.content.substring(message.content.indexOf(subCommand) + subCommand.length + 1, message.content.length).toLowerCase();
-        subArgument = subArgument.split(" ").join("-");
+        let subArgument;
+        if (args[1]) {
+            subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
+        };
 
         switch (subCommand) {
             case "ability":
@@ -30,10 +32,9 @@ module.exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(capitalizeString(response.name))
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
-
-                        return sendMessage(client, message, abilityEmbed);
+                        return sendMessage(client, message, null, abilityEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -54,10 +55,10 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Category:", capitalizeString(response.category.name), true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
                             .setImage(itemImage)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return sendMessage(client, message, itemEmbed);
+                        return sendMessage(client, message, null, itemEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -87,10 +88,10 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Target:", capitalizeString(response.target.name), true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return sendMessage(client, message, moveEmbed);
+                        return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -100,14 +101,15 @@ module.exports.run = async (client, message, args = []) => {
 
             default:
                 // Public variables
-                var pokemonName = subCommand;
+                var pokemonName;
                 var pokemonID;
 
-                args.forEach(arg => {
-                    if (arg !== args[0]) {
-                        pokemonName = `${pokemonName} ${arg}`;
-                    };
-                });
+                // Catch Slash Command structure
+                if (message.type == 'APPLICATION_COMMAND') {
+                    pokemonName = args.slice(1).join(" ");
+                } else {
+                    pokemonName = args.join(" ");
+                };
 
                 // Edgecase name corrections
                 if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[0]}-${args[1]}`;
@@ -331,10 +333,10 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
                             .setImage(banner)
-                            .setFooter(message.author.tag)
+                            .setFooter(message.member.user.tag)
                             .setTimestamp();
 
-                        return sendMessage(client, message, pkmEmbed);
+                        return sendMessage(client, message, null, pkmEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
