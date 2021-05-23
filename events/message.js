@@ -83,7 +83,7 @@ module.exports = async (client, message) => {
         if (secondCharacter == prefix || secondCharacter == ` `) return;
 
         let args;
-        let commandName;
+        let commandName = "";
         // Standard definition
         if (message.content) {
             args = message.content.slice(prefix.length).trim().split(/ +/g);
