@@ -37,17 +37,17 @@ exports.run = async (client, message, args) => {
             message.channel.messages.fetch({
                 limit: 100,
             }).then((messages) => {
-                const filterBy = user ? user.id : Client.user.id;
+                const filterBy = user.id;
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
-                    .then(sendMessage(client, message, `${numberFromMessage} messages from ${user.tag} have been deleted.`));
+                    .then(sendMessage(client, message, `Deleted ${numberFromMessage} messages from ${user.tag}.`));
             });
 
         } else {
             message.channel.messages.fetch({ limit: amount })
                 .then(messages => message.channel.bulkDelete(messages))
-                .then(sendMessage(client, message, `${numberFromMessage} messages have been deleted.`));
+                .then(sendMessage(client, message, `Deleted ${numberFromMessage} messages.`));
             return;
         };
 
