@@ -44,6 +44,7 @@ module.exports = async (client) => {
                 .setTimestamp();
             channel.send({ embed: gifEmbed });
         }, timeZone = timezone, start = true);
+
     } catch (e) {
         // log error
         const logger = require('../util/logger');

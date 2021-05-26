@@ -39,6 +39,7 @@ module.exports = async (client) => {
                 .setTimestamp();
             channel.send(candidateRandom, { embed: gifEmbed });
         }, timeZone = timezone, start = true);
+
     } catch (e) {
         // log error
         const logger = require('../util/logger');
