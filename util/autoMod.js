@@ -35,11 +35,12 @@ module.exports = async (message) => {
         "neger", // Thanks Ewok
         "fag",
         "faggot",
-        "tranny"
+        "tranny",
+        "retard" // french
     ];
-    const frenchSlurs = [
-        "retard"
-    ];
+    // const frenchSlurs = [
+    //     "retard"
+    // ];
     const exceptions = [
         "retardation" // Thanks Pokémom
     ];
@@ -47,7 +48,8 @@ module.exports = async (message) => {
         "triceratops"
     ];
 
-    if (globalSlurs.some(v => messageNormalized.includes(v)) || frenchSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
+    // if (globalSlurs.some(v => messageNormalized.includes(v)) || frenchSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
+    if (globalSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
 
     // Scam links
     if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
@@ -64,12 +66,12 @@ module.exports = async (message) => {
     // Slurs
     if (isSlur && !exceptions.some(v => messageNormalized.includes(v))) {
         // Currently checks for top 1 language(s) only, can be changed based on effectiveness
-        let detectedLanguages = lngDetector.detect(message.content, 1);
-        languageArray = detectedLanguages.map(function (x) {
-            return x[0];
-        });
+        // let detectedLanguages = lngDetector.detect(message.content, 1);
+        // languageArray = detectedLanguages.map(function (x) {
+        //     return x[0];
+        // });
 
-        if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
+        // if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
         reason = "Using slurs.";
         msgDelete();
     };
