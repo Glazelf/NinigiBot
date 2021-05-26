@@ -5,7 +5,7 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
-        const target;
+        let target;
         if (message.mentions) target = message.mentions.users.first();
         if (!target) target = message.member.user;
 
