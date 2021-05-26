@@ -32,11 +32,10 @@ module.exports = async (client) => {
         // Set bot status
         client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
 
-        // List servers the bot is connected to
-
-        await client.guilds.cache.forEach(async (guild) => {
-            await guild.members.fetch();
-        });
+        // List and fetch servers the bot is connected to
+        // await client.guilds.cache.forEach(async (guild) => {
+        //     await guild.members.fetch();
+        // });
 
         console.log("Servers:");
         await client.guilds.cache.forEach(async (guild) => {
