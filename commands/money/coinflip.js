@@ -11,7 +11,7 @@ exports.run = (client, message, args = []) => {
         let currency = globalVars.currency;
         let balance = bank.currency.getBalance(message.member.id);
         let inputText = "";
-        if (args[0]) inputText = args[0].toLowerCase();
+        if (args[0]) inputText = args[0].toString().toLowerCase();
 
         // Heads / Tails + Amounts
         let winSide = "heads";
