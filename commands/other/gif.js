@@ -56,7 +56,7 @@ Dango, Jojo, Stitch, Kuzco`;
                 .setFooter(message.member.user.tag)
                 .setTimestamp();
 
-            return sendMessage(client, message, gifEmbed);
+            return sendMessage(client, message, null, gifEmbed);
 
         } else {
             return sendMessage(client, message, missingGifString);
