@@ -11,17 +11,17 @@ module.exports = async (client) => {
         // Set slash commands
         if (!client.application?.owner) await client.application?.fetch();
 
-        let PrivateCommands = ["dm", "eval", "item", "kill", "moneyadd", "reload", "restart", "starlimit", "battle"];
-        let SACCommands = ["rule", "sysbot"];
+        let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
+        let SACCommands = ["sysbot"];
 
         await client.commands.forEach(command => {
             try {
-                if (PrivateCommands.includes(command.config.name)) {
-                    return;
-                } else if (SACCommands.includes(command.config.name)) {
+                if (SACCommands.includes(command.config.name)) {
                     client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                } else {
+                } else if (GlobalCommands.includes(command.config.name)) {
                     client.application?.commands.create(command.config);
+                } else {
+                    return;
                 };
                 console.log(`Loaded slash command: ${command.config.name} ✔`);
             } catch (e) {
