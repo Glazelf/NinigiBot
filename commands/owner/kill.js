@@ -8,8 +8,6 @@ exports.run = async (client, message) => {
         const getTime = require('../../util/getTime');
         let timestamp = await getTime();
 
-        await sendMessage(client, message, `Shutting down...`);
-
         // Delete all global commands
         await client.application.commands.set([]);
 
@@ -22,8 +20,9 @@ exports.run = async (client, message) => {
         // await client.guilds.cache.get(client.config.botServerID).commands.set([]);
 
         // Return message then destroy
-
+        await sendMessage(client, message, `Shutting down...`);
         console.log(`Bot killed by ${message.member.user.tag}. (${timestamp})`);
+
         await client.destroy()
         return process.exit();
 
