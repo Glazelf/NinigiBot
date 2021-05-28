@@ -27,7 +27,9 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
             };
         };
         if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
+        if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false };
         messageObject['code'] = code;
+
         return message.reply(replyText, messageObject)
 
     } catch (e) {
