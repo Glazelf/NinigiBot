@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
         let DefaultEmbedColor = "#99AB5";
 
         // Split off command
-        let input = args[0].match(/(\w+)\s*([\s\S]*)/);
+        let input = args[0];
 
         // Author avatar
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
