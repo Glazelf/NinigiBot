@@ -3,11 +3,8 @@ module.exports = async (message) => {
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
 
-    const LanguageDetect = require('languagedetect');
-    const lngDetector = new LanguageDetect();
-
     if (!servers.includes(message.guild.id)) return;
-    if (message.member.permissions.has("MANAGE_MESSAGES")) return;
+    // if (message.member.permissions.has("MANAGE_MESSAGES")) return;
     if (!message.content) return;
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
@@ -54,13 +51,15 @@ module.exports = async (message) => {
     // Scam links
     if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
         reason = "Posting scam links.";
-        ban();
+        await ban();
+        return true;
     };
 
     // Ad links
     if (adLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
         reason = "Advertisement.";
-        msgDelete();
+        await msgDelete();
+        return true;
     };
 
     // Slurs
@@ -73,7 +72,8 @@ module.exports = async (message) => {
 
         // if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
         reason = "Using slurs.";
-        msgDelete();
+        await msgDelete();
+        return true;
     };
 
     // Test
@@ -85,6 +85,7 @@ module.exports = async (message) => {
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
         return message.channel.send(`> Deleted a message by ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        return true;
     };
 
     async function kick() {
@@ -93,10 +94,11 @@ module.exports = async (message) => {
         await message.member.kick([reason]);
         await message.channel.send(`> Successfully auto-kicked ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
         try {
-            return message.member.user.send(`> You've been automatically kicked for the following reason: \`${reason}\`
+            message.member.user.send(`> You've been automatically kicked for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
+            return true;
         } catch (e) {
-            return;
+            return true;
         };
     };
 
@@ -105,10 +107,11 @@ module.exports = async (message) => {
         await message.member.ban({ days: 1, reason: reason });
         await message.channel.send(`> Successfully auto-banned ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
         try {
-            return message.member.user.send(`> You've been automatically banned for the following reason: \`${reason}\`
+            message.member.user.send(`> You've been automatically banned for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
+            return true;
         } catch (e) {
-            return;
+            return true;
         };
     };
 

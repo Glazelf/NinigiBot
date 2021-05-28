@@ -58,7 +58,9 @@ module.exports = async (client, message) => {
         if (message.member.user.bot == true) return;
 
         // Automod
-        if (message.type == 'DEFAULT') autoMod(message);
+        let modBool = false;
+        if (message.type == 'DEFAULT') modBool = await autoMod(message);
+        if (modBool) return;
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
