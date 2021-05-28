@@ -45,8 +45,7 @@ exports.run = async (client, message, args = []) => {
             };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
-            textMessage = `"\`${textMessage}\`"
-    > -${message.member}`;
+            textMessage = `"\`${textMessage}\`"\n-${message.member}`;
             return sendMessage(client, message, textMessage);
         };
 
