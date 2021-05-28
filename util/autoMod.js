@@ -11,7 +11,7 @@ module.exports = async (message) => {
 
     let reason = "Unspecified.";
     let isSlur = false;
-    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "").toLowerCase();
+    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W/g, '').replace(" ", "").toLowerCase();
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
@@ -84,7 +84,7 @@ module.exports = async (message) => {
     async function msgDelete() {
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
-        return message.channel.send(`> Deleted a message by ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        return message.channel.send(`Deleted a message by ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
         return true;
     };
 
@@ -92,9 +92,9 @@ module.exports = async (message) => {
         if (!message.member.kickable) return;
         await message.delete();
         await message.member.kick([reason]);
-        await message.channel.send(`> Successfully auto-kicked ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        await message.channel.send(`Successfully auto-kicked ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
         try {
-            message.member.user.send(`> You've been automatically kicked for the following reason: \`${reason}\`
+            message.member.user.send(`You've been automatically kicked for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
             return true;
         } catch (e) {
@@ -105,9 +105,9 @@ module.exports = async (message) => {
     async function ban() {
         if (!message.member.bannable) return;
         await message.member.ban({ days: 1, reason: reason });
-        await message.channel.send(`> Successfully auto-banned ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        await message.channel.send(`Successfully auto-banned ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
         try {
-            message.member.user.send(`> You've been automatically banned for the following reason: \`${reason}\`
+            message.member.user.send(`You've been automatically banned for the following reason: \`${reason}\`
 \`\`\`${message.content}\`\`\``);
             return true;
         } catch (e) {
