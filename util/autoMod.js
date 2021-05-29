@@ -4,7 +4,7 @@ module.exports = async (message) => {
     const servers = dbServers.map(server => server.server_id);
 
     if (!servers.includes(message.guild.id)) return;
-    if (message.member.permissions.has("MANAGE_MESSAGES")) return;
+    // if (message.member.permissions.has("MANAGE_MESSAGES")) return;
     if (!message.content) return;
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
