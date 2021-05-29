@@ -32,6 +32,8 @@ exports.run = async (client, message, args) => {
             };
         };
 
+        await message.channel.messages.fetch();
+
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
         if (user) {
             message.channel.messages.fetch({
@@ -41,13 +43,13 @@ exports.run = async (client, message, args) => {
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
-                    .then(sendMessage(client, message, `Deleted ${numberFromMessage} messages from ${user.tag}.`));
+                    .then(message.channel.send(`Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.`));
             });
 
         } else {
             message.channel.messages.fetch({ limit: amount })
                 .then(messages => message.channel.bulkDelete(messages))
-                .then(sendMessage(client, message, `Deleted ${numberFromMessage} messages.`));
+                .then(message.channel.send(`Deleted ${numberFromMessage} messages, ${message.member}.`));
             return;
         };
 
