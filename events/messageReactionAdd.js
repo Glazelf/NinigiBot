@@ -5,7 +5,7 @@ module.exports = async (client, messageReaction) => {
         const Discord = require("discord.js");
         const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
 
-        let targetMessage = await client.channels.cache.get(messageReaction.message.channel.id).messages.fetch(messageReaction.message.id);
+        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
 
@@ -19,7 +19,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetmessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = targetMessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
         if (targetMessage.reference) isReply = true;
 
@@ -42,7 +42,7 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetmessage.member.user.tag)
+            .setFooter(targetMessage.member.user.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count >= globalVars.starboardLimit && !messageDB) {
