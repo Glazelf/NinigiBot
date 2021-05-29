@@ -20,8 +20,6 @@ module.exports = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        await message.member.fetch();
-
         const autoMod = require('../util/autoMod');
 
         // Call image
