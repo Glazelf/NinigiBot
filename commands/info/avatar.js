@@ -1,6 +1,9 @@
 module.exports.run = async (client, message, args = []) => {
+    // Import globals
+    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require('discord.js');
 
         let user;
         let member;
@@ -19,13 +22,18 @@ module.exports.run = async (client, message, args = []) => {
             user = message.member.user;
         };
 
-        let totalMessage = `${user.tag}'s avatar.`;
-
         let avatar = null;
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
         if (!avatar) return sendMessage(client, message, `${user.tag} doesn't have an avatar.`);
 
-        return sendMessage(client, message, totalMessage, null, avatar);
+        const avatarEmbed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor)
+            .setAuthor(`${user.username}'s avatar`)
+            .setImage(avatar)
+            .setFooter(message.member.user.tag)
+            .setTimestamp();
+
+        return sendMessage(client, message, null, avatarEmbed);
 
     } catch (e) {
         // log error
