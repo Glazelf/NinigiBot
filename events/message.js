@@ -20,6 +20,8 @@ module.exports = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
+        await message.member.fetch();
+
         const autoMod = require('../util/autoMod');
 
         // Call image
@@ -30,6 +32,7 @@ module.exports = async (client, message) => {
 
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
+            if (!message.member) return;
             if (message.member.user.bot) return;
             if (message.content.indexOf(prefix) == 0) {
                 sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
