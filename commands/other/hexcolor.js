@@ -66,7 +66,7 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "hexcolor",
-    aliases: ["hexcolour"],
+    aliases: ["hexcolour", "colorhex", "colourhex"],
     description: "Sends image from hex code.",
     options: [{
         name: "hex",
