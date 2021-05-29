@@ -20,13 +20,19 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
         if (files) {
             // Ephemeral messages don't support attachments
             ephemeral = false;
-            if (Array.isArray(files)) files = [files];
-            messageObject['files'] = files
+            if (Array.isArray(files)) {
+                messageObject['files'] = files;
+            } else {
+                messageObject['files'] = [files];
+            };
         };
         if (components) {
             // Components, i.e. buttons
-            if (Array.isArray(components)) components = [components];
-            messageObject['components'] = components;
+            if (Array.isArray(components)) {
+                messageObject['components'] = components;
+            } else {
+                messageObject['components'] = [components];
+            };
         };
         if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false };
