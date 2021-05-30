@@ -85,6 +85,9 @@ module.exports = async (client, message) => {
         // Ignore messages that start with prefix double or prefix space
         if (secondCharacter == prefix || secondCharacter == ` `) return;
 
+        // Ignore messages sent in a disabled channel
+        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
+
         let args;
         let commandName = "";
         // Standard definition
@@ -101,8 +104,7 @@ module.exports = async (client, message) => {
             cmd = client.commands.get(client.aliases.get(commandName));
         } else return;
 
-        // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
+        if (message.deleted) return;
 
         // Run the command
         if (cmd) {
