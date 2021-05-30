@@ -11,27 +11,22 @@ module.exports.run = async (client, message, args = []) => {
         let memberFetch = await message.guild.members.fetch();
 
         let user;
-        let member;
         if (message.mentions) {
             user = message.mentions.users.first();
-            member = message.mentions.members.first();
         };
 
         if (!user) {
             let userID = args[0];
             user = client.users.cache.get(userID);
+            if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
 
         if (!user) {
             user = message.member.user;
         };
 
-        if (!member) {
-            member = message.member;
-        };
-
-        let memberCache = memberFetch.get(user.id);
-        if (!memberCache) return sendMessage(client, message, `No member information could be found for this user.`);
+        let member = memberFetch.get(user.id);
+        if (!member) return sendMessage(client, message, `No member information could be found for this user.`);
 
         // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
@@ -41,7 +36,7 @@ module.exports.run = async (client, message, args = []) => {
         let birthdayParsed = require('../../util/parseDate')(birthday);
 
         // Roles
-        let memberRoles = memberCache.roles.cache.filter(element => element.name !== "@everyone");
+        let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
         let shortenedRoles = false;
         if (memberRoles.size !== 0) {
@@ -78,7 +73,7 @@ module.exports.run = async (client, message, args = []) => {
         //Activities to string
         let activityLog = '';
         let customStatus = '';
-        const activities = memberCache.presence.activities;
+        const activities = member.presence.activities;
         for (const act in activities) {
             if (activities[act].name === 'Custom Status') {
                 let emoji = null;
@@ -109,17 +104,17 @@ module.exports.run = async (client, message, args = []) => {
         // Nitro Boost check
         let nitroEmote = "<:nitroboost:753268592081895605>";
         let userText = user;
-        if (memberCache.premiumSince > 0) userText = `${user} ${nitroEmote}`;
+        if (member.premiumSince > 0) userText = `${user} ${nitroEmote}`;
         if (user.bot) userText = `${user} 🤖`;
 
         // JoinRank
         let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
 
         // Check Days
-        let daysJoined = await checkDays(memberCache.joinedAt);
+        let daysJoined = await checkDays(member.joinedAt);
         let daysBoosting;
-        if (memberCache.premiumSince > 0) {
-            daysBoosting = await checkDays(memberCache.premiumSince);
+        if (member.premiumSince > 0) {
+            daysBoosting = await checkDays(member.premiumSince);
         };
         let daysCreated = await checkDays(user.createdAt);
 
@@ -138,8 +133,8 @@ module.exports.run = async (client, message, args = []) => {
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${memberCache.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
-        if (memberCache.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${memberCache.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
+            .addField("Joined at:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+        if (member.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         profileEmbed
             .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .setFooter(message.member.user.tag)
