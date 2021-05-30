@@ -65,27 +65,24 @@ module.exports.run = async (client, message, args = []) => {
             if (!args[0]) roleColor = 0;
 
             // Create role
-            await message.guild.roles.create({
-                data: {
+            try {
+                await message.guild.roles.create({
                     name: message.member.user.tag,
                     color: roleColor,
-                    position: personalRolePosition
-                },
-                reason: `Personal role for ${message.member.user.tag}.`,
-            }).catch(error => {
+                    position: personalRolePosition,
+                    reason: `Personal role for ${message.member.user.tag}.`,
+                })
+            } catch (e) {
                 // console.log(error);
-                return sendMessage(client, message, `An error occurred.`);
-            });
-
-            let createdRole = await message.guild.roles.cache.find(role => {
-                role.name == message.member.user.tag;
-            });
-            if (createdRole) {
-                message.member.roles.add(createdRole.id);
-                await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
-            } else {
-
+                return sendMessage(client, message, `An error occurred creating a role.`);
             };
+
+            let createdRole = await message.guild.roles.cache.find(role => role.name == message.member.user.tag);
+            console.log(createdRole)
+
+            message.member.roles.add(createdRole.id);
+            await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
+
             return sendMessage(client, message, `Created a personal role for you successfully.`);
         };
 
