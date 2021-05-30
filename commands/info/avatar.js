@@ -6,19 +6,16 @@ module.exports.run = async (client, message, args = []) => {
         const Discord = require('discord.js');
 
         let user;
-        let member;
         if (message.mentions) {
             user = message.mentions.users.first();
-            member = message.mentions.members.first();
         };
 
         if (!user && args[0]) {
             let userID = args[0];
             user = client.users.cache.get(userID);
-            member = message.guild.members.cache.get(userID);
         };
 
-        if (!user || !member) {
+        if (!user) {
             user = message.member.user;
         };
 
