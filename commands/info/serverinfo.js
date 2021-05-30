@@ -127,8 +127,9 @@ module.exports.run = async (client, message) => {
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
-${checkDays(guild.createdAt)}`, false)
-            .setImage(`${banner}?size=256`)
+${checkDays(guild.createdAt)}`, false);
+        if (banner) serverEmbed.setImage(`${banner}?size=256`);
+        serverEmbed
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
