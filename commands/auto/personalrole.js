@@ -7,7 +7,6 @@ module.exports.run = async (client, message, args = []) => {
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
         if (!serverID) return sendMessage(client, message, `Personal Roles are disabled in **${message.guild.name}**.`);
         let memberFetch = await message.guild.members.fetch();
-        let memberCache = memberFetch.get(message.member.id);
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
@@ -28,7 +27,7 @@ module.exports.run = async (client, message, args = []) => {
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
         };
 
-        if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it`);
+        if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES")) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or Mod to manage a personal role.`);
@@ -49,7 +48,7 @@ module.exports.run = async (client, message, args = []) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.member.user.tag)) memberCache.roles.add(personalRole.id);
+            if (!message.member.roles.cache.find(r => r.name == message.member.user.tag)) message.member.roles.add(personalRole.id);
 
             return sendMessage(client, message, `Updated your role successfully.`);
 
@@ -78,12 +77,15 @@ module.exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, `An error occurred.`);
             });
 
-            let createdRole;
-            await message.guild.roles.cache.forEach(role => {
-                if (role.name == message.member.user.tag) createdRole = role;
+            let createdRole = await message.guild.roles.cache.find(role => {
+                role.name == message.member.user.tag;
             });
-            memberCache.roles.add(createdRole.id);
-            await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
+            if (createdRole) {
+                message.member.roles.add(createdRole.id);
+                await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
+            } else {
+
+            };
             return sendMessage(client, message, `Created a personal role for you successfully.`);
         };
 
