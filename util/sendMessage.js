@@ -38,7 +38,11 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false };
         messageObject['code'] = code;
 
-        return message.reply(replyText, messageObject)
+        if (message.deleted == true) {
+            return message.channel.send(replyText, messageObject);
+        } else {
+            return message.reply(replyText, messageObject);
+        };
 
     } catch (e) {
         // log error
