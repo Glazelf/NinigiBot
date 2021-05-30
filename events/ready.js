@@ -14,20 +14,24 @@ module.exports = async (client) => {
         let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
         let SACCommands = ["sysbot"];
 
-        await client.commands.forEach(command => {
-            try {
-                if (SACCommands.includes(command.config.name)) {
-                    client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                } else if (GlobalCommands.includes(command.config.name)) {
-                    client.application?.commands.create(command.config);
-                } else {
-                    return;
+        let NinigiUserID = "592760951103684618";
+
+        if (client.user.id == NinigiUserID) {
+            await client.commands.forEach(command => {
+                try {
+                    if (SACCommands.includes(command.config.name)) {
+                        client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
+                    } else if (GlobalCommands.includes(command.config.name)) {
+                        client.application?.commands.create(command.config);
+                    } else {
+                        return;
+                    };
+                    console.log(`Loaded slash command: ${command.config.name} ✔`);
+                } catch (e) {
+                    console.log(e);
                 };
-                console.log(`Loaded slash command: ${command.config.name} ✔`);
-            } catch (e) {
-                console.log(e);
-            };
-        });
+            });
+        };
 
         // Set bot status
         client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
