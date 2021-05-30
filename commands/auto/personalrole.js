@@ -78,7 +78,6 @@ module.exports.run = async (client, message, args = []) => {
             };
 
             let createdRole = await message.guild.roles.cache.find(role => role.name == message.member.user.tag);
-            console.log(createdRole)
 
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
