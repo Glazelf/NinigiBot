@@ -35,7 +35,7 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
             };
         };
         if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
-        if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false };
+        if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
         messageObject['code'] = code;
 
         if (message.deleted == true) {
