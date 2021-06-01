@@ -15,14 +15,15 @@ module.exports.run = async (client, message, args = []) => {
         let member = message.member;
         const requestRole = args.join(' ').toLowerCase();
 
-        if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`, true);
+
+        if (!args[0]) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
 
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
-        if (roles.length < 1) return sendMessage(client, message, `There are no eligible roles to assign to yourself in this server.`, true);
+        if (roles.length < 1) return sendMessage(client, message, `There are no eligible roles to assign to yourself in this server.`);
 
-        if (requestRole.toLowerCase() === 'help') {
+        if (requestRole.toLowerCase() == 'help') {
             let roleText = [];
             member.guild.roles.cache.each(role => {
                 if (roles.includes(role.id)) {
