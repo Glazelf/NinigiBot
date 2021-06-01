@@ -18,9 +18,9 @@ module.exports = async (client, message) => {
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-        if (message.channel == log && message.member.user == client.user) return;
 
         if (!message || !message.member || !message.member.user) return;
+        if (message.channel == log && message.member.user == client.user) return;
 
         let messageContent = message.content;
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
