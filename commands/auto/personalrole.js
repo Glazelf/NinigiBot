@@ -6,7 +6,6 @@ module.exports.run = async (client, message, args = []) => {
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
         if (!serverID) return sendMessage(client, message, `Personal Roles are disabled in **${message.guild.name}**.`);
-        let memberFetch = await message.guild.members.fetch();
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
