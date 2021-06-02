@@ -18,6 +18,11 @@ module.exports.run = async (client, message, args = []) => {
 
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
 
+        // Check if requested content has any matches with client config. Should avoid possible security leaks.
+        for (const [key, value] of Object.entries(client.config)) {
+            if (evaled.includes(value)) return sendMessage(client, message, `For security reasons this content can't be returned.`);
+        };
+
         return sendMessage(client, message, clean(evaled), null, null, true, "js");
 
         function clean(text) {
