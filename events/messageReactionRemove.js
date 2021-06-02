@@ -45,14 +45,14 @@ module.exports = async (client, messageReaction) => {
             .setFooter(targetMessage.member.user.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
-        if (messageReaction.count >= globalVars.starboardLimit && messageDB) {
-            // Update
-            client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
-            await messageDB.destroy();
-            return;
-        } else if (messageReaction.count == 0 && messageDB) {
+        if (messageReaction.count == 0 && messageDB) {
             // Delete
             client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
+            await messageDB.destroy();
+            return;
+        } else if (messageDB) {
+            // Update
+            client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
             await messageDB.destroy();
             return;
         } else {
