@@ -66,7 +66,7 @@ module.exports = async (client, message) => {
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
         // Add currency if message doesn't start with prefix
-        if (message.content) {
+        if (message.content && message.member) {
             if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.member.id) && memberRoles.size !== 0) {
                 bank.currency.add(message.member.id, 1);
                 talkedRecently.add(message.member.id);
@@ -74,10 +74,10 @@ module.exports = async (client, message) => {
                     talkedRecently.delete(message.member.id);
                 }, 60000);
             };
-
-            // Ignore messages not starting with the prefix
-            if (message.content.indexOf(prefix) !== 0) return;
         };
+
+        // Ignore messages not starting with the prefix
+        if (message.content.indexOf(prefix) !== 0) return;
 
         // Ignore messages that are just prefix
         if (message.content === prefix) return;
