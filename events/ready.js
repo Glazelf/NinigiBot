@@ -11,7 +11,8 @@ module.exports = async (client) => {
         // Set slash commands
         if (!client.application?.owner) await client.application?.fetch();
 
-        let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
+        // Daily rate limit of 200 slash commands should only go up if they are fully deleted and readded, not on every boot.
+        // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
         let SACCommands = ["sysbot"];
 
         let NinigiUserID = "592760951103684618";
@@ -21,10 +22,8 @@ module.exports = async (client) => {
                 try {
                     if (SACCommands.includes(command.config.name)) {
                         client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                    } else if (GlobalCommands.includes(command.config.name)) {
-                        client.application?.commands.create(command.config);
                     } else {
-                        return;
+                        client.application?.commands.create(command.config);
                     };
                     console.log(`Loaded slash command: ${command.config.name} ✔`);
                 } catch (e) {
