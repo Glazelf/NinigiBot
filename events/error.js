@@ -1,8 +1,15 @@
 module.exports = (client, info) => {
-    // log error
-    console.log(info);
+    try {
+        // log error
+        console.log(info);
 
-    const logger = require('../util/logger');
+        // Reboot bot
+        let botjs = require('../bot');
+        botjs.botjs();
 
-    logger(e, client);
+    } catch (e) {
+        const logger = require('../util/logger');
+
+        logger(e, client);
+    };
 };
