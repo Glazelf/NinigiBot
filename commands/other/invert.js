@@ -4,6 +4,8 @@ module.exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         const Canvas = require("canvas");
 
+        return sendMessage(client, message, `Certain image editing commands are currently broken. Check the following issue for more information: https://github.com/Glazelf/NinigiBot/issues/103`);
+
         let user;
         let member;
         if (message.mentions) {
