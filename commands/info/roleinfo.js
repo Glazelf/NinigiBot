@@ -8,8 +8,10 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         let DefaultEmbedColor = "#99AB5";
 
+        if (!args[0]) return sendMessage(client, message, `Please provide a role name or ID.`);
+
         // Split off command
-        let input = args[0];
+        let input = args.join(" ");
 
         // Author avatar
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
