@@ -84,7 +84,7 @@ module.exports = async (client, interaction) => {
                     return interaction.update(pkmEmbed);
 
                 } catch (e) {
-                    // console.log(e);
+                    console.log(e);
                     return;
                 };
             } else {
