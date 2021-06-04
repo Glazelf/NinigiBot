@@ -1,9 +1,10 @@
+const getPokemon = require('../util/pokemon/getPokemon');
+
 module.exports = async (client, interaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
         if (interaction.user.bot) return;
-
         if (interaction.isCommand()) {
             if (!interaction.member) interaction.reply(`Sorry, you're not allowed to use commands in private messages!`);
 
@@ -47,9 +48,45 @@ module.exports = async (client, interaction) => {
             } else {
                 return;
             };
+
+            // Buttons
+        } else if (interaction.isMessageComponent() && interaction.componentType == 'BUTTON') {
+            // Pokémon command
+            if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
+                try {
+                    var Pokedex = require('pokedex-promise-v2');
+                    var P = new Pokedex();
+
+                    let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
+                    let newPkmID = pkmID;
+
+                    if (interaction.customID == 'pkmleft') {
+                        newPkmID = parseInt(pkmID) - 1;
+                    } else {
+                        newPkmID = parseInt(pkmID) + 1;
+                    };
+
+                    let pkmEmbed = null;
+
+                    await P.getPokemonByName(newPkmID)
+                        .then(async function (response) {
+                            pkmEmbed = await getPokemon(client, interaction.message, response);
+                        });
+                    if (!pkmEmbed) return;
+
+                    return interaction.update(pkmEmbed);
+
+                } catch (e) {
+                    // console.log(e);
+                    return;
+                };
+            } else {
+                return;
+            };
+            // Others
         } else {
             return;
-        }
+        };
 
     } catch (e) {
         // log error
