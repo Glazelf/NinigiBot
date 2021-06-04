@@ -28,7 +28,6 @@ module.exports.run = async (client, message) => {
                 client.shard.fetchClientValues('guilds.cache.size'),
                 client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
             ];
-
             await Promise.all(promises)
                 .then(results => {
                     totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
@@ -86,27 +85,40 @@ module.exports.run = async (client, message) => {
         // Owner
         let owner = client.users.cache.get(client.config.ownerID);
 
-        const botEmbed = new Discord.MessageEmbed()
+        let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
             .setThumbnail(avatar)
-            .addField("Account:", client.user, true)
+            .addField("Account:", client.user.toString(), true)
             .addField("Owner:", owner.tag, true)
             .addField("Prefix:", prefix, true);
-        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count, true);
+        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
-            .addField("Servers:", totalGuilds, true)
-            .addField("Users:", totalMembers, true)
-            .addField("Channels:", channelCount, true)
-            .addField("Code:", "[Github](https://github.com/Glazelf/NinigiBot 'Ninigi Github')", true)
-            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8 'Bot Invite')`, true)
+            .addField("Servers:", totalGuilds.toString(), true)
+            .addField("Users:", totalMembers.toString(), true)
+            .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
             .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
-${checkDays(client.user.createdAt)}`, false)
+            ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.member.user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, null, botEmbed);
+        // Buttons
+        let botButtons = new Discord.MessageActionRow()
+            .addComponents(
+                new Discord.MessageButton()
+                    .setLabel('Invite')
+                    .setStyle('LINK')
+                    .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8`),
+            )
+            .addComponents(
+                new Discord.MessageButton()
+                    .setLabel('Github')
+                    .setStyle('LINK')
+                    .setURL(`https://github.com/Glazelf/NinigiBot`),
+            );
+
+        return sendMessage(client, message, null, botEmbed, null, true, null, botButtons);
 
         function checkDays(date) {
             let now = new Date();
