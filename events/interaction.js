@@ -57,6 +57,9 @@ module.exports = async (client, interaction) => {
                     var Pokedex = require('pokedex-promise-v2');
                     var P = new Pokedex();
 
+                    console.log(interaction.message)
+                    console.log(interaction.message.embeds)
+                    console.log(interaction.message.embeds[0])
                     let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
                     let newPkmID = pkmID;
                     let maxPkmID = 898; // Calyrex
