@@ -5,12 +5,14 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
         const channels = dbChannels.map(channel => channel.channel_id);
 
         // Force hidden if disabled channel
-        if (channels.includes(message.channel.id)) ephemeral = true;
+        if (message) {
+            if (channels.includes(message.channel.id)) ephemeral = true;
+        };
         if (!code) code = false;
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
-        if (embed) {
+        if (message && embed) {
             if (message.type == 'APPLICATION_COMMAND') {
                 messageObject['embeds'] = [embed];
             } else {
