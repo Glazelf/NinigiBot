@@ -28,7 +28,7 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
                 messageObject['files'] = [files];
             };
         };
-        if (components) {
+        if (components && message.type == "DEFAULT") {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
