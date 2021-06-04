@@ -81,7 +81,8 @@ module.exports.run = async (client, message) => {
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
-        let guildOwner = await guild.fetchOwner()
+        let guildOwner = await guild.fetchOwner();
+        console.log(guildOwner)
 
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
@@ -110,18 +111,18 @@ module.exports.run = async (client, message) => {
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
-            .addField("Owner:", guildOwner, true)
+            .addField("Owner:", guildOwner.toString(), true)
             .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
-        if (guild.rulesChannel) serverEmbed.addField("Rules:", rules, true);
+        if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         serverEmbed
-            .addField("Total members:", guild.memberCount, true)
-            .addField("Human members:", humanMembers, true);
+            .addField("Total members:", guild.memberCount.toString(), true)
+            .addField("Human members:", humanMembers.toString(), true);
         if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
         serverEmbed
-            .addField("Channels:", channelCount, true);
-        if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", guild.roles.cache.size - 1, true);
+            .addField("Channels:", channelCount.toString(), true);
+        if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);

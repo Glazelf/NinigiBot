@@ -103,7 +103,7 @@ module.exports.run = async (client, message, args = []) => {
 
         // Nitro Boost check
         let nitroEmote = "<:nitroboost:753268592081895605>";
-        let userText = user;
+        let userText = user.toString();
         if (member.premiumSince > 0) userText = `${user} ${nitroEmote}`;
         if (user.bot) userText = `${user} 🤖`;
 

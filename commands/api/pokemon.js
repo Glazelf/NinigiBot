@@ -81,9 +81,9 @@ module.exports.run = async (client, message, args = []) => {
                             .setAuthor(capitalizeString(response.name))
                             .addField("Type:", getTypeEmotes(response.type.name), true)
                             .addField("Category:", capitalizeString(response.damage_class.name), true);
-                        if (response.power) moveEmbed.addField("Power:", response.power, true);
+                        if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
                         if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
-                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority, true);
+                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority.toString(), true);
                         moveEmbed
                             .addField("Target:", capitalizeString(response.target.name), true);
                         if (description) moveEmbed.addField("Description:", description, false);
@@ -94,7 +94,7 @@ module.exports.run = async (client, message, args = []) => {
                         return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
-                        // console.log(e);
+                        //console.log(e);
                         return sendMessage(client, message, `Could not find the specified move.`);
                     });
                 break;
