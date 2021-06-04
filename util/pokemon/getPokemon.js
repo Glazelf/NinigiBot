@@ -1,4 +1,4 @@
-module.exports = async (client, message, response) => {
+module.exports = async (client, message, response, interaction) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -206,6 +206,9 @@ module.exports = async (client, message, response) => {
         pokemonName = await capitalizeString(pokemonName);
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
+        let footer = message.member.user.tag;
+        if (interaction) footer = interaction.user.tag;
+
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -227,7 +230,7 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
             .setImage(banner)
-            .setFooter(message.member.user.tag)
+            .setFooter(footer)
             .setTimestamp();
 
         return pkmEmbed;
