@@ -71,7 +71,7 @@ module.exports = async (client, message) => {
                 bank.currency.add(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {
-                    talkedRecently.delete(message.member.id);
+                    if (message.member) talkedRecently.delete(message.member.id);
                 }, 60000);
             };
         };
