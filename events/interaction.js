@@ -59,6 +59,7 @@ module.exports = async (client, interaction) => {
 
                     let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
                     let newPkmID = pkmID;
+                    let maxPkmID = 898; // Calyrex
 
                     if (interaction.customID == 'pkmleft') {
                         newPkmID = parseInt(pkmID) - 1;
@@ -66,11 +67,17 @@ module.exports = async (client, interaction) => {
                         newPkmID = parseInt(pkmID) + 1;
                     };
 
+                    if (newPkmID < 1) {
+                        newPkmID = maxPkmID;
+                    } else if (newPkmID > maxPkmID) {
+                        newPkmID = 1;
+                    };
+
                     let pkmEmbed = null;
 
                     await P.getPokemonByName(newPkmID)
                         .then(async function (response) {
-                            pkmEmbed = await getPokemon(client, interaction.message, response);
+                            pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
                         });
                     if (!pkmEmbed) return;
 
