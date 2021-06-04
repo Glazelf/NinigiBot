@@ -14,10 +14,9 @@ module.exports = async (client, message, response) => {
         const capitalizeString = require('./capitalizeString');
 
         if (!response) return;
+
         // Correct name when searching by ID
         pokemonName = response.name;
-
-        console.log(response)
 
         // Typing
         let typeString = "";
