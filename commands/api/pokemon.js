@@ -114,9 +114,9 @@ module.exports.run = async (client, message, args = []) => {
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') {
-                    pokemonName = args.slice(1).join(" ");
+                    pokemonName = args.slice(1).join(" ").toLowerCase();
                 } else {
-                    pokemonName = args.join(" ");
+                    pokemonName = args.join(" ").toLowerCase();
                 };
 
                 // Edgecase name corrections
@@ -152,7 +152,7 @@ module.exports.run = async (client, message, args = []) => {
                         return sendMessage(client, message, null, pkmEmbed, null, true, null, pkmButtons);
 
                     }).catch(function (e) {
-                        // console.log(e);
+                        console.log(e);
                         return sendMessage(client, message, `Could not find the specified Pokémon.`);
                     });
                 break;
