@@ -1,4 +1,4 @@
-module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = null, components = null) => {
+module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = null, components = null, slashComponents = false) => {
     try {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
@@ -28,7 +28,8 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
                 messageObject['files'] = [files];
             };
         };
-        if (components && message.type == "DEFAULT") {
+        // Don't add components to slash commands unless specifically told to do so
+        if (components && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type == 'DEFAULT')) {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;

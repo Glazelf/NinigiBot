@@ -118,7 +118,7 @@ module.exports.run = async (client, message) => {
                     .setURL(`https://github.com/Glazelf/NinigiBot`),
             );
 
-        return sendMessage(client, message, null, botEmbed, null, true, null, botButtons);
+        return sendMessage(client, message, null, botEmbed, null, true, null, botButtons, true);
 
         function checkDays(date) {
             let now = new Date();
