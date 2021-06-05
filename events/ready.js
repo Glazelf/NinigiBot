@@ -33,7 +33,8 @@ module.exports = async (client) => {
         };
 
         // Set bot status
-        client.user.setPresence({ activities: [{ name: 'in Sinnoh' }], status: 'idle' });
+        let presence = initPresence();
+        client.user.setPresence(presence);
 
         // List and fetch servers the bot is connected to
         // await client.guilds.cache.forEach(async (guild) => {
@@ -59,6 +60,11 @@ Connected as ${client.user.tag}. (${timestamp})`);
     };
 };
 
+function initPresence() {
+    let presence = { activities: [{ name: 'over Sinnoh', type: 'WATCHING' }], status: 'idle' };
+    return presence;
+};
+
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "747878956434325626";
 module.exports.currency = "💰";
@@ -71,3 +77,4 @@ module.exports.eventChannelID = "752626723345924157"; // General2
 module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
+module.exports.presence = initPresence();
