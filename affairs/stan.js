@@ -37,7 +37,7 @@ module.exports = async (client) => {
                 .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
                 .setImage(randomGif)
                 .setTimestamp();
-            channel.send(candidateRandom, { embed: gifEmbed });
+            channel.send(candidateRandom.toString(), { embed: gifEmbed });
         }, timeZone = timezone, start = true);
 
     } catch (e) {
