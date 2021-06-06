@@ -61,7 +61,9 @@ Connected as ${client.user.tag}. (${timestamp})`);
 };
 
 function initPresence() {
-    let presence = { activities: [{ name: 'over Sinnoh', type: 'WATCHING' }], status: 'idle' };
+    // Alter activity string
+    // let presence = { activities: [{ name: 'over Sinnoh', type: 'WATCHING' }], status: 'idle' };
+    let presence = { activities: [{ name: 'the Sinnoh League', type: 'COMPETING' }], status: 'idle' };
     return presence;
 };
 
