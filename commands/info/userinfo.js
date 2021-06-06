@@ -82,6 +82,12 @@ module.exports.run = async (client, message, args = []) => {
                 // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
                 if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
             } else {
+                if (activities[act].type) {
+                    let actType = activities[act].type;
+                    if (actType == "COMPETING") actType += " IN";
+                    let activityType = capitalizeString(actType);
+                    activityLog += activityType;
+                };
                 activityLog += activities[act].name;
                 if (activities[act].details || activities[act].state) activityLog += ': ';
                 if (activities[act].details) activityLog += activities[act].details;
@@ -151,6 +157,13 @@ module.exports.run = async (client, message, args = []) => {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].id == userID) return i;
             };
+        };
+
+        function capitalizeString(str) {
+            let firstCharUpper = str[0].toUpperCase();
+            let rest = str.substring(1).toLowerCase();
+            let string = `${firstCharUpper}${rest} `;
+            return string;
         };
 
     } catch (e) {
