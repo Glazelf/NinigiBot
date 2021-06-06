@@ -50,48 +50,54 @@ module.exports = async (client, interaction) => {
             };
 
             // Buttons
-        } else if (interaction.isMessageComponent() && interaction.componentType == 'BUTTON') {
-            // Pokémon command
-            if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
-                try {
-                    var Pokedex = require('pokedex-promise-v2');
-                    var P = new Pokedex();
+        } else if (interaction.isMessageComponent()) {
+            if (interaction.componentType == 'BUTTON') {
+                // Pokémon command
+                if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
+                    try {
+                        var Pokedex = require('pokedex-promise-v2');
+                        var P = new Pokedex();
 
-                    let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
-                    let newPkmID = pkmID;
-                    let maxPkmID = 898; // Calyrex
+                        let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
+                        let newPkmID = pkmID;
+                        let maxPkmID = 898; // Calyrex
 
-                    if (interaction.customID == 'pkmleft') {
-                        newPkmID = parseInt(pkmID) - 1;
-                    } else {
-                        newPkmID = parseInt(pkmID) + 1;
+                        if (interaction.customID == 'pkmleft') {
+                            newPkmID = parseInt(pkmID) - 1;
+                        } else {
+                            newPkmID = parseInt(pkmID) + 1;
+                        };
+
+                        if (newPkmID < 1) {
+                            newPkmID = maxPkmID;
+                        } else if (newPkmID > maxPkmID) {
+                            newPkmID = 1;
+                        };
+
+                        let pkmEmbed = null;
+
+                        await P.getPokemonByName(newPkmID)
+                            .then(async function (response) {
+                                pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
+                            });
+                        if (!pkmEmbed) return;
+
+                        return interaction.update(pkmEmbed);
+
+                    } catch (e) {
+                        console.log(e);
+                        return;
                     };
-
-                    if (newPkmID < 1) {
-                        newPkmID = maxPkmID;
-                    } else if (newPkmID > maxPkmID) {
-                        newPkmID = 1;
-                    };
-
-                    let pkmEmbed = null;
-
-                    await P.getPokemonByName(newPkmID)
-                        .then(async function (response) {
-                            pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
-                        });
-                    if (!pkmEmbed) return;
-
-                    return interaction.update(pkmEmbed);
-
-                } catch (e) {
-                    console.log(e);
+                } else {
+                    // Other buttons
                     return;
                 };
             } else {
+                // Other component types
                 return;
             };
-            // Others
         } else {
+            // Other interaction types
             return;
         };
 
