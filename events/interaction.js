@@ -76,10 +76,15 @@ module.exports = async (client, interaction) => {
 
                         let pkmEmbed = null;
 
-                        await P.getPokemonByName(newPkmID)
-                            .then(async function (response) {
-                                pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
-                            });
+                        try {
+                            await P.getPokemonByName(newPkmID)
+                                .then(async function (response) {
+                                    pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
+                                });
+                        } catch (e) {
+                            // console.log(e);
+                            return;
+                        };
                         if (!pkmEmbed) return;
 
                         return interaction.update(pkmEmbed);
