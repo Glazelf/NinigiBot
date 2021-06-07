@@ -1,15 +1,15 @@
-module.exports = async (client, guild, user) => {
+module.exports = async (client, guildBan) => {
     // Import globals
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
-        let logChannel = await LogChannels.findOne({ where: { server_id: guild.id } });
+        let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
-        let log = guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = guildBan.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        const fetchedLogs = await guild.fetchAuditLogs({
+        const fetchedLogs = await guildBan.guild.fetchAuditLogs({
             limit: 1,
             type: 'MEMBER_BAN_ADD',
         });
@@ -19,7 +19,7 @@ module.exports = async (client, guild, user) => {
         if (reason == null) reason = "Not specified.";
         let bannedBy = `${executor.tag} (${executor.id})`;
 
-        if (target.id !== user.id) return;
+        if (target.id !== guildBan.user.id) return;
         let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
         let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
 
@@ -27,7 +27,7 @@ module.exports = async (client, guild, user) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`Member Banned 💔`, avatarExecutor)
             .setThumbnail(avatarTarget)
-            .setDescription(`**${guild.name}** now has ${guild.memberCount} members.`)
+            .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
             .addField(`User:`, `${target} (${target.id})`, false)
             .addField(`Reason:`, reason, false)
             .addField(`Banned by:`, bannedBy, false)
