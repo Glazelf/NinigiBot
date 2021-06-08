@@ -5,6 +5,8 @@ module.exports = async (client, messageReaction) => {
         const Discord = require("discord.js");
         const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
 
+        if (!messageReaction.count) return;
+
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
