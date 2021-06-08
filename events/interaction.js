@@ -82,7 +82,7 @@ module.exports = async (client, interaction) => {
                                     pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
                                 });
                         } catch (e) {
-                            // console.log(e);
+                            console.log(e);
                             return;
                         };
                         if (!pkmEmbed) return;
