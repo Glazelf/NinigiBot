@@ -31,7 +31,7 @@ exports.run = async (client, message, args = []) => {
             const noRoleEmbed = new Discord.MessageEmbed()
                 .setColor(DefaultEmbedColor)
                 .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
-                .addField("Members:", noRoleMembers, true)
+                .addField("Members:", noRoleMembers.toString(), true)
                 .setFooter(message.member.user.tag)
                 .setTimestamp();
 
@@ -62,10 +62,10 @@ exports.run = async (client, message, args = []) => {
         const roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor(`${role.name} (${role.id})`, avatar)
-            .addField("Tag:", role, true)
+            .addField("Tag:", role.toString(), true)
             .addField("Color:", roleColor, true)
-            .addField("Members:", memberCount, true)
-            .addField("Position:", role.rawPosition, true)
+            .addField("Members:", memberCount.toString(), true)
+            .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
             .setFooter(message.member.user.tag)
             .setTimestamp();
