@@ -96,6 +96,13 @@ module.exports = {
                     },
                 });
 
+                Reflect.defineProperty(money, 'getBirthday', {
+                    value: function getBirthday(id) {
+                        const user = money.get(id);
+                        return user ? user.birthday : null;
+                    },
+                });
+
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);
