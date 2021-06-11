@@ -21,8 +21,6 @@ module.exports.run = async (client, message, args = []) => {
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
-        if (roles.length < 1) return sendMessage(client, message, `There are no eligible roles to assign to yourself in this server.`);
-
         if (requestRole.toLowerCase() == 'help') {
             let roleText = [];
             member.guild.roles.cache.each(role => {
@@ -43,9 +41,14 @@ module.exports.run = async (client, message, args = []) => {
 > <@&${roleText[i]}>`;
             };
 
-            roleHelpMessage = `${roleHelpMessage}
-Please don't tag these roles, just put the name.
-Example: \`${prefix}role Minecraft\``;
+            if (roleHelpMessage.length > 0) {
+                roleHelpMessage = `${roleHelpMessage}
+                Please don't tag these roles, just put the name.
+                Example: \`${prefix}role Minecraft\``;
+            } else {
+                roleHelpMessage = `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`;
+            };
+
 
             if (roleHelpMessage.length > 1024) return sendMessage(client, message, `Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
 
