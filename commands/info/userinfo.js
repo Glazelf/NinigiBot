@@ -31,7 +31,6 @@ module.exports.run = async (client, message, args = []) => {
         // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
         let switchCode = bank.currency.getSwitchCode(user.id);
-        let biography = bank.currency.getBiography(user.id);
         let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
 
@@ -135,7 +134,6 @@ module.exports.run = async (client, message, args = []) => {
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
-        if (biography && biography !== 'None') profileEmbed.addField("Biography:", biography, true);
         profileEmbed
             .addField("Join ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
