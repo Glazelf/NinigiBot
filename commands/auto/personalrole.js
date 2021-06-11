@@ -13,12 +13,8 @@ module.exports.run = async (client, message, args = []) => {
 
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
-        let personalRolePosition;
-        if (boosterRole) {
-            personalRolePosition = boosterRole.position + 1;
-        } else {
-            personalRolePosition = 1;
-        };
+        if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
+        let personalRolePosition = boosterRole.position + 1;
 
         if (!message.member.roles.cache.has(boosterRole.id) && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
