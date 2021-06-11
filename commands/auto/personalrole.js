@@ -23,8 +23,6 @@ module.exports.run = async (client, message, args = []) => {
 
         if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, message, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
 
-        if (args.length < 1) return sendMessage(client, message, `Please provide a color to change your personal role to.`);
-
         // Color catch
         let roleColor = args[0];
         if (roleColor) {
