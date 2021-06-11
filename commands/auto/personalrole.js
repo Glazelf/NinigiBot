@@ -11,8 +11,10 @@ module.exports.run = async (client, message, args = []) => {
 
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
-
         let personalRolePosition = boosterRole.position + 1;
+
+        if (!message.member.roles.cache.has(boosterRole.id)) return sendMessage(client, message, `You need to be a Nitro Booster to manage a personal role.`);
+
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (message.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
