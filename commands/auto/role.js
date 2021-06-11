@@ -15,7 +15,6 @@ module.exports.run = async (client, message, args = []) => {
         let member = message.member;
         const requestRole = args.join(' ').toLowerCase();
 
-
         if (!args[0]) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
 
         const db = await EligibleRoles.findAll();
