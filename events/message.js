@@ -32,9 +32,7 @@ module.exports = async (client, message) => {
         if (message.channel.type == "dm" || !message.guild) {
             if (!message.member) return;
             if (message.member.user.bot) return;
-            if (message.content.indexOf(prefix) == 0) {
-                sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
-            };
+
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
             let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
@@ -49,6 +47,14 @@ module.exports = async (client, message) => {
                 .setImage(messageImage)
                 .setFooter(client.user.tag)
                 .setTimestamp();
+
+            if (message.content.indexOf(prefix) == 0) {
+                try {
+                    sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
+                } catch (e) {
+                    return DMChannel.send(dmEmbed);
+                };
+            };
             return DMChannel.send(dmEmbed);
         };
 
