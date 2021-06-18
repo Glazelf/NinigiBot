@@ -152,7 +152,7 @@ module.exports.run = async (client, message, args = []) => {
                         return sendMessage(client, message, null, pkmEmbed, null, true, null, pkmButtons);
 
                     }).catch(function (e) {
-                        console.log(e);
+                        // console.log(e);
                         return sendMessage(client, message, `Could not find the specified Pokémon.`);
                     });
                 break;
