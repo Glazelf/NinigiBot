@@ -25,7 +25,7 @@ exports.run = async (client, message, args = []) => {
             "&",
             "$"
         ];
-        calcInput = input.replace(/[a-zA-Z]/gm, '').replace(",", ".");
+        calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
@@ -46,7 +46,7 @@ exports.run = async (client, message, args = []) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return sendMessage(client, message, rounded.toString(), null, null, true, "js");
+        return sendMessage(client, message, `${rounded} (${calcInput})`, null, null, true, "js");
 
     } catch (e) {
         // log error
