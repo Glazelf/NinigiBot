@@ -92,7 +92,7 @@ module.exports.run = async (client, message) => {
         serverEmbed
             .addField("Owner:", guildOwner.toString(), true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
-        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
+        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         serverEmbed
             .addField("Total members:", guild.memberCount.toString(), true)
