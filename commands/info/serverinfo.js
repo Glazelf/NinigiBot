@@ -39,26 +39,6 @@ module.exports.run = async (client, message) => {
             "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"
         };
 
-        let region = {
-            "brazil": ":flag_br: Brazil",
-            "eu-central": ":flag_eu: Central Europe",
-            "singapore": ":flag_sg: Singapore",
-            "us-central": ":flag_us: U.S. Central",
-            "sydney": ":flag_au: Sydney",
-            "us-east": ":flag_us: U.S. East",
-            "us-south": ":flag_us: U.S. South",
-            "us-west": ":flag_us: U.S. West",
-            "eu-west": ":flag_eu: Western Europe",
-            "vip-us-east": ":flag_us: VIP U.S. East",
-            "london": ":flag_gb: London",
-            "amsterdam": ":flag_nl: Amsterdam",
-            "hongkong": ":flag_hk: Hong Kong",
-            "russia": ":flag_ru: Russia",
-            "southafrica": ":flag_za:  South Africa",
-            "europe": ":flag_eu: Europe",
-            "india": ":flag_in: India"
-        };
-
         // Check emote cap
         let emoteMax = "";
         switch (guild.premiumTier) {
@@ -111,7 +91,6 @@ module.exports.run = async (client, message) => {
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
             .addField("Owner:", guildOwner.toString(), true)
-            .addField("Region:", region[guild.region], true)
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `discord.gg/${guild.vanityURLCode}`, true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
