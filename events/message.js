@@ -52,10 +52,10 @@ module.exports = async (client, message) => {
                 try {
                     sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
                 } catch (e) {
-                    return DMChannel.send(dmEmbed);
+                    return DMChannel.send({ embeds: [dmEmbed] });
                 };
             };
-            return DMChannel.send(dmEmbed);
+            return DMChannel.send({ embeds: [dmEmbed] });
         };
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;

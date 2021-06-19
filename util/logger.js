@@ -42,7 +42,7 @@ Message by ${user.tag}:
                 message.reply(`An error has occurred. 
 The error has already been logged but please also report this as an issue on Github: 
 <https://github.com/Glazelf/NinigiBot/issues>`);
-                return devChannel.send(baseMessage);
+                return devChannel.send({ content: baseMessage });
             };
         };
 

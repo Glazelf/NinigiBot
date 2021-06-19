@@ -43,13 +43,13 @@ exports.run = async (client, message, args) => {
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
-                    .then(message.channel.send(`Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.`));
+                    .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.` }));
             });
 
         } else {
             message.channel.messages.fetch({ limit: amount })
                 .then(messages => message.channel.bulkDelete(messages))
-                .then(message.channel.send(`Deleted ${numberFromMessage} messages, ${message.member}.`));
+                .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${message.member}.` }));
             return;
         };
 

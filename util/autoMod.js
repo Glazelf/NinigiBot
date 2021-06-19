@@ -83,18 +83,20 @@ module.exports = async (message) => {
     async function msgDelete() {
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
-        return message.channel.send(`Deleted a message by ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
-        return true;
+        return message.channel.send({ content: `Deleted a message by ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\`` });
+        // return true;
     };
 
     async function kick() {
         if (!message.member.kickable) return;
         await message.delete();
         await message.member.kick([reason]);
-        await message.channel.send(`Successfully auto-kicked ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        await message.channel.send({ content: `Successfully auto-kicked ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\`` });
         try {
-            message.member.user.send(`You've been automatically kicked for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``);
+            message.member.user.send({
+                content: `You've been automatically kicked for the following reason: \`${reason}\`
+\`\`\`${message.content}\`\`\``
+            });
             return true;
         } catch (e) {
             return true;
@@ -104,10 +106,12 @@ module.exports = async (message) => {
     async function ban() {
         if (!message.member.bannable) return;
         await message.member.ban({ days: 1, reason: reason });
-        await message.channel.send(`Successfully auto-banned ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\``);
+        await message.channel.send({ content: `Successfully auto-banned ${message.member.user.tag} (${message.member.id}) for the following reason: \`${reason}\`` });
         try {
-            message.member.user.send(`You've been automatically banned for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``);
+            message.member.user.send({
+                content: `You've been automatically banned for the following reason: \`${reason}\`
+\`\`\`${message.content}\`\`\``
+            });
             return true;
         } catch (e) {
             return true;
@@ -115,6 +119,6 @@ module.exports = async (message) => {
     };
 
     function test() {
-        return message.channel.send(`banned lol`);
+        return message.channel.send({ content: `banned lol` });
     };
 };

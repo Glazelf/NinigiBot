@@ -29,7 +29,7 @@ exports.run = async (client, message, args = []) => {
             try {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID);
-                targetChannel.send(remoteMessage);
+                targetChannel.send({ content: remoteMessage });
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say

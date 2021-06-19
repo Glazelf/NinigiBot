@@ -29,7 +29,7 @@ module.exports.run = async (client, message, args = []) => {
             if (targetRole.position >= userRole.position && message.guild.ownerID !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban ${member.user.tag}.`);
 
             try {
-                await user.send(`You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``);
+                await user.send({ content: `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\`` });
                 banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Succeeded)`;
             } catch (e) {
                 // console.log(e);

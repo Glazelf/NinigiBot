@@ -49,7 +49,7 @@ module.exports = async (client, messageReaction) => {
 
         if (messageReaction.count >= globalVars.starboardLimit && !messageDB) {
             // Create
-            return starboard.send(starEmbed).then(m => StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
+            return starboard.send({ embeds: [starEmbed] }).then(m => StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
         } else if (messageDB) {
             // Update
             await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
