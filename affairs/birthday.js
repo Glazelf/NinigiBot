@@ -42,7 +42,7 @@ module.exports = async (client) => {
                 .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
                 .setImage(search("birthday"))
                 .setTimestamp();
-            channel.send({ embed: gifEmbed });
+            channel.send({ embeds: [gifEmbed] });
         }, timeZone = timezone, start = true);
 
     } catch (e) {
