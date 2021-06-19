@@ -113,7 +113,7 @@ module.exports.run = async (client, message, args = []) => {
         if (user.bot) userText = `${user} 🤖`;
 
         // JoinRank
-        let joinRank = `${getJoinRank(user.id, message.guild) + 1}/${message.guild.memberCount}`;
+        let joinRank = `${getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
 
         // Check Days
         let daysJoined = await checkDays(member.joinedAt);
@@ -153,7 +153,7 @@ module.exports.run = async (client, message, args = []) => {
             arr.sort((a, b) => a.joinedAt - b.joinedAt);
             // Get provided user
             for (let i = 0; i < arr.length; i++) {
-                if (arr[i].id == userID) return i;
+                if (arr[i].id == userID) return i+1;
             };
         };
 
