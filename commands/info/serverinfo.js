@@ -102,7 +102,7 @@ module.exports.run = async (client, message) => {
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
         if (guild.preferredLocale) {
-            if (language[guild.prefferedLocale]) serverEmbed.addField("Language:", language[guild.prefferedLocale], true);
+            if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
