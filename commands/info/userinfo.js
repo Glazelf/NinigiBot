@@ -153,7 +153,7 @@ module.exports.run = async (client, message, args = []) => {
             arr.sort((a, b) => a.joinedAt - b.joinedAt);
             // Get provided user
             for (let i = 0; i < arr.length; i++) {
-                if (arr[i].id == userID) return i+1;
+                if (arr[i].id == userID) return i + 1;
             };
         };
 
