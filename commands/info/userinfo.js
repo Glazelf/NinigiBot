@@ -135,12 +135,12 @@ module.exports.run = async (client, message, args = []) => {
         if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
-            .addField("Join ranking:", joinRank, true)
+            .addField("Join Ranking:", joinRank, true)
             .addField("Roles:", rolesSorted, false)
-            .addField("Joined at:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
-        if (member.premiumSince > 0) profileEmbed.addField(`Boosting since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
+            .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+            .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+        if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         profileEmbed
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .setFooter(message.member.user.tag)
             .setTimestamp();
 

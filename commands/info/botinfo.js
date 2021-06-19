@@ -98,7 +98,7 @@ module.exports.run = async (client, message) => {
             .addField("Users:", totalMembers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
-            .addField("Created at:", `${client.user.createdAt.toUTCString().substr(5,)}
+            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}
             ${checkDays(client.user.createdAt)}`, false)
             .setFooter(message.member.user.tag)
             .setTimestamp();
