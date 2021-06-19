@@ -82,7 +82,6 @@ module.exports.run = async (client, message) => {
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
         let guildOwner = await guild.fetchOwner();
-        console.log(guildOwner)
 
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
