@@ -24,6 +24,7 @@ module.exports = async (client, message) => {
 
         let messageContent = message.content;
         if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
+        if (messageContent.length < 1) return;
 
         let isReply = false;
         if (message.reference) isReply = true;
@@ -43,8 +44,8 @@ module.exports = async (client, message) => {
         const deleteEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Message Deleted ❌`, avatar)
-            .setDescription(`Message sent by ${message.member} (${message.member.id}) deleted from ${message.channel}.`);
-        if (messageContent.length > 0) deleteEmbed.addField(`Content:`, messageContent, false);
+            .setDescription(`Message sent by ${message.member} (${message.member.id}) deleted from ${message.channel}.`)
+            .addField(`Content:`, messageContent, false);
         if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
         deleteEmbed
             .setFooter(message.member.user.tag)
