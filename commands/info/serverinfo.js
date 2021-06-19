@@ -39,23 +39,31 @@ module.exports.run = async (client, message) => {
             "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"
         };
 
-        // Check emote cap
-        let emoteMax = "";
-        switch (guild.premiumTier) {
-            case 0:
-                emoteMax = "100";
-                break;
-            case 1:
-                emoteMax = "200";
-                break;
-            case 2:
-                emoteMax = "300";
-                break;
-            case 3:
-                emoteMax = "500";
-                break;
+        let languages = {
+            "en-US": ":flag_gb: English",
+            "da": ":flag_dk: Dansk (Danish)",
+            "de": ":flag_de: Deutsch (German)",
+            "es-ES": ":flag_es: Español (Spanish)"
         };
-        if (guild.partnered) emoteMax = "500";
+
+        console.log(guild.preferredLocale)
+
+        // Check emote cap
+        let emoteMax;
+        switch (guild.premiumTier) {
+            case "TIER_1":
+                emoteMax = 200;
+                break;
+            case "TIER_2":
+                emoteMax = 300;
+                break;
+            case "TIER_3":
+                emoteMax = 500;
+                break;
+            default:
+                emoteMax = 100;
+        };
+        if (guild.partnered) emoteMax = 500;
 
         let icon = guild.iconURL({ format: "png", dynamic: true });
         let banner = null;
@@ -90,12 +98,15 @@ module.exports.run = async (client, message) => {
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
-            .addField("Owner:", guildOwner.toString(), true)
-            .addField("Verification Level:", verifLevels[guild.verificationLevel], true);
-        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
+            .addField("Owner:", guildOwner.toString(), true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
+        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
+        if (guild.preferredLocale) {
+            if (language[guild.prefferedLocale]) serverEmbed.addField("Language:", language[guild.prefferedLocale], true);
+        };
         serverEmbed
-            .addField("Total members:", guild.memberCount.toString(), true)
+            .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
+            .addField("Total members:", `${guild.memberCount}/${guild.maximumMembers}`, true)
             .addField("Human members:", humanMembers.toString(), true);
         if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
         serverEmbed
