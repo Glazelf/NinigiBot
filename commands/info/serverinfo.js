@@ -72,8 +72,6 @@ module.exports.run = async (client, message) => {
             "ko": ":flag_kr: 한국어 (Korean)"
         };
 
-        console.log(guild.preferredLocale)
-
         // Check emote cap
         let emoteMax;
         switch (guild.premiumTier) {
