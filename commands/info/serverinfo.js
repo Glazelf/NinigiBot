@@ -6,7 +6,7 @@ module.exports.run = async (client, message) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const ShardUtil = new Discord.ShardClientUtil(client, "process");
+        let ShardUtil;
 
         let guild = message.guild;
 
@@ -21,6 +21,7 @@ module.exports.run = async (client, message) => {
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         var shardNumber = 1;
         if (client.shard) {
+            ShardUtil = new Discord.ShardClientUtil(client, "process");
             guildsByShard = await client.shard.fetchClientValues('guilds.cache');
             guildsByShard.forEach(function (guildShard, i) {
                 guildShard.forEach(function (shardGuild) {
@@ -35,15 +36,40 @@ module.exports.run = async (client, message) => {
             "NONE": "None",
             "LOW": "Low",
             "MEDIUM": "Medium",
-            "HIGH": "(╯°□°）╯︵  ┻━┻",
-            "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻"
+            "HIGH": "(╯°□°）╯︵  ┻━┻ (High)",
+            "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻ (Very High)"
         };
 
         let languages = {
             "en-US": ":flag_gb: English",
             "da": ":flag_dk: Dansk (Danish)",
             "de": ":flag_de: Deutsch (German)",
-            "es-ES": ":flag_es: Español (Spanish)"
+            "es-ES": ":flag_es: Español (Spanish)",
+            "fr": ":flag_fr: Français (French)",
+            "hr": ":flag_cr: Hrvatski (Croatian)",
+            "it": ":flag_it: Italiano (Italian)",
+            "lt": ":flag_lt: Lietuviškai (Lithuanian)",
+            "hu": ":flag_hu: Magyar (Hungarian)",
+            "nl": ":flag_nl: Nederlands (Dutch)",
+            "no": ":flag_no: Norsk (Norwegian)",
+            "pl": ":flag_pl: Polski (Polish)",
+            "pt-BR": ":flag_br: Português do Brasil (Brazilian Portuguese)",
+            "ro": ":flag_ro: Română (Romanian)",
+            "fi": ":flag_fi: Suomi (Finnish)",
+            "sv-SE": ":flag_se: Svenska (Swedish)",
+            "vi": ":flag_vn: Tiếng Việt (Vietnamese)",
+            "tr": ":flag_tr: Türkçe (Turkish)",
+            "cs": ":flag_cz: Čeština (Czech)",
+            "el": ":flag_gr: Ελληνικά (Greek)",
+            "bg": ":flag_bg: български (Bulgarian)",
+            "ru": ":flag_ru: Русский (Russian)",
+            "uk": ":flag_ua: Українська (Ukranian)",
+            "hi": ":flag_in: हिंदी (Hindi)",
+            "th": ":flag_th: ไทย (Thai)",
+            "zh-CN": ":flag_cn: 中文 (Simplified Chinese)",
+            "ja": ":flag_jp: 日本語 (Japanese)",
+            "zh-TW": ":flag_cn: 繁體中文 (Traditional Chinese)",
+            "ko": ":flag_kr: 한국어 (Korean)"
         };
 
         console.log(guild.preferredLocale)
@@ -106,8 +132,8 @@ module.exports.run = async (client, message) => {
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("Total members:", `${guild.memberCount}/${guild.maximumMembers}`, true)
-            .addField("Human members:", humanMembers.toString(), true);
+            .addField("Total Members:", guild.memberCount.toString(), true)
+            .addField("Human Members:", humanMembers.toString(), true);
         if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
         serverEmbed
             .addField("Channels:", channelCount.toString(), true);
@@ -116,7 +142,7 @@ module.exports.run = async (client, message) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created at:", `${guild.createdAt.toUTCString().substr(5,)}
+            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}
 ${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
