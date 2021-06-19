@@ -54,7 +54,7 @@ module.exports = async (client, member) => {
             .setFooter(member.user.tag)
             .setTimestamp();
 
-        return log.send(leaveEmbed);
+        return log.send({ embeds: [leaveEmbed] });
 
     } catch (e) {
         // log error

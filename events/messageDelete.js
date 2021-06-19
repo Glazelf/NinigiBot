@@ -51,7 +51,7 @@ module.exports = async (client, message) => {
             .setFooter(message.member.user.tag)
             .setTimestamp(message.createdTimestamp);
 
-        return log.send(deleteEmbed);
+        return log.send({ embeds: [deleteEmbed] });
 
     } catch (e) {
         // log error

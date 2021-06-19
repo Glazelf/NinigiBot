@@ -27,7 +27,7 @@ module.exports = async (client, member) => {
             .setFooter(member.user.tag)
             .setTimestamp();
 
-        return log.send(user.toString(), { embed: joinEmbed });
+        return log.send({ content: user.toString(), embeds: [joinEmbed] });
 
     } catch (e) {
         // log error

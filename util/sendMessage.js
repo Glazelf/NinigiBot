@@ -1,4 +1,4 @@
-module.exports = async (client, message, replyText, embed = null, files = null, ephemeral = true, code = null, components = null, slashComponents = false) => {
+module.exports = async (client, message, replyText, embeds = null, files = null, ephemeral = true, code = null, components = null, slashComponents = false) => {
     try {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
@@ -12,11 +12,12 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
-        if (message && embed) {
-            if (message.type == 'APPLICATION_COMMAND') {
-                messageObject['embeds'] = [embed];
+        if (replyText) messageObject['content'] = replyText;
+        if (embeds) {
+            if (Array.isArray(embeds)) {
+                messageObject['embeds'] = embeds;
             } else {
-                messageObject['embed'] = embed;
+                messageObject['embeds'] = [embeds];
             };
         };
         if (files) {
@@ -42,9 +43,9 @@ module.exports = async (client, message, replyText, embed = null, files = null, 
         messageObject['code'] = code;
 
         if (!message || message.deleted == true) {
-            return message.channel.send(replyText, messageObject);
+            return message.channel.send(messageObject);
         } else {
-            return message.reply(replyText, messageObject);
+            return message.reply(messageObject);
         };
 
     } catch (e) {

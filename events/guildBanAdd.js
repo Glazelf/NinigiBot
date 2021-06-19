@@ -34,7 +34,7 @@ module.exports = async (client, guildBan) => {
             .setFooter(target.tag)
             .setTimestamp();
 
-        return log.send(banEmbed);
+        return log.send({ embeds: [banEmbed] });
 
     } catch (e) {
         // log error

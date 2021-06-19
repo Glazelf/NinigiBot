@@ -59,7 +59,7 @@ module.exports = async (client, message, newMessage) => {
             .setFooter(message.member.user.tag)
             .setTimestamp(message.createdTimestamp);
 
-        return log.send(updateEmbed);
+        return log.send({ embeds: [updateEmbed] });
 
     } catch (e) {
         // log error

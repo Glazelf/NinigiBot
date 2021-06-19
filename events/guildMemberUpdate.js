@@ -61,7 +61,7 @@ module.exports = async (client, member, newMember) => {
             .setFooter(user.tag)
             .setTimestamp();
 
-        return log.send(updateEmbed);
+        return log.send({ embeds: [updateEmbed] });
 
         async function deleteBoosterRole() {
             let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
