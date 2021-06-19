@@ -17,7 +17,11 @@ module.exports = async (client, message, newMessage) => {
 
         if (!message || !message.member || !message.member.user) return;
         if (message.content === newMessage.content) return;
-        if (!message.content || !newMessage.content) return;
+
+        let messageImage = null;
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
+        if (!messageImage && !newMessage.content) return;
 
         let messageContent = message.content;
         let newMessageContent = newMessage.content
@@ -38,11 +42,6 @@ module.exports = async (client, message, newMessage) => {
                 isReply = false;
             };
         };
-
-        let messageImage = null;
-        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
-
-        if (!messageImage && !newMessageContent) return;
 
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
