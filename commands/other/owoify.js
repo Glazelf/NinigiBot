@@ -7,6 +7,7 @@ exports.run = async (client, message, args = []) => {
 
         if (!args[0]) return sendMessage(client, message, `Please provide an input to owoify.`);
 
+        let input = args.join(" ");
         let severity = message.content.substring(1, 4).toLowerCase();
         let inputOwOified = owoify(input, severity);
 
