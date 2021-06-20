@@ -6,10 +6,11 @@ exports.run = async (client, message, args = []) => {
         const owoify = require('owoify-js').default;
 
         if (!args[0]) return sendMessage(client, message, `Please provide an input to owoify.`);
-        let input = args.join(" ");
-        let owoifiedInput = owoify(input, "uwu");
 
-        return sendMessage(client, message, owoifiedInput);
+        let severity = message.content.substring(1, 4).toLowerCase();
+        let inputOwOified = owoify(input, severity);
+
+        return sendMessage(client, message, inputOwOified, null, null, false, "fix");
 
     } catch (e) {
         // log error
@@ -21,7 +22,7 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "owoify",
-    aliases: ["owo"],
+    aliases: ["owo", "uwuify", "uwu", "uvuify", "uvu"],
     description: "OwOifies text.",
     options: [{
         name: "input",
