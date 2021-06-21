@@ -52,7 +52,6 @@ module.exports = async (client, messageReaction) => {
             return starboard.send({ embeds: [starEmbed] }).then(m => StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
         } else if (messageDB) {
             // Update
-            console.log("test")
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             await starMessage.edit({ embeds: [starEmbed] });
