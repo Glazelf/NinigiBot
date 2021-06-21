@@ -114,7 +114,7 @@ module.exports.run = async (client, message, args = []) => {
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') {
-                    pokemonName = args.slice(1).join(" ").toLowerCase();
+                    pokemonName = args.slice(1).join("-").replace(" ", "-").toLowerCase();
                 } else {
                     pokemonName = args.join(" ").toLowerCase();
                 };
