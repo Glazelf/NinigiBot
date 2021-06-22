@@ -12,11 +12,12 @@ exports.run = async (client, message, args = []) => {
         if (!args[0]) return sendMessage(client, message, `Please provide a hex to convert.`);
 
         let hex = args[0];
+        while (hex.length < 6) hex = "0" + hex;
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return sendMessage(client, message, `Please provide a valid hex. Color hexes are 6 characters long including 0-9 and A-F.`);
+        if (!rgb) return sendMessage(client, message, `Please provide a valid hex. Color hexes only include 0-9 and A-F.`);
 
         let imgWidth = 225;
         let imgHeight = 100;
