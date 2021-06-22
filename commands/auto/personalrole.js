@@ -53,7 +53,7 @@ module.exports.run = async (client, message, args = []) => {
             // Re-add role if it got removed
             if (!message.member.roles.cache.find(r => r.name == message.member.user.tag)) message.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, `Updated your role successfully.`);
+            return sendMessage(client, message, `Updated your role successfully. Color set to \`#${roleColor}\`.`);
 
         } else {
             // Create role if it doesn't exit yet
