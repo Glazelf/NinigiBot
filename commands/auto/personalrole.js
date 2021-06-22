@@ -27,6 +27,7 @@ module.exports.run = async (client, message, args = []) => {
         let roleColor = args[0];
         if (roleColor) {
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
+            while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
