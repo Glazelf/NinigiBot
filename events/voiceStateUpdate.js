@@ -22,7 +22,12 @@ module.exports = async (client, oldMember, newMember) => {
             });
             //Left VC
         } else if (oldID) {
-            return textChannel.permissionOverwrites.get(newMember.id).delete();
+            let channelPermOverride = textChannel.permissionOverwrites.get(newMember.id);
+            if (channelPermOverride) {
+                return channelPermOverride.delete();
+            } else {
+                return;
+            };
         };
 
     } catch (e) {
