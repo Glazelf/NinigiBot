@@ -12,12 +12,13 @@ module.exports.run = async (client, message) => {
         let Flare = client.users.cache.get("592353588685307914");
         let Artic = client.users.cache.get("353184551096418316");
         // let Shion = client.users.cache.get("685608164506337351");
-        // let Exorcism = client.users.cache.get("465892606417567747");
+        let Exorcism = client.users.cache.get("465892606417567747");
         // let Xenoseon = "Xenoseon#1604"; // 268790953572040704
 
         // Bots
         // PKM
         let Konohana = client.users.cache.get(`696086046685003786`);
+        let Gura = client.users.cache.get("834359097523830834");
         let Flar3 = client.users.cache.get("734052437811527784");
         let Glaceon = client.users.cache.get("777555048104067082");
         // let BettyBot = client.users.cache.get("790506481630969869");
@@ -32,14 +33,16 @@ module.exports.run = async (client, message) => {
         let offlineString = "Offline";
         let offlineStatus = offlineString.toLowerCase();
         let KonohanaStatus = onlineString;
+        let GuraStatus = onlineString;
         let Flar3Status = onlineString;
         let GlaceonStatus = onlineString;
         let RibbotStatus = onlineString;
         let ACFlareStatus = onlineString;
 
         if (Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
-        if (Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
+        if (Gura.presence.status == offlineStatus) GuraStatus = offlineString;
         if (Glaceon.presence.status == offlineStatus) GlaceonStatus = offlineString;
+        if (Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
@@ -47,6 +50,7 @@ module.exports.run = async (client, message) => {
 **Format:** Bot (prefix): status (\`Host#0001\`)
 **Pokémon bots:**
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
+${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`)
 ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
 ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
 **ACNH bots:**
