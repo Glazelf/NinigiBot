@@ -125,15 +125,14 @@ module.exports.run = async (client, message) => {
             .addField("Owner:", guildOwner.toString(), true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
-        if (guild.preferredLocale) {
+        if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
             if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("Total Members:", guild.memberCount.toString(), true)
-            .addField("Human Members:", humanMembers.toString(), true);
-        if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
-        serverEmbed
+            .addField("Human Members:", humanMembers.toString(), true)
+            .addField("Bots:", `${botMembers} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
