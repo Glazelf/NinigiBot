@@ -139,14 +139,14 @@ module.exports.run = async (client, message, args = []) => {
                             .addComponents(
                                 new Discord.MessageButton()
                                     .setCustomID('pkmleft')
-                                    .setLabel('<--')
-                                    .setStyle('PRIMARY'),
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('⬅️')
                             )
                             .addComponents(
                                 new Discord.MessageButton()
                                     .setCustomID('pkmright')
-                                    .setLabel('-->')
-                                    .setStyle('PRIMARY'),
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('➡️')
                             );
 
                         return sendMessage(client, message, null, pkmEmbed, null, true, null, pkmButtons);
