@@ -30,6 +30,8 @@ Message by ${user.tag}:
 \`\`\`${message.content}\`\`\`` : `An error occurred:
 \`\`\`${exception}\`\`\``;
 
+        if (!message.author) return;
+
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1950) + `...\`\`\``;
         // Fix cross-shard logging sometime
         let devChannel = client.channels.cache.get(client.config.devChannelID);
