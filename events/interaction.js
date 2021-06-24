@@ -47,7 +47,8 @@ module.exports = async (client, interaction) => {
 
                 // Run the command
                 if (cmd) {
-                    return cmd.run(client, interaction, args);
+                    await cmd.run(client, interaction, args);
+                    return;
                 } else {
                     return;
                 };
@@ -89,10 +90,11 @@ module.exports = async (client, interaction) => {
                             };
                             if (!pkmEmbed) return;
 
-                            return interaction.update({ embeds: [pkmEmbed] });
+                            await interaction.update({ embeds: [pkmEmbed] });
+                            return;
 
                         } catch (e) {
-                            console.log(e);
+                            // console.log(e);
                             return;
                         };
                     } else {
