@@ -105,13 +105,10 @@ module.exports.run = async (client, message, args = []) => {
         // Avatar
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
-        // Badges / Emotes
-        let nitroEmote = "<:nitro_boost:753268592081895605>";
-
         // Profile badges
         let badgesArray = [];
         if (user.bot) badgesArray.push("🤖");
-        if (member.premiumSince > 0) badgesArray.push(`${nitroEmote}`);
+        if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
         if (user.flags) {
             for (const [key, value] of Object.entries(badgeEmotes)) {
                 if (user.flags.has(key)) badgesArray.push(value);
