@@ -7,6 +7,7 @@ module.exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
         const checkDays = require('../../util/checkDays');
+        const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
         let memberFetch = await message.guild.members.fetch();
 
@@ -106,11 +107,18 @@ module.exports.run = async (client, message, args = []) => {
         // Avatar
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
-        // Nitro Boost check
+        // Badges / Emotes
         let nitroEmote = "<:nitroboost:753268592081895605>";
-        let userText = user.toString();
-        if (member.premiumSince > 0) userText = `${user} ${nitroEmote}`;
-        if (user.bot) userText = `${user} 🤖`;
+
+        // Profile badges
+        let badgesArray = [];
+        if (member.premiumSince > 0) badgesArray.push(`${nitroEmote}`);
+        for (const [key, value] of Object.entries(badgeEmotes)) {
+            if (user.flags.has(key)) badgesArray.push(value);
+        };
+        if (user.bot) badgesArray.push("🤖");
+
+        let badgesString = badgesArray.join(" ");
 
         // JoinRank
         let joinRank = `${getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
@@ -127,7 +135,7 @@ module.exports.run = async (client, message, args = []) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.tag} (${user.id})`, avatar)
             .setThumbnail(avatar)
-            .addField("Account:", userText, true)
+            .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
         if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
