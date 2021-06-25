@@ -9,8 +9,6 @@ module.exports.run = async (client, message, args = []) => {
         const checkDays = require('../../util/checkDays');
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
-        let memberFetch = await message.guild.members.fetch();
-
         let user;
         if (message.mentions) {
             user = message.mentions.users.first();
@@ -18,15 +16,15 @@ module.exports.run = async (client, message, args = []) => {
 
         if (!user && args[0]) {
             let userID = args[0];
-            user = client.users.fetch(userID);
-            if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
+            user = await client.users.fetch(userID);
+            if (!user) user = await client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
 
         if (!user) {
             user = message.member.user;
         };
 
-        let member = memberFetch.get(user.id);
+        let member = await message.guild.members.fetch(user.id);
         if (!member) return sendMessage(client, message, `No member information could be found for this user.`);
 
         // Balance check
@@ -112,13 +110,13 @@ module.exports.run = async (client, message, args = []) => {
 
         // Profile badges
         let badgesArray = [];
+        if (user.bot) badgesArray.push("🤖");
         if (member.premiumSince > 0) badgesArray.push(`${nitroEmote}`);
         if (user.flags) {
             for (const [key, value] of Object.entries(badgeEmotes)) {
                 if (user.flags.has(key)) badgesArray.push(value);
             };
         };
-        if (user.bot) badgesArray.push("🤖");
         let badgesString = badgesArray.join(" ");
 
         // JoinRank
