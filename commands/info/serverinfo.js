@@ -18,7 +18,7 @@ module.exports.run = async (client, message) => {
         let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
         let guildsByShard = client.guilds.cache;
 
-        let nitroEmote = "<:nitroboost:753268592081895605>";
+        let nitroEmote = "<:nitro_boost:753268592081895605>";
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         var shardNumber = 1;

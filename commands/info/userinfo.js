@@ -108,7 +108,7 @@ module.exports.run = async (client, message, args = []) => {
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         // Badges / Emotes
-        let nitroEmote = "<:nitroboost:753268592081895605>";
+        let nitroEmote = "<:nitro_boost:753268592081895605>";
 
         // Profile badges
         let badgesArray = [];
@@ -117,7 +117,6 @@ module.exports.run = async (client, message, args = []) => {
             if (user.flags.has(key)) badgesArray.push(value);
         };
         if (user.bot) badgesArray.push("🤖");
-
         let badgesString = badgesArray.join(" ");
 
         // JoinRank
@@ -133,7 +132,7 @@ module.exports.run = async (client, message, args = []) => {
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${user.tag} (${user.id})`, avatar)
+            .setAuthor(`${user.username} (${user.id})`, avatar)
             .setThumbnail(avatar)
             .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);
