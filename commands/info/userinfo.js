@@ -18,7 +18,7 @@ module.exports.run = async (client, message, args = []) => {
 
         if (!user && args[0]) {
             let userID = args[0];
-            user = client.users.cache.get(userID);
+            user = client.users.fetch(userID);
             if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
 
@@ -113,8 +113,10 @@ module.exports.run = async (client, message, args = []) => {
         // Profile badges
         let badgesArray = [];
         if (member.premiumSince > 0) badgesArray.push(`${nitroEmote}`);
-        for (const [key, value] of Object.entries(badgeEmotes)) {
-            if (user.flags.has(key)) badgesArray.push(value);
+        if (user.flags) {
+            for (const [key, value] of Object.entries(badgeEmotes)) {
+                if (user.flags.has(key)) badgesArray.push(value);
+            };
         };
         if (user.bot) badgesArray.push("🤖");
         let badgesString = badgesArray.join(" ");
