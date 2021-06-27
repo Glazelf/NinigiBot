@@ -5,8 +5,8 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
-        let memberFetch = await message.guild.members.fetch();
 
+        let memberFetch = await message.guild.members.fetch();
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
 
         const leaderboardEmbed = new Discord.MessageEmbed()
