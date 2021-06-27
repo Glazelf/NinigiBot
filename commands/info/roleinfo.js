@@ -1,5 +1,3 @@
-const sendMessage = require('../../util/sendMessage');
-
 exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
