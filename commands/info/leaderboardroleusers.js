@@ -9,7 +9,6 @@ exports.run = async (client, message, args = []) => {
 
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
         await message.guild.roles.fetch();
-        await message.guild.members.fetch();
         let roleArray = [];
 
         await message.guild.roles.cache.forEach(role => {
