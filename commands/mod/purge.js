@@ -47,10 +47,14 @@ exports.run = async (client, message, args) => {
             });
 
         } else {
-            message.channel.messages.fetch({ limit: amount })
-                .then(messages => message.channel.bulkDelete(messages))
-                .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${message.member}.` }));
-            return;
+            try {
+                message.channel.messages.fetch({ limit: amount })
+                    .then(messages => message.channel.bulkDelete(messages));
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${message.member}.` }));
+                return;
+            } catch (e) {
+                return message.channel.send({ content: `An error occurred while bulk deleting, you are likely trying to bulk delete messages older than 14 days.` });
+            };
         };
 
     } catch (e) {
