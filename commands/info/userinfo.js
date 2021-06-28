@@ -102,8 +102,10 @@ module.exports.run = async (client, message, args = []) => {
             };
         };
 
-        // Avatar
+        // Avatar and banner
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+        let banner = null;
+        if (user.banner) banner = user.bannerURL({ format: "png" });
 
         // Profile badges
         let badgesArray = [];
@@ -144,6 +146,7 @@ module.exports.run = async (client, message, args = []) => {
             .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
+        if (banner) profileEmbed.setImage(`${banner}?size=256`);
         profileEmbed
             .setFooter(message.member.user.tag)
             .setTimestamp();
