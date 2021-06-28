@@ -8,7 +8,6 @@ exports.run = async (client, message, args = []) => {
         if (message.guild.roles.cache.size < 1) return sendMessage(client, message, "This server doesn't have any roles yet.");
 
         let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
-        await message.guild.roles.fetch();
         let roleArray = [];
 
         await message.guild.roles.cache.forEach(role => {
