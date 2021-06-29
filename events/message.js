@@ -31,16 +31,16 @@ module.exports = async (client, message) => {
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
             if (!message.member) return;
-            if (message.member.user.bot) return;
+            if (message.author.bot) return;
 
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
-            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.member.user.tag, false)
+                .addField(`Author:`, message.author.tag, false)
                 .addField(`Author ID:`, message.member.id, false);
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
@@ -62,7 +62,7 @@ module.exports = async (client, message) => {
 
         // Ignore all bots and welcome messages
         if (!message.member) return;
-        if (message.member.user.bot == true) return;
+        if (message.author.bot == true) return;
 
         // Automod
         let modBool = false;

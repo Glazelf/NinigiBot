@@ -105,7 +105,7 @@ module.exports.run = async (client, message) => {
 ${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
-            .setFooter(message.member.user.tag)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, serverEmbed);

@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         //items, food, equipment
         let target;
         if (message.mentions) target = message.mentions.users.first();
-        if (!target) target = message.member.user;
+        if (!target) target = message.author;
 
         if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
             const user = await Users.findOne({ where: { user_id: target.id } });

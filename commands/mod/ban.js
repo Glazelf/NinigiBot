@@ -36,11 +36,11 @@ module.exports.run = async (client, message, args = []) => {
                 banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Failed)`;
             };
 
-            await member.ban({ days: 0, reason: `${reason} -${message.member.user.tag}` });
+            await member.ban({ days: 0, reason: `${reason} -${message.author.tag}` });
         } else {
             banReturn = `Successfully banned ${memberID} for the following reason: \`${reason}\`.`;
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.member.user.tag}` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.author.tag}` });
             } catch (e) {
                 // console.log(e);
                 return sendMessage(client, message, `Could not find a user by that ID.`);

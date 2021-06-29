@@ -124,7 +124,7 @@ Vanity URL: https://discord.gg/shinx`
             .setColor(globalVars.embedColor)
             .setAuthor(`${objectName} ${titleNumber}`, avatar)
             .setDescription(objectText)
-            .setFooter(message.member.user.tag)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, ruleEmbed);

@@ -13,7 +13,7 @@ module.exports = async (exception, client, message = null) => {
         let user;
         if (message) {
             if (message.member) {
-                user = message.member.user;
+                user = message.author;
             };
         };
 

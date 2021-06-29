@@ -100,7 +100,7 @@ module.exports.run = async (client, message) => {
             .addField("Uptime:", uptime, false)
             .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}
             ${checkDays(client.user.createdAt)}`, false)
-            .setFooter(message.member.user.tag)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         // Buttons

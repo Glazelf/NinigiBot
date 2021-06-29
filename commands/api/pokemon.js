@@ -34,7 +34,7 @@ module.exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(message.member.user.tag)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
 
@@ -59,7 +59,7 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Category:", category, true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
                             .setImage(itemImage)
-                            .setFooter(message.member.user.tag)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, itemEmbed);
@@ -96,7 +96,7 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Target:", target, true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(message.member.user.tag)
+                            .setFooter(message.author.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed);

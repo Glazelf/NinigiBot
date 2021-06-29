@@ -19,7 +19,7 @@ exports.run = async (client, message, args = []) => {
                 while (input.length < 6) input = "0" + input;
                 let argHex = `0x${input}`;
                 let hexInt = parseInt(argHex);
-                return sendMessage(client, message, `${hexInt} (${message.member.user.tag})`, null, null, false, "js");
+                return sendMessage(client, message, `${hexInt} (${message.author.tag})`, null, null, false, "js");
             } catch (e) {
                 return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
             };
@@ -27,7 +27,7 @@ exports.run = async (client, message, args = []) => {
             if (isNaN(input)) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
             let argInt = parseInt(input);
             let hexString = argInt.toString(16).toUpperCase();
-            return sendMessage(client, message, `${hexString} (${message.member.user.tag})`, null, null, false, "js");
+            return sendMessage(client, message, `${hexString} (${message.author.tag})`, null, null, false, "js");
         };
 
     } catch (e) {

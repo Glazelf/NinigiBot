@@ -17,7 +17,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user) {
-            user = message.member.user;
+            user = message.author;
         };
 
         let avatar = null;
@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args = []) => {
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.username}'s avatar`)
             .setImage(`${avatar}?size=512`)
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, avatarEmbed);

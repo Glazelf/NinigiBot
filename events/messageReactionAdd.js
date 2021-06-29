@@ -44,7 +44,7 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetMessage.member.user.tag)
+            .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count >= globalVars.starboardLimit && !messageDB) {

@@ -15,7 +15,7 @@ exports.run = (client, message, args = []) => {
         };
 
         if (!target) {
-            target = message.member.user;
+            target = message.author;
         };
 
         return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);

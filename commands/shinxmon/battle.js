@@ -20,7 +20,7 @@ module.exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         let target = args[0];
         if (!target || target.length < 1 || !message.mentions) return sendMessage(client, message, `Please specify a user to battle.`);
-        const trainers = [message.member.user, message.mentions.users.first()];
+        const trainers = [message.author, message.mentions.users.first()];
         if (!trainers[1]) return sendMessage(client, message, `Please tag a valid person to battle.`)
         if (trainers[0].id === trainers[1].id) return sendMessage(client, message, `You cannot battle yourself!`);
         if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);

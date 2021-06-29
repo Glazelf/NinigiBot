@@ -114,7 +114,7 @@ ${checkDays(userCreated)}`;
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
-                        .setFooter(message.member.user.tag)
+                        .setFooter(message.author.tag)
                         .setTimestamp();
 
                     return sendMessage(client, message, null, userEmbed);

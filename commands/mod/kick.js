@@ -32,7 +32,7 @@ module.exports.run = async (client, message, args = []) => {
             // console.log(e);
             kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Failed)`;
         };
-        await member.kick([`${reason} -${message.member.user.tag}`]);
+        await member.kick([`${reason} -${message.author.tag}`]);
         return sendMessage(client, message, kickReturn);
 
     } catch (e) {

@@ -24,7 +24,7 @@ exports.run = async (client, message) => {
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);
-        console.log(`Bot killed by ${message.member.user.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
 
         await client.destroy()
         return process.exit();

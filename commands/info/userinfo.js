@@ -21,7 +21,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user) {
-            user = message.member.user;
+            user = message.author;
         };
 
         let member = await message.guild.members.fetch(user.id);
@@ -148,7 +148,7 @@ module.exports.run = async (client, message, args = []) => {
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         if (banner) profileEmbed.setImage(`${banner}?size=256`);
         profileEmbed
-            .setFooter(message.member.user.tag)
+            .setFooter(message.author.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, profileEmbed);

@@ -21,7 +21,7 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.member.user;
+            user = message.author;
         };
 
         let totalMessage = null;
