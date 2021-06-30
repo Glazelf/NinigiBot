@@ -34,7 +34,16 @@ module.exports.run = async (client, message) => {
             });
         };
 
-        // Check emote cap
+        // Bans
+        let banCount = 0;
+        try {
+            await guild.bans.fetch();
+            banCount = guild.bans.cache.size;
+        } catch (e) {
+            banCount = 0;
+        };
+
+        // Check emote and sticker caps
         let emoteMax;
         switch (guild.premiumTier) {
             case "TIER_1":
@@ -51,22 +60,26 @@ module.exports.run = async (client, message) => {
         };
         if (guild.partnered) emoteMax = 500;
 
+        // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
         let guildOwner = await guild.fetchOwner();
 
+        // Rules
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
             if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
         };
 
+        // Text channels
         let channelCount = 0;
         guild.channels.cache.forEach(channel => {
-            if (channel.type != "category") channelCount += 1;
+            if (channel.type != "category" && channel.type != "thread") channelCount += 1;
         });
 
+        // Boosters
         let boostGoal;
         if (guild.premiumSubscriptionCount < 2) {
             boostGoal = "/2";
@@ -98,6 +111,7 @@ module.exports.run = async (client, message) => {
             .addField("Channels:", channelCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
+        if (banCount > 0) serverEmbed.addField("Bans:", banCount.toString(), true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
