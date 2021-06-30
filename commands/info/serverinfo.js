@@ -45,20 +45,28 @@ module.exports.run = async (client, message) => {
 
         // Check emote and sticker caps
         let emoteMax;
+        let stickerMax;
         switch (guild.premiumTier) {
             case "TIER_1":
                 emoteMax = 200;
+                stickerMax = 15;
                 break;
             case "TIER_2":
                 emoteMax = 300;
+                stickerMax = 30;
                 break;
             case "TIER_3":
                 emoteMax = 500;
+                stickerMax = 60;
                 break;
             default:
                 emoteMax = 100;
+                stickerMax = 0;
         };
-        if (guild.partnered) emoteMax = 500;
+        if (guild.partnered) {
+            emoteMax = 500;
+            stickerMax = 60;
+        };
 
         // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
