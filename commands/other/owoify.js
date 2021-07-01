@@ -10,8 +10,9 @@ exports.run = async (client, message, args = []) => {
         let input = args.join(" ");
         let severity = message.content.substring(1, 4).toLowerCase();
         let inputOwOified = owoify(input, severity);
+        let returnString = `${inputOwOified} (${severity})`;
 
-        return sendMessage(client, message, inputOwOified, null, null, false, "fix");
+        return sendMessage(client, message, returnString, null, null, false, "fix");
 
     } catch (e) {
         // log error
