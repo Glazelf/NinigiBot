@@ -26,7 +26,7 @@ module.exports.run = async (client, message, args = []) => {
 
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${user.username}'s avatar`)
+            .setAuthor(`${user.username}'s avatar:`)
             .setImage(`${avatar}?size=512`)
             .setFooter(user.tag)
             .setTimestamp();
