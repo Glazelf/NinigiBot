@@ -42,8 +42,8 @@ module.exports.run = async (client, message, args = []) => {
 
             if (roleHelpMessage.length > 0) {
                 roleHelpMessage = `${roleHelpMessage}
-                Please don't tag these roles, just put the name.
-                Example: \`${prefix}role Minecraft\``;
+Please don't tag these roles, just put the name.
+Example: \`${prefix}role Minecraft\``;
             } else {
                 roleHelpMessage = `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`;
             };
