@@ -4,12 +4,14 @@ module.exports = async (client, interaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
+        let isAdmin = require('../util/isAdmin');
+        let sendMessage = require('../util/sendMessage');
         if (!interaction) return;
         if (interaction.user.bot) return;
 
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
-                if (!interaction.member) interaction.reply(`Sorry, you're not allowed to use commands in private messages!`);
+                if (!interaction.member) return sendMessage(client, interaction, `Sorry, you're not allowed to use commands in private messages!`);
 
                 const { DisabledChannels } = require('../database/dbObjects');
                 const dbChannels = await DisabledChannels.findAll();
@@ -108,15 +110,18 @@ module.exports = async (client, interaction) => {
                             try {
                                 // Toggle selected role
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
+                                let adminBool = await isAdmin(interaction.guild.me);
 
-                                if (!role || role.managed || interaction.guild.me.roles.highest.comparePositionTo(role) <= 0) return;
+                                if (!role) return sendMessage(client, interaction, `This role does not exist.`);
+                                if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
+                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(`I do not have permission to manage this role.`);
 
                                 if (interaction.member.roles.cache.has(role.id)) {
                                     await interaction.member.roles.remove(role);
-                                    return interaction.reply({ content: `Removed **${role.name}** from your roles!`, ephemeral: true });
+                                    return sendMessage(client, interaction, `Removed **${role.name}** from your roles!`);
                                 } else {
                                     await interaction.member.roles.add(role);
-                                    return interaction.reply({ content: `Added **${role.name}** to your roles!`, ephemeral: true });
+                                    return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
                                 };
                             } catch (e) {
                                 console.log(e);

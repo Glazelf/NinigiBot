@@ -4,6 +4,7 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -20,6 +21,7 @@ module.exports.run = async (client, message, args = []) => {
             user = message.member.user;
         };
         const requestRole = args.join(' ').toLowerCase();
+        let adminBool = await isAdmin(message.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
@@ -77,7 +79,7 @@ module.exports.run = async (client, message, args = []) => {
                 if (!role) return sendMessage(client, message, invalidRoleText);
                 if (!roles.includes(role.id)) return sendMessage(client, message, invalidRoleText);
                 if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-                if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
+                if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
 
                 if (member.roles.cache.has(role.id)) {
                     await member.roles.remove(role);
