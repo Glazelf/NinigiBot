@@ -104,9 +104,7 @@ module.exports.run = async (client, message, args = []) => {
                 roleIDs.push(eligibleRole.role_id);
             });
             roles = Object.entries(roles).sort((a, b) => b[1].role.position - a[1].role.position);
-            console.log(roles)
             for await (const [key, value] of Object.entries(roles)) {
-                console.log(value)
                 let currentRole = await message.guild.roles.cache.get(value[1].role.id);
                 if (!currentRole) continue;
                 rolesArray.push({
