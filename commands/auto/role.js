@@ -20,17 +20,25 @@ module.exports.run = async (client, message, args = []) => {
         } else {
             user = message.member.user;
         };
-        const requestRole = args.join(' ').toLowerCase();
+        let requestRole = args.join(' ').toLowerCase();
         let adminBool = await isAdmin(message.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        const db = await EligibleRoles.findAll();
-        const roles = db.map(role => role.role_id);
+        let db = await EligibleRoles.findAll();
+        let roles = [];
+        let roleIDs = [];
+        await db.forEach(eligibleRole => {
+            roles.push({
+                id: eligibleRole.role_id,
+                description: eligibleRole.description
+            });
+            roleIDs.push(eligibleRole.role_id);
+        });
 
         let roleText = [];
         member.guild.roles.cache.each(role => {
-            if (roles.includes(role.id)) {
+            if (roleIDs.includes(role.id)) {
                 roleText.push(role);
             };
         });
@@ -92,11 +100,13 @@ module.exports.run = async (client, message, args = []) => {
             };
 
         } else {
-            for (let i = 0; i < roleText.length; i++) {
-                let roleFetch = await message.guild.roles.fetch(roleText[i]);
+            for await (const [key, value] of Object.entries(roles)) {
+                let roleFetch = await message.guild.roles.fetch(value['id']);
+                if (!roleFetch) return;
                 rolesArray.push({
                     label: roleFetch.name,
-                    value: roleText[i]
+                    value: value['id'],
+                    description: value['description']
                 });
             };
             if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in this server.`);

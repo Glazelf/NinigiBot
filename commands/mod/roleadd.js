@@ -8,7 +8,14 @@ module.exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        const requestRole = args.join(' ').toLowerCase();
+        let requestRole = args.join(' ').toLowerCase();
+        let inputArray;
+        let description;
+        if (requestRole.includes(",")) {
+            inputArray = requestRole.split(",");
+            requestRole = inputArray[0].trim();
+            description = inputArray[1].trim();
+        };
 
         if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role.`);
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
@@ -22,7 +29,12 @@ module.exports.run = async (client, message, args = []) => {
             await roleID.destroy();
             return sendMessage(client, message, `The **${roleTag}** role is no longer eligible to be selfassigned.`);
         } else {
-            await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
+            if (description) {
+                await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase(), description: description });
+            } else {
+                await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
+            };
+
             return sendMessage(client, message, `The **${role.name}** role is now eligible to be selfassigned.`);
         };
 
