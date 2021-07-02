@@ -30,16 +30,8 @@ module.exports.run = async (client, message, args = []) => {
         let db = await EligibleRoles.findAll();
         let roles = [];
         let roleIDs = [];
-        await db.forEach(eligibleRole => {
-            roles.push({
-                id: eligibleRole.role_id,
-                description: eligibleRole.description
-            });
-            roleIDs.push(eligibleRole.role_id);
-        });
-
         let roleText = [];
-        member.guild.roles.cache.each(role => {
+        await member.guild.roles.cache.each(async (role) => {
             if (roleIDs.includes(role.id)) {
                 roleText.push(role);
             };
@@ -102,13 +94,29 @@ module.exports.run = async (client, message, args = []) => {
             };
 
         } else {
+            await db.forEach(async (eligibleRole) => {
+                let currentRole = await message.guild.roles.cache.get(eligibleRole.role_id);
+                if (!currentRole) return;
+                roles.push({
+                    role: currentRole,
+                    description: eligibleRole.description
+                });
+                roleIDs.push(eligibleRole.role_id);
+            });
+            roles = Object.entries(roles).sort((a, b) => {
+                console.log(a)
+                console.log(b)
+                b[1].role.position - a[1].role.position
+            });
+            console.log(roles)
             for await (const [key, value] of Object.entries(roles)) {
-                let roleFetch = await message.guild.roles.cache.get(value['id'])
-                if (!roleFetch) continue;
+                console.log(value)
+                let currentRole = await message.guild.roles.cache.get(value[1].role.id);
+                if (!currentRole) continue;
                 rolesArray.push({
-                    label: roleFetch.name,
-                    value: value['id'],
-                    description: value['description']
+                    label: value[1].role.name,
+                    value: value[1].role.id,
+                    description: value[1].description
                 });
             };
             if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in this server.`);
