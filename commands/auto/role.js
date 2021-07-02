@@ -103,11 +103,7 @@ module.exports.run = async (client, message, args = []) => {
                 });
                 roleIDs.push(eligibleRole.role_id);
             });
-            roles = Object.entries(roles).sort((a, b) => {
-                console.log(a)
-                console.log(b)
-                b[1].role.position - a[1].role.position
-            });
+            roles = Object.entries(roles).sort((a, b) => b[1].role.position - a[1].role.position);
             console.log(roles)
             for await (const [key, value] of Object.entries(roles)) {
                 console.log(value)
