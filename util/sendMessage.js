@@ -7,7 +7,7 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         // Force hidden if disabled channel
         if (message) {
             if (channels.includes(message.channel.id)) {
-                if (message.type !== "DEFAULT" && files && ephemeral == true) return message.reply({ content: `You can't use that command in this channel because it contains files.`, ephemeral: true });
+                if (message.type !== "DEFAULT" && files && ephemeral == true) return message.reply({ content: `You can't use that command in this channel because the reply contains files, which can not be hidden.`, ephemeral: true });
                 ephemeral = true;
             };
         };
