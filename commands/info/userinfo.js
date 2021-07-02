@@ -18,7 +18,7 @@ module.exports.run = async (client, message, args = []) => {
             try {
                 let userID = args[0];
                 user = await client.users.fetch(userID);
-                if (!user) user = await client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
+                if (!user) user = await client.users.cache.find(user => user.tag.toLowerCase() == args[0].toString().toLowerCase());
             } catch (e) {
                 // console.log();
             };
