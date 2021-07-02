@@ -109,7 +109,7 @@ module.exports.run = async (client, message, args = []) => {
                         return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
-                        console.log(e);
+                        // console.log(e);
                         return sendMessage(client, message, `Could not find the specified move.`);
                     });
                 break;
