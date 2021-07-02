@@ -99,6 +99,7 @@ module.exports.run = async (client, message, args = []) => {
                     value: roleText[i]
                 });
             };
+            if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in this server.`);
             let rolesSelects = new Discord.MessageActionRow()
                 .addComponents(
                     new Discord.MessageSelectMenu()
