@@ -9,6 +9,7 @@ module.exports.run = async (client, message, args = []) => {
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         let splitDescriptionCharacter = ";";
+        let selectDescriptionCharacterLimit = 50;
         let requestRole = args.join(' ');
         let inputArray;
         let description;
@@ -16,6 +17,7 @@ module.exports.run = async (client, message, args = []) => {
             inputArray = requestRole.split(splitDescriptionCharacter);
             requestRole = inputArray[0].trim();
             description = inputArray[1].trim();
+            if (description.length > selectDescriptionCharacterLimit) return sendMessage(client, message, `Role description must be ${selectDescriptionCharacterLimit} characters or less.`);
         };
 
         requestRole = requestRole.toLowerCase();
