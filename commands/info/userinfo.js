@@ -15,13 +15,21 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user && args[0]) {
-            let userID = args[0];
-            user = await client.users.fetch(userID);
-            if (!user) user = await client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
+            try {
+                let userID = args[0];
+                user = await client.users.fetch(userID);
+                if (!user) user = await client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
+            } catch (e) {
+                // console.log();
+            };
         };
 
         if (!user) {
-            user = message.author;
+            if (message.type == 'DEFAULT') {
+                user = message.author;
+            } else {
+                user = message.member.user;
+            };
         };
 
         let member = await message.guild.members.fetch(user.id);
