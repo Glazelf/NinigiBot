@@ -116,12 +116,16 @@ module.exports = async (client, interaction) => {
                                 if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
                                 if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(`I do not have permission to manage this role.`);
 
-                                if (interaction.member.roles.cache.has(role.id)) {
-                                    await interaction.member.roles.remove(role);
-                                    return sendMessage(client, interaction, `Removed **${role.name}** from your roles!`);
-                                } else {
-                                    await interaction.member.roles.add(role);
-                                    return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
+                                try {
+                                    if (interaction.member.roles.cache.has(role.id)) {
+                                        await interaction.member.roles.remove(role);
+                                        return sendMessage(client, interaction, `Removed **${role.name}** from your roles!`);
+                                    } else {
+                                        await interaction.member.roles.add(role);
+                                        return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
+                                    };
+                                } catch (e) {
+                                    return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`);
                                 };
                             } catch (e) {
                                 console.log(e);
