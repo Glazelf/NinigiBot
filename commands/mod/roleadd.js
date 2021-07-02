@@ -8,7 +8,7 @@ module.exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        let requestRole = args.join(' ').toLowerCase();
+        let requestRole = args.join(' ');
         let inputArray;
         let description;
         if (requestRole.includes(",")) {
@@ -16,6 +16,8 @@ module.exports.run = async (client, message, args = []) => {
             requestRole = inputArray[0].trim();
             description = inputArray[1].trim();
         };
+
+        requestRole = requestRole.toLowerCase();
 
         if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role.`);
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
