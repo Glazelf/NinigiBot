@@ -54,56 +54,77 @@ module.exports = async (client, interaction) => {
                 };
 
             case "MESSAGE_COMPONENT":
-                if (interaction.componentType == 'BUTTON') {
-                    // Pokémon command
-                    if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
-                        try {
-                            var Pokedex = require('pokedex-promise-v2');
-                            var P = new Pokedex();
-
-                            let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
-                            let newPkmID = pkmID;
-                            let maxPkmID = 898; // Calyrex
-
-                            if (interaction.customID == 'pkmleft') {
-                                newPkmID = parseInt(pkmID) - 1;
-                            } else {
-                                newPkmID = parseInt(pkmID) + 1;
-                            };
-
-                            if (newPkmID < 1) {
-                                newPkmID = maxPkmID;
-                            } else if (newPkmID > maxPkmID) {
-                                newPkmID = 1;
-                            };
-
-                            let pkmEmbed = null;
-
+                switch (interaction.componentType) {
+                    case "BUTTON":
+                        // Pokémon command
+                        if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
                             try {
-                                await P.getPokemonByName(newPkmID)
-                                    .then(async function (response) {
-                                        pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
-                                    });
+                                var Pokedex = require('pokedex-promise-v2');
+                                var P = new Pokedex();
+
+                                let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
+                                let newPkmID = pkmID;
+                                let maxPkmID = 898; // Calyrex
+
+                                if (interaction.customID == 'pkmleft') {
+                                    newPkmID = parseInt(pkmID) - 1;
+                                } else {
+                                    newPkmID = parseInt(pkmID) + 1;
+                                };
+
+                                if (newPkmID < 1) {
+                                    newPkmID = maxPkmID;
+                                } else if (newPkmID > maxPkmID) {
+                                    newPkmID = 1;
+                                };
+
+                                let pkmEmbed = null;
+
+                                try {
+                                    await P.getPokemonByName(newPkmID)
+                                        .then(async function (response) {
+                                            pkmEmbed = await getPokemon(client, interaction.message, response, interaction);
+                                        });
+                                } catch (e) {
+                                    console.log(e);
+                                    return;
+                                };
+                                if (!pkmEmbed) return;
+
+                                await interaction.update({ embeds: [pkmEmbed] });
+                                return;
+
                             } catch (e) {
-                                console.log(e);
+                                // console.log(e);
                                 return;
                             };
-                            if (!pkmEmbed) return;
-
-                            await interaction.update({ embeds: [pkmEmbed] });
-                            return;
-
-                        } catch (e) {
-                            // console.log(e);
+                        } else {
+                            // Other buttons
                             return;
                         };
-                    } else {
-                        // Other buttons
+
+                    case "SELECT_MENU":
+                        if (interaction.customID == 'role-select') {
+                            // Toggle selected role
+                            const role = await interaction.guild.roles.fetch(interaction.values[0]);
+
+                            if (!role || role.managed || interaction.guild.me.roles.highest.comparePositionTo(role) <= 0) return;
+
+                            if (interaction.member.roles.cache.has(role.id)) {
+                                await interaction.member.roles.remove(role);
+                                return interaction.reply({ content: `Removed **${role.name}** from your roles!`, ephemeral: true });
+                            } else {
+                                await interaction.member.roles.add(role);
+                                return interaction.reply({ content: `Added **${role.name}** to your roles!`, ephemeral: true });
+                            };
+
+                        } else {
+                            // Other select menus
+                            return;
+                        };
+                    default:
+                        // Other component types
                         return;
-                    };
-                } else {
-                    // Other component types
-                    return;
                 };
 
             case "PING":

@@ -81,7 +81,6 @@ Example: \`${prefix}role Minecraft\``;
                 .addComponents(
                     new Discord.MessageSelectMenu()
                         .setCustomID('role-select')
-                        .minValues(1)
                         .setPlaceholder('Click here to drop down!')
                         .addOptions(rolesArray),
                 );
