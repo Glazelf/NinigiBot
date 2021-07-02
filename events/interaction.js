@@ -109,8 +109,12 @@ module.exports = async (client, interaction) => {
                         if (interaction.customID == 'role-select') {
                             try {
                                 // Toggle selected role
+                                const { EligibleRoles } = require('../database/dbObjects');
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
                                 let adminBool = await isAdmin(interaction.guild.me);
+
+                                let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
+                                if (!checkRoleEligibility) return sendMessage(client, interaction, `This role is not available anymore.`);
 
                                 if (!role) return sendMessage(client, interaction, `This role does not exist.`);
                                 if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
