@@ -23,8 +23,6 @@ module.exports.run = async (client, message, args = []) => {
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        if (!args[0]) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
-
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
@@ -43,31 +41,53 @@ module.exports.run = async (client, message, args = []) => {
         let roleHelpMessage = "";
         let rolesArray = [];
 
-        for (let i = 0; i < roleText.length; i++) {
-            roleHelpMessage = `${roleHelpMessage}
-> <@&${roleText[i]}>`;
-        };
-
-        if (roleHelpMessage.length > 0) {
-            roleHelpMessage = `${roleHelpMessage}
-Please don't tag these roles, just put the name.
-Example: \`${prefix}role Minecraft\``;
-        } else {
-            return sendMessage(client, message, `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`);
-        };
-
         if (roleText.length > selectOptionLimit) {
-            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Your list of self-assignable roles is over ${embedDescriptionCharacterLimit}. Consider removing some roles to shorten it.`);
 
-            let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+            if (!args[0] || args[0] == "help") {
+                for (let i = 0; i < roleText.length; i++) {
+                    roleHelpMessage = `${roleHelpMessage}
+        > ${i + 1}. <@&${roleText[i]}>`;
+                };
 
-            const rolesHelp = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
-                .setAuthor(`Available roles: `, avatar)
-                .setDescription(roleHelpMessage)
-                .setFooter(user.tag)
-                .setTimestamp();
-            return sendMessage(client, message, null, rolesHelp);
+                if (roleHelpMessage.length > 0) {
+                    roleHelpMessage = `${roleHelpMessage}
+        Please don't tag these roles, just put the name.
+        Example: \`${prefix}role Minecraft\`
+        If you wish to use a dropdown select menu, you need 25 or less selfassignable roles.`;
+                } else {
+                    return sendMessage(client, message, `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`);
+                };
+
+                if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.`);
+
+                let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+
+                const rolesHelp = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setAuthor(`Available roles: `, avatar)
+                    .setDescription(roleHelpMessage)
+                    .setFooter(user.tag)
+                    .setTimestamp();
+                return sendMessage(client, message, null, rolesHelp);
+            } else {
+                // Interaction code
+                const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
+
+                let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
+                if (!role) return sendMessage(client, message, invalidRoleText);
+                if (!roles.includes(role.id)) return sendMessage(client, message, invalidRoleText);
+                if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
+                if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
+
+                if (member.roles.cache.has(role.id)) {
+                    await member.roles.remove(role);
+                    return sendMessage(client, message, `You no longer have the **${role.name}** role, ${member}. *booo*`);
+
+                } else {
+                    await member.roles.add(role);
+                    return sendMessage(client, message, `You now have the **${role.name}** role, ${member}! Yay!`);
+                };
+            };
 
         } else {
             for (let i = 0; i < roleText.length; i++) {
@@ -86,24 +106,6 @@ Example: \`${prefix}role Minecraft\``;
                 );
 
             return sendMessage(client, message, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
-        };
-
-        // Interaction code
-        const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
-
-        let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
-        if (!role) return sendMessage(client, message, invalidRoleText);
-        if (!roles.includes(role.id)) return sendMessage(client, message, invalidRoleText);
-        if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
-
-        if (member.roles.cache.has(role.id)) {
-            await member.roles.remove(role);
-            return sendMessage(client, message, `You no longer have the **${role.name}** role, ${member}. *booo*`);
-
-        } else {
-            await member.roles.add(role);
-            return sendMessage(client, message, `You now have the **${role.name}** role, ${member}! Yay!`);
         };
 
     } catch (e) {
