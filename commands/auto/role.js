@@ -14,6 +14,7 @@ module.exports.run = async (client, message, args = []) => {
 
         let member = message.member;
         const requestRole = args.join(' ').toLowerCase();
+        let embedDescriptionCharacterLimit = 4096;
 
         if (!args[0]) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
 
@@ -49,7 +50,7 @@ Example: \`${prefix}role Minecraft\``;
             };
 
 
-            if (roleHelpMessage.length > 1024) return sendMessage(client, message, `Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
+            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
 
             let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
