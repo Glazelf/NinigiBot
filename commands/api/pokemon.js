@@ -149,7 +149,7 @@ module.exports.run = async (client, message, args = []) => {
                                     .setEmoji('➡️')
                             );
 
-                        return sendMessage(client, message, null, pkmEmbed, null, true, null, pkmButtons);
+                        return sendMessage(client, message, null, pkmEmbed, null, true, pkmButtons);
 
                     }).catch(function (e) {
                         // console.log(e);

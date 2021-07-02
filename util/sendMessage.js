@@ -1,4 +1,4 @@
-module.exports = async (client, message, replyText, embeds = null, files = null, ephemeral = true, code = null, components = null, slashComponents = false) => {
+module.exports = async (client, message, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false) => {
     try {
         const { DisabledChannels } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
@@ -8,7 +8,6 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         if (message) {
             if (channels.includes(message.channel.id)) ephemeral = true;
         };
-        if (!code) code = false;
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
@@ -40,7 +39,6 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         };
         if (message.type == 'APPLICATION_COMMAND') messageObject['ephemeral'] = ephemeral;
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
-        messageObject['code'] = code;
 
         if (!message || message.deleted == true) {
             return message.channel.send(messageObject);

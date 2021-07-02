@@ -23,7 +23,9 @@ module.exports.run = async (client, message, args = []) => {
             if (evaled.includes(value)) return sendMessage(client, message, `For security reasons this content can't be returned.`);
         };
 
-        return sendMessage(client, message, clean(evaled), null, null, true, "js");
+        let returnString = clean(evaled);
+
+        return sendMessage(client, message, `\`\`\`js\n${returnString}\n\`\`\``);
 
         function clean(text) {
             if (typeof (text) === "string")
