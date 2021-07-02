@@ -8,11 +8,12 @@ module.exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
+        let splitDescriptionCharacter = ";";
         let requestRole = args.join(' ');
         let inputArray;
         let description;
-        if (requestRole.includes(",")) {
-            inputArray = requestRole.split(",");
+        if (requestRole.includes(splitDescriptionCharacter)) {
+            inputArray = requestRole.split(splitDescriptionCharacter);
             requestRole = inputArray[0].trim();
             description = inputArray[1].trim();
         };
