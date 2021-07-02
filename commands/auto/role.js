@@ -13,6 +13,8 @@ module.exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
+        await message.guild.roles.fetch();
+
         let member = message.member;
         let user;
         if (message.type == 'DEFAULT') {
@@ -101,8 +103,7 @@ module.exports.run = async (client, message, args = []) => {
 
         } else {
             for await (const [key, value] of Object.entries(roles)) {
-                if (!member.guild.roles.cache.includes(value['id'])) continue;
-                let roleFetch = await message.guild.roles.fetch(value['id']);
+                let roleFetch = await message.guild.roles.cache.get(value['id'])
                 if (!roleFetch) continue;
                 rolesArray.push({
                     label: roleFetch.name,
