@@ -105,17 +105,22 @@ module.exports = async (client, interaction) => {
 
                     case "SELECT_MENU":
                         if (interaction.customID == 'role-select') {
-                            // Toggle selected role
-                            const role = await interaction.guild.roles.fetch(interaction.values[0]);
+                            try {
+                                // Toggle selected role
+                                const role = await interaction.guild.roles.fetch(interaction.values[0]);
 
-                            if (!role || role.managed || interaction.guild.me.roles.highest.comparePositionTo(role) <= 0) return;
+                                if (!role || role.managed || interaction.guild.me.roles.highest.comparePositionTo(role) <= 0) return;
 
-                            if (interaction.member.roles.cache.has(role.id)) {
-                                await interaction.member.roles.remove(role);
-                                return interaction.reply({ content: `Removed **${role.name}** from your roles!`, ephemeral: true });
-                            } else {
-                                await interaction.member.roles.add(role);
-                                return interaction.reply({ content: `Added **${role.name}** to your roles!`, ephemeral: true });
+                                if (interaction.member.roles.cache.has(role.id)) {
+                                    await interaction.member.roles.remove(role);
+                                    return interaction.reply({ content: `Removed **${role.name}** from your roles!`, ephemeral: true });
+                                } else {
+                                    await interaction.member.roles.add(role);
+                                    return interaction.reply({ content: `Added **${role.name}** to your roles!`, ephemeral: true });
+                                };
+                            } catch (e) {
+                                console.log(e);
+                                return;
                             };
 
                         } else {
