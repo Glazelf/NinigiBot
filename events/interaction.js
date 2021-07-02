@@ -125,7 +125,7 @@ module.exports = async (client, interaction) => {
                                         return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
                                     };
                                 } catch (e) {
-                                    return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`);
+                                    return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, null, null, false);
                                 };
                             } catch (e) {
                                 console.log(e);
