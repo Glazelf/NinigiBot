@@ -102,7 +102,7 @@ module.exports.run = async (client, message, args = []) => {
         } else {
             for await (const [key, value] of Object.entries(roles)) {
                 let roleFetch = await message.guild.roles.fetch(value['id']);
-                if (!roleFetch) return;
+                if (!roleFetch) continue;
                 rolesArray.push({
                     label: roleFetch.name,
                     value: value['id'],
