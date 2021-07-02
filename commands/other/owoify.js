@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
         if (!args[0]) return sendMessage(client, message, `Please provide an input to owoify.`);
@@ -10,7 +11,7 @@ exports.run = async (client, message, args = []) => {
         let input = args.join(" ");
         let severity = message.content.substring(1, 4).toLowerCase();
         let inputOwOified = owoify(input, severity);
-        let returnString = `\`\`\`fix\n${inputOwOified} (${severity})\n\`\`\``;
+        let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 
         return sendMessage(client, message, returnString);
 

@@ -1,4 +1,5 @@
 module.exports = async (message) => {
+    const Discord = require("discord.js");
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
@@ -12,6 +13,8 @@ module.exports = async (message) => {
     let reason = "Unspecified.";
     let isSlur = false;
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W/g, '').replace(" ", "").toLowerCase();
+    let messageContentBlock = "";
+    if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
     const scamLinks = [
         "https://glorysocial.com/profile/"
@@ -94,8 +97,7 @@ module.exports = async (message) => {
         await message.channel.send({ content: `Successfully auto-kicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
-                content: `You've been automatically kicked for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``
+                content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}`
             });
             return true;
         } catch (e) {
@@ -109,8 +111,7 @@ module.exports = async (message) => {
         await message.channel.send({ content: `Successfully auto-banned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
-                content: `You've been automatically banned for the following reason: \`${reason}\`
-\`\`\`${message.content}\`\`\``
+                content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}`
             });
             return true;
         } catch (e) {
