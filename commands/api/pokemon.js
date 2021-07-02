@@ -41,7 +41,7 @@ module.exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(footer)
+                            .setFooter(user.tag)
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
 
@@ -103,13 +103,13 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Target:", target, true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(footer)
+                            .setFooter(user.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
-                        // console.log(e);
+                        console.log(e);
                         return sendMessage(client, message, `Could not find the specified move.`);
                     });
                 break;
