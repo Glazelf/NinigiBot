@@ -8,6 +8,13 @@ exports.run = async (client, message) => {
         const getTime = require('../../util/getTime');
         let timestamp = await getTime();
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         // Return message then destroy
         await sendMessage(client, message, `Starting shutdown. Removing all slash commands might take a bit.`);
 
@@ -24,7 +31,7 @@ exports.run = async (client, message) => {
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);
-        console.log(`Bot killed by ${message.author.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${user.tag}. (${timestamp})`);
 
         await client.destroy()
         return process.exit();

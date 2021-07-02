@@ -17,6 +17,13 @@ module.exports.run = async (client, message, args = []) => {
         if (isNaN(inputNumber)) return sendMessage(client, message, `You must provide a valid number.`);
         let titleNumber = inputNumber;
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         // Channels
         let rulesChannel = `<#549220480490536972>`;
         let NSFWChannel = `<#717841246101700709>`;
@@ -124,7 +131,7 @@ Vanity URL: https://discord.gg/shinx`
             .setColor(globalVars.embedColor)
             .setAuthor(`${objectName} ${titleNumber}`, avatar)
             .setDescription(objectText)
-            .setFooter(message.author.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, ruleEmbed);

@@ -12,6 +12,13 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
         let input = args[0];
 
@@ -20,7 +27,7 @@ exports.run = async (client, message, args = []) => {
                 while (input.length < 6) input = "0" + input;
                 let argHex = `0x${input}`;
                 let hexInt = parseInt(argHex);
-                let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${message.author.tag})`)
+                let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
                 return sendMessage(client, message, returnString);
             } catch (e) {
                 return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
@@ -29,7 +36,7 @@ exports.run = async (client, message, args = []) => {
             if (isNaN(input)) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
             let argInt = parseInt(input);
             let hexString = argInt.toString(16).toUpperCase();
-            let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${message.author.tag})`)
+            let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
             return sendMessage(client, message, returnString);
         };
 

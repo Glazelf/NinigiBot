@@ -15,6 +15,13 @@ module.exports.run = async (client, message, args = []) => {
         };
         if (!member || !user) return sendMessage(client, message, `Please mention someone to kick.`);
 
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && message.guild.ownerID !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to kick ${user.tag}.`);
@@ -32,7 +39,7 @@ module.exports.run = async (client, message, args = []) => {
             // console.log(e);
             kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Failed)`;
         };
-        await member.kick([`${reason} -${message.author.tag}`]);
+        await member.kick([`${reason} -${author.tag}`]);
         return sendMessage(client, message, kickReturn);
 
     } catch (e) {

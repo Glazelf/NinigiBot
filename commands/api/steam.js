@@ -30,6 +30,13 @@ module.exports.run = async (client, message, args = []) => {
         let userFriends;
         let userGroups;
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         switch (subCommand) {
             case "user":
                 try {
@@ -114,7 +121,7 @@ ${checkDays(userCreated)}`;
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
-                        .setFooter(message.author.tag)
+                        .setFooter(user.tag)
                         .setTimestamp();
 
                     return sendMessage(client, message, null, userEmbed);

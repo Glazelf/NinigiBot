@@ -15,9 +15,15 @@ exports.run = async (client, message, args = []) => {
             transferTarget = client.users.cache.get(userID);
         };
         if (!transferTarget) return;
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
         let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${globalVars.currency}`;
 
-        if (transferTarget == message.author) return sendMessage(client, message, `You can't transfer money to yourself.`)
+        if (transferTarget == user) return sendMessage(client, message, `You can't transfer money to yourself.`)
         if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `You need to specify a valid number to transfer.`);
         if (transferAmount > currentAmount) return sendMessage(client, message, `You don't have enough money to transfer that much, you only have ${userBalance}.`);
         if (transferAmount <= 0) return sendMessage(client, message, `Please enter an amount greater than zero.`);

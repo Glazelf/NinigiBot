@@ -21,7 +21,11 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.author;
+            if (message.type == 'DEFAULT') {
+                user = message.author;
+            } else {
+                user = message.member.user;
+            };
         };
 
         let totalMessage = null;

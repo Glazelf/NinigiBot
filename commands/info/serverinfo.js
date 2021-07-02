@@ -18,6 +18,13 @@ module.exports.run = async (client, message) => {
         let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
         let guildsByShard = client.guilds.cache;
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
@@ -127,7 +134,7 @@ module.exports.run = async (client, message) => {
 ${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
-            .setFooter(message.author.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, serverEmbed);

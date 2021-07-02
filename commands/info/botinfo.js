@@ -39,6 +39,13 @@ module.exports.run = async (client, message) => {
             totalMembers = await getUsers();
         };
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
         let days = Math.floor(totalSeconds / 86400);
@@ -100,7 +107,7 @@ module.exports.run = async (client, message) => {
             .addField("Uptime:", uptime, false)
             .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}
             ${checkDays(client.user.createdAt)}`, false)
-            .setFooter(message.author.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         // Buttons

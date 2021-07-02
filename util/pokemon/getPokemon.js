@@ -206,7 +206,7 @@ module.exports = async (client, message, response, interaction) => {
         pokemonName = await capitalizeString(pokemonName);
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
-        let footer = message.author.tag;
+        let footer = message.member.user.tag;
         if (interaction) footer = interaction.user.tag;
 
         // Embed building

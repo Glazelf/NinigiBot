@@ -32,6 +32,13 @@ module.exports.run = async (client, message, args = []) => {
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
         if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
@@ -43,7 +50,7 @@ module.exports.run = async (client, message, args = []) => {
             if (!args[0]) roleColor = personalRole.color;
 
             personalRole.edit({
-                name: message.author.tag,
+                name: user.tag,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
@@ -52,7 +59,7 @@ module.exports.run = async (client, message, args = []) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.author.tag)) message.member.roles.add(personalRole.id);
+            if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
 
             return sendMessage(client, message, `Updated your role successfully. Color set to \`#${roleColor}\`.`);
 
@@ -71,17 +78,17 @@ module.exports.run = async (client, message, args = []) => {
             // Create role
             try {
                 await message.guild.roles.create({
-                    name: message.author.tag,
+                    name: user.tag,
                     color: roleColor,
                     position: personalRolePosition,
-                    reason: `Personal role for ${message.author.tag}.`,
+                    reason: `Personal role for ${user.tag}.`,
                 })
             } catch (e) {
                 // console.log(error);
                 return sendMessage(client, message, `An error occurred creating a role.`);
             };
 
-            let createdRole = await message.guild.roles.cache.find(role => role.name == message.author.tag);
+            let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
 
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });

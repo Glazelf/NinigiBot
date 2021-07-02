@@ -32,6 +32,13 @@ exports.run = async (client, message, args) => {
             };
         };
 
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
         await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
@@ -40,7 +47,7 @@ exports.run = async (client, message, args) => {
                 limit: 100,
             }).then((messages) => {
                 const filterBy = user.id;
-                messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
+                messages = messages.filter(m => author.id === filterBy).array().slice(0, amount);
 
                 message.channel.bulkDelete(messages)
                     .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.` }));

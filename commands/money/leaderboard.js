@@ -7,12 +7,20 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
 
         let memberFetch = await message.guild.members.fetch();
-        let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
+        let avatar = author.displayAvatarURL({ format: "png", dynamic: true });
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Currency leaderboard:`, avatar)
-            .setFooter(message.author.tag)
+            .setFooter(author.tag)
             .setTimestamp();
 
         if (args[0]) {

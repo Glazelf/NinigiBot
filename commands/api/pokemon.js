@@ -20,6 +20,13 @@ module.exports.run = async (client, message, args = []) => {
             subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
         };
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         switch (subCommand) {
             case "ability":
                 P.getAbilityByName(subArgument)
@@ -34,7 +41,7 @@ module.exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(message.author.tag)
+                            .setFooter(footer)
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
 
@@ -59,7 +66,7 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Category:", category, true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
                             .setImage(itemImage)
-                            .setFooter(message.author.tag)
+                            .setFooter(user.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, itemEmbed);
@@ -96,7 +103,7 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Target:", target, true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(message.author.tag)
+                            .setFooter(footer)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed);

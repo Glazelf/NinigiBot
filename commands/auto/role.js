@@ -13,56 +13,83 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         let member = message.member;
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
         const requestRole = args.join(' ').toLowerCase();
         let embedDescriptionCharacterLimit = 4096;
+        let selectOptionLimit = 25;
 
         if (!args[0]) return sendMessage(client, message, `Please provide a role. Use \`${prefix}role help\` to see the available roles.`);
 
         const db = await EligibleRoles.findAll();
         const roles = db.map(role => role.role_id);
 
-        if (requestRole.toLowerCase() == 'help') {
-            let roleText = [];
-            member.guild.roles.cache.each(role => {
-                if (roles.includes(role.id)) {
-                    roleText.push(role);
-                };
-            });
-
-            // Role sorting for role help
-            roleText.sort((r, r2) => r2.position - r.position).join(", ");
-            roleText = roleText.map(role => role.id);
-
-            // Role help embed and logic
-            let roleHelpMessage = "";
-
-            for (let i = 0; i < roleText.length; i++) {
-                roleHelpMessage = `${roleHelpMessage}
-> <@&${roleText[i]}>`;
+        let roleText = [];
+        member.guild.roles.cache.each(role => {
+            if (roles.includes(role.id)) {
+                roleText.push(role);
             };
+        });
 
-            if (roleHelpMessage.length > 0) {
-                roleHelpMessage = `${roleHelpMessage}
+        // Role sorting for role help
+        roleText.sort((r, r2) => r2.position - r.position).join(", ");
+        roleText = roleText.map(role => role.id);
+
+        // Role help embed and logic
+        let roleHelpMessage = "";
+        let rolesArray = [];
+
+        for (let i = 0; i < roleText.length; i++) {
+            roleHelpMessage = `${roleHelpMessage}
+> <@&${roleText[i]}>`;
+        };
+
+        if (roleHelpMessage.length > 0) {
+            roleHelpMessage = `${roleHelpMessage}
 Please don't tag these roles, just put the name.
 Example: \`${prefix}role Minecraft\``;
-            } else {
-                roleHelpMessage = `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`;
-            };
+        } else {
+            return sendMessage(client, message, `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`);
+        };
 
-
-            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Your list of self-assignable roles is too long to fit in a single message. Consider removing some.`);
+        if (roleText.length > selectOptionLimit) {
+            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Your list of self-assignable roles is over ${embedDescriptionCharacterLimit}. Consider removing some roles to shorten it.`);
 
             let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Available roles:`, avatar)
+                .setAuthor(`Available roles: `, avatar)
                 .setDescription(roleHelpMessage)
-                .setFooter(message.author.tag)
+                .setFooter(user.tag)
                 .setTimestamp();
             return sendMessage(client, message, null, rolesHelp);
+
+        } else {
+            for (let i = 0; i < roleText.length; i++) {
+                let roleFetch = await message.guild.roles.fetch(roleText[i]);
+                rolesArray.push({
+                    label: roleFetch.name,
+                    value: roleText[i]
+                });
+            };
+            let rolesSelects = new Discord.MessageActionRow()
+                .addComponents(
+                    new Discord.MessageSelectMenu()
+                        .setCustomID('role-select')
+                        .minValues(1)
+                        .setPlaceholder('Click here to drop down!')
+                        .addOptions(rolesArray),
+                );
+
+            return sendMessage(client, message, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
         };
 
+        // Interaction code
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
 
         let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
