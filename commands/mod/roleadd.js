@@ -22,13 +22,15 @@ module.exports.run = async (client, message, args = []) => {
         if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role.`);
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
         if (!role) return sendMessage(client, message, `That role does not exist.`);
-        let roleID = await EligibleRoles.findOne({ where: { role_id: role.id, name: requestRole } });
+        let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });
 
         if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
 
-        if (roleID) {
+        if (roleIDs.length > 0) {
             let roleTag = role.name;
-            await roleID.destroy();
+            for await (const roleID of roleIDs) {
+                roleID.destroy();
+            };
             return sendMessage(client, message, `The **${roleTag}** role is no longer eligible to be selfassigned.`);
         } else {
             if (description) {
