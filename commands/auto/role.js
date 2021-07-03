@@ -50,9 +50,6 @@ module.exports.run = async (client, message, args = []) => {
 
         if (!args[0] || args[0] == "help") {
             // Select Menu
-            console.log("wtf")
-            console.log(args[0])
-            console.log(roleText.length)
             if (!args[0] && roleText.length <= selectOptionLimit) {
                 await db.forEach(async (eligibleRole) => {
                     let currentRole = await message.guild.roles.cache.get(eligibleRole.role_id);
