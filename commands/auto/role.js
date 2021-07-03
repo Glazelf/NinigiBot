@@ -92,7 +92,7 @@ module.exports.run = async (client, message, args = []) => {
                 roleHelpMessage = `${roleHelpMessage}
 Please don't tag these roles, just put the name.
 Example: \`${prefix}role Minecraft\`
-If you wish to use a dropdown select menu, you need 25 or less selfassignable roles.`;
+If you wish to use a select menu, use \`${prefix}role\` while having ${selectOptionLimit} or less selfassignable roles.`;
             } else {
                 return sendMessage(client, message, `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`);
             };
