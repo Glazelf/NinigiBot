@@ -8,6 +8,11 @@ module.exports.run = async (client, message, args = []) => {
         if (!message.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
         let member;
         if (message.mentions) {
             user = message.mentions.users.first();
