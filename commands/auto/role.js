@@ -31,6 +31,9 @@ module.exports.run = async (client, message, args = []) => {
         let roles = [];
         let roleIDs = [];
         let roleText = [];
+        await db.forEach(eligibleRole => {
+            roleIDs.push(eligibleRole.role_id);
+        });
         await member.guild.roles.cache.each(async (role) => {
             if (roleIDs.includes(role.id)) {
                 roleText.push(role);
@@ -45,7 +48,6 @@ module.exports.run = async (client, message, args = []) => {
         let roleHelpMessage = "";
         let rolesArray = [];
 
-        console.log(roleText.length)
         if (roleText.length > selectOptionLimit) {
 
             if (!args[0] || args[0] == "help") {
