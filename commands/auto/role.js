@@ -45,6 +45,7 @@ module.exports.run = async (client, message, args = []) => {
         let roleHelpMessage = "";
         let rolesArray = [];
 
+        console.log(roleText.length)
         if (roleText.length > selectOptionLimit) {
 
             if (!args[0] || args[0] == "help") {
