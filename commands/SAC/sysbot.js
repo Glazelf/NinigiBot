@@ -47,15 +47,15 @@ module.exports.run = async (client, message) => {
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
         return sendMessage(client, message, `Here's a list of Sysbots and their status:
-**Format:** Bot (prefix): status (\`Host#0001\`) (Notes)
+**Format:** Bot (prefix): status (\`Host#0001\`)
 **Pokémon bots:**
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
-${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekdays)
+${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`)
 ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
 ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
 **ACNH bots:**
-${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`) (Items only)
-${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekends)
+${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
+${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`)
 ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
 Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
