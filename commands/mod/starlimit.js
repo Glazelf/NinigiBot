@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args) => {
             oldStarLimit = globalVars.starLimit;
         };
 
-        if (args[0] && adminBool) {
+        if (args[0] && (adminBool || message.member.permissions.has("MANAGE_CHANNELS"))) {
             let starLimit = args[0];
             if (isNaN(starLimit)) return sendMessage(client, message, `You need to provide a valid number.`);
 
