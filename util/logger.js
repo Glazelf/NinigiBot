@@ -22,7 +22,7 @@ module.exports = async (exception, client, message = null) => {
 
         let exceptionCode = Discord.Formatters.codeBlock(exception);
         let messageContentCode = "";
-        if (!message.content || message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
+        if (!message || !message.content || message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
 
         // log to dev channel
         let baseMessage;
