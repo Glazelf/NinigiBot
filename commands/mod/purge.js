@@ -23,13 +23,9 @@ exports.run = async (client, message, args) => {
             user = message.mentions.users.first();
         };
 
-        if (!user) {
+        if (!user && args[1]) {
             let userID = args[1];
-            user = client.users.cache.get(userID);
-            if (!user) {
-                userID = args[0];
-                user = client.users.cache.get(userID);
-            };
+            user = await client.users.cache.get(userID);
         };
 
         let author;
@@ -42,26 +38,27 @@ exports.run = async (client, message, args) => {
         await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
-        if (user) {
-            message.channel.messages.fetch({
-                limit: 100,
-            }).then((messages) => {
-                const filterBy = user.id;
-                messages = messages.filter(m => author.id === filterBy).array().slice(0, amount);
+        try {
+            if (user) {
+                let maxMessageFetch = 100;
+                message.channel.messages.fetch({
+                    limit: maxMessageFetch,
+                }).then((messages) => {
+                    messages = messages.filter(m => m.author.id == user.id).array().slice(0, amount);
 
-                message.channel.bulkDelete(messages)
-                    .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.` }));
-            });
+                    message.channel.bulkDelete(messages)
+                        .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.` }));
+                });
 
-        } else {
-            try {
+            } else {
                 message.channel.messages.fetch({ limit: amount })
                     .then(messages => message.channel.bulkDelete(messages));
                 await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${message.member}.` });
                 return;
-            } catch (e) {
-                return message.channel.send({ content: `An error occurred while bulk deleting, you are likely trying to bulk delete messages older than 14 days.` });
+
             };
+        } catch (e) {
+            return message.channel.send({ content: `An error occurred while bulk deleting, you are likely trying to bulk delete messages older than 14 days.` });
         };
 
     } catch (e) {
