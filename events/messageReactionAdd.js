@@ -55,6 +55,8 @@ module.exports = async (client, messageReaction) => {
             // Update
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            if (!starMessage) return;
+
             await starMessage.edit({ embeds: [starEmbed] });
             return;
         } else {
