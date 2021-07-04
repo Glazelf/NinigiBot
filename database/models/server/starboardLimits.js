@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        stars: {
+        star_limit: {
             type: DataTypes.INTEGER,
             allowNull: false
         }

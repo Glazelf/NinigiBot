@@ -1,21 +1,26 @@
-exports.run = (client, message, args = []) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(messsage.member, client);
+        let adminBool = await isAdmin(message.member, client);
 
         const { StarboardLimits } = require('../../database/dbObjects');
-        let oldStarLimit = await StarboardLimits.findOne({ where: { server_id: message.guild.id } });
-
-        if (!oldStarLimit) oldSarLimit = globalVars.starLimit;
+        let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: message.guild.id } });
+        let oldStarLimit
+        if (oldStarLimitDB) {
+            oldStarLimit = oldStarLimitDB.star_limit;
+        } else {
+            oldStarLimit = globalVars.starLimit;
+        };
 
         if (args[0] && adminBool) {
             let starLimit = args[0];
             if (isNaN(starLimit)) return sendMessage(client, message, `You need to provide a valid number.`);
 
-            await StarboardLimits.upsert({ server_id: message.guild.id, prefix: starLimit });
+            if (oldStarLimitDB) oldStarLimitDB.destroy();
+            await StarboardLimits.upsert({ server_id: message.guild.id, star_limit: starLimit });
 
             return sendMessage(client, message, `The star limit was changed to ${starLimit}.`);
         } else {

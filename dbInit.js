@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const config = require('./config.json');
-const { StarboardLimits } = require('./database/dbObjects');
 
 const sequelize = new Sequelize('database', config.dbUsername, config.dbPassword, {
     host: 'localhost',
@@ -28,7 +27,7 @@ const ModEnabledServers = require('./database/models/global/ModEnabledServers')(
 const LogChannels = require('./database/models/global/LogChannels')(sequelize, Sequelize.DataTypes);
 const StarboardChannels = require('./database/models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
 const StarboardMessages = require('./database/models/global/StarboardMessages')(sequelize, Sequelize.DataTypes);
-const StarboardLimits = require('./database/models/global/StarboardLimits')(sequelize, Sequelize.DataTypes);
+const StarboardLimits = require('./database/models/server/StarboardLimits')(sequelize, Sequelize.DataTypes);
 const VCTextChannels = require('./database/models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
