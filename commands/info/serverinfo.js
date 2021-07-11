@@ -130,8 +130,7 @@ module.exports.run = async (client, message) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}
-${checkDays(guild.createdAt)}`, false);
+            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
             .setFooter(user.tag)
