@@ -27,7 +27,7 @@ exports.run = async (client, message, args = []) => {
                 while (input.length < 6) input = "0" + input;
                 let argHex = `0x${input}`;
                 let hexInt = parseInt(argHex);
-                let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
+                let returnString = Discord.Formatters.codeBlock("js", `${hexInt} (${user.tag})`)
                 return sendMessage(client, message, returnString);
             } catch (e) {
                 return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
