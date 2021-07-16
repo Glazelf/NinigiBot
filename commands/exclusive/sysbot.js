@@ -46,7 +46,7 @@ module.exports.run = async (client, message) => {
         if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
-        return sendMessage(client, message, `Here's a list of Sysbots and their status:
+        let returnString = `Here's a list of Sysbots and their status:
 **Format:** Bot (prefix): status (\`Host#0001\`) (Notes)
 **Pokémon bots:**
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
@@ -59,7 +59,9 @@ ${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekends)
 ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
 Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
-Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`);
+Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`;
+
+        return sendMessage(client, message, returnString);
 
     } catch (e) {
         // log error
