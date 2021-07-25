@@ -41,28 +41,27 @@ exports.run = async (client, message, args) => {
         if (user) {
             try {
                 let maxMessageFetch = 100;
-                message.channel.messages.fetch({
-                    limit: maxMessageFetch,
-                }).then((messages) => {
-                    messages = messages.filter(m => m.author.id == user.id).array().slice(0, amount);
-
-                    message.channel.bulkDelete(messages)
-                        .then(message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${message.member}.` }));
-                });
+                let messages = await message.channel.messages.fetch({ limit: maxMessageFetch });
+                messages = await messages.filter(m => m.author.id == user.id).array().slice(0, amount);
+                try {
+                    await message.channel.bulkDelete(messages);
+                    await message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
+                } catch (e) {
+                    return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` })
+                };
             } catch (e) {
-                return message.channel.send({ content: `An error occurred while bulk deleting, you are likely trying to bulk delete messages older than 14 days.` });
+                return message.channel.send({ content: `An error occurred while bulk deleting.` });
             };
         } else {
             try {
-                message.channel.messages.fetch({ limit: amount })
-                    .then(messages => message.channel.bulkDelete(messages));
-                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${message.member}.` });
+                let messages = await message.channel.messages.fetch({ limit: amount });
+                await message.channel.bulkDelete(messages);
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.` });
                 return;
             } catch (e) {
-                return message.channel.send({ content: `An error occurred while bulk deleting, you are likely trying to bulk delete messages older than 14 days.` });
+                return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
             };
         };
-
 
     } catch (e) {
         // log error
