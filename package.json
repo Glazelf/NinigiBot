@@ -14,7 +14,7 @@
     "enmap": "^5.2.4",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
-    "giphy-random": "^2.0.8",
+    "giphy-random": "^1.0.5",
     "languagedetect": "^2.0.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.5",
