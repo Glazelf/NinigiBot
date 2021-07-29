@@ -21,7 +21,9 @@ module.exports = async (client, oldMember, newMember) => {
         console.log("base")
         // Joined VC
         if (newID) {
+            console.log("huh")
             if (channelPermOverride) {
+                console.log("thats not right")
                 try {
                     return channelPermOverride.edit({
                         VIEW_CHANNEL: true,
@@ -32,6 +34,7 @@ module.exports = async (client, oldMember, newMember) => {
                 };
             } else {
                 try {
+                    console.log("wtf")
                     return textChannel.permissionOverwrites.set([
                         {
                             id: user.id,
