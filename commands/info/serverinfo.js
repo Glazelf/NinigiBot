@@ -15,7 +15,6 @@ module.exports.run = async (client, message) => {
         let memberFetch = await guild.members.fetch();
         let humanMembers = memberFetch.filter(member => !member.user.bot).size;
         let botMembers = memberFetch.filter(member => member.user.bot).size;
-        let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
         let guildsByShard = client.guilds.cache;
 
         let user;
