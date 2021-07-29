@@ -23,7 +23,7 @@ module.exports = async (client, oldMember, newMember) => {
                 try {
                     return textChannel.permissionOverwrites.edit(user, {
                         VIEW_CHANNEL: true,
-                        READ_MESSAGE_HISTORY: true
+                        READ_MESSAGE_HISTORY: true, user: user
                     });
                 } catch (e) {
                     console.log(e);
@@ -32,7 +32,7 @@ module.exports = async (client, oldMember, newMember) => {
                 try {
                     return textChannel.permissionOverwrites.create(user, {
                         VIEW_CHANNEL: true,
-                        READ_MESSAGE_HISTORY: true
+                        READ_MESSAGE_HISTORY: true, user: user
                     });
                 } catch (e) {
                     console.log(e);
