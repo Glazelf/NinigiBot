@@ -1,5 +1,6 @@
 module.exports = async (client, oldMember, newMember) => {
     try {
+        console.log("voice statse")
         const { VCTextChannels } = require('../database/dbObjects');
         let oldID = null;
         let newID = null;
@@ -7,13 +8,13 @@ module.exports = async (client, oldMember, newMember) => {
         if (newMember.channelID) newID = newMember.channelID;
 
         let user = client.users.cache.get(newMember.id);
-        if (user.bot) return;
+        // if (user.bot) return;
 
         let VCTextChannel = await VCTextChannels.findOne({ where: { server_id: newMember.guild.id } });
-        if (!VCTextChannel) return;
+        // if (!VCTextChannel) return;
         await newMember.guild.channels.fetch();
         let textChannel = newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
-        if (!textChannel) return;
+        // if (!textChannel) return;
         await textChannel.fetch();
         let channelPermOverride = textChannel.permissionOverwrites.get(newMember.id);
         console.log(channelPermOverride)
