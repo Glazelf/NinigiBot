@@ -48,7 +48,7 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        if (e.includes("Missing Permissions")) {
+                        if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
                             return sendMessage(client, message, `Could not find the specified ability.`);
@@ -78,7 +78,7 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        if (e.includes("Missing Permissions")) {
+                        if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
                             return sendMessage(client, message, `Could not find the specified item.`);
@@ -119,7 +119,7 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        if (e.includes("Missing Permissions")) {
+                        if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
                             return sendMessage(client, message, `Could not find the specified move.`);
@@ -156,24 +156,14 @@ module.exports.run = async (client, message, args = []) => {
 
                         // Buttons
                         let pkmButtons = new Discord.MessageActionRow()
-                            .addComponents(
-                                new Discord.MessageButton()
-                                    .setCustomID('pkmleft')
-                                    .setStyle('PRIMARY')
-                                    .setEmoji('⬅️')
-                            )
-                            .addComponents(
-                                new Discord.MessageButton()
-                                    .setCustomID('pkmright')
-                                    .setStyle('PRIMARY')
-                                    .setEmoji('➡️')
-                            );
+                            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️' }))
+                            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️' }));
 
                         return sendMessage(client, message, null, pkmEmbed, null, true, pkmButtons);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        if (e.includes("Missing Permissions")) {
+                        if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
                             return sendMessage(client, message, `Could not find the specified Pokémon.`);

@@ -111,18 +111,8 @@ module.exports.run = async (client, message) => {
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()
-            .addComponents(
-                new Discord.MessageButton()
-                    .setLabel('Invite')
-                    .setStyle('LINK')
-                    .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8`),
-            )
-            .addComponents(
-                new Discord.MessageButton()
-                    .setLabel('Github')
-                    .setStyle('LINK')
-                    .setURL(`https://github.com/Glazelf/NinigiBot`),
-            );
+            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', URL: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
+            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', URL: 'https://github.com/Glazelf/NinigiBot' }));
 
         return sendMessage(client, message, null, botEmbed, null, true, botButtons, true);
 
