@@ -1,6 +1,5 @@
 module.exports = async (client, oldMember, newMember) => {
     try {
-        const Discord = require("discord.js");
         const { VCTextChannels } = require('../database/dbObjects');
         let oldID = null;
         let newID = null;
@@ -18,14 +17,11 @@ module.exports = async (client, oldMember, newMember) => {
         let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
         if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.cache.get(oldMember.id);
 
-        console.log("base")
         // Joined VC
         if (newID) {
-            console.log("huh")
             if (channelPermOverride) {
-                console.log("thats not right")
                 try {
-                    return channelPermOverride.edit({
+                    return textChannel.permissionOverwrites.edit(user, {
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
@@ -34,8 +30,7 @@ module.exports = async (client, oldMember, newMember) => {
                 };
             } else {
                 try {
-                    console.log("wtf")
-                    return channelPermOverride.create({
+                    return textChannel.permissionOverwrites.create(user, {
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
@@ -45,9 +40,7 @@ module.exports = async (client, oldMember, newMember) => {
             };
             //Left VC
         } else if (oldID) {
-            console.log("delet")
             if (channelPermOverride) {
-                console.log("success?")
                 await channelPermOverride.delete();
                 return;
             } else {
