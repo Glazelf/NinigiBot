@@ -17,17 +17,17 @@ module.exports.run = async (client, message) => {
 
         // Bots
         // PKM
-        let Konohana = client.users.cache.get(`696086046685003786`);
-        let Gura = client.users.cache.get("834359097523830834");
-        let Flar3 = client.users.cache.get("734052437811527784");
-        let Glaceon = client.users.cache.get("777555048104067082");
-        // let BettyBot = client.users.cache.get("790506481630969869");
-        // let Arkos = client.users.cache.get("702604221714923691");
-        // let Miku = client.users.cache.get("752902915508666499");
+        let Konohana = message.guild.members.cache.get(`696086046685003786`);
+        let Gura = message.guild.members.cache.get("834359097523830834");
+        let Flar3 = message.guild.members.cache.get("734052437811527784");
+        let Glaceon = message.guild.members.cache.get("777555048104067082");
+        // let BettyBot = message.guild.members.cache.get("790506481630969869");
+        // let Arkos = message.guild.members.cache.get("702604221714923691");
+        // let Miku = message.guild.members.cache.get("752902915508666499");
         // ACNH
-        let Ribbot = client.users.cache.get("739823632267608135");
-        let ACFlare = client.users.cache.get("792174299716386867");
-        // let MagicDoctor = client.users.cache.get("797553861211586654");
+        let Ribbot = message.guild.members.cache.get("739823632267608135");
+        let ACFlare = message.guild.members.cache.get("792174299716386867");
+        // let MagicDoctor = message.guild.members.cache.get("797553861211586654");
 
         let onlineString = "**Online**";
         let offlineString = "Offline";
@@ -39,12 +39,12 @@ module.exports.run = async (client, message) => {
         let RibbotStatus = onlineString;
         let ACFlareStatus = onlineString;
 
-        if (Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
-        if (Gura.presence.status == offlineStatus) GuraStatus = offlineString;
-        if (Glaceon.presence.status == offlineStatus) GlaceonStatus = offlineString;
-        if (Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
-        if (Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
-        if (ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
+        if (!Konohana || !Konohana.presence || Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
+        if (!Gura || !Gura.presence || Gura.presence.status == offlineStatus) GuraStatus = offlineString;
+        if (!Glaceon || !Glaceon.presence || Glaceon.presence.status == offlineStatus) GlaceonStatus = offlineString;
+        if (!Flar3 || !Flar3.presence || Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
+        if (!Ribbot || !Ribbot.presence || Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
+        if (!ACFlare || !ACFlare.presence || ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
         let returnString = `Here's a list of Sysbots and their status:
 **Format:** Bot (prefix): status (\`Host#0001\`) (Notes)
