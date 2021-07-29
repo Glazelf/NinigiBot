@@ -72,12 +72,7 @@ module.exports.run = async (client, message, args = []) => {
                 };
                 if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in this server.`);
                 let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(
-                        new Discord.MessageSelectMenu()
-                            .setCustomID('role-select')
-                            .setPlaceholder('Click here to drop down!')
-                            .addOptions(rolesArray),
-                    );
+                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
                 return sendMessage(client, message, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
             };
