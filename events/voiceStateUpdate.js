@@ -35,11 +35,12 @@ module.exports = async (client, oldMember, newMember) => {
                 };
             } else {
                 try {
-                    let permOverwrites = textChanel.permissionOverwrites.cache.get(user.id);
-                    return permOverwrites.create(user, {
-                        VIEW_CHANNEL: true,
-                        READ_MESSAGE_HISTORY: true, user: user
-                    });
+                    return textChanel.permissionOverwrites.set([
+                        {
+                            id: user.id,
+                            allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.READ_MESSAGE_HISTORY]
+                        }
+                    ]);
                 } catch (e) {
                     console.log(e);
                 };
