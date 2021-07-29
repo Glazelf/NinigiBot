@@ -15,33 +15,26 @@ module.exports = async (client, oldMember, newMember) => {
         if (!textChannel) return;
         await textChannel.fetch();
         let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
-        console.log("voice state 438")
 
         // Joined VC
         if (newID) {
             if (channelPermOverride) {
                 try {
-                    console.log("4")
-                    await channelPermOverride.edit({
+                    return channelPermOverride.edit({
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
-                    console.log("34")
-                    return;
                 } catch (e) {
                     console.log(e);
                 };
             } else {
                 try {
-                    console.log("357")
-                    await textChanel.permissionOverwrites.set([
+                    return textChannel.permissionOverwrites.set([
                         {
                             id: user.id,
                             allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.READ_MESSAGE_HISTORY]
                         }
                     ]);
-                    console.log("58")
-                    return;
                 } catch (e) {
                     console.log(e);
                 };
