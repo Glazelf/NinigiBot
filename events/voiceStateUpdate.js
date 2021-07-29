@@ -15,13 +15,14 @@ module.exports = async (client, oldMember, newMember) => {
         let textChannel = newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
         if (!textChannel) return;
         await textChannel.fetch();
-        let channelPermOverride = textChannel.permissionOverwrites.cache.get(newMember.id);
+        let channelPermOverride = textChannel.permissionOverwrites.get(newMember.id);
+        console.log(channelPermOverride)
 
         // Joined VC
         if (newID) {
             if (channelPermOverride) {
                 try {
-                    return textChannel.permissionOverwrites.edit(user, {
+                    return channelPermOverride.edit({
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
@@ -30,7 +31,8 @@ module.exports = async (client, oldMember, newMember) => {
                 };
             } else {
                 try {
-                    return textChannel.permissionOverwrites.create(user, {
+                    let permOverwrites = textChanel.permissionOverwrites.get(user.id);
+                    return permOverwrites.create(user, {
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
