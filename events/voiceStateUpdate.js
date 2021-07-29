@@ -20,15 +20,23 @@ module.exports = async (client, oldMember, newMember) => {
         // Joined VC
         if (newID) {
             if (channelPermOverride) {
-                return textChannel.permissionOverwrites.edit(user, {
-                    VIEW_CHANNEL: true,
-                    READ_MESSAGE_HISTORY: true
-                });
+                try {
+                    return textChannel.permissionOverwrites.edit(user, {
+                        VIEW_CHANNEL: true,
+                        READ_MESSAGE_HISTORY: true
+                    });
+                } catch (e) {
+                    // console.log(e);
+                };
             } else {
-                return textChannel.permissionOverwrites.create(user, {
-                    VIEW_CHANNEL: true,
-                    READ_MESSAGE_HISTORY: true
-                });
+                try {
+                    return textChannel.permissionOverwrites.create(user, {
+                        VIEW_CHANNEL: true,
+                        READ_MESSAGE_HISTORY: true
+                    });
+                } catch (e) {
+                    // console.log(e);
+                };
             };
             //Left VC
         } else if (oldID) {
