@@ -33,10 +33,10 @@ module.exports.run = async (client, message, args = []) => {
 
             try {
                 await user.send({ content: `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\`` });
-                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Succeeded)`;
+                banReturn = `Successfully banned **${member.user.tag}** for the following reason: \`${reason}\`. (DM Succeeded)`;
             } catch (e) {
                 // console.log(e);
-                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Failed)`;
+                banReturn = `Successfully banned **${member.user.tag}** for the following reason: \`${reason}\`. (DM Failed)`;
             };
             await member.ban({ days: 0, reason: `${reason} -${user.tag}` });
 
@@ -48,7 +48,7 @@ module.exports.run = async (client, message, args = []) => {
                 user = message.member.user;
             };
 
-            banReturn = `Successfully banned ${memberID} for the following reason: \`${reason}\`.`;
+            banReturn = `Successfully banned <@${memberID}> **(${memberID})**  for the following reason: \`${reason}\`.`;
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${user.tag}` });
             } catch (e) {

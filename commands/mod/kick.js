@@ -32,12 +32,12 @@ module.exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
-        let kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Succeeded)`;
+        let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Succeeded)`;
         try {
             await user.send({ content: `You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\`` });
         } catch (e) {
             // console.log(e);
-            kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Failed)`;
+            kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Failed)`;
         };
         await member.kick([`${reason} -${author.tag}`]);
         return sendMessage(client, message, kickReturn);
