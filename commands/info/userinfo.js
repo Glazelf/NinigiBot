@@ -57,23 +57,27 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         // Clear up status wording
-        let userStatus = "Error";
-        switch (member.presence.status) {
-            case "online":
-                userStatus = "Online";
-                break;
-            case "idle":
-                userStatus = "Idle";
-                break;
-            case "dnd":
-                userStatus = "Busy";
-                break;
-            case "invisible":
-                userStatus = "Invisible";
-                break;
-            case "offline":
-                userStatus = "Offline";
-                break;
+        let userStatus;
+        if (member.presence) {
+            switch (member.presence.status) {
+                case "online":
+                    userStatus = "Online";
+                    break;
+                case "idle":
+                    userStatus = "Idle";
+                    break;
+                case "dnd":
+                    userStatus = "Busy";
+                    break;
+                case "invisible":
+                    userStatus = "Invisible";
+                    break;
+                case "offline":
+                    userStatus = "Offline";
+                    break;
+            };
+        } else {
+            userStatus = "Offline";
         };
 
         //Activities to string
