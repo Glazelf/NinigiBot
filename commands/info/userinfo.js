@@ -169,7 +169,7 @@ module.exports.run = async (client, message, args = []) => {
             if (!guild.members.cache.get(userID)) return;
             // Sort all users by join time
             let arr = guild.members.cache.array();
-            arr.sort((a, b) => a.joinedAt - b.joinedAt);
+            await arr.sort((a, b) => a.joinedAt - b.joinedAt);
             // Get provided user
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].id == userID) return i + 1;
