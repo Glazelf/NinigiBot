@@ -3,8 +3,8 @@ module.exports = async (client, oldMember, newMember) => {
         const { VCTextChannels } = require('../database/dbObjects');
         let oldID = null;
         let newID = null;
-        if (oldMember.channelID) oldID = oldMember.channelId;
-        if (newMember.channelID) newID = newMember.channelId;
+        if (oldMember.channelId) oldID = oldMember.channelId;
+        if (newMember.channelId) newID = newMember.channelId;
 
         let user = client.users.cache.get(newMember.id);
         if (user.bot) return;
