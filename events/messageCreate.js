@@ -114,9 +114,8 @@ module.exports = async (client, message) => {
 
         // Run the command
         if (cmd) {
-            message.channel.startTyping();
+            await message.channel.sendTyping();
             await cmd.run(client, message, args);
-            message.channel.stopTyping(true);
         } else return;
 
         return;

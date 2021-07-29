@@ -17,9 +17,6 @@ module.exports = async (exception, client, message = null) => {
             };
         };
 
-        // Stop typing
-        if (message) message.channel.stopTyping(true);
-
         let exceptionCode = Discord.Formatters.codeBlock(exception);
         let messageContentCode = "";
         if (!message || !message.content || message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
