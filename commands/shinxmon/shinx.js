@@ -1,4 +1,4 @@
-const Canvas = require('pureimage');
+const Canvas = require('canvas');
 
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],

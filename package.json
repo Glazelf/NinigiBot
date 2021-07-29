@@ -8,6 +8,7 @@
     "@mapbox/node-pre-gyp": "^1.0.5",
     "@sapphire/async-queue": "^1.1.2",
     "bufferutil": "^4.0.3",
+    "canvas": "^2.8.0",
     "cron": "^1.8.2",
     "discord.js": "github:discordjs/discord.js",
     "discord.js-commando": "^0.10.0",
