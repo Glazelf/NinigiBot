@@ -12,7 +12,7 @@ module.exports = async (client, oldMember, newMember) => {
         let VCTextChannel = await VCTextChannels.findOne({ where: { server_id: newMember.guild.id } });
         if (!VCTextChannel) return;
         await newMember.guild.channels.fetch();
-        let textChannel = newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
+        let textChannel = await newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
         if (!textChannel) return;
         await textChannel.fetch();
         let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
@@ -35,12 +35,10 @@ module.exports = async (client, oldMember, newMember) => {
             } else {
                 try {
                     console.log("wtf")
-                    return textChannel.permissionOverwrites.set([
-                        {
-                            id: user.id,
-                            allow: [Discord.Permissions.FLAGS.VIEW_CHANNEL, Discord.Permissions.FLAGS.READ_MESSAGE_HISTORY]
-                        }
-                    ]);
+                    return channelPermOverride.create({
+                        VIEW_CHANNEL: true,
+                        READ_MESSAGE_HISTORY: true, user: user
+                    });
                 } catch (e) {
                     console.log(e);
                 };
@@ -50,7 +48,8 @@ module.exports = async (client, oldMember, newMember) => {
             console.log("delet")
             if (channelPermOverride) {
                 console.log("success?")
-                return channelPermOverride.delete();
+                await channelPermOverride.delete();
+                return;
             } else {
                 return;
             };
