@@ -58,7 +58,7 @@ module.exports.run = async (client, message, args = []) => {
 
         // Clear up status wording
         let userStatus = "Error";
-        switch (user.presence.status) {
+        switch (member.presence.status) {
             case "online":
                 userStatus = "Online";
                 break;
