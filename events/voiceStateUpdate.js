@@ -26,7 +26,7 @@ module.exports = async (client, oldMember, newMember) => {
                         READ_MESSAGE_HISTORY: true, user: user
                     });
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                 };
             } else {
                 try {
@@ -35,7 +35,7 @@ module.exports = async (client, oldMember, newMember) => {
                         READ_MESSAGE_HISTORY: true, user: user
                     });
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                 };
             };
             //Left VC
