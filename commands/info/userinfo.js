@@ -131,7 +131,7 @@ module.exports.run = async (client, message, args = []) => {
         let badgesString = badgesArray.join(" ");
 
         // JoinRank
-        let joinRank = `${getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
+        let joinRank = `${await getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
 
         // Check Days
         let daysJoined = await checkDays(member.joinedAt);
@@ -165,7 +165,7 @@ module.exports.run = async (client, message, args = []) => {
 
         return sendMessage(client, message, null, profileEmbed);
 
-        function getJoinRank(userID, guild) {
+        async function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;
             // Sort all users by join time
             let arr = guild.members.cache.array();
