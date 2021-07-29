@@ -1,5 +1,6 @@
 module.exports = async (client, oldMember, newMember) => {
     try {
+        const Discord = require("discord.js");
         const { VCTextChannels } = require('../database/dbObjects');
         let oldID = null;
         let newID = null;
@@ -32,7 +33,7 @@ module.exports = async (client, oldMember, newMember) => {
                     return textChannel.permissionOverwrites.set([
                         {
                             id: user.id,
-                            allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.READ_MESSAGE_HISTORY]
+                            allow: [Discord.Permissions.FLAGS.VIEW_CHANNEL, Discord.Permissions.FLAGS.READ_MESSAGE_HISTORY]
                         }
                     ]);
                 } catch (e) {
