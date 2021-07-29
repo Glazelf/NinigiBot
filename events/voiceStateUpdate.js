@@ -8,39 +8,40 @@ module.exports = async (client, oldMember, newMember) => {
         if (newMember.channelID) newID = newMember.channelID;
 
         let user = client.users.cache.get(newMember.id);
-        // if (user.bot) return;
+        if (user.bot) return;
         console.log(`user bot ${user.bot}`)
 
         let VCTextChannel = await VCTextChannels.findOne({ where: { server_id: newMember.guild.id } });
         console.log(`vctextchannel ${VCTextChannel}`)
-        // if (!VCTextChannel) return;
+        if (!VCTextChannel) return;
         await newMember.guild.channels.fetch();
         let textChannel = newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
         console.log(`textchannel ${textChannel}`)
-        // if (!textChannel) return;
+        if (!textChannel) return;
         await textChannel.fetch();
-        let channelPermOverride = textChannel.permissionOverwrites.cache.get(newMember.id);
-        console.log(channelPermOverride)
+        let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
 
         // Joined VC
         if (newID) {
             if (channelPermOverride) {
                 try {
-                    return channelPermOverride.edit({
+                    await channelPermOverride.edit({
                         VIEW_CHANNEL: true,
                         READ_MESSAGE_HISTORY: true, user: user
                     });
+                    return;
                 } catch (e) {
                     console.log(e);
                 };
             } else {
                 try {
-                    return textChanel.permissionOverwrites.set([
+                    await textChanel.permissionOverwrites.set([
                         {
                             id: user.id,
                             allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.READ_MESSAGE_HISTORY]
                         }
                     ]);
+                    return;
                 } catch (e) {
                     console.log(e);
                 };
