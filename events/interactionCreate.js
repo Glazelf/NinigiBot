@@ -59,7 +59,7 @@ module.exports = async (client, interaction) => {
                 switch (interaction.componentType) {
                     case "BUTTON":
                         // Pokémon command
-                        if (interaction.customID == 'pkmleft' || interaction.customID == 'pkmright') {
+                        if (interaction.customId == 'pkmleft' || interaction.customId == 'pkmright') {
                             try {
                                 var Pokedex = require('pokedex-promise-v2');
                                 var P = new Pokedex();
@@ -68,7 +68,7 @@ module.exports = async (client, interaction) => {
                                 let newPkmID = pkmID;
                                 let maxPkmID = 898; // Calyrex
 
-                                if (interaction.customID == 'pkmleft') {
+                                if (interaction.customId == 'pkmleft') {
                                     newPkmID = parseInt(pkmID) - 1;
                                 } else {
                                     newPkmID = parseInt(pkmID) + 1;
@@ -106,7 +106,7 @@ module.exports = async (client, interaction) => {
                         };
 
                     case "SELECT_MENU":
-                        if (interaction.customID == 'role-select') {
+                        if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
                                 const { EligibleRoles } = require('../database/dbObjects');
