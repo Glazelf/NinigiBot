@@ -16,9 +16,7 @@ module.exports.run = async (client, message) => {
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         let returnString = `${days}d ${hours}h ${minutes}m ${seconds}s left.`;
-        if (distance <= 0) {
-            returnString = `If you read this you have the big gay :flushed:.`;
-        };
+        if (distance <= 0) returnString = `If you read this you have the big gay 😳.`;
 
         return sendMessage(client, message, returnString);
 
