@@ -117,7 +117,7 @@ module.exports.run = async (client, message, args = []) => {
         // Avatar and banner
         let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
         let banner = null;
-        if (user.banner) banner = user.bannerURL({ format: "png" });
+        if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true });
 
         // Profile badges
         let badgesArray = [];
