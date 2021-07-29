@@ -18,6 +18,7 @@ module.exports = async (client, oldMember, newMember) => {
         let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
         if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.cache.get(oldMember.id);
 
+        console.log("base")
         // Joined VC
         if (newID) {
             if (channelPermOverride) {
@@ -43,7 +44,9 @@ module.exports = async (client, oldMember, newMember) => {
             };
             //Left VC
         } else if (oldID) {
+            console.log("delet")
             if (channelPermOverride) {
+                console.log("success?")
                 return channelPermOverride.delete();
             } else {
                 return;
