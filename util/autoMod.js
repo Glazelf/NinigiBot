@@ -87,7 +87,7 @@ module.exports = async (message) => {
     async function msgDelete() {
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
-        return message.channel.send({ content: `Deleted a message by ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\`` });
+        return message.channel.send({ content: `Deleted a message by **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         // return true;
     };
 
@@ -95,7 +95,7 @@ module.exports = async (message) => {
         if (!message.member.kickable) return;
         await message.delete();
         await message.member.kick([reason]);
-        await message.channel.send({ content: `Successfully auto-kicked ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\`` });
+        await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
                 content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}`
@@ -109,7 +109,7 @@ module.exports = async (message) => {
     async function ban() {
         if (!message.member.bannable) return;
         await message.member.ban({ days: 1, reason: reason });
-        await message.channel.send({ content: `Successfully auto-banned ${message.author.tag} (${message.author.id}) for the following reason: \`${reason}\`` });
+        await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
                 content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}`
