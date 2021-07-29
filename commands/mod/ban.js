@@ -53,8 +53,12 @@ module.exports.run = async (client, message, args = []) => {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${user.tag}` });
             } catch (e) {
                 // console.log(e);
-                return sendMessage(client, message, `Could not find a user by that ID.`);
-            }
+                if (e.includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    return sendMessage(client, message, `Could not find a user by that ID.`);
+                };
+            };
         };
 
         return sendMessage(client, message, banReturn);

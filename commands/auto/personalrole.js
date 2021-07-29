@@ -85,7 +85,11 @@ module.exports.run = async (client, message, args = []) => {
                 })
             } catch (e) {
                 // console.log(error);
-                return sendMessage(client, message, `An error occurred creating a role.`);
+                if (e.includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    return sendMessage(client, message, `An error occurred creating a role.`);
+                };
             };
 
             let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);

@@ -2,6 +2,7 @@ module.exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const logger = require('../../util/logger');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -47,7 +48,11 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified ability.`);
+                        if (e.includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified ability.`);
+                        };
                     });
                 break;
 
@@ -73,7 +78,11 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified item.`);
+                        if (e.includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified item.`);
+                        };
                     });
                 break;
 
@@ -110,7 +119,11 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified move.`);
+                        if (e.includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified move.`);
+                        };
                     });
                 break;
 
@@ -160,7 +173,11 @@ module.exports.run = async (client, message, args = []) => {
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                        if (e.includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                        };
                     });
                 break;
         };

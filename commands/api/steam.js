@@ -128,7 +128,11 @@ ${checkDays(userCreated)}`;
 
                 } catch (e) {
                     // console.log(e);
-                    return sendMessage(client, message, userFailString);
+                    if (e.includes("Missing Permissions")) {
+                        return logger(e, client, message);
+                    } else {
+                        return sendMessage(client, message, userFailString);
+                    };
                 };
             case "game":
                 // Get game info from ID
