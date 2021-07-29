@@ -48,7 +48,7 @@ module.exports.run = async (client, message, args = []) => {
                 user = message.member.user;
             };
 
-            banReturn = `Successfully banned <@${memberID}> **(${memberID})**  for the following reason: \`${reason}\`.`;
+            banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${user.tag}` });
             } catch (e) {
