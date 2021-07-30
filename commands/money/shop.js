@@ -22,20 +22,25 @@ exports.run = async (client, message, args = []) => {
         // Lottery Tickets are messed up and temporarily removed, so items is empty
         /*if (input == 'items') {
             const items = await CurrencyShop.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         }*/ if (input == 'equipment') {
             const items = await Equipments.findAll(condition);
-            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } if (input == 'food') {
             const items = await Foods.findAll(condition);
-            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         }; // Coming soon, maybe
         /* if(input == 'key'){
             const items = await KeyItems.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } *//* if(input == 'rooms'){
             const items = await Room.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } */
         return sendMessage(client, message, failString);
 
