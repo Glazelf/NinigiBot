@@ -17,7 +17,7 @@ exports.run = async (client, message, args = []) => {
         let failString = `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`;
         if (!args[0]) return sendMessage(client, message, failString);
 
-        const [, , input] = args[0].match(/(\w+)\s*([\s\S]*)/);
+        const input = args[0].toLowerCase();
         const condition = { where: { cost: { [ne]: 0 } } };
         // Lottery Tickets are messed up and temporarily removed, so items is empty
         /*if (input == 'items') {
