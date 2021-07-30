@@ -14,6 +14,9 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
+        let failString = `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`;
+        if (!args[0]) return sendMessage(client, message, failString);
+
         const [, , input] = args[0].match(/(\w+)\s*([\s\S]*)/);
         const condition = { where: { cost: { [ne]: 0 } } };
         // Lottery Tickets are messed up and temporarily removed, so items is empty
@@ -26,7 +29,7 @@ exports.run = async (client, message, args = []) => {
         } if (input == 'food') {
             const items = await Foods.findAll(condition);
             return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
-        } // Coming soon, maybe
+        }; // Coming soon, maybe
         /* if(input == 'key'){
             const items = await KeyItems.findAll(condition);
             return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
@@ -34,7 +37,7 @@ exports.run = async (client, message, args = []) => {
             const items = await Room.findAll(condition);
             return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
         } */
-        return sendMessage(client, message, `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`);
+        return sendMessage(client, message, failString);
 
     } catch (e) {
         // log error
