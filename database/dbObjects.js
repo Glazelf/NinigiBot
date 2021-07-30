@@ -94,14 +94,14 @@ Shinx.prototype.changeNick = function (newNick) {
 
 Shinx.prototype.play = function (amount) {
     this.varyFriendship(0.05 * amount);
-    this.varySleep(-0.15);
+    this.varySleep(-0.01);
     this.varyHunger(-0.15);
     this.save();
 };
 
 Shinx.prototype.feed = function (amount) {
     this.varyHunger(amount);
-    this.varySleep(-0.1);
+    this.varySleep(-0.01);
     this.save();
 };
 
@@ -133,8 +133,8 @@ Shinx.prototype.see = function () {
     const hoursPassed = currentHour - this.lastmeet;
     if (this.sleep === 0) this.sleeping = true;
     if (hoursPassed === 0) return;
-    if (this.sleeping) this.varySleep(hoursPassed * 0.5);
-    else this.varySleep(-hoursPassed * 0.02);
+    if (this.sleeping) this.varySleep(hoursPassed * 2);
+    else this.varySleep(-hoursPassed * 0.001);
     if (this.sleep === 1) this.sleeping = false;
     if (this.sleep === 0) this.sleeping = true;
     this.varyHunger(-hoursPassed * 0.01);
