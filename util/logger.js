@@ -36,7 +36,11 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
         let devChannel = client.channels.cache.get(client.config.devChannelID);
         if (message) {
             if (baseMessage.includes("Missing Permissions")) {
-                return message.reply(`I lack permissions to perform the requested action.`);
+                try {
+                    return message.reply(`I lack permissions to perform the requested action.`);
+                } catch (e) {
+                    return;
+                };
             } else if (baseMessage.includes("Missing Access")) {
                 return;
             } else {
