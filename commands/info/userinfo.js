@@ -58,7 +58,11 @@ module.exports.run = async (client, message, args = []) => {
 
         // Clear up status wording
         let userStatus;
+        let activityLog = '';
+        let customStatus = '';
+        let actBool = false;
         if (member.presence) {
+            // Online status string correction
             switch (member.presence.status) {
                 case "online":
                     userStatus = "Online";
@@ -76,42 +80,41 @@ module.exports.run = async (client, message, args = []) => {
                     userStatus = "Offline";
                     break;
             };
+
+            // Activities to string
+            const activities = member.presence.activities;
+            for (const act in activities) {
+                if (activities[act].name === 'Custom Status') {
+                    let emoji = null;
+                    if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id);
+                    if (emoji) customStatus = emoji.toString() + ' ';
+                    // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
+                    if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
+                } else {
+                    if (activities[act].type) {
+                        let actType = activities[act].type;
+                        if (actType == "COMPETING") actType += " IN";
+                        let activityType = capitalizeString(actType);
+                        activityLog += activityType;
+                    };
+                    activityLog += activities[act].name;
+                    if (activities[act].details || activities[act].state) activityLog += ': ';
+                    if (activities[act].details) activityLog += activities[act].details;
+                    if (activities[act].details && activities[act].state) activityLog += ', ';
+                    if (activities[act].state) activityLog += activities[act].state;
+                    activityLog += '\n';
+                };
+
+                // Custom status handling
+                actBool = new Boolean(activities[0]);
+                if (actBool == true) {
+                    if (activities[0].name === 'Custom Status') {
+                        actBool = new Boolean(activities[1]);
+                    };
+                };
+            };
         } else {
             userStatus = "Offline";
-        };
-
-        //Activities to string
-        let activityLog = '';
-        let customStatus = '';
-        const activities = member.presence.activities;
-        for (const act in activities) {
-            if (activities[act].name === 'Custom Status') {
-                let emoji = null;
-                if (activities[act].emoji) emoji = client.emojis.cache.get(activities[act].emoji.id);
-                if (emoji) customStatus = emoji.toString() + ' ';
-                // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
-                if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
-            } else {
-                if (activities[act].type) {
-                    let actType = activities[act].type;
-                    if (actType == "COMPETING") actType += " IN";
-                    let activityType = capitalizeString(actType);
-                    activityLog += activityType;
-                };
-                activityLog += activities[act].name;
-                if (activities[act].details || activities[act].state) activityLog += ': ';
-                if (activities[act].details) activityLog += activities[act].details;
-                if (activities[act].details && activities[act].state) activityLog += ', ';
-                if (activities[act].state) activityLog += activities[act].state;
-                activityLog += '\n';
-            };
-        };
-
-        let actBool = new Boolean(activities[0]);
-        if (actBool == true) {
-            if (activities[0].name === 'Custom Status') {
-                actBool = new Boolean(activities[1]);
-            };
         };
 
         // Avatar and banner
@@ -148,9 +151,9 @@ module.exports.run = async (client, message, args = []) => {
             .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
-        if (customStatus.length >= 1 && customStatus !== 'null') profileEmbed.addField("Custom Status:", customStatus, true);
+        if (customStatus.length >= 1 && customStatus !== 'null' && member.presence) profileEmbed.addField("Custom Status:", customStatus, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
-        if (actBool == true) profileEmbed.addField("Activities:", activityLog, false);
+        if (actBool == true && member.presence) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
             .addField("Join Ranking:", joinRank, true)
