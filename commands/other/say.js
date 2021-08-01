@@ -34,7 +34,7 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return sendMessage(client, message, textMessage);
+                return message.channelID.send({ content: textMessage });
             };
         } else if (adminBool) {
             // Return plain message if member is admin
