@@ -38,7 +38,7 @@ exports.run = async (client, message, args = []) => {
             };
         } else if (adminBool) {
             // Return plain message if member is admin
-            return sendMessage(client, message, textMessage);
+            return message.channelID.send({ content: textMessage });
         } else {
             // Prevent using bot to go around ping permissions, should be caught in message handler
             // if (textMessage.includes("@")) {
