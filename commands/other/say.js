@@ -15,6 +15,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Split off command
+        if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
         let channelID = args[0];
         let textMessage = args.join(" ");
         let remoteMessage = textMessage.slice(channelID.length + 1);
