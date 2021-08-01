@@ -34,11 +34,11 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return message.channelID.send({ content: textMessage });
+                return message.channel.send({ content: textMessage });
             };
         } else if (adminBool) {
             // Return plain message if member is admin
-            return message.channelID.send({ content: textMessage });
+            return message.channel.send({ content: textMessage });
         } else {
             // Prevent using bot to go around ping permissions, should be caught in message handler
             // if (textMessage.includes("@")) {
