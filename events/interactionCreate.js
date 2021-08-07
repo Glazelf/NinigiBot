@@ -18,9 +18,7 @@ module.exports = async (client, interaction) => {
 
                 // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
                 let args = [];
-                console.log(interaction.options)
-                await interaction.options.forEach(async option => {
-
+                await interaction.options._hoistedOptions.forEach(async option => {
                     if (option.type == 'SUB_COMMAND') {
                         args.push(option.name);
                         if (option.hasOwnProperty("options")) {
