@@ -4,11 +4,23 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("KICK_MEMBERS") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        let member = message.mentions.members.first();
-        let user = message.mentions.users.first();
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
         if (!member || !user) return sendMessage(client, message, `Please mention someone to kick.`);
+
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
 
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
@@ -20,14 +32,14 @@ module.exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
-        let kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Succeeded)`;
+        let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Succeeded)`;
         try {
-            await user.send(`You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\``);
+            await user.send({ content: `You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\`` });
         } catch (e) {
             // console.log(e);
-            kickReturn = `Successfully kicked ${user.tag} for reason: \`${reason}\`. (DM Failed)`;
+            kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Failed)`;
         };
-        await member.kick([`${reason} -${message.member.user.tag}`]);
+        await member.kick([`${reason} -${author.tag}`]);
         return sendMessage(client, message, kickReturn);
 
     } catch (e) {

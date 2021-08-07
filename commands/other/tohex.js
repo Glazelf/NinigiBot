@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -11,21 +12,32 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
+        let input = args[0];
 
         if (message.content.toLowerCase().startsWith(`${prefix}todecimal`)) {
             try {
-                let argHex = `0x${args[0]}`;
+                while (input.length < 6) input = "0" + input;
+                let argHex = `0x${input}`;
                 let hexInt = parseInt(argHex);
-                return sendMessage(client, message, `${hexInt} (${message.member.user.tag})`, true, null, "js");
+                let returnString = Discord.Formatters.codeBlock("js", `${hexInt} (${user.tag})`)
+                return sendMessage(client, message, returnString);
             } catch (e) {
                 return sendMessage(client, message, `An error occurred trying to convert to decimal. Make sure your input is a valid hex.`);
             };
         } else {
-            if (isNaN(args[0])) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
-            let argInt = parseInt(args[0]);
+            if (isNaN(input)) return sendMessage(client, message, `Please provide a valid number to convert to hex.`);
+            let argInt = parseInt(input);
             let hexString = argInt.toString(16).toUpperCase();
-            return sendMessage(client, message, `${hexString} (${message.member.user.tag})`, true, null, "js");
+            let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
+            return sendMessage(client, message, returnString);
         };
 
     } catch (e) {

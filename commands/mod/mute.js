@@ -4,7 +4,8 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_ROLES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         // Minutes the user is muted
         let muteTime = 60;
@@ -18,7 +19,10 @@ module.exports.run = async (client, message, args = []) => {
             if (muteTime > 10080) muteTime = 10080;
         };
 
-        const member = message.mentions.members.first();
+        let member;
+        if (message.mentions) {
+            member = message.mentions.members.first();
+        };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
         if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);
@@ -26,10 +30,10 @@ module.exports.run = async (client, message, args = []) => {
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
             await member.roles.remove(role);
-            return sendMessage(client, message, `${member.user.tag} has been unmuted.`);
+            return sendMessage(client, message, `Unmuted **${member.user.tag}**.`);
         } else {
             await member.roles.add(role);
-            sendMessage(client, message, `${member.user.tag} has been muted for ${muteTime} minute(s).`);
+            sendMessage(client, message, `Muted **${member.user.tag}** for ${muteTime} minute(s).`);
             // sets a timeout to unmute the user.
             setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
         };

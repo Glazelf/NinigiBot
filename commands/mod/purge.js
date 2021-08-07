@@ -1,10 +1,11 @@
-exports.run = (client, message, args = []) => {
+exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_MESSAGES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!message.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         let numberFromMessage = args[0];
 
@@ -17,34 +18,65 @@ exports.run = (client, message, args = []) => {
 
         let amount = parseInt(numberOfMessages);
 
-        let user = message.mentions.users.first();
-
-        if (!user) {
-            let userID = args[1];
-            user = client.users.cache.get(userID);
-            if (!user) {
-                userID = args[0];
-                user = client.users.cache.get(userID);
-            };
+        let user;
+        if (message.mentions) {
+            user = message.mentions.users.first();
         };
+
+        if (!user && args[1]) {
+            let userID = args[1];
+            user = await client.users.cache.get(userID);
+        };
+
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
+        await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested)
         if (user) {
-            message.channel.messages.fetch({
-                limit: 100,
-            }).then((messages) => {
-                const filterBy = user ? user.id : Client.user.id;
-                messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
-
-                message.channel.bulkDelete(messages)
-                    .then(sendMessage(client, message, `${numberFromMessage} messages from ${user.tag} have been deleted.`));
-            });
-
+            try {
+                let maxMessageFetch = 100;
+                let messages = await message.channel.messages.fetch({ limit: maxMessageFetch });
+                messages = await messages.filter(m => m.author.id == user.id).array().slice(0, amount);
+                try {
+                    await message.channel.bulkDelete(messages);
+                    await message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
+                } catch (e) {
+                    if (e.includes("Missing Permissions")) {
+                        return logger(e, client, message);
+                    } else {
+                        return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
+                    };
+                };
+            } catch (e) {
+                if (e.includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    return message.channel.send({ content: `An error occurred while bulk deleting.` });
+                };
+            };
         } else {
-            message.channel.messages.fetch({ limit: amount })
-                .then(messages => message.channel.bulkDelete(messages))
-                .then(sendMessage(client, message, `${numberFromMessage} messages have been deleted.`));
-            return;
+            try {
+                let messages = await message.channel.messages.fetch({ limit: amount });
+                await message.channel.bulkDelete(messages);
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.` });
+                return;
+            } catch (e) {
+                if (e.includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    if (e.includes("Missing Permissions")) {
+                        return logger(e, client, message);
+                    } else {
+                        return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
+                    };
+                };
+            };
         };
 
     } catch (e) {

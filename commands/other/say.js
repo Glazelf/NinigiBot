@@ -5,6 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { Prefixes } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
+        let adminBool = await isAdmin(message.member, client);
 
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -14,7 +15,9 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Split off command
+        if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
         let channelID = args[0];
+        let textMessage = args.join(" ");
         let remoteMessage = textMessage.slice(channelID.length + 1);
 
         // Catch empty argument
@@ -27,24 +30,23 @@ exports.run = async (client, message, args = []) => {
             try {
                 // If channelID is specified correctly, throw message into specified channel
                 targetChannel = message.client.channels.cache.get(channelID);
-                targetChannel.send(remoteMessage);
+                targetChannel.send({ content: remoteMessage });
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return sendMessage(client, message, textMessage);
+                return message.channel.send({ content: textMessage });
             };
-        } else if (isAdmin(message.member, client)) {
+        } else if (adminBool) {
             // Return plain message if member is admin
-            return sendMessage(client, message, textMessage);
+            return message.channel.send({ content: textMessage });
         } else {
-            // Prevent using bot to go around ping permissions
-            if (textMessage.includes("@")) {
-                return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`);
-            };
+            // Prevent using bot to go around ping permissions, should be caught in message handler
+            // if (textMessage.includes("@")) {
+            //     return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`);
+            // };
 
             // Add credits to avoid anonymous abuse by people who are admin nor owner
-            textMessage = `"\`${textMessage}\`"
-    > -${message.member}`;
+            textMessage = `"\`${textMessage}\`"\n-${message.member}`;
             return sendMessage(client, message, textMessage);
         };
 

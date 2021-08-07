@@ -9,7 +9,10 @@ module.exports.run = async (client, message, args = []) => {
         let currency = globalVars.currency;
 
         const transferAmount = args[1]
-        let transferTarget = message.mentions.users.first();
+        let transferTarget;
+        if (message.mentions) {
+            transferTarget = message.mentions.users.first();
+        };
 
         let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${currency}`;
 

@@ -4,7 +4,10 @@ exports.run = (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        let target = message.mentions.users.first();
+        let target;
+        if (message.mentions) {
+            target = message.mentions.users.first();
+        };
 
         if (!target) {
             let userID = args[0];
@@ -12,7 +15,11 @@ exports.run = (client, message, args = []) => {
         };
 
         if (!target) {
-            target = message.member.user;
+            if (message.type == 'DEFAULT') {
+                target = message.author;
+            } else {
+                target = message.member.user;
+            };
         };
 
         return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);

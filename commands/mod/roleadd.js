@@ -4,25 +4,44 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
-
         const isAdmin = require('../../util/isAdmin');
-        if (!message.member.permissions.has("MANAGE_ROLES") && !isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        const requestRole = args.join(' ').toLowerCase();
+        let splitDescriptionCharacter = ";";
+        let selectDescriptionCharacterLimit = 50;
+        let requestRole = args.join(' ');
+        let inputArray;
+        let description;
+        if (requestRole.includes(splitDescriptionCharacter)) {
+            inputArray = requestRole.split(splitDescriptionCharacter);
+            requestRole = inputArray[0].trim();
+            description = inputArray[1].trim();
+            if (description.length > selectDescriptionCharacterLimit) return sendMessage(client, message, `Role description must be ${selectDescriptionCharacterLimit} characters or less.`);
+        };
+
+        requestRole = requestRole.toLowerCase();
 
         if (requestRole.length < 1) return sendMessage(client, message, `Please provide a role.`);
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
         if (!role) return sendMessage(client, message, `That role does not exist.`);
-        let roleID = await EligibleRoles.findOne({ where: { role_id: role.id, name: requestRole } });
+        let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });
 
         if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
 
-        if (roleID) {
+        if (roleIDs.length > 0) {
             let roleTag = role.name;
-            await roleID.destroy();
+            for await (const roleID of roleIDs) {
+                roleID.destroy();
+            };
             return sendMessage(client, message, `The **${roleTag}** role is no longer eligible to be selfassigned.`);
         } else {
-            await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
+            if (description) {
+                await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase(), description: description });
+            } else {
+                await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
+            };
+
             return sendMessage(client, message, `The **${role.name}** role is now eligible to be selfassigned.`);
         };
 

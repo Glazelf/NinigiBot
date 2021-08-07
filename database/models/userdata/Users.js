@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: "None",
             allowNull: false,
         },
-        biography: {
-            type: DataTypes.STRING,
-            defaultValue: "None",
-            allowNull: false,
-        },
         birthday: {
             type: DataTypes.STRING,
             allowNull: true,

@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
 
         let noInputString = `You need to provide something to calculate`;
         if (!args[0]) return sendMessage(client, message, noInputString);
@@ -25,7 +26,7 @@ exports.run = async (client, message, args = []) => {
             "&",
             "$"
         ];
-        calcInput = input.replace(/[a-zA-Z]/gm, '').replace(",", ".");
+        calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
@@ -46,7 +47,9 @@ exports.run = async (client, message, args = []) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        return sendMessage(client, message, rounded, null, null, true, "js");
+        let returnString = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
+
+        return sendMessage(client, message, `\`\`\`js\n${rounded} (${calcInput})\n\`\`\``);
 
     } catch (e) {
         // log error

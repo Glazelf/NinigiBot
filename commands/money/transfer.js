@@ -6,15 +6,24 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
         const currentAmount = bank.currency.getBalance(message.member.id);
         let transferAmount = args[0];
-        let transferTarget = message.mentions.users.first();
+        let transferTarget;
+        if (message.mentions) {
+            transferTarget = message.mentions.users.first();
+        };
         if (!transferTarget) {
             let userID = args[1];
             transferTarget = client.users.cache.get(userID);
         };
         if (!transferTarget) return;
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
         let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${globalVars.currency}`;
 
-        if (transferTarget == message.member.user) return sendMessage(client, message, `You can't transfer money to yourself.`)
+        if (transferTarget == user) return sendMessage(client, message, `You can't transfer money to yourself.`)
         if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `You need to specify a valid number to transfer.`);
         if (transferAmount > currentAmount) return sendMessage(client, message, `You don't have enough money to transfer that much, you only have ${userBalance}.`);
         if (transferAmount <= 0) return sendMessage(client, message, `Please enter an amount greater than zero.`);

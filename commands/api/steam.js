@@ -30,6 +30,13 @@ module.exports.run = async (client, message, args = []) => {
         let userFriends;
         let userGroups;
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         switch (subCommand) {
             case "user":
                 try {
@@ -106,22 +113,26 @@ ${checkDays(userCreated)}`;
                         .setAuthor(`${userName} (${userID})`, userAvatar)
                         .setThumbnail(userAvatar)
                         .addField("Profile:", `[Link](${userURL} 'Profile URL')`, true);
-                    if (userLevel) userEmbed.addField("Level:", userLevel, true);
-                    if (userBadges) userEmbed.addField("Badges:", userBadges, true);
-                    if (userGames) userEmbed.addField("Games Played:", userGames, true);
-                    if (userFriends) userEmbed.addField("Friends:", userFriends, true);
-                    if (userGroups) userEmbed.addField("Groups:", userGroups, true);
+                    if (userLevel) userEmbed.addField("Level:", userLevel.toString(), true);
+                    if (userBadges) userEmbed.addField("Badges:", userBadges.toString(), true);
+                    if (userGames) userEmbed.addField("Games Played:", userGames.toStrig(), true);
+                    if (userFriends) userEmbed.addField("Friends:", userFriends.toString(), true);
+                    if (userGroups) userEmbed.addField("Groups:", userGroups.toString(), true);
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
-                        .setFooter(message.member.user.tag)
+                        .setFooter(user.tag)
                         .setTimestamp();
 
                     return sendMessage(client, message, null, userEmbed);
 
                 } catch (e) {
                     // console.log(e);
-                    return sendMessage(client, message, userFailString);
+                    if (e.includes("Missing Permissions")) {
+                        return logger(e, client, message);
+                    } else {
+                        return sendMessage(client, message, userFailString);
+                    };
                 };
             case "game":
                 // Get game info from ID

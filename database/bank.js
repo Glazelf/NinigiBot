@@ -83,28 +83,8 @@ module.exports = {
                     },
                 });
 
-                Reflect.defineProperty(money, 'biography', {
-                    value: async function biography(id, text) {
-                        const user = money.get(id);
-                        if (user) {
-                            user.biography = text;
-                            return user.save();
-                        };
-                        const newUser = await Users.create({ user_id: id, biography: text });
-                        money.set(id, newUser);
-                        return newUser;
-                    },
-                });
-
-                Reflect.defineProperty(money, 'getBiography', {
-                    value: function getBiography(id) {
-                        const user = money.get(id);
-                        return user ? user.biography : 'None';
-                    },
-                });
-
                 Reflect.defineProperty(money, 'birthday', {
-                    value: async function biography(id, birthday) {
+                    value: async function birthday(id, birthday) {
                         const user = money.get(id);
                         if (user) {
                             user.birthday = birthday;
@@ -117,7 +97,7 @@ module.exports = {
                 });
 
                 Reflect.defineProperty(money, 'getBirthday', {
-                    value: function getBiography(id) {
+                    value: function getBirthday(id) {
                         const user = money.get(id);
                         return user ? user.birthday : null;
                     },

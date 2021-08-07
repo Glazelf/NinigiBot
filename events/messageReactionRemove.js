@@ -5,7 +5,9 @@ module.exports = async (client, messageReaction) => {
         const Discord = require("discord.js");
         const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
 
-        let targetMessage = await client.channels.cache.get(messageReaction.message.channel.id).messages.fetch(messageReaction.message.id);
+        if (!messageReaction.count) return;
+
+        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
 
@@ -19,7 +21,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetmessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = targetMessage.author.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
         if (targetMessage.reference) isReply = true;
 
@@ -42,18 +44,21 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetmessage.member.user.tag)
+            .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
-        if (messageReaction.count >= globalVars.starboardLimit && messageDB) {
-            // Update
-            client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
+        if (messageReaction.count == 0 && messageDB) {
+            // Delete
+            await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
             await messageDB.destroy();
             return;
-        } else if (messageReaction.count == 0 && messageDB) {
-            // Delete
-            client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
-            await messageDB.destroy();
+        } else if (messageDB) {
+            // Update
+            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            if (!starMessage) return;
+
+            await starMessage.edit({ embeds: [starEmbed] });
             return;
         } else {
             // Ignore

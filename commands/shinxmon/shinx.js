@@ -1,4 +1,4 @@
-// const Canvas = require('canvas');
+const Canvas = require('canvas');
 
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
@@ -66,19 +66,25 @@ module.exports.run = async (client, message, args = []) => {
         let shinx;
         let master;
 
-        if (message.mentions.members.first()) {
-            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
-            const expectedId = /<@!(\d+)/.exec(args[0]);
-            const targetId = message.mentions.members.first().id;
+        if (message.mentions) {
+            if (message.mentions.members.first()) {
+                if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+                const expectedId = /<@!(\d+)/.exec(args[0]);
+                const targetId = message.mentions.members.first().id;
 
-            if (expectedId && expectedId[1] == targetId) {
-                shinx = await bank.currency.getShinx(targetId);
-                master = message.mentions.members.first().user;
-                args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
-        } else {
-            master = message.member.user;
-            shinx = await bank.currency.getShinx(master.id);
+                if (expectedId && expectedId[1] == targetId) {
+                    shinx = await bank.currency.getShinx(targetId);
+                    master = message.mentions.members.first().user;
+                    args.splice(0, 1);
+                } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
+            } else {
+                if (message.type == 'DEFAULT') {
+                    master = message.author;
+                } else {
+                    master = message.member.user;
+                };
+                shinx = await bank.currency.getShinx(master.id);
+            };
         };
 
         shinx.see();

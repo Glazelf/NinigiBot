@@ -2,10 +2,15 @@ module.exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const Canvas = require("canvas");
 
-        let user = message.mentions.users.first();
-        let member = message.mentions.members.first();
+        return sendMessage(client, message, `Certain image editing commands are currently broken. Check the following issue for more information: https://github.com/Glazelf/NinigiBot/issues/103.`);
+
+        let user;
+        let member;
+        if (message.mentions) {
+            user = message.mentions.users.first();
+            member = message.mentions.members.first();
+        };
         let attachment = null;
         if (message.attachments.size > 0) attachment = message.attachments.values().next().value.attachment;
 
@@ -16,7 +21,11 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.member.user;
+            if (message.type == 'DEFAULT') {
+                user = message.author;
+            } else {
+                user = message.member.user;
+            };
         };
 
         let totalMessage = null;
@@ -31,7 +40,7 @@ module.exports.run = async (client, message, args = []) => {
             totalMessage = `Here you go, your inverted image:`;
         } else {
             if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-            if (!avatar) return message.channel.send(`${user.tag} doesn't have an avatar.`);
+            if (!avatar) return message.channel.send({ content: `${user.tag} doesn't have an avatar.` });
             targetImage = avatar;
             targetImageWidth = 128;
             targetImageHeight = 128;

@@ -12,7 +12,9 @@ exports.run = async (client, message, args = []) => {
         };
 
         let commandName = "8ball";
-        if (!message.content.toLowerCase().startsWith(`${prefix}8ball`)) commandName = "Magic Conch";
+        if (message.content) {
+            if (!message.content.toLowerCase().startsWith(`${prefix}8ball`)) commandName = "Magic Conch";
+        };
 
         if (!args[0]) return sendMessage(client, message, `You need to provide something for the ${commandName} to consider.`);
 

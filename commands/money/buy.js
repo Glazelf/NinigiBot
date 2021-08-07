@@ -7,6 +7,7 @@ exports.run = async (client, message, args = []) => {
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
+        if (!args[0]) return sendMessage(client, message, `You need to provide the name of the item you want to buy.`);
         const commandArgs = args[0].match(/(\w+)\s*([\s\S]*)/);
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });

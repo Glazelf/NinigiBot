@@ -13,13 +13,21 @@ module.exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        // const Canvas = require('canvas');
+        const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
+
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
         let target = args[0];
-        if (!target || target.length < 1) return sendMessage(client, message, `Please specify a user to battle.`);
-        const trainers = [message.member.user, message.mentions.users.first()];
+        if (!target || target.length < 1 || !message.mentions) return sendMessage(client, message, `Please specify a user to battle.`);
+        const trainers = [author, message.mentions.users.first()];
         if (!trainers[1]) return sendMessage(client, message, `Please tag a valid person to battle.`)
         if (trainers[0].id === trainers[1].id) return sendMessage(client, message, `You cannot battle yourself!`);
         if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
@@ -35,7 +43,8 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         await sendMessage(client, message, `Do you accept the challenge, ${trainers[1]}? (y\\n)`);
-        const accepts = await message.channel.awaitMessages(m => m.author.id == trainers[1].id, { max: 1, time: 10000 });
+        const filter = m => m.author.id == trainers[1].id;
+        const accepts = await message.channel.awaitMessages({filter,  max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage(client, message, `Battle has been cancelled.`);
         if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
         globalVars.battling.yes = true;

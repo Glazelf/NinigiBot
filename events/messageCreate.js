@@ -30,45 +30,56 @@ module.exports = async (client, message) => {
 
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
-            if (message.member.user.bot) return;
-            if (message.content.indexOf(prefix) == 0) {
-                sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
-            };
+            if (!message.member) return;
+            if (message.author.bot) return;
+
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
-            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.member.user.tag, false)
+                .addField(`Author:`, message.author.tag, false)
                 .addField(`Author ID:`, message.member.id, false);
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
                 .setFooter(client.user.tag)
                 .setTimestamp();
-            return DMChannel.send(dmEmbed);
+
+            if (message.content.indexOf(prefix) == 0) {
+                try {
+                    sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
+                } catch (e) {
+                    return DMChannel.send({ embeds: [dmEmbed] });
+                };
+            };
+            return DMChannel.send({ embeds: [dmEmbed] });
         };
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
         // Ignore all bots and welcome messages
         if (!message.member) return;
-        if (message.member.user.bot == true) return;
+        if (message.author.bot == true) return;
 
         // Automod
-        autoMod(message);
+        let modBool = false;
+        if (message.type == 'DEFAULT') modBool = await autoMod(message);
+        if (modBool) return;
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
         // Add currency if message doesn't start with prefix
-        if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.member.id) && memberRoles.size !== 0) {
-            bank.currency.add(message.member.id, 1);
-            talkedRecently.add(message.member.id);
-            setTimeout(() => {
-                talkedRecently.delete(message.member.id);
-            }, 60000);
+        if (message.content && message.member) {
+            if (message.content.indexOf(prefix) !== 0 && !talkedRecently.has(message.member.id) && memberRoles.size !== 0) {
+                bank.currency.add(message.member.id, 1);
+                talkedRecently.add(message.member.id);
+                setTimeout(() => {
+                    if (message.member) talkedRecently.delete(message.member.id);
+                }, 60000);
+            };
         };
 
         // Ignore messages not starting with the prefix
@@ -80,9 +91,13 @@ module.exports = async (client, message) => {
         // Ignore messages that start with prefix double or prefix space
         if (secondCharacter == prefix || secondCharacter == ` `) return;
 
+        let args;
+        let commandName = "";
         // Standard definition
-        const args = message.content.slice(prefix.length).trim().split(/ +/g);
-        const commandName = args.shift().toLowerCase();
+        if (message.content) {
+            args = message.content.slice(prefix.length).trim().split(/ +/g);
+            commandName = args.shift().toLowerCase();
+        };
 
         // Grab the command data from the client.commands Enmap
         let cmd;
@@ -95,11 +110,12 @@ module.exports = async (client, message) => {
         // Ignore messages sent in a disabled channel
         if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
 
+        if (message.deleted) return;
+
         // Run the command
         if (cmd) {
-            message.channel.startTyping();
+            await message.channel.sendTyping();
             await cmd.run(client, message, args);
-            message.channel.stopTyping(true);
         } else return;
 
         return;

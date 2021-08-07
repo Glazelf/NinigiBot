@@ -1,16 +1,16 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        if (!isAdmin(message.member, client)) return sendMessage(client, message, globalVars.lackPerms);
+        let adminBool = await isAdmin(message.member, client);
+        if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
 
-        const args = message.content.split(' ');
-        let subCommand = args[1];
+        let subCommand = args[0];
         if (!subCommand) {
             if (oldPrefix) {
                 return sendMessage(client, message, `The current prefix is: \`${oldPrefix.prefix}\`.`);

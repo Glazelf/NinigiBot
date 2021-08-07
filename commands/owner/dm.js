@@ -16,7 +16,7 @@ exports.run = async (client, message, args = []) => {
             return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
         };
 
-        await targetUser.send(textMessage);
+        await targetUser.send({ content: textMessage });
         return sendMessage(client, message, `Message succesfully sent to ${targetUser.tag}.`);
 
     } catch (e) {

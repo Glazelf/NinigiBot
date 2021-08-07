@@ -1,5 +1,3 @@
-const sendMessage = require('../../util/sendMessage');
-
 exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,11 +6,20 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         let DefaultEmbedColor = "#99AB5";
 
+        if (!args[0]) return sendMessage(client, message, `Please provide a role name or ID.`);
+
         // Split off command
-        let input = args[0].match(/(\w+)\s*([\s\S]*)/);
+        let input = args.join(" ");
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
 
         // Author avatar
-        let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
@@ -29,8 +36,8 @@ exports.run = async (client, message, args = []) => {
             const noRoleEmbed = new Discord.MessageEmbed()
                 .setColor(DefaultEmbedColor)
                 .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
-                .addField("Members:", noRoleMembers, true)
-                .setFooter(message.member.user.tag)
+                .addField("Members:", noRoleMembers.toString(), true)
+                .setFooter(user.tag)
                 .setTimestamp();
 
             return sendMessage(client, message, null, noRoleEmbed);
@@ -60,12 +67,12 @@ exports.run = async (client, message, args = []) => {
         const roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor(`${role.name} (${role.id})`, avatar)
-            .addField("Tag:", role, true)
+            .addField("Tag:", role.toString(), true)
             .addField("Color:", roleColor, true)
-            .addField("Members:", memberCount, true)
-            .addField("Position:", role.rawPosition, true)
+            .addField("Members:", memberCount.toString(), true)
+            .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, roleEmbed);
