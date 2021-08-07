@@ -40,7 +40,8 @@ module.exports.run = async (client, message, args = []) => {
         let rolesSorted = "None";
         let shortenedRoles = false;
         if (memberRoles.size !== 0) {
-            rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position).array().join(", ");
+            rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
+            rolesSorted = [...rolesSorted.values()].join(", ");
             for (i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
                 rolesSorted = rolesSorted.split(", ");
                 await rolesSorted.pop();
@@ -145,7 +146,7 @@ module.exports.run = async (client, message, args = []) => {
         function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;
             // Sort all users by join time
-            let arr = guild.members.cache.array();
+            let arr = [...guild.members.cache.values()];
             arr.sort((a, b) => a.joinedAt - b.joinedAt);
             // Get provided user
             for (let i = 0; i < arr.length; i++) {

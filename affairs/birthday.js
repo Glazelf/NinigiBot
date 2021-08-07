@@ -20,8 +20,8 @@ module.exports = async (client) => {
         let yesterdayCuties = birthdayRole.members;
         yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
         const cuties = [];
-        for (m in guild.members.cache.array()) {
-            const member = guild.members.cache.array()[m];
+        for (m in [...guild.members.cache.values()]) {
+            const member = [...guild.members.cache.values()][m];
             const birthday = bank.currency.getBirthday(member.id);
             if (birthday) {
                 let now = new Date();
@@ -31,16 +31,17 @@ module.exports = async (client) => {
                 };
             };
         };
+    };
 
-        if (cuties.length < 1) return;
+    if (cuties.length < 1) return;
 
-        let channel = guild.channels.cache.find(channel => channel.id === channelID);
+    let channel = guild.channels.cache.find(channel => channel.id === channelID);
 
-        const gifEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
-            .setImage(search("birthday"))
-            .setTimestamp();
-        channel.send({ embed: gifEmbed });
-    }, timeZone = timezone, start = true);
+    const gifEmbed = new Discord.MessageEmbed()
+        .setColor(globalVars.embedColor)
+        .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
+        .setImage(search("birthday"))
+        .setTimestamp();
+    channel.send({ embed: gifEmbed });
+}, timeZone = timezone, start = true);
 };
