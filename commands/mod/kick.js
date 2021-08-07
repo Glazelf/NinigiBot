@@ -39,7 +39,16 @@ module.exports.run = async (client, message, args = []) => {
             // console.log(e);
             kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Failed)`;
         };
-        await member.kick([`${reason} -${author.tag}`]);
+        try {
+            await member.kick([`${reason} -${author.tag}`]);
+        } catch (e) {
+            // console.log(e);
+            if (e.includes("Missing Permissions")) {
+                return logger(e, client, message);
+            } else {
+                return sendMessage(client, message, `Could not find a user by that ID.`);
+            };
+        };
         return sendMessage(client, message, kickReturn);
 
     } catch (e) {
