@@ -128,7 +128,7 @@ ${checkDays(userCreated)}`;
 
                 } catch (e) {
                     // console.log(e);
-                    if (e.includes("Missing Permissions")) {
+                    if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
                     } else {
                         return sendMessage(client, message, userFailString);

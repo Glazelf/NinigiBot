@@ -47,14 +47,14 @@ exports.run = async (client, message, args) => {
                     await message.channel.bulkDelete(messages);
                     await message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
                 } catch (e) {
-                    if (e.includes("Missing Permissions")) {
+                    if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
                     } else {
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
                     };
                 };
             } catch (e) {
-                if (e.includes("Missing Permissions")) {
+                if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {
                     return message.channel.send({ content: `An error occurred while bulk deleting.` });
@@ -67,10 +67,10 @@ exports.run = async (client, message, args) => {
                 await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.` });
                 return;
             } catch (e) {
-                if (e.includes("Missing Permissions")) {
+                if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {
-                    if (e.includes("Missing Permissions")) {
+                    if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
                     } else {
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
