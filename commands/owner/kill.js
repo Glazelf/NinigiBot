@@ -16,7 +16,7 @@ exports.run = async (client, message) => {
         };
 
         // Return message then destroy
-        await sendMessage(client, message, `Starting shutdown. Removing all slash commands might take a bit.`);
+        await sendMessage(client, message, `Starting shutdown. Removing all slash commands, context menus etc. might take a bit. It might take up to an hour for them to vanish on Discord's end.`);
 
         // Delete all global commands
         await client.application.commands.set([]);

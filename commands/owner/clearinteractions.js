@@ -5,6 +5,8 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
+
+        await sendMessage(client, message, `Removing all slash commands, context menus etc. might take a while. It might take up to an hour for them to vanish on Discord's end.`)
         // Delete all global commands
         await client.application.commands.set([]);
 
