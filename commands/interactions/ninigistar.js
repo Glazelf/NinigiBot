@@ -10,7 +10,7 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
-        let reaction = await message.reaction.cache.find(reaction => reaction.emoji == '⭐' && reaction.me);
+        let reaction = await message.reactions.cache.find(reaction => reaction.emoji == '⭐' && reaction.me);
         try {
             if (reaction) {
                 await reaction.remove();
