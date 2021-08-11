@@ -23,7 +23,11 @@ exports.run = async (client, message) => {
 
         // Delete all guild commands
         await client.guilds.cache.forEach(guild => {
-            guild.commands.set([]);
+            try {
+                guild.commands.set([]);
+            } catch (e) {
+                // console.log(e);
+            };
         });
 
         // Delete SAC specific commands

@@ -12,7 +12,11 @@ exports.run = async (client, message, args = []) => {
 
         // Delete all guild commands
         await client.guilds.cache.forEach(guild => {
-            guild.commands.set([]);
+            try {
+                guild.commands.set([]);
+            } catch (e) {
+                // console.log(e);
+            };
         });
 
         return sendMessage(client, message, `Removed all slash commands, context menus etc.`);
