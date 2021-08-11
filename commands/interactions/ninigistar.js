@@ -2,6 +2,8 @@ exports.run = async (client, interaction, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        console.log(interaction)
+        console.log(message)
         // Interaction only
         if (interaction.type == 'DEFAULT') return;
 
