@@ -38,12 +38,11 @@ module.exports = async (client, interaction) => {
 
                 // Grab the command data from the client.commands Enmap
                 let cmd;
-                let commandName = interaction.commandName.toLowerCase();
+                let commandName = interaction.commandName.toLowerCase().replace(" ", "");
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
-                    console.log(command.config.name.toLowerCase().replace(" ", ""))
-                    console.log(commandName.toLowerCase().replace(" ", ""))
-                    if (command.config.name.toLowerCase().replace(" ", "") == commandName.toLowerCase().replace(" ", "")) cmd = client.commands.get(commandName);
+                    if (command.config.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
+                    console.log(cmd)
                 });
                 if (!cmd) {
                     if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
