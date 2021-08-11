@@ -2,6 +2,7 @@ exports.run = async (client, interaction, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const sendMessage = require('../../util/sendMessage');
         console.log(interaction)
         console.log(message)
         // Interaction only
