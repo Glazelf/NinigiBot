@@ -8,7 +8,7 @@ exports.run = async (client, interaction, message) => {
         try {
             await message.react('⭐');
         } catch (e) {
-            // console.log(e);
+            console.log(e);
         };
 
         return sendMessage(client, interaction, `Starred this message for you!`);
