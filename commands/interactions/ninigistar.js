@@ -14,14 +14,15 @@ exports.run = async (client, interaction, args = []) => {
         try {
             if (reaction) {
                 await reaction.remove();
+                return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you!`);
             } else {
                 await message.react('⭐');
+                return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
             };
         } catch (e) {
             console.log(e);
+            return;
         };
-
-        return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
 
     } catch (e) {
         // log error
