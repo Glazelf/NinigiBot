@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args = []) => {
 
         if (!user && args[0]) {
             let userID = args[0];
-            user = client.users.cache.get(userID);
+            user = client.users.fetch(userID);
             if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
 
