@@ -196,16 +196,7 @@ module.exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "userinfo",
-    aliases: ["user", "profile"],
-    description: "Displays information about a specified user.",
-    options: [{
-        name: "user-mention",
-        type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
-    }]
+    name: "Userinfo",
+    type: "USER",
+    aliases: ["user", "profile"]
 };

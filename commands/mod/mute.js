@@ -47,16 +47,6 @@ module.exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "mute",
-    aliases: ["unmute"],
-    description: "Mute a specific user.",
-    options: [{
-        name: "user-mention",
-        type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
-    }]
+    name: "Mute",
+    type: "USER"
 };
