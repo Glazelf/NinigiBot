@@ -4,7 +4,9 @@ exports.run = async (client, interaction, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 
+        console.log(args.targetId)
         let message = await interaction.channel.messages.fetch(args.targetId);
+        console.log(message)
         if (!message) return;
 
         // Interaction only
@@ -16,7 +18,7 @@ exports.run = async (client, interaction, args = []) => {
             console.log(e);
         };
 
-        return sendMessage(client, interaction, `Starred this message for you!`);
+        return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
 
     } catch (e) {
         // log error
