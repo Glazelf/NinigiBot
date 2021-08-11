@@ -101,11 +101,20 @@ module.exports = async (client, message) => {
 
         // Grab the command data from the client.commands Enmap
         let cmd;
-        if (client.commands.has(commandName)) {
-            cmd = client.commands.get(commandName);
-        } else if (client.aliases.has(commandName)) {
-            cmd = client.commands.get(client.aliases.get(commandName));
-        } else return;
+        // Slower? command checker, since some commands user capitalization
+        await client.commands.forEach(command => {
+            if (command.config.name.toLowerCase() == commandName) cmd = client.commands.get(commandName);
+        });
+        if (!cmd) {
+            if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
+        };
+
+        // Probably faster command checker, but fails when command uses capitalization (i.e. context menu)
+        // if (client.commands.has(commandName)) {
+        //     cmd = client.commands.get(commandName);
+        // } else if (client.aliases.has(commandName)) {
+        //     cmd = client.commands.get(client.aliases.get(commandName));
+        // } else return;
 
         // Ignore messages sent in a disabled channel
         if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
