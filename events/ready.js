@@ -13,14 +13,14 @@ module.exports = async (client) => {
 
         // Daily rate limit of 200 slash commands should only go up if they are fully deleted and readded, not on every boot.
         // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
-        let commandsExclusive = ["sysbot", "rule", "countdown"];
+        let commandsExclude = ["sysbot", "rule", "countdown", "clearinteractions", "dm", "eval", "item", "kill", "moneyadd", "reload", "restart"];
 
         let NinigiUserID = "592760951103684618";
 
         if (client.user.id == NinigiUserID) {
             await client.commands.forEach(command => {
                 try {
-                    if (commandsExclusive.includes(command.config.name)) return;
+                    if (commandsExclude.includes(command.config.name)) return;
                     client.application?.commands.create(command.config);
                     console.log(`Loaded slash command: ${command.config.name} ✔`);
                     // Server exclusive slash command:
