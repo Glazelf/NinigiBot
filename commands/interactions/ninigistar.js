@@ -2,16 +2,21 @@ exports.run = async (client, interaction, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        // Interaction only
+        if (interaction.type == 'DEFAULT') return;
+
         const sendMessage = require('../../util/sendMessage');
 
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
-        // Interaction only
-        if (interaction.type == 'DEFAULT') return;
-
+        let reaction = await message.reaction.cache.find(reaction => reaction.emoji == '⭐' && reaction.me);
         try {
-            await message.react('⭐');
+            if (reaction) {
+                await reaction.remove();
+            } else {
+                await message.react('⭐');
+            };
         } catch (e) {
             console.log(e);
         };
