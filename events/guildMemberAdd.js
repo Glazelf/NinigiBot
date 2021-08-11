@@ -10,24 +10,31 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let user = client.users.cache.get(member.id);
+        let botMember = await message.guild.members.fetch(client.user.id);
+        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let user = client.users.cache.get(member.id);
 
-        let icon = member.guild.iconURL({ format: "png", dynamic: true });
-        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+            let icon = member.guild.iconURL({ format: "png", dynamic: true });
+            let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
-        let daysCreated = await checkDays(user.createdAt);
+            let daysCreated = await checkDays(user.createdAt);
 
-        const joinEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setAuthor(`Member Joined ❤️`, icon)
-            .setThumbnail(avatar)
-            .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-            .addField(`User: `, `${user} (${user.id})`)
-            .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-            .setFooter(member.user.tag)
-            .setTimestamp();
+            const joinEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setAuthor(`Member Joined ❤️`, icon)
+                .setThumbnail(avatar)
+                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .addField(`User: `, `${user} (${user.id})`)
+                .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                .setFooter(member.user.tag)
+                .setTimestamp();
 
-        return log.send({ content: user.toString(), embeds: [joinEmbed] });
+            return log.send({ content: user.toString(), embeds: [joinEmbed] });
+        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+        } else {
+            return;
+        };
 
     } catch (e) {
         // log error
