@@ -1,9 +1,9 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         // Interaction only
-        if (message.type == 'DEFAULT') return;
+        if (interaction.type == 'DEFAULT') return;
 
         try {
             await message.react('⭐');
@@ -11,13 +11,13 @@ exports.run = async (client, message) => {
             // console.log(e);
         };
 
-        return sendMessage(client, message, `Starred this message for you!`);
+        return sendMessage(client, interaction, `Starred this message for you!`);
 
     } catch (e) {
         // log error
         const logger = require('../../util/logger');
 
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
