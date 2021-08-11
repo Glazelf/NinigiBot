@@ -22,18 +22,18 @@ exports.run = async (client, message) => {
         await client.application.commands.set([]);
 
         // Delete all guild commands
-        // await client.guilds.cache.forEach(guild => {
-        //     guild.commands.set([]);
-        // });
+        await client.guilds.cache.forEach(guild => {
+            guild.commands.set([]);
+        });
 
         // Delete SAC specific commands
-        await client.guilds.cache.get(client.config.botServerID).commands.set([]);
+        // await client.guilds.cache.get(client.config.botServerID).commands.set([]);
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);
         console.log(`Bot killed by ${user.tag}. (${timestamp})`);
 
-        await client.destroy()
+        await client.destroy();
         return process.exit();
 
     } catch (e) {
