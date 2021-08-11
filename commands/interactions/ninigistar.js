@@ -1,10 +1,12 @@
-exports.run = async (client, interaction, message) => {
+exports.run = async (client, interaction, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        console.log(interaction)
-        console.log(message)
+
+        let message = await interaction.channel.messages.fetch(args.targetId);
+        if (!message) return;
+
         // Interaction only
         if (interaction.type == 'DEFAULT') return;
 
