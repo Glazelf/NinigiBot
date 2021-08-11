@@ -6,7 +6,6 @@ exports.run = async (client, interaction, args = []) => {
 
         console.log(args.targetId)
         let message = await interaction.channel.messages.fetch(args.targetId);
-        console.log(message)
         if (!message) return;
 
         // Interaction only
