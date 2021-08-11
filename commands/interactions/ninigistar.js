@@ -11,17 +11,13 @@ exports.run = async (client, interaction, args = []) => {
         if (!message) return;
 
         let reaction = await message.reactions.cache.find(reaction => reaction.emoji == '⭐' && reaction.me);
-        try {
-            if (reaction) {
-                await reaction.remove();
-                return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you!`);
-            } else {
-                await message.react('⭐');
-                return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
-            };
-        } catch (e) {
-            console.log(e);
-            return;
+
+        if (reaction) {
+            await reaction.remove();
+            return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you!`);
+        } else {
+            await message.react('⭐');
+            return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
         };
 
     } catch (e) {
