@@ -5,6 +5,7 @@ exports.run = async (client, interaction, args = []) => {
         const sendMessage = require('../../util/sendMessage');
 
         console.log(args.targetId)
+        console.log(args)
         let message = await interaction.channel.messages.fetch(args.targetId);
         if (!message) return;
 
