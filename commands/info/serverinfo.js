@@ -1,6 +1,6 @@
 const { forEach } = require('lodash');
 
-module.exports.run = async (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
