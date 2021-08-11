@@ -1,0 +1,30 @@
+exports.run = async (client, message, args = []) => {
+    // Import globals
+    let globalVars = require('../../events/ready');
+    try {
+        const sendMessage = require('../../util/sendMessage');
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+
+        // Delete all global commands
+        await client.application.commands.set([]);
+
+        // Delete all guild commands
+        await client.guilds.cache.forEach(guild => {
+            guild.commands.set([]);
+        });
+
+        return sendMessage(client, message, `Removed all slash commands, context menus etc.`);
+
+    } catch (e) {
+        // log error
+        const logger = require('../../util/logger');
+
+        logger(e, client, message);
+    };
+};
+
+module.exports.config = {
+    name: "clearinteractions",
+    aliases: [],
+    description: "Clears all slash commands and other interactions."
+};
