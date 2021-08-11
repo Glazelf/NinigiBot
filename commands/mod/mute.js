@@ -35,10 +35,10 @@ module.exports.run = async (client, message, args = []) => {
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
             await member.roles.remove(role);
-            return sendMessage(client, message, `Unmuted **${member.user.tag}**.`);
+            return sendMessage(client, message, `Unmuted **${member.user.tag}** (${member.id}).`);
         } else {
             await member.roles.add(role);
-            sendMessage(client, message, `Muted **${member.user.tag}** for ${muteTime} minute(s).`);
+            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
             // sets a timeout to unmute the user.
             setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
         };
