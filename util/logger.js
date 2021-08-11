@@ -26,7 +26,7 @@ module.exports = async (exception, client, message = null) => {
         baseMessage = message && user ? `An error occurred in ${message.channel}!
 Link: ${message.url}
 Error:\n${exceptionCode}
-Message by ${user.tag}:
+Message by **${user.tag}** (${user.id}):
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (!message.author) return;
