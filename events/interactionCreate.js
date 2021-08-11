@@ -41,6 +41,8 @@ module.exports = async (client, interaction) => {
                 let commandName = interaction.commandName.toLowerCase();
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
+                    console.log(command.config.name.toLowerCase().replace(" ", ""))
+                    console.log(commandName.toLowerCase().replace(" ", ""))
                     if (command.config.name.toLowerCase().replace(" ", "") == commandName.toLowerCase().replace(" ", "")) cmd = client.commands.get(commandName);
                 });
                 if (!cmd) {
