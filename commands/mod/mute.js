@@ -23,8 +23,11 @@ module.exports.run = async (client, message, args = []) => {
         if (message.mentions) {
             member = message.mentions.members.first();
         };
-        // convert user to member
-        if (!member.user) member = await message.guild.members.fetch(member.id);
+        if (!member) {
+            let memberID = args[0];
+            member = await message.guild.members.fetch(memberID);
+            if (!member) member = message.guild.members.cache.find(member => member.user.username.toLowerCase() == args[0].toString().toLowerCase());
+        };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
         if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);
