@@ -42,7 +42,6 @@ module.exports = async (client, interaction) => {
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
                     if (command.config.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
-                    console.log(cmd)
                 });
                 if (!cmd) {
                     if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
