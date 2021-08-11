@@ -38,13 +38,20 @@ module.exports = async (client, interaction) => {
 
                 // Grab the command data from the client.commands Enmap
                 let cmd;
-                if (client.commands.has(interaction.commandName)) {
-                    cmd = client.commands.get(interaction.commandName);
-                } else if (client.aliases.has(interaction.commandName)) {
-                    cmd = client.commands.get(client.aliases.get(interaction.commandName));
-                } else {
-                    return;
+                // Slower? command checker, since some commands user capitalization
+                await client.commands.forEach(command => {
+                    if (command.config.name.toLowerCase() == interaction.commandName) cmd = client.commands.get(interaction.commandName);
+                });
+                if (!cmd) {
+                    if (client.aliases.has(interaction.commandName)) cmd = client.commands.get(client.aliases.get(interaction.commandName));
                 };
+
+                // Probably faster command checker, but fails when command uses capitalization (i.e. context menu)
+                // if (client.commands.has(interaction.commandName)) {
+                //     cmd = client.commands.get(interaction.commandName);
+                // } else if (client.aliases.has(interaction.commandName)) {
+                //     cmd = client.commands.get(client.aliases.get(interaction.commandName));
+                // } else return;
 
                 // Run the command
                 if (cmd) {
