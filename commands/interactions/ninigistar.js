@@ -11,6 +11,9 @@ exports.run = async (client, interaction, args = []) => {
         if (!message) return;
 
         let starReacts = await message.reactions.cache.filter(reaction => reaction.emoji.name == '⭐');
+        console.log(message)
+        console.log(message.reactions)
+        console.log(message.reactions.cache)
         await message.reactions.cache.forEach(reaction => { console.log(reaction.emoji) })
         console.log(starReacts)
         let reaction = await starReacts.me;
