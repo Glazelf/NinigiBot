@@ -20,7 +20,7 @@ exports.run = async (client, interaction, args = []) => {
         let reactionsBot = await messageReactionResolvable.users.fetch(client.user.id);
 
         if (reactionsBot.size > 0) {
-            await messageReactionResolvable.remove(client.user);
+            await message.reactions.remove(client.user);
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
             await message.react('⭐');
