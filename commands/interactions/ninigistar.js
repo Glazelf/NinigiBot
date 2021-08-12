@@ -21,6 +21,7 @@ exports.run = async (client, interaction, args = []) => {
         let reaction = await message.reactions.resolve(messageReactionResolvable);
         console.log(messageReactionResolvable == reaction);
         let reactionsBot = await reaction.users.fetch(client.user.id);
+        console.log(reactionsBot)
 
         await reactionsBot.forEach(reaction => {
             if (reaction.id == client.user.id) botReacted = true;
