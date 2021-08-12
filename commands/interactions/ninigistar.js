@@ -10,7 +10,8 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
-        let starReacts = await message.reactions.cache.filter(reaction => reaction.emoji == '⭐');
+        let starReacts = await message.reactions.cache.filter(reaction => reaction.emoji.name == '⭐');
+        await message.reactions.cache.forEach(reaction => { console.log(reaction.emoji) })
         console.log(starReacts)
         let reaction = await starReacts.me;
         console.log(reaction)
