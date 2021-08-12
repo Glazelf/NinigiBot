@@ -14,7 +14,7 @@ exports.run = async (client, interaction, args = []) => {
         console.log("Message: ---------------------------------------------------------")
         console.log(message)
         console.log(`message.reactions: -----------------------------------------------`)
-        console.log(message.reactions.reactions)
+        console.log(message.reactions)
         await message.reactions.cache.forEach(reaction => { console.log(reaction.emoji) })
         console.log("star reacts: -----------------------------------------------")
         console.log(starReacts)
