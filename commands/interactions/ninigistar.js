@@ -10,14 +10,17 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
-        let reaction = await message.reactions.cache.find(reaction => reaction.emoji == '⭐' && reaction.me);
+        let starReacts = await message.reactions.cache.filter(reaction => reaction.emoji == '⭐');
+        console.log(starReacts)
+        let reaction = await starReacts.me;
+        console.log(reaction)
 
         if (reaction) {
             await reaction.remove();
-            return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you!`);
+            return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
             await message.react('⭐');
-            return sendMessage(client, interaction, `Starred ${message.author}'s message for you!`);
+            return sendMessage(client, interaction, `Starred ${message.author}'s message for you! (${message.url})`);
         };
 
     } catch (e) {
