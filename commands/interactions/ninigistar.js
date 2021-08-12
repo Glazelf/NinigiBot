@@ -11,7 +11,6 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
-        let reaction = null;
         let reactionData = {
             me: true,
             emoji: {
