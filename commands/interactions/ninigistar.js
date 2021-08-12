@@ -10,12 +10,15 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
+        let reaction = null;
         const filter = (reaction, user) => reaction.emoji.name == '⭐' && user.id == client.user.id;
-        let reaction = await message.awaitReactions({ filter });
+        await message.awaitReactions({ filter }).then(collected => {
+            if (collected.size > 0) reaction = collected[0];
+        }).catch(console.log(error));
         console.log(reaction)
 
         if (reaction) {
-            await reaction[0].remove();
+            await reaction.remove();
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
             await message.react('⭐');
