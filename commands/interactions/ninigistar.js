@@ -14,7 +14,7 @@ exports.run = async (client, interaction, args = []) => {
         const filter = (reaction, user) => reaction.emoji.name == '⭐' && user.id == client.user.id;
         await message.awaitReactions({ filter }).then(collected => {
             if (collected.size > 0) reaction = collected[0];
-        }).catch(console.log(error));
+        }).catch(console.error);
         console.log(reaction)
 
         if (reaction) {
