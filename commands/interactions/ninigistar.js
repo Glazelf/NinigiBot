@@ -19,9 +19,10 @@ exports.run = async (client, interaction, args = []) => {
         };
         let messageReactionResolvable = new Discord.MessageReaction(client, reactionData, message);
         let reactionsBot = await messageReactionResolvable.users.fetch(client.user.id);
+        let messageStars = await message.reactions.cache.get('⭐');
 
         if (reactionsBot.size > 0) {
-            await messageReactionResolvable.remove();
+            await messageStars.remove();
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
             await message.react('⭐');
