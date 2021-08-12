@@ -16,17 +16,11 @@ exports.run = async (client, interaction, args = []) => {
                 name: '⭐'
             }
         };
-        let botReaction = null;
         let messageReactionResolvable = new Discord.MessageReaction(client, reactionData, message);
-        console.log(messageReactionResolvable)
+        let reactionsBot = await messageReactionResolvable.users.fetch(client.user.id);
 
-        await messageReactionResolvable.forEach(reaction => {
-            console.log(reaction)
-            if (reaction.id == client.user.id) botReaction = reaction;
-        });
-
-        if (botReaction) {
-            await botReaction.remove();
+        if (reactionsBot.size > 0) {
+            await messageReactionResolvable.remove(client.user);
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
             await message.react('⭐');
