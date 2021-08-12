@@ -5,17 +5,23 @@ exports.run = async (client, interaction, args = []) => {
         // Interaction only
         if (interaction.type == 'DEFAULT') return;
 
+        const Discord = require('discord.js');
         const sendMessage = require('../../util/sendMessage');
 
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
         let reaction = null;
-        const filter = (reaction, user) => reaction.emoji.name == '⭐' && user.id == client.user.id;
-        await message.awaitReactions({ filter }).then(collected => {
-            if (collected.size > 0) reaction = collected[0];
-            return;
-        }).catch(console.error);
+        let reactionData = {
+            me: true,
+            emoji: {
+                name: '⭐'
+            }
+        };
+        let messageReactionResolvable = new Discord.MessageReaction(client, reactionData, message);
+        console.log(messageReactionResolvable)
+        console.log("------------------------------------------------")
+        let reaction = await message.reactions.resolve(messageReactionResolvable);
         console.log(reaction)
 
         if (reaction) {
