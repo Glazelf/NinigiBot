@@ -18,9 +18,9 @@ exports.run = async (client, interaction, args = []) => {
         };
         let botReaction = null;
         let messageReactionResolvable = new Discord.MessageReaction(client, reactionData, message);
-        let reactions = await message.reactions.resolve(messageReactionResolvable);
+        console.log(messageReactionResolvable)
 
-        await reactions.forEach(reaction => {
+        await messageReactionResolvable.forEach(reaction => {
             console.log(reaction)
             if (reaction.id == client.user.id) botReaction = reaction;
         });
