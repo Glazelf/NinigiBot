@@ -11,6 +11,7 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
+        let botReacted = false;
         let reactionData = {
             me: true,
             emoji: {
@@ -18,9 +19,12 @@ exports.run = async (client, interaction, args = []) => {
             }
         };
         let messageReactions = new Discord.MessageReaction(client, reactionData, message);
-        let reactionsBot = await messageReactions.users.fetch(client.user.id);
+        let starReactions = await messageReactions.users.fetch();
+        starReactions.forEach(reaction => {
+            if (reaction.id == client.user.id) botReacted = true;
+        });
 
-        if (reactionsBot.size > 0) {
+        if (botReacted) {
             await messageReactions.users.remove(client.user);
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
