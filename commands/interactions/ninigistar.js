@@ -21,9 +21,9 @@ exports.run = async (client, interaction, args = []) => {
         console.log(messageReactionResolvable)
         console.log("------------------------------------------------")
         let reaction = await message.reactions.resolve(messageReactionResolvable);
-        console.log(reaction)
+        console.log(reaction.count)
 
-        if (reaction) {
+        if (reaction.count) {
             await reaction.remove();
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);
         } else {
