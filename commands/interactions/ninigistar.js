@@ -21,7 +21,7 @@ exports.run = async (client, interaction, args = []) => {
         console.log(messageReactionResolvable)
         console.log("------------------------------------------------")
         let reaction = await message.reactions.resolve(messageReactionResolvable);
-        console.log(reaction.count)
+        console.log(reaction.reactions)
 
         if (reaction.count) {
             await reaction.remove();
