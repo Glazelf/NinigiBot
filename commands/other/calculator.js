@@ -5,6 +5,8 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
+        let maxMessageLength = 2000;
+
         let noInputString = `You need to provide something to calculate`;
         if (!args[0]) return sendMessage(client, message, noInputString);
 
@@ -47,9 +49,10 @@ exports.run = async (client, message, args = []) => {
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
 
-        let returnString = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
-
-        return sendMessage(client, message, `\`\`\`js\n${rounded} (${calcInput})\n\`\`\``);
+        let output = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
+        let returnString = output;
+        if (output.length > maxMessageLength) returnString = Discord.Formatters.codeBlock("js", rounded.toString());
+        return sendMessage(client, message, returnString);
 
     } catch (e) {
         // log error
