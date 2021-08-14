@@ -102,7 +102,7 @@ exports.run = async (client, message) => {
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Users:", totalMembers.toString(), true)
+            .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", Math.round(totalMembers / totalGuilds).toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
