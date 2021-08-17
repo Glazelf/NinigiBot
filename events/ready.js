@@ -31,7 +31,6 @@ module.exports = async (client) => {
             });
         };
 
-        await client.users.fetch();
         await client.guilds.fetch();
         await client.guilds.cache.forEach(guild => {
             try {
