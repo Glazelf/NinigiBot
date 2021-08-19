@@ -18,7 +18,6 @@ exports.run = async (client, message, args = []) => {
             try {
                 let userID = args[0];
                 user = await client.users.fetch(userID);
-                if (!user) user = await client.users.cache.find(user => user.tag.toLowerCase() == args[0].toString().toLowerCase());
             } catch (e) {
                 // console.log();
             };
@@ -26,9 +25,9 @@ exports.run = async (client, message, args = []) => {
 
         if (!user) {
             if (message.type == 'DEFAULT') {
-                user = message.author;
+                user = await client.users.fetch(message.author.id);
             } else {
-                user = message.member.user;
+                user = await client.users.fetch(message.member.id);
             };
         };
 
