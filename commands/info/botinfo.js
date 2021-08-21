@@ -22,6 +22,7 @@ exports.run = async (client, message) => {
 
         var totalGuilds = 0;
         var totalMembers = 0;
+        let botVerifRequirement = 76;
 
         if (client.shard) {
             const promises = [
@@ -38,6 +39,8 @@ exports.run = async (client, message) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
+
+        if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
 
         let user;
         if (message.type == 'DEFAULT') {
