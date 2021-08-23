@@ -19,7 +19,6 @@ exports.run = async (client, message, args = []) => {
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Currency leaderboard:`, avatar)
             .setFooter(author.tag)
             .setTimestamp();
 
@@ -32,7 +31,9 @@ exports.run = async (client, message, args = []) => {
                     .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
                     .join('\n');
 
-                leaderboardEmbed.setDescription(leaderboardStringGlobal);
+                leaderboardEmbed
+                    .setDescription(leaderboardStringGlobal)
+                    .setAuthor(`Global leaderboard:`, avatar);
 
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
                 let leaderboardStringID = bank.currency.sort((a, b) => b.balance - a.balance)
@@ -41,7 +42,9 @@ exports.run = async (client, message, args = []) => {
                     .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency} (${(client.users.cache.get(user.user_id).id)})`)
                     .join('\n');
 
-                leaderboardEmbed.setDescription(leaderboardStringID);
+                leaderboardEmbed
+                    .setDescription(leaderboardStringID)
+                    .setAuthor(`Leaderboard:`, avatar);
 
             } else {
                 serverLB();
