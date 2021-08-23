@@ -12,7 +12,7 @@ exports.run = async (client, message, args) => {
         if (oldStarLimitDB) {
             oldStarLimit = oldStarLimitDB.star_limit;
         } else {
-            oldStarLimit = globalVars.starLimit;
+            oldStarLimit = globalVars.starboardLimit;
         };
 
         if (args[0] && (adminBool || message.member.permissions.has("MANAGE_CHANNELS"))) {

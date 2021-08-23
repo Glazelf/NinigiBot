@@ -14,7 +14,7 @@ module.exports = async (client, messageReaction) => {
         if (starLimit) {
             starLimit = starLimit.star_limit;
         } else {
-            starLimit = globalVars.starLimit;
+            starLimit = globalVars.starboardLimit;
         };
 
         if (!starboardChannel) return;
