@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
         let user;
-        if (message.mentions) {
+        if (message.mentions.members || message.mentions.repliedUser) {
             user = message.mentions.users.first();
         };
 

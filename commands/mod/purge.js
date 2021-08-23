@@ -19,7 +19,7 @@ exports.run = async (client, message, args) => {
         let amount = parseInt(numberOfMessages);
 
         let user;
-        if (message.mentions) {
+        if (message.mentions.members || message.mentions.repliedUser) {
             user = message.mentions.users.first();
         };
 

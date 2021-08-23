@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
 
         let user;
         let member;
-        if (message.mentions) {
+        if (message.mentions.members || message.mentions.repliedUser) {
             user = message.mentions.users.first();
             member = message.mentions.members.first();
         };
