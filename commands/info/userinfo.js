@@ -122,6 +122,10 @@ exports.run = async (client, message, args = []) => {
         let banner = null;
         if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true });
 
+        // Accent color
+        let embedColor = globalVars.embedColor;
+        if (user.accent_color) embedColor = user.accent_color;
+
         // Profile badges
         let badgesArray = [];
         if (user.bot) badgesArray.push("🤖");
@@ -145,7 +149,7 @@ exports.run = async (client, message, args = []) => {
         let daysCreated = await checkDays(user.createdAt);
 
         const profileEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
+            .setColor(embedColor)
             .setAuthor(`${user.username} (${user.id})`, avatar)
             .setThumbnail(avatar)
             .addField("Account:", `${user} ${badgesString}`, true)
