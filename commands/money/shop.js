@@ -6,6 +6,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const { Equipments, Foods, KeyItems, Room, CurrencyShop, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -14,27 +15,35 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
-        const [, , input] = args[0].match(/(\w+)\s*([\s\S]*)/);
+        let failString = `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`;
+        if (!args[0]) return sendMessage(client, message, failString);
+
+        const input = args[0].toLowerCase();
         const condition = { where: { cost: { [ne]: 0 } } };
         // Lottery Tickets are messed up and temporarily removed, so items is empty
         /*if (input == 'items') {
             const items = await CurrencyShop.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         }*/ if (input == 'equipment') {
             const items = await Equipments.findAll(condition);
-            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } if (input == 'food') {
             const items = await Foods.findAll(condition);
-            return sendMessage(client, message, items.map(i => i.toString()).join('\n'), { code: true });
-        } // Coming soon, maybe
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
+        }; // Coming soon, maybe
         /* if(input == 'key'){
             const items = await KeyItems.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } *//* if(input == 'rooms'){
             const items = await Room.findAll(condition);
-            return sendMessage(client, message,items.map(i => i.toString()).join('\n'), { code: true });
+            let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            return sendMessage(client, message, returnString);
         } */
-        return sendMessage(client, message, `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`);
+        return sendMessage(client, message, failString);
 
     } catch (e) {
         // log error

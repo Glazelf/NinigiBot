@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,13 +9,16 @@ module.exports.run = async (client, message, args = []) => {
 
         let user;
         let member;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
             member = message.mentions.members.first();
+        } else {
+            if (!args[0]) return sendMessage(client, message, `You need to provide a user to ban.`);
+            user = client.users.cache.get(args[0]);
+            member = message.guild.members.cache.get(args[0]);
         };
 
         let banReturn = null;
-        let memberID = args[0];
 
         let reason = "Not specified.";
         if (args[1]) {
@@ -23,28 +26,41 @@ module.exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
-        if (member && user) {
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
+        if (member) {
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && message.guild.ownerID !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban ${member.user.tag}.`);
+            if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
             try {
                 await user.send({ content: `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\`` });
-                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Succeeded)`;
+                banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`. (DM Succeeded)`;
             } catch (e) {
                 // console.log(e);
-                banReturn = `Successfully banned ${member.user.tag} for the following reason: \`${reason}\`. (DM Failed)`;
+                banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`. (DM Failed)`;
             };
+            await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
 
-            await member.ban({ days: 0, reason: `${reason} -${message.member.user.tag}` });
         } else {
-            banReturn = `Successfully banned ${memberID} for the following reason: \`${reason}\`.`;
+            let memberID = args[0];
+
+            banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${message.member.user.tag}` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag}` });
             } catch (e) {
                 // console.log(e);
-                return sendMessage(client, message, `Could not find a user by that ID.`);
-            }
+                if (e.toString().includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    return sendMessage(client, message, `Could not find a user by that ID.`);
+                };
+            };
         };
 
         return sendMessage(client, message, banReturn);

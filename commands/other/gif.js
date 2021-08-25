@@ -21,8 +21,14 @@ Hug
 Dango, Jojo, Stitch, Kuzco`;
 
         let user;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
+        };
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
         };
         let missingGifString = `You didn't provide a valid gif argument.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
         if (!args[0]) return sendMessage(client, message, missingGifString);
@@ -38,7 +44,7 @@ Dango, Jojo, Stitch, Kuzco`;
             if (gifArgument == "hug") {
                 if (user) {
                     gifString = `${message.member} gave ${user} a tight hug!`;
-                    if (user == message.member.user) {
+                    if (user == author) {
                         gifString = `${user} is hugging themselves... This is kind of sad...`;
                     };
                 } else {
@@ -46,14 +52,14 @@ Dango, Jojo, Stitch, Kuzco`;
                 };
             };
 
-            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = author.displayAvatarURL({ format: "png", dynamic: true });
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
                 .setDescription(gifString)
                 .setImage(gif)
-                .setFooter(message.member.user.tag)
+                .setFooter(author.tag)
                 .setTimestamp();
 
             return sendMessage(client, message, null, gifEmbed);
@@ -76,7 +82,7 @@ Dango, Jojo, Stitch, Kuzco`;
 
         // const randomGif = await getRandomGif();
 
-        // let avatar = message.member.user.displayAvatarURL({
+        // let avatar = author.displayAvatarURL({
         //     format: "png",
         //     dynamic: true
         // });
@@ -86,7 +92,7 @@ Dango, Jojo, Stitch, Kuzco`;
         //     .setAuthor(`Gif (${args})`, avatar)
         //     .setDescription(`Here's your gif, ${message.member}:`)
         //     .setImage(randomGif)
-        //     .setFooter(message.member.user.tag)
+        //     .setFooter(author.tag)
         //     .setTimestamp();
 
         // return sendMessage(client, message, gifEmbed);

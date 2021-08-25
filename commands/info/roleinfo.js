@@ -1,5 +1,3 @@
-const sendMessage = require('../../util/sendMessage');
-
 exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
@@ -13,8 +11,15 @@ exports.run = async (client, message, args = []) => {
         // Split off command
         let input = args.join(" ");
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         // Author avatar
-        let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
@@ -32,7 +37,7 @@ exports.run = async (client, message, args = []) => {
                 .setColor(DefaultEmbedColor)
                 .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
                 .addField("Members:", noRoleMembers.toString(), true)
-                .setFooter(message.member.user.tag)
+                .setFooter(user.tag)
                 .setTimestamp();
 
             return sendMessage(client, message, null, noRoleEmbed);
@@ -67,7 +72,7 @@ exports.run = async (client, message, args = []) => {
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, roleEmbed);

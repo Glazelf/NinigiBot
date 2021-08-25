@@ -1,6 +1,6 @@
 const sendMessage = require('../../util/sendMessage');
 
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');

@@ -31,16 +31,16 @@ module.exports = async (client, message) => {
         // Ignore commands in DMs
         if (message.channel.type == "dm" || !message.guild) {
             if (!message.member) return;
-            if (message.member.user.bot) return;
+            if (message.author.bot) return;
 
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
-            let avatar = message.member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.member.user.tag, false)
+                .addField(`Author:`, message.author.tag, false)
                 .addField(`Author ID:`, message.member.id, false);
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
@@ -62,7 +62,7 @@ module.exports = async (client, message) => {
 
         // Ignore all bots and welcome messages
         if (!message.member) return;
-        if (message.member.user.bot == true) return;
+        if (message.author.bot == true) return;
 
         // Automod
         let modBool = false;
@@ -101,11 +101,20 @@ module.exports = async (client, message) => {
 
         // Grab the command data from the client.commands Enmap
         let cmd;
-        if (client.commands.has(commandName)) {
-            cmd = client.commands.get(commandName);
-        } else if (client.aliases.has(commandName)) {
-            cmd = client.commands.get(client.aliases.get(commandName));
-        } else return;
+        // Slower? command checker, since some commands user capitalization
+        await client.commands.forEach(command => {
+            if (command.config.name.toLowerCase() == commandName) cmd = client.commands.get(commandName);
+        });
+        if (!cmd) {
+            if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
+        };
+
+        // Probably faster command checker, but fails when command uses capitalization (i.e. context menu)
+        // if (client.commands.has(commandName)) {
+        //     cmd = client.commands.get(commandName);
+        // } else if (client.aliases.has(commandName)) {
+        //     cmd = client.commands.get(client.aliases.get(commandName));
+        // } else return;
 
         // Ignore messages sent in a disabled channel
         if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
@@ -114,9 +123,8 @@ module.exports = async (client, message) => {
 
         // Run the command
         if (cmd) {
-            message.channel.startTyping();
+            await message.channel.sendTyping();
             await cmd.run(client, message, args);
-            message.channel.stopTyping(true);
         } else return;
 
         return;

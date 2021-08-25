@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -29,6 +29,13 @@ module.exports.run = async (client, message, args = []) => {
         let userGames;
         let userFriends;
         let userGroups;
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
 
         switch (subCommand) {
             case "user":
@@ -114,14 +121,18 @@ ${checkDays(userCreated)}`;
                     if (userLastOnline) userEmbed.addField("Last Online:", userLastOnline, true);
                     if (userCreated) userEmbed.addField("Created At:", userCreated, true);
                     userEmbed
-                        .setFooter(message.member.user.tag)
+                        .setFooter(user.tag)
                         .setTimestamp();
 
                     return sendMessage(client, message, null, userEmbed);
 
                 } catch (e) {
                     // console.log(e);
-                    return sendMessage(client, message, userFailString);
+                    if (e.toString().includes("Missing Permissions")) {
+                        return logger(e, client, message);
+                    } else {
+                        return sendMessage(client, message, userFailString);
+                    };
                 };
             case "game":
                 // Get game info from ID

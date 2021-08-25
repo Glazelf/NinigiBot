@@ -21,7 +21,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetMessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = targetMessage.author.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
         if (targetMessage.reference) isReply = true;
 
@@ -44,17 +44,21 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetMessage.member.user.tag)
+            .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count == 0 && messageDB) {
             // Delete
-            client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
+            await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
             await messageDB.destroy();
             return;
         } else if (messageDB) {
             // Update
-            await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
+            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            if (!starMessage) return;
+
+            await starMessage.edit({ embeds: [starEmbed] });
             return;
         } else {
             // Ignore

@@ -1,6 +1,6 @@
 const { forEach } = require('lodash');
 
-module.exports.run = async (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -22,6 +22,7 @@ module.exports.run = async (client, message) => {
 
         var totalGuilds = 0;
         var totalMembers = 0;
+        let botVerifRequirement = 76;
 
         if (client.shard) {
             const promises = [
@@ -37,6 +38,15 @@ module.exports.run = async (client, message) => {
         } else {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
+        };
+        let averageUsers = Math.round(totalMembers / totalGuilds);
+        if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
         };
 
         // Calculate the uptime in days, hours, minutes, seconds
@@ -95,30 +105,20 @@ module.exports.run = async (client, message) => {
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Users:", totalMembers.toString(), true)
+            .addField("Total Users:", totalMembers.toString(), true)
+            .addField("Average Users:", averageUsers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
-            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}
-            ${checkDays(client.user.createdAt)}`, false)
-            .setFooter(message.member.user.tag)
+            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
+            .setFooter(user.tag)
             .setTimestamp();
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()
-            .addComponents(
-                new Discord.MessageButton()
-                    .setLabel('Invite')
-                    .setStyle('LINK')
-                    .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8`),
-            )
-            .addComponents(
-                new Discord.MessageButton()
-                    .setLabel('Github')
-                    .setStyle('LINK')
-                    .setURL(`https://github.com/Glazelf/NinigiBot`),
-            );
+            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
+            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
 
-        return sendMessage(client, message, null, botEmbed, null, true, null, botButtons, true);
+        return sendMessage(client, message, null, botEmbed, null, true, botButtons, true);
 
         function checkDays(date) {
             let now = new Date();

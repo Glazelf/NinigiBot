@@ -41,6 +41,7 @@ const ModEnabledServers = require('./models/global/ModEnabledServers')(sequelize
 const LogChannels = require('./models/global/LogChannels')(sequelize, Sequelize.DataTypes);
 const StarboardChannels = require('./models/global/StarboardChannels')(sequelize, Sequelize.DataTypes);
 const StarboardMessages = require('./models/global/StarboardMessages')(sequelize, Sequelize.DataTypes);
+const StarboardLimits = require('./models/server/StarboardLimits')(sequelize, Sequelize.DataTypes);
 const VCTextChannels = require('./models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
@@ -93,14 +94,14 @@ Shinx.prototype.changeNick = function (newNick) {
 
 Shinx.prototype.play = function (amount) {
     this.varyFriendship(0.05 * amount);
-    this.varySleep(-0.15);
+    this.varySleep(-0.01);
     this.varyHunger(-0.15);
     this.save();
 };
 
 Shinx.prototype.feed = function (amount) {
     this.varyHunger(amount);
-    this.varySleep(-0.1);
+    this.varySleep(-0.01);
     this.save();
 };
 
@@ -132,8 +133,8 @@ Shinx.prototype.see = function () {
     const hoursPassed = currentHour - this.lastmeet;
     if (this.sleep === 0) this.sleeping = true;
     if (hoursPassed === 0) return;
-    if (this.sleeping) this.varySleep(hoursPassed * 0.5);
-    else this.varySleep(-hoursPassed * 0.02);
+    if (this.sleeping) this.varySleep(hoursPassed * 2);
+    else this.varySleep(-hoursPassed * 0.001);
     if (this.sleep === 1) this.sleeping = false;
     if (this.sleep === 0) this.sleeping = true;
     this.varyHunger(-hoursPassed * 0.01);
@@ -309,4 +310,4 @@ Users.prototype.getRoom = function () {
     });
 };
 
-module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, VCTextChannels, Prefixes, ModEnabledServers, Shinx };
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, VCTextChannels, Prefixes, ModEnabledServers, Shinx };

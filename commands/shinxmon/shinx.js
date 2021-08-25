@@ -1,4 +1,4 @@
-// const Canvas = require('canvas');
+const Canvas = require('canvas');
 
 const tapping = [
     ['is sleeping. Shh!', 1, 'a'],
@@ -47,12 +47,11 @@ const visitors = [
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
 
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        return sendMessage(client, message, `Certain image editing commands are currently broken. Check the following issue for more information: https://github.com/Glazelf/NinigiBot/issues/103.`);
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
         const { Prefixes } = require('../../database/dbObjects');
@@ -67,21 +66,23 @@ module.exports.run = async (client, message, args = []) => {
         let shinx;
         let master;
 
-        if (message.mentions) {
-            if (message.mentions.members.first()) {
-                if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
-                const expectedId = /<@!(\d+)/.exec(args[0]);
-                const targetId = message.mentions.members.first().id;
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+            const expectedId = /<@!(\d+)/.exec(args[0]);
+            const targetId = message.mentions.members.first().id;
 
-                if (expectedId && expectedId[1] == targetId) {
-                    shinx = await bank.currency.getShinx(targetId);
-                    master = message.mentions.members.first().user;
-                    args.splice(0, 1);
-                } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
+            if (expectedId && expectedId[1] == targetId) {
+                shinx = await bank.currency.getShinx(targetId);
+                master = message.mentions.members.first().user;
+                args.splice(0, 1);
+            } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
+        } else {
+            if (message.type == 'DEFAULT') {
+                master = message.author;
             } else {
                 master = message.member.user;
-                shinx = await bank.currency.getShinx(master.id);
             };
+            shinx = await bank.currency.getShinx(master.id);
         };
 
         shinx.see();

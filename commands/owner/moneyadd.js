@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -10,7 +10,7 @@ module.exports.run = async (client, message, args = []) => {
 
         const transferAmount = args[1]
         let transferTarget;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             transferTarget = message.mentions.users.first();
         };
 

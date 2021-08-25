@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -6,18 +6,22 @@ module.exports.run = async (client, message, args = []) => {
         const Discord = require('discord.js');
 
         let user;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
         };
 
         if (!user && args[0]) {
             let userID = args[0];
-            user = client.users.cache.get(userID);
+            user = await client.users.fetch(userID);
             if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
 
         if (!user) {
-            user = message.member.user;
+            if (message.type == 'DEFAULT') {
+                user = message.author;
+            } else {
+                user = message.member.user;
+            };
         };
 
         let avatar = null;
@@ -26,9 +30,9 @@ module.exports.run = async (client, message, args = []) => {
 
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${user.username}'s avatar`)
+            .setAuthor(`${user.username}'s avatar:`)
             .setImage(`${avatar}?size=512`)
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, avatarEmbed);
@@ -42,16 +46,7 @@ module.exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "avatar",
-    aliases: ["avi", "pfp"],
-    description: "Sends a user's avatar.",
-    options: [{
-        name: "user-mention",
-        type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
-    }]
+    name: "Avatar",
+    type: "USER",
+    aliases: ["avi", "pfp"]
 };

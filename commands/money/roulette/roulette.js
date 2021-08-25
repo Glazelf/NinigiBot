@@ -18,6 +18,13 @@ exports.run = async (client, message) => {
 
         let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         roulette.shift()
         if (roulette.on) {
             process = setInterval(() => {
@@ -59,7 +66,7 @@ exports.run = async (client, message) => {
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
 After some time, the roulette spins and we get the winer(s), who gets 36x the bet money they invested on the winning slot.`, null, null, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
-                .setFooter(message.member.user.tag)
+                .setFooter(user.tag)
                 .setTimestamp();
             sendMessage(client, message, null, welcome, null, false);
         } else {

@@ -1,9 +1,16 @@
-module.exports.run = async (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
 
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -16,7 +23,7 @@ module.exports.run = async (client, message) => {
 [Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')`, false)
             .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')`, true)
             .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, helpEmbed);

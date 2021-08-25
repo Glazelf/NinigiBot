@@ -9,52 +9,57 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        await client.users.fetch(member.id);
+        let botMember = await member.guild.members.fetch(client.user.id);
+        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let user = await client.users.fetch(member.id);
+            let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+            let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
-        let user = client.users.cache.get(member.id);
-        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
-        let icon = member.guild.iconURL({ format: "png", dynamic: true });
+            let embedAuthor = `Member Left 💔`;
+            let reasonText = "Not specified.";
+            let kicked = false;
 
-        let embedAuthor = `Member Left 💔`;
-        let reasonText = "Not specified.";
-        let kicked = false;
+            const fetchedLogs = await member.guild.fetchAuditLogs({
+                limit: 1,
+                type: 'MEMBER_KICK',
+            });
+            const kickLog = fetchedLogs.entries.first();
 
-        const fetchedLogs = await member.guild.fetchAuditLogs({
-            limit: 1,
-            type: 'MEMBER_KICK',
-        });
-        const kickLog = fetchedLogs.entries.first();
-
-        if (kickLog) {
-            if (kickLog.createdAt > member.joinedAt) {
-                var { executor, target, reason } = kickLog;
-                if (target.id !== member.id) return;
-                kicked = true;
-                if (reason) reasonText = reason;
-                icon = executor.displayAvatarURL({ format: "png", dynamic: true });
-                embedAuthor = `Member Kicked 💔`;
+            if (kickLog) {
+                if (kickLog.createdAt > member.joinedAt) {
+                    var { executor, target, reason } = kickLog;
+                    if (target.id !== user.id) return;
+                    kicked = true;
+                    if (reason) reasonText = reason;
+                    icon = executor.displayAvatarURL({ format: "png", dynamic: true });
+                    embedAuthor = `Member Kicked 💔`;
+                };
             };
-        };
 
-        const leaveEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setAuthor(embedAuthor, icon)
-            .setThumbnail(avatar)
-            .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-            .addField(`User: `, `${user} (${user.id})`, false);
-        if (kicked == true) {
-            leaveEmbed.addField(`Reason:`, reasonText, false)
-            try {
-                leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${executor.id})`, false);
-            } catch (e) {
-                // console.log(e);
+            const leaveEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setAuthor(embedAuthor, icon)
+                .setThumbnail(avatar)
+                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .addField(`User: `, `${user} (${user.id})`, false);
+            if (kicked == true) {
+                leaveEmbed.addField(`Reason:`, reasonText, false)
+                try {
+                    leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${executor.id})`, false);
+                } catch (e) {
+                    // console.log(e);
+                };
             };
-        };
-        leaveEmbed
-            .setFooter(member.user.tag)
-            .setTimestamp();
+            leaveEmbed
+                .setFooter(user.tag)
+                .setTimestamp();
 
-        return log.send({ embeds: [leaveEmbed] });
+            return log.send({ embeds: [leaveEmbed] });
+        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+        } else {
+            return;
+        };
 
     } catch (e) {
         // log error

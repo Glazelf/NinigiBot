@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -27,9 +27,17 @@ module.exports.run = async (client, message, args = []) => {
         let roleColor = args[0];
         if (roleColor) {
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
+            while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
@@ -42,7 +50,7 @@ module.exports.run = async (client, message, args = []) => {
             if (!args[0]) roleColor = personalRole.color;
 
             personalRole.edit({
-                name: message.member.user.tag,
+                name: user.tag,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
@@ -51,9 +59,9 @@ module.exports.run = async (client, message, args = []) => {
             });
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == message.member.user.tag)) message.member.roles.add(personalRole.id);
+            if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, `Updated your role successfully.`);
+            return sendMessage(client, message, `Updated your role successfully. Color set to \`#${roleColor}\`.`);
 
         } else {
             // Create role if it doesn't exit yet
@@ -70,17 +78,21 @@ module.exports.run = async (client, message, args = []) => {
             // Create role
             try {
                 await message.guild.roles.create({
-                    name: message.member.user.tag,
+                    name: user.tag,
                     color: roleColor,
                     position: personalRolePosition,
-                    reason: `Personal role for ${message.member.user.tag}.`,
+                    reason: `Personal role for ${user.tag}.`,
                 })
             } catch (e) {
                 // console.log(error);
-                return sendMessage(client, message, `An error occurred creating a role.`);
+                if (e.toString().includes("Missing Permissions")) {
+                    return logger(e, client, message);
+                } else {
+                    return sendMessage(client, message, `An error occurred creating a role.`);
+                };
             };
 
-            let createdRole = await message.guild.roles.cache.find(role => role.name == message.member.user.tag);
+            let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
 
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });

@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -20,8 +20,13 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         let member;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             member = message.mentions.members.first();
+        };
+        if (!member) {
+            let memberID = args[0];
+            member = await message.guild.members.fetch(memberID);
+            if (!member) member = message.guild.members.cache.find(member => member.user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
@@ -30,10 +35,10 @@ module.exports.run = async (client, message, args = []) => {
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
             await member.roles.remove(role);
-            return sendMessage(client, message, `${member.user.tag} has been unmuted.`);
+            return sendMessage(client, message, `Unmuted **${member.user.tag}** (${member.id}).`);
         } else {
             await member.roles.add(role);
-            sendMessage(client, message, `${member.user.tag} has been muted for ${muteTime} minute(s).`);
+            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
             // sets a timeout to unmute the user.
             setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
         };
@@ -47,16 +52,6 @@ module.exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "mute",
-    aliases: ["unmute"],
-    description: "Mute a specific user.",
-    options: [{
-        name: "user-mention",
-        type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
-    }]
+    name: "Mute",
+    type: "USER"
 };

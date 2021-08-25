@@ -3,13 +3,19 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
+        const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbObjects');
 
         if (!messageReaction.count) return;
 
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+        let starLimit = await StarboardLimits.findOne({ where: { server_id: messageReaction.message.guild.id } });
+        if (starLimit) {
+            starLimit = starLimit.star_limit;
+        } else {
+            starLimit = globalVars.starboardLimit;
+        };
 
         if (!starboardChannel) return;
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
@@ -21,7 +27,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetMessage.member.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = targetMessage.author.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
         if (targetMessage.reference) isReply = true;
 
@@ -44,15 +50,20 @@ module.exports = async (client, messageReaction) => {
         starEmbed
             .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
-            .setFooter(targetMessage.member.user.tag)
+            .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
 
-        if (messageReaction.count >= globalVars.starboardLimit && !messageDB) {
+        if (messageReaction.count >= starLimit && !messageDB) {
             // Create
-            return starboard.send({ embeds: [starEmbed] }).then(m => StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
+            await starboard.send({ embeds: [starEmbed] }).then(async (m) => await StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
+            return;
         } else if (messageDB) {
             // Update
-            await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.edit(starEmbed));
+            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            if (!starMessage) return;
+
+            await starMessage.edit({ embeds: [starEmbed] });
             return;
         } else {
             // Ignore

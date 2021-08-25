@@ -3,7 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, client.config.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         // send channel a message that you're resetting bot [optional]
         await sendMessage(client, message, `Restarting...`);

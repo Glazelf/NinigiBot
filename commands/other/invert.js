@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -7,7 +7,7 @@ module.exports.run = async (client, message, args = []) => {
 
         let user;
         let member;
-        if (message.mentions) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
             member = message.mentions.members.first();
         };
@@ -21,7 +21,11 @@ module.exports.run = async (client, message, args = []) => {
         };
 
         if (!user || !member) {
-            user = message.member.user;
+            if (message.type == 'DEFAULT') {
+                user = message.author;
+            } else {
+                user = message.member.user;
+            };
         };
 
         let totalMessage = null;

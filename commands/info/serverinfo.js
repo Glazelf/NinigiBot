@@ -1,11 +1,13 @@
 const { forEach } = require('lodash');
 
-module.exports.run = async (client, message) => {
+exports.run = async (client, message) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        let languages = require("../../objects/discord/languages.json");
+        let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
 
         let guild = message.guild;
@@ -13,10 +15,16 @@ module.exports.run = async (client, message) => {
         let memberFetch = await guild.members.fetch();
         let humanMembers = memberFetch.filter(member => !member.user.bot).size;
         let botMembers = memberFetch.filter(member => member.user.bot).size;
-        let onlineMembers = memberFetch.filter(member => member.presence.status !== "offline").size;
         let guildsByShard = client.guilds.cache;
 
-        let nitroEmote = "<:nitroboost:753268592081895605>";
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
+        let nitroEmote = "<:nitro_boost:753268592081895605>";
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         var shardNumber = 1;
@@ -32,79 +40,60 @@ module.exports.run = async (client, message) => {
             });
         };
 
-        let verifLevels = {
-            "NONE": "None",
-            "LOW": "Low",
-            "MEDIUM": "Medium",
-            "HIGH": "(╯°□°）╯︵  ┻━┻ (High)",
-            "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻ (Very High)"
+        // Bans
+        let banCount = 0;
+        try {
+            await guild.bans.fetch();
+            banCount = guild.bans.cache.size;
+        } catch (e) {
+            banCount = 0;
         };
 
-        let languages = {
-            "en-US": ":flag_gb: English",
-            "da": ":flag_dk: Dansk (Danish)",
-            "de": ":flag_de: Deutsch (German)",
-            "es-ES": ":flag_es: Español (Spanish)",
-            "fr": ":flag_fr: Français (French)",
-            "hr": ":flag_cr: Hrvatski (Croatian)",
-            "it": ":flag_it: Italiano (Italian)",
-            "lt": ":flag_lt: Lietuviškai (Lithuanian)",
-            "hu": ":flag_hu: Magyar (Hungarian)",
-            "nl": ":flag_nl: Nederlands (Dutch)",
-            "no": ":flag_no: Norsk (Norwegian)",
-            "pl": ":flag_pl: Polski (Polish)",
-            "pt-BR": ":flag_br: Português do Brasil (Brazilian Portuguese)",
-            "ro": ":flag_ro: Română (Romanian)",
-            "fi": ":flag_fi: Suomi (Finnish)",
-            "sv-SE": ":flag_se: Svenska (Swedish)",
-            "vi": ":flag_vn: Tiếng Việt (Vietnamese)",
-            "tr": ":flag_tr: Türkçe (Turkish)",
-            "cs": ":flag_cz: Čeština (Czech)",
-            "el": ":flag_gr: Ελληνικά (Greek)",
-            "bg": ":flag_bg: български (Bulgarian)",
-            "ru": ":flag_ru: Русский (Russian)",
-            "uk": ":flag_ua: Українська (Ukranian)",
-            "hi": ":flag_in: हिंदी (Hindi)",
-            "th": ":flag_th: ไทย (Thai)",
-            "zh-CN": ":flag_cn: 中文 (Simplified Chinese)",
-            "ja": ":flag_jp: 日本語 (Japanese)",
-            "zh-TW": ":flag_cn: 繁體中文 (Traditional Chinese)",
-            "ko": ":flag_kr: 한국어 (Korean)"
-        };
-
-        // Check emote cap
+        // Check emote and sticker caps
         let emoteMax;
+        let stickerMax;
         switch (guild.premiumTier) {
             case "TIER_1":
                 emoteMax = 200;
+                stickerMax = 15;
                 break;
             case "TIER_2":
                 emoteMax = 300;
+                stickerMax = 30;
                 break;
             case "TIER_3":
                 emoteMax = 500;
+                stickerMax = 60;
                 break;
             default:
                 emoteMax = 100;
+                stickerMax = 0;
         };
-        if (guild.partnered) emoteMax = 500;
+        if (guild.partnered) {
+            emoteMax = 500;
+            stickerMax = 60;
+        };
 
+        // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
 
         let guildOwner = await guild.fetchOwner();
 
+        // Rules
         if (guild.rulesChannel) {
             var rules = guild.rulesChannel;
             if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
         };
 
+        // Text channels
         let channelCount = 0;
         guild.channels.cache.forEach(channel => {
-            if (channel.type != "category") channelCount += 1;
+            if (channel.type != "category" && channel.type != "thread") channelCount += 1;
         });
 
+        // Boosters
         let boostGoal;
         if (guild.premiumSubscriptionCount < 2) {
             boostGoal = "/2";
@@ -125,26 +114,26 @@ module.exports.run = async (client, message) => {
             .addField("Owner:", guildOwner.toString(), true);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
-        if (guild.preferredLocale) {
+        if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
             if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("Total Members:", guild.memberCount.toString(), true)
-            .addField("Human Members:", humanMembers.toString(), true);
-        if (botMembers > 0) serverEmbed.addField("Bots:", `${botMembers} 🤖`, true);
-        serverEmbed
+            .addField("Human Members:", humanMembers.toString(), true)
+            .addField("Bots:", `${botMembers} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
+        if (guild.stickers.cache.size > 0) serverEmbed.addField("Stickers:", `${guild.stickers.cache.size}/${stickerMax}`, true);
+        if (banCount > 0) serverEmbed.addField("Bans:", banCount.toString(), true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}
-${checkDays(guild.createdAt)}`, false);
+            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
-            .setFooter(message.member.user.tag)
+            .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, serverEmbed);

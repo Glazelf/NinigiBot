@@ -8,29 +8,37 @@ module.exports = async (client) => {
         storedBalances.forEach(b => bank.currency.set(b.user_id, b));
         const getTime = require('../util/getTime');
 
-        // Set slash commands
+        // Set interactions
         if (!client.application?.owner) await client.application?.fetch();
 
-        // Daily rate limit of 200 slash commands should only go up if they are fully deleted and readded, not on every boot.
+        // Daily rate limit of 200 interactions should only go up if they are fully deleted and readded, not on every boot.
         // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
-        let SACCommands = ["sysbot"];
+        let commandsExclude = ["sysbot", "rule", "countdown", "clearinteractions", "dm", "eval", "item", "kill", "moneyadd", "reload", "restart"];
 
         let NinigiUserID = "592760951103684618";
 
         if (client.user.id == NinigiUserID) {
             await client.commands.forEach(command => {
                 try {
-                    if (SACCommands.includes(command.config.name)) {
-                        client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
-                    } else {
-                        client.application?.commands.create(command.config);
-                    };
-                    console.log(`Loaded slash command: ${command.config.name} ✔`);
+                    if (commandsExclude.includes(command.config.name)) return;
+                    client.application?.commands.create(command.config);
+                    console.log(`Loaded interaction: ${command.config.name} ✔`);
+                    // Server exclusive interactions:
+                    // client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
                 } catch (e) {
                     console.log(e);
                 };
             });
         };
+
+        await client.guilds.fetch();
+        await client.guilds.cache.forEach(guild => {
+            try {
+                guild.members.fetch();
+            } catch (e) {
+                console.log(e);
+            };
+        });
 
         // Set bot status
         let presence = initPresence();
@@ -40,11 +48,6 @@ module.exports = async (client) => {
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
-
-        console.log("Servers:");
-        await client.guilds.cache.forEach(async (guild) => {
-            console.log(`-${guild.name}`);
-        });
 
         let timestamp = await getTime();
 
@@ -71,7 +74,7 @@ module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "747878956434325626";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
-module.exports.lackPerms = `You do not have the required permissions to do this.`;
+module.exports.lackPerms = "You do not have the required permissions to do this.";
 module.exports.prefix = "?";
 module.exports.eventChannelID = "752626723345924157"; // General2
 //module.exports.eventChannelID = "665274079397281835"; // Old stan channel

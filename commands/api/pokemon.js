@@ -1,7 +1,8 @@
-module.exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const logger = require('../../util/logger');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -20,6 +21,13 @@ module.exports.run = async (client, message, args = []) => {
             subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
         };
 
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
         switch (subCommand) {
             case "ability":
                 P.getAbilityByName(subArgument)
@@ -34,13 +42,17 @@ module.exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
                             .addField("Description:", englishEntry.short_effect, false)
-                            .setFooter(message.member.user.tag)
+                            .setFooter(user.tag)
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified ability.`);
+                        if (e.toString().includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified ability.`);
+                        };
                     });
                 break;
 
@@ -59,14 +71,18 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Category:", category, true)
                             .addField("Description:", response.effect_entries[0].short_effect, false)
                             .setImage(itemImage)
-                            .setFooter(message.member.user.tag)
+                            .setFooter(user.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, itemEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified item.`);
+                        if (e.toString().includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified item.`);
+                        };
                     });
                 break;
 
@@ -96,14 +112,18 @@ module.exports.run = async (client, message, args = []) => {
                             .addField("Target:", target, true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(message.member.user.tag)
+                            .setFooter(user.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified move.`);
+                        if (e.toString().includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified move.`);
+                        };
                     });
                 break;
 
@@ -114,7 +134,7 @@ module.exports.run = async (client, message, args = []) => {
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') {
-                    pokemonName = args.slice(1).join(" ").toLowerCase();
+                    pokemonName = args.slice(1).join("-").replace(" ", "-").toLowerCase();
                 } else {
                     pokemonName = args.join(" ").toLowerCase();
                 };
@@ -136,24 +156,18 @@ module.exports.run = async (client, message, args = []) => {
 
                         // Buttons
                         let pkmButtons = new Discord.MessageActionRow()
-                            .addComponents(
-                                new Discord.MessageButton()
-                                    .setCustomID('pkmleft')
-                                    .setLabel('<--')
-                                    .setStyle('PRIMARY'),
-                            )
-                            .addComponents(
-                                new Discord.MessageButton()
-                                    .setCustomID('pkmright')
-                                    .setLabel('-->')
-                                    .setStyle('PRIMARY'),
-                            );
+                            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️' }))
+                            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️' }));
 
-                        return sendMessage(client, message, null, pkmEmbed, null, true, null, pkmButtons);
+                        return sendMessage(client, message, null, pkmEmbed, null, true, pkmButtons);
 
                     }).catch(function (e) {
                         // console.log(e);
-                        return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                        if (e.toString().includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                        };
                     });
                 break;
         };

@@ -15,6 +15,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Split off command
+        if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
         let channelID = args[0];
         let textMessage = args.join(" ");
         let remoteMessage = textMessage.slice(channelID.length + 1);
@@ -33,11 +34,11 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {
                 // If error: execute regular quoteless say
-                return sendMessage(client, message, textMessage);
+                return message.channel.send({ content: textMessage });
             };
         } else if (adminBool) {
             // Return plain message if member is admin
-            return sendMessage(client, message, textMessage);
+            return message.channel.send({ content: textMessage });
         } else {
             // Prevent using bot to go around ping permissions, should be caught in message handler
             // if (textMessage.includes("@")) {

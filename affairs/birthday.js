@@ -21,8 +21,8 @@ module.exports = async (client) => {
             let yesterdayCuties = birthdayRole.members;
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
             const cuties = [];
-            for (m in guild.members.cache.array()) {
-                const member = guild.members.cache.array()[m];
+            for (m in [...guild.members.cache.values()]) {
+                const member = [...guild.members.cache.values()][m];
                 const birthday = bank.currency.getBirthday(member.id);
                 if (birthday) {
                     let now = new Date();

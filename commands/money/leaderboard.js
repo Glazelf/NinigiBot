@@ -3,41 +3,69 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
+
         let memberFetch = await message.guild.members.fetch();
+
+        let author;
+        if (message.type == 'DEFAULT') {
+            author = message.author;
+        } else {
+            author = message.member.user;
+        };
+
+        let avatar = author.displayAvatarURL({ format: "png", dynamic: true });
+
+        const leaderboardEmbed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor)
+            .setFooter(author.tag)
+            .setTimestamp();
 
         if (args[0]) {
             if (args[0].toLowerCase() == "global") {
-                return sendMessage(client, message,
-                    bank.currency.sort((a, b) => b.balance - a.balance)
-                        .filter(user => client.users.cache.has(user.user_id))
-                        .first(10)
-                        .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
-                        .join('\n'), null, null, true, true
-                );
+                let leaderboardStringGlobal = bank.currency.sort((a, b) => b.balance - a.balance)
+                    .filter(user => client.users.cache.has(user.user_id))
+                    .filter(user => !client.users.cache.get(user.user_id).bot)
+                    .first(10)
+                    .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
+                    .join('\n');
+
+                leaderboardEmbed
+                    .setDescription(leaderboardStringGlobal)
+                    .setAuthor(`Global leaderboard:`, avatar);
+
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
-                return sendMessage(client, message,
-                    bank.currency.sort((a, b) => b.balance - a.balance)
-                        .filter(user => client.users.cache.has(user.user_id))
-                        .first(10)
-                        .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)} (${(client.users.cache.get(user.user_id).id)}): ${Math.floor(user.balance)}${globalVars.currency}`)
-                        .join('\n'), null, null, true, true
-                );
+                let leaderboardStringID = bank.currency.sort((a, b) => b.balance - a.balance)
+                    .filter(user => client.users.cache.has(user.user_id))
+                    .first(10)
+                    .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency} (${(client.users.cache.get(user.user_id).id)})`)
+                    .join('\n');
+
+                leaderboardEmbed
+                    .setDescription(leaderboardStringID)
+                    .setAuthor(`Leaderboard:`, avatar);
+
             } else {
-                serverLeaderboard();
+                serverLB();
             };
         } else {
-            serverLeaderboard();
+            serverLB();
         };
 
-        function serverLeaderboard() {
-            return sendMessage(client, message,
-                bank.currency.sort((a, b) => b.balance - a.balance)
-                    .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
-                    .first(10)
-                    .map((user, position) => `(${position + 1}) ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
-                    .join('\n'), null, null, true, true
-            );
+        return sendMessage(client, message, null, leaderboardEmbed);
+
+        function serverLB() {
+            let leaderboardString = bank.currency.sort((a, b) => b.balance - a.balance)
+                .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
+                .filter(user => !client.users.cache.get(user.user_id).bot)
+                .first(10)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
+                .join('\n');
+
+            if (leaderboardString.length < 1) return sendMessage(client, message, "Noone in this server has any currency yet.");
+
+            leaderboardEmbed.setDescription(leaderboardString);
         };
 
     } catch (e) {

@@ -17,7 +17,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         await targetUser.send({ content: textMessage });
-        return sendMessage(client, message, `Message succesfully sent to ${targetUser.tag}.`);
+        return sendMessage(client, message, `Message succesfully sent to **${targetUser.tag}** (${targetUser.id}).`);
 
     } catch (e) {
         // log error
