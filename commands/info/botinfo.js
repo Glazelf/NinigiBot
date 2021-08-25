@@ -39,7 +39,7 @@ exports.run = async (client, message) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
-
+        let averageUsers = Math.round(totalMembers / totalGuilds);
         if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
 
         let user;
@@ -106,7 +106,7 @@ exports.run = async (client, message) => {
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Average Users:", Math.round(totalMembers / totalGuilds).toString(), true)
+            .addField("Average Users:", averageUsers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
             .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
