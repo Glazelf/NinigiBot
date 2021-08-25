@@ -28,7 +28,7 @@ module.exports = async (client, member) => {
             if (kickLog) {
                 if (kickLog.createdAt > member.joinedAt) {
                     var { executor, target, reason } = kickLog;
-                    if (target.id !== member.id) return;
+                    if (target.id !== user.id) return;
                     kicked = true;
                     if (reason) reasonText = reason;
                     icon = executor.displayAvatarURL({ format: "png", dynamic: true });
