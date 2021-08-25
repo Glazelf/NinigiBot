@@ -6,7 +6,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
         let target;
-        if (message.mentions.members || message.mentions.repliedUser) target = message.mentions.users.first();
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) target = message.mentions.users.first();
         if (!target) {
             if (message.type == 'DEFAULT') {
                 target = message.author;

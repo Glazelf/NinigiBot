@@ -66,7 +66,7 @@ exports.run = async (client, message, args = []) => {
         let shinx;
         let master;
 
-        if (message.mentions.members || message.mentions.repliedUser) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             const expectedId = /<@!(\d+)/.exec(args[0]);
             const targetId = message.mentions.members.first().id;

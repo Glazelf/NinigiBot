@@ -12,7 +12,7 @@ exports.run = async (client, message, args = []) => {
 
         // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
-        if (message.mentions.members || message.mentions.repliedUser) {
+        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
             const expectedId = /<@!(\d+)/.exec(args[0]);
             const targetId = message.mentions.members.first().id;
             if (expectedId && expectedId[1] == targetId) {
