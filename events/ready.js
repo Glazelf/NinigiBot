@@ -49,11 +49,6 @@ module.exports = async (client) => {
         //     await guild.members.fetch();
         // });
 
-        console.log("Servers:");
-        await client.guilds.cache.forEach(async (guild) => {
-            console.log(`-${guild.name}`);
-        });
-
         let timestamp = await getTime();
 
         console.log(`Commands: ${client.commands.size}
