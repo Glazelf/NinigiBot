@@ -11,13 +11,15 @@ exports.run = async (client, message, args = []) => {
 
         let user;
         if (message.mentions.members || message.mentions.repliedUser) {
-            user = message.mentions.users.first();
+            user = await message.mentions.users.first();
+            // force fetch
+            if (user) user = await client.users.fetch(user.id, { force: true });
         };
 
         if (!user && args[0]) {
             try {
                 let userID = args[0];
-                user = await client.users.fetch(userID);
+                user = await client.users.fetch(userID, { force: true });
             } catch (e) {
                 // console.log();
             };
@@ -25,9 +27,9 @@ exports.run = async (client, message, args = []) => {
 
         if (!user) {
             if (message.type == 'DEFAULT') {
-                user = await client.users.fetch(message.author.id);
+                user = await client.users.fetch(message.author.id, { force: true });
             } else {
-                user = await client.users.fetch(message.member.id);
+                user = await client.users.fetch(message.member.id, { force: true });
             };
         };
 
@@ -124,7 +126,7 @@ exports.run = async (client, message, args = []) => {
 
         // Accent color
         let embedColor = globalVars.embedColor;
-        if (user.accent_color) embedColor = user.accent_color;
+        if (user.accentColor) embedColor = user.accentColor;
 
         // Profile badges
         let badgesArray = [];
