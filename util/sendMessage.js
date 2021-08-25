@@ -4,12 +4,12 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         const dbChannels = await DisabledChannels.findAll();
         const channels = dbChannels.map(channel => channel.channel_id);
 
+        if (!message) return;
+
         // Force hidden if disabled channel
-        if (message) {
-            if (channels.includes(message.channel.id)) {
-                if (message.type !== "DEFAULT" && files && ephemeral == true) return message.reply({ content: `You can't use that command in this channel because the reply contains files, which can not be hidden.`, ephemeral: true });
-                ephemeral = true;
-            };
+        if (channels.includes(message.channel.id)) {
+            if (message.type !== "DEFAULT" && files && ephemeral == true) return message.reply({ content: `You can't use that command in this channel because the reply contains files, which can not be hidden.`, ephemeral: true });
+            ephemeral = true;
         };
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
@@ -43,7 +43,7 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         messageObject['ephemeral'] = ephemeral;
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (!message || message.deleted == true) {
+        if (message.deleted == true) {
             return message.channel.send(messageObject);
         } else {
             return message.reply(messageObject);
