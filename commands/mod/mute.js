@@ -20,7 +20,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let member;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             member = message.mentions.members.first();
         };
         if (!member) {

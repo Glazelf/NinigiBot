@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
 
         const transferAmount = args[1]
         let transferTarget;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             transferTarget = message.mentions.users.first();
         };
 
