@@ -33,8 +33,13 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
-        let member = await message.guild.members.fetch(user.id);
-        if (!member) return sendMessage(client, message, `No member information could be found for this user.`);
+        let member;
+        try {
+            member = await message.guild.members.fetch(user.id);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `No member information could be found for this user.`);
+        };
 
         // Balance check
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
