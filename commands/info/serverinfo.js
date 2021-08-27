@@ -11,10 +11,11 @@ exports.run = async (client, message) => {
         let ShardUtil;
 
         let guild = message.guild;
+        await guild.members.fetch();
+        await guild.channels.fetch();
 
-        let memberFetch = await guild.members.fetch();
-        let humanMembers = memberFetch.filter(member => !member.user.bot).size;
-        let botMembers = memberFetch.filter(member => member.user.bot).size;
+        let humanMembers = guild.members.cache.filter(member => !member.user.bot).size;
+        let botMembers = guild.members.cache.filter(member => member.user.bot).size;
         let guildsByShard = client.guilds.cache;
 
         let user;
@@ -69,7 +70,7 @@ exports.run = async (client, message) => {
                 emoteMax = 100;
                 stickerMax = 0;
         };
-        if (guild.partnered) {
+        if (guild.partnered || guild.verified) {
             emoteMax = 500;
             stickerMax = 60;
         };
@@ -89,20 +90,25 @@ exports.run = async (client, message) => {
 
         // Text channels
         let channelCount = 0;
+        let threadCount = 0;
         guild.channels.cache.forEach(channel => {
-            if (channel.type != "category" && channel.type != "thread") channelCount += 1;
+            if (channel.isText() || channel.isVoice()) channelCount += 1;
+            if (channel.isThread()) threadCount += 1;
+            if (channel.archived == true) console.log(channel)
         });
 
         // Boosters
-        let boostGoal;
-        if (guild.premiumSubscriptionCount < 2) {
-            boostGoal = "/2";
+        let boosterString;
+        if (guild.partnered || guild.verified) {
+            boosterString = `${guild.premiumSubscriptionCount}${nitroEmote}`;
+        } else if (guild.premiumSubscriptionCount < 2) {
+            boosterString = `${guild.premiumSubscriptionCount}/2${nitroEmote}`;
         } else if (guild.premiumSubscriptionCount < 15) {
-            boostGoal = "/15";
+            boosterString = `${guild.premiumSubscriptionCount}/15${nitroEmote}`;
         } else if (guild.premiumSubscriptionCount < 30) {
-            boostGoal = "/30";
+            boosterString = `${guild.premiumSubscriptionCount}/30${nitroEmote}`;
         } else {
-            boostGoal = "";
+            boosterString = `${guild.premiumSubscriptionCount}${nitroEmote}`;
         };
 
         const serverEmbed = new Discord.MessageEmbed()
@@ -123,11 +129,12 @@ exports.run = async (client, message) => {
             .addField("Human Members:", humanMembers.toString(), true)
             .addField("Bots:", `${botMembers} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
+        if (threadCount > 0) serverEmbed.addField("Threads:", threadCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.stickers.cache.size > 0) serverEmbed.addField("Stickers:", `${guild.stickers.cache.size}/${stickerMax}`, true);
         if (banCount > 0) serverEmbed.addField("Bans:", banCount.toString(), true);
-        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", `${guild.premiumSubscriptionCount}${boostGoal}${nitroEmote}`, true);
+        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
