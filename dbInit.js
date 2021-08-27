@@ -30,6 +30,7 @@ const StarboardMessages = require('./database/models/global/StarboardMessages')(
 const StarboardLimits = require('./database/models/server/StarboardLimits')(sequelize, Sequelize.DataTypes);
 const VCTextChannels = require('./database/models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
+const Languages = require('./database/models/global/Languages')(sequelize, Sequelize.DataTypes);
 
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Equipments = require('./database/models/data/Equipments')(sequelize, Sequelize.DataTypes);
@@ -53,6 +54,7 @@ const syncDatabase = async () => {
         await StarboardMessages.sync({ alter: true });
         await StarboardLimits.sync({ alter: true });
         await Prefixes.sync({ alter: true });
+        await Languages.sync({ alter: true });
 
         await UserItems.sync({ alter: true });
         await UserFoods.sync({ alter: true });
