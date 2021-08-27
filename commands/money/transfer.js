@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         const currentAmount = bank.currency.getBalance(message.member.id);
         let transferAmount = args[0];
         let transferTarget;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             transferTarget = message.mentions.users.first();
         };
         if (!transferTarget) {

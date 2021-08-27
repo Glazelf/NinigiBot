@@ -32,13 +32,6 @@ module.exports = async (client) => {
         };
 
         await client.guilds.fetch();
-        await client.guilds.cache.forEach(guild => {
-            try {
-                guild.members.fetch();
-            } catch (e) {
-                console.log(e);
-            };
-        });
 
         // Set bot status
         let presence = initPresence();

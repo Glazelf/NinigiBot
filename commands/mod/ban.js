@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
 
         let user;
         let member;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
             member = message.mentions.members.first();
         } else {
@@ -54,7 +54,7 @@ exports.run = async (client, message, args = []) => {
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag}` });
             } catch (e) {
-                // console.log(e);
+                console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {

@@ -5,7 +5,7 @@ exports.run = (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         let target;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             target = message.mentions.users.first();
         };
 

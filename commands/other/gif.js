@@ -21,7 +21,7 @@ Hug
 Dango, Jojo, Stitch, Kuzco`;
 
         let user;
-        if (message.mentions && (message.mentions.members || message.mentions.repliedUser)) {
+        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
         };
         let author;
