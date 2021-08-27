@@ -89,8 +89,10 @@ exports.run = async (client, message) => {
 
         // Text channels
         let channelCount = 0;
+        let threadCount = 0;
         guild.channels.cache.forEach(channel => {
-            if (channel.type != "category" && channel.type != "thread") channelCount += 1;
+            if (channel.type == "GUILD_TEXT") channelCount += 1;
+            if (channel.type == "GUILD_PRIVATE_THREAD" || channel.type == "GUILD_PUBLIC_THREAD") threadCount += 1;
         });
 
         // Boosters
@@ -123,6 +125,7 @@ exports.run = async (client, message) => {
             .addField("Human Members:", humanMembers.toString(), true)
             .addField("Bots:", `${botMembers} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
+        if (threadCount > 0) serverEmbed.addField("Threads:", threadCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
         if (guild.stickers.cache.size > 0) serverEmbed.addField("Stickers:", `${guild.stickers.cache.size}/${stickerMax}`, true);
