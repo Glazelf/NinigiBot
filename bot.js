@@ -18,11 +18,29 @@ let botjsFunction = function botjsFunction() {
     const config = require("./config.json");
     client.config = config;
 
+    let languages = {};
+    // This loop reads the /objects/languages/ folder and attaches each language to a variable
+    fs.readdir("./objects/languages", (err, files) => {
+        if (err) return console.error(err);
+        files.forEach(file => {
+            // If the file is not a JSON file, ignore it.
+            if (!file.endsWith(".json")) return;
+
+            // Load the language file itself
+            const language = require(`./objects/languages/${file}`);
+
+            // Get just the language abbreviation from the file name
+            let languageAbbr = file.split(".")[0];
+            languages[languageAbbr] = language;
+            delete require.cache[require.resolve(`./objects/languages/${file}`)];
+        });
+    });
+    client.languages = languages;
+
     // This loop reads the /events/ folder and attaches each event file to the appropriate event.
     fs.readdir("./events/", (err, files) => {
         if (err) return console.error(err);
         files.forEach(file => {
-
             // If the file is not a JS file, ignore it.
             if (!file.endsWith(".js")) return;
 
@@ -50,7 +68,6 @@ let botjsFunction = function botjsFunction() {
     function walk(dir, callback) {
         fs.readdir(dir, function (err, files) {
             if (err) throw err;
-
             files.forEach(function (file) {
                 let filepath = path.join(dir, file);
                 fs.stat(filepath, function (err, stats) {
