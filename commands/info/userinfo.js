@@ -50,7 +50,7 @@ exports.run = async (client, message, args = []) => {
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
-        let shortenedRoles = false;
+        let shortenedRoles;
         if (memberRoles.size !== 0) {
             rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
             rolesSorted = [...rolesSorted.values()].join(", ");
