@@ -9,9 +9,10 @@ module.exports = async (client, message) => {
         const sendMessage = require('../util/sendMessage');
         let secondCharacter = message.content.charAt(1);
 
-        const { DisabledChannels, Prefixes } = require('../database/dbObjects');
+        const { DisabledChannels, Prefixes, Languages } = require('../database/dbObjects');
         const dbChannels = await DisabledChannels.findAll();
         const channels = dbChannels.map(channel => channel.channel_id);
+
         let prefix = false;
         if (message.guild) prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -19,6 +20,10 @@ module.exports = async (client, message) => {
         } else {
             prefix = globalVars.prefix;
         };
+
+        let language = await Languages.findOne({ where: { server_id: message.guild.id } });
+        let botLanguage = globalVars.language;
+        if (language) botLanguage = language.language;
 
         const autoMod = require('../util/autoMod');
 
@@ -124,7 +129,7 @@ module.exports = async (client, message) => {
         // Run the command
         if (cmd) {
             await message.channel.sendTyping();
-            await cmd.run(client, message, args);
+            await cmd.run(client, message, args, botLanguage);
         } else return;
 
         return;
