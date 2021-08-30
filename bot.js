@@ -24,7 +24,7 @@ let botjsFunction = function botjsFunction() {
         if (err) return console.error(err);
         files.forEach(file => {
             // If the file is not a JSON file, ignore it.
-            if (!file.endsWith(".json")) return;
+            if (!file.endsWith(".json") || file == 'example.json') return;
 
             // Load the language file itself
             const language = require(`./objects/languages/${file}`);
