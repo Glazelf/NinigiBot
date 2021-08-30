@@ -11,8 +11,6 @@ exports.run = async (client, message, args = [], language) => {
         } else {
             prefix = globalVars.prefix;
         };
-        let lackPermsString = await getLanguageString(client, 'fr', 'lackPerms');
-        console.log(lackPermsString)
 
         let pauseString = await getLanguageString(client, language, 'pingPauseString');
         let pongString = await getLanguageString(client, language, 'pingInitialMessage')
