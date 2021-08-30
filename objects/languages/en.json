@@ -1,5 +1,6 @@
 {
     "lackPerms": "You do not have the required permissions to do this.",
+    "pokemonNoArgument": "You need to provide either a subcommand or a Pokémon to look up.",
     "pingPauseString": "(hold on, processing latency...)",
     "pingInitialMessage": "Pong!'ed back in...",
     "pingWebsocketString": "Websocket latency is [0]ms.",
