@@ -5,6 +5,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {

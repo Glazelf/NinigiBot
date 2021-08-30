@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         if (!args[1]) return sendMessage(client, message, `You need to provide a message to send.`);

@@ -5,6 +5,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");

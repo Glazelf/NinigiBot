@@ -5,6 +5,7 @@ exports.run = (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');

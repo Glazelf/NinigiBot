@@ -1,6 +1,7 @@
 module.exports = async (client) => {
     // Import globals
     let globalVars = require('../events/ready');
+    const getLanguageString = require('../util/getLanguageString');
     try {
 
         const cron = require("cron");

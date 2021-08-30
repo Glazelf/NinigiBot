@@ -2,6 +2,7 @@ module.exports = async (client, messageReaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
+        const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
         const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbObjects');
 

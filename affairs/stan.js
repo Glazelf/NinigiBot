@@ -12,6 +12,7 @@ module.exports = async (client) => {
         new cron.CronJob(time, async () => {
             // Import globals
             let globalVars = require('../events/ready');
+            const getLanguageString = require('../util/getLanguageString');
             let guild = client.guilds.cache.get(guildID);
             if (!guild) return;
             let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);

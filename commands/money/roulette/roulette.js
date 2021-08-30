@@ -3,6 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../../events/ready');
     try {
         const sendMessage = require('../../../util/sendMessage');
+        const getLanguageString = require('../../../util/getLanguageString');
         const roulette = require('../../../affairs/roulette');
         const { bank } = require('../../../database/bank');
         const Discord = require("discord.js");

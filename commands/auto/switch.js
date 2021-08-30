@@ -1,6 +1,7 @@
 exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
 
         let switchCodeGet = bank.currency.getSwitchCode(message.member.id);

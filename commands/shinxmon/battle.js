@@ -13,6 +13,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');

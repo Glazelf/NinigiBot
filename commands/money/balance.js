@@ -3,6 +3,7 @@ exports.run = (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
         let target;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {

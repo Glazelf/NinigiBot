@@ -3,6 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(message.member, client);
         if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);

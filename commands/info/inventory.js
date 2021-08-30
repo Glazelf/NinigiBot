@@ -4,6 +4,7 @@ const { Users } = require('../../database/dbObjects');
 exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         //items, food, equipment
         let target;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) target = message.mentions.users.first();

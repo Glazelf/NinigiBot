@@ -2,6 +2,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const logger = require('../../util/logger');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");

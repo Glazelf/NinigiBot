@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const fs = require('fs');
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');

@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         let inputNumbers = args.join(" ").replace(", ", " ").split(" ");
 
         if (!inputNumbers[1]) return sendMessage(client, message, `You need to provide 2 numbers.`);

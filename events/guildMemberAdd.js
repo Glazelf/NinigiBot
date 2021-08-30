@@ -2,6 +2,7 @@ module.exports = async (client, member) => {
     // Import globals
     let globalVars = require('./ready');
     try {
+        const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
         const checkDays = require('../util/checkDays');

@@ -1,6 +1,7 @@
 exports.run = (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         let conversionType = args[0];
         let conversionValue = args[1];
 

@@ -3,6 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         if (message.guild.id !== client.config.botServerID) return;
 
         let rulesChannelID = "549220480490536972";

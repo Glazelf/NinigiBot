@@ -1,6 +1,7 @@
 exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
 
         return sendMessage(client, message, `Certain image editing commands are currently broken. Check the following issue for more information: https://github.com/Glazelf/NinigiBot/issues/103.`);

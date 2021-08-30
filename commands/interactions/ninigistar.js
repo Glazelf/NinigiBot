@@ -2,6 +2,7 @@ exports.run = async (client, interaction, args = []) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
+        const getLanguageString = require('../../util/getLanguageString');
         // Interaction only
         if (interaction.type == 'DEFAULT') return;
 

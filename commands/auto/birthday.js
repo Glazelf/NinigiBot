@@ -3,6 +3,7 @@ const sendMessage = require('../../util/sendMessage');
 exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
 
         if (args.length < 1) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);

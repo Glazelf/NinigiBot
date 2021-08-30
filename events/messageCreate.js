@@ -4,9 +4,11 @@ module.exports = async (client, message) => {
     // Import globals
     let globalVars = require('./ready');
     try {
+        const getLanguageString = require('../util/getLanguageString');
+        const sendMessage = require('../util/sendMessage');
         const Discord = require("discord.js");
         const { bank } = require('../database/bank');
-        const sendMessage = require('../util/sendMessage');
+
         let secondCharacter = message.content.charAt(1);
 
         const { DisabledChannels, Prefixes, Languages } = require('../database/dbObjects');

@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { EligibleRoles } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(message.member, client);

@@ -4,8 +4,9 @@ module.exports = async (client, interaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
-        let isAdmin = require('../util/isAdmin');
+        const getLanguageString = require('../util/getLanguageString');
         let sendMessage = require('../util/sendMessage');
+        let isAdmin = require('../util/isAdmin');
         if (!interaction) return;
         if (interaction.user.bot) return;
 

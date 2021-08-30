@@ -3,6 +3,7 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         if (message.guild.id !== "861884184787550218") return;
 
         let targetDate = new Date("Aug 1, 2021 8:25:00").getTime();

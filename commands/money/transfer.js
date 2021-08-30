@@ -3,6 +3,7 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
         const currentAmount = bank.currency.getBalance(message.member.id);
         let transferAmount = args[0];
