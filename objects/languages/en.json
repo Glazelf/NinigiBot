@@ -1,3 +1,7 @@
 {
-    "lackPerms": "You do not have the required permissions to do this."
+    "lackPerms": "You do not have the required permissions to do this.",
+    "pingPauseString": "(hold on, processing latency...)",
+    "pingInitialMessage": "Pong!'ed back in...",
+    "pingWebsocketString": "Websocket latency is [0]ms.",
+    "pingInteractionString": "Pong! Slash command latency is [0]ms."
 }
