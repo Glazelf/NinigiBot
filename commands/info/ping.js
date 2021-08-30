@@ -1,8 +1,9 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getLanguageString = require('../../util/getLanguageString');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -10,9 +11,11 @@ exports.run = async (client, message) => {
         } else {
             prefix = globalVars.prefix;
         };
+        let lackPermsString = await getLanguageString(client, 'fr', 'lackPerms');
+        console.log(lackPermsString)
 
-        let pongString = `Pong!'ed back in`;
-        let pauseString = `${pongString} (hold on, processing latency...)`;
+        let pauseString = `(hold on, processing latency...)`;
+        let pongString = `Pong!'ed back in... ${pauseString}`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
 
         // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.\
@@ -31,7 +34,7 @@ exports.run = async (client, message) => {
 
         // Send message then edit message to reflect difference in creation timestamps
         if (message.type == 'DEFAULT') {
-            return message.reply({ content: pauseString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.edit({ content: `${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.` }));
+            return message.reply({ content: pongString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.edit({ content: pongString.replace(pauseString, `${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.`) }));
         } else {
             let replyText = `Pong! Slash command latency is ${client.ws.ping}ms.`;
             return sendMessage(client, message, replyText);
