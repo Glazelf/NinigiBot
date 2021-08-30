@@ -1,7 +1,7 @@
 {
-    "lackPerms": "la chaîne anglaise mais en français",
-    "pingPauseString": "",
+    "lackPerms": "Vous n'avez pas les permissions nécessaires pour le faire.",
+    "pingPauseString": "(attendez, latence en cours de traitement...)",
     "pingInitialMessage": "",
-    "pingWebsocketString": "La latence de Websocket est de [0]ms.",
-    "pingInteractionString": ""
+    "pingWebsocketString": "La latence du Websocket est de [0]ms.",
+    "pingInteractionString": "Pong! La latence de la commande Slash est de [0]ms."
 }
