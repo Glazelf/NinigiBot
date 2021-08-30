@@ -1,3 +1,7 @@
 {
-    "lackPerms": "the english string but in french"
+    "lackPerms": "the english string but in french",
+    "pingPauseString": "",
+    "pingInitialMessage": "",
+    "pingWebsocketString": "",
+    "pingInteractionString": ""
 }
