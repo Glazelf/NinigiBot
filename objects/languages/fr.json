@@ -2,6 +2,6 @@
     "lackPerms": "la chaîne anglaise mais en français",
     "pingPauseString": "",
     "pingInitialMessage": "",
-    "pingWebsocketString": "",
+    "pingWebsocketString": "La latence de Websocket est de [0]ms.",
     "pingInteractionString": ""
 }
