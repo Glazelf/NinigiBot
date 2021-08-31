@@ -1,4 +1,6 @@
 {
+    "birthdayAffairDescription": "",
+    "birthdayAffairJoinWord": "",
     "lackPerms": "Vous n'avez pas les permissions nécessaires pour le faire.",
     "pingPauseString": "(attendez, latence en cours de traitement...)",
     "pingInitialMessage": "Pong! est de retour dans...",
@@ -30,5 +32,6 @@
     "pokemonUndefinedAbility": "",
     "pokemonUndefinedItem": "",
     "pokemonUndefinedMove": "",
-    "pokemonUndefinedPokemon": ""
+    "pokemonUndefinedPokemon": "",
+    "stanAffairDescription": ""
 }

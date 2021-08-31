@@ -1,5 +1,9 @@
 module.exports = async (client) => {
+    // Import globals
+    let globalVars = require('../events/ready');
     try {
+        const getLanguageString = require('../util/getLanguageString');
+        const Discord = require("discord.js");
         const cron = require("cron");
         const timezone = 'cest';
         const time = '00 00 20 * * *'; //Sec Min Hour, 8pm
@@ -7,12 +11,13 @@ module.exports = async (client) => {
         const guildID = client.config.botServerID;
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const Discord = require("discord.js");
-        const config = require("../config.json");
+        const { Languages } = require('../database/dbObjects');
 
         new cron.CronJob(time, async () => {
-            // Import globals
-            let globalVars = require('../events/ready');
-            const getLanguageString = require('../util/getLanguageString');
+            let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
+            let language = globalVars.language;
+            if (dbLanguage) language = dbLanguage.language;
+
             let guild = client.guilds.cache.get(guildID);
             if (!guild) return;
             let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
@@ -22,7 +27,7 @@ module.exports = async (client) => {
             const getRandomGif = async () => {
                 const randomElement = gifTags[Math.floor(Math.random() * gifTags.length)];
 
-                const { data } = await giphyRandom(config.giphy, {
+                const { data } = await giphyRandom(client.config.giphy, {
                     tag: randomElement
                 });
                 return data.image_url;
@@ -33,9 +38,12 @@ module.exports = async (client) => {
             let candidateRandom = candidates[randomPick];
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
+            let stanAffairDescription = await getLanguageString(client, language, 'stanAffairDescription');
+            let stanDescription = stanAffairDescription.replace('[0]', `**${candidateRandom.tag}**`);
+
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
+                .setDescription(stanDescription)
                 .setImage(randomGif)
                 .setTimestamp();
             channel.send({ content: candidateRandom.toString(), embeds: [gifEmbed] });

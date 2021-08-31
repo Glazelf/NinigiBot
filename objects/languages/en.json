@@ -32,5 +32,6 @@
     "pokemonUndefinedAbility": "Could not find the specified ability.",
     "pokemonUndefinedItem": "Could not find the specified item.",
     "pokemonUndefinedMove": "Could not find the specified move.",
-    "pokemonUndefinedPokemon": "Could not find the specified Pokémon."
+    "pokemonUndefinedPokemon": "Could not find the specified Pokémon.",
+    "stanAffairDescription": "Today's most stannable person is [0]!"
 }
