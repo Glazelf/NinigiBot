@@ -1,4 +1,6 @@
 {
+    "birthdayAffairDescription": "Today's is [0]'s birthday, everyone!",
+    "birthdayAffairJoinWord": "and",
     "lackPerms": "You do not have the required permissions to do this.",
     "pingPauseString": "(hold on, processing latency...)",
     "pingInitialMessage": "Pong!'ed back in...",
