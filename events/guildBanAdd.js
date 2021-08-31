@@ -2,6 +2,7 @@ module.exports = async (client, guildBan) => {
     // Import globals
     let globalVars = require('./ready');
     try {
+        const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
         let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
