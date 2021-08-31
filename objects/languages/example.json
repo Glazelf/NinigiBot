@@ -1,4 +1,9 @@
 {
+    "autoModBannedDM": "",
+    "autoModBannedReturn": "",
+    "autoModDeletedMessage": "",
+    "autoModKickedDM": "",
+    "autoModKickedReturn": "",
     "birthdayAffairDescription": "",
     "birthdayAffairJoinWord": "",
     "lackPerms": "",

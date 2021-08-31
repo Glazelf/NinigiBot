@@ -1,4 +1,5 @@
-module.exports = async (message) => {
+module.exports = async (client, message, language) => {
+    const getLanguageString = require('./util/getLanguageString');
     const Discord = require("discord.js");
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
@@ -87,7 +88,11 @@ module.exports = async (message) => {
     async function msgDelete() {
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
-        return message.channel.send({ content: `Deleted a message by **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
+
+        let autoModDeletedMessage = await getLanguageString(client, language, 'autoModDeletedMessage');
+        autoModDeletedMessage = autoModDeletedMessage.replace('[userTag]', `**${message.author.tag}**`).replace('[userID]', `(${message.author.id})`).replace('[reason]', `\`${reason}\``);
+
+        return message.channel.send({ content: autoModDeletedMessage });
         // return true;
     };
 
@@ -95,29 +100,38 @@ module.exports = async (message) => {
         if (!message.member.kickable) return;
         await message.delete();
         await message.member.kick([reason]);
-        await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
+
+        let autoModKickedReturn = await getLanguageString(client, language, 'autoModKickedReturn');
+        autoModKickedReturn = autoModKickedReturn.replace('[userTag]', `**${message.author.tag}**`).replace('[userID]', `(${message.author.id})`).replace('[reason]', `\`${reason}\``);
+        let autoModKickedDM = await getLanguageString(client, language, 'autoModKickedDM');
+        autoModKickedDM = autoModKickedDM.replace('[reason]', `\`${reason}\``) + `\n${messageContentBlock}`;
+
+        await message.channel.send({ content: autoModKickedReturn });
         try {
-            message.author.send({
-                content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}`
-            });
+            message.author.send({ content: autoModKickedDM });
             return true;
         } catch (e) {
+            // console.log(e);
             return true;
         };
     };
 
     async function ban() {
         if (!message.member.bannable) return;
-        await message.member.ban({ days: 1, reason: reason });
-        await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
+
+        let autoModBannedReturn = await getLanguageString(client, language, 'autoModBannedReturn');
+        autoModBannedReturn = autoModBannedReturn.replace('[userTag]', `**${message.author.tag}**`).replace('[userID]', `(${message.author.id})`).replace('[reason]', `\`${reason}\``);
+        let autoModBannedDM = await getLanguageString(client, language, 'autoModBannedDM');
+        autoModBannedDM = autoModBannedDM.replace('[reason]', `\`${reason}\``) + `\n${messageContentBlock}`;
+
+        await message.channel.send({ content: autoModBannedReturn });
         try {
-            message.author.send({
-                content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}`
-            });
-            return true;
+            message.author.send({ content: autoModBannedDM });
         } catch (e) {
-            return true;
+            // console.log(e);
         };
+        await message.member.ban({ days: 1, reason: reason });
+        return true;
     };
 
     function test() {

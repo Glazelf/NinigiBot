@@ -1,5 +1,9 @@
 {
+    "autoModBannedDM": "You've been automatically banned for the following reason: [reason]",
+    "autoModBannedReturn": "Successfully auto-banned [userTag] [userID] for the following reason: [reason]",
     "autoModDeletedMessage": "Deleted a message by [userTag] [userID] for the following reason: [reason]",
+    "autoModKickedDM": "You've been automatically kicked for the following reason: [reason]",
+    "autoModKickedReturn": "Successfully auto-kicked [userTag] [userID] for the following reason: [reason]",
     "birthdayAffairDescription": "Today's is [userTag]'s birthday, everyone!",
     "birthdayAffairJoinWord": "and",
     "lackPerms": "You do not have the required permissions to do this.",

@@ -72,7 +72,7 @@ module.exports = async (client, message) => {
 
         // Automod
         let modBool = false;
-        if (message.type == 'DEFAULT') modBool = await autoMod(message);
+        if (message.type == 'DEFAULT') modBool = await autoMod(client, message, language);
         if (modBool) return;
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
