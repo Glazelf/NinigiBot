@@ -10,11 +10,14 @@ module.exports = async (client, interaction) => {
         if (!interaction) return;
         if (interaction.user.bot) return;
 
+        const { DisabledChannels, Languages } = require('../database/dbObjects');
+        let dbLanguage = await Languages.findOne({ where: { server_id: interaction.guild.id } });
+        let language = globalVars.language;
+        if (dbLanguage) language = dbLanguage.language;
+
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
                 if (!interaction.member) return sendMessage(client, interaction, `Sorry, you're not allowed to use commands in private messages!`);
-
-                const { DisabledChannels } = require('../database/dbObjects');
                 const dbChannels = await DisabledChannels.findAll();
 
                 // Format options into same structure as regular args[], holy shit this is ugly code but it works for now

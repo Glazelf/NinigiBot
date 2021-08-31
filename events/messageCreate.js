@@ -22,9 +22,9 @@ module.exports = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
-        let language = await Languages.findOne({ where: { server_id: message.guild.id } });
-        let botLanguage = globalVars.language;
-        if (language) botLanguage = language.language;
+        let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
+        let language = globalVars.language;
+        if (dbLanguage) language = dbLanguage.language;
 
         const autoMod = require('../util/autoMod');
 
@@ -130,7 +130,7 @@ module.exports = async (client, message) => {
         // Run the command
         if (cmd) {
             await message.channel.sendTyping();
-            await cmd.run(client, message, args, botLanguage);
+            await cmd.run(client, message, args, language);
         } else return;
 
         return;
