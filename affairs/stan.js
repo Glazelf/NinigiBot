@@ -39,7 +39,7 @@ module.exports = async (client) => {
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
             let stanAffairDescription = await getLanguageString(client, language, 'stanAffairDescription');
-            let stanDescription = stanAffairDescription.replace('[userTag]', `**${candidateRandom.tag}**`);
+            let stanDescription = stanAffairDescription.replace('[usertag]', `**${candidateRandom.tag}**`);
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

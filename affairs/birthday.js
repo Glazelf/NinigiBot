@@ -43,7 +43,7 @@ module.exports = async (client) => {
 
             let birthdayAffairDescription = await getLanguageString(client, language, 'birthdayAffairDescription');
             let birthdayAffairJoinWord = await getLanguageString(client, language, 'birthdayAffairJoinWord');
-            let birthdayDescription = birthdayAffairDescription.replace('[userTag]', cuties.join(` ${birthdayAffairJoinWord} `));
+            let birthdayDescription = birthdayAffairDescription.replace('[usertag]', cuties.join(` ${birthdayAffairJoinWord} `));
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
