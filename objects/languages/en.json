@@ -1,11 +1,12 @@
 {
-    "birthdayAffairDescription": "Today's is [0]'s birthday, everyone!",
+    "autoModDeletedMessage": "Deleted a message by [userTag] [userID] for the following reason: [reason]",
+    "birthdayAffairDescription": "Today's is [userTag]'s birthday, everyone!",
     "birthdayAffairJoinWord": "and",
     "lackPerms": "You do not have the required permissions to do this.",
     "pingPauseString": "(hold on, processing latency...)",
     "pingInitialMessage": "Pong!'ed back in...",
-    "pingWebsocketString": "Websocket latency is [0]ms.",
-    "pingInteractionString": "Pong! Slash command latency is [0]ms.",
+    "pingWebsocketString": "Websocket latency is [websocketLatency]ms.",
+    "pingInteractionString": "Pong! Slash command latency is [latency]ms.",
     "pokemonNoArgument": "You need to provide either a subcommand or a Pokémon to look up.",
     "pokemonTitleAbilities": "Abilities:",
     "pokemonTitleAccuracy": "Accuracy:",
@@ -33,5 +34,5 @@
     "pokemonUndefinedItem": "Could not find the specified item.",
     "pokemonUndefinedMove": "Could not find the specified move.",
     "pokemonUndefinedPokemon": "Could not find the specified Pokémon.",
-    "stanAffairDescription": "Today's most stannable person is [0]!"
+    "stanAffairDescription": "Today's most stannable person is [userTag]!"
 }

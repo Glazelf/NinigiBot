@@ -16,7 +16,7 @@ exports.run = async (client, message, args = [], language) => {
         let pongString = await getLanguageString(client, language, 'pingInitialMessage')
         pongString = `${pongString} ${pauseString}`;
         let wsLatencyString = await getLanguageString(client, language, 'pingWebsocketString');
-        wsLatencyString = wsLatencyString.replace('[0]', client.ws.ping);
+        wsLatencyString = wsLatencyString.replace('[websocketLatency]', client.ws.ping);
 
         // Replace string based on input. For some reason .replaceAll() doesn't work here. Whatever.\
         if (message.content) {
@@ -37,7 +37,7 @@ exports.run = async (client, message, args = [], language) => {
             return message.reply({ content: pongString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.edit({ content: pongString.replace(pauseString, `${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}`) }));
         } else {
             let replyText = await getLanguageString(client, language, 'pingInteractionString');
-            replyText = replyText.replace('[0]', client.ws.ping);
+            replyText = replyText.replace('[latency]', client.ws.ping);
             return sendMessage(client, message, replyText);
         };
 
