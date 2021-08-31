@@ -116,13 +116,13 @@ module.exports = async (client, message) => {
         //     cmd = client.commands.get(client.aliases.get(commandName));
         // } else return;
 
-        // Ignore messages sent in a disabled channel
-        if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
-
         if (message.deleted) return;
 
         // Run the command
         if (cmd) {
+            // Ignore messages sent in a disabled channel
+            if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
+
             await message.channel.sendTyping();
             await cmd.run(client, message, args);
         } else return;
