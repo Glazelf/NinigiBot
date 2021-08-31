@@ -137,7 +137,7 @@ module.exports = async (client, message, response, interaction, language) => {
                     let formID = leadingZeros(responseForm.id.toString());
                     pokemonID = `${formID}${formChar}`;
                 })
-                .catch(function (e) {
+                .catch(async function (e) {
                     // console.log(e);
                     let pokemonUndefinedPokemonString = await getLanguageString(client, language, 'pokemonUndefinedPokemon');
                     return sendMessage(client, message, pokemonUndefinedPokemonString, true);
