@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -14,7 +14,8 @@ exports.run = async (client, message, args = []) => {
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/pokemon/capitalizeString');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
+        let pokemonNoArgumentString = await getLanguageString(client, language, 'pokemonNoArgument');
+        if (!args[0]) return sendMessage(client, message, pokemonNoArgumentString);
 
         let subCommand = args[0].toLowerCase();
         let subArgument;
@@ -47,12 +48,13 @@ exports.run = async (client, message, args = []) => {
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
 
-                    }).catch(function (e) {
+                    }).catch(async function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified ability.`);
+                            let pokemonUndefinedAbilityString = await getLanguageString(client, language, 'pokemonUndefinedAbility');
+                            return sendMessage(client, message, pokemonUndefinedAbilityString);
                         };
                     });
                 break;
@@ -77,12 +79,13 @@ exports.run = async (client, message, args = []) => {
 
                         return sendMessage(client, message, null, itemEmbed);
 
-                    }).catch(function (e) {
+                    }).catch(async function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified item.`);
+                            let pokemonUndefinedItemString = await getLanguageString(client, language, 'pokemonUndefinedItem');
+                            return sendMessage(client, message, pokemonUndefinedItemString);
                         };
                     });
                 break;
@@ -101,29 +104,38 @@ exports.run = async (client, message, args = []) => {
                         let category = await capitalizeString(response.damage_class.name);
                         let target = await capitalizeString(response.target.name);
 
+                        let pokemonTitleTypeString = await getLanguageString(client, language, 'pokemonTitleType');
+                        let pokemonTitleCategoryString = await getLanguageString(client, language, 'pokemonTitleCategory');
+                        let pokemonTitlePowerString = await getLanguageString(client, language, 'pokemonTitlePower');
+                        let pokemonTitleAccuracyString = await getLanguageString(client, language, 'pokemonTitleAccuracy');
+                        let pokemonTitlePriorityString = await getLanguageString(client, language, 'pokemonTitlePriority');
+                        let pokemonTitleTargetString = await getLanguageString(client, language, 'pokemonTitleTarget');
+                        let pokemonTitleDescriptionString = await getLanguageString(client, language, 'pokemonTitleDescription');
+
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
-                            .addField("Type:", type, true)
-                            .addField("Category:", category, true);
-                        if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
-                        if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
-                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority.toString(), true);
+                            .addField(pokemonTitleTypeString, type, true)
+                            .addField(pokemonTitleCategoryString, category, true);
+                        if (response.power) moveEmbed.addField(pokemonTitlePowerString, response.power.toString(), true);
+                        if (response.accuracy) moveEmbed.addField(pokemonTitleAccuracyString, `${response.accuracy}%`, true);
+                        if (response.priority !== 0) moveEmbed.addField(pokemonTitlePriorityString, response.priority.toString(), true);
                         moveEmbed
-                            .addField("Target:", target, true);
-                        if (description) moveEmbed.addField("Description:", description, false);
+                            .addField(pokemonTitleTargetString, target, true);
+                        if (description) moveEmbed.addField(pokemonTitleDescriptionString, description, false);
                         moveEmbed
                             .setFooter(user.tag)
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed);
 
-                    }).catch(function (e) {
+                    }).catch(async function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified move.`);
+                            let pokemonUndefinedMoveString = await getLanguageString(client, language, 'pokemonUndefinedMove');
+                            return sendMessage(client, message, pokemonUndefinedMoveString);
                         };
                     });
                 break;
@@ -153,7 +165,7 @@ exports.run = async (client, message, args = []) => {
                         // Log for testing, remove later
                         // console.log(response);
 
-                        let pkmEmbed = await getPokemon(client, message, response);
+                        let pkmEmbed = await getPokemon(client, message, response, null, language);
 
                         // Buttons
                         let pkmButtons = new Discord.MessageActionRow()
@@ -162,12 +174,13 @@ exports.run = async (client, message, args = []) => {
 
                         return sendMessage(client, message, null, pkmEmbed, null, true, pkmButtons);
 
-                    }).catch(function (e) {
+                    }).catch(async function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                            let pokemonUndefinedPokemonString = await getLanguageString(client, language, 'pokemonUndefinedPokemon');
+                            return sendMessage(client, message, pokemonUndefinedPokemonString);
                         };
                     });
                 break;

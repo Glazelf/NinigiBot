@@ -1,8 +1,9 @@
-module.exports = async (client, message, response, interaction) => {
+module.exports = async (client, message, response, interaction, language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
+        const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -138,7 +139,8 @@ module.exports = async (client, message, response, interaction) => {
                 })
                 .catch(function (e) {
                     // console.log(e);
-                    return sendMessage(client, message, `Could not find the specified Pokémon.`, true);
+                    let pokemonUndefinedPokemonString = await getLanguageString(client, language, 'pokemonUndefinedPokemon');
+                    return sendMessage(client, message, pokemonUndefinedPokemonString, true);
                 });
         };
 
@@ -209,26 +211,43 @@ module.exports = async (client, message, response, interaction) => {
         let footer = message.member.user.tag;
         if (interaction) footer = interaction.user.tag;
 
+        let pokemonTitleTypeString = await getLanguageString(client, language, 'pokemonTitleType');
+        let pokemonTitleMetricsString = await getLanguageString(client, language, 'pokemonTitleMetrics');
+        let pokemonTitleWeightString = await getLanguageString(client, language, 'pokemonTitleWeight');
+        let pokemonTitleHeightString = await getLanguageString(client, language, 'pokemonTitleHeight');
+        let pokemonTitleAbilitiesString = await getLanguageString(client, language, 'pokemonTitleAbilities');
+        let pokemonTitleWeaknessesString = await getLanguageString(client, language, 'pokemonTitleWeaknesses');
+        let pokemonTitleResistancesString = await getLanguageString(client, language, 'pokemonTitleResistances');
+        let pokemonTitleImmunitiesString = await getLanguageString(client, language, 'pokemonTitleImmunities');
+        let pokemonTitleStatsString = await getLanguageString(client, language, 'pokemonTitleStats');
+        let pokemonTitleStatHPString = await getLanguageString(client, language, 'pokemonTitleStatHP');
+        let pokemonTitleStatAttackString = await getLanguageString(client, language, 'pokemonTitleStatAttack');
+        let pokemonTitleStatDefenseString = await getLanguageString(client, language, 'pokemonTitleStatDefense');
+        let pokemonTitleStatSpecialAttackString = await getLanguageString(client, language, 'pokemonTitleStatSpecialAttack');
+        let pokemonTitleStatSpecialDefenseString = await getLanguageString(client, language, 'pokemonTitleStatSpecialDefense');
+        let pokemonTitleStatSpeedString = await getLanguageString(client, language, 'pokemonTitleStatSpeed');
+        let pokemonTitleBaseStatTotalString = await getLanguageString(client, language, 'pokemonTitleBaseStatTotal');
+
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${pokemonID.toUpperCase()}: ${pokemonName}`, icon)
             .setThumbnail(sprite)
-            .addField("Type:", typeString, true)
-            .addField("Metrics:", `Weight: ${weight}
-Height: ${height}`, true);
-        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false);
-        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
-        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
-        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
+            .addField(pokemonTitleTypeString, typeString, true)
+            .addField(pokemonTitleMetricsString, `${pokemonTitleWeightString} ${weight}
+${pokemonTitleHeightString} ${height}`, true);
+        if (abilityString.length > 0) pkmEmbed.addField(pokemonTitleAbilitiesString, abilityStringCapitalized, false);
+        if (superEffectives.length > 0) pkmEmbed.addField(pokemonTitleWeaknessesString, superEffectives, false);
+        if (resistances.length > 0) pkmEmbed.addField(pokemonTitleResistancesString, resistances, false);
+        if (immunities.length > 0) pkmEmbed.addField(pokemonTitleImmunitiesString, immunities, false);
         pkmEmbed
-            .addField(`Stats: ${statLevels}`, `HP: **${baseHP}** ${HPstats}
-Atk: **${baseAtk}** ${Atkstats}
-Def: **${baseDef}** ${Defstats}
-SpA: **${baseSpA}** ${SpAstats}
-SpD: **${baseSpD}** ${SpDstats}
-Spe: **${baseSpe}** ${Spestats}
-BST: ${BST}`, false)
+            .addField(`${pokemonTitleStatsString} ${statLevels}`, `${pokemonTitleStatHPString} **${baseHP}** ${HPstats}
+${pokemonTitleStatAttackString} **${baseAtk}** ${Atkstats}
+${pokemonTitleStatDefenseString} **${baseDef}** ${Defstats}
+${pokemonTitleStatSpecialAttackString} **${baseSpA}** ${SpAstats}
+${pokemonTitleStatSpecialDefenseString} **${baseSpD}** ${SpDstats}
+${pokemonTitleStatSpeedString} **${baseSpe}** ${Spestats}
+${pokemonTitleBaseStatTotalString} ${BST}`, false)
             .setImage(banner)
             .setFooter(footer)
             .setTimestamp();
