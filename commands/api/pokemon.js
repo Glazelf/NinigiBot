@@ -14,8 +14,8 @@ exports.run = async (client, message, args = [], language) => {
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/pokemon/capitalizeString');
 
-        let pokemonNoArgumentString = await getLanguageString(client, language, 'pokemonNoArgument');
-        if (!args[0]) return sendMessage(client, message, pokemonNoArgumentString);
+        let pokemonNoArgument = await getLanguageString(client, language, 'pokemonNoArgument');
+        if (!args[0]) return sendMessage(client, message, pokemonNoArgument);
 
         let subCommand = args[0].toLowerCase();
         let subArgument;
@@ -53,8 +53,8 @@ exports.run = async (client, message, args = [], language) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            let pokemonUndefinedAbilityString = await getLanguageString(client, language, 'pokemonUndefinedAbility');
-                            return sendMessage(client, message, pokemonUndefinedAbilityString);
+                            let pokemonUndefinedAbility = await getLanguageString(client, language, 'pokemonUndefinedAbility');
+                            return sendMessage(client, message, pokemonUndefinedAbility);
                         };
                     });
                 break;
@@ -84,8 +84,8 @@ exports.run = async (client, message, args = [], language) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            let pokemonUndefinedItemString = await getLanguageString(client, language, 'pokemonUndefinedItem');
-                            return sendMessage(client, message, pokemonUndefinedItemString);
+                            let pokemonUndefinedItem = await getLanguageString(client, language, 'pokemonUndefinedItem');
+                            return sendMessage(client, message, pokemonUndefinedItem);
                         };
                     });
                 break;
@@ -104,25 +104,25 @@ exports.run = async (client, message, args = [], language) => {
                         let category = await capitalizeString(response.damage_class.name);
                         let target = await capitalizeString(response.target.name);
 
-                        let pokemonTitleTypeString = await getLanguageString(client, language, 'pokemonTitleType');
-                        let pokemonTitleCategoryString = await getLanguageString(client, language, 'pokemonTitleCategory');
-                        let pokemonTitlePowerString = await getLanguageString(client, language, 'pokemonTitlePower');
-                        let pokemonTitleAccuracyString = await getLanguageString(client, language, 'pokemonTitleAccuracy');
-                        let pokemonTitlePriorityString = await getLanguageString(client, language, 'pokemonTitlePriority');
-                        let pokemonTitleTargetString = await getLanguageString(client, language, 'pokemonTitleTarget');
-                        let pokemonTitleDescriptionString = await getLanguageString(client, language, 'pokemonTitleDescription');
+                        let pokemonTitleType = await getLanguageString(client, language, 'pokemonTitleType');
+                        let pokemonTitleCategory = await getLanguageString(client, language, 'pokemonTitleCategory');
+                        let pokemonTitlePower = await getLanguageString(client, language, 'pokemonTitlePower');
+                        let pokemonTitleAccuracy = await getLanguageString(client, language, 'pokemonTitleAccuracy');
+                        let pokemonTitlePriority = await getLanguageString(client, language, 'pokemonTitlePriority');
+                        let pokemonTitleTarget = await getLanguageString(client, language, 'pokemonTitleTarget');
+                        let pokemonTitleDescription = await getLanguageString(client, language, 'pokemonTitleDescription');
 
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
-                            .addField(pokemonTitleTypeString, type, true)
-                            .addField(pokemonTitleCategoryString, category, true);
-                        if (response.power) moveEmbed.addField(pokemonTitlePowerString, response.power.toString(), true);
-                        if (response.accuracy) moveEmbed.addField(pokemonTitleAccuracyString, `${response.accuracy}%`, true);
-                        if (response.priority !== 0) moveEmbed.addField(pokemonTitlePriorityString, response.priority.toString(), true);
+                            .addField(pokemonTitleType, type, true)
+                            .addField(pokemonTitleCategory, category, true);
+                        if (response.power) moveEmbed.addField(pokemonTitlePower, response.power.toString(), true);
+                        if (response.accuracy) moveEmbed.addField(pokemonTitleAccuracy, `${response.accuracy}%`, true);
+                        if (response.priority !== 0) moveEmbed.addField(pokemonTitlePriority, response.priority.toString(), true);
                         moveEmbed
-                            .addField(pokemonTitleTargetString, target, true);
-                        if (description) moveEmbed.addField(pokemonTitleDescriptionString, description, false);
+                            .addField(pokemonTitleTarget, target, true);
+                        if (description) moveEmbed.addField(pokemonTitleDescription, description, false);
                         moveEmbed
                             .setFooter(user.tag)
                             .setTimestamp();
@@ -134,8 +134,8 @@ exports.run = async (client, message, args = [], language) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            let pokemonUndefinedMoveString = await getLanguageString(client, language, 'pokemonUndefinedMove');
-                            return sendMessage(client, message, pokemonUndefinedMoveString);
+                            let pokemonUndefinedMove = await getLanguageString(client, language, 'pokemonUndefinedMove');
+                            return sendMessage(client, message, pokemonUndefinedMove);
                         };
                     });
                 break;
@@ -179,8 +179,8 @@ exports.run = async (client, message, args = [], language) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            let pokemonUndefinedPokemonString = await getLanguageString(client, language, 'pokemonUndefinedPokemon');
-                            return sendMessage(client, message, pokemonUndefinedPokemonString);
+                            let pokemonUndefinedPokemon = await getLanguageString(client, language, 'pokemonUndefinedPokemon');
+                            return sendMessage(client, message, pokemonUndefinedPokemon);
                         };
                     });
                 break;

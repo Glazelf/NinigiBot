@@ -13,12 +13,11 @@ module.exports = async (client) => {
         const { bank } = require('../database/bank');
         const { search } = require('../util/search');
 
-        let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
-        let language = globalVars.language;
-        if (dbLanguage) language = dbLanguage.language;
-
         new cron.CronJob(time, async () => {
-            let globalVars = require('../events/ready');
+            let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
+            let language = globalVars.language;
+            if (dbLanguage) language = dbLanguage.language;
+
             let guild = client.guilds.cache.get(guildID);
             if (!guild) return;
             const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
@@ -42,9 +41,9 @@ module.exports = async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === channelID);
 
-            let birthdayAffairDescriptionString = await getLanguageString(client, language, 'birthdayAffairDescription');
-            let birthdayAffairJoinWordString = await getLanguageString(client, language, 'birthdayAffairJoinWord');
-            let birthdayDescription = birthdayAffairDescriptionString.replace('[0]', cuties.join(` ${birthdayAffairJoinWordString} `));
+            let birthdayAffairDescription = await getLanguageString(client, language, 'birthdayAffairDescription');
+            let birthdayAffairJoinWord = await getLanguageString(client, language, 'birthdayAffairJoinWord');
+            let birthdayDescription = birthdayAffairDescription.replace('[0]', cuties.join(` ${birthdayAffairJoinWord} `));
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

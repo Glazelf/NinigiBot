@@ -211,43 +211,43 @@ module.exports = async (client, message, response, interaction, language) => {
         let footer = message.member.user.tag;
         if (interaction) footer = interaction.user.tag;
 
-        let pokemonTitleTypeString = await getLanguageString(client, language, 'pokemonTitleType');
-        let pokemonTitleMetricsString = await getLanguageString(client, language, 'pokemonTitleMetrics');
-        let pokemonTitleWeightString = await getLanguageString(client, language, 'pokemonTitleWeight');
-        let pokemonTitleHeightString = await getLanguageString(client, language, 'pokemonTitleHeight');
-        let pokemonTitleAbilitiesString = await getLanguageString(client, language, 'pokemonTitleAbilities');
-        let pokemonTitleWeaknessesString = await getLanguageString(client, language, 'pokemonTitleWeaknesses');
-        let pokemonTitleResistancesString = await getLanguageString(client, language, 'pokemonTitleResistances');
-        let pokemonTitleImmunitiesString = await getLanguageString(client, language, 'pokemonTitleImmunities');
-        let pokemonTitleStatsString = await getLanguageString(client, language, 'pokemonTitleStats');
-        let pokemonTitleStatHPString = await getLanguageString(client, language, 'pokemonTitleStatHP');
-        let pokemonTitleStatAttackString = await getLanguageString(client, language, 'pokemonTitleStatAttack');
-        let pokemonTitleStatDefenseString = await getLanguageString(client, language, 'pokemonTitleStatDefense');
-        let pokemonTitleStatSpecialAttackString = await getLanguageString(client, language, 'pokemonTitleStatSpecialAttack');
-        let pokemonTitleStatSpecialDefenseString = await getLanguageString(client, language, 'pokemonTitleStatSpecialDefense');
-        let pokemonTitleStatSpeedString = await getLanguageString(client, language, 'pokemonTitleStatSpeed');
-        let pokemonTitleBaseStatTotalString = await getLanguageString(client, language, 'pokemonTitleBaseStatTotal');
+        let pokemonTitleType = await getLanguageString(client, language, 'pokemonTitleType');
+        let pokemonTitleMetrics = await getLanguageString(client, language, 'pokemonTitleMetrics');
+        let pokemonTitleWeight = await getLanguageString(client, language, 'pokemonTitleWeight');
+        let pokemonTitleHeight = await getLanguageString(client, language, 'pokemonTitleHeight');
+        let pokemonTitleAbilities = await getLanguageString(client, language, 'pokemonTitleAbilities');
+        let pokemonTitleWeaknesses = await getLanguageString(client, language, 'pokemonTitleWeaknesses');
+        let pokemonTitleResistances = await getLanguageString(client, language, 'pokemonTitleResistances');
+        let pokemonTitleImmunities = await getLanguageString(client, language, 'pokemonTitleImmunities');
+        let pokemonTitleStats = await getLanguageString(client, language, 'pokemonTitleStats');
+        let pokemonTitleStatHP = await getLanguageString(client, language, 'pokemonTitleStatHP');
+        let pokemonTitleStatAttack = await getLanguageString(client, language, 'pokemonTitleStatAttack');
+        let pokemonTitleStatDefense = await getLanguageString(client, language, 'pokemonTitleStatDefense');
+        let pokemonTitleStatSpecialAttack = await getLanguageString(client, language, 'pokemonTitleStatSpecialAttack');
+        let pokemonTitleStatSpecialDefense = await getLanguageString(client, language, 'pokemonTitleStatSpecialDefense');
+        let pokemonTitleStatSpeed = await getLanguageString(client, language, 'pokemonTitleStatSpeed');
+        let pokemonTitleBaseStatTotal = await getLanguageString(client, language, 'pokemonTitleBaseStatTotal');
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${pokemonID.toUpperCase()}: ${pokemonName}`, icon)
             .setThumbnail(sprite)
-            .addField(pokemonTitleTypeString, typeString, true)
-            .addField(pokemonTitleMetricsString, `${pokemonTitleWeightString} ${weight}
-${pokemonTitleHeightString} ${height}`, true);
-        if (abilityString.length > 0) pkmEmbed.addField(pokemonTitleAbilitiesString, abilityStringCapitalized, false);
-        if (superEffectives.length > 0) pkmEmbed.addField(pokemonTitleWeaknessesString, superEffectives, false);
-        if (resistances.length > 0) pkmEmbed.addField(pokemonTitleResistancesString, resistances, false);
-        if (immunities.length > 0) pkmEmbed.addField(pokemonTitleImmunitiesString, immunities, false);
+            .addField(pokemonTitleType, typeString, true)
+            .addField(pokemonTitleMetrics, `${pokemonTitleWeight} ${weight}
+${pokemonTitleHeight} ${height}`, true);
+        if (abilityString.length > 0) pkmEmbed.addField(pokemonTitleAbilities, abilityStringCapitalized, false);
+        if (superEffectives.length > 0) pkmEmbed.addField(pokemonTitleWeaknesses, superEffectives, false);
+        if (resistances.length > 0) pkmEmbed.addField(pokemonTitleResistances, resistances, false);
+        if (immunities.length > 0) pkmEmbed.addField(pokemonTitleImmunities, immunities, false);
         pkmEmbed
-            .addField(`${pokemonTitleStatsString} ${statLevels}`, `${pokemonTitleStatHPString} **${baseHP}** ${HPstats}
-${pokemonTitleStatAttackString} **${baseAtk}** ${Atkstats}
-${pokemonTitleStatDefenseString} **${baseDef}** ${Defstats}
-${pokemonTitleStatSpecialAttackString} **${baseSpA}** ${SpAstats}
-${pokemonTitleStatSpecialDefenseString} **${baseSpD}** ${SpDstats}
-${pokemonTitleStatSpeedString} **${baseSpe}** ${Spestats}
-${pokemonTitleBaseStatTotalString} ${BST}`, false)
+            .addField(`${pokemonTitleStats} ${statLevels}`, `${pokemonTitleStatHP} **${baseHP}** ${HPstats}
+${pokemonTitleStatAttack} **${baseAtk}** ${Atkstats}
+${pokemonTitleStatDefense} **${baseDef}** ${Defstats}
+${pokemonTitleStatSpecialAttack} **${baseSpA}** ${SpAstats}
+${pokemonTitleStatSpecialDefense} **${baseSpD}** ${SpDstats}
+${pokemonTitleStatSpeed} **${baseSpe}** ${Spestats}
+${pokemonTitleBaseStatTotal} ${BST}`, false)
             .setImage(banner)
             .setFooter(footer)
             .setTimestamp();
