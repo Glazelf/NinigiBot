@@ -10,7 +10,6 @@ module.exports = async (client) => {
         // const time = '* * * * *'; //Sec Min Hour testing
         const guildID = client.config.botServerID;
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
-        const Discord = require("discord.js");
         const { Languages } = require('../database/dbObjects');
 
         new cron.CronJob(time, async () => {
