@@ -8,8 +8,11 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
 
         // Force hidden if disabled channel
         if (channels.includes(message.channel.id)) {
-            if (message.type !== "DEFAULT" && files && ephemeral == true) return message.reply({ content: `You can't use that command in this channel because the reply contains files, which can not be hidden.`, ephemeral: true });
-            ephemeral = true;
+            if (message.type !== "DEFAULT" && files && ephemeral == true) {
+                ephemeral = false
+            } else {
+                ephemeral = true;
+            }
         };
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
