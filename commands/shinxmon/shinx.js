@@ -1,3 +1,4 @@
+// Not translated yet, see: https://github.com/Glazelf/NinigiBot/issues/139
 const Canvas = require('canvas');
 
 const tapping = [

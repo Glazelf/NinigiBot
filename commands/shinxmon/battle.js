@@ -1,3 +1,4 @@
+// Not translated yet, see: https://github.com/Glazelf/NinigiBot/issues/139
 const { Users } = require('../../database/dbObjects');
 const ShinxBattle = require('../../shinx/shinxBattle');
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
