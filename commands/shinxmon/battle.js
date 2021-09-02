@@ -174,7 +174,7 @@ exports.run = async (client, message, args = []) => {
                 const regen = shinxes[i].applyRegen();
                 if (regen) {
                     let verb = regen > 0 ? 'recovered' : 'lost';
-                    text += addLine(`${nicks[i]} ${verb} some health!`);
+                    text += addLine(`**${nicks[i]}** ${verb} some health!`);
                 };
             };
             sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
