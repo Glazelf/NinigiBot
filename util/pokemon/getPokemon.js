@@ -3,7 +3,7 @@ module.exports = async (client, message, response, interaction, language) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
-        const getLanguageString = require('../../util/getLanguageString');
+        const getLanguageString = require('../getLanguageString');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');

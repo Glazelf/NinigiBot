@@ -1,5 +1,5 @@
 module.exports = async (client, message, language) => {
-    const getLanguageString = require('./util/getLanguageString');
+    const getLanguageString = require('./getLanguageString');
     const Discord = require("discord.js");
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
