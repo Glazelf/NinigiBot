@@ -29,7 +29,6 @@ module.exports = async (client, birthday, language) => {
             return months[parseInt(month)];
         };
 
-
     } catch (e) {
         // log error
         const logger = require('./logger');
