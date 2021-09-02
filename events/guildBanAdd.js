@@ -16,6 +16,7 @@ module.exports = async (client, guildBan) => {
         });
 
         const banLog = fetchedLogs.entries.first();
+        if (!banLog) return;
         let { executor, target, reason } = banLog;
         if (!executor) return;
         if (reason == null) reason = "Not specified.";

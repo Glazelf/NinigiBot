@@ -34,7 +34,7 @@ exports.run = async (client, message, args = []) => {
 
                 leaderboardEmbed
                     .setDescription(leaderboardStringGlobal)
-                    .setAuthor(`Global leaderboard:`, avatar);
+                    .setAuthor(`Global Leaderboard:`, avatar);
 
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
                 let leaderboardStringID = bank.currency.sort((a, b) => b.balance - a.balance)
@@ -45,7 +45,7 @@ exports.run = async (client, message, args = []) => {
 
                 leaderboardEmbed
                     .setDescription(leaderboardStringID)
-                    .setAuthor(`Leaderboard:`, avatar);
+                    .setAuthor(`ID Leaderboard:`, avatar);
 
             } else {
                 serverLB();
@@ -66,7 +66,9 @@ exports.run = async (client, message, args = []) => {
 
             if (leaderboardString.length < 1) return sendMessage(client, message, "Noone in this server has any currency yet.");
 
-            leaderboardEmbed.setDescription(leaderboardString);
+            leaderboardEmbed
+                .setDescription(leaderboardString)
+                .setAuthor(`Leaderboard:`, avatar);
         };
 
     } catch (e) {

@@ -28,10 +28,9 @@ exports.run = (client, message, args = []) => {
         if (amount == "quarter") amount = balance / 4;
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
+        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please enter an a number that's equal to or larger than 1.`);
 
-        if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
         amount = Math.floor(amount);
-        if (amount <= 0) return sendMessage(client, message, `Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
             return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);

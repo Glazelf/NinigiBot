@@ -24,15 +24,15 @@ exports.run = async (client, message, args = []) => {
             if (args[0] === 'food') {
                 items = await user.getFoods();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);
-                return sendMessage(client, message, `${target.toString()}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
+                return sendMessage(client, message, `${target.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
             } else if (args[0] === 'equipment') {
                 items = await user.getEquipments();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no equipment!`);
-                return sendMessage(client, message, `${target.toString()}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
+                return sendMessage(client, message, `${target.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
             } else if (args[0] === 'keys') {
                 items = await user.getKeys();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no key items!`);
-                return sendMessage(client, message, `${target.toString()}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
+                return sendMessage(client, message, `${target.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
                 let description = `${target.toString()}'s inventory:`;
                 const length = description.length;

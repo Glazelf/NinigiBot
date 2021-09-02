@@ -8,6 +8,10 @@ exports.run = async (client, message, args = []) => {
         const { Users, Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
+
+        // Disable because bugs
+        return sendMessage(client, message, `Buying is currently experiencing some bugs and has been disabled. For  more info: <https://github.com/Glazelf/NinigiBot/issues/132>.`);
+
         if (!args[0]) return sendMessage(client, message, `You need to provide the name of the item you want to buy.`);
         const commandArgs = args[0].match(/(\w+)\s*([\s\S]*)/);
         for (let i = 0; i < shops.length; i++) {

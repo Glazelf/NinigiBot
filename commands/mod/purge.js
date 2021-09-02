@@ -11,14 +11,17 @@ exports.run = async (client, message, args) => {
         let numberFromMessage = args[0];
 
         let numberFromMessagestoNumber = Number(numberFromMessage);
+        let maxNumberOfMessages = 100;
         let numberOfMessages = numberFromMessagestoNumber + 1;
         if (isNaN(numberOfMessages)) numberFromMessage = args[1];
         if (isNaN(numberOfMessages)) return sendMessage(client, message, `Please provide a valid number.`);
 
-        if (numberOfMessages > 100) numberOfMessages = 100;
+        // Max number of messages allowed to be deleted at once
+        if (numberOfMessages > maxNumberOfMessages) numberOfMessages = maxNumberOfMessages;
 
         let amount = parseInt(numberOfMessages);
 
+        // Get user
         let user;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
@@ -38,7 +41,7 @@ exports.run = async (client, message, args) => {
 
         await message.channel.messages.fetch();
 
-        // Fetch 100 messages (will be filtered and lowered up to max amount requested)
+        // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
                 let maxMessageFetch = 100;

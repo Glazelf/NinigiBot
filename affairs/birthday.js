@@ -13,6 +13,7 @@ module.exports = async (client) => {
         const { bank } = require('../database/bank');
         const { search } = require('../util/search');
 
+        // Create cron job
         new cron.CronJob(time, async () => {
             let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
             let language = globalVars.language;
@@ -25,6 +26,8 @@ module.exports = async (client) => {
             let yesterdayCuties = birthdayRole.members;
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
             const cuties = [];
+            await guild.members.fetch();
+            // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
                 const birthday = bank.currency.getBirthday(member.id);

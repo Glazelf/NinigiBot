@@ -54,7 +54,7 @@ module.exports = {
 
                 Reflect.defineProperty(money, 'getRandomShinx', {
                     value: async function getRandomShinx(amount, exclude, guild) {
-                        const results = await Shinx.findAll({ where: { user_id: { [Op.ne]: exclude, [Op.in]: guild.members.cache.keyArray() } }, order: Sequelize.fn('RANDOM'), limit: amount });
+                        const results = await Shinx.findAll({ where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
                         return results.map(res => res.dataValues);
                     }
                 });
