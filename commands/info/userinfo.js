@@ -181,6 +181,7 @@ exports.run = async (client, message, args = []) => {
 
         async function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;
+            await guild.members.fetch();
             // Sort all users by join time
             let arr = [...guild.members.cache.values()];
             arr.sort((a, b) => a.joinedAt - b.joinedAt);
