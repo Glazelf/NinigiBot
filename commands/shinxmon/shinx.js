@@ -172,7 +172,7 @@ exports.run = async (client, message, args = []) => {
                 ctx.drawImage(img, 198, 52);
             };
 
-            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
+            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
         } else if (args[0] === 'nick') {
             args.shift()
             const nickname = args.join(' ');
@@ -286,7 +286,7 @@ exports.run = async (client, message, args = []) => {
                 ctx.drawImage(img, 199, 0);
             };
 
-            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
 
         } else if (args[0] == 'play') {
             canvas = Canvas.createCanvas(578, 398);
@@ -340,7 +340,7 @@ exports.run = async (client, message, args = []) => {
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.play(reaction[2]);
-            return sendMessage(client, message, `${shinx.nick} ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
 
         } else {
             canvas = Canvas.createCanvas(256, 160);
@@ -363,7 +363,7 @@ exports.run = async (client, message, args = []) => {
             img = await Canvas.loadImage('./assets/portraits.png');
             let conversation = await bank.currency.getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
-            return sendMessage(client, message, `${shinx.nick} ${conversation.quote}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            return sendMessage(client, message, `**${shinx.nick}** ${conversation.quote}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
         };
 
     } catch (e) {

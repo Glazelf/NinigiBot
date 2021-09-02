@@ -42,7 +42,8 @@ exports.run = async (client, message, args = []) => {
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
 
-        await sendMessage(client, message, `Do you accept the challenge, ${trainers[1]}? (y\\n)`);
+        if (trainers[1].bot) return sendMessage(client, message, `**${trainers[1].tag}** is a bot and can't battle.`);
+        await sendMessage(client, message, `Do you accept the challenge, **${trainers[1]}**? (y\\n)`);
         const filter = m => m.author.id == trainers[1].id;
         const accepts = await message.channel.awaitMessages({ filter, max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage(client, message, `Battle has been cancelled.`);
@@ -106,7 +107,7 @@ exports.run = async (client, message, args = []) => {
             text = '';
             for (let i = 0; i < 2; i++) {
                 const attackMove = shinxes[i].attack();
-                text += addLine(`${nicks[i]} uses ${attackMove[0]}!`);
+                text += addLine(`**${nicks[i]}** used ${attackMove[0]}!`);
                 const result = shinxes[(i + 1) % 2].takeDamage(attackMove);
                 if (result === true) {
                     canvas = Canvas.createCanvas(240, 130);
@@ -126,11 +127,11 @@ exports.run = async (client, message, args = []) => {
                     if (paidMoney !== 0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}💰 to ${trainers[i].username}.`);
                     for (let h = 0; h < 2; h++) {
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
-                        text += addLine(`${nicks[h]} won ${exp[0]} exp. points!`);
+                        text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);
                         if (exp[1] > 0) {
-                            text += addLine(`${nicks[h]} grew to level ${shinxes[h].level}!`);
+                            text += addLine(`**${nicks[h]}** grew to level **${shinxes[h].level}**!`);
                             const rewards = await require('../../shinx/levelRewards')(shinxes[h], exp[1]);
-                            if (rewards.length > 0) for (let c = 0; c < rewards.length; c++) text += addLine(`${trainers[h].username}, you got a new ${rewards[c][0]}: ${rewards[c][1]}!`);
+                            if (rewards.length > 0) for (let c = 0; c < rewards.length; c++) text += addLine(`**${trainers[h].username}**, you got a new ${rewards[c][0]}: **${rewards[c][1]}**!`);
                         };
                     };
 
@@ -139,7 +140,7 @@ exports.run = async (client, message, args = []) => {
                     return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
                 } else {
                     if (result === -1) {
-                        text += addLine(`${nicks[i]} lost his shield by blocking a deathblow!`);
+                        text += addLine(`**${nicks[i]}** lost his shield by blocking a deathblow!`);
                     };
                 };
             };
