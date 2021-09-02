@@ -14,7 +14,7 @@
     "pokemonNoArgument": "Vous devez fournir soit une sous-commande, soit un Pokémon à rechercher.",
     "pokemonTitleAbilities": "Capacités:",
     "pokemonTitleAccuracy": "Précision:",
-    "pokemonTitleBaseStatTotal": "Statistiques de base:",
+    "pokemonTitleBaseStatTotal": "STB:",
     "pokemonTitleCategory": "Catégorie:",
     "pokemonTitleDescription": "Description:",
     "pokemonTitleHeight": "Taille:",
