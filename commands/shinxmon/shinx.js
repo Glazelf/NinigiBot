@@ -71,7 +71,9 @@ exports.run = async (client, message, args = []) => {
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
             const expectedId = /<@!(\d+)/.exec(args[0]);
-            const targetId = message.mentions.members.first().id;
+            let target = message.mentions.users.first();
+            if (target.bot) return sendMessage(client, message, `**${target.tag}** is a bot.`);
+            const targetId = target.id
 
             if (expectedId && expectedId[1] == targetId) {
                 shinx = await bank.currency.getShinx(targetId);
