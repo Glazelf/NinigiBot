@@ -2,10 +2,15 @@ module.exports = async (date, client) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
+        const getLanguageString = require('./getLanguageString');
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff / 86400000);
-        return days + (days == 1 ? " day" : " days") + " ago";
+
+        let daysSingle = await getLanguageString(client, language, 'checkDaysSingle');
+        let daysMultiple = await getLanguageString(client, language, 'checkDaysMultiple');
+        let daysAgo = await getLanguageString(client, language, 'checkDaysAgo');
+        return days + (days == 1 ? ` ${daysSingle}` : ` ${daysMultiple}`) + ` ${daysAgo}`;
 
     } catch (e) {
         // log error
