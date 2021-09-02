@@ -107,7 +107,7 @@ exports.run = async (client, message, args = []) => {
             text = '';
             for (let i = 0; i < 2; i++) {
                 const attackMove = shinxes[i].attack();
-                text += addLine(`**${nicks[i]}** used ${attackMove[0]}!`);
+                text += addLine(`**${nicks[i]}** used **${attackMove[0]}**!`);
                 const result = shinxes[(i + 1) % 2].takeDamage(attackMove);
                 if (result === true) {
                     canvas = Canvas.createCanvas(240, 130);
