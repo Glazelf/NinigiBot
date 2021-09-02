@@ -1,12 +1,13 @@
 const { forEach } = require('lodash');
 
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
+        const checkDays = require('../../util/checkDays');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
@@ -138,20 +139,14 @@ exports.run = async (client, message) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
+            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(client, message.guild, guild.createdAt, language)}`, false);
+        client, message, userCreated, language
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
             .setFooter(user.tag)
             .setTimestamp();
 
         return sendMessage(client, message, null, serverEmbed);
-
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
 
     } catch (e) {
         // log error

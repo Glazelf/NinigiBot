@@ -1,12 +1,8 @@
-module.exports = async (date, client) => {
+module.exports = async (client, date, language) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
         const getLanguageString = require('./getLanguageString');
-        const { Languages } = require('../database/dbObjects');
-        let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
-        let language = globalVars.language;
-        if (dbLanguage) language = dbLanguage.language;
 
         let now = new Date();
         let diff = now.getTime() - date.getTime();

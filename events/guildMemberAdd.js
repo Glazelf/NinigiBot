@@ -18,7 +18,9 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
             let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
 
-            let daysCreated = await checkDays(user.createdAt);
+            // Language = en as a test for now untill proper translation 
+            let language = 'en';
+            let daysCreated = await checkDays(client, user.createdAt, language);
 
             const joinEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

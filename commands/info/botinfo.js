@@ -1,11 +1,12 @@
 const { forEach } = require('lodash');
 
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
+        const checkDays = require('../../util/checkDays');
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -110,7 +111,7 @@ exports.run = async (client, message) => {
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
-            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
+            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client, client.user.createdAt, language)}`, false)
             .setFooter(user.tag)
             .setTimestamp();
 
@@ -120,13 +121,6 @@ exports.run = async (client, message) => {
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
 
         return sendMessage(client, message, null, botEmbed, null, true, botButtons, true);
-
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
 
         async function getUsers() {
             // Fast but inaccurate method

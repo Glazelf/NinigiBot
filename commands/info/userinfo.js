@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -9,6 +9,7 @@ exports.run = async (client, message, args = []) => {
         const { Users } = require('../../database/dbObjects');
         const checkDays = require('../../util/checkDays');
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
+        const parseDate = require('../../util/parseDate');
 
         let user;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
@@ -46,7 +47,7 @@ exports.run = async (client, message, args = []) => {
         let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
         let switchCode = bank.currency.getSwitchCode(user.id);
         let birthday = bank.currency.getBirthday(user.id);
-        let birthdayParsed = require('../../util/parseDate')(birthday);
+        let birthdayParsed = await parseDate(client, birthday, language);
 
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
@@ -149,12 +150,12 @@ exports.run = async (client, message, args = []) => {
         let joinRank = `${await getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
 
         // Check Days
-        let daysJoined = await checkDays(member.joinedAt);
+        let daysJoined = await checkDays(client, member.joinedAt, language);
         let daysBoosting;
         if (member.premiumSince > 0) {
-            daysBoosting = await checkDays(member.premiumSince);
+            daysBoosting = await checkDays(client, member.premiumSince, language);
         };
-        let daysCreated = await checkDays(user.createdAt);
+        let daysCreated = await checkDays(client, user.createdAt, language);
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
