@@ -27,6 +27,7 @@ exports.run = async (client, message, args = []) => {
         } else {
             user = message.member.user;
         };
+        console.log(message)
         console.log(subCommand)
         console.log(subArgument)
 
