@@ -147,6 +147,7 @@ exports.run = async (client, message, args = []) => {
                 // Easter egg name aliases
                 await correctValue(easterEggName, pokemonName);
 
+                console.log(pokemonName)
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
                         // Log for testing, remove later
@@ -165,8 +166,6 @@ exports.run = async (client, message, args = []) => {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
-                        } else if (message.type == 'APPLICATION_COMMAND') {
-                            return message.reply("what")
                         } else {
                             return sendMessage(client, message, `Could not find the specified Pokémon.`);
                         };
