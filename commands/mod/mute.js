@@ -34,7 +34,7 @@ exports.run = async (client, message, args = []) => {
 
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
+        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).`);
 
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
