@@ -138,7 +138,7 @@ module.exports = async (client, message, response, interaction) => {
                 })
                 .catch(function (e) {
                     // console.log(e);
-                    return sendMessage(client, message, `Could not find the specified Pokémon.`, true);
+                    return sendMessage(client, message, `Could not find the specified Pokémon.`);
                 });
         };
 
