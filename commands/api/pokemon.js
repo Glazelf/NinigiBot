@@ -29,10 +29,6 @@ exports.run = async (client, message, args = []) => {
 
         };
 
-        console.log(message)
-        console.log(subCommand)
-        console.log(subArgument)
-
         switch (subCommand) {
             case "ability":
                 P.getAbilityByName(subArgument)
