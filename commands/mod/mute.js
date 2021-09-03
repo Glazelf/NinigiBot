@@ -33,6 +33,10 @@ exports.run = async (client, message, args = []) => {
         const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
         if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);
 
+        let userRole = message.member.roles.highest;
+        let targetRole = member.roles.highest;
+        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).`);
+
         let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
         if (isMuted) {
             await member.roles.remove(role);
