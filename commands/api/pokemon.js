@@ -27,6 +27,8 @@ exports.run = async (client, message, args = []) => {
         } else {
             user = message.member.user;
         };
+        console.log(subCommand)
+        console.log(subArgument)
 
         switch (subCommand) {
             case "ability":
@@ -147,7 +149,7 @@ exports.run = async (client, message, args = []) => {
                 // Easter egg name aliases
                 await correctValue(easterEggName, pokemonName);
 
-                console.log(pokemonName)
+
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
                         // Log for testing, remove later
@@ -167,6 +169,7 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
+                            message.reply("Could not find the specified Pokémon.")
                             return sendMessage(client, message, `Could not find the specified Pokémon.`);
                         };
                     });
