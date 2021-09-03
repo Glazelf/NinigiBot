@@ -172,7 +172,6 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            message.reply("Could not find the specified Pokémon.")
                             return sendMessage(client, message, `Could not find the specified Pokémon.`);
                         };
                     });

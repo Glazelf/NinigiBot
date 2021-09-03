@@ -43,11 +43,9 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         messageObject['ephemeral'] = ephemeral;
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (message.deleted == true) {
-            return message.channel.send(messageObject);
-        } else {
-            return message.reply(messageObject);
-        };
+        if (message.type == "DEFAULT" && message.deleted == true) return message.channel.send(messageObject);
+
+        return message.reply(messageObject);
 
     } catch (e) {
         // log error
