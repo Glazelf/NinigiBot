@@ -11,9 +11,9 @@ module.exports = async (client, member, newMember) => {
         if (!log) return;
 
         let botMember = await member.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let user = client.users.cache.get(member.id);
-
             let updateCase = null;
             let topText = null;
             let changeText = null;
@@ -50,8 +50,7 @@ module.exports = async (client, member, newMember) => {
                     changeText = `**${member.guild.name}** will lose this Nitro Boost in 3 days.`;
                     break;
                 default:
-                    topText = "Undefined guild member update event.";
-                    changeText = "Undefined guild member update event.";
+                    return;
                     break;
             };
 
@@ -71,6 +70,7 @@ module.exports = async (client, member, newMember) => {
                 if (oldRole) await oldRole.delete();
                 await roleDB.destroy();
             };
+
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {

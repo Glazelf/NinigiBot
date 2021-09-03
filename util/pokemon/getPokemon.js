@@ -1,4 +1,4 @@
-module.exports = async (client, message, response, interaction, language) => {
+module.exports = async (client, message, response, language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -209,7 +209,7 @@ module.exports = async (client, message, response, interaction, language) => {
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
         let footer = message.member.user.tag;
-        if (interaction) footer = interaction.user.tag;
+        if (message.type != "DEFAULT") footer = message.member.user.tag;
 
         let pokemonTitleType = await getLanguageString(client, language, 'pokemonTitleType');
         let pokemonTitleMetrics = await getLanguageString(client, language, 'pokemonTitleMetrics');

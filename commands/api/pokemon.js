@@ -28,6 +28,7 @@ exports.run = async (client, message, args = [], language) => {
             user = message.author;
         } else {
             user = message.member.user;
+
         };
 
         switch (subCommand) {
@@ -159,6 +160,7 @@ exports.run = async (client, message, args = [], language) => {
 
                 // Easter egg name aliases
                 await correctValue(easterEggName, pokemonName);
+
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {

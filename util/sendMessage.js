@@ -15,6 +15,7 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
             }
         };
 
+        console.log("1")
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
         if (replyText) messageObject['content'] = replyText;
@@ -43,14 +44,14 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
                 messageObject['components'] = [components];
             };
         };
+        console.log("2")
         messageObject['ephemeral'] = ephemeral;
         if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (message.deleted == true) {
-            return message.channel.send(messageObject);
-        } else {
-            return message.reply(messageObject);
-        };
+        if (message.type == "DEFAULT" && message.deleted == true) return message.channel.send(messageObject);
+
+        console.log("3")
+        return message.reply(messageObject);
 
     } catch (e) {
         // log error

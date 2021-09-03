@@ -4,11 +4,15 @@ module.exports = async (client, member) => {
     try {
         const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
+        let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+        let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+
+        if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
         let botMember = await member.guild.members.fetch(client.user.id);
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
@@ -60,6 +64,12 @@ module.exports = async (client, member) => {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {
             return;
+        };
+
+        async function deleteBoosterRole() {
+            let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
+            if (oldRole) await oldRole.delete();
+            await roleDB.destroy();
         };
 
     } catch (e) {
