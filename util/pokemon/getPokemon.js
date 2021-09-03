@@ -1,4 +1,4 @@
-module.exports = async (client, message, response, interaction) => {
+module.exports = async (client, message, response) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -207,7 +207,7 @@ module.exports = async (client, message, response, interaction) => {
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
         let footer = message.member.user.tag;
-        if (interaction) footer = interaction.user.tag;
+        if (message.type != "DEFAULT") footer = interaction.user.tag;
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
