@@ -4,13 +4,17 @@ module.exports = async (client, messageReaction) => {
     try {
         const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
-        const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
+        const { StarboardChannels, StarboardMessages, Languages } = require('../database/dbObjects');
 
         if (!messageReaction.count) return;
 
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+
+        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let language = globalVars.language;
+        if (dbLanguage) language = dbLanguage.language;
 
         if (!starboardChannel) return;
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);

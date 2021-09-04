@@ -4,11 +4,17 @@ module.exports = async (client, member) => {
     try {
         const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
-        const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
+        const { LogChannels, PersonalRoles, PersonalRoleServers, Languages } = require('../database/dbObjects');
+
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
+
+        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let language = globalVars.language;
+        if (dbLanguage) language = dbLanguage.language;
+
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
 

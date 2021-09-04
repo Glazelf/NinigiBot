@@ -7,7 +7,7 @@ module.exports = async (client, message) => {
 
         if (!message.guild) return;
 
-        const { LogChannels, StarboardMessages } = require('../database/dbObjects');
+        const { LogChannels, StarboardMessages, Languages } = require('../database/dbObjects');
 
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
@@ -19,6 +19,10 @@ module.exports = async (client, message) => {
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
+
+        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let language = globalVars.language;
+        if (dbLanguage) language = dbLanguage.language;
 
         let botMember = await message.guild.members.fetch(client.user.id);
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
