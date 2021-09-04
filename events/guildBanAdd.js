@@ -14,6 +14,8 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
+        let botMember = await member.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const banLog = fetchedLogs.entries.first();
             if (!banLog) return;
