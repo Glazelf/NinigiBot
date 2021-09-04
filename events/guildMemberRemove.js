@@ -22,11 +22,21 @@ module.exports = async (client, member) => {
 
         let botMember = await member.guild.members.fetch(client.user.id);
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let memberLeaveEventTitle = await getLanguageString(client, language, 'memberLeaveEventTitle');
+            let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
+            guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${member.guild.name}**`).replace('[memberCount]', member.guild.memberCount);
+            let userTitle = await getLanguageString(client, language, 'userTitle');
+            let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
+            let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
+
+            let kickEventTitle = await getLanguageString(client, language, 'kickEventTitle');
+            let kickExecutorTitle = await getLanguageString(client, language, 'kickExecutorTitle');
+
             let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
-            let embedAuthor = `Member Left 💔`;
-            let reasonText = "Not specified.";
+            let embedAuthor = `${memberLeaveEventTitle} 💔`;
+            let reasonText = reasonUnspecified;
             let kicked = false;
 
             const fetchedLogs = await member.guild.fetchAuditLogs({
@@ -42,7 +52,7 @@ module.exports = async (client, member) => {
                     kicked = true;
                     if (reason) reasonText = reason;
                     icon = executor.displayAvatarURL({ format: "png", dynamic: true });
-                    embedAuthor = `Member Kicked 💔`;
+                    embedAuthor = `${kickEventTitle} 💔`;
                 };
             };
 
@@ -50,12 +60,12 @@ module.exports = async (client, member) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(embedAuthor, icon)
                 .setThumbnail(avatar)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${member} (${member.id})`, false);
+                .setDescription(guildMemberCountUpdate)
+                .addField(userTitle, `${member} (${member.id})`, false);
             if (kicked == true) {
-                leaveEmbed.addField(`Reason:`, reasonText, false)
+                leaveEmbed.addField(reasonTitle, reasonText, false)
                 try {
-                    leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${executor.id})`, false);
+                    leaveEmbed.addField(kickExecutorTitle, `${executor.tag} (${executor.id})`, false);
                 } catch (e) {
                     // console.log(e);
                 };
