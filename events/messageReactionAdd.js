@@ -19,7 +19,7 @@ module.exports = async (client, messageReaction) => {
             starLimit = globalVars.starboardLimit;
         };
 
-        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let dbLanguage = await Languages.findOne({ where: { server_id: messageReaction.message.guild.id } });
         let language = globalVars.language;
         if (dbLanguage) language = dbLanguage.language;
 

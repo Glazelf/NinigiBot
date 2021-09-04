@@ -11,7 +11,7 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let dbLanguage = await Languages.findOne({ where: { server_id: member.guild.id } });
         let language = globalVars.language;
         if (dbLanguage) language = dbLanguage.language;
 

@@ -12,7 +12,7 @@ module.exports = async (client, messageReaction) => {
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
 
-        let dbLanguage = await Languages.findOne({ where: { server_id: guildBan.guild.id } });
+        let dbLanguage = await Languages.findOne({ where: { server_id: messageReaction.message.guild.id } });
         let language = globalVars.language;
         if (dbLanguage) language = dbLanguage.language;
 
