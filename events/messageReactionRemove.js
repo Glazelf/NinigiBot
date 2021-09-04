@@ -45,14 +45,14 @@ module.exports = async (client, messageReaction) => {
         starboardMessageSentData = starboardMessageSentData.replace('[member]', targetMessage.author).replace('[channel]', targetMessage.channel);
         let starboardMessageContextTitle = await getLanguageString(client, language, 'starboardMessageContextTitle');
         let linkString = await getLanguageString(client, language, 'linkString');
-        let starboardMessageReplyTitle = await getLanguageString(client, language, 'starboardMessageReplyTitle');
+        let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
 
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`⭐${messageReaction.count}`, avatar)
             .setDescription(targetMessage.content)
             .addField(starboardMessageSentTitle, starboardMessageSentData, false);
-        if (isReply) starEmbed.addField(starboardMessageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+        if (isReply) starEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
         starEmbed
             .addField(starboardMessageContextTitle, `[${linkString}](${targetMessage.url})`, false)
             .setImage(messageImage)

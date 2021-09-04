@@ -54,16 +54,25 @@ module.exports = async (client, message, newMessage) => {
 
             let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 
+            let messageEditEventTitle = await getLanguageString(client, language, 'messageEditEventTitle');
+            let messageEditEventData = await getLanguageString(client, language, 'messageEditEventData');
+            messageEditEventData = messageEditEventData.replace('[user]', `${message.author} (${message.author.id}`).replace('[channel]', message.channel);
+            let updateOldTitle = await getLanguageString(client, language, 'updateOldTitle');
+            let updateNewTitle = await getLanguageString(client, language, 'updateNewTitle');
+            let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
+            let messageJumpTitle = await getLanguageString(client, language, 'messageJumpTitle');
+            let linkString = await getLanguageString(client, language, 'linkString');
+
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Message Edited ⚒️`, avatar)
-                .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);
-            if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
+                .setAuthor(`${messageEditEventTitle} ⚒️`, avatar)
+                .setDescription(messageEditEventData);
+            if (messageContent.length > 0) updateEmbed.addField(updateOldTitle, messageContent, false);
             updateEmbed
-                .addField(`After:`, newMessageContent, false)
-            if (isReply) updateEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+                .addField(updateNewTitle, newMessageContent, false)
+            if (isReply) updateEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
             updateEmbed
-                .addField(`Jump to message:`, `[Link](${message.url})`, false)
+                .addField(messageJumpTitle, `[${linkString}](${message.url})`, false)
                 .setImage(messageImage)
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
