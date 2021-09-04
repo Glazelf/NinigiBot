@@ -4,6 +4,7 @@
     "autoModDeletedMessage": "Supprimé un message de [userTag] [userID] pour la raison suivante: [reason]",
     "autoModKickedDM": "Vous avez été automatiquement kick pour la raison suivante: [reason]",
     "autoModKickedReturn": "Auto-kicked de [userTag] [userID] réussi pour la raison suivante: [reason]",
+    "banExecutorTitle": "",
     "birthdayAffairDescription": "Aujourd'hui, c'est l'anniversaire de [userTag], tout le monde!",
     "birthdayAffairJoinWord": "et",
     "checkDaysAgo": "",
@@ -13,6 +14,7 @@
     "getCardinalnd": "",
     "getCardinalrd": "",
     "getCardinalth": "",
+    "guildMemberCountUpdate": "",
     "lackPerms": "Vous n'avez pas les permissions nécessaires pour le faire.",
     "parseDateJan": "",
     "parseDateFeb": "",
@@ -57,5 +59,8 @@
     "pokemonUndefinedItem": "Impossible de trouver l'objet spécifié.",
     "pokemonUndefinedMove": "Impossible de trouver le mouvement spécifié.",
     "pokemonUndefinedPokemon": "Impossible de trouver le Pokémon spécifié.",
-    "stanAffairDescription": "La personne la plus stable du jour est [userTag]!"
+    "reasonTitle": "",
+    "reasonUnspecified": "",
+    "stanAffairDescription": "La personne la plus stable du jour est [userTag]!",
+    "userTitle": ""
 }

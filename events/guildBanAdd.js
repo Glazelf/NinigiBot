@@ -19,11 +19,20 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
+
+        let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
+        let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
+        let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
+        guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${guildBan.guild.name}**`).replace('[memberCount]', guildBan.guild.memberCount);
+        let userTitle = await getLanguageString(client, language, 'userTitle');
+        let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
+        let banExecutorTitle = await getLanguageString(client, language, 'banExecutorTitle');
+
         const banLog = fetchedLogs.entries.first();
         if (!banLog) return;
         let { executor, target, reason } = banLog;
         if (!executor) return;
-        if (reason == null) reason = "Not specified.";
+        if (reason == null) reason = reasonUnspecified;
         let bannedBy = `${executor.tag} (${executor.id})`;
 
         if (target.id !== guildBan.user.id) return;
@@ -32,12 +41,12 @@ module.exports = async (client, guildBan) => {
 
         const banEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Member Banned 💔`, avatarExecutor)
+            .setAuthor(`${banEventTitle} 💔`, avatarExecutor)
             .setThumbnail(avatarTarget)
-            .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
-            .addField(`User:`, `${target} (${target.id})`, false)
-            .addField(`Reason:`, reason, false)
-            .addField(`Banned by:`, bannedBy, false)
+            .setDescription(guildMemberCountUpdate)
+            .addField(userTitle, `${target} (${target.id})`, false)
+            .addField(reasonTitle, reason, false)
+            .addField(banExecutorTitle, bannedBy, false)
             .setFooter(target.tag)
             .setTimestamp();
 
