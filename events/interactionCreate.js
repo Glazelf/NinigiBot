@@ -132,7 +132,7 @@ module.exports = async (client, interaction) => {
                                 if (!role) return sendMessage(client, interaction, roleUndefined);
 
                                 let roleName = `**${role.name}**`;
-                                let targetMember = `**${interaction.member.tag}**`;
+                                let targetMember = `**${interaction.member.user.tag}**`;
                                 roleUnmanagableIntegration.replace('[roleName]', roleName);
                                 roleUnmanagablePermissions.replace('[roleName]', roleName);
                                 roleToggleAdded.replace('[roleName]', roleName);
