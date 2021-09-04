@@ -4,6 +4,7 @@
     "autoModDeletedMessage": "Deleted a message by [userTag] [userID] for the following reason: [reason]",
     "autoModKickedDM": "You've been automatically kicked for the following reason: [reason]",
     "autoModKickedReturn": "Successfully auto-kicked [userTag] [userID] for the following reason: [reason]",
+    "banEventTitle": "Member Banned",
     "banExecutorTitle": "Banned by:",
     "birthdayAffairDescription": "Today's is [userTag]'s birthday, everyone!",
     "birthdayAffairJoinWord": "and",
