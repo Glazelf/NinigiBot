@@ -125,6 +125,9 @@ module.exports = async (client, interaction) => {
                                 let roleAssignUnavailable = await getLanguageString(client, language, 'roleAssignUnavailable');
                                 let roleUnmanagableIntegration = await getLanguageString(client, language, 'roleUnmanagableIntegration');
                                 let roleUnmanagablePermissions = await getLanguageString(client, language, 'roleUnmanagablePermissions');
+                                let roleToggleAdded = await getLanguageString(client, language, 'roleToggleAdded');
+                                let roleToggleRemoved = await getLanguageString(client, language, 'roleToggleRemoved');
+                                let roleToggleFailed = await getLanguageString(client, langugae, 'roleToggleFailed');
 
                                 // Toggle selected role
                                 const { EligibleRoles } = require('../database/dbObjects');
@@ -132,8 +135,12 @@ module.exports = async (client, interaction) => {
                                 if (!role) return sendMessage(client, interaction, roleUndefined);
 
                                 let roleName = `**${role.name}**`;
+                                let targetMember = `**${interaction.member.tag}**`;
                                 roleUnmanagableIntegration.replace('[roleName]', roleName);
                                 roleUnmanagablePermissions.replace('[roleName]', roleName);
+                                roleToggleAdded.replace('[roleName]', roleName);
+                                roleToggleRemoved.replace('[roleName]', roleName);
+                                roleToggleFailed.replace('[roleName]', roleName).replace('[targetMember]', targetMember);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) return sendMessage(client, interaction, roleAssignUnavailable);
@@ -145,13 +152,13 @@ module.exports = async (client, interaction) => {
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        return sendMessage(client, interaction, `Removed **${role.name}** from your roles!`);
+                                        return sendMessage(client, interaction, roleToggleAdded);
                                     } else {
                                         await interaction.member.roles.add(role);
-                                        return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
+                                        return sendMessage(client, interaction, roleToggleRemoved);
                                     };
                                 } catch (e) {
-                                    return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, null, null, false);
+                                    return sendMessage(client, interaction, roleToggleFailed, null, null, false);
                                 };
                             } catch (e) {
                                 console.log(e);
