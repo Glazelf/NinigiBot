@@ -16,6 +16,7 @@
     "getCardinalth": "",
     "guildMemberCountUpdate": "",
     "lackPerms": "",
+    "logBotPermissionError": "",
     "parseDateJan": "",
     "parseDateFeb": "",
     "parseDateMar": "",

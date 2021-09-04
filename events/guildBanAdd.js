@@ -53,7 +53,8 @@ module.exports = async (client, guildBan) => {
             return log.send({ embeds: [banEmbed] });
 
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
+            return log.send({ content: logBotPermissionError });
         } else {
             return;
         };

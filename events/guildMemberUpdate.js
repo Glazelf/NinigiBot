@@ -70,16 +70,17 @@ module.exports = async (client, member, newMember) => {
 
             return log.send({ embeds: [updateEmbed] });
 
-            async function deleteBoosterRole() {
-                let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
-                if (oldRole) await oldRole.delete();
-                await roleDB.destroy();
-            };
-
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
+            return log.send({ content: logBotPermissionError });
         } else {
             return;
+        };
+
+        async function deleteBoosterRole() {
+            let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
+            if (oldRole) await oldRole.delete();
+            await roleDB.destroy();
         };
 
     } catch (e) {

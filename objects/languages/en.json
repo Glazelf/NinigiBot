@@ -16,6 +16,7 @@
     "getCardinalth": "th",
     "guildMemberCountUpdate": "[guildName] now has [memberCount] members.",
     "lackPerms": "You do not have the required permissions to do this.",
+    "logBotPermissionError": "I lack permissions to send embeds in your log channel.",
     "parseDateJan": "January",
     "parseDateFeb": "February",
     "parseDateMar": "March",
