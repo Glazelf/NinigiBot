@@ -38,6 +38,9 @@ exports.run = async (client, message, args = []) => {
             let targetRole = member.roles.highest;
             if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
+            let existingBan = await message.guild.bans.fetch(member.id);
+            if (existingBan) return sendMessage(client, message, `${member.user.tag} (${member.id}) is already banned.`);
+
             try {
                 await user.send({ content: `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\`` });
                 banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`. (DM Succeeded)`;
@@ -49,6 +52,9 @@ exports.run = async (client, message, args = []) => {
 
         } else {
             let memberID = args[0];
+
+            let existingBan = await message.guild.bans.fetch(memberID);
+            if (existingBan) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
             try {
