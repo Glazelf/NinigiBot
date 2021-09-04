@@ -19,38 +19,44 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
+        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
+            let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
+            let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
+            guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${guildBan.guild.name}**`).replace('[memberCount]', guildBan.guild.memberCount);
+            let userTitle = await getLanguageString(client, language, 'userTitle');
+            let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
+            let banExecutorTitle = await getLanguageString(client, language, 'banExecutorTitle');
 
-        let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
-        let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
-        let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
-        guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${guildBan.guild.name}**`).replace('[memberCount]', guildBan.guild.memberCount);
-        let userTitle = await getLanguageString(client, language, 'userTitle');
-        let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
-        let banExecutorTitle = await getLanguageString(client, language, 'banExecutorTitle');
+            const banLog = fetchedLogs.entries.first();
+            if (!banLog) return;
+            let { executor, target, reason } = banLog;
+            if (!executor) return;
+            if (reason == null) reason = reasonUnspecified;
+            let bannedBy = `${executor.tag} (${executor.id})`;
 
-        const banLog = fetchedLogs.entries.first();
-        if (!banLog) return;
-        let { executor, target, reason } = banLog;
-        if (!executor) return;
-        if (reason == null) reason = reasonUnspecified;
-        let bannedBy = `${executor.tag} (${executor.id})`;
+            if (target.id !== guildBan.user.id) return;
+            let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
+            let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
 
-        if (target.id !== guildBan.user.id) return;
-        let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
-        let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
+            const banEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setAuthor(`${banEventTitle} 💔`, avatarExecutor)
+                .setThumbnail(avatarTarget)
+                .setDescription(guildMemberCountUpdate)
+                .addField(userTitle, `${target} (${target.id})`, false)
+                .addField(reasonTitle, reason, false)
+                .addField(banExecutorTitle, bannedBy, false)
+                .setFooter(target.tag)
+                .setTimestamp();
 
-        const banEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setAuthor(`${banEventTitle} 💔`, avatarExecutor)
-            .setThumbnail(avatarTarget)
-            .setDescription(guildMemberCountUpdate)
-            .addField(userTitle, `${target} (${target.id})`, false)
-            .addField(reasonTitle, reason, false)
-            .addField(banExecutorTitle, bannedBy, false)
-            .setFooter(target.tag)
-            .setTimestamp();
+            return log.send({ embeds: [banEmbed] });
 
-        return log.send({ embeds: [banEmbed] });
+        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+        } else {
+            return;
+        };
 
     } catch (e) {
         // log error
