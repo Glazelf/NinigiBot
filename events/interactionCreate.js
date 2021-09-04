@@ -17,8 +17,9 @@ module.exports = async (client, interaction) => {
 
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
-                if (!interaction.member) return sendMessage(client, interaction, `Sorry, you're not allowed to use commands in private messages!`);
-                const dbChannels = await DisabledChannels.findAll();
+                let commandErrorDM = await getLanguageString(client, language, 'commandErrorDM');
+
+                if (!interaction.member) return sendMessage(client, interaction, commandErrorDM);
 
                 // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
                 let args = [];
@@ -118,17 +119,28 @@ module.exports = async (client, interaction) => {
                     case "SELECT_MENU":
                         if (interaction.customId == 'role-select') {
                             try {
+                                let adminBool = await isAdmin(interaction.guild.me);
+
+                                let roleUndefined = await getLanguageString(client, language, 'roleUndefined');
+                                let roleAssignUnavailable = await getLanguageString(client, language, 'roleAssignUnavailable');
+                                let roleUnmanagableIntegration = await getLanguageString(client, language, 'roleUnmanagableIntegration');
+                                let roleUnmanagablePermissions = await getLanguageString(client, language, 'roleUnmanagablePermissions');
+
                                 // Toggle selected role
                                 const { EligibleRoles } = require('../database/dbObjects');
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
-                                if (!role) return sendMessage(client, interaction, `This role does not exist.`);
-                                let adminBool = await isAdmin(interaction.guild.me);
+                                if (!role) return sendMessage(client, interaction, roleUndefined);
+
+                                let roleName = `**${role.name}**`;
+                                roleUnmanagableIntegration.replace('[roleName]', roleName);
+                                roleUnmanagablePermissions.replace('[roleName]', roleName);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
-                                if (!checkRoleEligibility) return sendMessage(client, interaction, `This role is not available anymore.`);
+                                if (!checkRoleEligibility) return sendMessage(client, interaction, roleAssignUnavailable);
 
-                                if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(`I do not have permission to manage this role.`);
+
+                                if (role.managed) return sendMessage(client, interaction, roleUnmanagableIntegration);
+                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(client, interaction, roleUnmanagablePermissions);
 
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
