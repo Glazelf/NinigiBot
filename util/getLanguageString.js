@@ -2,7 +2,9 @@ module.exports = async (client, language, stringName) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
-        let languageString = client.languages[language][stringName];
+        let guildLanguage = client.languages[language];
+        if (!guildLanguage) guildLanguage = client.languages['en'];
+        let languageString = guildLanguage[stringName];
         if (!languageString || languageString.length < 1) languageString = client.languages['en'][stringName];
         return languageString;
 
