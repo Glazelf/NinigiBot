@@ -11,7 +11,6 @@ module.exports = async (client) => {
         const guildID = client.config.botServerID;
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const { Languages } = require('../database/dbObjects');
-        const Discord = require("discord.js");
         const giphyRandom = require("giphy-random");
         const config = require("../config.json");
 
