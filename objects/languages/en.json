@@ -15,6 +15,10 @@
     "getCardinalnd": "nd",
     "getCardinalrd": "rd",
     "getCardinalth": "th",
+    "guildBoostCountUpdate": "[guildName] now has [boostCount] Nitro Boosts.",
+    "guildBoostDecay": "[guildName] will lose this Nitro Boost in 3 days.",
+    "guildBoostStartEventTitle": "Started Nitro Boosting",
+    "guildBoostStopEventTitle": "Stopped Nitro Boosting",
     "guildMemberCountUpdate": "[guildName] now has [memberCount] members.",
     "kickEventTitle": "Member Kicked",
     "kickExecutorTitle": "Kicked by:",
@@ -22,6 +26,7 @@
     "logBotPermissionError": "I lack permissions to send embeds in your log channel.",
     "memberJoinEventTitle": "Member Joined",
     "memberLeaveEventTitle": "Member Left",
+    "memberNicknameUpdateEventTitle": "Nickname Changed",
     "parseDateJan": "January",
     "parseDateFeb": "February",
     "parseDateMar": "March",
@@ -69,5 +74,8 @@
     "reasonUnspecified": "Not specified.",
     "stanAffairDescription": "Today's most stannable person is [userTag]!",
     "timeCreatedTitle": "Created At:",
+    "updateNewTitle": "New:",
+    "updateOldTitle": "Old:",
+    "updateRemovedTitle": "Removed:",
     "userTitle": "User:"
 }

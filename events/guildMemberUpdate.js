@@ -18,6 +18,18 @@ module.exports = async (client, member, newMember) => {
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let memberUpdateNicknameEventTitle = await getLanguageString(client, language, 'memberNicknameUpdateEventTitle');
+            let guildBoostStartEventTitle = await getLanguageString(client, language, 'guildBoostStartEventTitle');
+            let guildBoostStopEventTitle = await getLanguageString(client, language, 'guildBoostStopEventTitle');
+            let userTitle = await getLanguageString(client, language, 'userTitle');
+            let updateOldTitle = await getLanguageString(client, language, 'updateOldTitle');
+            let updateNewTitle = await getLanguageString(client, language, 'updateNewTitle');
+            let updateRemovedTitle = await getLanguageString(client, language, 'updateRemovedTitle');
+            let guildBoostCountUpdate = await getLanguageString(client, language, 'guildBoostCountUpdate');
+            guildBoostCountUpdate = guildBoostCountUpdate.replace('[guildName]', `**${member.guild.name}**`).replace('[boostCount]', member.guild.premiumSubscriptionCount);
+            let guildBoostDecay = await getLanguageString(client, language, 'guildBoostDecay');
+            guildBoostDecay = guildBoostDecay.replace('[guildName]', `**${member.guild.name}**`);
+
             let user = client.users.cache.get(member.id);
             let updateCase = null;
             let topText = null;
@@ -37,22 +49,22 @@ module.exports = async (client, member, newMember) => {
 
             switch (updateCase) {
                 case "nickname":
-                    topText = "Nickname Changed ⚒️";
+                    topText = `${memberUpdateNicknameEventTitle} ⚒️`;
                     if (member.nickname && newMember.nickname) {
-                        changeText = `Old: **${member.nickname}**\nNew: **${newMember.nickname}**`;
+                        changeText = `${updateOldTitle} **${member.nickname}**\n${updateNewTitle} **${newMember.nickname}**`;
                     } else if (newMember.nickname) {
-                        changeText = `New: **${newMember.nickname}**`;
+                        changeText = `${updateNewTitle} **${newMember.nickname}**`;
                     } else {
-                        changeText = `Removed: **${member.nickname}**`;
+                        changeText = `${updateRemovedTitle} **${member.nickname}**`;
                     };
                     break;
                 case "nitroStart":
-                    topText = "Started Nitro Boosting ⚒️";
-                    changeText = `**${member.guild.name}** now has ${member.guild.premiumSubscriptionCount} Nitro Boosts.`;
+                    topText = `${guildBoostStartEventTitle} ⚒️`;
+                    changeText = guildBoostCountUpdate;
                     break;
                 case "nitroEnd":
-                    topText = "Stopped Nitro Boosting ⚒️";
-                    changeText = `**${member.guild.name}** will lose this Nitro Boost in 3 days.`;
+                    topText = `${guildBoostStopEventTitle} ⚒️`;
+                    changeText = guildBoostDecay;
                     break;
                 default:
                     return;
@@ -64,7 +76,7 @@ module.exports = async (client, member, newMember) => {
                 .setAuthor(topText, icon)
                 .setThumbnail(avatar)
                 .setDescription(changeText)
-                .addField(`User:`, `${user} (${user.id})`)
+                .addField(userTitle, `${user} (${user.id})`)
                 .setFooter(user.tag)
                 .setTimestamp();
 

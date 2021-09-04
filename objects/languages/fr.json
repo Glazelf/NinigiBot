@@ -15,6 +15,10 @@
     "getCardinalnd": "",
     "getCardinalrd": "",
     "getCardinalth": "",
+    "guildBoostCountUpdate": "",
+    "guildBoostDecay": "",
+    "guildBoostStartEventTitle": "",
+    "guildBoostStopEventTitle": "",
     "guildMemberCountUpdate": "",
     "kickEventTitle": "",
     "kickExecutorTitle": "",
@@ -22,6 +26,7 @@
     "logBotPermissionError": "",
     "memberJoinEventTitle": "",
     "memberLeaveEventTitle": "",
+    "memberNicknameUpdateEventTitle": "",
     "parseDateJan": "",
     "parseDateFeb": "",
     "parseDateMar": "",
@@ -69,5 +74,8 @@
     "reasonUnspecified": "",
     "stanAffairDescription": "La personne la plus stable du jour est [userTag]!",
     "timeCreatedTitle": "",
+    "updateNewTitle": "",
+    "updateOldTitle": "",
+    "updateRemovedTitle": "",
     "userTitle": ""
 }
