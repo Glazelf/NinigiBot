@@ -19,6 +19,8 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
+        let botMember = await member.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
             let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');

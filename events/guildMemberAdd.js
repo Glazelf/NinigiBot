@@ -17,6 +17,7 @@ module.exports = async (client, member) => {
         if (dbLanguage) language = dbLanguage.language;
 
         let botMember = await member.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let memberJoinEventTitle = await getLanguageString(client, language, 'memberJoinEventTitle');
             let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');

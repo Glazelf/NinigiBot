@@ -21,6 +21,7 @@ module.exports = async (client, member) => {
         if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
         let botMember = await member.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let memberLeaveEventTitle = await getLanguageString(client, language, 'memberLeaveEventTitle');
             let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');

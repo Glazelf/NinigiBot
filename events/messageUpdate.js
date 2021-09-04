@@ -21,6 +21,7 @@ module.exports = async (client, message, newMessage) => {
         if (dbLanguage) language = dbLanguage.language;
 
         let botMember = await message.guild.members.fetch(client.user.id);
+
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (!message || !message.author) return;
             if (message.content === newMessage.content) return;
