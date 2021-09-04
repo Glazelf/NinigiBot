@@ -124,7 +124,7 @@ module.exports = async (client, interaction) => {
                                 if (!checkRoleEligibility) return sendMessage(client, interaction, `This role is not available anymore.`);
 
                                 if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(`I do not have permission to manage this role.`);
+                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(client, interaction, `I do not have permission to manage this role.`);
 
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
