@@ -17,13 +17,10 @@ module.exports = async (client, interaction) => {
 
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
-                let commandErrorDM = await getLanguageString(client, language, 'commandErrorDM');
-
-                if (!interaction.member) return sendMessage(client, interaction, commandErrorDM);
+                if (!interaction.member) return sendMessage(client, interaction, "Sorry, you're not allowed to use commands in private messages.");
 
                 // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
                 let args = [];
-
                 if (interaction.options._subcommand) args.push(interaction.options._subcommand);
                 await interaction.options._hoistedOptions.forEach(async option => {
                     if (option.hasOwnProperty("options")) {
