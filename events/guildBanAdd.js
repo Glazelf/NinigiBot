@@ -20,12 +20,12 @@ module.exports = async (client, guildBan) => {
         });
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
             let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
             let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
             guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${guildBan.guild.name}**`).replace('[memberCount]', guildBan.guild.memberCount);
             let userTitle = await getLanguageString(client, language, 'userTitle');
             let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
+            let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
             let banExecutorTitle = await getLanguageString(client, language, 'banExecutorTitle');
 
             const banLog = fetchedLogs.entries.first();
