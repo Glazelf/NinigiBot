@@ -14,29 +14,36 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
-        const banLog = fetchedLogs.entries.first();
-        if (!banLog) return;
-        let { executor, target, reason } = banLog;
-        if (!executor) return;
-        if (reason == null) reason = "Not specified.";
-        let bannedBy = `${executor.tag} (${executor.id})`;
+        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            const banLog = fetchedLogs.entries.first();
+            if (!banLog) return;
+            let { executor, target, reason } = banLog;
+            if (!executor) return;
+            if (reason == null) reason = "Not specified.";
+            let bannedBy = `${executor.tag} (${executor.id})`;
 
-        if (target.id !== guildBan.user.id) return;
-        let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
-        let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
+            if (target.id !== guildBan.user.id) return;
+            let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
+            let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
 
-        const banEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setAuthor(`Member Banned 💔`, avatarExecutor)
-            .setThumbnail(avatarTarget)
-            .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
-            .addField(`User:`, `${target} (${target.id})`, false)
-            .addField(`Reason:`, reason, false)
-            .addField(`Banned by:`, bannedBy, false)
-            .setFooter(target.tag)
-            .setTimestamp();
+            const banEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setAuthor(`Member Banned 💔`, avatarExecutor)
+                .setThumbnail(avatarTarget)
+                .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
+                .addField(`User:`, `${target} (${target.id})`, false)
+                .addField(`Reason:`, reason, false)
+                .addField(`Banned by:`, bannedBy, false)
+                .setFooter(target.tag)
+                .setTimestamp();
 
-        return log.send({ embeds: [banEmbed] });
+            return log.send({ embeds: [banEmbed] });
+
+        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+        } else {
+            return;
+        };
 
     } catch (e) {
         // log error
