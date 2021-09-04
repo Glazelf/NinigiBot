@@ -18,6 +18,7 @@
     "guildMemberCountUpdate": "",
     "lackPerms": "",
     "logBotPermissionError": "",
+    "memberJoinEventTitle": "",
     "parseDateJan": "",
     "parseDateFeb": "",
     "parseDateMar": "",
@@ -64,5 +65,6 @@
     "reasonTitle": "",
     "reasonUnspecified": "",
     "stanAffairDescription": "",
+    "timeCreatedTitle": "",
     "userTitle": ""
 }

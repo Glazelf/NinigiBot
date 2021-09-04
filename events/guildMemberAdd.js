@@ -18,6 +18,12 @@ module.exports = async (client, member) => {
 
         let botMember = await member.guild.members.fetch(client.user.id);
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            let memberJoinEventTitle = await getLanguageString(client, language, 'memberJoinEventTitle');
+            let guildMemberCountUpdate = await getLanguageString(client, language, 'guildMemberCountUpdate');
+            guildMemberCountUpdate = guildMemberCountUpdate.replace('[guildName]', `**${member.guild.name}**`).replace('[memberCount]', member.guild.memberCount);
+            let userTitle = await getLanguageString(client, language, 'userTitle');
+            let timeCreatedTitle = await getLanguageString(client, language, 'timeCreatedTitle');
+
             let user = client.users.cache.get(member.id);
 
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
@@ -29,11 +35,11 @@ module.exports = async (client, member) => {
 
             const joinEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Member Joined ❤️`, icon)
+                .setAuthor(`${memberJoinEventTitle} ❤️`, icon)
                 .setThumbnail(avatar)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${user} (${user.id})`)
-                .addField("Created at:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                .setDescription(guildMemberCountUpdate)
+                .addField(userTitle, `${user} (${user.id})`)
+                .addField(timeCreatedTitle, `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
                 .setFooter(member.user.tag)
                 .setTimestamp();
 

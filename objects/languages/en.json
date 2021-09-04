@@ -18,6 +18,7 @@
     "guildMemberCountUpdate": "[guildName] now has [memberCount] members.",
     "lackPerms": "You do not have the required permissions to do this.",
     "logBotPermissionError": "I lack permissions to send embeds in your log channel.",
+    "memberJoinEventTitle": "Member Joined",
     "parseDateJan": "January",
     "parseDateFeb": "February",
     "parseDateMar": "March",
@@ -64,5 +65,6 @@
     "reasonTitle": "Reason:",
     "reasonUnspecified": "Not specified.",
     "stanAffairDescription": "Today's most stannable person is [userTag]!",
+    "timeCreatedTitle": "Created At:",
     "userTitle": "User:"
 }

@@ -18,6 +18,7 @@
     "guildMemberCountUpdate": "",
     "lackPerms": "Vous n'avez pas les permissions nécessaires pour le faire.",
     "logBotPermissionError": "",
+    "memberJoinEventTitle": "",
     "parseDateJan": "",
     "parseDateFeb": "",
     "parseDateMar": "",
@@ -64,5 +65,6 @@
     "reasonTitle": "",
     "reasonUnspecified": "",
     "stanAffairDescription": "La personne la plus stable du jour est [userTag]!",
+    "timeCreatedTitle": "",
     "userTitle": ""
 }
