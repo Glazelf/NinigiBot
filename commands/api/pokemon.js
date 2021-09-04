@@ -167,7 +167,7 @@ exports.run = async (client, message, args = [], language) => {
                         // Log for testing, remove later
                         // console.log(response);
 
-                        let pkmEmbed = await getPokemon(client, message, response, null, language);
+                        let pkmEmbed = await getPokemon(client, message, response, language);
 
                         // Buttons
                         let pkmButtons = new Discord.MessageActionRow()

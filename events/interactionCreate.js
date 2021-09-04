@@ -93,7 +93,7 @@ module.exports = async (client, interaction) => {
                                 try {
                                     await P.getPokemonByName(newPkmID)
                                         .then(async function (response) {
-                                            pkmEmbed = await getPokemon(client, interaction.message, response, interaction, language);
+                                            pkmEmbed = await getPokemon(client, interaction.message, response, language);
                                         });
                                 } catch (e) {
                                     console.log(e);
