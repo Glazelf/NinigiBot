@@ -127,7 +127,9 @@ module.exports = async (client, message) => {
         // Run the command
         if (cmd) {
             // Ignore messages sent in a disabled channel
-            if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
+            let guildChannelDisabled = await getLanguageString(client, language, 'guildChannelDisabled');
+            guildChannelDisabled.replace('[channel]', message.channel);
+            if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, guildChannelDisabled);
 
             await message.channel.sendTyping();
             await cmd.run(client, message, args, language);

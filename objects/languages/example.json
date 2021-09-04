@@ -19,6 +19,7 @@
     "guildBoostDecay": "",
     "guildBoostStartEventTitle": "",
     "guildBoostStopEventTitle": "",
+    "guildChannelDisabled": "",
     "guildMemberCountUpdate": "",
     "kickEventTitle": "",
     "kickExecutorTitle": "",

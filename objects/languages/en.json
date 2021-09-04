@@ -19,6 +19,7 @@
     "guildBoostDecay": "[guildName] will lose this Nitro Boost in 3 days.",
     "guildBoostStartEventTitle": "Started Nitro Boosting",
     "guildBoostStopEventTitle": "Stopped Nitro Boosting",
+    "guildChannelDisabled": "Commands have been disabled in [channel].",
     "guildMemberCountUpdate": "[guildName] now has [memberCount] members.",
     "kickEventTitle": "Member Kicked",
     "kickExecutorTitle": "Kicked by:",
