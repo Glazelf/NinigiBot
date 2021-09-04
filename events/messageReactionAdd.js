@@ -47,14 +47,21 @@ module.exports = async (client, messageReaction) => {
             };
         };
 
+        let starboardMessageSentTitle = await getLanguageString(client, language, 'starboardMessageSentTitle');
+        let starboardMessageSentData = await getLanguageString(client, language, 'starboardMessageSentData');
+        starboardMessageSentData = starboardMessageSentData.replace('[member]', targetMessage.author).replace('[channel]', targetMessage.channel);
+        let starboardMessageContextTitle = await getLanguageString(client, language, 'starboardMessageContextTitle');
+        let linkString = await getLanguageString(client, language, 'linkString');
+        let starboardMessageReplyTitle = await getLanguageString(client, language, 'starboardMessageReplyTitle');
+
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`⭐${messageReaction.count}`, avatar)
             .setDescription(targetMessage.content)
-            .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
-        if (isReply) starEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+            .addField(starboardMessageSentTitle, starboardMessageSentData, false);
+        if (isReply) starEmbed.addField(starboardMessageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
         starEmbed
-            .addField(`Context:`, `[Link](${targetMessage.url})`, false)
+            .addField(starboardMessageContextTitle, `[${linkString}](${targetMessage.url})`, false)
             .setImage(messageImage)
             .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
