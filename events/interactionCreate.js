@@ -10,7 +10,7 @@ module.exports = async (client, interaction) => {
         if (!interaction) return;
         if (interaction.user.bot) return;
 
-        const { DisabledChannels, Languages } = require('../database/dbObjects');
+        const { Languages } = require('../database/dbObjects');
         let dbLanguage = await Languages.findOne({ where: { server_id: interaction.guild.id } });
         let language = globalVars.language;
         if (dbLanguage) language = dbLanguage.language;
@@ -124,7 +124,7 @@ module.exports = async (client, interaction) => {
                                 let roleUnmanagablePermissions = await getLanguageString(client, language, 'roleUnmanagablePermissions');
                                 let roleToggleAdded = await getLanguageString(client, language, 'roleToggleAdded');
                                 let roleToggleRemoved = await getLanguageString(client, language, 'roleToggleRemoved');
-                                let roleToggleFailed = await getLanguageString(client, langugae, 'roleToggleFailed');
+                                let roleToggleFailed = await getLanguageString(client, language, 'roleToggleFailed');
 
                                 // Toggle selected role
                                 const { EligibleRoles } = require('../database/dbObjects');
