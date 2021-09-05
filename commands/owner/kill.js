@@ -22,7 +22,7 @@ exports.run = async (client, message) => {
         // Delete all global commands
         await client.application.commands.set([]);
 
-        // Delete all guild commands
+        // Delete all guild commands, disabled because we don't use guild-specific commands
         // await client.guilds.cache.forEach(guild => {
         //     try {
         //         guild.commands.set([]);
