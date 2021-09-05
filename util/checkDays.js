@@ -8,10 +8,12 @@ module.exports = async (client, date, language) => {
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff / 86400000);
 
-        let daysSingle = await getLanguageString(client, language, 'checkDaysSingle');
-        let daysMultiple = await getLanguageString(client, language, 'checkDaysMultiple');
-        let daysAgo = await getLanguageString(client, language, 'checkDaysAgo');
-        return days + (days == 1 ? ` ${daysSingle}` : ` ${daysMultiple}`) + ` ${daysAgo}`;
+        let daysAgoSingle = await getLanguageString(client, language, 'checkDaysAgoSingle');
+        let daysAgoMultiple = await getLanguageString(client, language, 'checkDaysAgoMultiple');
+
+        let returnString = daysAgoMultiple;
+        if (days == 1) returnString = daysAgoSingle;
+        return returnString;
 
     } catch (e) {
         // log error
