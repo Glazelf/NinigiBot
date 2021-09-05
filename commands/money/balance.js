@@ -15,12 +15,21 @@ exports.run = (client, message, args = []) => {
             target = client.users.cache.get(userID);
         };
 
+
         if (!target) {
             if (message.type == 'DEFAULT') {
                 target = message.author;
             } else {
                 target = message.member.user;
             };
+        };
+
+        let member;
+        try {
+            member = await message.guild.members.fetch(target);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `No member information could be found for this user.`);
         };
 
         return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);

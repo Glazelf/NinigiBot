@@ -15,6 +15,14 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        let member;
+        try {
+            member = await message.guild.members.fetch(target.id);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `No member information could be found for this user.`);
+        };
+
         if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
             const user = await Users.findOne({ where: { user_id: target.id } });
 
