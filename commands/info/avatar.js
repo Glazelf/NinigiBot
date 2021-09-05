@@ -26,6 +26,14 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        let member;
+        try {
+            member = await message.guild.members.fetch(user.id);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `No member information could be found for this user.`);
+        };
+
         // Get avatar
         let avatar = null;
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
