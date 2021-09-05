@@ -9,6 +9,7 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
+        // Get role and description
         let splitDescriptionCharacter = ";";
         let selectDescriptionCharacterLimit = 50;
         let requestRole = args.join(' ');
@@ -30,6 +31,7 @@ exports.run = async (client, message, args = []) => {
 
         if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
 
+        // Database
         if (roleIDs.length > 0) {
             let roleTag = role.name;
             for await (const roleID of roleIDs) {

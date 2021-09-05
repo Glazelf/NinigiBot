@@ -8,6 +8,7 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
+        // Get user
         let user;
         let member;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
@@ -34,14 +35,18 @@ exports.run = async (client, message, args = []) => {
             author = message.member.user;
         };
 
+        // If user is found
         if (member) {
+            // Check permissions
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
             if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
+            // See if target isn't already banned
             let existingBan = await message.guild.bans.fetch(member.id);
-            if (existingBan) return sendMessage(client, message, `${member.user.tag} (${member.id}) is already banned.`);
+            if (existingBan) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
 
+            // Ban
             try {
                 await user.send({ content: `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\`` });
                 banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`. (DM Succeeded)`;
@@ -51,6 +56,7 @@ exports.run = async (client, message, args = []) => {
             };
             await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
 
+            // If user isn't found, try to ban by ID
         } else {
             let memberID = args[0];
 

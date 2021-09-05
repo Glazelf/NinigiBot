@@ -11,6 +11,7 @@ exports.run = (client, message, args = []) => {
 
         conversionType = conversionType.toLowerCase();
 
+        // Get various conversions
         switch (conversionType) {
             case "fahrenheit":
                 conversionReturn = (conversionValue - 32) * 5 / 9;

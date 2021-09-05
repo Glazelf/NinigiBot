@@ -5,7 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
-        const checkDays = require('../../util/checkDays');
+        const checkDays = require("../../util/checkDays");
         const SteamAPI = require('steamapi');
         const steam = new SteamAPI(`${client.config.steam}`);
 
@@ -40,6 +40,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         switch (subCommand) {
+            // Users
             case "user":
                 try {
                     // Try to convert non-numerical input to an ID
@@ -136,6 +137,7 @@ ${checkDays(client, userCreated, language)}`;
                         return sendMessage(client, message, userFailString);
                     };
                 };
+            // Games
             case "game":
                 // Get game info from ID
                 return sendMessage(client, message, `Game info goes here.`);

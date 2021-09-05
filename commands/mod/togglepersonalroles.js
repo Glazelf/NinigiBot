@@ -11,6 +11,7 @@ exports.run = async (client, message) => {
         const { PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
 
+        // Database
         if (serverID) {
             await serverID.destroy();
             return sendMessage(client, message, `Personal Roles can no longer be managed by users in **${message.guild.name}**.`);

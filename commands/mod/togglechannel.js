@@ -13,12 +13,14 @@ exports.run = async (client, message, args = []) => {
         let channel = null;
         let subCommand = null;
 
+        // Get input, default to current channel
         if (args[0]) {
             subCommand = args[0].toLowerCase();
         } else {
             subCommand = message.channel.id;
         };
 
+        // If no input check stuff
         if (!channel) channel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!channel) channel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!channel) channel = message.channel;
@@ -26,6 +28,7 @@ exports.run = async (client, message, args = []) => {
         let channelName = channel.name.toLowerCase();
         let channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });
 
+        // Database
         if (channelID) {
             await channelID.destroy();
             return sendMessage(client, message, `Commands can now be used in ${channel} again.`);

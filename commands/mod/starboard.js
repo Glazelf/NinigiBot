@@ -11,6 +11,7 @@ exports.run = async (client, message, args = []) => {
         const { StarboardChannels } = require('../../database/dbObjects');
         let oldChannel = await StarboardChannels.findOne({ where: { server_id: message.guild.id } });
 
+        // Check input
         let subCommand = args[0];
         if (!subCommand) {
             if (oldChannel) {
@@ -20,10 +21,12 @@ exports.run = async (client, message, args = []) => {
         };
         subCommand = subCommand.toLowerCase();
 
+        // Get channel
         let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!targetChannel && subCommand !== "disable") return sendMessage(client, message, `That channel does not exist in this server.`);
 
+        // Database
         if (oldChannel) await oldChannel.destroy();
         if (subCommand == "disable") return sendMessage(client, message, `Disabled starboard functionality in **${message.guild.name}**.`);
 

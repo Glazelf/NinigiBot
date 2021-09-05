@@ -21,6 +21,7 @@ exports.run = async (client, message, args = []) => {
 
             let items;
 
+            // Display inventory per item category
             if (args[0] === 'food') {
                 items = await user.getFoods();
                 if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);

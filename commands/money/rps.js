@@ -19,6 +19,7 @@ exports.run = (client, message, args = []) => {
         let playerChoice = args[0].toLowerCase();
         amount = args[1];
 
+        // Get input
         let rps = ["rock", "paper", "scissor"];
         if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissor\`.`);
 
@@ -30,6 +31,7 @@ exports.run = (client, message, args = []) => {
             return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
         };
 
+        // Randomize bot choice
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
 
         if (botChoice == playerChoice) return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
@@ -37,12 +39,14 @@ exports.run = (client, message, args = []) => {
         let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
 > You win ${amount}${currency}.`;
 
+        // Compare choices
         if ((playerChoice == rps[0] && botChoice == rps[1]) || (playerChoice == rps[1] && botChoice == rps[2]) || (playerChoice == rps[2] && botChoice == rps[0])) {
             returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
 > You lose ${amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
+        // Update currency
         bank.currency.add(message.member.id, amount);
         sendMessage(client, message, returnString);
 

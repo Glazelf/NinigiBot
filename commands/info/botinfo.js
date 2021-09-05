@@ -26,6 +26,7 @@ exports.run = async (client, message, args = [], language) => {
         var totalMembers = 0;
         let botVerifRequirement = 76;
 
+        // Get shards (Currently not properly functional)
         if (client.shard) {
             const promises = [
                 client.shard.fetchClientValues('guilds.cache.size'),
