@@ -4,10 +4,12 @@ module.exports = async (client, member) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
+
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
+
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
 

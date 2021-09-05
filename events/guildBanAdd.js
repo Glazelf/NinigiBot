@@ -4,6 +4,7 @@ module.exports = async (client, guildBan) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
+
         let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
         let log = guildBan.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
