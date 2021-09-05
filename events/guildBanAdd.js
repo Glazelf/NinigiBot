@@ -5,6 +5,7 @@ module.exports = async (client, guildBan) => {
         const getLanguageString = require('../util/getLanguageString');
         const Discord = require("discord.js");
         const { LogChannels, Languages } = require('../database/dbObjects');
+
         let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
         let log = guildBan.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
@@ -19,7 +20,7 @@ module.exports = async (client, guildBan) => {
             type: 'MEMBER_BAN_ADD',
         });
 
-        let botMember = await member.guild.members.fetch(client.user.id);
+        let botMember = await guildBan.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let banEventTitle = await getLanguageString(client, language, 'banEventTitle');
