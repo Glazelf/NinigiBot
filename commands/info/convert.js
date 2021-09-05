@@ -1,4 +1,4 @@
-exports.run = (client, message, args = []) => {
+exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');

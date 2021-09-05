@@ -1,4 +1,4 @@
-module.exports = hp => {
+module.exports = async (hp) => {
     if (hp == 0) return 'a';
     return [color(hp), size(hp)]
 };
