@@ -14,11 +14,13 @@ module.exports = async (client, message) => {
             if (starboardMessage) starboardMessage.delete();
         };
 
+        // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
+        // Check message content
         let botMember = await message.guild.members.fetch(client.user.id);
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (!message || !message.author) return;

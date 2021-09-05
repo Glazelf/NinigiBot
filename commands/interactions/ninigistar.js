@@ -11,6 +11,7 @@ exports.run = async (client, interaction, args = []) => {
         let message = await interaction.channel.messages.fetch(args[0]);
         if (!message) return;
 
+        // Check if bot has reacted
         let botReacted = false;
         let reactionData = {
             me: true,
@@ -24,6 +25,7 @@ exports.run = async (client, interaction, args = []) => {
             if (reaction.id == client.user.id) botReacted = true;
         });
 
+        // If bot reacted, remove. If not, react.
         if (botReacted) {
             await messageReactions.users.remove(client.user);
             return sendMessage(client, interaction, `Unstarred ${message.author}'s message for you! (${message.url})`);

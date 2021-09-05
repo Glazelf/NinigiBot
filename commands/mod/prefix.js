@@ -10,6 +10,7 @@ exports.run = async (client, message, args) => {
         const { Prefixes } = require('../../database/dbObjects');
         let oldPrefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
 
+        // Get input
         let subCommand = args[0];
         if (!subCommand) {
             if (oldPrefix) {
@@ -19,6 +20,7 @@ exports.run = async (client, message, args) => {
         };
         subCommand = subCommand.toLowerCase();
 
+        // Database
         if (oldPrefix) await oldPrefix.destroy();
         if (subCommand == "?" || subCommand == "reset") return sendMessage(client, message, `Prefix has been reset to \`?\`.`);
         await Prefixes.upsert({ server_id: message.guild.id, prefix: subCommand });

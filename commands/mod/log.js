@@ -10,6 +10,7 @@ exports.run = async (client, message, args) => {
         const { LogChannels } = require('../../database/dbObjects');
         let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
 
+        // Get channel
         let subCommand = args[0];
         if (!subCommand) {
             if (oldChannel) {
@@ -19,10 +20,12 @@ exports.run = async (client, message, args) => {
         };
         subCommand = subCommand.toLowerCase();
 
+        // See if channel exists
         let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
         if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!targetChannel && subCommand !== "disable") return sendMessage(client, message, `That channel does not exist in this server.`);
 
+        // Database
         if (oldChannel) await oldChannel.destroy();
         if (subCommand == "disable") return sendMessage(client, message, `Disabled logging functionality in **${message.guild.name}**.`);
 

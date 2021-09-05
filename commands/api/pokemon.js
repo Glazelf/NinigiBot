@@ -30,6 +30,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         switch (subCommand) {
+            // Abilities
             case "ability":
                 P.getAbilityByName(subArgument)
                     .then(async function (response) {
@@ -57,6 +58,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
 
+            // Items
             case "item":
                 P.getItemByName(subArgument)
                     .then(async function (response) {
@@ -87,6 +89,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
 
+            // Moves
             case "move":
                 P.getMoveByName(subArgument)
                     .then(async function (response) {
@@ -128,6 +131,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
 
+            // Pokémon
             default:
                 // Public variables
                 var pokemonName;
@@ -174,6 +178,7 @@ exports.run = async (client, message, args = []) => {
                 break;
         };
 
+        // Correct common name discrepancies
         async function correctValue(object, input) {
             var uncorrectedNames = Object.keys(object);
             uncorrectedNames.forEach(function (key) {

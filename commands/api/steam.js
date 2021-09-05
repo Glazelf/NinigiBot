@@ -4,6 +4,7 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const checkDays = require("../../util/checkDays");
         const SteamAPI = require('steamapi');
         const steam = new SteamAPI(`${client.config.steam}`);
 
@@ -38,6 +39,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         switch (subCommand) {
+            // Users
             case "user":
                 try {
                     // Try to convert non-numerical input to an ID
@@ -134,16 +136,10 @@ ${checkDays(userCreated)}`;
                         return sendMessage(client, message, userFailString);
                     };
                 };
+            // Games
             case "game":
                 // Get game info from ID
                 return sendMessage(client, message, `Game info goes here.`);
-        };
-
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
         };
 
         function checkPrivacy(field) {

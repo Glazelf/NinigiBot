@@ -9,6 +9,7 @@ module.exports = async (client, message, newMessage) => {
 
         if (!message.guild) return;
 
+        // Get log
         const { LogChannels } = require('../database/dbObjects');
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
@@ -17,6 +18,7 @@ module.exports = async (client, message, newMessage) => {
 
         let botMember = await message.guild.members.fetch(client.user.id);
 
+        // Check message content
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (!message || !message.author) return;
             if (message.content === newMessage.content) return;

@@ -10,6 +10,7 @@ exports.run = async (client, message) => {
         const { ModEnabledServers } = require('../../database/dbObjects');
         let serverID = await ModEnabledServers.findOne({ where: { server_id: message.guild.id } });
 
+        // Database
         if (serverID) {
             await serverID.destroy();
             return sendMessage(client, message, `**${message.guild.name}** will no longer be automatically moderated.`);

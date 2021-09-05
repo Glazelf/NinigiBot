@@ -23,6 +23,7 @@ exports.run = async (client, message, args = []) => {
             .setTimestamp();
 
         if (args[0]) {
+            // Global leaderboard
             if (args[0].toLowerCase() == "global") {
                 let leaderboardStringGlobal = bank.currency.sort((a, b) => b.balance - a.balance)
                     .filter(user => client.users.cache.has(user.user_id))
@@ -35,6 +36,7 @@ exports.run = async (client, message, args = []) => {
                     .setDescription(leaderboardStringGlobal)
                     .setAuthor(`Global Leaderboard:`, avatar);
 
+                // Leaderboard with IDs
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
                 let leaderboardStringID = bank.currency.sort((a, b) => b.balance - a.balance)
                     .filter(user => client.users.cache.has(user.user_id))

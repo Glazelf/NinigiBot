@@ -12,6 +12,7 @@ exports.run = async (client, message) => {
             user = message.member.user;
         };
 
+        // Structure lazy help embed with mostly just links lol
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`Help has arrived!`, client.user.displayAvatarURL({ format: "png", dynamic: true }))

@@ -40,6 +40,7 @@ module.exports = async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === channelID);
 
+            // Create embed
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)

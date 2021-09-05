@@ -9,6 +9,7 @@ exports.run = (client, message, args = []) => {
             target = message.mentions.users.first();
         };
 
+        // Get user
         if (!target) {
             let userID = args[0];
             target = client.users.cache.get(userID);

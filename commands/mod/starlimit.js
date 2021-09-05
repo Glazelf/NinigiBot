@@ -15,6 +15,7 @@ exports.run = async (client, message, args) => {
             oldStarLimit = globalVars.starboardLimit;
         };
 
+        // Database and input stuff
         if (args[0] && (adminBool || message.member.permissions.has("MANAGE_CHANNELS"))) {
             let starLimit = args[0];
             if (isNaN(starLimit)) return sendMessage(client, message, `You need to provide a valid number.`);
@@ -23,6 +24,8 @@ exports.run = async (client, message, args) => {
             await StarboardLimits.upsert({ server_id: message.guild.id, star_limit: starLimit });
 
             return sendMessage(client, message, `The star limit was changed to ${starLimit}.`);
+
+            // If no input or user lacks permissions: Show current star limit
         } else {
             return sendMessage(client, message, `The current star limit is ${oldStarLimit}.`);
         };

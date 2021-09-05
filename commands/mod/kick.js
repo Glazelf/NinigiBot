@@ -7,6 +7,7 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
+        // Get user
         let user;
         let member;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
@@ -22,6 +23,7 @@ exports.run = async (client, message, args = []) => {
             author = message.member.user;
         };
 
+        // Check permissions
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to kick **${user.tag}** (${user.id}).`);
@@ -32,6 +34,7 @@ exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
+        // Kick
         let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Succeeded)`;
         try {
             await user.send({ content: `You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\`` });

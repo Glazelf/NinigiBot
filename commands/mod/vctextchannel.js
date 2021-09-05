@@ -10,6 +10,7 @@ exports.run = async (client, message, args = []) => {
         const { VCTextChannels } = require('../../database/dbObjects');
         let oldChannel = await VCTextChannels.findOne({ where: { server_id: message.guild.id } });
 
+        // Get channel
         let subCommand = args[0];
         if (!subCommand) {
             if (oldChannel) {
@@ -23,6 +24,7 @@ exports.run = async (client, message, args = []) => {
         if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
         if (!targetChannel && subCommand !== "disable") return sendMessage(client, message, `That channel does not exist in this server.`);
 
+        // Database
         if (oldChannel) await oldChannel.destroy();
         if (subCommand == "disable") return sendMessage(client, message, `Disabled VC text channel functionality in **${message.guild.name}**.`);
 

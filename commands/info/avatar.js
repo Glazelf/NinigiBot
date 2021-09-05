@@ -5,6 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require('discord.js');
 
+        // Get user
         let user;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
@@ -24,9 +25,10 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        // Get avatar
         let avatar = null;
         if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true });
-        if (!avatar) return sendMessage(client, message, `${user.tag} doesn't have an avatar.`);
+        if (!avatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
 
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
