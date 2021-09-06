@@ -5,8 +5,9 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../../util/sendMessage');
         const { set } = require('lodash');
         const roulette = require('../../../affairs/roulette')
-        if (!roulette.on) return;
         const { Prefixes } = require('../../../database/dbObjects');
+        const { bank } = require('../../../database/bank');
+
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
             prefix = prefix.prefix;
@@ -14,11 +15,14 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
+        if (!roulette.on) return sendMessage(client, message, `There is currently no roulette going on. Use ${prefix}roulette to start one.`);
         if (roulette.hadBet(message.member.id)) return message.react('✋');
-        const { bank } = require('../../../database/bank');
+
         args = args.join(' ');
-        if (args.includes('help')) return sendMessage(client, message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`?bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, null, null, false);
+
+        if (args.includes('help')) return sendMessage(client, message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, null, null, false);
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
+
         const money = parseInt(args.slice(0, args.indexOf(',')).trim())
         args = args.slice(args.indexOf(',') + 1).trim();
         const betRequests = new Set(args.split(/\s+/));
