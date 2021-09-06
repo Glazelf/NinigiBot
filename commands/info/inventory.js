@@ -32,18 +32,18 @@ exports.run = async (client, message, args = []) => {
             // Display inventory per item category
             if (args[0] === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return sendMessage(client, message, `${target.toString()} has no food!`);
+                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no food!`);
                 return sendMessage(client, message, `${target.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
             } else if (args[0] === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return sendMessage(client, message, `${target.toString()} has no equipment!`);
+                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no equipment!`);
                 return sendMessage(client, message, `${target.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
             } else if (args[0] === 'keys') {
                 items = await user.getKeys();
-                if (!items.length) return sendMessage(client, message, `${target.toString()} has no key items!`);
+                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no key items!`);
                 return sendMessage(client, message, `${target.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
             } else {
-                let description = `${target.toString()}'s inventory:`;
+                let description = `**${target.tag}**'s inventory:`;
                 const length = description.length;
                 items = await user.getItems();
                 let itemsInventoryText = `${items.map(t => {
@@ -58,7 +58,7 @@ exports.run = async (client, message, args = []) => {
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return sendMessage(client, message, `${target.toString()} has nothing!`);
+                if (description.length === length) if (!items.length) return sendMessage(client, message, `**${target.tag}** has nothing!`);
                 return sendMessage(client, message, description);
             };
         };
