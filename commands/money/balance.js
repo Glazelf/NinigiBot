@@ -32,7 +32,8 @@ exports.run = async (client, message, args = []) => {
             return sendMessage(client, message, `No member information could be found for this user.`);
         };
 
-        return sendMessage(client, message, `${target.tag} has ${Math.floor(bank.currency.getBalance(target.id))}${globalVars.currency}.`);
+        let dbBalance = await bank.currency.getBalance(target.id);
+        return sendMessage(client, message, `${target.tag} has ${Math.floor(dbBalance)}${globalVars.currency}.`);
 
     } catch (e) {
         // log error

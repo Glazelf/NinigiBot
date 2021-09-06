@@ -3,7 +3,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let switchCodeGet = bank.currency.getSwitchCode(message.member.id);
+        let switchCodeGet = await bank.currency.getSwitchCode(message.member.id);
 
         // Present code if no code is supplied as an argument
         if (args.length < 1) {

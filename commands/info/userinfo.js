@@ -42,10 +42,14 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Balance check
-        let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
-        let switchCode = bank.currency.getSwitchCode(user.id);
-        let birthday = bank.currency.getBirthday(user.id);
+        let dbBalance = await bank.currency.getBalance(user.id);
+        let userBalance = `${Math.floor(dbBalance)}${globalVars.currency}`;
+        let switchCode = await bank.currency.getSwitchCode(user.id);
+
+        let birthday = await bank.currency.getBirthday(user.id);
         let birthdayParsed = require('../../util/parseDate')(birthday);
+
+        console.log(birthday)
 
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");

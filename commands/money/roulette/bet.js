@@ -31,8 +31,10 @@ exports.run = async (client, message, args = []) => {
                 for (let i = minimum; i <= maximum; i++) bets.add(`${i}`);
             } else bets.add(request);
         });
-        if (bets.size * money > bank.currency.getBalance(message.member.id)) {
-            return sendMessage(client, message, `You don't have enough currency}.\nYou only have ${Math.floor(bank.currency.getBalance(message.member.id))}${globalVars.currency}.`, null, null, false);
+
+        let dbBalance = await bank.currency.getBalance(message.member.id);
+        if (bets.size * money > dbBalance) {
+            return sendMessage(client, message, `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.`, null, null, false);
         };
         bets.forEach(bet => {
             roulette.addBet(bet, message.member.id, 36 * money);

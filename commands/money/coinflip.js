@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
-        let balance = bank.currency.getBalance(message.member.id);
+        let balance = await bank.currency.getBalance(message.member.id);
         let inputText = "";
         if (args[0]) inputText = args[0].toString().toLowerCase();
 
