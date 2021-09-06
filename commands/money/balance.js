@@ -33,7 +33,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let dbBalance = await bank.currency.getBalance(target.id);
-        return sendMessage(client, message, `${target.tag} has ${Math.floor(dbBalance)}${globalVars.currency}.`);
+        return sendMessage(client, message, `**${target.tag}** has ${Math.floor(dbBalance)}${globalVars.currency}.`);
 
     } catch (e) {
         // log error
