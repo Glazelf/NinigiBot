@@ -7,6 +7,7 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
         const checkDays = require('../../util/checkDays');
+        const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
         let user;
@@ -47,9 +48,7 @@ exports.run = async (client, message, args = []) => {
         let switchCode = await bank.currency.getSwitchCode(user.id);
 
         let birthday = await bank.currency.getBirthday(user.id);
-        let birthdayParsed = require('../../util/parseDate')(birthday);
-
-        console.log(birthday)
+        let birthdayParsed = await parseDate(birthday);
 
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
