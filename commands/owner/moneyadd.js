@@ -15,7 +15,8 @@ exports.run = async (client, message, args = []) => {
             transferTarget = message.mentions.users.first();
         };
 
-        let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${currency}`;
+        let dbBalance = await bank.currency.getBalance(message.member.id);
+        let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
         if (!transferTarget) {
             let userID = args[0];
@@ -25,7 +26,8 @@ exports.run = async (client, message, args = []) => {
         if (!transferTarget) return sendMessage(client, message, `That's not a valid target.`);
         if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `That's not a valid number.`);
 
-        bank.currency.add(transferTarget.id, +transferAmount).then(userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${currency}`);
+        bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(message.member.id));
+        userBalance = `${Math.floor(dbBalance)}${currency}`;
 
         return sendMessage(client, message, `Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
 

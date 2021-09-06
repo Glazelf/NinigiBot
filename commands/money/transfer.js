@@ -5,7 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
-        const currentAmount = bank.currency.getBalance(message.member.id);
+        const currentAmount = await bank.currency.getBalance(message.member.id);
         let transferAmount = args[0];
         let transferTarget;
 
@@ -24,7 +24,7 @@ exports.run = async (client, message, args = []) => {
         } else {
             user = message.member.user;
         };
-        let userBalance = `${Math.floor(bank.currency.getBalance(message.member.id))}${globalVars.currency}`;
+        let userBalance = `${Math.floor(currentAmount)}${globalVars.currency}`;
 
         // Catch errors
         if (transferTarget == user) return sendMessage(client, message, `You can't transfer money to yourself.`)

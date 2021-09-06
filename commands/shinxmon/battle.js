@@ -126,7 +126,7 @@ exports.run = async (client, message, args = []) => {
                     };
                     text += addLine(`**${nicks[(i + 1) % 2]}** fainted!`);
                     const paidMoney = bank.currency.payBattle(trainers[(i + 1) % 2].id, trainers[i].id);
-                    if (paidMoney !== 0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}💰 to ${trainers[i].username}.`);
+                    if (paidMoney !== 0) text += addLine(`${trainers[(i + 1) % 2].username} paid ${paidMoney}${globalVars.currency} to ${trainers[i].username}.`);
                     for (let h = 0; h < 2; h++) {
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);

@@ -8,6 +8,7 @@ exports.run = async (client, message, args = [], language) => {
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
         const checkDays = require('../../util/checkDays');
+        const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
         const parseDate = require('../../util/parseDate');
 
@@ -44,7 +45,8 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         // Balance check
-        let userBalance = `${Math.floor(bank.currency.getBalance(user.id))}${globalVars.currency}`;
+        let dbBalance = await bank.currency.getBalance(user.id);
+        let userBalance = `${Math.floor(dbBalance)}${globalVars.currency}`;
         let switchCode = bank.currency.getSwitchCode(user.id);
         let birthday = bank.currency.getBirthday(user.id);
         let birthdayParsed = await parseDate(client, birthday, language);

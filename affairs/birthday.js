@@ -30,7 +30,7 @@ module.exports = async (client) => {
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
-                const birthday = bank.currency.getBirthday(member.id);
+                const birthday = await bank.currency.getBirthday(member.id);
                 if (birthday) {
                     let now = new Date();
                     if (now.getDate() === parseInt(birthday.substring(0, 2)) && (now.getMonth() + 1) === parseInt(birthday.substring(2))) {

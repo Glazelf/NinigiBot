@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
-        let balance = bank.currency.getBalance(message.member.id);
+        let balance = await bank.currency.getBalance(message.member.id);
         let inputText = "";
         if (args[1]) inputText = args[1].toLowerCase();
         if (inputText == "quarter") args[1] = balance / 4;
