@@ -139,8 +139,7 @@ exports.run = async (client, message, args = [], language) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(client, message.guild, guild.createdAt, language)}`, false);
-        client, message, userCreated, language
+            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(client, guild.createdAt, language)}`, false);
         if (banner) serverEmbed.setImage(`${banner}?size=256`);
         serverEmbed
             .setFooter(user.tag)
