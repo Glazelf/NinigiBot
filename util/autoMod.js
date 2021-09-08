@@ -12,75 +12,71 @@ module.exports = async (message) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
-    let isSlur = false;
     let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W/g, '').replace(" ", "").toLowerCase();
     let messageContentBlock = "";
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
     const scamLinks = [
-        "https://glorysocial.com/profile/"
+        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discorcl)\.(com|org|ru|click).*", // Discord gift links
+        ".*http(.)?:\/\/[^\s]*\.ru.*" // Russian websites, should disable this for russian discords lol
     ];
+    let scamRegex = new RegExp(scamLinks.join("|"), "i");
+
     const adLinks = [
         "discord.gg",
         "bit.ly",
         "twitch.tv"
     ];
+    let adRegex = new RegExp(adLinks.join("|"), "i");
+
     const globalSlurs = [
-        "nigger",
-        "niqqer",
-        "nigga",
-        "niqqa",
-        "nlgger",
-        "nlgga",
-        "nibba",
-        "neger", // Thanks Ewok
+        "(n|i){1,32}(l|e){0,32}((g{2,32}|q){1,32}|[gqb]{2,32}|[g]{1,32})([er]{1,32}|[e3ra]{1,32})", // Variations of the n-word
+        "niglet", // Thanks Ewok but idt I can easily fit this one into the regex above
         "faggot",
         "tranny",
-        "retard" // french
+        "(retard)(?!ation)" // Retard but not retardation
     ];
-    // const frenchSlurs = [
-    //     "retard"
-    // ];
-    const exceptions = [
-        "retardation" // Thanks Pokémom
+    let slurRegex = new RegExp(globalSlurs.join("|"), "i");
+
+    // Language exceptions currently unused
+    const exceptionsFrench = [
+        "retard"
     ];
+    let exceptionsFrenchRegex = new RegExp(exceptionsFrench.join("|"), "i");
+
+    const exceptionsSpanish = [
+        "negro"
+    ];
+    let exceptionsSpanishRegex = new RegExp(exceptionsSpanish.join("|"), "i");
+
     const testArray = [
         "triceratops"
     ];
-
-    // if (globalSlurs.some(v => messageNormalized.includes(v)) || frenchSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
-    if (globalSlurs.some(v => messageNormalized.includes(v))) isSlur = true;
+    let testRegex = new RegExp(testArray.join("|"), "i");
 
     // Scam links
-    if (scamLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
+    if (scamRegex.test(messageNormalized)) {
         reason = "Posting scam links.";
         await ban();
         return true;
     };
 
-    // Ad links
-    if (adLinks.some(v => messageNormalized.includes(v)) && memberRoles.size == 0) {
-        reason = "Advertisement.";
-        await msgDelete();
-        return true;
-    };
-
     // Slurs
-    if (isSlur && !exceptions.some(v => messageNormalized.includes(v))) {
-        // Currently checks for top 1 language(s) only, can be changed based on effectiveness
-        // let detectedLanguages = lngDetector.detect(message.content, 1);
-        // languageArray = detectedLanguages.map(function (x) {
-        //     return x[0];
-        // });
-
-        // if (frenchSlurs.some(v => messageNormalized.includes(v)) && languageArray.indexOf("french") > -1) return;
+    if (slurRegex.test(messageNormalized)) {
         reason = "Using slurs.";
         await msgDelete();
         return true;
     };
 
+    // Ad links
+    if (adRegex.test(messageNormalized) && memberRoles.size == 0) {
+        reason = "Advertisement.";
+        await msgDelete();
+        return true;
+    };
+
     // Test
-    // if (testArray.some(v => messageNormalized.includes(v))) {
+    // if (testRegex.test(messageNormalized)) {
     //     test();
     // };
 
