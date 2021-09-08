@@ -57,12 +57,15 @@ CurrencyShop.prototype.toString = function () {
     return `${this.name}: ${this.cost}💰, ${this.usage}`
 };
 
-Equipments.prototype.toString = function () {
+Equipments.prototype.toString = async function () {
+    let food = await numberParser(this.food * 100);
+    let sleep = await numberParser(this.sleep * 100);
+    let friendship = await numberParser(this.friendship * 100);
     let description = `${this.name}: ${this.cost}💰,`;
     if (this.regen) description += ` recovers ${this.regen * 100}% points per turn,`;
-    if (this.food) description += ` ${numberParser(this.food * 100)}% food,`;
-    if (this.sleep) description += ` ${numberParser(this.sleep * 100)}% sleep,`;
-    if (this.friendship) description += ` ${numberParser(this.friendship * 100)}% friendship,`;
+    if (this.food) description += ` ${food}% food,`;
+    if (this.sleep) description += ` ${sleep}% sleep,`;
+    if (this.friendship) description += ` ${friendship}% friendship,`;
     if (this.guard) description += ` blocks one deathblow,`;
     if (this.safeguard) description += ` blocks all deathblows,`;
     if (this.geass) description += ` turn one geass,`;

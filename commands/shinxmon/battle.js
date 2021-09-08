@@ -147,7 +147,9 @@ exports.run = async (client, message, args = []) => {
                 };
             };
 
-            const hps = [hp(shinxes[0].percent), hp(shinxes[1].percent)]
+            let shinxHP0 = await hp(shinxes[0].percent);
+            let shinxHP1 = await hp(shinxes[1].percent);
+            const hps = [shinxHP0, shinxHP1]
             for (let i = 0; i < 2; i++) {
                 if (!isNaN(hps[i][0])) {
                     const color = hps[i][0];
