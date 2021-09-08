@@ -1,5 +1,6 @@
-module.exports = async (message) => {
+module.exports = async (client, message) => {
     const Discord = require("discord.js");
+    let getTime = require('../util/getTime');
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
@@ -8,6 +9,8 @@ module.exports = async (message) => {
     if (!message.member) return;
     if (message.member.permissions.has("MANAGE_MESSAGES")) return;
     if (!message.content) return;
+
+    let time = await getTime(client);
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
@@ -30,7 +33,8 @@ module.exports = async (message) => {
     let adRegex = new RegExp(adLinks.join("|"), "i");
 
     const globalSlurs = [
-        "(n|i){1,32}(l|e){0,32}((g{2,32}|q){1,32}|[gqb]{2,32}|[g]{1,32})([er]{1,32}|[e3ra]{1,32})", // Variations of the n-word
+        "(n){1,32}(l|i){0,32}((g{2,32}|q){1,32}|[gqb]{2,32})((er){1,32}|[ra]{1,32})", // Variations of the n-word
+        "neger", // Thanks Ewok
         "niglet", // Thanks Ewok but idt I can easily fit this one into the regex above
         "faggot",
         "tranny",
@@ -90,7 +94,7 @@ module.exports = async (message) => {
     async function kick() {
         if (!message.member.kickable) return;
         await message.delete();
-        await message.member.kick([reason]);
+        await message.member.kick([`${reason} -${client.user.tag} (${time})`]);
         await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
@@ -104,7 +108,7 @@ module.exports = async (message) => {
 
     async function ban() {
         if (!message.member.bannable) return;
-        await message.member.ban({ days: 1, reason: reason });
+        await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
         await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         try {
             message.author.send({
