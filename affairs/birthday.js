@@ -15,7 +15,7 @@ module.exports = async (client) => {
 
         // Create cron job
         new cron.CronJob(time, async () => {
-            let dbLanguage = await Languages.findOne({ where: { server_id: message.guild.id } });
+            let dbLanguage = await Languages.findOne({ where: { server_id: globalVars.homeServerID } });
             let language = globalVars.language;
             if (dbLanguage) language = dbLanguage.language;
 
