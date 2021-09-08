@@ -147,7 +147,11 @@ module.exports = async (client, message, language) => {
         } catch (e) {
             // console.log(e);
         };
-        await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
+        try {
+            await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
+        } catch (e) {
+            // console.log(e);
+        };
         return true;
     };
 
