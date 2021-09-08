@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
 
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         if (!args[0]) return sendMessage(client, message, `Please provide a hex to convert.`);
 

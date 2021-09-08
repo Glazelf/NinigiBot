@@ -42,7 +42,7 @@ module.exports = async (client) => {
         //     await guild.members.fetch();
         // });
 
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         console.log(`Commands: ${client.commands.size}
 Guilds: ${client.guilds.cache.size}
