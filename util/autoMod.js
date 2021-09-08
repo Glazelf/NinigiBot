@@ -64,6 +64,12 @@ module.exports = async (client, message, language) => {
 
     // Slurs
     if (slurRegex.test(messageNormalized)) {
+        if (language = "fr") {
+            if (exceptionsFrenchRegex.test(messageNormalized)) return false;
+        };
+        if (language = "es") {
+            if (exceptionsSpanishRegex.test(messageNormalized)) return false;
+        };
         reason = "Using slurs.";
         await msgDelete();
         return true;
