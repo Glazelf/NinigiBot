@@ -64,7 +64,7 @@ module.exports = async (client, message, language) => {
 
     // Scam links
     if (scamRegex.test(messageNormalized)) {
-        if (language = "ru") {
+        if (language == "ru" || message.guild.preferredLocale == "ru") {
             if (russianLinks.test(messageNormalized)) return false;
         };
         reason = "Posting scam links.";
@@ -74,10 +74,10 @@ module.exports = async (client, message, language) => {
 
     // Slurs
     if (slurRegex.test(messageNormalized)) {
-        if (language = "fr") {
+        if (language == "fr" || message.guild.preferredLocale == "fr") {
             if (exceptionsFrenchRegex.test(messageNormalized)) return false;
         };
-        if (language = "es") {
+        if (language == "es" || message.guild.preferredLocale == "es-ES") {
             if (exceptionsSpanishRegex.test(messageNormalized)) return false;
         };
         reason = "Using slurs.";
