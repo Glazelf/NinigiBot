@@ -17,11 +17,14 @@ module.exports = async (client, message, language) => {
     let messageContentBlock = "";
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
+    let russianLinks = new RegExp(".*http(.)?:\/\/[^\s]*\.ru.*", "i");
+
     const scamLinks = [
         ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discorcl)\.(com|org|ru|click).*", // Discord gift links
-        ".*http(.)?:\/\/[^\s]*\.ru.*" // Russian websites, should disable this for russian discords lol
+        russianLinks // Russian websites, should disable this for russian discords lol
     ];
     let scamRegex = new RegExp(scamLinks.join("|"), "i");
+
 
     const adLinks = [
         "discord.gg",
@@ -39,7 +42,7 @@ module.exports = async (client, message, language) => {
     ];
     let slurRegex = new RegExp(globalSlurs.join("|"), "i");
 
-    // Language exceptions currently unused
+    // Language exceptions
     const exceptionsFrench = [
         "retard"
     ];
@@ -57,6 +60,9 @@ module.exports = async (client, message, language) => {
 
     // Scam links
     if (scamRegex.test(messageNormalized)) {
+        if (language = "ru") {
+            if (russianLinks.test(messageNormalized)) return false;
+        };
         reason = "Posting scam links.";
         await ban();
         return true;
