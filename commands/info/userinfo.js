@@ -10,7 +10,6 @@ exports.run = async (client, message, args = [], language) => {
         const checkDays = require('../../util/checkDays');
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
-        const parseDate = require('../../util/parseDate');
 
         let user;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
