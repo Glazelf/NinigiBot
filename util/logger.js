@@ -4,7 +4,7 @@ module.exports = async (exception, client, message = null) => {
     try {
         const Discord = require("discord.js");
         const getTime = require('./getTime');
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         // log error
         console.log(`Error at ${timestamp}:`);

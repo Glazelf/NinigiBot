@@ -9,7 +9,7 @@ exports.run = async (client, message) => {
 
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         let user;
         if (message.type == 'DEFAULT') {

@@ -1,6 +1,7 @@
 module.exports = async (client, message, language) => {
     const getLanguageString = require('./getLanguageString');
     const Discord = require("discord.js");
+    let getTime = require('../util/getTime');
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
@@ -9,6 +10,8 @@ module.exports = async (client, message, language) => {
     if (!message.member) return;
     if (message.member.permissions.has("MANAGE_MESSAGES")) return;
     if (!message.content) return;
+
+    let time = await getTime(client);
 
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
@@ -34,7 +37,8 @@ module.exports = async (client, message, language) => {
     let adRegex = new RegExp(adLinks.join("|"), "i");
 
     const globalSlurs = [
-        "(n|i){1,32}(l|e){0,32}((g{2,32}|q){1,32}|[gqb]{2,32}|[g]{1,32})([er]{1,32}|[e3ra]{1,32})", // Variations of the n-word
+        "(n){1,32}(l|i){0,32}((g{2,32}|q){1,32}|[gqb]{2,32})((er){1,32}|[ra]{1,32})", // Variations of the n-word
+        "neger", // Thanks Ewok
         "niglet", // Thanks Ewok but idt I can easily fit this one into the regex above
         "faggot",
         "tranny",
@@ -107,7 +111,6 @@ module.exports = async (client, message, language) => {
     async function kick() {
         if (!message.member.kickable) return;
         await message.delete();
-        await message.member.kick([reason]);
 
         let autoModKickedReturn = await getLanguageString(client, language, 'autoModKickedReturn');
         autoModKickedReturn = autoModKickedReturn.replace('[userTag]', `**${message.author.tag}**`).replace('[userID]', `(${message.author.id})`).replace('[reason]', `\`${reason}\``);
@@ -115,8 +118,14 @@ module.exports = async (client, message, language) => {
         autoModKickedDM = autoModKickedDM.replace('[reason]', `\`${reason}\``) + `\n${messageContentBlock}`;
 
         await message.channel.send({ content: autoModKickedReturn });
+
         try {
-            message.author.send({ content: autoModKickedDM });
+            await message.author.send({ content: autoModKickedDM });
+        } catch (e) {
+            // console.log(e);
+        };
+        try {
+            await message.member.kick([`${reason} -${client.user.tag} (${time})`]);
             return true;
         } catch (e) {
             // console.log(e);
@@ -138,7 +147,7 @@ module.exports = async (client, message, language) => {
         } catch (e) {
             // console.log(e);
         };
-        await message.member.ban({ days: 1, reason: reason });
+        await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
         return true;
     };
 

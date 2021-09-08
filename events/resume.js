@@ -8,7 +8,7 @@ module.exports = async (client) => {
         // Set bot status
         client.user.setPresence(globalVars.presence);
 
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         // Console log status
         return console.log(`Resumed. (${timestamp})`);

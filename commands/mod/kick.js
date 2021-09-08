@@ -5,6 +5,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const isAdmin = require('../../util/isAdmin');
+        const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(message.member, client);
         if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
@@ -35,6 +36,8 @@ exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
+        let time = await getTime(client);
+
         // Kick
         let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Succeeded)`;
         try {
@@ -44,7 +47,7 @@ exports.run = async (client, message, args = []) => {
             kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Failed)`;
         };
         try {
-            await member.kick([`${reason} -${author.tag}`]);
+            await member.kick([`${reason} -${author.tag} (${time})`]);
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {

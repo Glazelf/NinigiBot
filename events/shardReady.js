@@ -5,7 +5,7 @@ module.exports = async (client, id) => {
         const Discord = require("discord.js");
         const getTime = require('../util/getTime');
 
-        let timestamp = await getTime();
+        let timestamp = await getTime(client);
 
         client.user.setPresence(globalVars.presence);
 
