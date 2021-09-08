@@ -5,7 +5,7 @@ exports.run = async (client, message) => {
         const sendMessage = require('../../util/sendMessage');
         if (message.guild.id !== "861884184787550218") return;
 
-        let targetDate = new Date("Sep 8, 2021 17:00:00").getTime();
+        let targetDate = new Date("Sept 8, 2021 17:00:00").getTime();
         let now = new Date().getTime();
         let distance = targetDate - now;
 
