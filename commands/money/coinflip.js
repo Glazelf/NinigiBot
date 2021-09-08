@@ -28,7 +28,7 @@ exports.run = async (client, message, args = []) => {
         if (amount == "quarter") amount = balance / 4;
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
-        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please enter an a number that's equal to or larger than 1.`);
+        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
 
         amount = Math.floor(amount);
 
