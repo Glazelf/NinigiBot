@@ -20,7 +20,7 @@ module.exports = async (client, message, language) => {
     let messageContentBlock = "";
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
-    let russianLinks = new RegExp(".*http(.)?:\/\/[^\s]*\.ru.*", "i");
+    let russianLinks = new RegExp(".*http(.)?:\/\/[^s]*.ru.*", "i");
 
     const scamLinks = [
         ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discorcl).(com|org|ru|click).*", // Discord gift links
