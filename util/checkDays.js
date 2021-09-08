@@ -13,6 +13,9 @@ module.exports = async (client, date, language) => {
 
         let returnString = daysAgoMultiple;
         if (days == 1) returnString = daysAgoSingle;
+
+        returnString = returnString.replace('[daysNumber]', days);
+
         return returnString;
 
     } catch (e) {
