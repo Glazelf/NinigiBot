@@ -3,9 +3,11 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const forever = require('forever');
+        const getTime = require('../../util/getTime');
+
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        const getTime = require('../../util/getTime');
         let timestamp = await getTime();
 
         let user;
@@ -16,7 +18,7 @@ exports.run = async (client, message) => {
         };
 
         // Return message then destroy
-        await sendMessage(client, message, `Starting shutdown. Removing all slash commands, context menus etc. might take a bit. It might take up to an hour for them to vanish on Discord's end.`);
+        await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
 
         // Delete all global commands
         await client.application.commands.set([]);
@@ -32,6 +34,8 @@ exports.run = async (client, message) => {
 
         // Delete SAC specific commands
         // await client.guilds.cache.get(client.config.botServerID).commands.set([]);
+
+        forever.stop(0);
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);

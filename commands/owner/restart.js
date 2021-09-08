@@ -3,13 +3,35 @@ exports.run = async (client, message) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getTime = require('../../util/getTime');
+
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
-        // send channel a message that you're resetting bot [optional]
-        await sendMessage(client, message, `Restarting...`);
+        let timestamp = await getTime();
+
+        let user;
+        if (message.type == 'DEFAULT') {
+            user = message.author;
+        } else {
+            user = message.member.user;
+        };
+
+        // Return message then destroy
+        await sendMessage(client, message, `Restarting for **${user.tag}**.`);
+        console.log(`Restarting for ${user.tag}. (${timestamp})`);
+
+        // Skip deleting all global commands because of rate limits per day
+        // await client.application.commands.set([]);
+
+        // Destroy, will reboot thanks to forever package
         await client.destroy();
-        await client.login(client.config.token);
-        return sendMessage(client, message, `Successfully restarted!`);
+        return process.exit();
+
+        // Restarts a shard
+        // await sendMessage(client, message, `Restarting...`);
+        // await client.destroy();
+        // await client.login(client.config.token);
+        // return sendMessage(client, message, `Successfully restarted!`);
 
     } catch (e) {
         // log error
