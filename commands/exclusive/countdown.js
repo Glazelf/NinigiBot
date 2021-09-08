@@ -4,7 +4,7 @@ exports.run = async (client, message) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
-        if (message.guild.id !== "861884184787550218") return;
+        if (message.guild.id !== client.config.botServerID) return;
 
         let targetDate = new Date("Sep 20, 2021 17:00:00").getTime();
         let now = new Date().getTime();

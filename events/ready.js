@@ -63,7 +63,6 @@ function initPresence() {
     return presence;
 };
 
-module.exports.homeServerID = "549214833858576395";
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "747878956434325626";
 module.exports.currency = "💰";
