@@ -35,7 +35,7 @@ exports.run = async (client, message, args = []) => {
         bank.currency.add(message.member.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return sendMessage(client, message, `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.tag}.`);
+        return sendMessage(client, message, `Successfully transferred ${transferAmount}${globalVars.currency} to **${transferTarget.tag}**`);
 
     } catch (e) {
         // log error

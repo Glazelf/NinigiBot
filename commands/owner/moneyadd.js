@@ -28,7 +28,7 @@ exports.run = async (client, message, args = []) => {
         bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(message.member.id));
         userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        return sendMessage(client, message, `Successfully added ${transferAmount}${currency} to ${transferTarget.tag}.`);
+        return sendMessage(client, message, `Successfully added ${transferAmount}${currency} to **${transferTarget.tag}**.`);
 
     } catch (e) {
         // log error
