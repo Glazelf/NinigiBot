@@ -16,7 +16,14 @@ module.exports = async (client, message, language) => {
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
-    let messageNormalized = message.content.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W/g, '').replace(" ", "").toLowerCase();
+    let messageNormalized = message.content
+        .replace(/[\uff01-\uff5e]/g, function (ch) { return String.fromCharCode(ch.charCodeAt(0) - 0xfee0); }) // convert full-width to half-width
+        .normalize("NFD") // standard normalization
+        .replace(/[\u0300-\u036f]/g, "") // idk lol
+        .replace(/\W/g, "") // ???
+        .replace(" ", "") // remove spaces
+        .toLowerCase();
+
     let messageContentBlock = "";
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
