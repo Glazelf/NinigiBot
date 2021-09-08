@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
         const steam = new SteamAPI(`${client.config.steam}`);
 
         // Sanitize and sort user input
-        if (args.length < 2) return sendMessage(client, message, `Please provide either \`user\` or \`game\` and a valid ID.`);
+        if (args.length < 2) return sendMessage(client, message, `Please provide either \`user\` or \`game\` followed by a valid ID.`);
         let subCommand = args[0].match(/(\w+)\s*([\s\S]*)/);
         let steamInput = args[1].match(/(\w+)\s*([\s\S]*)/);
 

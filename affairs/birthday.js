@@ -61,6 +61,6 @@ module.exports = async (client) => {
         // log error
         const logger = require('../util/logger');
 
-        logger(e, client, message);
+        logger(e, client);
     };
 };
