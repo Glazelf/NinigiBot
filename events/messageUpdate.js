@@ -39,8 +39,6 @@ module.exports = async (client, message, newMessage) => {
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
             if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1020)}...`;
 
-            // Language = en as a test for now untill proper translation 
-            let language = 'en';
             await autoMod(client, newMessage, language);
 
             let isReply = false;
