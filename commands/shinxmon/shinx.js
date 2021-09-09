@@ -48,7 +48,7 @@ const visitors = [
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {

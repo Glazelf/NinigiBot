@@ -1,7 +1,8 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = [], language) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
+
         return sendMessage(client, message, `Here's an invite for me to join your server: <https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8>.`);
 
     } catch (e) {

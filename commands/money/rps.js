@@ -1,6 +1,6 @@
 const cooldown = new Set();
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {

@@ -9,7 +9,7 @@ const addLine = (line) => {
 
 const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {

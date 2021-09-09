@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
