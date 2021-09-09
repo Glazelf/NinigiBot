@@ -210,6 +210,9 @@ module.exports = async (client, message, response, language) => {
 
         let footer = message.member.user.tag;
 
+        let decimalSeperator = await getLanguageString(client, language, 'decimalSeperator');
+        weight = weight.replace('.', decimalSeperator);
+        height = height.replace('.', decimalSeperator);
         let pokemonTitleType = await getLanguageString(client, language, 'pokemonTitleType');
         let pokemonTitleMetrics = await getLanguageString(client, language, 'pokemonTitleMetrics');
         let pokemonTitleWeight = await getLanguageString(client, language, 'pokemonTitleWeight');

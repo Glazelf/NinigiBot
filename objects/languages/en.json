@@ -12,6 +12,7 @@
     "birthdayUpdateSuccess": "Successfully updated your birthday.",
     "checkDaysAgoMultiple": "[daysNumber] days ago",
     "checkDaysAgoSingle": "[daysNumber] day ago",
+    "decimalSeperator": ".",
     "getCardinalst": "st",
     "getCardinalnd": "nd",
     "getCardinalrd": "rd",
