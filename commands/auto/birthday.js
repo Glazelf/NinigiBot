@@ -1,18 +1,22 @@
 const sendMessage = require('../../util/sendMessage');
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = [], language) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const { bank } = require('../../database/bank');
 
         // Check and sanitize birthday
-        if (args.length < 1) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
+        let birthdayNoArgument = await getLanguageString(client, language, 'birthdayNoArgument');
+        birthdayNoArgument = birthdayNoArgument.replace('[birthdayFormat]', '`dd-mm`');
+        let birthdayUpdateSuccess = await getLanguageString(client, language, 'birthdayUpdateSuccess');
+
+        if (args.length < 1) return sendMessage(client, message, birthdayNoArgument);
         let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(args);
-        if (!birthday) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
+        if (!birthday) return sendMessage(client, message, birthdayNoArgument);
 
         bank.currency.birthday(message.member.id, birthday[1] + birthday[2]);
-        return sendMessage(client, message, `Successfully updated your birthday.`);
+        return sendMessage(client, message, birthdayUpdateSuccess);
 
     } catch (e) {
         // log error

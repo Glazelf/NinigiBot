@@ -8,6 +8,8 @@
     "banExecutorTitle": "Banni par:",
     "birthdayAffairDescription": "Aujourd'hui, c'est l'anniversaire de [userTag], tout le monde!",
     "birthdayAffairJoinWord": "et",
+    "birthdayNoArgument": "",
+    "birthdayUpdateSuccess": "",
     "checkDaysAgoMultiple": "Il y a [daysNumber] jours",
     "checkDaysAgoSingle": "Il y a [daysNumber] jour",
     "getCardinalst": "er",

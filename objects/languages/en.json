@@ -8,6 +8,8 @@
     "banExecutorTitle": "Banned by:",
     "birthdayAffairDescription": "Today's is [userTag]'s birthday, everyone!",
     "birthdayAffairJoinWord": "and",
+    "birthdayNoArgument": "Please specify a valid birthday in [birthdayFormat] format.",
+    "birthdayUpdateSuccess": "Successfully updated your birthday.",
     "checkDaysAgoMultiple": "[daysNumber] days ago",
     "checkDaysAgoSingle": "[daysNumber] day ago",
     "getCardinalst": "st",
