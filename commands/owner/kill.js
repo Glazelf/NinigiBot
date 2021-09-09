@@ -36,7 +36,7 @@ exports.run = async (client, message) => {
         // Delete SAC specific commands
         // await client.guilds.cache.get(client.config.botServerID).commands.set([]);
 
-        forever.stop(0);
+        forever.stopAll();
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);
