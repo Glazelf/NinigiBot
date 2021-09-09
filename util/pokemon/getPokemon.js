@@ -209,7 +209,6 @@ module.exports = async (client, message, response, language) => {
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
         let footer = message.member.user.tag;
-        if (message.type != "DEFAULT") footer = message.member.user.tag;
 
         let pokemonTitleType = await getLanguageString(client, language, 'pokemonTitleType');
         let pokemonTitleMetrics = await getLanguageString(client, language, 'pokemonTitleMetrics');
