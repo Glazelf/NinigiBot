@@ -207,7 +207,6 @@ module.exports = async (client, message, response) => {
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
         let footer = message.member.user.tag;
-        if (message.type != "DEFAULT") footer = message.member.user.tag;
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
