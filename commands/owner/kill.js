@@ -17,11 +17,13 @@ exports.run = async (client, message) => {
             user = message.member.user;
         };
 
-        // Return message then destroy
-        await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
+        if (args[0] == 'soft') {
+            // Return message then destroy
+            await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
 
-        // Delete all global commands
-        await client.application.commands.set([]);
+            // Delete all global commands
+            await client.application.commands.set([]);
+        };
 
         // Delete all guild commands, disabled because we don't use guild-specific commands
         // await client.guilds.cache.forEach(guild => {
