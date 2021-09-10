@@ -64,8 +64,8 @@ exports.run = async (client, message) => {
         let stickerCapTier2 = 30;
         let stickerCapTier3 = 60;
         let boosterRequirementTier1 = 2;
-        let boosterRequirementTier2 = 15;
-        let boosterRequirementTier3 = 30;
+        let boosterRequirementTier2 = 7;
+        let boosterRequirementTier3 = 14;
         if (guild.partnered || guild.verified) {
             emoteMax = emoteCapTier3;
             stickerMax = stickerCapTier3;
