@@ -356,6 +356,11 @@ exports.run = async (client, message, args = [], language) => {
             shinx.play(reaction[2]);
             return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
 
+        } else if (args[0] == "release") {
+            await shinx.destroy();
+
+            return sendMessage(client, message, `Successfully released Shinx and reset all it's values.`);
+
         } else {
             canvas = Canvas.createCanvas(256, 160);
             ctx = canvas.getContext('2d');
