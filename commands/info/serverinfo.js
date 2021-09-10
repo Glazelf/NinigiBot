@@ -50,30 +50,54 @@ exports.run = async (client, message) => {
             banCount = 0;
         };
 
-        // Check emote and sticker caps
+        // Check emote and sticker caps, and boosters
         let emoteMax;
         let stickerMax;
-        switch (guild.premiumTier) {
-            case "TIER_1":
-                emoteMax = 200;
-                stickerMax = 15;
-                break;
-            case "TIER_2":
-                emoteMax = 300;
-                stickerMax = 30;
-                break;
-            case "TIER_3":
-                emoteMax = 500;
-                stickerMax = 60;
-                break;
-            default:
-                emoteMax = 100;
-                stickerMax = 0;
-        };
+        let boosterString;
         if (guild.partnered || guild.verified) {
             emoteMax = 500;
             stickerMax = 60;
+            boosterString = guild.premiumSubscriptionCount;
+        } else {
+            switch (guild.premiumTier) {
+                case "TIER_1":
+                    emoteMax = 200;
+                    stickerMax = 15;
+                    boosterString = `${guild.premiumSubscriptionCount}/2`;
+                    break;
+                case "TIER_2":
+                    emoteMax = 300;
+                    stickerMax = 30;
+                    boosterString = `${guild.premiumSubscriptionCount}/15`;
+                    break;
+                case "TIER_3":
+                    emoteMax = 500;
+                    stickerMax = 60;
+                    boosterString = `${guild.premiumSubscriptionCount}/30`;
+                    break;
+                default:
+                    emoteMax = 100;
+                    stickerMax = 0;
+                    boosterString = guild.premiumSubscriptionCount;
+            };
         };
+        boosterString = boosterString + nitroEmote;
+
+
+        // Boosters
+
+        if (guild.partnered || guild.verified) {
+            boosterString = guild.premiumSubscriptionCount;
+        } else if (guild.premiumSubscriptionCount < 2) {
+
+        } else if (guild.premiumSubscriptionCount < 15) {
+
+        } else if (guild.premiumSubscriptionCount < 30) {
+
+        } else {
+            boosterString = guild.premiumSubscriptionCount;
+        };
+
 
         // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
@@ -96,20 +120,6 @@ exports.run = async (client, message) => {
             if (channel.isThread()) threadCount += 1;
             if (channel.archived == true) console.log(channel)
         });
-
-        // Boosters
-        let boosterString;
-        if (guild.partnered || guild.verified) {
-            boosterString = `${guild.premiumSubscriptionCount}${nitroEmote}`;
-        } else if (guild.premiumSubscriptionCount < 2) {
-            boosterString = `${guild.premiumSubscriptionCount}/2${nitroEmote}`;
-        } else if (guild.premiumSubscriptionCount < 15) {
-            boosterString = `${guild.premiumSubscriptionCount}/15${nitroEmote}`;
-        } else if (guild.premiumSubscriptionCount < 30) {
-            boosterString = `${guild.premiumSubscriptionCount}/30${nitroEmote}`;
-        } else {
-            boosterString = `${guild.premiumSubscriptionCount}${nitroEmote}`;
-        };
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
