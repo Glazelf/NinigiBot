@@ -34,6 +34,7 @@ module.exports = {
 
                 Reflect.defineProperty(money, 'getShinx', {
                     value: async function getShinx(id) {
+                        const parseMeetDate = require('../util/parseMeetDate');
                         let user = money.get(id);
 
                         if (!user) {
@@ -46,7 +47,8 @@ module.exports = {
 
                         if (!shinx) {
                             const now = new Date();
-                            shinx = await Shinx.create({ user_id: id, meetup: require('../util/parseMeetDate')(now.getDate(), now.getMonth(), now.getFullYear()) });
+                            meetup = await parseMeetDate((now.getDate(), now.getMonth(), now.getFullYear()));
+                            shinx = await Shinx.create({ user_id: id, meetup: meetup });
                         };
                         return shinx;
                     },
