@@ -54,50 +54,46 @@ exports.run = async (client, message) => {
         let emoteMax;
         let stickerMax;
         let boosterString;
+        // Variables for the above
+        let emoteCapTier0 = 100;
+        let emoteCapTier1 = 200;
+        let emoteCapTier2 = 300;
+        let emoteCapTier3 = 500;
+        let stickerCapTier0 = 0;
+        let stickerCapTier1 = 15;
+        let stickerCapTier2 = 30;
+        let stickerCapTier3 = 60;
+        let boosterRequirementTier1 = 2;
+        let boosterRequirementTier2 = 15;
+        let boosterRequirementTier3 = 30;
         if (guild.partnered || guild.verified) {
-            emoteMax = 500;
-            stickerMax = 60;
+            emoteMax = emoteCapTier3;
+            stickerMax = stickerCapTier3;
             boosterString = guild.premiumSubscriptionCount;
         } else {
             switch (guild.premiumTier) {
                 case "TIER_1":
-                    emoteMax = 200;
-                    stickerMax = 15;
-                    boosterString = `${guild.premiumSubscriptionCount}/2`;
+                    emoteMax = emoteCapTier1;
+                    stickerMax = stickerCapTier1;
+                    boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier2}`;
                     break;
                 case "TIER_2":
-                    emoteMax = 300;
-                    stickerMax = 30;
-                    boosterString = `${guild.premiumSubscriptionCount}/15`;
+                    emoteMax = emoteCapTier2;
+                    stickerMax = stickerCapTier2;
+                    boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier3}`;
                     break;
                 case "TIER_3":
-                    emoteMax = 500;
-                    stickerMax = 60;
-                    boosterString = `${guild.premiumSubscriptionCount}/30`;
+                    emoteMax = emoteCapTier3;
+                    stickerMax = stickerCapTier3;
+                    boosterString = guild.premiumSubscriptionCount;
                     break;
                 default:
-                    emoteMax = 100;
-                    stickerMax = 0;
-                    boosterString = guild.premiumSubscriptionCount;
+                    emoteMax = emoteCapTier0;
+                    stickerMax = stickerCapTier0;
+                    boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
         boosterString = boosterString + nitroEmote;
-
-
-        // Boosters
-
-        if (guild.partnered || guild.verified) {
-            boosterString = guild.premiumSubscriptionCount;
-        } else if (guild.premiumSubscriptionCount < 2) {
-
-        } else if (guild.premiumSubscriptionCount < 15) {
-
-        } else if (guild.premiumSubscriptionCount < 30) {
-
-        } else {
-            boosterString = guild.premiumSubscriptionCount;
-        };
-
 
         // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
