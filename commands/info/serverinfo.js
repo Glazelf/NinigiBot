@@ -14,8 +14,10 @@ exports.run = async (client, message) => {
         await guild.members.fetch();
         await guild.channels.fetch();
 
-        let humanMembers = guild.members.cache.filter(member => !member.user.bot).size;
         let botMembers = guild.members.cache.filter(member => member.user.bot).size;
+        let humanMembers = guild.members.cache.size - botMembers;
+        let managedEmotes = guild.emojis.cache.filter(emote => emote.managed).size; // Only managed emote source seems to be Twitch
+        let unmanagedEmotes = guild.emojis.cache.size - managedEmotes; // Currently unused 
         let guildsByShard = client.guilds.cache;
 
         let user;
@@ -94,6 +96,7 @@ exports.run = async (client, message) => {
             };
         };
         boosterString = boosterString + nitroEmote;
+        if (managedEmotes > 0) emoteMax += managedEmotes;
 
         // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
