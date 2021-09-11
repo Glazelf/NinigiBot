@@ -139,19 +139,16 @@ exports.run = async (client, message, args = []) => {
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') {
-                    pokemonName = args.slice(1).join("-").replace(" ", "-").toLowerCase();
+                    pokemonName = args.slice(1).join("-").replace(" ", "-").replace(":", "").toLowerCase();
                 } else {
-                    pokemonName = args.join(" ").toLowerCase();
+                    pokemonName = args.join("-").replace(" ", "-").replace(":", "").toLowerCase();
                 };
 
                 // Edgecase name corrections
-                if (pokemonName.startsWith("tapu") || pokemonName == "type null") pokemonName = `${args[0]}-${args[1]}`;
-                if (pokemonName == "type: null") pokemonName = `${args[0].substring(0, args[0].length - 1)}-${args[1]}`;
                 await correctValue(correctionName, pokemonName);
 
                 // Easter egg name aliases
                 await correctValue(easterEggName, pokemonName);
-
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
