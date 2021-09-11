@@ -138,13 +138,10 @@ exports.run = async (client, message, args = []) => {
                 var pokemonID;
 
                 // Catch Slash Command structure
-                if (message.type == 'APPLICATION_COMMAND') {
-                    pokemonName = args.slice(1).join("-").replace(" ", "-").replace(":", "").toLowerCase();
-                } else {
-                    pokemonName = args.join("-").replace(" ", "-").replace(":", "").toLowerCase();
-                };
+                if (message.type == 'APPLICATION_COMMAND') pokemonName = args.slice(1);
 
                 // Edgecase name corrections
+                pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
                 await correctValue(correctionName, pokemonName);
 
                 // Easter egg name aliases
