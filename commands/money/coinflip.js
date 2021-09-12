@@ -35,11 +35,11 @@ exports.run = async (client, message, args = []) => {
             return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
         };
 
-        let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}.`;
+        let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}. You now have ${balance + amount}${currency}.`;
 
         // Coinflip randomization, code in brackets is executed only upon a loss
         if (Math.random() >= 0.5) {
-            returnString = `Sorry, you flipped **${loseSide}** and lost ${amount}${currency}.`;
+            returnString = `Sorry, you flipped **${loseSide}** and lost ${amount}${currency}. You now have ${balance - amount}${currency}.`;
             amount = Math.abs(amount) * -1;
         };
 
