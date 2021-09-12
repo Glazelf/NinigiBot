@@ -4,6 +4,7 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
+
         let target;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             target = message.mentions.users.first();
@@ -14,7 +15,6 @@ exports.run = async (client, message, args = []) => {
             let userID = args[0];
             target = client.users.cache.get(userID);
         };
-
 
         if (!target) {
             if (message.type == 'DEFAULT') {
