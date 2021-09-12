@@ -19,14 +19,17 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
 
         let author;
+        let target;
         if (message.type == 'DEFAULT') {
             author = message.author;
+            target = message.mentions.users.first();
         } else {
             author = message.member.user;
         };
+        if (!target) target = client.users.fetch(args[0]);
 
-        let target = args[0];
         if (!target || target.length < 1 || (message.mentions && (!message.mentions.members && !message.mentions.repliedUser))) return sendMessage(client, message, `Please specify a user to battle.`);
+
         const trainers = [author, target];
         if (!trainers[1]) return sendMessage(client, message, `Please tag a valid person to battle.`)
         if (trainers[0].id === trainers[1].id) return sendMessage(client, message, `You cannot battle yourself!`);
