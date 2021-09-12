@@ -1,7 +1,7 @@
 const { update } = require("lodash");
 
 module.exports = async (client, message, newMessage) => {
-    const logger = require('../../util/logger');
+    const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
     try {
