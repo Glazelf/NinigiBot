@@ -1,4 +1,7 @@
 exports.run = async (client, message, args = []) => {
+    const logger = require('../../util/logger');
+    // Import globals
+    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
@@ -20,9 +23,7 @@ exports.run = async (client, message, args = []) => {
         return sendMessage(client, message, `Successfully updated your Nintendo Switch friend code.`);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

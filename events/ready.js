@@ -51,7 +51,7 @@ Users: ${client.users.cache.size} (cached)
 Connected as ${client.user.tag}. (${timestamp})`);
 
     } catch (e) {
-        // log error
+        // Log error
         console.log(e);
     };
 };

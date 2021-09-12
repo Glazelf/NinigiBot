@@ -1,8 +1,9 @@
 exports.run = async (client, message, args = []) => {
+    const logger = require('../../util/logger');
+    // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const logger = require('../../util/logger');
         const Discord = require("discord.js");
         const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
@@ -188,9 +189,7 @@ exports.run = async (client, message, args = []) => {
         };
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

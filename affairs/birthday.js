@@ -1,8 +1,8 @@
 module.exports = async (client) => {
+    const logger = require('../util/logger');
     // Import globals
     let globalVars = require('../events/ready');
     try {
-
         const cron = require("cron");
         const timezone = 'cest';
         const time = '05 00 00 * * *'; //Sec Min Hour 
@@ -50,9 +50,7 @@ module.exports = async (client) => {
         }, timeZone = timezone, start = true);
 
     } catch (e) {
-        // log error
-        const logger = require('../util/logger');
-
+        // Log error
         logger(e, client);
     };
 };

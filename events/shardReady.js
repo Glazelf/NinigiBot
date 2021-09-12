@@ -13,7 +13,7 @@ module.exports = async (client, id) => {
         return console.log(`Launched shard ${id}. (${timestamp})`);
 
     } catch (e) {
-        // log error
+        // Log error
         console.log(e);
     };
 };

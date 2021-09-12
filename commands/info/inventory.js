@@ -2,6 +2,9 @@ const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 
 exports.run = async (client, message, args = []) => {
+    const logger = require('../../util/logger');
+    // Import globals
+    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         //items, food, equipment
@@ -64,9 +67,7 @@ exports.run = async (client, message, args = []) => {
         return sendMessage(client, message, `Please specify a category: items, food or equipment.`);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

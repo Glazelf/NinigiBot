@@ -37,7 +37,7 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         return message.reply(messageObject);
 
     } catch (e) {
-        // log error
+        // Log error
         const logger = require('./logger');
 
         logger(e, client);

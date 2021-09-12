@@ -6,7 +6,7 @@ module.exports = async (exception, client, message = null) => {
         const getTime = require('./getTime');
         let timestamp = await getTime(client);
 
-        // log error
+        // Log error
         console.log(`Error at ${timestamp}:`);
         console.log(exception);
 

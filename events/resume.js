@@ -14,7 +14,7 @@ module.exports = async (client) => {
         return console.log(`Resumed. (${timestamp})`);
 
     } catch (e) {
-        // log error
+        // Log error
         console.log(e);
     };
 };

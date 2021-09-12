@@ -1,4 +1,5 @@
 exports.run = async (client, message, args = []) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -33,9 +34,7 @@ exports.run = async (client, message, args = []) => {
         return sendMessage(client, message, `${targetChannel} is now **${message.guild.name}**'s VC text channel.`);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

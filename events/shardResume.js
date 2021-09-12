@@ -14,7 +14,7 @@ module.exports = async (client, id) => {
         return console.log(`Reconnected shard ${id}. (${timestamp})`);
 
     } catch (e) {
-        // log error
+        // Log error
         console.log(e);
     };
 };

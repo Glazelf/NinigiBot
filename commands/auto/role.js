@@ -1,4 +1,5 @@
 exports.run = async (client, message, args = []) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -128,9 +129,7 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
         };
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

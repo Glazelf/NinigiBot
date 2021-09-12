@@ -8,7 +8,7 @@ module.exports = async (date, client) => {
         return days + (days == 1 ? " day" : " days") + " ago";
 
     } catch (e) {
-        // log error
+        // Log error
         const logger = require('./logger');
 
         logger(e, client);

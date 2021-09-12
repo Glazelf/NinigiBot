@@ -49,7 +49,7 @@ module.exports = async (client, oldMember, newMember) => {
         };
 
     } catch (e) {
-        // log error
+        // Log error
         console.log(e);
     };
 };
