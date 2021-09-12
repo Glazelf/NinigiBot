@@ -6,7 +6,7 @@ exports.run = async (client, message, args = [], language) => {
         const getLanguageString = require('../../util/getLanguageString');
         if (message.guild.id !== client.config.botServerID) return;
 
-        let targetDate = new Date("Sep 20, 2021 17:00:00").getTime();
+        let targetDate = new Date("Sep 18, 2021 20:00:00").getTime();
         let now = new Date().getTime();
         let distance = targetDate - now;
 

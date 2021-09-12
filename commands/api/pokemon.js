@@ -147,11 +147,11 @@ exports.run = async (client, message, args = [], language) => {
             // Pokémon
             default:
                 // Public variables
-                var pokemonName;
+                var pokemonName = args;
                 var pokemonID;
 
                 // Catch Slash Command structure
-                if (message.type == 'APPLICATION_COMMAND') pokemonName = args.slice(1);
+                if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
 
                 // Edgecase name corrections
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
