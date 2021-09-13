@@ -1,10 +1,13 @@
-const Sequelize = require('sequelize');
-const { Users } = require('../../database/dbObjects');
-
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
+    // Import globals
+    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
+        const Sequelize = require('sequelize');
+        const { Users } = require('../../database/dbObjects');
+
         //items, food, equipment
         let target;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) target = message.mentions.users.first();
@@ -65,9 +68,7 @@ exports.run = async (client, message, args = [], language) => {
         return sendMessage(client, message, `Please specify a category: items, food or equipment.`);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

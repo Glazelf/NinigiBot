@@ -1,6 +1,9 @@
 module.exports = async (client, info) => {
+    const logger = require('../../util/logger');
+    // Import globals
+    let globalVars = require('./ready');
     try {
-        // log error
+        // Log error
         console.log(info);
 
         // Reboot bot
@@ -8,8 +11,7 @@ module.exports = async (client, info) => {
         botjs();
 
     } catch (e) {
-        const logger = require('../util/logger');
-
+        // Log error
         logger(e, client);
     };
 };

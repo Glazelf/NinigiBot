@@ -1,4 +1,5 @@
 module.exports = async (client) => {
+    const logger = require('../util/logger');
     // Import globals
     let globalVars = require('../events/ready');
     try {
@@ -58,9 +59,7 @@ module.exports = async (client) => {
         }, timeZone = timezone, start = true);
 
     } catch (e) {
-        // log error
-        const logger = require('../util/logger');
-
+        // Log error
         logger(e, client);
     };
 };

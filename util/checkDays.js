@@ -19,7 +19,7 @@ module.exports = async (client, date, language) => {
         return returnString;
 
     } catch (e) {
-        // log error
+        // Log error
         const logger = require('./logger');
 
         logger(e, client);

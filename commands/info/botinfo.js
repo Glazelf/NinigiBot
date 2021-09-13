@@ -1,12 +1,15 @@
 const { forEach } = require('lodash');
 
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const checkDays = require('../../util/checkDays');
+        const Discord = require("discord.js");
+
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -15,7 +18,8 @@ exports.run = async (client, message, args = [], language) => {
             prefix = globalVars.prefix;
         };
 
-        const Discord = require("discord.js");
+        await client.guilds.fetch();
+
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
         // let userCount = await client.users.fetch();
         // let memberFetch = await message.guild.members.fetch();
@@ -44,6 +48,13 @@ exports.run = async (client, message, args = [], language) => {
         };
         let averageUsers = Math.round(totalMembers / totalGuilds);
         if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
+
+        // Get unique owner count
+        let ownerPool = [];
+        await client.guilds.cache.forEach(guild => {
+            ownerPool.push(guild.ownerId);
+        });
+        let uniqueOwners = countUnique(ownerPool);
 
         let user;
         if (message.type == 'DEFAULT') {
@@ -108,6 +119,7 @@ exports.run = async (client, message, args = [], language) => {
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
+            .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
@@ -144,14 +156,12 @@ exports.run = async (client, message, args = [], language) => {
             return userCount;
         };
 
-        function uniqueArray(value, index, self) {
-            return self.indexOf(value) === index;
+        function countUnique(iterable) {
+            return new Set(iterable).size;
         };
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

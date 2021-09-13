@@ -1,6 +1,7 @@
 const cooldown = new Set();
 
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -57,9 +58,7 @@ exports.run = async (client, message, args = [], language) => {
         }, 1500);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

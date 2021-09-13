@@ -1,6 +1,5 @@
-const getPokemon = require('../util/pokemon/getPokemon');
-
 module.exports = async (client, interaction) => {
+    const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
     try {
@@ -179,9 +178,7 @@ module.exports = async (client, interaction) => {
         };
 
     } catch (e) {
-        // log error
-        const logger = require('../util/logger');
-
+        // Log error
         logger(e, client, interaction);
     };
 };

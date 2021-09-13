@@ -1,4 +1,5 @@
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -89,9 +90,7 @@ exports.run = async (client, message, args = [], language) => {
         return sendMessage(client, message, banReturn);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

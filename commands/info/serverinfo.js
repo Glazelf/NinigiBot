@@ -1,6 +1,7 @@
 const { forEach } = require('lodash');
 
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -16,10 +17,10 @@ exports.run = async (client, message, args = [], language) => {
         await guild.members.fetch();
         await guild.channels.fetch();
 
-        let botMembers = guild.members.cache.filter(member => member.user.bot).size;
-        let humanMembers = guild.members.cache.size - botMembers;
-        let managedEmotes = guild.emojis.cache.filter(emote => emote.managed).size; // Only managed emote source seems to be Twitch
-        let unmanagedEmotes = guild.emojis.cache.size - managedEmotes; // Currently unused 
+        let botMembers = guild.members.cache.filter(member => member.user.bot);
+        let humanMemberCount = guild.members.cache.size - botMembers.size;
+        let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
+        let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
 
         let user;
@@ -98,7 +99,6 @@ exports.run = async (client, message, args = [], language) => {
             };
         };
         boosterString = boosterString + nitroEmote;
-        if (managedEmotes > 0) emoteMax += managedEmotes;
 
         // Icon and banner
         let icon = guild.iconURL({ format: "png", dynamic: true });
@@ -137,12 +137,13 @@ exports.run = async (client, message, args = [], language) => {
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("Total Members:", guild.memberCount.toString(), true)
-            .addField("Human Members:", humanMembers.toString(), true)
-            .addField("Bots:", `${botMembers} 🤖`, true)
+            .addField("Human Members:", humanMemberCount.toString(), true)
+            .addField("Bots:", `${botMembers.size} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
         if (threadCount > 0) serverEmbed.addField("Threads:", threadCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
-        if (guild.emojis.cache.size > 0) serverEmbed.addField("Emotes:", `${guild.emojis.cache.size}/${emoteMax} 😳`, true);
+        if (unmanagedEmoteCount > 0) serverEmbed.addField("Emotes:", `${unmanagedEmoteCount}/${emoteMax} 😳`, true);
+        if (managedEmotes.size > 0) serverEmbed.addField("Twitch Emotes:", `${managedEmotes.size}`, true);
         if (guild.stickers.cache.size > 0) serverEmbed.addField("Stickers:", `${guild.stickers.cache.size}/${stickerMax}`, true);
         if (banCount > 0) serverEmbed.addField("Bans:", banCount.toString(), true);
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
@@ -157,9 +158,7 @@ exports.run = async (client, message, args = [], language) => {
         return sendMessage(client, message, null, serverEmbed);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

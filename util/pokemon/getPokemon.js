@@ -305,7 +305,7 @@ ${pokemonTitleBaseStatTotal} ${BST}`, false)
         };
 
     } catch (e) {
-        // log error
+        // Log error
         const logger = require('../logger');
 
         logger(e, client);

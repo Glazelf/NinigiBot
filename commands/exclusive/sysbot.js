@@ -1,4 +1,5 @@
 exports.run = async (client, message, args = [], language) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -65,9 +66,7 @@ Check the pins in <#${globalVars.botChannelID}> for information and ways to supp
         return sendMessage(client, message, returnString);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

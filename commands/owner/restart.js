@@ -1,4 +1,5 @@
 exports.run = async (client, message) => {
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -35,9 +36,7 @@ exports.run = async (client, message) => {
         // return sendMessage(client, message, `Successfully restarted!`);
 
     } catch (e) {
-        // log error
-        const logger = require('../../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

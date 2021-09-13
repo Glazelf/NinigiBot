@@ -1,4 +1,5 @@
 module.exports = async (client, message) => {
+    const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
     try {
@@ -40,9 +41,9 @@ module.exports = async (client, message) => {
 
             if (isReply) {
                 try {
-                    let ReplyChannel = await client.channels.cache.get(message.reference.channelID);
-                    if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelID);
-                    var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageID);
+                    let ReplyChannel = await client.channels.cache.get(message.reference.channelId);
+                    if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelId);
+                    var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageId);
                 } catch (e) {
                     isReply = false;
                 };
@@ -75,9 +76,7 @@ module.exports = async (client, message) => {
         };
 
     } catch (e) {
-        // log error
-        const logger = require('../util/logger');
-
+        // Log error
         logger(e, client, message);
     };
 };

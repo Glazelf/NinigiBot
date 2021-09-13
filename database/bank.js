@@ -110,6 +110,7 @@ module.exports = {
                         const user = money.get(id);
                         if (user) {
                             user.balance += Number(amount);
+                            user.balance = Math.floor(user.balance);
                             return user.save();
                         };
                         const newUser = await Users.create({ user_id: id, balance: amount });
