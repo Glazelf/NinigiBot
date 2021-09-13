@@ -1,5 +1,5 @@
 exports.run = async (client, message, args = []) => {
-    const logger = require('../util/logger');
+    const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
