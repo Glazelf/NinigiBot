@@ -33,7 +33,7 @@ exports.run = async (client, message, args = []) => {
 
         if (input.length < 1) return sendMessage(client, message, `Please either reply to a message or write a question.`);
 
-        let question = input.replaceAll(" ", "+");
+        let question = input.replaceAll("+", "%2B").replaceAll(" ", "+");
         let googleLink = `https://www.google.com/search?q=${question}`;
 
         // Button
