@@ -21,9 +21,11 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
                 messageObject['files'] = [files];
             };
         };
+
         // Don't add components to slash commands unless specifically told to do so
-        if (components && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type == 'DEFAULT')) {
+        if (components && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type != 'APPLICATION_COMMAND')) {
             // Components, i.e. buttons
+            console.log(components)
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
             } else {
@@ -31,9 +33,9 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
             };
         };
         messageObject['ephemeral'] = ephemeral;
-        if (message.type == "DEFAULT") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
+        if (message.type != "APPLICATION_COMMAND") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (message.type == "DEFAULT" && message.deleted == true) return message.channel.send(messageObject);
+        if (message.type != "APPLICATION_COMMAND" && message.deleted == true) return message.channel.send(messageObject);
         return message.reply(messageObject);
 
     } catch (e) {

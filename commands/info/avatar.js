@@ -20,10 +20,10 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         if (!user) {
-            if (message.type == 'DEFAULT') {
-                user = message.author;
-            } else {
+            if (message.type == 'APPLICATION_COMMAND') {
                 user = message.member.user;
+            } else {
+                user = message.author;
             };
         };
 
