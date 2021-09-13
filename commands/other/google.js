@@ -6,8 +6,6 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        console.log(Discord)
-
         let replyMessage;
 
         // Slash Command
@@ -23,21 +21,17 @@ exports.run = async (client, message, args = []) => {
         if (!replyMessage) return sendMessage(client, message, `No message could be found for that ID.`);
         if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
 
-        console.log(replyMessage.content)
         let input = replyMessage.content;
         let question = input.replaceAll(" ", "+");
         let googleLink = `https://www.google.com/search?q=${question}`;
 
-        console.log(googleLink)
-
         // Button
         let googleButton = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
-        console.log(googleButton)
 
         let returnString = `Here's the answer to your question, ${replyMessage.author}:`;
 
-        return sendMessage(client, message, returnString, null, null, false,);
+        return sendMessage(client, message, returnString, null, null, false, googleButton);
 
     } catch (e) {
         // Log error
