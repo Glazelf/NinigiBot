@@ -21,6 +21,14 @@ module.exports = async (client, guildBan) => {
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const banLog = fetchedLogs.entries.first();
             if (!banLog) return;
+            let executor;
+            let target;
+            let reason;
+            if (banLog) {
+                executor = banLog.executor;
+                target = banLog.target;
+                reason = banLog.reason;
+            };
             let { executor, target, reason } = banLog;
             if (!executor) return;
             if (reason == null) reason = "Not specified.";
