@@ -43,13 +43,12 @@ module.exports = async (client, message, newMessage) => {
             await autoMod(client, newMessage, language);
 
             let isReply = false;
+            let replyMessage;
             if (message.reference) isReply = true;
 
             if (isReply) {
                 try {
-                    let ReplyChannel = await client.channels.cache.get(message.reference.channelId);
-                    if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelId);
-                    var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageId);
+                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
                 } catch (e) {
                     isReply = false;
                 };
@@ -73,7 +72,7 @@ module.exports = async (client, message, newMessage) => {
             if (messageContent.length > 0) updateEmbed.addField(updateOldTitle, messageContent, false);
             updateEmbed
                 .addField(updateNewTitle, newMessageContent, false)
-            if (isReply) updateEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+            if (isReply) updateEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
                 .addField(messageJumpTitle, `[${linkString}](${message.url})`, false)
                 .setImage(messageImage)

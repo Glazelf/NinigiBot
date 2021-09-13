@@ -29,13 +29,12 @@ module.exports = async (client, messageReaction) => {
 
         let avatar = targetMessage.author.displayAvatarURL({ format: "png", dynamic: true });
         let isReply = false;
+        let replyMessage
         if (targetMessage.reference) isReply = true;
 
         if (isReply) {
             try {
-                let ReplyChannel = await client.channels.cache.get(targetMessage.reference.channelId);
-                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(targetMessage.reference.channelId);
-                var ReplyMessage = await ReplyChannel.messages.fetch(targetMessage.reference.messageId);
+                replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
             } catch (e) {
                 isReply = false;
             };
@@ -53,7 +52,7 @@ module.exports = async (client, messageReaction) => {
             .setAuthor(`⭐${messageReaction.count}`, avatar)
             .setDescription(targetMessage.content)
             .addField(starboardMessageSentTitle, starboardMessageSentData, false);
-        if (isReply) starEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+        if (isReply) starEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
             .addField(starboardMessageContextTitle, `[${linkString}](${targetMessage.url})`, false)
             .setImage(messageImage)

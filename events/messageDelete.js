@@ -45,13 +45,12 @@ module.exports = async (client, message) => {
             if (messageContent.length < 1) return;
 
             let isReply = false;
+            let replyMessage
             if (message.reference) isReply = true;
 
             if (isReply) {
                 try {
-                    let ReplyChannel = await client.channels.cache.get(message.reference.channelId);
-                    if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelId);
-                    var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageId);
+                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
                 } catch (e) {
                     isReply = false;
                 };
@@ -71,7 +70,7 @@ module.exports = async (client, message) => {
                 .setAuthor(`${messageDeleteEventTitle} ❌`, avatar)
                 .setDescription(messageDeleteEventData)
                 .addField(messageContentTitle, messageContent, false);
-            if (isReply) deleteEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author} (${ReplyMessage.author.id})`);
+            if (isReply) deleteEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
             if (executor) deleteEmbed.addField(messageDeleteEventExecutorTitle, `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
