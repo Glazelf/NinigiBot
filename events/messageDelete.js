@@ -40,13 +40,12 @@ module.exports = async (client, message) => {
             if (messageContent.length < 1) return;
 
             let isReply = false;
+            let replyMessage
             if (message.reference) isReply = true;
 
             if (isReply) {
                 try {
-                    let ReplyChannel = await client.channels.cache.get(message.reference.channelId);
-                    if (!ReplyChannel) ReplyChannel = await client.channels.fetch(message.reference.channelId);
-                    var ReplyMessage = await ReplyChannel.messages.fetch(message.reference.messageId);
+                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
                 } catch (e) {
                     isReply = false;
                 };
@@ -59,7 +58,7 @@ module.exports = async (client, message) => {
                 .setAuthor(`Message Deleted ❌`, avatar)
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
                 .addField(`Content:`, messageContent, false);
-            if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author} (${ReplyMessage.author.id})`);
+            if (isReply) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
             if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
