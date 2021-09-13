@@ -15,6 +15,14 @@ module.exports = async (client, message) => {
             if (starboardMessage) starboardMessage.delete();
         };
 
+        const fetchedLogs = await message.guild.fetchAuditLogs({
+            limit: 1,
+            type: 'MESSAGE_DELETE',
+        });
+        let deleteLog = fetchedLogs.entries.first();
+        let executor;
+        if (deleteLog) executor = deleteLog.executor;
+
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
@@ -51,7 +59,8 @@ module.exports = async (client, message) => {
                 .setAuthor(`Message Deleted ❌`, avatar)
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
                 .addField(`Content:`, messageContent, false);
-            if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+            if (isReply) deleteEmbed.addField(`Replying to:`, `"${ReplyMessage.content}"\n-${ReplyMessage.author} (${ReplyMessage.author.id})`);
+            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
