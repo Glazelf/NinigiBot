@@ -11,7 +11,7 @@ exports.run = async (client, message, args = []) => {
 
         let input = args.join(" ");
         let severity = "owo";
-        if (message.type == "DEFAULT") severity = message.content.substring(1, 4).toLowerCase();
+        if (message.type != "APPLICATION_COMMAND") severity = message.content.substring(1, 4).toLowerCase();
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 

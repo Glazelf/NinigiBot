@@ -11,10 +11,10 @@ exports.run = async (client, message) => {
         let timestamp = await getTime(client);
 
         let user;
-        if (message.type == 'DEFAULT') {
-            user = message.author;
-        } else {
+        if (message.type == 'APPLICATION_COMMAND') {
             user = message.member.user;
+        } else {
+            user = message.author;
         };
 
         // Return message then destroy

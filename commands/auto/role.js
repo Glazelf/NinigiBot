@@ -18,11 +18,12 @@ exports.run = async (client, message, args = []) => {
 
         let member = message.member;
         let user;
-        if (message.type == 'DEFAULT') {
-            user = message.author;
-        } else {
+        if (message.type == 'APPLICATION_COMMAND') {
             user = message.member.user;
+        } else {
+            user = message.author;
         };
+
         let requestRole = args.join(' ').toLowerCase();
         let adminBool = await isAdmin(message.guild.me);
         let embedDescriptionCharacterLimit = 4096;
