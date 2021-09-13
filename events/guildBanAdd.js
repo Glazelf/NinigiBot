@@ -34,6 +34,14 @@ module.exports = async (client, guildBan) => {
 
             const banLog = fetchedLogs.entries.first();
             if (!banLog) return;
+            let executor;
+            let target;
+            let reason;
+            if (banLog) {
+                executor = banLog.executor;
+                target = banLog.target;
+                reason = banLog.reason;
+            };
             let { executor, target, reason } = banLog;
             if (!executor) return;
             if (reason == null) reason = reasonUnspecified;

@@ -16,6 +16,14 @@ module.exports = async (client, message) => {
             if (starboardMessage) starboardMessage.delete();
         };
 
+        const fetchedLogs = await message.guild.fetchAuditLogs({
+            limit: 1,
+            type: 'MESSAGE_DELETE',
+        });
+        let deleteLog = fetchedLogs.entries.first();
+        let executor;
+        if (deleteLog) executor = deleteLog.executor;
+
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
@@ -56,13 +64,15 @@ module.exports = async (client, message) => {
             messageDeleteEventData = messageDeleteEventData.replace('[user]', `${message.author} (${message.author.id})`).replace('[channel]', message.channel);
             let messageContentTitle = await getLanguageString(client, language, 'messageContentTitle');
             let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
+            let messageDeleteEventExecutorTitle = await getLanguageString(client, language, 'messageDeleteEventExecutorTitle');
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${messageDeleteEventTitle} ❌`, avatar)
                 .setDescription(messageDeleteEventData)
                 .addField(messageContentTitle, messageContent, false);
-            if (isReply) deleteEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author}`);
+            if (isReply) deleteEmbed.addField(messageReplyTitle, `"${ReplyMessage.content}"\n-${ReplyMessage.author} (${ReplyMessage.author.id})`);
+            if (executor) deleteEmbed.addField(messageDeleteEventExecutorTitle, `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
