@@ -34,10 +34,10 @@ exports.run = async (client, message, args = []) => {
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         let user;
-        if (message.type == 'DEFAULT') {
-            user = message.author;
-        } else {
+        if (message.type == 'APPLICATION_COMMAND') {
             user = message.member.user;
+        } else {
+            user = message.author;
         };
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
