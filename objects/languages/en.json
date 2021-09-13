@@ -33,6 +33,7 @@
     "memberNicknameUpdateEventTitle": "Nickname Changed",
     "messageContentTitle": "Content:",
     "messageDeleteEventData": "Message sent by [user] deleted from [channel].",
+    "messageDeleteEventExecutorTitle": "Deleted by:",
     "messageDeleteEventTitle": "Message Deleted",
     "messageEditEventData": "Message sent by [user] edited in [channel].",
     "messageEditEventTitle": "Message Edited",

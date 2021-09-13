@@ -33,6 +33,7 @@
     "memberNicknameUpdateEventTitle": "Pseudo modifié",
     "messageContentTitle": "Contenue :",
     "messageDeleteEventData": "Message envoyé par [user] supprimé dans [channel].",
+    "messageDeleteEventExecutorTitle": "",
     "messageDeleteEventTitle": "Message effacer",
     "messageEditEventData": "Message envoyé par [user] édité dans [channel].",
     "messageEditEventTitle": "Message modifié",
