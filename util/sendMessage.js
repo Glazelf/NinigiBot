@@ -25,7 +25,6 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         // Don't add components to slash commands unless specifically told to do so
         if (components && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type != 'APPLICATION_COMMAND')) {
             // Components, i.e. buttons
-            console.log(components)
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
             } else {
