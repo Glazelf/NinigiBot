@@ -34,9 +34,9 @@ module.exports = async (client, messageReaction) => {
 
         if (isReply) {
             try {
-                let ReplyChannel = await client.channels.cache.get(targetMessage.reference.channelID);
-                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(targetMessage.reference.channelID);
-                var ReplyMessage = await ReplyChannel.messages.fetch(targetMessage.reference.messageID);
+                let ReplyChannel = await client.channels.cache.get(targetMessage.reference.channelId);
+                if (!ReplyChannel) ReplyChannel = await client.channels.fetch(targetMessage.reference.channelId);
+                var ReplyMessage = await ReplyChannel.messages.fetch(targetMessage.reference.messageId);
             } catch (e) {
                 isReply = false;
             };
