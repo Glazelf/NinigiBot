@@ -7,6 +7,8 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
 
         let replyMessage;
+        let input;
+        let questionAskUser;
 
         // Slash Command
         if (message.type == "APPLICATION_COMMAND") {
@@ -14,14 +16,23 @@ exports.run = async (client, message, args = []) => {
 
             // Regular Command
         } else {
-            if (!message.reference) return sendMessage(client, message, `Please reply to the message that contains a stupid question.`);
-            replyMessage = await message.channel.messages.fetch(message.reference.messageId);
+            if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
         };
 
-        if (!replyMessage) return sendMessage(client, message, `No message could be found for that ID.`);
-        if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
+        // Reply
+        if (message.reference) {
+            input = replyMessage.content;
+            questionAskUser = replyMessage.author;
+            if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
 
-        let input = replyMessage.content;
+            // Text in command
+        } else {
+            input = args.join(" ");
+            questionAskUser = `**${message.author.tag}**`;
+        };
+
+        if (input.length < 1) return sendMessage(client, message, `Please either reply to a message or write a question.`);
+
         let question = input.replaceAll(" ", "+");
         let googleLink = `https://www.google.com/search?q=${question}`;
 
@@ -29,7 +40,7 @@ exports.run = async (client, message, args = []) => {
         let googleButton = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
 
-        let returnString = `Here's the answer to your question, ${replyMessage.author}:`;
+        let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
         return sendMessage(client, message, returnString, null, null, false, googleButton);
 
