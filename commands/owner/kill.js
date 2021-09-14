@@ -18,7 +18,7 @@ exports.run = async (client, message, args = []) => {
             user = message.author;
         };
 
-        if (args[0] == 'soft') {
+        if (args[0] != 'soft') {
             // Return message then destroy
             await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
 
