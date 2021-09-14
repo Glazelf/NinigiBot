@@ -47,7 +47,7 @@ module.exports.config = {
     aliases: ["lmgtfy"],
     description: "Generates a Google link for a stupid question.",
     options: [{
-        name: "Question",
+        name: "question",
         type: "STRING",
         description: "Question to Google.",
     }]
