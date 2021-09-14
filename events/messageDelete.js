@@ -15,13 +15,19 @@ module.exports = async (client, message) => {
             if (starboardMessage) starboardMessage.delete();
         };
 
-        const fetchedLogs = await message.guild.fetchAuditLogs({
-            limit: 1,
-            type: 'MESSAGE_DELETE',
-        });
-        let deleteLog = fetchedLogs.entries.first();
         let executor;
-        if (deleteLog) executor = deleteLog.executor;
+        try {
+            const fetchedLogs = await message.guild.fetchAuditLogs({
+                limit: 1,
+                type: 'MESSAGE_DELETE',
+            });
+            let deleteLog = fetchedLogs.entries.first();
+            if (deleteLog) executor = deleteLog.executor;
+        } catch (e) {
+            // console.log(e);
+            if (e.toString().includes("Missing Permissions")) executor = null;
+        };
+
 
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
