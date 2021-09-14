@@ -22,7 +22,7 @@ module.exports = async (client) => {
                 try {
                     if (commandsExclude.includes(command.config.name)) return;
                     client.application?.commands.create(command.config);
-                    console.log(`Loaded interaction: ${command.config.name} ✔`);
+                    // console.log(`Loaded interaction: ${command.config.name} ✔`);
                     // Server exclusive interactions:
                     // client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
                 } catch (e) {
@@ -30,6 +30,7 @@ module.exports = async (client) => {
                 };
             });
         };
+        console.log("Loaded interactions!");
 
         await client.guilds.fetch();
 
