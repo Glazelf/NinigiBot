@@ -29,7 +29,7 @@ module.exports = async (client, member) => {
             let user = client.users.cache.get(member.id);
 
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
-            let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
 
             let daysCreated = await checkDays(client, user.createdAt, language);
 
@@ -43,7 +43,7 @@ module.exports = async (client, member) => {
                 .setFooter(member.user.tag)
                 .setTimestamp();
 
-            return log.send({ content: user.toString(), embeds: [joinEmbed] });
+            return log.send({ content: member.toString(), embeds: [joinEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
             return log.send({ content: logBotPermissionError });

@@ -30,7 +30,7 @@ module.exports = async (client, guildBan) => {
             let userTitle = await getLanguageString(client, language, 'userTitle');
             let reasonTitle = await getLanguageString(client, language, 'reasonTitle');
             let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
-            let banExecutorTitle = await getLanguageString(client, language, 'banExecutorTitle');
+            let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             const banLog = fetchedLogs.entries.first();
             if (!banLog) return;
@@ -57,7 +57,7 @@ module.exports = async (client, guildBan) => {
                 .setDescription(guildMemberCountUpdate)
                 .addField(userTitle, `${target} (${target.id})`, false)
                 .addField(reasonTitle, reason, false)
-                .addField(banExecutorTitle, bannedBy, false)
+                .addField(executorTitle, bannedBy, false)
                 .setFooter(target.tag)
                 .setTimestamp();
 

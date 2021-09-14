@@ -40,6 +40,20 @@ module.exports = async (client, member, newMember) => {
             if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
             if (!updateCase) return;
 
+            let executor;
+            try {
+                const fetchedLogs = await member.guild.fetchAuditLogs({
+                    limit: 1,
+                    type: 'MEMBER_UPDATE',
+                });
+                let memberUpdateLog = fetchedLogs.entries.first();
+                if (memberUpdateLog) executor = memberUpdateLog.executor;
+            } catch (e) {
+                console.log(e);
+                if (e.toString().includes("Missing Permissions")) executor = null;
+            };
+            if (executor.id == member.id) executor = null;
+
             const { PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
             let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
@@ -69,7 +83,6 @@ module.exports = async (client, member, newMember) => {
                     break;
                 default:
                     return;
-                    break;
             };
 
             const updateEmbed = new Discord.MessageEmbed()
@@ -79,6 +92,8 @@ module.exports = async (client, member, newMember) => {
                 .setDescription(changeText)
                 .addField(userTitle, `${user} (${user.id})`)
                 .setFooter(user.tag)
+            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`)
+            updateEmbed
                 .setTimestamp();
 
             return log.send({ embeds: [updateEmbed] });

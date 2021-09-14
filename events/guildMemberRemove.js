@@ -32,7 +32,7 @@ module.exports = async (client, member) => {
             let reasonUnspecified = await getLanguageString(client, language, 'reasonUnspecified');
 
             let kickEventTitle = await getLanguageString(client, language, 'kickEventTitle');
-            let kickExecutorTitle = await getLanguageString(client, language, 'kickExecutorTitle');
+            let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
@@ -67,7 +67,7 @@ module.exports = async (client, member) => {
             if (kicked == true) {
                 leaveEmbed.addField(reasonTitle, reasonText, false)
                 try {
-                    leaveEmbed.addField(kickExecutorTitle, `${executor.tag} (${executor.id})`, false);
+                    leaveEmbed.addField(executorTitle, `${executor.tag} (${executor.id})`, false);
                 } catch (e) {
                     // console.log(e);
                 };

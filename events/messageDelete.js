@@ -16,13 +16,19 @@ module.exports = async (client, message) => {
             if (starboardMessage) starboardMessage.delete();
         };
 
-        const fetchedLogs = await message.guild.fetchAuditLogs({
-            limit: 1,
-            type: 'MESSAGE_DELETE',
-        });
-        let deleteLog = fetchedLogs.entries.first();
         let executor;
-        if (deleteLog) executor = deleteLog.executor;
+        try {
+            const fetchedLogs = await message.guild.fetchAuditLogs({
+                limit: 1,
+                type: 'MESSAGE_DELETE',
+            });
+            let deleteLog = fetchedLogs.entries.first();
+            if (deleteLog) executor = deleteLog.executor;
+        } catch (e) {
+            // console.log(e);
+            if (e.toString().includes("Missing Permissions")) executor = null;
+        };
+
 
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
@@ -63,7 +69,7 @@ module.exports = async (client, message) => {
             messageDeleteEventData = messageDeleteEventData.replace('[user]', `${message.author} (${message.author.id})`).replace('[channel]', message.channel);
             let messageContentTitle = await getLanguageString(client, language, 'messageContentTitle');
             let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
-            let messageDeleteEventExecutorTitle = await getLanguageString(client, language, 'messageDeleteEventExecutorTitle');
+            let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
@@ -71,7 +77,7 @@ module.exports = async (client, message) => {
                 .setDescription(messageDeleteEventData)
                 .addField(messageContentTitle, messageContent, false);
             if (isReply) deleteEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
-            if (executor) deleteEmbed.addField(messageDeleteEventExecutorTitle, `${executor} (${executor.id})`, true)
+            if (executor) deleteEmbed.addField(executorTitle, `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);

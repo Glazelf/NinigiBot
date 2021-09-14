@@ -19,7 +19,7 @@ module.exports = async (exception, client, message = null) => {
 
         let exceptionCode = Discord.Formatters.codeBlock(exception);
         let messageContentCode = "";
-        if (!message || !message.content || message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
+        if (message && message.content && message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
 
         // log to dev channel
         let baseMessage;
@@ -28,8 +28,6 @@ Link: ${message.url}
 Error:\n${exceptionCode}
 Message by **${user.tag}** (${user.id}):
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
-
-        if (!message.author) return;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + `...`;
         // Fix cross-shard logging sometime
