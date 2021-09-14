@@ -1,4 +1,4 @@
-let botjsFunction = function botjsFunction() {
+let botjsFunction = async function botjsFunction() {
     const Discord = require('discord.js');
     let commando = require('discord.js-commando');
     const Enmap = require("enmap");
@@ -60,12 +60,13 @@ let botjsFunction = function botjsFunction() {
     client.commands = new Enmap();
     client.aliases = new Discord.Collection();
 
-    walk(`./commands/`);
+    await walk(`./commands/`);
+    console.log("Loaded commands!");
 
     client.login(config.token);
 
     // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
-    function walk(dir, callback) {
+    async function walk(dir, callback) {
         fs.readdir(dir, function (err, files) {
             if (err) throw err;
             files.forEach(function (file) {
@@ -76,7 +77,7 @@ let botjsFunction = function botjsFunction() {
                     } else if (stats.isFile() && file.endsWith('.js')) {
                         let props = require(`./${filepath}`);
                         let commandName = file.split(".")[0];
-                        console.log(`Loaded command: ${commandName} ✔`);
+                        //console.log(`Loaded command: ${commandName} ✔`);
                         client.commands.set(commandName, props);
                         if (props.config.aliases) {
                             props.config.aliases.forEach(alias => {

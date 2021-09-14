@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
             user = message.author;
         };
 
-        if (args[0] == 'soft') {
+        if (args[0] != 'soft') {
             // Return message then destroy
             await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
 
