@@ -150,8 +150,7 @@ exports.run = async (client, message, args = [], language) => {
             //             if (!member.user.bot) userList.push(member.id);
             //         }));
             // });
-            // userList = userList.filter(uniqueArray);
-            // let userCount = userList.length;
+            // userCount = countUnique(userList);
 
             return userCount;
         };
