@@ -10,17 +10,9 @@ exports.run = async (client, message, args = []) => {
         let input;
         let questionAskUser;
 
-        // Slash Command
-        if (message.type == "APPLICATION_COMMAND") {
-            replyMessage = await message.channel.messages.fetch(args[0]);
-
-            // Regular Command
-        } else {
-            if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
-        };
-
         // Reply
         if (message.reference) {
+            if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
             input = replyMessage.content;
             questionAskUser = replyMessage.author;
             if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
@@ -55,8 +47,8 @@ module.exports.config = {
     aliases: ["lmgtfy"],
     description: "Generates a Google link for a stupid question.",
     options: [{
-        name: "Message ID",
+        name: "Question",
         type: "STRING",
-        description: "Message ID of the question that should've been Googled.",
+        description: "Question to Google.",
     }]
 };
