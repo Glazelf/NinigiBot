@@ -21,8 +21,13 @@ exports.run = async (client, message) => {
         await sendMessage(client, message, `Restarting for **${user.tag}**.`);
         console.log(`Restarting for ${user.tag}. (${timestamp})`);
 
-        // Skip deleting all global commands because of rate limits per day
-        // await client.application.commands.set([]);
+        if (args[0] == 'hard') {
+            // Return message then destroy
+            await sendMessage(client, message, `Starting hard restart for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit.`);
+
+            // Delete all global commands
+            await client.application.commands.set([]);
+        };
 
         // Destroy, will reboot thanks to forever package
         await client.destroy();
