@@ -52,7 +52,7 @@ module.exports = async (client, member) => {
             if (kicked == true) {
                 leaveEmbed.addField(`Reason:`, reasonText, false)
                 try {
-                    leaveEmbed.addField(`Kicked by:`, `${executor.tag} (${executor.id})`, false);
+                    leaveEmbed.addField(`Executor`, `${executor.tag} (${executor.id})`, false);
                 } catch (e) {
                     // console.log(e);
                 };

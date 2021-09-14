@@ -44,7 +44,7 @@ module.exports = async (client, guildBan) => {
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
                 .addField(`User:`, `${target} (${target.id})`, false)
                 .addField(`Reason:`, reason, false)
-                .addField(`Banned by:`, bannedBy, false)
+                .addField(`Executor`, bannedBy, false)
                 .setFooter(target.tag)
                 .setTimestamp();
 

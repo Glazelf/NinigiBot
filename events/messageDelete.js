@@ -65,7 +65,7 @@ module.exports = async (client, message) => {
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
                 .addField(`Content:`, messageContent, false);
             if (isReply) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
-            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`, true)
+            if (executor) deleteEmbed.addField('Executor:', `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
