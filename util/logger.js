@@ -29,8 +29,6 @@ Error:\n${exceptionCode}
 Message by **${user.tag}** (${user.id}):
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (!message.author) return;
-
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + `...`;
         // Fix cross-shard logging sometime
         let devChannel = client.channels.cache.get(client.config.devChannelID);
