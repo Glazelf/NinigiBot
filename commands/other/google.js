@@ -20,7 +20,11 @@ exports.run = async (client, message, args = []) => {
             // Text in command
         } else {
             input = args.join(" ");
-            questionAskUser = `**${message.author.tag}**`;
+            if (message.type == "APPLICATION_COMMAND") {
+                questionAskUser = `**${message.member.user.tag}**`;
+            } else {
+                questionAskUser = `**${message.author.tag}**`;
+            };
         };
 
         if (input.length < 1) return sendMessage(client, message, `Please either reply to a message or write a question.`);
@@ -34,7 +38,7 @@ exports.run = async (client, message, args = []) => {
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        return sendMessage(client, message, returnString, null, null, false, googleButton);
+        return sendMessage(client, message, returnString, null, null, false, googleButton, true);
 
     } catch (e) {
         // Log error
