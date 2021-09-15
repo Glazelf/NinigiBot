@@ -17,6 +17,8 @@ exports.run = async (client, message, args = [], language) => {
         await guild.members.fetch();
         await guild.channels.fetch();
 
+        let botMember = await guild.members.fetch(client.user.id);
+
         let botMembers = guild.members.cache.filter(member => member.user.bot);
         let humanMemberCount = guild.members.cache.size - botMembers.size;
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
@@ -116,10 +118,16 @@ exports.run = async (client, message, args = [], language) => {
         // Text channels
         let channelCount = 0;
         let threadCount = 0;
-        guild.channels.cache.forEach(channel => {
+        let archivedThreadCount = 0;
+
+        await guild.channels.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
             if (channel.isThread()) threadCount += 1;
-            if (channel.archived == true) console.log(channel)
+            // Get archived threads?
+            // if (channel.threads && channel.isText() && botMember.permissions.has("ADMINISTRATOR")) {
+            //     let archivedThreads = await channel.threads.fetchArchived();
+            //     threadCount += archivedThreads.threads.entries().length;
+            // };
         });
 
         const serverEmbed = new Discord.MessageEmbed()
@@ -140,7 +148,7 @@ exports.run = async (client, message, args = [], language) => {
             .addField("Human Members:", humanMemberCount.toString(), true)
             .addField("Bots:", `${botMembers.size} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
-        if (threadCount > 0) serverEmbed.addField("Active Threads:", threadCount.toString(), true);
+        if (threadCount > 0) serverEmbed.addField("Threads:", threadCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (unmanagedEmoteCount > 0) serverEmbed.addField("Emotes:", `${unmanagedEmoteCount}/${emoteMax} 😳`, true);
         if (managedEmotes.size > 0) serverEmbed.addField("Twitch Emotes:", `${managedEmotes.size}`, true);
