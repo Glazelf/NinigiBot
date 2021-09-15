@@ -148,7 +148,8 @@ exports.run = async (client, message, args = [], language) => {
             .addField("Human Members:", humanMemberCount.toString(), true)
             .addField("Bots:", `${botMembers.size} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
-        if (threadCount > 0) serverEmbed.addField("Threads:", threadCount.toString(), true);
+        // Change "Active Threads" to "Threads" when archived threads get added
+        if (threadCount > 0) serverEmbed.addField("Active Threads:", threadCount.toString(), true);
         if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
         if (unmanagedEmoteCount > 0) serverEmbed.addField("Emotes:", `${unmanagedEmoteCount}/${emoteMax} 😳`, true);
         if (managedEmotes.size > 0) serverEmbed.addField("Twitch Emotes:", `${managedEmotes.size}`, true);
