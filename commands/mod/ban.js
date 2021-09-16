@@ -55,7 +55,7 @@ exports.run = async (client, message, args = [], language) => {
             if (existingBan) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
 
             // Ban
-            banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
+            banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
             try {
                 await user.send({ content: dmString });
                 banReturn = `${banReturn} (DM Succeeded)`;
