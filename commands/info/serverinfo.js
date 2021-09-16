@@ -118,7 +118,7 @@ exports.run = async (client, message) => {
         let threadCount = 0;
         let archivedThreadCount = 0;
 
-        await guild.channels.forEach(async channel => {
+        await guild.channels.cache.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
             if (channel.isThread()) threadCount += 1;
             // Get archived threads?
