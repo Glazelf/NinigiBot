@@ -32,7 +32,7 @@ exports.run = async (client, message, args = []) => {
 
         if (input.length < 1) return sendMessage(client, message, `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.`);
 
-        let question = input.replaceAll("+", "%2B").replaceAll(" ", "+");
+        let question = input.replaceAll("+", "%2B").replaceAll(" ", "+").normalize("NFD");
         let googleLink = `https://www.google.com/search?q=${question}`;
 
         let maxLinkLength = 512
