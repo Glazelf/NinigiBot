@@ -54,7 +54,7 @@ exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "google",
+    name: "Google",
     aliases: ["lmgtfy"],
     type: "MESSAGE"
 };
