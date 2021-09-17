@@ -16,10 +16,12 @@ exports.run = async (client, message, args = []) => {
             if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
             input = replyMessage.content;
             questionAskUser = replyMessage.author;
+            console.log("reference")
 
             // Text in command
         } else {
             if (message.type == "APPLICATION_COMMAND") {
+                console.log("app command")
                 interaction = message;
                 message = await message.channel.messages.fetch(args[0]);
                 input = message.content;
