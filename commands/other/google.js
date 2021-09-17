@@ -30,6 +30,9 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
+        if (interaction) message = interaction;
+
         if (input.length < 1) return sendMessage(client, message, `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.`);
 
         let question = input.replaceAll("+", "%2B").replaceAll(" ", "+").normalize("NFD");
@@ -44,7 +47,6 @@ exports.run = async (client, message, args = []) => {
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        if (interaction) message = interaction;
         return sendMessage(client, message, returnString, null, null, false, googleButton, true);
 
     } catch (e) {
