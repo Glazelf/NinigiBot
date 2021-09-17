@@ -15,19 +15,20 @@ exports.run = async (client, message, args = []) => {
             if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
             input = replyMessage.content;
             questionAskUser = replyMessage.author;
-            if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
 
             // Text in command
         } else {
-            input = args.join(" ");
             if (message.type == "APPLICATION_COMMAND") {
+                message = await message.channel.messages.fetch(args[0]);
+                input = message.content;
                 questionAskUser = `**${message.member.user.tag}**`;
             } else {
                 questionAskUser = `**${message.author.tag}**`;
+                input = args.join(" ");
             };
         };
 
-        if (input.length < 1) return sendMessage(client, message, `Please either reply to a message or write a question.`);
+        if (input.length < 1) return sendMessage(client, message, `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.`);
 
         let question = input.replaceAll("+", "%2B").replaceAll(" ", "+");
         let googleLink = `https://www.google.com/search?q=${question}`;
@@ -49,10 +50,5 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "google",
     aliases: ["lmgtfy"],
-    description: "Generates a Google link for a stupid question.",
-    options: [{
-        name: "question",
-        type: "STRING",
-        description: "Question to Google.",
-    }]
+    type: "MESSAGE"
 };
