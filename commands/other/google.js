@@ -9,6 +9,7 @@ exports.run = async (client, message, args = []) => {
         let replyMessage;
         let input;
         let questionAskUser;
+        let interaction;
 
         // Reply
         if (message.reference) {
@@ -19,6 +20,7 @@ exports.run = async (client, message, args = []) => {
             // Text in command
         } else {
             if (message.type == "APPLICATION_COMMAND") {
+                interaction = message;
                 message = await message.channel.messages.fetch(args[0]);
                 input = message.content;
                 questionAskUser = `**${message.member.user.tag}**`;
@@ -42,6 +44,7 @@ exports.run = async (client, message, args = []) => {
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
+        if (message.type == "APPLICATION_COMMAND") message = interaction;
         return sendMessage(client, message, returnString, null, null, false, googleButton, true);
 
     } catch (e) {
