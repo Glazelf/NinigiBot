@@ -23,7 +23,7 @@ exports.run = async (client, message, args = []) => {
                 interaction = message;
                 message = await message.channel.messages.fetch(args[0]);
                 input = message.content;
-                questionAskUser = `**${message.member.user.tag}**`;
+                questionAskUser = message.member;
             } else {
                 questionAskUser = `**${message.author.tag}**`;
                 input = args.join(" ");
@@ -45,7 +45,6 @@ exports.run = async (client, message, args = []) => {
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
         if (interaction) message = interaction;
-        console.log(interaction)
         return sendMessage(client, message, returnString, null, null, false, googleButton, true);
 
     } catch (e) {
