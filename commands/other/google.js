@@ -9,28 +9,37 @@ exports.run = async (client, message, args = []) => {
         let replyMessage;
         let input;
         let questionAskUser;
+        let interaction = null;
 
         // Reply
         if (message.reference) {
             if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
             input = replyMessage.content;
             questionAskUser = replyMessage.author;
-            if (!replyMessage.content) return sendMessage(client, message, `That message has no text content to Google.`);
 
             // Text in command
         } else {
-            input = args.join(" ");
             if (message.type == "APPLICATION_COMMAND") {
-                questionAskUser = `**${message.member.user.tag}**`;
+                interaction = message;
+                message = await message.channel.messages.fetch(args[0]);
+                input = message.content;
+                questionAskUser = message.member;
             } else {
                 questionAskUser = `**${message.author.tag}**`;
+                input = args.join(" ");
             };
         };
 
-        if (input.length < 1) return sendMessage(client, message, `Please either reply to a message or write a question.`);
+        // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
+        if (interaction) message = interaction;
 
-        let question = input.replaceAll("+", "%2B").replaceAll(" ", "+");
+        if (input.length < 1) return sendMessage(client, message, `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.`);
+
+        let question = input.replaceAll("+", "%2B").replaceAll(" ", "+").normalize("NFD");
         let googleLink = `https://www.google.com/search?q=${question}`;
+
+        let maxLinkLength = 512;
+        if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
 
         // Button
         let googleButton = new Discord.MessageActionRow()
@@ -47,12 +56,7 @@ exports.run = async (client, message, args = []) => {
 };
 
 module.exports.config = {
-    name: "google",
+    name: "Google",
     aliases: ["lmgtfy"],
-    description: "Generates a Google link for a stupid question.",
-    options: [{
-        name: "question",
-        type: "STRING",
-        description: "Question to Google.",
-    }]
+    type: "MESSAGE"
 };
