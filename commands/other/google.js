@@ -33,6 +33,9 @@ exports.run = async (client, message, args = []) => {
         let question = input.replaceAll("+", "%2B").replaceAll(" ", "+");
         let googleLink = `https://www.google.com/search?q=${question}`;
 
+        let maxLinkLength = 512
+        if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
+
         // Button
         let googleButton = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
