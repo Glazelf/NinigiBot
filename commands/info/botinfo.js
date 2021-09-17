@@ -101,7 +101,7 @@ exports.run = async (client, message) => {
         // Channels
         var channelCount = 0;
         client.channels.cache.forEach(channel => {
-            if (channel.type != "category") channelCount += 1;
+            if (channel.isText() || channel.isVoice()) channelCount += 1;
         });
 
         // Owner
