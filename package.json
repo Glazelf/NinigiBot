@@ -12,7 +12,7 @@
     "cron": "^1.8.2",
     "discord.js": "^13.2.0-dev.1631534592.be8912a",
     "discord.js-commando": "^0.10.0",
-    "enmap": "^5.2.4",
+    "enmap": "^5.8.7",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "forever": "^4.0.1",
