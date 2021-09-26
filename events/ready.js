@@ -77,4 +77,4 @@ module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.presence = initPresence();
-module.exports.displayAvatarSettings = { size: 64, format: "png", dynamic: true };
+module.exports.displayAvatarSettings = { size: 128, format: "png", dynamic: true };
