@@ -101,9 +101,10 @@ exports.run = async (client, message) => {
         boosterString = boosterString + nitroEmote;
 
         // Icon and banner
-        let icon = guild.iconURL({ format: "png", dynamic: true });
+        let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
+        // Remove size from if() after updating to a commit where https://github.com/discordjs/discord.js/pull/6686 is merged
+        if (guild.bannerURL({ size: 256 })) banner = guild.bannerURL({ format: "png", size: 256 });
 
         let guildOwner = await guild.fetchOwner();
 
@@ -157,7 +158,7 @@ exports.run = async (client, message) => {
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
-        if (banner) serverEmbed.setImage(`${banner}?size=256`);
+        if (banner) serverEmbed.setImage(banner);
         serverEmbed
             .setFooter(user.tag)
             .setTimestamp();
