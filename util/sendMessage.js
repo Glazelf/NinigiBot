@@ -13,8 +13,8 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
             };
         };
         if (files) {
-            // Ephemeral messages don't support attachments
-            ephemeral = false;
+            // Ephemeral messages couldn't have files, should be enabled now.
+            // ephemeral = false;
             if (Array.isArray(files)) {
                 messageObject['files'] = files;
             } else {
