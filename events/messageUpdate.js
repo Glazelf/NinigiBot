@@ -48,7 +48,7 @@ module.exports = async (client, message, newMessage) => {
                 };
             };
 
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

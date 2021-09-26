@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
 
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)

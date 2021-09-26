@@ -96,7 +96,7 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
 
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.`);
 
-            let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

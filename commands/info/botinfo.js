@@ -96,7 +96,7 @@ exports.run = async (client, message) => {
         // let userCount = await getUsers();
 
         // Avatar
-        let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Channels
         var channelCount = 0;

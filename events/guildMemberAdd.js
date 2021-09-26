@@ -16,7 +16,7 @@ module.exports = async (client, member) => {
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
-            let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let daysCreated = await checkDays(member.user.createdAt);
 

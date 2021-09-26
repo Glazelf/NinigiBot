@@ -19,7 +19,7 @@ module.exports = async (client, member) => {
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
             let embedAuthor = `Member Left 💔`;
@@ -38,7 +38,7 @@ module.exports = async (client, member) => {
                     if (target.id !== member.id) return;
                     kicked = true;
                     if (reason) reasonText = reason;
-                    icon = executor.displayAvatarURL({ format: "png", dynamic: true });
+                    icon = executor.displayAvatarURL(globalVars.displayAvatarSettings);
                     embedAuthor = `Member Kicked 💔`;
                 };
             };

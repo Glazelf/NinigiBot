@@ -54,7 +54,7 @@ exports.run = async (client, message, args = []) => {
         if (globalVars.battling.yes) return sendMessage(client, message, `Theres already a battle going on.`);
         globalVars.battling.yes = true;
         let text = '';
-        const avatars = [trainers[0].displayAvatarURL({ format: "png", dynamic: true }), trainers[1].displayAvatarURL({ format: "png", dynamic: true })];
+        const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
 
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');

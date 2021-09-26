@@ -43,7 +43,7 @@ module.exports = async (client, member, newMember) => {
             if (!newMember.premiumSince && serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
-            let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
             switch (updateCase) {
                 case "nickname":
