@@ -103,8 +103,7 @@ exports.run = async (client, message) => {
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        // Remove size from if() after updating to a commit where https://github.com/discordjs/discord.js/pull/6686 is merged
-        if (guild.bannerURL({ size: 256 })) banner = guild.bannerURL({ format: "png", size: 256 });
+        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png", size: 256 });
 
         let guildOwner = await guild.fetchOwner();
 
