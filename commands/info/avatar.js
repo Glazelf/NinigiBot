@@ -37,7 +37,7 @@ exports.run = async (client, message, args = []) => {
         // Get avatar
         let avatar = null;
         // Remove size in if() when access to npm install
-        if (user.avatarURL({ size: 256 })) avatar = user.avatarURL({ format: "png", dynamic: true, size: 512 });
+        if (user.avatarURL({ size: 256 })) avatar = user.avatarURL({ format: "png", dynamic: true, size: 256 });
         if (!avatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
 
         const avatarEmbed = new Discord.MessageEmbed()
