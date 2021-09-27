@@ -18,7 +18,7 @@ exports.run = async (client, message, args = [], language) => {
             prefix = globalVars.prefix;
         };
 
-        let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         let user;
         if (message.type == 'APPLICATION_COMMAND') {

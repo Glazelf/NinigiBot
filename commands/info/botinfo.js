@@ -98,12 +98,12 @@ exports.run = async (client, message, args = [], language) => {
         // let userCount = await getUsers();
 
         // Avatar
-        let avatar = client.user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Channels
         var channelCount = 0;
         client.channels.cache.forEach(channel => {
-            if (channel.type != "category") channelCount += 1;
+            if (channel.isText() || channel.isVoice()) channelCount += 1;
         });
 
         // Owner

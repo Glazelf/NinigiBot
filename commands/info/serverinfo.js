@@ -103,9 +103,9 @@ exports.run = async (client, message, args = [], language) => {
         boosterString = boosterString + nitroEmote;
 
         // Icon and banner
-        let icon = guild.iconURL({ format: "png", dynamic: true });
+        let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png" });
+        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png", size: 256 });
 
         let guildOwner = await guild.fetchOwner();
 
@@ -159,7 +159,7 @@ exports.run = async (client, message, args = [], language) => {
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(client, guild.createdAt, language)}`, false);
-        if (banner) serverEmbed.setImage(`${banner}?size=256`);
+        if (banner) serverEmbed.setImage(banner);
         serverEmbed
             .setFooter(user.tag)
             .setTimestamp();

@@ -24,11 +24,11 @@ module.exports = async (client, message) => {
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) executor = deleteLog.executor;
+            if (deleteLog.extra.channel != message.channel || executor.target.id != message.member.id) executor = null
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) executor = null;
         };
-
 
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
@@ -62,7 +62,7 @@ module.exports = async (client, message) => {
                 };
             };
 
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let messageDeleteEventTitle = await getLanguageString(client, message, 'messageDeleteEventTitle');
             let messageDeleteEventData = await getLanguageString(client, message, 'messageDeleteEventData');

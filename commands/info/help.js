@@ -17,7 +17,7 @@ exports.run = async (client, message, args = [], language) => {
         // Structure lazy help embed with mostly just links lol
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Help has arrived!`, client.user.displayAvatarURL({ format: "png", dynamic: true }))
+            .setAuthor(`Help has arrived!`, client.user.displayAvatarURL(globalVars.displayAvatarSettings))
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Support:", `[Paypal](https://paypal.me/glazelf 'Paypal')

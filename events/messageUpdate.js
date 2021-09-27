@@ -54,7 +54,7 @@ module.exports = async (client, message, newMessage) => {
                 };
             };
 
-            let avatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let messageEditEventTitle = await getLanguageString(client, language, 'messageEditEventTitle');
             let messageEditEventData = await getLanguageString(client, language, 'messageEditEventData');

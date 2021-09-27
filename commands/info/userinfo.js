@@ -129,9 +129,9 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         // Avatar and banner
-        let avatar = user.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true });
+        if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true, size: 256 });
 
         // Accent color
         let embedColor = globalVars.embedColor;
@@ -176,7 +176,7 @@ exports.run = async (client, message, args = [], language) => {
             .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
-        if (banner) profileEmbed.setImage(`${banner}?size=256`);
+        if (banner) profileEmbed.setImage(banner);
         profileEmbed
             .setFooter(user.tag)
             .setTimestamp();

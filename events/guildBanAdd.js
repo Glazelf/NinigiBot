@@ -47,8 +47,8 @@ module.exports = async (client, guildBan) => {
             let bannedBy = `${executor.tag} (${executor.id})`;
 
             if (target.id !== guildBan.user.id) return;
-            let avatarExecutor = executor.displayAvatarURL({ format: "png", dynamic: true });
-            let avatarTarget = target.displayAvatarURL({ format: "png", dynamic: true });
+            let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const banEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

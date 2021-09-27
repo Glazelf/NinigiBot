@@ -54,7 +54,7 @@ Dango, Jojo, Stitch, Kuzco`;
                 };
             };
 
-            let avatar = author.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

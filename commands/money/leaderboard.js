@@ -17,7 +17,7 @@ exports.run = async (client, message, args = [], language) => {
             author = message.member.user;
         };
 
-        let avatar = author.displayAvatarURL({ format: "png", dynamic: true });
+        let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

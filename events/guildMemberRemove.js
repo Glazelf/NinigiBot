@@ -34,7 +34,7 @@ module.exports = async (client, member) => {
             let kickEventTitle = await getLanguageString(client, language, 'kickEventTitle');
             let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
-            let avatar = member.user.displayAvatarURL({ format: "png", dynamic: true });
+            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let icon = member.guild.iconURL({ format: "png", dynamic: true });
 
             let embedAuthor = `${memberLeaveEventTitle} 💔`;
@@ -53,7 +53,7 @@ module.exports = async (client, member) => {
                     if (target.id !== member.id) return;
                     kicked = true;
                     if (reason) reasonText = reason;
-                    icon = executor.displayAvatarURL({ format: "png", dynamic: true });
+                    icon = executor.displayAvatarURL(globalVars.displayAvatarSettings);
                     embedAuthor = `${kickEventTitle} 💔`;
                 };
             };
