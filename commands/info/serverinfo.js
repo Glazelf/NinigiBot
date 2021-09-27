@@ -103,7 +103,8 @@ exports.run = async (client, message) => {
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png", size: 256 });
+        // Remove size in if() when access to npm install
+        if (guild.bannerURL({ size: 256 })) banner = guild.bannerURL({ format: "png", size: 256 });
 
         let guildOwner = await guild.fetchOwner();
 
