@@ -43,7 +43,7 @@ exports.run = async (client, message, args = []) => {
             totalMessage = `Here you go, your inverted image:`;
         } else {
             // Remove size in if() when access to npm install
-            if (user.avatarURL({ size: 128 })) avatar = user.avatarURL({ format: "png", dynamic: true, size: 128 });
+            if (user.avatarURL({ size: 256 })) avatar = user.avatarURL({ format: "png", dynamic: true, size: 256 });
             if (!avatar) return message.channel.send({ content: `**${user.tag}** doesn't have an avatar.` });
             targetImage = avatar;
             targetImageWidth = 128;
