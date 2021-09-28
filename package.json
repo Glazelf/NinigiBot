@@ -10,7 +10,7 @@
     "bufferutil": "^4.0.3",
     "canvas": "^2.8.0",
     "cron": "^1.8.2",
-    "discord.js": "^13.2.0-dev.1632787496.3b14883",
+    "discord.js": "^13.2.0-dev.1632830601.3b14883",
     "discord.js-commando": "^0.10.0",
     "enmap": "^5.2.4",
     "ffmpeg": "0.0.4",
