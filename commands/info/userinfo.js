@@ -42,6 +42,7 @@ exports.run = async (client, message, args = []) => {
             // console.log(e);
             return sendMessage(client, message, `No member information could be found for this user.`);
         };
+        console.log(member)
 
         // Balance check
         let dbBalance = await bank.currency.getBalance(user.id);
