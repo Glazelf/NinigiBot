@@ -22,13 +22,7 @@ exports.run = async (client, message, args = [], language) => {
             };
         };
 
-        if (!user) {
-            if (message.type == 'APPLICATION_COMMAND') {
-                user = message.member.user;
-            } else {
-                user = message.author;
-            };
-        };
+        if (!user) user = message.member.user;
 
         let member;
         try {

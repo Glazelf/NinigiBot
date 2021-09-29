@@ -10,12 +10,7 @@ exports.run = async (client, message, args = [], language) => {
 
         let memberFetch = await message.guild.members.fetch();
 
-        let author;
-        if (message.type == 'DEFAULT') {
-            author = message.author;
-        } else {
-            author = message.member.user;
-        };
+        let author = message.member.user;
 
         let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 

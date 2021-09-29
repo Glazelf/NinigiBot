@@ -29,11 +29,7 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         if (!user) {
-            if (message.type == 'DEFAULT') {
-                user = await client.users.fetch(message.author.id, { force: true });
-            } else {
-                user = await client.users.fetch(message.member.id, { force: true });
-            };
+            user = await client.users.fetch(message.member.id, { force: true });
         };
 
         let member;

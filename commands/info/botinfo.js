@@ -56,12 +56,7 @@ exports.run = async (client, message, args = [], language) => {
         });
         let uniqueOwners = countUnique(ownerPool);
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);

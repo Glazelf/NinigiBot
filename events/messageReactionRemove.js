@@ -27,7 +27,7 @@ module.exports = async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
 
-        let avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+        let avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         let isReply = false;
         let replyMessage
         if (targetMessage.reference) isReply = true;

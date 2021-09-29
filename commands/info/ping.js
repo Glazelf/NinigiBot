@@ -34,12 +34,12 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         // Send message then edit message to reflect difference in creation timestamps
-        if (message.type == 'DEFAULT') {
-            return message.reply({ content: pongString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.edit({ content: pongString.replace(pauseString, `${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}`) }));
-        } else {
+        if (message.type == 'APPLICATION_COMMAND') {
             let replyText = await getLanguageString(client, language, 'pingInteractionString');
             replyText = replyText.replace('[latency]', client.ws.ping);
             return sendMessage(client, message, replyText);
+        } else {
+            return message.reply({ content: pongString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.edit({ content: pongString.replace(pauseString, `${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}`) }));
         };
 
     } catch (e) {

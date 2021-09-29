@@ -26,12 +26,7 @@ Dango, Jojo, Stitch, Kuzco`;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
         };
-        let author;
-        if (message.type == 'DEFAULT') {
-            author = message.author;
-        } else {
-            author = message.member.user;
-        };
+        let author = message.member.user;
         let missingGifString = `You didn't provide a valid gif argument.\nFor a list of gif arguments, use \`${prefix}gif help\`.`;
         if (!args[0]) return sendMessage(client, message, missingGifString);
         let gifArgument = args[0].toLowerCase();

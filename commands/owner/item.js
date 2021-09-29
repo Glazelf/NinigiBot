@@ -22,11 +22,7 @@ exports.run = async (client, message, args = []) => {
                 args.splice(0, 1);
             } else return sendMessage(client, message, `The syntax is \`${prefix}item <target> <item name>\`.`);
         } else {
-            if (message.type == 'DEFAULT') {
-                target = message.author;
-            } else {
-                target = message.member.user;
-            };
+            target = message.member.user;
         };
         const itemName = args.join(' ')
         for (let i = 0; i < shops.length; i++) {

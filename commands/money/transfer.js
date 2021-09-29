@@ -19,12 +19,8 @@ exports.run = async (client, message, args = [], language) => {
             transferTarget = client.users.cache.get(userID);
         };
         if (!transferTarget) return;
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+
+        let user = message.member.user;
         let userBalance = `${Math.floor(currentAmount)}${globalVars.currency}`;
 
         // Catch errors

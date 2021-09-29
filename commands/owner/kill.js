@@ -12,12 +12,7 @@ exports.run = async (client, message, args = []) => {
 
         let timestamp = await getTime(client);
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         if (args[0] != 'soft') {
             // Return message then destroy

@@ -7,12 +7,7 @@ exports.run = async (client, message, args = [], language) => {
         const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         // Structure lazy help embed with mostly just links lol
         const helpEmbed = new Discord.MessageEmbed()

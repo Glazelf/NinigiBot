@@ -82,11 +82,7 @@ exports.run = async (client, message, args = [], language) => {
                 args.splice(0, 1);
             } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
         } else {
-            if (message.type == 'DEFAULT') {
-                master = message.author;
-            } else {
-                master = message.member.user;
-            };
+            master = message.member.user;
             shinx = await bank.currency.getShinx(master.id);
         };
 

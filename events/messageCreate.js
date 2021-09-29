@@ -43,6 +43,7 @@ module.exports = async (client, message) => {
             // Send message contents to dm channel
             let DMChannel = client.channels.cache.get(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
@@ -73,7 +74,7 @@ module.exports = async (client, message) => {
 
         // Automod
         let modBool = false;
-        if (message.type == 'DEFAULT') modBool = await autoMod(client, message, language);
+        if (message.type != 'APPLICATION_COMMAND') modBool = await autoMod(client, message, language);
         if (modBool) return;
 
         let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");

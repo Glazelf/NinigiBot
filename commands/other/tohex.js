@@ -14,12 +14,7 @@ exports.run = async (client, message, args = [], language) => {
             prefix = globalVars.prefix;
         };
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
         let input = args[0];

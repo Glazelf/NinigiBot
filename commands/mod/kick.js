@@ -19,12 +19,7 @@ exports.run = async (client, message, args = [], language) => {
         };
         if (!member || !user) return sendMessage(client, message, `Please mention someone to kick.`);
 
-        let author;
-        if (message.type == 'DEFAULT') {
-            author = message.author;
-        } else {
-            author = message.member.user;
-        };
+        let author = message.member.user;
 
         // Check permissions
         let userRole = message.member.roles.highest;
