@@ -17,12 +17,8 @@ exports.run = async (client, message, args = []) => {
         await message.guild.roles.fetch();
 
         let member = message.member;
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
+
 
         let requestRole = args.join(' ').toLowerCase();
         let adminBool = await isAdmin(message.guild.me);

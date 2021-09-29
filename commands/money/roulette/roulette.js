@@ -19,12 +19,7 @@ exports.run = async (client, message) => {
 
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         roulette.shift()
         if (roulette.on) {

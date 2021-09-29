@@ -32,12 +32,7 @@ exports.run = async (client, message, args) => {
             user = await client.users.cache.get(userID);
         };
 
-        let author;
-        if (message.type == 'DEFAULT') {
-            author = message.author;
-        } else {
-            author = message.member.user;
-        };
+        let author = message.member.user;
 
         await message.channel.messages.fetch();
 

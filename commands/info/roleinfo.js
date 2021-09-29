@@ -12,12 +12,7 @@ exports.run = async (client, message, args = []) => {
         // Split off command
         let input = args.join(" ");
 
-        let user;
-        if (message.type == 'APPLICATION_COMMAND') {
-            user = message.member.user;
-        } else {
-            user = message.author;
-        };
+        let user = message.member.user;
 
         // Author avatar
         let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
