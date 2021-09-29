@@ -43,6 +43,8 @@ const StarboardChannels = require('./models/global/StarboardChannels')(sequelize
 const StarboardMessages = require('./models/global/StarboardMessages')(sequelize, Sequelize.DataTypes);
 const StarboardLimits = require('./models/server/StarboardLimits')(sequelize, Sequelize.DataTypes);
 const VCTextChannels = require('./models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
+const RulesChannels = require('./models/global/RulesChannels')(sequelize, Sequelize.DataTypes);
+const ServerRules = require('./models/server/ServerRules')(sequelize, Sequelize.DataTypes);
 const Prefixes = require('./models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
@@ -313,4 +315,4 @@ Users.prototype.getRoom = function () {
     });
 };
 
-module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, VCTextChannels, Prefixes, ModEnabledServers, Shinx };
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, VCTextChannels, RulesChannels, ServerRules, Prefixes, ModEnabledServers, Shinx };
