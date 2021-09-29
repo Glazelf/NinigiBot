@@ -7,6 +7,7 @@ exports.run = async (client, message, args = [], language) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
+        const randomNumber = require('../../util/randomNumber');
         if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
@@ -23,12 +24,13 @@ exports.run = async (client, message, args = [], language) => {
             winSide = "tails";
             loseSide = "heads";
         };
-        if (!isNaN(args[1]) || ["quarter", "half", "all"].includes(args[1])) amount = args[1];
+        if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
 
         // Shortcuts
         if (amount == "quarter") amount = balance / 4;
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
+        if (amount == "random") amount = await randomNumber(1, balance);
         if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
 
         // Enforce flooring

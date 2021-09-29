@@ -129,6 +129,7 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         // Avatar and banner
+        let serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
         let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
         let banner = null;
         if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true, size: 256 });
@@ -162,7 +163,7 @@ exports.run = async (client, message, args = [], language) => {
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor(`${user.username} (${user.id})`, avatar)
-            .setThumbnail(avatar)
+            .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);

@@ -5,6 +5,7 @@ exports.run = async (client, message, args = [], language) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
+        const randomNumber = require('../../util/randomNumber');
         let inputNumbers = args.join(" ").replace(", ", " ").split(" ");
 
         if (!inputNumbers[1]) return sendMessage(client, message, `You need to provide 2 numbers.`);
@@ -18,15 +19,9 @@ exports.run = async (client, message, args = [], language) => {
         highNumber = parseInt(highNumber);
         if (lowNumber > highNumber) return sendMessage(client, message, `Make sure the first number is lower than the second number.`);
 
-        let randomValue = randomIntFromInterval(lowNumber, highNumber);
+        let randomValue = await randomNumber(lowNumber, highNumber);
 
         return sendMessage(client, message, `Your random number is \`${randomValue}\`.`);
-
-        function randomIntFromInterval(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
 
     } catch (e) {
         // Log error

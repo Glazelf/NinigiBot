@@ -35,7 +35,7 @@ module.exports = async (client, member) => {
             let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            let icon = member.guild.iconURL({ format: "png", dynamic: true });
+            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
 
             let embedAuthor = `${memberLeaveEventTitle} 💔`;
             let reasonText = reasonUnspecified;

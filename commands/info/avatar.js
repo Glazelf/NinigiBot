@@ -15,8 +15,11 @@ exports.run = async (client, message, args = [], language) => {
 
         if (!user && args[0]) {
             let userID = args[0];
-            user = await client.users.fetch(userID);
-            if (!user) user = client.users.cache.find(user => user.username.toLowerCase() == args[0].toString().toLowerCase());
+            try {
+                user = await client.users.fetch(userID);
+            } catch (e) {
+                // console.log(e);
+            };
         };
 
         if (!user) {
@@ -37,13 +40,13 @@ exports.run = async (client, message, args = [], language) => {
 
         // Get avatar
         let avatar = null;
-        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true, size: 128 });
+        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true, size: 512 });
         if (!avatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
 
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`${user.username}'s avatar:`)
-            .setImage(`${avatar}?size=512`)
+            .setImage(avatar)
             .setFooter(user.tag)
             .setTimestamp();
 

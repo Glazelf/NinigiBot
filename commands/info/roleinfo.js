@@ -21,7 +21,7 @@ exports.run = async (client, message, args = [], language) => {
         };
 
         // Author avatar
-        let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
+        let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Check for role
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
