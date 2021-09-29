@@ -39,13 +39,19 @@ exports.run = async (client, message, args = []) => {
 
         // Get avatar
         let avatar = null;
-        if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true, size: 512 });
+        if (user.avatarURL()) avatar = await user.avatarURL({ format: "png", dynamic: true, size: 512 });
         if (!avatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
+        let serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+        if (!serverAvatar) {
+            serverAvatar = avatar;
+            avatar = null;
+        };
 
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${user.username}'s avatar:`)
-            .setImage(avatar)
+            .setThumbnail(avatar)
+            .setAuthor(`${user.username}'s avatar(s):`)
+            .setImage(serverAvatar)
             .setFooter(user.tag)
             .setTimestamp();
 
