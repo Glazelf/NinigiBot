@@ -31,12 +31,7 @@ exports.run = async (client, message, args = []) => {
 
         let dmString = `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``;
 
-        let author;
-        if (message.type == 'DEFAULT') {
-            author = message.author;
-        } else {
-            author = message.member.user;
-        };
+        let author = message.member.user;
 
         await message.guild.bans.fetch();
 

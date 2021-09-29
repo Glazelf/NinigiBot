@@ -17,13 +17,7 @@ exports.run = async (client, message, args = []) => {
             target = client.users.cache.get(userID);
         };
 
-        if (!target) {
-            if (message.type == 'DEFAULT') {
-                target = message.author;
-            } else {
-                target = message.member.user;
-            };
-        };
+        if (!target) target = message.member.user;
 
         let member;
         try {

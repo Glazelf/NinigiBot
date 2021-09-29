@@ -23,13 +23,7 @@ exports.run = async (client, message, args = []) => {
             member = message.guild.members.cache.get(userID);
         };
 
-        if (!user || !member) {
-            if (message.type == 'DEFAULT') {
-                user = message.author;
-            } else {
-                user = message.member.user;
-            };
-        };
+        if (!user || !member) user = message.member.user;
 
         let totalMessage = null;
         let avatar = null;

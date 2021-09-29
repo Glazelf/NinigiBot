@@ -10,13 +10,7 @@ exports.run = async (client, message, args = []) => {
         //items, food, equipment
         let target;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) target = message.mentions.users.first();
-        if (!target) {
-            if (message.type == 'DEFAULT') {
-                target = message.author;
-            } else {
-                target = message.member.user;
-            };
-        };
+        if (!target) target = message.member.user;
 
         let member;
         try {
