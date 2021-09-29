@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         rule_title: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         rule_body: {
             type: DataTypes.STRING,
