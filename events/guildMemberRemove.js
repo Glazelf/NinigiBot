@@ -20,7 +20,7 @@ module.exports = async (client, member) => {
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            let icon = member.guild.iconURL({ format: "png", dynamic: true });
+            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
 
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
