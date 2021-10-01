@@ -31,7 +31,6 @@ module.exports = async (client, guildBan) => {
             };
             if (!executor) return;
             if (reason == null) reason = "Not specified.";
-            let bannedBy = `${executor.tag} (${executor.id})`;
 
             if (target.id !== guildBan.user.id) return;
             let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -44,7 +43,7 @@ module.exports = async (client, guildBan) => {
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
                 .addField(`User:`, `${target} (${target.id})`, false)
                 .addField(`Reason:`, reason, false)
-                .addField(`Executor`, bannedBy, false)
+                .addField(`Executor:`, `${executor.tag} (${executor.id})`, false)
                 .setFooter(target.tag)
                 .setTimestamp();
 

@@ -73,8 +73,8 @@ module.exports = async (client, member, newMember) => {
                 .setAuthor(topText, icon)
                 .setThumbnail(avatar)
                 .setDescription(changeText)
-                .addField(`User:`, `${user} (${user.id})`)
-            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`)
+                .addField(`User:`, `${user} (${user.id})`);
+            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`);
             updateEmbed
                 .setFooter(user.tag)
                 .setTimestamp();

@@ -24,7 +24,7 @@ module.exports = async (client, role) => {
                 const { executor: createExecutor, target } = createLog;
                 if (target.id !== role.id) return;
                 executor = createExecutor;
-            }
+            };
 
             const permissionSerializer = require('../util/permissionBitfieldSerializer');
             const permissions = permissionSerializer(role.permissions);
