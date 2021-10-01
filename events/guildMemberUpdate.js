@@ -30,6 +30,7 @@ module.exports = async (client, member, newMember) => {
             guildBoostCountUpdate = guildBoostCountUpdate.replace('[guildName]', `**${member.guild.name}**`).replace('[boostCount]', member.guild.premiumSubscriptionCount);
             let guildBoostDecay = await getLanguageString(client, language, 'guildBoostDecay');
             guildBoostDecay = guildBoostDecay.replace('[guildName]', `**${member.guild.name}**`);
+            let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             let user = client.users.cache.get(member.id);
             let updateCase = null;
@@ -91,8 +92,8 @@ module.exports = async (client, member, newMember) => {
                 .setThumbnail(avatar)
                 .setDescription(changeText)
                 .addField(userTitle, `${user} (${user.id})`)
-                .setFooter(user.tag)
-            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`)
+                .setFooter(user.tag);
+            if (executor) updateEmbed.addField(executorTitle, `${executor} (${executor.id})`);
             updateEmbed
                 .setTimestamp();
 

@@ -24,7 +24,7 @@ module.exports = async (client, oldRole, newRole) => {
                 const { executor: updateExecutor, target } = updateLog;
                 if (target.id !== newRole.id) return;
                 executor = updateExecutor;
-            }
+            };
 
             // Role color
             let embedColor = newRole.hexColor;
@@ -42,14 +42,14 @@ module.exports = async (client, oldRole, newRole) => {
                     .addField(`Old name: `, oldRole.name)
                     .addField(`New name: `, newRole.name);
             } else {
-                updateEmbed.addField('Role name: ', newRole.name)
-            }
+                updateEmbed.addField('Role name: ', newRole.name);
+            };
 
             if (oldRole.color !== newRole.color) {
                 updateEmbed
                     .addField(`Old color: `, oldRole.hexColor)
                     .addField(`New color: `, newRole.hexColor);
-            }
+            };
 
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 const permissionSerializer = require('../util/permissionBitfieldSerializer');
@@ -58,7 +58,7 @@ module.exports = async (client, oldRole, newRole) => {
                 updateEmbed
                     .addField(`Old permissions: `, oldPermissions.join(', '))
                     .addField(`New permissions: `, newPermissions.join(', '));
-            }
+            };
 
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

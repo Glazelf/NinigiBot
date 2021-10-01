@@ -65,11 +65,7 @@ module.exports = async (client, member) => {
                 .addField(userTitle, `${member} (${member.id})`, false);
             if (kicked == true) {
                 leaveEmbed.addField(reasonTitle, reasonText, false)
-                try {
-                    leaveEmbed.addField(executorTitle, `${executor.tag} (${executor.id})`, false);
-                } catch (e) {
-                    // console.log(e);
-                };
+                if (executor) leaveEmbed.addField(executorTitle, `${executor.tag} (${executor.id})`, false);
             };
             leaveEmbed
                 .setFooter(member.user.tag)
