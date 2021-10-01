@@ -15,7 +15,7 @@ module.exports = async (client, oldChannel, newChannel) => {
         let botMember = await newChannel.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelType = require('../util/getChannelType')
+            const getChannelType = require('../util/getChannelType');
             const fetchedLogs = await newChannel.guild.fetchAuditLogs({
                 limit: 1,
                 type: 'CHANNEL_UPDATE',
@@ -29,7 +29,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                 }
             };
 
-            const channelType = getChannelType(newChannel)
+            const channelType = getChannelType(newChannel);
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

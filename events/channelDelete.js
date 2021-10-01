@@ -17,34 +17,28 @@ module.exports = async (client, channel) => {
             const getChannelType = require('../util/getChannelType');
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_CREATE',
+                type: 'CHANNEL_DELETE',
             });
-            const createLog = fetchedLogs.entries.first()
+            const deleteLog = fetchedLogs.entries.first();
             let executor
-            if (createLog) {
-                const { executor: createExecutor, target } = createLog;
-                if (target.id === channel.id) {
+            if (deleteLog) {
+                const { executor: createExecutor, target } = deleteLog;
+                if (target.id === newChannel.id) {
                     executor = createExecutor;
                 }
             };
-
+            
             const channelType = getChannelType(channel);
 
-            const createEmbed = new Discord.MessageEmbed()
+            const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${channelType} Channel Created ⭐`)
+                .setAuthor(`${channelType} Channel Deleted ❌`)
                 .addField(`Channel name: `, channel.name)
+                .addField('Deleted by: ', `${executor} (${executor.id})`)
                 .setFooter(channel.id)
                 .setTimestamp();
 
-            if (channel.parent) {
-                createEmbed.addField('Parent category: ', channel.parent.name);
-            }
-            if (executor) {
-                createEmbed.addField('Created by: ', `${executor} (${executor.id})`);
-            }
-
-            return log.send({ embeds: [createEmbed] });
+            return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {
@@ -54,5 +48,5 @@ module.exports = async (client, channel) => {
     } catch (e) {
         // Log error
         logger(e, client);
-    }
-}
+    };
+};
