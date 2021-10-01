@@ -42,12 +42,8 @@ exports.run = async (client, message, args = []) => {
         if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
 
         // Role color
-        let roleColor = `#${role.color.toString(16)}`;
-        let embedColor = roleColor;
-        if (roleColor == "#0") {
-            roleColor = "Default";
-            embedColor = DefaultEmbedColor;
-        };
+        let embedColor = role.hexColor;
+        if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
         // Member count
         let memberCount = message.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
@@ -64,7 +60,7 @@ exports.run = async (client, message, args = []) => {
             .setColor(embedColor)
             .setAuthor(`${role.name} (${role.id})`, avatar)
             .addField("Tag:", role.toString(), true)
-            .addField("Color:", roleColor, true)
+            .addField("Color:", role.hexColor, true)
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
