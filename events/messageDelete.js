@@ -11,8 +11,11 @@ module.exports = async (client, message) => {
 
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
-            let starboardMessage = client.channels.cache.get(messageDB.starboard_channel_id).messages.cache.fetch(messageDB.starboard_message_id);
-            if (starboardMessage) starboardMessage.delete();
+            let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+            if (starboardChannel) {
+                let starboardMessage = starboardChannel.messages.fetch(messageDB.starboard_message_id);
+                if (starboardMessage) starboardMessage.delete();
+            };
         };
 
         let executor;
