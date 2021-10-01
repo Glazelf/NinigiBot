@@ -26,8 +26,12 @@ module.exports = async (client, oldRole, newRole) => {
                 executor = updateExecutor;
             }
 
+            // Role color
+            let embedColor = newRole.hexColor;
+            if (embedColor == "#000000") embedColor = globalVars.embedColor;
+
             const updateEmbed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
+                .setColor(embedColor)
                 .setAuthor(`Role Updated ⚒️`)
                 .addField('Updated by: ', `${executor} (${executor.id})`)
                 .setFooter(newRole.id)
@@ -40,7 +44,7 @@ module.exports = async (client, oldRole, newRole) => {
             } else {
                 updateEmbed.addField('Role name: ', newRole.name)
             }
-            
+
             if (oldRole.color !== newRole.color) {
                 updateEmbed
                     .addField(`Old color: `, oldRole.hexColor)
