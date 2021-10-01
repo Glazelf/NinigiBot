@@ -14,7 +14,7 @@ module.exports = async (client, channel) => {
         let botMember = await channel.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelType = require('../util/getChannelType');
+            const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
                 type: 'CHANNEL_DELETE',
@@ -28,7 +28,7 @@ module.exports = async (client, channel) => {
                 }
             };
             
-            const channelType = getChannelType(channel);
+            const channelType = getChannelTypeName(channel);
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
