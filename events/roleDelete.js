@@ -30,7 +30,7 @@ module.exports = async (client, role) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Role Deleted`)
                 .addField(`Role name: `, role.name)
-                .addField('Deleted by: ', `${executor.username}#${executor.discriminator} (${executor.id})`)
+                .addField('Deleted by: ', `${executor} (${executor.id})`)
                 .setTimestamp();
 
             return log.send({ embeds: [deleteEmbed] });

@@ -35,7 +35,7 @@ module.exports = async (client, role) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Role Created`)
                 .addField(`Role name: `, role.name)
-                .addField('Created by: ', `${executor.username}#${executor.discriminator} (${executor.id})`)
+                .addField('Created by: ', `${executor} (${executor.id})`)
                 .setTimestamp();
 
             createEmbed.addField(`Permissions: `, permissions.join(', '));
