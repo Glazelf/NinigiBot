@@ -35,6 +35,10 @@ module.exports = async (client, messageReaction) => {
             };
         };
 
+        // Buttons
+        let starButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(`⭐${messageReaction.count}`, avatar)
@@ -42,7 +46,6 @@ module.exports = async (client, messageReaction) => {
             .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
         if (isReply) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
-            .addField(`Context:`, `[Link](${targetMessage.url})`, false)
             .setImage(messageImage)
             .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
@@ -58,7 +61,7 @@ module.exports = async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
 
-            await starMessage.edit({ embeds: [starEmbed] });
+            await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {
             // Ignore
