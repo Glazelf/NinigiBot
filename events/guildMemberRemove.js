@@ -49,12 +49,8 @@ module.exports = async (client, member) => {
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .addField(`User: `, `${member} (${member.id})`, false);
             if (kicked == true) {
-                leaveEmbed.addField(`Reason:`, reasonText, false)
-                try {
-                    leaveEmbed.addField(`Executor`, `${executor.tag} (${executor.id})`, false);
-                } catch (e) {
-                    // console.log(e);
-                };
+                leaveEmbed.addField(`Reason:`, reasonText, false);
+                if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);
             };
             leaveEmbed
                 .setFooter(member.user.tag)
