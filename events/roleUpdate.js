@@ -30,6 +30,7 @@ module.exports = async (client, oldRole, newRole) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Role Updated ⚒️`)
                 .addField('Updated by: ', `${executor} (${executor.id})`)
+                .setFooter(newRole.id)
                 .setTimestamp();
 
             if (oldRole.name !== newRole.name) {

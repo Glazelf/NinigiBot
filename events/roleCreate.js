@@ -37,6 +37,7 @@ module.exports = async (client, role) => {
                 .addField(`Role name: `, role.name)
                 .addField('Created by: ', `${executor} (${executor.id})`)
                 .addField(`Permissions: `, permissions.join(', '))
+                .setFooter(role.id)
                 .setTimestamp();
 
             return log.send({ embeds: [createEmbed] });
