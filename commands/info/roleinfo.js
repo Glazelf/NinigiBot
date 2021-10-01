@@ -5,7 +5,7 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        let DefaultEmbedColor = "#99AB5";
+        let DefaultEmbedColor = globalVars.embedColor;
 
         if (!args[0]) return sendMessage(client, message, `Please provide a role name or ID.`);
 
