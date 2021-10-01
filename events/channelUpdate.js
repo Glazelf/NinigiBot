@@ -5,7 +5,6 @@ module.exports = async (client, oldChannel, newChannel) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
-        const ChannelTypes = Discord.Constants.ChannelTypes;
 
         let logChannel = await LogChannels.findOne({ where: { server_id: newChannel.guild.id } });
         if (!logChannel) return;
@@ -52,7 +51,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                     .addField(`New category: `, newChannel.parent?.name ?? 'None');
             };
 
-            if ([ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_NEWS, ChannelTypes.GUILD_STORE].includes(newChannel.type)) {
+            if (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     updateEmbed
                         .addField(`Old topic: `, oldChannel.topic || 'Empty')
@@ -69,7 +68,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                         .addField(`Old slowmode timer: `, `${oldChannel.rateLimitPerUser} seconds`)
                         .addField(`New slowmode timer: `, `${newChannel.rateLimitPerUser} seconds`);
                 }
-            } else if ([ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE].includes(newChannel.type)) {
+            } else if (['GUILD_VOICE', 'GUILD_STAGE_VOICE'].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
                     updateEmbed
                         .addField(`Old bitrate: `, `${oldChannel.bitrate}`)
