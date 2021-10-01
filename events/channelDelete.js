@@ -23,7 +23,7 @@ module.exports = async (client, channel) => {
             let executor
             if (deleteLog) {
                 const { executor: createExecutor, target } = deleteLog;
-                if (target.id === newChannel.id) {
+                if (target.id === channel.id) {
                     executor = createExecutor;
                 }
             };
@@ -34,9 +34,12 @@ module.exports = async (client, channel) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${channelType} Channel Deleted ❌`)
                 .addField(`Channel name: `, channel.name)
-                .addField('Deleted by: ', `${executor} (${executor.id})`)
                 .setFooter(channel.id)
                 .setTimestamp();
+
+            if (executor) {
+                deleteEmbed.addField('Deleted by: ', `${executor} (${executor.id})`);
+            }
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

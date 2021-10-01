@@ -33,9 +33,12 @@ module.exports = async (client, oldChannel, newChannel) => {
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${channelType} Channel Updated ⚒️`)
-                .addField('Updated by: ', `${executor} (${executor.id})`)
                 .setFooter(newChannel.id)
                 .setTimestamp();
+
+            if (executor) {
+                updateEmbed.addField('Updated by: ', `${executor} (${executor.id})`);
+            }
 
             if (oldChannel.name !== newChannel.name) {
                 updateEmbed
@@ -47,20 +50,20 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             if (oldChannel.parentId !== newChannel.parentId) {
                 updateEmbed
-                    .addField(`Old category: `, oldChannel.parent?.name ?? 'None')
-                    .addField(`New category: `, newChannel.parent?.name ?? 'None');
+                    .addField(`Old category: `, oldChannel.parent?.name ?? '(None)')
+                    .addField(`New category: `, newChannel.parent?.name ?? '(None)');
             };
 
             if (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     updateEmbed
-                        .addField(`Old topic: `, oldChannel.topic || 'Empty')
-                        .addField(`New topic: `, newChannel.topic || 'Empty');
+                        .addField(`Old topic: `, oldChannel.topic || '(None)')
+                        .addField(`New topic: `, newChannel.topic || '(None)');
                 }
                 if (oldChannel.nsfw !== newChannel.nsfw) {
                     updateEmbed
                         .addField(`Old Is NSFW: `, `${oldChannel.nsfw}`)
-                        .addField(`Old Is NSFW: `, `${newChannel.nsfw}`);
+                        .addField(`New Is NSFW: `, `${newChannel.nsfw}`);
                 }
                 // these will both be undefined on a GUILD_NEWS channel, since there is no rate limit there
                 if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
@@ -71,19 +74,25 @@ module.exports = async (client, oldChannel, newChannel) => {
             } else if (['GUILD_VOICE', 'GUILD_STAGE_VOICE'].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
                     updateEmbed
-                        .addField(`Old bitrate: `, `${oldChannel.bitrate}`)
-                        .addField(`New bitrate: `, `${newChannel.bitrate}`);
+                        .addField(`Old bitrate: `, `${(oldChannel.bitrate / 1000)}kbps`)
+                        .addField(`New bitrate: `, `${(newChannel.bitrate / 1000)}kbps`);
                 }
                 if (oldChannel.userLimit !== newChannel.userLimit) {
                     updateEmbed
-                        .addField(`Old user limit: `, `${oldChannel.userLimit}`)
-                        .addField(`New user limit: `, `${newChannel.userLimit}`);
+                        .addField(`Old user limit: `, `${oldChannel.userLimit || 'No limit'}`)
+                        .addField(`New user limit: `, `${newChannel.userLimit || 'No limit'}`);
                 }
                 if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
                     updateEmbed
-                        .addField(`Old region: `, oldChannel.rtcRegion || 'Empty')
-                        .addField(`New region: `, newChannel.rtcRegion || 'Empty');
+                        .addField(`Old region: `, oldChannel.rtcRegion || 'automatic')
+                        .addField(`New region: `, newChannel.rtcRegion || 'automatic');
                 }
+            }
+
+            if (!updateEmbed.fields.some(field => field.name.startsWith('New'))) {
+                // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
+                // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
+                return;
             }
 
             return log.send({ embeds: [updateEmbed] });
