@@ -24,7 +24,7 @@ module.exports = async (client, role) => {
                 const { executor: deleteExecutor, target } = deleteLog;
                 if (target.id !== role.id) return;
                 executor = deleteExecutor;
-            }
+            };
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
