@@ -53,7 +53,6 @@ module.exports = async (client, member) => {
                     if (target.id !== member.id) return;
                     kicked = true;
                     if (reason) reasonText = reason;
-                    icon = executor.displayAvatarURL(globalVars.displayAvatarSettings);
                     embedAuthor = `${kickEventTitle} 💔`;
                 };
             };
