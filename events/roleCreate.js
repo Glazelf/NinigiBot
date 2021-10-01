@@ -36,9 +36,8 @@ module.exports = async (client, role) => {
                 .setAuthor(`Role Created`)
                 .addField(`Role name: `, role.name)
                 .addField('Created by: ', `${executor} (${executor.id})`)
+                .addField(`Permissions: `, permissions.join(', '))
                 .setTimestamp();
-
-            createEmbed.addField(`Permissions: `, permissions.join(', '));
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
