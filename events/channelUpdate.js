@@ -48,6 +48,12 @@ module.exports = async (client, oldChannel, newChannel) => {
                 updateEmbed.addField('Channel name: ', newChannel.name);
             };
 
+            if (oldChannel.type !== newChannel.type) {
+                updateEmbed
+                    .addField(`Old type:`, oldChannel.type)
+                    .addField(`New type:`, newChannel.type);
+            };
+
             if (oldChannel.parentId !== newChannel.parentId) {
                 updateEmbed
                     .addField(`Old category: `, oldChannel.parent?.name ?? '(None)')
