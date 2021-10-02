@@ -6,7 +6,9 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(message.member, client);
+
         if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.channel.rateLimitPerUser) return sendMessage(client, message, `This channel type doesn't support slowmode.`);
 
         let slowmodeMaxSeconds = 21600;
 
