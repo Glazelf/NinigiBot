@@ -103,10 +103,8 @@ exports.run = async (client, message) => {
         let guildOwner = await guild.fetchOwner();
 
         // Rules
-        if (guild.rulesChannel) {
-            var rules = guild.rulesChannel;
-            if (guild !== message.guild) rules = `#${guild.rulesChannel.name}`;
-        };
+        let rules
+        if (guild.rulesChannel) rules = guild.rulesChannel;
 
         // Text channels
         let channelCount = 0;

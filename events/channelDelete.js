@@ -1,4 +1,4 @@
-module.exports = async (client, role) => {
+module.exports = async (client, channel) => {
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
@@ -6,33 +6,41 @@ module.exports = async (client, role) => {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: role.guild.id } });
+        let logChannel = await LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;
-        let log = role.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        let log = channel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await role.guild.members.fetch(client.user.id);
+        let botMember = await channel.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const fetchedLogs = await role.guild.fetchAuditLogs({
+            const getChannelTypeName = require('../util/getChannelType');
+            const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'ROLE_DELETE',
+                type: 'CHANNEL_DELETE',
             });
             const deleteLog = fetchedLogs.entries.first();
             let executor;
             if (deleteLog) {
-                const { executor: deleteExecutor, target } = deleteLog;
-                if (target.id !== role.id) return;
-                executor = deleteExecutor;
+                const { executor: createExecutor, target } = deleteLog;
+                if (target.id === channel.id) {
+                    executor = createExecutor;
+                };
             };
+
+            const channelType = getChannelTypeName(channel);
+
+            let footer = newChannel.id;
+            if (executor) footer = executor.tag;
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Role Deleted ❌`)
-                .addField(`Role:`, `${role.name} (${role.id})`)
-                .addField('Deleted by:', `${executor} (${executor.id})`)
-                .setFooter(executor.tag)
+                .setAuthor(`${channelType} Channel Deleted ❌`)
+                .addField(`Channel:`, channel.name)
+                .setFooter(footer)
                 .setTimestamp();
+
+            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

@@ -5,6 +5,7 @@ module.exports = async (client, member) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
+        const checkDays = require('../util/checkDays');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
@@ -26,6 +27,10 @@ module.exports = async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
 
+            // Check Days
+            let daysJoined = await checkDays(member.joinedAt);
+            let daysCreated = await checkDays(member.user.createdAt);
+
             const fetchedLogs = await member.guild.fetchAuditLogs({
                 limit: 1,
                 type: 'MEMBER_KICK',
@@ -42,12 +47,18 @@ module.exports = async (client, member) => {
                 };
             };
 
+            // Buttons
+            let leaveButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+
             const leaveEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(embedAuthor, icon)
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${member} (${member.id})`, false);
+                .addField(`User: `, `${member} (${member.id})`, false)
+                .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true)
+                .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             if (kicked == true) {
                 leaveEmbed.addField(`Reason:`, reasonText, false);
                 if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);
@@ -56,7 +67,7 @@ module.exports = async (client, member) => {
                 .setFooter(member.user.tag)
                 .setTimestamp();
 
-            return log.send({ embeds: [leaveEmbed] });
+            return log.send({ embeds: [leaveEmbed], components: [leaveButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {

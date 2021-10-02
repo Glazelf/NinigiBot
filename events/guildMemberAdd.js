@@ -20,17 +20,21 @@ module.exports = async (client, member) => {
 
             let daysCreated = await checkDays(member.user.createdAt);
 
+            // Buttons
+            let joinButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+
             const joinEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Member Joined ❤️`, icon)
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .addField(`User: `, `${member} (${member.id})`)
-                .addField("Created at:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
                 .setFooter(member.user.tag)
                 .setTimestamp();
 
-            return log.send({ content: member.toString(), embeds: [joinEmbed] });
+            return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {
