@@ -33,6 +33,10 @@ module.exports = async (client, member) => {
 
             let daysCreated = await checkDays(client, user.createdAt, language);
 
+            // Buttons
+            let joinButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+
             const joinEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${memberJoinEventTitle} ❤️`, icon)
@@ -43,7 +47,7 @@ module.exports = async (client, member) => {
                 .setFooter(member.user.tag)
                 .setTimestamp();
 
-            return log.send({ content: member.toString(), embeds: [joinEmbed] });
+            return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
             return log.send({ content: logBotPermissionError });

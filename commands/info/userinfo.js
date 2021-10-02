@@ -156,6 +156,10 @@ exports.run = async (client, message, args = [], language) => {
         };
         let daysCreated = await checkDays(client, user.createdAt, language);
 
+        // Buttons
+        let profileButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
+
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor(`${user.username} (${user.id})`, avatar)
@@ -178,7 +182,7 @@ exports.run = async (client, message, args = [], language) => {
             .setFooter(user.tag)
             .setTimestamp();
 
-        return sendMessage(client, message, null, profileEmbed);
+        return sendMessage(client, message, null, profileEmbed, null, true, profileButtons);
 
         async function getJoinRank(userID, guild) {
             if (!guild.members.cache.get(userID)) return;

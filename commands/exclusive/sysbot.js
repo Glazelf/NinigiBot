@@ -6,8 +6,9 @@ exports.run = async (client, message, args = [], language) => {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         if (message.guild.id !== client.config.botServerID) return;
+        const Discord = require("discord.js");
 
-        let rulesChannelID = "549220480490536972";
+        if (message.guild.id !== client.config.botServerID) return;
 
         // Bot hosts
         let Glaze = client.users.cache.get(client.config.ownerID);
@@ -48,6 +49,14 @@ exports.run = async (client, message, args = [], language) => {
         if (!Ribbot || !Ribbot.presence || Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (!ACFlare || !ACFlare.presence || ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
 
+        // Buttons
+        let sysbotButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: 'Rules', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.guild.rulesChannel.id}` }))
+            .addComponents(new Discord.MessageButton({ label: 'Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/747878956434325626` }))
+            .addComponents(new Discord.MessageButton({ label: 'PKM Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/797885250667282444` }))
+            .addComponents(new Discord.MessageButton({ label: 'ACNH Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/614979959156375567` }));
+
+
         let returnString = `Here's a list of Sysbots and their status:
 **Format:** Bot (prefix): status (\`Host#0001\`) (Notes)
 **Pokémon bots:**
@@ -60,10 +69,10 @@ ${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
 ${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekends)
 ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
-Before asking a question make sure your question isn't already answered in either <#${rulesChannelID}> or <#${globalVars.botChannelID}>.
+Before asking a question make sure your question isn't already answered in either ${message.guild.rulesChannel} or <#${globalVars.botChannelID}>.
 Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`;
 
-        return sendMessage(client, message, returnString);
+        return sendMessage(client, message, returnString, null, null, false, sysbotButtons);
 
     } catch (e) {
         // Log error

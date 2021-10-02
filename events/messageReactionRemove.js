@@ -44,8 +44,11 @@ module.exports = async (client, messageReaction) => {
         let starboardMessageSentData = await getLanguageString(client, language, 'starboardMessageSentData');
         starboardMessageSentData = starboardMessageSentData.replace('[member]', targetMessage.author).replace('[channel]', targetMessage.channel);
         let starboardMessageContextTitle = await getLanguageString(client, language, 'starboardMessageContextTitle');
-        let linkString = await getLanguageString(client, language, 'linkString');
         let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
+
+        // Buttons
+        let starButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: starboardMessageContextTitle, style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
 
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -54,7 +57,6 @@ module.exports = async (client, messageReaction) => {
             .addField(starboardMessageSentTitle, starboardMessageSentData, false);
         if (isReply) starEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
-            .addField(starboardMessageContextTitle, `[${linkString}](${targetMessage.url})`, false)
             .setImage(messageImage)
             .setFooter(targetMessage.author.tag)
             .setTimestamp(targetMessage.createdTimestamp);
@@ -70,7 +72,7 @@ module.exports = async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
 
-            await starMessage.edit({ embeds: [starEmbed] });
+            await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {
             // Ignore

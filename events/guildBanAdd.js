@@ -49,6 +49,10 @@ module.exports = async (client, guildBan) => {
             let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
+            // Buttons
+            let banButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
+
             const banEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${banEventTitle} 💔`, avatarExecutor)
@@ -60,7 +64,7 @@ module.exports = async (client, guildBan) => {
                 .setFooter(target.tag)
                 .setTimestamp();
 
-            return log.send({ embeds: [banEmbed] });
+            return log.send({ embeds: [banEmbed], components: [banButtons] });
 
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
