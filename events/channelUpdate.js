@@ -31,10 +31,14 @@ module.exports = async (client, oldChannel, newChannel) => {
             const oldChannelType = getChannelTypeName(oldChannel);
             const newChannelType = getChannelTypeName(newChannel);
 
+            let footer = newChannel.id;
+            if (executor) footer = executor.tag;
+
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${newChannelType} Channel Updated ⚒️`)
-                .setFooter(newChannel.id)
+                .addField(`Channel:`, `${newChannel} (${newChannel.id})`)
+                .setFooter(footer)
                 .setTimestamp();
 
             if (executor) updateEmbed.addField('Updated by:', `${executor} (${executor.id})`);

@@ -33,16 +33,15 @@ module.exports = async (client, oldRole, newRole) => {
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(embedColor)
                 .setAuthor(`Role Updated ⚒️`)
+                .addField(`Role:`, `${role} (${role.id})`)
                 .addField('Updated by:', `${executor} (${executor.id})`)
-                .setFooter(newRole.id)
+                .setFooter(executor.tag)
                 .setTimestamp();
 
             if (oldRole.name !== newRole.name) {
                 updateEmbed
                     .addField(`Old name:`, oldRole.name)
                     .addField(`New name:`, newRole.name);
-            } else {
-                updateEmbed.addField('Role name: ', newRole.name);
             };
 
             if (oldRole.color !== newRole.color) {

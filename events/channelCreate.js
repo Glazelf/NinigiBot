@@ -30,11 +30,15 @@ module.exports = async (client, channel) => {
 
             const channelType = getChannelTypeName(channel);
 
+            let footer = newChannel.id;
+            if (executor) footer = executor.tag;
+
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${channelType} Channel Created ⭐`)
+                .addField(`Channel:`, `${channel} (${channel.id})`)
                 .addField(`Channel name:`, channel.name)
-                .setFooter(channel.id)
+                .setFooter(footer)
                 .setTimestamp();
 
             if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
