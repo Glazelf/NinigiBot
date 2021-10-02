@@ -34,9 +34,9 @@ module.exports = async (client, role) => {
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`Role Created ⭐`)
-                .addField(`Role name: `, role.name)
-                .addField('Created by: ', `${executor} (${executor.id})`)
-                .addField(`Permissions: `, permissions.join(', '))
+                .addField(`Role name:`, role.name)
+                .addField('Created by:', `${executor} (${executor.id})`)
+                .addField(`Permissions:`, permissions.join(', '))
                 .setFooter(role.id)
                 .setTimestamp();
 

@@ -33,22 +33,22 @@ module.exports = async (client, oldRole, newRole) => {
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(embedColor)
                 .setAuthor(`Role Updated ⚒️`)
-                .addField('Updated by: ', `${executor} (${executor.id})`)
+                .addField('Updated by:', `${executor} (${executor.id})`)
                 .setFooter(newRole.id)
                 .setTimestamp();
 
             if (oldRole.name !== newRole.name) {
                 updateEmbed
-                    .addField(`Old name: `, oldRole.name)
-                    .addField(`New name: `, newRole.name);
+                    .addField(`Old name:`, oldRole.name)
+                    .addField(`New name:`, newRole.name);
             } else {
                 updateEmbed.addField('Role name: ', newRole.name);
             };
 
             if (oldRole.color !== newRole.color) {
                 updateEmbed
-                    .addField(`Old color: `, oldRole.hexColor)
-                    .addField(`New color: `, newRole.hexColor);
+                    .addField(`Old color:`, oldRole.hexColor)
+                    .addField(`New color:`, newRole.hexColor);
             };
 
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
@@ -56,8 +56,8 @@ module.exports = async (client, oldRole, newRole) => {
                 const oldPermissions = permissionSerializer(oldRole.permissions);
                 const newPermissions = permissionSerializer(newRole.permissions);
                 updateEmbed
-                    .addField(`Old permissions: `, oldPermissions.join(', '))
-                    .addField(`New permissions: `, newPermissions.join(', '));
+                    .addField(`Old permissions:`, oldPermissions.join(', '))
+                    .addField(`New permissions:`, newPermissions.join(', '));
             };
 
             return log.send({ embeds: [updateEmbed] });
