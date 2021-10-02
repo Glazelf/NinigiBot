@@ -20,14 +20,14 @@ module.exports = async (client, channel) => {
                 type: 'CHANNEL_DELETE',
             });
             const deleteLog = fetchedLogs.entries.first();
-            let executor
+            let executor;
             if (deleteLog) {
                 const { executor: createExecutor, target } = deleteLog;
                 if (target.id === channel.id) {
                     executor = createExecutor;
-                }
+                };
             };
-            
+
             const channelType = getChannelTypeName(channel);
 
             const deleteEmbed = new Discord.MessageEmbed()
@@ -37,9 +37,7 @@ module.exports = async (client, channel) => {
                 .setFooter(channel.id)
                 .setTimestamp();
 
-            if (executor) {
-                deleteEmbed.addField('Deleted by: ', `${executor} (${executor.id})`);
-            }
+            if (executor) deleteEmbed.addField('Deleted by: ', `${executor} (${executor.id})`);
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

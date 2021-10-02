@@ -20,12 +20,12 @@ module.exports = async (client, channel) => {
                 type: 'CHANNEL_CREATE',
             });
             const createLog = fetchedLogs.entries.first()
-            let executor
+            let executor;
             if (createLog) {
                 const { executor: createExecutor, target } = createLog;
                 if (target.id === channel.id) {
                     executor = createExecutor;
-                }
+                };
             };
 
             const channelType = getChannelTypeName(channel);
@@ -37,12 +37,8 @@ module.exports = async (client, channel) => {
                 .setFooter(channel.id)
                 .setTimestamp();
 
-            if (channel.parent) {
-                createEmbed.addField('Parent category: ', channel.parent.name);
-            }
-            if (executor) {
-                createEmbed.addField('Created by: ', `${executor} (${executor.id})`);
-            }
+            if (channel.parent) createEmbed.addField('Parent category: ', channel.parent.name);
+            if (executor) createEmbed.addField('Created by: ', `${executor} (${executor.id})`);
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
