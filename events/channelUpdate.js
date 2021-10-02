@@ -28,11 +28,12 @@ module.exports = async (client, oldChannel, newChannel) => {
                 }
             };
 
-            const channelType = getChannelTypeName(newChannel);
+            const oldChannelType = getChannelTypeName(oldChannel);
+            const newChannelType = getChannelTypeName(newChannel);
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${channelType} Channel Updated ⚒️`)
+                .setAuthor(`${newChannelType} Channel Updated ⚒️`)
                 .setFooter(newChannel.id)
                 .setTimestamp();
 
@@ -50,8 +51,8 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             if (oldChannel.type !== newChannel.type) {
                 updateEmbed
-                    .addField(`Old type:`, oldChannel.type)
-                    .addField(`New type:`, newChannel.type);
+                    .addField(`Old type:`, oldChannelType)
+                    .addField(`New type:`, newChannelType);
             };
 
             if (oldChannel.parentId !== newChannel.parentId) {
