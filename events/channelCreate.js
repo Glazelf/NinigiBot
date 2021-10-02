@@ -33,12 +33,12 @@ module.exports = async (client, channel) => {
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${channelType} Channel Created ⭐`)
-                .addField(`Channel name: `, channel.name)
+                .addField(`Channel name:`, channel.name)
                 .setFooter(channel.id)
                 .setTimestamp();
 
-            if (channel.parent) createEmbed.addField('Parent category: ', channel.parent.name);
-            if (executor) createEmbed.addField('Created by: ', `${executor} (${executor.id})`);
+            if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
+            if (executor) createEmbed.addField('Created by:', `${executor} (${executor.id})`);
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

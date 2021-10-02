@@ -94,8 +94,8 @@ module.exports = async (client, oldChannel, newChannel) => {
                 };
                 if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
                     updateEmbed
-                        .addField(`Old region: `, oldChannel.rtcRegion || 'automatic')
-                        .addField(`New region: `, newChannel.rtcRegion || 'automatic');
+                        .addField(`Old region:`, oldChannel.rtcRegion || 'automatic')
+                        .addField(`New region:`, newChannel.rtcRegion || 'automatic');
                 };
             };
 

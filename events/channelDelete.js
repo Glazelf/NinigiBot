@@ -33,11 +33,11 @@ module.exports = async (client, channel) => {
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`${channelType} Channel Deleted ❌`)
-                .addField(`Channel name: `, channel.name)
+                .addField(`Channel name:`, channel.name)
                 .setFooter(channel.id)
                 .setTimestamp();
 
-            if (executor) deleteEmbed.addField('Deleted by: ', `${executor} (${executor.id})`);
+            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
