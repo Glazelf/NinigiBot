@@ -72,11 +72,16 @@ module.exports = async (client, oldChannel, newChannel) => {
                         .addField(`Old Is NSFW: `, `${oldChannel.nsfw}`)
                         .addField(`New Is NSFW: `, `${newChannel.nsfw}`);
                 }
-                // these will both be undefined on a GUILD_NEWS channel, since there is no rate limit there
-                if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+
+                // these will both be undefined on a GUILD_NEWS channel, since there is no rate limit there, possibly also for GUILD_STORE channels
+                let oldSlowmode = 0;
+                let newSlowmode = 0;
+                if (oldChannel.rateLimitPerUser) oldSlowmode = oldChannel.rateLimitPerUser;
+                if (newChannel.rateLimitPerUser) newSlowmode = newChannel.rateLimitPerUser;
+                if (oldSlowmode !== newSlowmode) {
                     updateEmbed
-                        .addField(`Old slowmode timer: `, `${oldChannel.rateLimitPerUser} seconds`)
-                        .addField(`New slowmode timer: `, `${newChannel.rateLimitPerUser} seconds`);
+                        .addField(`Old slowmode timer: `, `${oldSlowmode} seconds`)
+                        .addField(`New slowmode timer: `, `${newSlowmode} seconds`);
                 }
             } else if (['GUILD_VOICE', 'GUILD_STAGE_VOICE'].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
