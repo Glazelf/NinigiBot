@@ -30,8 +30,7 @@ module.exports = async (client, message) => {
         };
 
         // Ignore commands in DMs
-        if (message.channel.type == "dm" || !message.guild) {
-            if (!message.member) return;
+        if (message.channel.type == "DM" || !message.guild) {
             if (message.author.bot) return;
 
             // Send message contents to dm channel
@@ -42,8 +41,7 @@ module.exports = async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.author.tag, false)
-                .addField(`Author ID:`, message.member.id, false);
+                .addField(`Author:`, `${message.author.tag} (${message.author.id})`, false)
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
