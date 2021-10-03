@@ -13,13 +13,11 @@ exports.run = async (client, message) => {
         let Flare = client.users.cache.get("592353588685307914");
         let Artic = client.users.cache.get("353184551096418316");
         // let Shion = client.users.cache.get("685608164506337351");
-        let Exorcism = client.users.cache.get("465892606417567747");
         // let Xenoseon = "Xenoseon#1604"; // 268790953572040704
 
         // Bots
         // PKM
-        let Konohana = message.guild.members.cache.get(`696086046685003786`);
-        let Gura = message.guild.members.cache.get("834359097523830834");
+        let Konohana = message.guild.members.cache.get("696086046685003786");
         let Flar3 = message.guild.members.cache.get("734052437811527784");
         let Glaceon = message.guild.members.cache.get("777555048104067082");
         // let BettyBot = message.guild.members.cache.get("790506481630969869");
@@ -41,7 +39,6 @@ exports.run = async (client, message) => {
         let ACFlareStatus = onlineString;
 
         if (!Konohana || !Konohana.presence || Konohana.presence.status == offlineStatus) KonohanaStatus = offlineString;
-        if (!Gura || !Gura.presence || Gura.presence.status == offlineStatus) GuraStatus = offlineString;
         if (!Glaceon || !Glaceon.presence || Glaceon.presence.status == offlineStatus) GlaceonStatus = offlineString;
         if (!Flar3 || !Flar3.presence || Flar3.presence.status == offlineStatus) Flar3Status = offlineString;
         if (!Ribbot || !Ribbot.presence || Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
@@ -59,12 +56,10 @@ exports.run = async (client, message) => {
 **Format:** Bot (prefix): status (\`Host#0001\`) (Notes)
 **Pokémon bots:**
 ${Konohana} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
-${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekdays)
 ${Flar3} (3): ${Flar3Status} (\`${Flare.tag}\`)
 ${Glaceon} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
 **ACNH bots:**
 ${Ribbot} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
-${Gura} ($): ${GuraStatus} (\`${Exorcism.tag}\`) (Weekends)
 ${ACFlare} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 
 Before asking a question make sure your question isn't already answered in either ${message.guild.rulesChannel} or <#${globalVars.botChannelID}>.
