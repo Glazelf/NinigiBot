@@ -4,11 +4,9 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const fs = require('fs');
+        const { PassThrough } = require('stream')
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
-
-        let timestamp = await getTime(client);
 
         if (!args[0]) return sendMessage(client, message, `Please provide a hex to convert.`);
 
@@ -27,25 +25,10 @@ exports.run = async (client, message, args = []) => {
         ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`;
         ctx.fillRect(0, 0, imgWidth, imgHeight);
 
-        await fs.promises.mkdir('memory/images', { recursive: true });
-        let imgPath = `memory/images/hexcolor-${message.member.id}.png`;
+        const stream = new PassThrough();
+        await PImage.encodePNGToStream(img, stream);
 
-        await PImage.encodePNGToStream(img, fs.createWriteStream(imgPath)).then(() => {
-            // console.log(`Wrote out image ${imgPath}. (${timestamp})`);
-        }).catch((e) => {
-            // console.log(e);
-            console.log(`Failed to create ${imgPath}. (${timestamp})`);
-        });
-
-        await sendMessage(client, message, `Here's the color for ${formattingHash}${hex}:`, null, imgPath);
-
-        try {
-            fs.unlinkSync(imgPath);
-            // console.log(`Deleted image ${imgPath}. (${timestamp})`);
-        } catch (e) {
-            // console.log(e);
-            console.log(`Failed to delete ${imgPath}. (${timestamp})`);
-        };
+        await sendMessage(client, message, `Here's the color for ${formattingHash}${hex}:`, null, stream);
 
         return;
 
@@ -57,7 +40,6 @@ exports.run = async (client, message, args = []) => {
                 b: parseInt(result[3], 16)
             } : null;
         };
-
     } catch (e) {
         // Log error
         logger(e, client, message);
