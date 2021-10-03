@@ -11,9 +11,9 @@ const typeNames = {
   GUILD_PRIVATE_THREAD: 'Private Thread',
   GUILD_PUBLIC_THREAD: 'Public Thread',
   UNKNOWN: 'Unknown'
-}
+};
 
 module.exports = (channel) => {
-  if (!channel) throw new Error('channel cannot be undefined or empty')
+  if (!channel) throw new Error('channel cannot be undefined or empty');
   return typeNames[channel.type] ?? 'Unknown';
-}
+};
