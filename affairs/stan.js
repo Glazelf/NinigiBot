@@ -13,6 +13,8 @@ module.exports = async (client) => {
         const giphyRandom = require("giphy-random");
         const config = require("../config.json");
 
+        if (client.user.id != "592760951103684618") return;
+
         // Create cronjob
         new cron.CronJob(time, async () => {
             let guild = client.guilds.cache.get(guildID);
