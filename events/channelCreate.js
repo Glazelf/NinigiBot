@@ -30,7 +30,7 @@ module.exports = async (client, channel) => {
 
             const channelType = getChannelTypeName(channel);
 
-            let footer = newChannel.id;
+            let footer = channel.id;
             if (executor) footer = executor.tag;
 
             const createEmbed = new Discord.MessageEmbed()
