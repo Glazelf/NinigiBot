@@ -42,7 +42,7 @@ module.exports = async (client, guildBan) => {
                 target = banLog.target;
                 reason = banLog.reason;
             };
-            if (!executor) return;
+            if (!executor || !target) return;
             if (reason == null) reason = reasonUnspecified;
 
             if (target.id !== guildBan.user.id) return;

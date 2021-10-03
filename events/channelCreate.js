@@ -30,12 +30,14 @@ module.exports = async (client, channel) => {
 
             const channelType = getChannelTypeName(channel);
 
-            let footer = newChannel.id;
+            let footer = channel.id;
             if (executor) footer = executor.tag;
+
+            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${channelType} Channel Created ⭐`)
+                .setAuthor(`${channelType} Channel Created ⭐`, icon)
                 .addField(`Channel:`, `${channel} (${channel.id})`)
                 .addField(`Channel name:`, channel.name)
                 .setFooter(footer)

@@ -65,7 +65,8 @@ module.exports = async (client, message) => {
                 };
             };
 
-            let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let messageDeleteEventTitle = await getLanguageString(client, message, 'messageDeleteEventTitle');
             let messageDeleteEventData = await getLanguageString(client, message, 'messageDeleteEventData');

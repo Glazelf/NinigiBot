@@ -34,9 +34,11 @@ module.exports = async (client, oldChannel, newChannel) => {
             let footer = newChannel.id;
             if (executor) footer = executor.tag;
 
+            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
+
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${newChannelType} Channel Updated ⚒️`)
+                .setAuthor(`${newChannelType} Channel Updated ⚒️`, icon)
                 .addField(`Channel:`, `${newChannel} (${newChannel.id})`)
                 .setFooter(footer)
                 .setTimestamp();

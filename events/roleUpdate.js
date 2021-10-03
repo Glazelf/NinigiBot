@@ -30,9 +30,11 @@ module.exports = async (client, oldRole, newRole) => {
             let embedColor = newRole.hexColor;
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
+            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
+
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(embedColor)
-                .setAuthor(`Role Updated ⚒️`)
+                .setAuthor(`Role Updated ⚒️`, icon)
                 .addField(`Role:`, `${newRole} (${newRole.id})`)
                 .addField('Updated by:', `${executor} (${executor.id})`)
                 .setFooter(executor.tag)

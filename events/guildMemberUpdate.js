@@ -33,12 +33,19 @@ module.exports = async (client, member, newMember) => {
             let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
             let user = client.users.cache.get(member.id);
+
+            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
+            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+
             let updateCase = null;
             let topText = null;
             let changeText = null;
+            let image = null;
             if (member.nickname !== newMember.nickname) updateCase = "nickname";
             if (!member.premiumSince && newMember.premiumSince) updateCase = "nitroStart";
             if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
+            if (oldAvatar !== avatar) updateCase = "guildAvatar";
             if (!updateCase) return;
 
             let executor;
@@ -60,9 +67,6 @@ module.exports = async (client, member, newMember) => {
             let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
-            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
-
             switch (updateCase) {
                 case "nickname":
                     topText = `${memberUpdateNicknameEventTitle} ⚒️`;
@@ -82,6 +86,10 @@ module.exports = async (client, member, newMember) => {
                     topText = `${guildBoostStopEventTitle} ⚒️`;
                     changeText = guildBoostDecay;
                     break;
+                case "guildAvatar":
+                    topText = "Updated Server Avatar ⚒️";
+                    image = avatar;
+                    break;
                 default:
                     return;
             };
@@ -89,12 +97,13 @@ module.exports = async (client, member, newMember) => {
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(topText, icon)
-                .setThumbnail(avatar)
-                .setDescription(changeText)
-                .addField(userTitle, `${user} (${user.id})`)
-                .setFooter(user.tag);
+                .setThumbnail(oldAvatar);
+            if (changeText) updateEmbed.setDescription(changeText);
+            updateEmbed.addField(userTitle, `${user} (${user.id})`)
             if (executor) updateEmbed.addField(executorTitle, `${executor} (${executor.id})`);
             updateEmbed
+                .setImage(image)
+                .setFooter(user.tag)
                 .setTimestamp();
 
             return log.send({ embeds: [updateEmbed] });
