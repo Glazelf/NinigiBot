@@ -9,13 +9,11 @@ exports.run = async (client, message, args = []) => {
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
-        // Disable because bugs
-        return sendMessage(client, message, `Buying is currently experiencing some bugs and has been disabled. For  more info: <https://github.com/Glazelf/NinigiBot/issues/132>.`);
-
         if (!args[0]) return sendMessage(client, message, `You need to provide the name of the item you want to buy.`);
-        const commandArgs = args[0].match(/(\w+)\s*([\s\S]*)/);
+        const commandArgs = args.join(' ').match(/(\w+(?:\s+\w+)*)/);
+
         for (let i = 0; i < shops.length; i++) {
-            const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs } } });
+            const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs[1] } } });
             if (item) {
                 if (item.cost === 0) return sendMessage(client, message, `That item doesn't exist.`);
                 let dbBalance = await bank.currency.getBalance(message.member.id);
@@ -57,7 +55,7 @@ module.exports.config = {
     name: "buy",
     aliases: [],
     description: "Buy an item from the shop.",
-    optiosn: [{
+    options: [{
         name: "item-name",
         type: "STRING",
         description: "The name of the item you want to buy.",
