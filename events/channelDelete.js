@@ -33,9 +33,11 @@ module.exports = async (client, channel) => {
             let footer = channel.id;
             if (executor) footer = executor.tag;
 
+            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
+
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${channelType} Channel Deleted ❌`)
+                .setAuthor(`${channelType} Channel Deleted ❌`, icon)
                 .addField(`Channel:`, channel.name)
                 .setFooter(footer)
                 .setTimestamp();

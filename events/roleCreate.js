@@ -29,11 +29,13 @@ module.exports = async (client, role) => {
             const permissionSerializer = require('../util/permissionBitfieldSerializer');
             const permissions = permissionSerializer(role.permissions);
 
+            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
+
             // the roleCreated event fires immediately upon clicking the add role button,
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Role Created ⭐`)
+                .setAuthor(`Role Created ⭐`, icon)
                 .addField(`Role:`, `${role} (${role.id})`)
                 .addField(`Role name:`, role.name)
                 .addField('Created by:', `${executor} (${executor.id})`)
