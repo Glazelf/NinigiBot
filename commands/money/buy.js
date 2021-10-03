@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
         if (!args[0]) return sendMessage(client, message, `You need to provide the name of the item you want to buy.`);
-        const commandArgs = args?.join(' ').match(/(\w+(?:\s+\w+)*)/);
+        const commandArgs = args.join(' ').match(/(\w+(?:\s+\w+)*)/);
 
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs[1] } } });
