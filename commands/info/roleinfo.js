@@ -41,7 +41,8 @@ exports.run = async (client, message, args = []) => {
 
         if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
 
-        // Role color
+        // Role visuals
+        let icon = role.iconURL(globalVars.displayAvatarSettings);
         let embedColor = role.hexColor;
         if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
@@ -59,7 +60,8 @@ exports.run = async (client, message, args = []) => {
         const roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor(`${role.name} (${role.id})`, avatar)
-            .addField("Tag:", role.toString(), true)
+            .setThumbnail(icon)
+            .addField("Role:", role.toString(), true)
             .addField("Color:", role.hexColor, true)
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
