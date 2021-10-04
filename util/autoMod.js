@@ -27,7 +27,7 @@ module.exports = async (client, message) => {
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
     const scamLinks = [
-        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discorcl|dicsord).(com|org|ru|click|gift).*", // Discord gift links
+        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discorcl|dicsord|dlscord).(com|org|ru|click|gift).*", // Discord gift links
         ".*http(.)?:\/\/[^s]*.ru.*" // Russian websites, should disable this for russian discords lol
     ];
     let scamRegex = new RegExp(scamLinks.join("|"), "i");
