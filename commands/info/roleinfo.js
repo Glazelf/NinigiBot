@@ -21,7 +21,7 @@ exports.run = async (client, message, args = []) => {
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
         if (!role) role = message.guild.roles.cache.get(input);
 
-        if (input.toLowerCase() == "none") {
+        if (input.toLowerCase() == "none" && !role) {
             let fetchedMembers = await message.guild.members.fetch();
             let noRoleMembers = 0;
             fetchedMembers.forEach(member => {
