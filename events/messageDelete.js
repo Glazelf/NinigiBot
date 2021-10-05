@@ -60,7 +60,12 @@ module.exports = async (client, message) => {
                 };
             };
 
-            let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar;
+            if (message.member) {
+                avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            } else {
+                avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            };
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
