@@ -113,11 +113,11 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
 
             if (member.roles.cache.has(role.id)) {
                 await member.roles.remove(role);
-                return sendMessage(client, message, `You no longer have the **${role.name}** role, ${member}. *booo*`);
+                return sendMessage(client, message, `Removed you from the **${role.name}** role, **${member.user.tag}**!`);
 
             } else {
                 await member.roles.add(role);
-                return sendMessage(client, message, `You now have the **${role.name}** role, ${member}! Yay!`);
+                return sendMessage(client, message, `Gave you the **${role.name}** role, **${member.user.tag}**.`);
             };
         };
 
