@@ -4,7 +4,6 @@
   "description": "NinigiBot for Discord",
   "main": "forever.js",
   "dependencies": {
-    "@discordjs/uws": "^11.149.1",
     "@mapbox/node-pre-gyp": "^1.0.5",
     "@sapphire/async-queue": "^1.1.2",
     "bufferutil": "^4.0.3",
