@@ -33,7 +33,7 @@
     "y18n": "^5.0.5"
   },
   "devDependencies": {
-    "mocha": "^6.2.3"
+    "mocha": "^9.1.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
