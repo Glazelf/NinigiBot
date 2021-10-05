@@ -12,6 +12,11 @@ exports.run = async (client, message, args = []) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
+        // Check if icons are possible
+        let iconsAllowed = false;
+        let nitroLevel2Req = 7;
+        if (message.guild.premiumSubscriptionCount > nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
+
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
@@ -58,7 +63,7 @@ exports.run = async (client, message, args = []) => {
             });
 
             try {
-                if (messageImage) personalRole.setIcon(messageImage);
+                if (messageImage && iconsAllowed) personalRole.setIcon(messageImage);
             } catch (e) {
                 // console.log(e);
             };
@@ -99,7 +104,7 @@ exports.run = async (client, message, args = []) => {
 
             let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
             try {
-                if (messageImage) createdRole.setIcon(messageImage);
+                if (messageImage && iconsAllowed) createdRole.setIcon(messageImage);
             } catch (e) {
                 // console.log(e);
             };
