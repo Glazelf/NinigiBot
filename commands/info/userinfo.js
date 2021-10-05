@@ -93,7 +93,7 @@ exports.run = async (client, message, args = [], language) => {
             for (const act in activities) {
                 if (activities[act].name === 'Custom Status') {
                     let emoji = null;
-                    if (activities[act].emoji) emoji = await client.emojis.fetch(activities[act].emoji.id);
+                    if (activities[act].emoji) emoji = await client.emojis.cache.get(activities[act].emoji.id);
                     if (emoji) customStatus = emoji.toString() + ' ';
                     // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
                     if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
