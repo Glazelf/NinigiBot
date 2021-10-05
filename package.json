@@ -6,7 +6,7 @@
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
     "@sapphire/async-queue": "^1.1.5",
-    "bufferutil": "^4.0.3",
+    "bufferutil": "^4.0.4",
     "canvas": "^2.8.0",
     "cron": "^1.8.2",
     "discord.js": "^13.2.0-dev.1632916991.fe95005",
