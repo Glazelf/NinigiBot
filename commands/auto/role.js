@@ -63,9 +63,9 @@ exports.run = async (client, message, args = []) => {
                     let currentRole = await message.guild.roles.fetch(value[1].role.id);
                     if (!currentRole) continue;
                     rolesArray.push({
-                        label: value[1].role.name,
-                        value: value[1].role.id,
-                        description: value[1].description
+                        label: currentRole.name,
+                        value: currentRole.id,
+                        description: value[1].description,
                     });
                 };
                 if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in this server.`);
