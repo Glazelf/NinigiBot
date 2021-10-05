@@ -1,5 +1,6 @@
 version: 2
-package-ecosystem: "npm"
-directory: "/"
-schedule:
-interval: "daily"
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
