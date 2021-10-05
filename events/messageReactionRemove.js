@@ -24,7 +24,7 @@ module.exports = async (client, messageReaction) => {
 
         let avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         let isReply = false;
-        let replyMessage
+        let replyMessage;
         if (targetMessage.reference) isReply = true;
 
         if (isReply) {
