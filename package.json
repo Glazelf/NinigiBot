@@ -4,9 +4,8 @@
   "description": "NinigiBot for Discord",
   "main": "forever.js",
   "dependencies": {
-    "@discordjs/uws": "^10.149.0",
     "@mapbox/node-pre-gyp": "^1.0.5",
-    "@sapphire/async-queue": "^1.1.2",
+    "@sapphire/async-queue": "^1.1.5",
     "bufferutil": "^4.0.3",
     "canvas": "^2.8.0",
     "cron": "^1.8.2",
@@ -25,16 +24,16 @@
     "owoify-js": "^1.0.7",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^3.3.2",
-    "pureimage": "^0.3.2",
+    "pureimage": "^0.3.5",
     "sequelize": "^6.3.4",
     "sqlite3": "^5.0.2",
     "steamapi": "^2.1.3",
     "tslib": "^2.3.0",
-    "utf-8-validate": "^5.0.3",
+    "utf-8-validate": "^5.0.6",
     "y18n": "^5.0.5"
   },
   "devDependencies": {
-    "mocha": "^6.2.3"
+    "mocha": "^9.1.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

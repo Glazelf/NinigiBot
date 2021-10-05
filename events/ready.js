@@ -24,7 +24,8 @@ module.exports = async (client) => {
                     client.application?.commands.create(command.config);
                     // console.log(`Loaded interaction: ${command.config.name} ✔`);
                     // Server exclusive interactions:
-                    // client.guilds.cache.get(client.config.botServerID)?.commands.create(command.config);
+                    // let guild = await client.guilds.fetch(client.config.botServerID);
+                    // if (guild) guild.commands.create(command.config);
                 } catch (e) {
                     console.log(e);
                 };

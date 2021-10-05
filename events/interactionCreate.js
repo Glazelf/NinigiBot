@@ -129,10 +129,10 @@ module.exports = async (client, interaction) => {
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        return sendMessage(client, interaction, `Removed **${role.name}** from your roles!`);
+                                        return sendMessage(client, interaction, `Removed you from the **${role.name}** role!`);
                                     } else {
                                         await interaction.member.roles.add(role);
-                                        return sendMessage(client, interaction, `Added **${role.name}** to your roles!`);
+                                        return sendMessage(client, interaction, `Gave you the **${role.name}** role!`);
                                     };
                                 } catch (e) {
                                     return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, null, null, false);

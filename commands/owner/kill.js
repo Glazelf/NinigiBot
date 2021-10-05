@@ -31,7 +31,8 @@ exports.run = async (client, message, args = []) => {
         // });
 
         // Delete SAC specific commands
-        // await client.guilds.cache.get(client.config.botServerID).commands.set([]);
+        // let guild = await client.guilds.fetch(client.config.botServerID);
+        // await guild.commands.set([]);
 
         forever.stopAll();
 

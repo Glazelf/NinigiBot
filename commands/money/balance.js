@@ -14,7 +14,7 @@ exports.run = async (client, message, args = []) => {
         // Get user
         if (!target) {
             let userID = args[0];
-            target = client.users.cache.get(userID);
+            target = await client.users.fetch(userID);
         };
 
         if (!target) target = message.member.user;
