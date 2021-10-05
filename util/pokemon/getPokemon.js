@@ -4,7 +4,6 @@ module.exports = async (client, message, response) => {
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
-        const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
         var P = new Pokedex();
         const correctionDisplay = require('../../objects/pokemon/correctionDisplay.json');
