@@ -20,7 +20,7 @@ exports.run = async (client, message, args = []) => {
 
         if (!transferTarget) {
             let userID = args[0];
-            transferTarget = client.users.cache.get(userID);
+            transferTarget = await client.users.fetch(userID);
         };
 
         if (!transferTarget) return sendMessage(client, message, `That's not a valid target.`);
