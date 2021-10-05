@@ -15,7 +15,7 @@ module.exports = async (client) => {
         // Create cron job
         new cron.CronJob(time, async () => {
             let globalVars = require('../events/ready');
-            let guild = client.guilds.cache.get(guildID);
+            let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
             const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
             if (!birthdayRole) return;

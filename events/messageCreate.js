@@ -34,7 +34,7 @@ module.exports = async (client, message) => {
             if (message.author.bot) return;
 
             // Send message contents to dm channel
-            let DMChannel = client.channels.cache.get(client.config.devChannelID);
+            let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const dmEmbed = new Discord.MessageEmbed()

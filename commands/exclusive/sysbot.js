@@ -9,24 +9,24 @@ exports.run = async (client, message) => {
         if (message.guild.id !== client.config.botServerID) return;
 
         // Bot hosts
-        let Glaze = client.users.cache.get(client.config.ownerID);
-        let Flare = client.users.cache.get("592353588685307914");
-        let Artic = client.users.cache.get("353184551096418316");
-        // let Shion = client.users.cache.get("685608164506337351");
+        let Glaze = await client.users.fetch(client.config.ownerID);
+        let Flare = await client.users.fetch("592353588685307914");
+        let Artic = await client.users.fetch("353184551096418316");
+        // let Shion = client.users.fetch("685608164506337351");
         // let Xenoseon = "Xenoseon#1604"; // 268790953572040704
 
         // Bots
         // PKM
-        let Konohana = message.guild.members.cache.get("696086046685003786");
-        let Flar3 = message.guild.members.cache.get("734052437811527784");
-        let Glaceon = message.guild.members.cache.get("777555048104067082");
-        // let BettyBot = message.guild.members.cache.get("790506481630969869");
-        // let Arkos = message.guild.members.cache.get("702604221714923691");
-        // let Miku = message.guild.members.cache.get("752902915508666499");
+        let Konohana = await message.guild.members.fetch("696086046685003786");
+        let Flar3 = await message.guild.members.fetch("734052437811527784");
+        let Glaceon = await message.guild.members.fetch("777555048104067082");
+        // let BettyBot = await message.guild.members.fetch("790506481630969869");
+        // let Arkos = await message.guild.members.fetch("702604221714923691");
+        // let Miku = await message.guild.members.fetch("752902915508666499");
         // ACNH
-        let Ribbot = message.guild.members.cache.get("739823632267608135");
-        let ACFlare = message.guild.members.cache.get("792174299716386867");
-        // let MagicDoctor = message.guild.members.cache.get("797553861211586654");
+        let Ribbot = await message.guild.members.fetch("739823632267608135");
+        let ACFlare = await message.guild.members.fetch("792174299716386867");
+        // let MagicDoctor = await message.guild.members.fetch("797553861211586654");
 
         let onlineString = "**Online**";
         let offlineString = "Offline";

@@ -50,7 +50,7 @@ exports.run = async (client, message, args = []) => {
             // Select Menu
             if (!args[0] && roleText.length <= selectOptionLimit) {
                 await db.forEach(async (eligibleRole) => {
-                    let currentRole = await message.guild.roles.cache.get(eligibleRole.role_id);
+                    let currentRole = await message.guild.roles.fetch(eligibleRole.role_id);
                     if (!currentRole) return;
                     roles.push({
                         role: currentRole,
@@ -60,7 +60,7 @@ exports.run = async (client, message, args = []) => {
                 });
                 roles = Object.entries(roles).sort((a, b) => b[1].role.position - a[1].role.position);
                 for await (const [key, value] of Object.entries(roles)) {
-                    let currentRole = await message.guild.roles.cache.get(value[1].role.id);
+                    let currentRole = await message.guild.roles.fetch(value[1].role.id);
                     if (!currentRole) continue;
                     rolesArray.push({
                         label: value[1].role.name,

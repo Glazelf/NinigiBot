@@ -52,7 +52,7 @@ module.exports = async (client, messageReaction) => {
 
         if (messageReaction.count == 0 && messageDB) {
             // Delete
-            await client.channels.cache.get(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
+            await client.channels.fetch(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
             await messageDB.destroy();
             return;
         } else if (messageDB) {

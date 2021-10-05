@@ -29,7 +29,7 @@ exports.run = async (client, message, args) => {
 
         if (!user && args[1]) {
             let userID = args[1];
-            user = await client.users.cache.get(userID);
+            user = await client.users.fetch(userID);
         };
 
         let author = message.member.user;

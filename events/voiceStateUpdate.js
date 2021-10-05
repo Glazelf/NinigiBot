@@ -6,7 +6,7 @@ module.exports = async (client, oldMember, newMember) => {
         if (oldMember.channelId) oldID = oldMember.channelId;
         if (newMember.channelId) newID = newMember.channelId;
 
-        let user = client.users.cache.get(newMember.id);
+        let user = await client.users.fetch(newMember.id);
         if (user.bot) return;
         let VCTextChannel = await VCTextChannels.findOne({ where: { server_id: newMember.guild.id } });
         if (!VCTextChannel) return;
@@ -14,8 +14,8 @@ module.exports = async (client, oldMember, newMember) => {
         let textChannel = await newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
         if (!textChannel) return;
         await textChannel.fetch();
-        let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
-        if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.cache.get(oldMember.id);
+        let channelPermOverride = await textChannel.permissionOverwrites.fetch(newMember.id);
+        if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.fetch(oldMember.id);
 
         // Joined VC
         if (newID) {

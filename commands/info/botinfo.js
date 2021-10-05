@@ -100,7 +100,7 @@ exports.run = async (client, message) => {
         });
 
         // Owner
-        let owner = client.users.cache.get(client.config.ownerID);
+        let owner = await client.users.fetch(client.config.ownerID);
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
