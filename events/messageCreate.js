@@ -123,7 +123,12 @@ module.exports = async (client, message) => {
             // Ignore messages sent in a disabled channel
             if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
 
-            await message.channel.sendTyping();
+            try {
+                await message.channel.sendTyping();
+            } catch (e) {
+                // console.log(e);
+            };
+
             await cmd.run(client, message, args);
         } else return;
 
