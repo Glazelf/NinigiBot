@@ -30,7 +30,7 @@ module.exports = async (client, oldRole, newRole) => {
             let embedColor = newRole.hexColor;
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
-            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = newRole.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(embedColor)

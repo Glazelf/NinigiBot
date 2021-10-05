@@ -18,8 +18,8 @@ exports.run = async (client, message, args = [], language) => {
             member = message.mentions.members.first();
         } else {
             if (!args[0]) return sendMessage(client, message, `You need to provide a user to ban.`);
-            user = client.users.cache.get(args[0]);
-            member = message.guild.members.cache.get(args[0]);
+            user = await client.users.fetch(args[0]);
+            member = await message.guild.members.fetch(args[0]);
         };
 
         let banReturn = null;
@@ -46,7 +46,7 @@ exports.run = async (client, message, args = [], language) => {
             if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
             // See if target isn't already banned
-            let existingBan = await message.guild.bans.cache.get(member.id)
+            let existingBan = await message.guild.bans.fetch(member.id)
             if (existingBan) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
 
             // Ban
@@ -64,7 +64,7 @@ exports.run = async (client, message, args = [], language) => {
         } else {
             let memberID = args[0];
 
-            let existingBan = await message.guild.bans.cache.get(memberID);
+            let existingBan = await message.guild.bans.fetch(memberID);
             if (existingBan) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;

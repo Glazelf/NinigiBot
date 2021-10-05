@@ -29,7 +29,7 @@ module.exports = async (client, member) => {
             let user = client.users.cache.get(member.id);
 
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
-            let avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let daysCreated = await checkDays(client, user.createdAt, language);
 

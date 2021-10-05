@@ -26,13 +26,28 @@ exports.run = async (client, message, args = [], language) => {
                 typeCapitalized = "feet";
                 typeReturn = "meters";
                 break;
+            case "gallons":
+                conversionReturn = conversionValue * 3.78541;
+                typeCapitalized = "gallons";
+                typeReturn = "liters";
+                break;
+            case "horsepower":
+                conversionReturn = conversionValue * 745.7;
+                typeCapitalized = "horsepower";
+                typeReturn = "watts";
+                break;
+            case "inches":
+                conversionReturn = conversionValue * 2.54;
+                typeCapitalized = "inches";
+                typeReturn = "centimeters";
+                break;
             case "lbs":
                 conversionReturn = conversionValue * 0.453592;
                 typeCapitalized = "lbs";
                 typeReturn = "kilos";
                 break;
             default:
-                return sendMessage(client, message, `You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet and lbs.`);
+                return sendMessage(client, message, `You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet, gallons, horsepower, inches, and lbs.`);
         };
         conversionReturn = Math.round(conversionReturn * 100) / 100;
 
@@ -65,6 +80,33 @@ module.exports.config = {
         options: [{
             name: "amount",
             description: "The amount of feet.",
+            type: "INTEGER"
+        }]
+    }, {
+        name: "gallons",
+        description: "Convert from gallons to liters.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of gallons.",
+            type: "INTEGER"
+        }]
+    }, {
+        name: "horsepower",
+        description: "Convert from horsepower to watts.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of horsepower.",
+            type: "INTEGER"
+        }]
+    }, {
+        name: "inches",
+        description: "Convert from inches to centimeters.",
+        type: "SUB_COMMAND",
+        options: [{
+            name: "amount",
+            description: "The amount of inches.",
             type: "INTEGER"
         }]
     }, {

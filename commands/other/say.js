@@ -31,7 +31,7 @@ exports.run = async (client, message, args = [], language) => {
         if (message.member.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
-                targetChannel = message.client.channels.cache.get(channelID);
+                targetChannel = await message.client.channels.fetch(channelID);
                 targetChannel.send({ content: remoteMessage });
                 return sendMessage(client, message, `Message succesfully sent to specified channel.`);
             } catch (e) {

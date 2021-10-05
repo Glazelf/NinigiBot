@@ -20,7 +20,7 @@ module.exports = async (client) => {
             let language = globalVars.language;
             if (dbLanguage) language = dbLanguage.language;
 
-            let guild = client.guilds.cache.get(guildID);
+            let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
             const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
             if (!birthdayRole) return;

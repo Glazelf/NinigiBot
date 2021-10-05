@@ -32,7 +32,7 @@ module.exports = async (client, member, newMember) => {
             guildBoostDecay = guildBoostDecay.replace('[guildName]', `**${member.guild.name}**`);
             let executorTitle = await getLanguageString(client, language, 'executorTitle');
 
-            let user = client.users.cache.get(member.id);
+            let user = client.users.fetch(member.id);
 
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);

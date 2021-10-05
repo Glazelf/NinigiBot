@@ -20,8 +20,8 @@ exports.run = async (client, message, args = [], language) => {
 
         if (!user) {
             let userID = args[0];
-            user = client.users.cache.get(userID);
-            member = message.guild.members.cache.get(userID);
+            user = await client.users.fetch(userID);
+            member = await message.guild.members.fetch(userID);
         };
 
         if (!user || !member) user = message.member.user;
