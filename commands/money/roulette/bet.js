@@ -4,7 +4,6 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../../events/ready');
     try {
         const sendMessage = require('../../../util/sendMessage');
-        const { set } = require('lodash');
         const roulette = require('../../../affairs/roulette')
         const { Prefixes } = require('../../../database/dbObjects');
         const { bank } = require('../../../database/bank');

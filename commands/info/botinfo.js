@@ -1,5 +1,3 @@
-const { forEach } = require('lodash');
-
 exports.run = async (client, message) => {
     const logger = require('../../util/logger');
     // Import globals
