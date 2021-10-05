@@ -1,6 +1,5 @@
 let botjsFunction = async function botjsFunction() {
     const Discord = require('discord.js');
-    let commando = require('discord.js-commando');
     const Enmap = require("enmap");
     const fs = require("fs");
     const path = require("path");

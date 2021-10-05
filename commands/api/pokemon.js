@@ -6,7 +6,6 @@ exports.run = async (client, message, args = [], language) => {
         const sendMessage = require('../../util/sendMessage');
         const getLanguageString = require('../../util/getLanguageString');
         const Discord = require("discord.js");
-        const fetch = require("node-fetch");
         var Pokedex = require('pokedex-promise-v2');
         var P = new Pokedex();
         const correctionName = require('../../objects/pokemon/correctionName.json');
