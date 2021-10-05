@@ -2,5 +2,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    assignees: ["glazelf"]
+    open-pull-requests-limit: 5
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "saturday"
+      time: "09:00"
+      timezone: "Europe/Amsterdam"
