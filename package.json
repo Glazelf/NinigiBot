@@ -19,7 +19,7 @@
     "path": "^0.12.7",
     "pokedex-promise-v2": "^3.3.2",
     "pureimage": "^0.3.5",
-    "sequelize": "^6.3.4",
+    "sequelize": "^6.6.5",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
