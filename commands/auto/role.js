@@ -46,7 +46,7 @@ exports.run = async (client, message, args = []) => {
         let roleHelpMessage = "";
         let rolesArray = [];
 
-        if (!args[0] || args[0] == "help") {
+        if (!args[0]) {
             // Select Menu
             if (!args[0] && roleText.length <= selectOptionLimit) {
                 await db.forEach(async (eligibleRole) => {
