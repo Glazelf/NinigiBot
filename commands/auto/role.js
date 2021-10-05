@@ -121,10 +121,6 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
             };
         };
 
-        function selectMenu() {
-
-        };
-
     } catch (e) {
         // Log error
         logger(e, client, message);
