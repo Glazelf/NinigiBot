@@ -56,7 +56,7 @@ CurrencyShop.prototype.toString = function () {
     return `${this.name}: ${this.cost}💰, ${this.usage}`
 };
 
-Equipments.prototype.toString = async function () {
+Equipments.prototype.toString = function () {
     let food = numberParser(this.food * 100);
     let sleep = numberParser(this.sleep * 100);
     let friendship = numberParser(this.friendship * 100);
