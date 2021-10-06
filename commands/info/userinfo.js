@@ -45,7 +45,7 @@ exports.run = async (client, message, args = []) => {
         let switchCode = await bank.currency.getSwitchCode(user.id);
 
         let birthday = await bank.currency.getBirthday(user.id);
-        let birthdayParsed = await parseDate(birthday);
+        let birthdayParsed = parseDate(birthday);
 
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
