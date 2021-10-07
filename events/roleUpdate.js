@@ -61,6 +61,16 @@ module.exports = async (client, oldRole, newRole) => {
                     .addField(`New permissions:`, newPermissions.join(', '));
             };
 
+            if (oldRole.icon !== newRole.icon) {
+                let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
+                let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
+                console.log(newIcon)
+                updateEmbed
+                    .setDescription(`Icon updated.`)
+                    .setThumbnail(oldIcon)
+                    .setImage(newIcon);
+            };
+
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
