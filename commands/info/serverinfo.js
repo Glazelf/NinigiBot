@@ -96,7 +96,7 @@ exports.run = async (client, message) => {
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL({ format: "png", size: 256 });
+        if (guild.bannerURL()) banner = guild.bannerURL(globalVars.displayAvatarSettings);
 
         let guildOwner = await guild.fetchOwner();
 
