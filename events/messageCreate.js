@@ -52,7 +52,7 @@ module.exports = async (client, message) => {
                 .setFooter(message.author.tag)
                 .setTimestamp();
 
-            let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: profileButtons }
+            let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
 
             if (message.content.indexOf(prefix) == 0) {
                 try {
