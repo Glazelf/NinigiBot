@@ -90,7 +90,7 @@
     "roleUnmanagableIntegration": "I can't manage the [roleName] role because it is being automatically managed by an integration.",
     "roleUnmanagablePermissions": "I do not have permission to manage the [roleName] role.",
     "stanAffairDescription": "Today's most stannable person is [userTag]!",
-    "starboardMessageContextTitle": "Context:",
+    "messageContextTitle": "Context:",
     "starboardMessageSentData": "By [member] in [channel]",
     "starboardMessageSentTitle": "Sent:",
     "timeCreatedTitle": "Created At:",

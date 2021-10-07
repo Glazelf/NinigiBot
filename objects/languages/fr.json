@@ -90,7 +90,7 @@
     "roleUnmanagableIntegration": "Je ne peux pas gérer le rôle [roleName] car il est géré automatiquement par une intégration.",
     "roleUnmanagablePermissions": "Je n'ai pas les permissions de gérer le rôle [roleName].",
     "stanAffairDescription": "La personne la plus stable du jour est [userTag]!",
-    "starboardMessageContextTitle": "Contexte :",
+    "messageContextTitle": "Contexte :",
     "starboardMessageSentData": "Par [member] dans [channel]",
     "starboardMessageSentTitle": "Envoyé :",
     "timeCreatedTitle": "Créé le :",

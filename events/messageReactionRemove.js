@@ -49,12 +49,12 @@ module.exports = async (client, messageReaction) => {
         let starboardMessageSentTitle = await getLanguageString(client, language, 'starboardMessageSentTitle');
         let starboardMessageSentData = await getLanguageString(client, language, 'starboardMessageSentData');
         starboardMessageSentData = starboardMessageSentData.replace('[member]', targetMessage.author).replace('[channel]', targetMessage.channel);
-        let starboardMessageContextTitle = await getLanguageString(client, language, 'starboardMessageContextTitle');
+        let messageContextTitle = await getLanguageString(client, language, 'messageContextTitle');
         let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
 
         // Buttons
         let starButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: starboardMessageContextTitle, style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+            .addComponents(new Discord.MessageButton({ label: messageContextTitle, style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
 
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
