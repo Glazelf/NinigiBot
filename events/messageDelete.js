@@ -26,7 +26,7 @@ module.exports = async (client, message) => {
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) executor = deleteLog.executor;
-            if (deleteLog.extra.channel != message.channel || executor.target.id != message.member.id) executor = null
+            if (deleteLog.extra.channel != message.channel || deleteLog.target.id != message.member.id || deleteLog.createdTimestamp < (Date.now() - 5000)) executor = null;
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) executor = null;
@@ -60,7 +60,12 @@ module.exports = async (client, message) => {
                 };
             };
 
-            let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar;
+            if (message.member) {
+                avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            } else {
+                avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            };
 
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

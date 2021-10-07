@@ -1,4 +1,4 @@
-module.exports = async (day, month, year) => {
+module.exports = (day, month, year) => {
     return `${parseMonth(month)} ${day}, ${year}`;
 };
 

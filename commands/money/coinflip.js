@@ -29,7 +29,7 @@ exports.run = async (client, message, args = []) => {
         if (amount == "quarter") amount = balance / 4;
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
-        if (amount == "random") amount = await randomNumber(1, balance);
+        if (amount == "random") amount = randomNumber(1, balance);
         if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
 
         // Enforce flooring

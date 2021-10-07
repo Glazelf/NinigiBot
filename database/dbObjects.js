@@ -58,10 +58,10 @@ CurrencyShop.prototype.toString = function () {
     return `${this.name}: ${this.cost}💰, ${this.usage}`
 };
 
-Equipments.prototype.toString = async function () {
-    let food = await numberParser(this.food * 100);
-    let sleep = await numberParser(this.sleep * 100);
-    let friendship = await numberParser(this.friendship * 100);
+Equipments.prototype.toString = function () {
+    let food = numberParser(this.food * 100);
+    let sleep = numberParser(this.sleep * 100);
+    let friendship = numberParser(this.friendship * 100);
     let description = `${this.name}: ${this.cost}💰,`;
     if (this.regen) description += ` recovers ${this.regen * 100}% points per turn,`;
     if (this.food) description += ` ${food}% food,`;
