@@ -27,7 +27,11 @@ exports.run = async (client, message, args = []) => {
         };
         if (!member) {
             let memberID = args[0];
-            member = await message.guild.members.fetch(memberID);
+            try {
+                member = await message.guild.members.fetch(memberID);
+            } catch (e) {
+                // console.log(e);
+            };
             if (!member) member = message.guild.members.cache.find(member => member.user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);

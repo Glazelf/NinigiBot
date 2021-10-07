@@ -46,7 +46,16 @@ module.exports = async (client, message, newMessage) => {
                 };
             };
 
-            let avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar;
+            if (newMessage.member) {
+                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            } else {
+                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            };
+
+            // Buttons
+            let updateButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
@@ -57,12 +66,11 @@ module.exports = async (client, message, newMessage) => {
                 .addField(`After:`, newMessageContent, false)
             if (isReply) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
-                .addField(`Jump to message:`, `[Link](${message.url})`, false)
                 .setImage(messageImage)
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
 
-            return log.send({ embeds: [updateEmbed] });
+            return log.send({ embeds: [updateEmbed], components: [updateButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {

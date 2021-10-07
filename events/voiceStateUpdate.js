@@ -14,8 +14,8 @@ module.exports = async (client, oldMember, newMember) => {
         let textChannel = await newMember.guild.channels.cache.find(channel => channel.id == VCTextChannel.channel_id);
         if (!textChannel) return;
         await textChannel.fetch();
-        let channelPermOverride = await textChannel.permissionOverwrites.fetch(newMember.id);
-        if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.fetch(oldMember.id);
+        let channelPermOverride = await textChannel.permissionOverwrites.cache.get(newMember.id);
+        if (!channelPermOverride) channelPermOverride = await textChannel.permissionOverwrites.cache.get(oldMember.id);
 
         // Joined VC
         if (newID) {

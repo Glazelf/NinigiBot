@@ -12,7 +12,13 @@ exports.run = async (client, message, args = []) => {
         let textMessage = args.slice(1).join(" ");
         const userID = args[0];
 
-        let targetUser = await client.users.fetch(userID);
+        let targetUser;
+        try {
+            targetUser = await client.users.fetch(userID);
+        } catch (e) {
+            // console.log(e);
+        };
+
         if (!targetUser) {
             return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
         };

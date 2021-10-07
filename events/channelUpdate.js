@@ -34,7 +34,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             let footer = newChannel.id;
             if (executor) footer = executor.tag;
 
-            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
