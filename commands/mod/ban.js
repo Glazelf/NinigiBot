@@ -17,8 +17,17 @@ exports.run = async (client, message, args = []) => {
             member = message.mentions.members.first();
         } else {
             if (!args[0]) return sendMessage(client, message, `You need to provide a user to ban.`);
-            user = await client.users.fetch(args[0]);
-            member = await message.guild.members.fetch(args[0]);
+            try {
+                user = await client.users.fetch(args[0]);
+            } catch (e) {
+                // console.log(e);
+            };
+            try {
+                member = await message.guild.members.fetch(args[0]);
+            } catch (e) {
+                // console.log(e);
+            };
+
         };
 
         let banReturn = null;
