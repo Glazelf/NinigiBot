@@ -72,7 +72,12 @@ exports.run = async (client, message, args = []) => {
         } else {
             let memberID = args[0];
 
-            let existingBan = await message.guild.bans.fetch(memberID);
+            let existingBan;
+            try {
+                existingBan = await message.guild.bans.fetch(memberID);
+            } catch (e) {
+                // console.log(e);
+            };
             if (existingBan) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
