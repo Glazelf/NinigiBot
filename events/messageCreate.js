@@ -55,7 +55,7 @@ module.exports = async (client, message) => {
                     return DMChannel.send({ embeds: [dmEmbed] });
                 };
             };
-            return DMChannel.send({ embeds: [dmEmbed] });
+            return DMChannel.send({ content: message.author.id, embeds: [dmEmbed] });
         };
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
