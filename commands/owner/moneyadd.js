@@ -21,7 +21,11 @@ exports.run = async (client, message, args = []) => {
 
         if (!transferTarget) {
             let userID = args[0];
-            transferTarget = await client.users.fetch(userID);
+            try {
+                transferTarget = await client.users.fetch(userID);
+            } catch (e) {
+                // console.log(e);
+            };
         };
 
         if (!transferTarget) return sendMessage(client, message, `That's not a valid target.`);

@@ -1,5 +1,3 @@
-const { get } = require('lodash');
-
 module.exports = async (client, birthday, language) => {
     // Import globals
     let globalVars = require('../events/ready');

@@ -43,8 +43,8 @@ exports.run = async (client, message, args = [], language) => {
         // Balance check
         let dbBalance = await bank.currency.getBalance(user.id);
         let userBalance = `${Math.floor(dbBalance)}${globalVars.currency}`;
-        let switchCode = bank.currency.getSwitchCode(user.id);
-        let birthday = bank.currency.getBirthday(user.id);
+        let switchCode = await bank.currency.getSwitchCode(user.id);
+        let birthday = await bank.currency.getBirthday(user.id);
         let birthdayParsed = await parseDate(client, birthday, language);
 
         // Roles

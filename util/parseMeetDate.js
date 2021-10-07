@@ -1,5 +1,5 @@
 // Not translated yet, see: https://github.com/Glazelf/NinigiBot/issues/139
-module.exports = async (day, month, year) => {
+module.exports = (day, month, year) => {
     return `${parseMonth(month)} ${day}, ${year}`;
 };
 

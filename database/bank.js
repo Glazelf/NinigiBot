@@ -47,7 +47,7 @@ module.exports = {
 
                         if (!shinx) {
                             const now = new Date();
-                            meetup = await parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear());
+                            meetup = parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear());
                             shinx = await Shinx.create({ user_id: id, meetup: meetup });
                         };
                         return shinx;

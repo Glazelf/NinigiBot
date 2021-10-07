@@ -16,7 +16,11 @@ exports.run = async (client, message, args = [], language) => {
         };
         if (!transferTarget) {
             let userID = args[1];
-            transferTarget = await client.users.fetch(userID);
+            try {
+                transferTarget = await client.users.fetch(userID);
+            } catch (e) {
+                // console.log(e);
+            };
         };
         if (!transferTarget) return;
 

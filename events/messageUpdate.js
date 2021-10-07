@@ -52,7 +52,12 @@ module.exports = async (client, message, newMessage) => {
                 };
             };
 
-            let avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar;
+            if (newMessage.member) {
+                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
+            } else {
+                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            };
 
             let messageEditEventTitle = await getLanguageString(client, language, 'messageEditEventTitle');
             let messageEditEventData = await getLanguageString(client, language, 'messageEditEventData');
@@ -60,8 +65,11 @@ module.exports = async (client, message, newMessage) => {
             let updateOldTitle = await getLanguageString(client, language, 'updateOldTitle');
             let updateNewTitle = await getLanguageString(client, language, 'updateNewTitle');
             let messageReplyTitle = await getLanguageString(client, language, 'messageReplyTitle');
-            let messageJumpTitle = await getLanguageString(client, language, 'messageJumpTitle');
-            let linkString = await getLanguageString(client, language, 'linkString');
+            let messageContextTitle = await getLanguageString(client, language, 'messageContextTitle');
+
+            // Buttons
+            let updateButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: messageContextTitle, style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
@@ -72,12 +80,11 @@ module.exports = async (client, message, newMessage) => {
                 .addField(updateNewTitle, newMessageContent, false)
             if (isReply) updateEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
-                .addField(messageJumpTitle, `[${linkString}](${message.url})`, false)
                 .setImage(messageImage)
                 .setFooter(message.author.tag)
                 .setTimestamp(message.createdTimestamp);
 
-            return log.send({ embeds: [updateEmbed] });
+            return log.send({ embeds: [updateEmbed], components: [updateButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let logBotPermissionError = await getLanguageString(client, language, 'logBotPermissionError');
             return log.send({ content: logBotPermissionError });

@@ -19,7 +19,7 @@ exports.run = async (client, message, args = [], language) => {
         highNumber = parseInt(highNumber);
         if (lowNumber > highNumber) return sendMessage(client, message, `Make sure the first number is lower than the second number.`);
 
-        let randomValue = await randomNumber(lowNumber, highNumber);
+        let randomValue = randomNumber(lowNumber, highNumber);
 
         return sendMessage(client, message, `Your random number is \`${randomValue}\`.`);
 
