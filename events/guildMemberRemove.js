@@ -7,6 +7,9 @@ module.exports = async (client, member) => {
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
         const checkDays = require('../util/checkDays');
 
+        // Replace this with generic "member left" log
+        if (!member) return;
+
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
