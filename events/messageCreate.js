@@ -37,25 +37,31 @@ module.exports = async (client, message) => {
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
+            // Buttons
+            let profileButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${message.author.id}` }));
+
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor(`DM Message`, avatar)
                 .setThumbnail(avatar)
-                .addField(`Author:`, `${message.author.tag} (${message.author.id})`, false)
+                .addField(`Author:`, `${message.author} (${message.author.id})`, false)
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
-                .setFooter(client.user.tag)
+                .setFooter(message.author.tag)
                 .setTimestamp();
+
+            let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
 
             if (message.content.indexOf(prefix) == 0) {
                 try {
                     sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
                 } catch (e) {
-                    return DMChannel.send({ embeds: [dmEmbed] });
+                    return DMChannel.send(dmLogObject);
                 };
             };
-            return DMChannel.send({ embeds: [dmEmbed] });
+            return DMChannel.send(dmLogObject);
         };
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;

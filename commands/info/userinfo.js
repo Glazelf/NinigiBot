@@ -149,12 +149,12 @@ exports.run = async (client, message, args = []) => {
         let joinRank = `${await getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
 
         // Check Days
-        let daysJoined = await checkDays(member.joinedAt);
+        let daysJoined = await checkDays(member.joinedAt, client);
         let daysBoosting;
         if (member.premiumSince > 0) {
-            daysBoosting = await checkDays(member.premiumSince);
+            daysBoosting = await checkDays(member.premiumSince, client);
         };
-        let daysCreated = await checkDays(user.createdAt);
+        let daysCreated = await checkDays(user.createdAt, client);
 
         // Buttons
         let profileButtons = new Discord.MessageActionRow()
