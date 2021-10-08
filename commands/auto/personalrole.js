@@ -32,6 +32,7 @@ exports.run = async (client, message, args = []) => {
         // Color catch
         let roleColor = args[0];
         if (roleColor) {
+            roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
