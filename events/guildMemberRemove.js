@@ -31,8 +31,8 @@ module.exports = async (client, member) => {
             let kicked = false;
 
             // Check Days
-            let daysJoined = await checkDays(member.joinedAt);
-            let daysCreated = await checkDays(member.user.createdAt);
+            let daysJoined = await checkDays(member.joinedAt, client);
+            let daysCreated = await checkDays(member.user.createdAt, client);
 
             const fetchedLogs = await member.guild.fetchAuditLogs({
                 limit: 1,

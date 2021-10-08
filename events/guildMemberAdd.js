@@ -18,7 +18,7 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            let daysCreated = await checkDays(member.user.createdAt);
+            let daysCreated = await checkDays(member.user.createdAt, client);
 
             // Buttons
             let joinButtons = new Discord.MessageActionRow()
