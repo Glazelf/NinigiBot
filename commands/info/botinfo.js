@@ -14,6 +14,10 @@ exports.run = async (client, message) => {
             prefix = globalVars.prefix;
         };
 
+        let DiscordJSVersion = Discord.version;
+        if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
+        let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
+
         await client.guilds.fetch();
 
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
@@ -106,6 +110,8 @@ exports.run = async (client, message) => {
             .setThumbnail(avatar)
             .addField("Account:", client.user.toString(), true)
             .addField("Owner:", owner.tag, true)
+            .addField("Discord.JS:", DiscordJSVersion, true)
+            .addField("Memory Usage:", memoryUsage, true)
             .addField("Prefix:", prefix, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
