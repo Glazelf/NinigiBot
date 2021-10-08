@@ -64,7 +64,6 @@ module.exports = async (client, oldRole, newRole) => {
             if (oldRole.icon !== newRole.icon) {
                 let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
                 let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
-                console.log(newIcon)
                 updateEmbed
                     .setDescription(`Icon updated.`)
                     .setThumbnail(oldIcon)
