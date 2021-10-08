@@ -12,6 +12,11 @@ exports.run = async (client, message, args = []) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
+        // Check if icons are possible
+        let iconsAllowed = false;
+        let nitroLevel2Req = 7;
+        if (message.guild.premiumSubscriptionCount > nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
+
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
@@ -33,6 +38,9 @@ exports.run = async (client, message, args = []) => {
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
+        let messageImage = null;
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+
         let user = message.member.user;
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
@@ -53,6 +61,12 @@ exports.run = async (client, message, args = []) => {
                 // console.log(e);
                 return sendMessage(client, message, `An error occurred.`);
             });
+
+            try {
+                if (messageImage && iconsAllowed) personalRole.setIcon(messageImage);
+            } catch (e) {
+                // console.log(e);
+            };
 
             // Re-add role if it got removed
             if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
@@ -78,7 +92,7 @@ exports.run = async (client, message, args = []) => {
                     color: roleColor,
                     position: personalRolePosition,
                     reason: `Personal role for ${user.tag}.`,
-                })
+                });
             } catch (e) {
                 // console.log(error);
                 if (e.toString().includes("Missing Permissions")) {
@@ -89,6 +103,11 @@ exports.run = async (client, message, args = []) => {
             };
 
             let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
+            try {
+                if (messageImage && iconsAllowed) createdRole.setIcon(messageImage);
+            } catch (e) {
+                // console.log(e);
+            };
 
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
