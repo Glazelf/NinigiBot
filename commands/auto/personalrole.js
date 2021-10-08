@@ -48,10 +48,13 @@ exports.run = async (client, message, args = []) => {
         if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
+            let editReturnString = `Updated your role successfully. `;
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
             if (!args[0]) roleColor = personalRole.color;
+
+            if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
 
             personalRole.edit({
                 name: user.tag,
@@ -63,7 +66,10 @@ exports.run = async (client, message, args = []) => {
             });
 
             try {
-                if (messageImage && iconsAllowed) personalRole.setIcon(messageImage);
+                if (messageImage && iconsAllowed) {
+                    personalRole.setIcon(messageImage);
+                    editReturnString += `Image updated.`;
+                };
             } catch (e) {
                 // console.log(e);
             };
@@ -71,7 +77,7 @@ exports.run = async (client, message, args = []) => {
             // Re-add role if it got removed
             if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, `Updated your role successfully. Color set to \`#${roleColor}\`.`);
+            return sendMessage(client, message, editReturnString);
 
         } else {
             // Create role if it doesn't exit yet
