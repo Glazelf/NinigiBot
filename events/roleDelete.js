@@ -27,7 +27,7 @@ module.exports = async (client, role) => {
             };
 
             // Role color
-            let embedColor = newRole.hexColor;
+            let embedColor = role.hexColor;
             if (!embedColor || embedColor == "#000000") embedColor = globalVars.embedColor;
 
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
