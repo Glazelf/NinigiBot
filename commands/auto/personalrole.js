@@ -49,7 +49,7 @@ exports.run = async (client, message, args = []) => {
         if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
-            let editReturnString = `Updated your role successfully. `;
+            let editReturnString = `Updated your role successfully; `;
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
