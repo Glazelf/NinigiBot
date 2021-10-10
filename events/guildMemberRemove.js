@@ -7,9 +7,6 @@ module.exports = async (client, member) => {
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
         const checkDays = require('../util/checkDays');
 
-        // Replace this with generic "member left" log
-        if (!member) return;
-
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
@@ -40,8 +37,8 @@ module.exports = async (client, member) => {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 // Check Days
-                let daysJoined = await checkDays(member.joinedAt, client);
-                let daysCreated = await checkDays(member.user.createdAt, client);
+                let daysJoined = await checkDays(member.joinedAt);
+                let daysCreated = await checkDays(member.user.createdAt);
 
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
