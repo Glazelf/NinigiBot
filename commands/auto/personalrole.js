@@ -55,7 +55,7 @@ exports.run = async (client, message, args = []) => {
 
             if (!args[0]) roleColor = personalRole.color;
 
-            if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
+            if (roleColor != personalRole.color) editReturnString += `color set to \`#${roleColor}\`. `;
 
             personalRole.edit({
                 name: user.tag,
@@ -69,7 +69,7 @@ exports.run = async (client, message, args = []) => {
             try {
                 if (messageImage && iconsAllowed) {
                     personalRole.setIcon(messageImage);
-                    editReturnString += `Image updated.`;
+                    editReturnString += `image updated.`;
                 };
             } catch (e) {
                 // console.log(e);
