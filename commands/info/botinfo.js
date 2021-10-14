@@ -102,14 +102,14 @@ exports.run = async (client, message) => {
         });
 
         // Owner
-        let owner = await client.users.fetch(client.config.ownerID);
+        let owner = "Glaze#6669";
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
             .setThumbnail(avatar)
             .addField("Account:", client.user.toString(), true)
-            .addField("Owner:", owner.tag, true)
+            .addField("Author:", owner, true)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
             .addField("Prefix:", prefix, true);
