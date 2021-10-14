@@ -64,7 +64,7 @@ module.exports = async (client, message, newMessage) => {
             if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
             updateEmbed
                 .addField(`After:`, newMessageContent, false)
-            if (isReply) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+            if (isReply && replyMessage) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
                 .setImage(messageImage)
                 .setFooter(message.author.tag)
