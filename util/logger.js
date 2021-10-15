@@ -12,9 +12,7 @@ module.exports = async (exception, client, message = null) => {
 
         let user;
         if (message) {
-            if (message.member) {
-                user = message.author;
-            };
+            if (message.member) user = message.author;
         };
 
         let exceptionCode = Discord.Formatters.codeBlock(exception);
