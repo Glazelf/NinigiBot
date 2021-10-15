@@ -37,7 +37,8 @@ module.exports = async (client, member) => {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 // Check Days
-                let daysJoined = await checkDays(member.joinedAt);
+                let daysJoined = null;
+                if (member.joinedAt) daysJoined = await checkDays(member.joinedAt);
                 let daysCreated = await checkDays(member.user.createdAt);
 
                 const fetchedLogs = await member.guild.fetchAuditLogs({
@@ -62,8 +63,9 @@ module.exports = async (client, member) => {
 
                 leaveEmbed
                     .setThumbnail(avatar)
-                    .addField(`User: `, `${member} (${member.id})`, false)
-                    .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true)
+                    .addField(`User: `, `${member} (${member.id})`, false);
+                if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+                leaveEmbed
                     .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
                     .setFooter(member.user.tag);
                 if (kicked == true) {
