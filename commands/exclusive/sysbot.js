@@ -17,15 +17,15 @@ exports.run = async (client, message) => {
 
         // Bots
         // PKM
-        let Konohana = await message.guild.members.fetch("696086046685003786"); // Glaze
-        let Flar3 = await message.guild.members.fetch("734052437811527784"); // Flare
-        let Glaceon = await message.guild.members.fetch("777555048104067082"); // Artic
-        let BingoBot = await message.guild.members.fetch("898605924057481288"); // Mingus
-        // let Arkos = await message.guild.members.fetch("702604221714923691"); // Shion
+        let Konohana = await message.guild.members.fetch("696086046685003786", { force: true }); // Glaze
+        let Flar3 = await message.guild.members.fetch("734052437811527784", { force: true }); // Flare
+        let Glaceon = await message.guild.members.fetch("777555048104067082", { force: true }); // Artic
+        let BingoBot = await message.guild.members.fetch("898605924057481288", { force: true }); // Mingus
+        // let Arkos = await message.guild.members.fetch("702604221714923691", { force: true }); // Shion
         // ACNH
-        let Ribbot = await message.guild.members.fetch("739823632267608135"); // Glaze
-        let ACFlare = await message.guild.members.fetch("792174299716386867"); // Flare
-        let TimTomBot = await message.guild.members.fetch("898608573943263312"); // Mingus
+        let Ribbot = await message.guild.members.fetch("739823632267608135", { force: true }); // Glaze
+        let ACFlare = await message.guild.members.fetch("792174299716386867", { force: true }); // Flare
+        let TimTomBot = await message.guild.members.fetch("898608573943263312", { force: true }); // Mingus
 
         let onlineString = "**Online**";
         let offlineString = "Offline";
