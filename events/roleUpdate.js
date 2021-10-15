@@ -56,9 +56,11 @@ module.exports = async (client, oldRole, newRole) => {
                 const permissionSerializer = require('../util/permissionBitfieldSerializer');
                 const oldPermissions = permissionSerializer(oldRole.permissions);
                 const newPermissions = permissionSerializer(newRole.permissions);
-                updateEmbed
-                    .addField(`Old permissions:`, oldPermissions.join(', '))
-                    .addField(`New permissions:`, newPermissions.join(', '));
+                if (oldPermissions.length > 0 && newPermissions.length > 0) {
+                    updateEmbed
+                        .addField(`Old permissions:`, oldPermissions.join(', '))
+                        .addField(`New permissions:`, newPermissions.join(', '));
+                };
             };
 
             if (oldRole.icon !== newRole.icon) {
