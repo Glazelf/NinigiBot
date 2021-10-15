@@ -66,13 +66,13 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, `An error occurred.`);
             });
 
-            try {
-                if (messageImage && iconsAllowed) {
+            if (messageImage && iconsAllowed) {
+                try {
                     personalRole.setIcon(messageImage);
                     editReturnString += `image updated.`;
+                } catch (e) {
+                    // console.log(e);
                 };
-            } catch (e) {
-                // console.log(e);
             };
 
             // Re-add role if it got removed
