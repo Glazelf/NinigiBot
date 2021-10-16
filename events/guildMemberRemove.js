@@ -29,7 +29,6 @@ module.exports = async (client, member) => {
 
             let leaveEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(embedAuthor, icon)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
 
@@ -62,6 +61,7 @@ module.exports = async (client, member) => {
                     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 
                 leaveEmbed
+                    .setAuthor(embedAuthor, icon)
                     .setThumbnail(avatar)
                     .addField(`User: `, `${member} (${member.id})`, false);
                 if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
