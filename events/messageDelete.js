@@ -84,7 +84,7 @@ module.exports = async (client, message) => {
                 .setAuthor(`${messageDeleteEventTitle} ❌`, avatar)
                 .setDescription(messageDeleteEventData)
                 .addField(messageContentTitle, messageContent, false);
-            if (isReply) deleteEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
+            if (isReply && replyMessage) deleteEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
             if (executor) deleteEmbed.addField(executorTitle, `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter(message.author.tag)

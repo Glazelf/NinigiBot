@@ -61,7 +61,7 @@ module.exports = async (client, messageReaction) => {
             .setAuthor(`⭐${messageReaction.count}`, avatar)
             .setDescription(targetMessage.content)
             .addField(starboardMessageSentTitle, starboardMessageSentData, false);
-        if (isReply) starEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
+        if (isReply && replyMessage) starEmbed.addField(messageReplyTitle, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
             .setImage(messageImage)
             .setFooter(targetMessage.author.tag)

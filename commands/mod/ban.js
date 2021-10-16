@@ -55,7 +55,12 @@ exports.run = async (client, message, args = [], language) => {
             if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
             // See if target isn't already banned
-            let existingBan = await message.guild.bans.fetch(member.id)
+            let existingBan = null;
+            try {
+                existingBan = await message.guild.bans.fetch(member.id);
+            } catch (e) {
+                // console.log(e);
+            };
             if (existingBan) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
 
             // Ban

@@ -13,6 +13,11 @@ exports.run = async (client, message, args = [], language) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
+        // Check if icons are possible
+        let iconsAllowed = false;
+        let nitroLevel2Req = 7;
+        if (message.guild.premiumSubscriptionCount > nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
+
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
@@ -28,11 +33,15 @@ exports.run = async (client, message, args = [], language) => {
         // Color catch
         let roleColor = args[0];
         if (roleColor) {
+            roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
+
+        let messageImage = null;
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
         let user = message.member.user;
 
@@ -41,10 +50,13 @@ exports.run = async (client, message, args = [], language) => {
         if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
+            let editReturnString = `Updated your role successfully; `;
             let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
             if (!args[0]) roleColor = personalRole.color;
+
+            if (roleColor != personalRole.color) editReturnString += `color set to \`#${roleColor}\`. `;
 
             personalRole.edit({
                 name: user.tag,
@@ -55,10 +67,19 @@ exports.run = async (client, message, args = [], language) => {
                 return sendMessage(client, message, `An error occurred.`);
             });
 
+            if (messageImage && iconsAllowed) {
+                try {
+                    personalRole.setIcon(messageImage);
+                    editReturnString += `image updated.`;
+                } catch (e) {
+                    // console.log(e);
+                };
+            };
+
             // Re-add role if it got removed
             if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, `Updated your role successfully. Color set to \`#${roleColor}\`.`);
+            return sendMessage(client, message, editReturnString);
 
         } else {
             // Create role if it doesn't exit yet
@@ -79,7 +100,7 @@ exports.run = async (client, message, args = [], language) => {
                     color: roleColor,
                     position: personalRolePosition,
                     reason: `Personal role for ${user.tag}.`,
-                })
+                });
             } catch (e) {
                 // console.log(error);
                 if (e.toString().includes("Missing Permissions")) {
@@ -90,6 +111,11 @@ exports.run = async (client, message, args = [], language) => {
             };
 
             let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
+            try {
+                if (messageImage && iconsAllowed) createdRole.setIcon(messageImage);
+            } catch (e) {
+                // console.log(e);
+            };
 
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
