@@ -30,19 +30,20 @@ module.exports = async (client, member, newMember) => {
             if (oldAvatar !== avatar) updateCase = "guildAvatar";
             if (!updateCase) return;
 
+            let fetchedLogs
             let executor;
             try {
-                const fetchedLogs = await member.guild.fetchAuditLogs({
+                fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_UPDATE',
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
+                if (executor.id == member.id || memberUpdateLog.createdTimestamp < (Date.now() - 5000)) executor = null;
             } catch (e) {
-                console.log(e);
+                // console.log(e);
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
-            if (executor.id == member.id) executor = null;
 
             const { PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
             let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });

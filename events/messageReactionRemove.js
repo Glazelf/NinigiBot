@@ -50,7 +50,7 @@ module.exports = async (client, messageReaction) => {
             .setAuthor(`⭐${messageReaction.count}`, avatar)
             .setDescription(targetMessage.content)
             .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
-        if (isReply) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+        if (isReply && replyMessage) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
             .setImage(messageImage)
             .setFooter(targetMessage.author.tag)

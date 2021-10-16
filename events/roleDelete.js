@@ -26,10 +26,14 @@ module.exports = async (client, role) => {
                 executor = deleteExecutor;
             };
 
+            // Role color
+            let embedColor = role.hexColor;
+            if (!embedColor || embedColor == "#000000") embedColor = globalVars.embedColor;
+
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
 
             const deleteEmbed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
+                .setColor(embedColor)
                 .setAuthor(`Role Deleted ❌`, icon)
                 .addField(`Role:`, `${role.name} (${role.id})`)
                 .addField('Deleted by:', `${executor} (${executor.id})`)

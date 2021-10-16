@@ -20,54 +20,65 @@ module.exports = async (client, member) => {
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
+            let memberLeaveObject = {};
 
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
+            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
 
-            // Check Days
-            let daysJoined = await checkDays(member.joinedAt);
-            let daysCreated = await checkDays(member.user.createdAt);
-
-            const fetchedLogs = await member.guild.fetchAuditLogs({
-                limit: 1,
-                type: 'MEMBER_KICK',
-            });
-            const kickLog = fetchedLogs.entries.first();
-
-            if (kickLog) {
-                if (kickLog.createdAt > member.joinedAt) {
-                    var { executor, target, reason } = kickLog;
-                    if (target.id !== member.id) return;
-                    kicked = true;
-                    if (reason) reasonText = reason;
-                    embedAuthor = `Member Kicked 💔`;
-                };
-            };
-
-            // Buttons
-            let leaveButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
-
-            const leaveEmbed = new Discord.MessageEmbed()
+            let leaveEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(embedAuthor, icon)
-                .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${member} (${member.id})`, false)
-                .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true)
-                .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-            if (kicked == true) {
-                leaveEmbed.addField(`Reason:`, reasonText, false);
-                if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);
-            };
-            leaveEmbed
-                .setFooter(member.user.tag)
                 .setTimestamp();
 
-            return log.send({ embeds: [leaveEmbed], components: [leaveButtons] });
+            if (member) {
+                let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
+
+                // Check Days
+                let daysJoined = null;
+                if (member.joinedAt) daysJoined = await checkDays(member.joinedAt);
+                let daysCreated = await checkDays(member.user.createdAt);
+
+                const fetchedLogs = await member.guild.fetchAuditLogs({
+                    limit: 1,
+                    type: 'MEMBER_KICK',
+                });
+                const kickLog = fetchedLogs.entries.first();
+
+                if (kickLog) {
+                    if (kickLog.createdAt > member.joinedAt) {
+                        var { executor, target, reason } = kickLog;
+                        if (target.id !== member.id) return;
+                        kicked = true;
+                        if (reason) reasonText = reason;
+                        embedAuthor = `Member Kicked 💔`;
+                    };
+                };
+
+                // Buttons
+                let leaveButtons = new Discord.MessageActionRow()
+                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+
+                leaveEmbed
+                    .setAuthor(embedAuthor, icon)
+                    .setThumbnail(avatar)
+                    .addField(`User: `, `${member} (${member.id})`, false);
+                if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+                leaveEmbed
+                    .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                    .setFooter(member.user.tag);
+                if (kicked == true) {
+                    leaveEmbed.addField(`Reason:`, reasonText, false);
+                    if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);
+                };
+
+                memberLeaveObject['components'] = [leaveButtons];
+            };
+
+            memberLeaveObject['embeds'] = [leaveEmbed];
+            return log.send(memberLeaveObject);
+
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             return log.send({ content: `I lack permissions to send embeds in your log channel.` });
         } else {
