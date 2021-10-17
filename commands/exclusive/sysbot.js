@@ -46,7 +46,7 @@ exports.run = async (client, message) => {
         if (!BingoBot || !BingoBot.presence || BingoBot.presence.status == offlineStatus) BingoBotStatus = offlineString;
         if (!Ribbot || !Ribbot.presence || Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
         if (!ACFlare || !ACFlare.presence || ACFlare.presence.status == offlineStatus) ACFlareStatus = offlineString;
-        if (!TimTomBot || !TimTomBot.presence || !TimTomBot.presence.status == offlineStatus) TimTomBotStatus = offlineString;
+        if (!TimTomBot || !TimTomBot.presence || TimTomBot.presence.status == offlineStatus) TimTomBotStatus = offlineString;
 
         // Buttons
         let sysbotButtons = new Discord.MessageActionRow()
