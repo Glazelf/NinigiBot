@@ -26,7 +26,7 @@ exports.run = async (client, message, args = []) => {
         if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to kick **${user.tag}** (${user.id}).`);
 
         let reason = "Not specified.";
-        if (args[2]) {
+        if (args[1]) {
             reason = args.slice(1, args.length + 1);
             reason = reason.join(' ');
         };
