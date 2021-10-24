@@ -1,13 +1,15 @@
 module.exports = async (client, message) => {
     const Discord = require("discord.js");
     let getTime = require('../util/getTime');
+    const isAdmin = require('./isAdmin');
+    let adminBool = await isAdmin(message.member, client);
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
 
     if (!servers.includes(message.guild.id)) return;
     if (!message.member) return;
-    if (message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("KICK_MEMBERS")) return;
+    if (message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("KICK_MEMBERS") || adminBool) return;
     if (!message.content) return;
 
     let time = await getTime(client);
@@ -25,6 +27,11 @@ module.exports = async (client, message) => {
 
     let messageContentBlock = "";
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
+
+    const genericLinks = [
+        ".*http(.)?:\/\/[^s]*.*"
+    ];
+    let genericLinkRegex = new RegExp(genericLinks.join("|"), "i");
 
     const scamLinks = [
         ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl).(com|org|ru|click|gift|net).*", // Discord gift links
@@ -66,7 +73,9 @@ module.exports = async (client, message) => {
     let testRegex = new RegExp(testArray.join("|"), "i");
 
     // Scam links
-    if (scamRegex.test(message.content)) {
+    let specificScamLink = scamRegex.test(message.content);
+    let genericLinkPing = genericLinkRegex.test(message.content) && message.content.includes("@everyone") && message.mentions.everyone == false;
+    if (specificScamLink || genericLinkPing) {
         reason = "Posting scam links.";
         await ban();
         return true;
@@ -101,30 +110,54 @@ module.exports = async (client, message) => {
     async function kick() {
         if (!message.member.kickable) return;
         await message.delete();
-        await message.member.kick([`${reason} -${client.user.tag} (${time})`]);
-        await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
+
+        let dmResult = "(DM succeeded)";
+
         try {
             message.author.send({
                 content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}`
             });
-            return true;
         } catch (e) {
-            return true;
+            // console.log(e);
+            dmResult = "(DM failed)";
         };
+
+        try {
+            await message.member.kick([`${reason} -${client.user.tag} (${time})`]);
+        } catch (e) {
+            // console.log(e);
+            await message.channel.send({ content: `Failed to auto-kick **${message.author.tag}** (${message.author.id}). This is probably a permission issue.` });
+            return false;
+        };
+
+        await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+
+        return true;
     };
 
     async function ban() {
         if (!message.member.bannable) return;
-        await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
-        await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
+
+        let dmResult = "(DM succeeded)";
+
         try {
-            message.author.send({
-                content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}`
-            });
-            return true;
+            message.author.send({ content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}` });
         } catch (e) {
-            return true;
+            // console.log(e);
+            dmResult = "(DM failed)";
         };
+
+        try {
+            await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
+        } catch (e) {
+            // console.log(e);
+            await message.channel.send({ content: `Failed to auto-ban **${message.author.tag}** (${message.author.id}). This is probably a permission issue.` });
+            return false;
+        };
+
+        await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+
+        return true;
     };
 
     function test() {
