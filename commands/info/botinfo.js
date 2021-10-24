@@ -146,6 +146,8 @@ exports.run = async (client, message) => {
                 userCount += guild.memberCount;
             });
 
+            console.log(typeof userCount)
+
             // Slow but accurate method
             // var userList = [];
             // await client.guilds.cache.forEach(guild => {
