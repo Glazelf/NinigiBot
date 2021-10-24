@@ -44,7 +44,7 @@ exports.run = async (client, message) => {
                 .catch(console.error);
         } else {
             totalGuilds = client.guilds.cache.size;
-            totalMembers = await getUsers(client);
+            totalMembers = await getUsers();
         };
         let averageUsers = Math.round(totalMembers / totalGuilds);
         if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
@@ -89,7 +89,7 @@ exports.run = async (client, message) => {
         };
 
         // Calculate total user count
-        // let userCount = await getUsers(client);
+        // let userCount = await getUsers();
 
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -138,7 +138,7 @@ exports.run = async (client, message) => {
             return days + (days == 1 ? " day" : " days") + " ago";
         };
 
-        async function getUsers(client) {
+        async function getUsers() {
             // Fast but inaccurate method
             let userCount = 0;
             await client.guilds.cache.forEach(guild => {
