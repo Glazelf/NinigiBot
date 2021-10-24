@@ -98,7 +98,7 @@ exports.run = async (client, message) => {
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Channels
-        var channelCount = 0;
+        let channelCount = 0;
         client.channels.cache.forEach(channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
         });
@@ -145,12 +145,9 @@ exports.run = async (client, message) => {
             // Fast but inaccurate method
             let userCount = 0;
             await client.guilds.cache.forEach(guild => {
-                console.log(userCount)
-                console.log(guild.memberCount)
-                userCount += guild.memberCount;
+                if (!guild.memberCount) console.log(guild)
+                if (guild.memberCount) userCount += guild.memberCount;
             });
-
-            console.log(typeof userCount)
 
             // Slow but accurate method
             // var userList = [];
