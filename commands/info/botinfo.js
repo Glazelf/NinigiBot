@@ -23,11 +23,11 @@ exports.run = async (client, message) => {
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
         // let userCount = await client.users.fetch();
         // let memberFetch = await message.guild.members.fetch();
-        // console.log(userCount)
-        // console.log(Object.keys(userCount))
+        // console.log(userCount);
+        // console.log(Object.keys(userCount));
 
-        var totalGuilds = 0;
-        var totalMembers = 0;
+        let totalGuilds = 0;
+        let totalMembers = 0;
         let botVerifRequirement = 76;
 
         // Get shards (Currently not properly functional)
@@ -52,6 +52,7 @@ exports.run = async (client, message) => {
         // Get unique owner count
         let ownerPool = [];
         await client.guilds.cache.forEach(guild => {
+            console.log(guild.id)
             ownerPool.push(guild.ownerId);
         });
         let uniqueOwners = countUnique(ownerPool);
@@ -141,7 +142,7 @@ exports.run = async (client, message) => {
 
         async function getUsers() {
             // Fast but inaccurate method
-            var userCount = 0;
+            let userCount = 0;
             await client.guilds.cache.forEach(guild => {
                 userCount += guild.memberCount;
             });
