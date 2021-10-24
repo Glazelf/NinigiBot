@@ -52,6 +52,7 @@ exports.run = async (client, message) => {
         // Get unique owner count
         let ownerPool = [];
         await client.guilds.cache.forEach(guild => {
+            console.log(guild.memberCount)
             ownerPool.push(guild.ownerId);
         });
         let uniqueOwners = countUnique(ownerPool);
@@ -102,11 +103,6 @@ exports.run = async (client, message) => {
 
         // Owner
         let owner = "Glaze#6669";
-
-        console.log(uniqueOwners)
-        console.log(uniqueOwners.toString())
-        console.log(totalMembers)
-        console.log(totalMembers.toString())
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
