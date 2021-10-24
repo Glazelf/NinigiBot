@@ -52,7 +52,7 @@ exports.run = async (client, message) => {
         // Get unique owner count
         let ownerPool = [];
         await client.guilds.cache.forEach(guild => {
-            console.log(guild.id)
+            console.log(guild)
             ownerPool.push(guild.ownerId);
         });
         let uniqueOwners = countUnique(ownerPool);
