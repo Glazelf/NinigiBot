@@ -55,8 +55,6 @@ exports.run = async (client, message) => {
             ownerPool.push(guild.ownerId);
         });
         let uniqueOwners = countUnique(ownerPool);
-        console.log(ownerPool)
-        console.log(uniqueOwners)
 
         let user = message.member.user;
 
@@ -105,6 +103,11 @@ exports.run = async (client, message) => {
         // Owner
         let owner = "Glaze#6669";
 
+        console.log(uniqueOwners)
+        console.log(uniqueOwners.toString())
+        console.log(totalMembers)
+        console.log(totalMembers.toString())
+
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor(client.user.username, avatar)
@@ -117,8 +120,8 @@ exports.run = async (client, message) => {
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Unique Owners:", `${uniqueOwners}`, true)
-            .addField("Total Users:", `${totalMembers}`, true)
+            .addField("Unique Owners:", uniqueOwners.toString(), true)
+            .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
