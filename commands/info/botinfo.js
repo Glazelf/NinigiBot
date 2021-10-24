@@ -70,18 +70,17 @@ exports.run = async (client, message) => {
 
         // Figure out if the numbers given is different than 1
         let multiDays = "";
-        if (days !== 1) { multiDays = "s" };
+        if (days !== 1) multiDays = "s";
         let multiHours = "";
-        if (hours !== 1) { multiHours = "s" };
+        if (hours !== 1) multiHours = "s";
         let multiMinutes = "";
-        if (minutes !== 1) { multiMinutes = "s" };
+        if (minutes !== 1) multiMinutes = "s";
         let multiSeconds = "";
-        if (seconds !== 1) { multiSeconds = "s" };
+        if (seconds !== 1) multiSeconds = "s";
 
         // Reset hours
-        while (hours >= 24) {
-            hours = hours - 24;
-        };
+        if (hours >= 24) hours = hours - (days * 24);
+
 
         // Bind variables together into a string
         let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
