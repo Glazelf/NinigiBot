@@ -49,6 +49,9 @@ exports.run = async (client, message) => {
         let averageUsers = Math.round(totalMembers / totalGuilds);
         if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
 
+        console.log(typeof totalMembers)
+        console.log(typeof averageUsers)
+
         // Get unique owner count
         let ownerPool = [];
         await client.guilds.cache.forEach(guild => {
