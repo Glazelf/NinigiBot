@@ -7,7 +7,7 @@ module.exports = async (client, message) => {
 
     if (!servers.includes(message.guild.id)) return;
     if (!message.member) return;
-    if (message.member.permissions.has("MANAGE_MESSAGES")) return;
+    if (message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("KICK_MEMBERS")) return;
     if (!message.content) return;
 
     let time = await getTime(client);
@@ -66,21 +66,21 @@ module.exports = async (client, message) => {
     let testRegex = new RegExp(testArray.join("|"), "i");
 
     // Scam links
-    if (scamRegex.test(messageNormalized)) {
+    if (scamRegex.test(message.content)) {
         reason = "Posting scam links.";
         await ban();
         return true;
     };
 
     // Slurs
-    if (slurRegex.test(messageNormalized)) {
+    if (slurRegex.test(message.content) || scamRegex.test(messageNormalized)) {
         reason = "Using slurs.";
         await msgDelete();
         return true;
     };
 
     // Ad links
-    if (adRegex.test(messageNormalized) && memberRoles.size == 0) {
+    if (adRegex.test(message.content) && memberRoles.size == 0) {
         reason = "Advertisement.";
         await msgDelete();
         return true;
