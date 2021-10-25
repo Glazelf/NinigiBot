@@ -7,10 +7,10 @@ module.exports = async (client, message) => {
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
 
-    if (!servers.includes(message.guild.id)) return;
-    if (!message.member) return;
-    if (message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("KICK_MEMBERS") || adminBool) return;
-    if (!message.content) return;
+    if (!servers.includes(message.guild.id)) return false;
+    if (!message.member) return false;
+    if (message.member.permissions.has("MANAGE_MESSAGES") || message.member.permissions.has("KICK_MEMBERS") || adminBool) return false;
+    if (!message.content) return false;
 
     let time = await getTime(client);
 
@@ -29,13 +29,13 @@ module.exports = async (client, message) => {
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
     const genericLinks = [
-        ".*http(.)?:\/\/[^s]*.*"
+        ".*http(.)?:\/\/[^s]*.*\..{1,}"
     ];
     let genericLinkRegex = new RegExp(genericLinks.join("|"), "i");
 
     const scamLinks = [
-        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl).(com|org|ru|click|gift|net).*", // Discord gift links
-        ".*http(.)?:\/\/[^s]*.\.ru.*" // Russian websites, should disable this for russian discords lol
+        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl)\.(com|org|ru|click|gift|net).*", // Discord gift links
+        ".*http(.)?:\/\/[^s]*.\.ru*." // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done
     ];
     let scamRegex = new RegExp(scamLinks.join("|"), "i");
 
@@ -108,7 +108,7 @@ module.exports = async (client, message) => {
     };
 
     async function kick() {
-        if (!message.member.kickable) return;
+        if (!message.member.kickable) return false;
         await message.delete();
 
         let dmResult = "(DM succeeded)";
@@ -134,7 +134,7 @@ module.exports = async (client, message) => {
     };
 
     async function ban() {
-        if (!message.member.bannable) return;
+        if (!message.member.bannable) return false;
 
         let dmResult = "(DM succeeded)";
 
@@ -158,7 +158,8 @@ module.exports = async (client, message) => {
         return true;
     };
 
-    function test() {
-        return message.channel.send({ content: `banned lol` });
+    async function test() {
+        await message.channel.send({ content: `banned lol` });
+        return true;
     };
 };
