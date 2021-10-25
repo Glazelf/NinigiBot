@@ -114,9 +114,7 @@ module.exports = async (client, message) => {
         let dmResult = "(DM succeeded)";
 
         try {
-            message.author.send({
-                content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}`
-            });
+            await message.author.send({ content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}` });
         } catch (e) {
             // console.log(e);
             dmResult = "(DM failed)";
@@ -141,7 +139,7 @@ module.exports = async (client, message) => {
         let dmResult = "(DM succeeded)";
 
         try {
-            message.author.send({ content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}` });
+            await message.author.send({ content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}` });
         } catch (e) {
             // console.log(e);
             dmResult = "(DM failed)";
