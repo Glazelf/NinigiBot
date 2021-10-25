@@ -2,6 +2,7 @@ module.exports = async (member, client) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
+        if (!member.guild || !member.permissions) return false;
         if (member.guild.ownerID == member.id) {
             return true
         } else if (member.permissions.has("ADMINISTRATOR")) {
