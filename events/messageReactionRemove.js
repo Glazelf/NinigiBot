@@ -6,7 +6,7 @@ module.exports = async (client, messageReaction) => {
         const Discord = require("discord.js");
         const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
 
-        if (!messageReaction.count) return;
+        if (messageReaction.count == null || messageReaction.count == undefined) return;
 
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
@@ -58,7 +58,10 @@ module.exports = async (client, messageReaction) => {
 
         if (messageReaction.count == 0 && messageDB) {
             // Delete
-            await client.channels.fetch(messageDB.starboard_channel_id).messages.fetch(messageDB.starboard_message_id).then(m => m.delete());
+            let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
+            await starChannel.messages.fetch(messageDB.starboard_message_id).then(m => {
+                m.delete()
+            });
             await messageDB.destroy();
             return;
         } else if (messageDB) {
