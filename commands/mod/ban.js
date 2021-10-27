@@ -42,7 +42,13 @@ exports.run = async (client, message, args = []) => {
 
         let author = message.member.user;
 
-        await message.guild.bans.fetch();
+        let bansFetch;
+        try {
+            bansFetch = await message.guild.bans.fetch();
+        } catch (e) {
+            // console.log(e);
+            bansFetch = null;
+        };
 
         let time = await getTime(client);
 
@@ -54,13 +60,9 @@ exports.run = async (client, message, args = []) => {
             if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
 
             // See if target isn't already banned
-            let existingBan = null;
-            try {
-                existingBan = await message.guild.bans.fetch(member.id);
-            } catch (e) {
-                // console.log(e);
+            if (bansFetch) {
+                if (bansFetch.has(member.id)) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
             };
-            if (existingBan) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
 
             // Ban
             banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
@@ -77,13 +79,10 @@ exports.run = async (client, message, args = []) => {
         } else {
             let memberID = args[0];
 
-            let existingBan;
-            try {
-                existingBan = await message.guild.bans.fetch(memberID);
-            } catch (e) {
-                // console.log(e);
+            // See if target isn't already banned
+            if (bansFetch) {
+                if (bansFetch.has(memberID)) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
             };
-            if (existingBan) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
 
