@@ -31,13 +31,22 @@ exports.run = async (client, message, args = []) => {
                         // Why are german entries still tagged as English?
                         // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
                         // English entries always seem to be either the only or the last entry, so this should work. For now.
+                        let abilityDescription;
                         let englishEntry = response.effect_entries[response.effect_entries.length - 1];
+
+                        if (englishEntry) {
+                            abilityDescription = englishEntry.short_effect;
+                        } else {
+                            englishEntry = response.flavor_text_entries[response.flavor_text_entries.length - 1];
+                            abilityDescription = englishEntry.flavor_text;
+                        };
+
                         let author = await capitalizeString(response.name);
 
                         const abilityEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
-                            .addField("Description:", englishEntry.short_effect, false)
+                            .addField("Description:", abilityDescription, false)
                             .setFooter(user.tag)
                             .setTimestamp();
                         return sendMessage(client, message, null, abilityEmbed);
