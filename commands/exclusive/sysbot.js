@@ -69,6 +69,7 @@ ${ACFlare.user.username} (/): ${ACFlareStatus} (\`${Flare.tag}\`)
 ${TimTomBot.user.username} (%): ${TimTomBotStatus} (\`${Mingus.tag}\`)
 
 Before asking a question make sure your question isn't already answered in either ${message.guild.rulesChannel} or <#${globalVars.botChannelID}>.
+**Bots will be hosted when hosts feel like it and have time**, there is no schedule. Asking or even begging for bots is often useless and can be annoying.
 Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`;
 
         return sendMessage(client, message, returnString, null, null, false, sysbotButtons);
