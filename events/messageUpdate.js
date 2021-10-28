@@ -8,6 +8,9 @@ module.exports = async (client, message, newMessage) => {
         const isAdmin = require('../util/isAdmin');
 
         if (!message.guild) return;
+        if (!message || !message.author) return;
+        if (message.content === newMessage.content) return;
+        if (!messageImage && !newMessage.content) return;
 
         await message.guild.fetch();
 
@@ -24,13 +27,8 @@ module.exports = async (client, message, newMessage) => {
         let adminBool = await isAdmin(botMember, client);
 
         if ((log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) || adminBool) {
-            if (!message || !message.author) return;
-            if (message.content === newMessage.content) return;
-
             let messageImage = null;
             if (message.attachments.size > 0) messageImage = message.attachments.first().url;
-
-            if (!messageImage && !newMessage.content) return;
 
             let messageContent = message.content;
             let newMessageContent = newMessage.content
