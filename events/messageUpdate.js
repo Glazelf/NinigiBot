@@ -9,7 +9,6 @@ module.exports = async (client, message, newMessage) => {
 
         if (!message.guild) return;
 
-        await message.member.fetch();
         await message.guild.fetch();
 
         // Get log
