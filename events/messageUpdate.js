@@ -5,8 +5,12 @@ module.exports = async (client, message, newMessage) => {
     try {
         const Discord = require("discord.js");
         const autoMod = require('../util/autoMod');
+        const isAdmin = require('../util/isAdmin');
 
         if (!message.guild) return;
+
+        await message.member.fetch();
+        await message.guild.fetch();
 
         // Get log
         const { LogChannels } = require('../database/dbObjects');
@@ -18,7 +22,9 @@ module.exports = async (client, message, newMessage) => {
         let botMember = await message.guild.members.fetch(client.user.id);
 
         // Check message content
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        let adminBool = await isAdmin(botMember, client);
+
+        if ((log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) || adminBool) {
             if (!message || !message.author) return;
             if (message.content === newMessage.content) return;
 
