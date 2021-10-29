@@ -21,7 +21,6 @@ exports.run = async (client, message, args = []) => {
 
 
         let requestRole = args.join(' ').toLowerCase();
-        let adminBoolUser = await isAdmin(client, message.member)
         let adminBoolBot = await isAdmin(client, message.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
@@ -111,7 +110,6 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
             if (!roleIDs.includes(role.id)) return sendMessage(client, message, invalidRoleText);
             if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
             if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
-            if (message.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage(client, message, `You don't have a high enough role to make the **${role.name}** role selfassignable.`);
 
             if (member.roles.cache.has(role.id)) {
                 await member.roles.remove(role);
