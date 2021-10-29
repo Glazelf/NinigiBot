@@ -118,7 +118,7 @@ module.exports = async (client, interaction) => {
                                 const { EligibleRoles } = require('../database/dbObjects');
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
                                 if (!role) return sendMessage(client, interaction, `This role does not exist.`);
-                                let adminBool = await isAdmin(interaction.guild.me);
+                                let adminBool = await isAdmin(client, interaction.guild.me);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) return sendMessage(client, interaction, `This role is not available anymore.`);

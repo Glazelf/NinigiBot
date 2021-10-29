@@ -6,7 +6,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(message.member, client);
+        let adminBool = await isAdmin(client, message.member);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         // Get role and description

@@ -5,7 +5,7 @@ exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(message.member, client);
+        let adminBool = await isAdmin(client, message.member);
         if (!adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         const { Prefixes } = require('../../database/dbObjects');

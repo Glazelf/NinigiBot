@@ -2,7 +2,7 @@ module.exports = async (client, message) => {
     const Discord = require("discord.js");
     let getTime = require('../util/getTime');
     const isAdmin = require('./isAdmin');
-    let adminBool = await isAdmin(message.member, client);
+    let adminBool = await isAdmin(client, message.member);
     const { ModEnabledServers } = require('../database/dbObjects');
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);

@@ -5,7 +5,7 @@ exports.run = async (client, message, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(message.member, client);
+        let adminBool = await isAdmin(client, message.member);
 
         const { StarboardLimits } = require('../../database/dbObjects');
         let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: message.guild.id } });
