@@ -71,7 +71,7 @@ exports.run = async (client, message, args = []) => {
                     personalRole.setIcon(messageImage);
                     editReturnString += `image updated.`;
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                 };
             };
 
