@@ -55,7 +55,7 @@ exports.run = async (client, message, args = []) => {
 
             if (!args[0]) roleColor = personalRole.color;
 
-            if (roleColor != personalRole.color) editReturnString += `color set to \`#${roleColor}\`. `;
+            if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
 
             personalRole.edit({
                 name: user.tag,
@@ -69,10 +69,14 @@ exports.run = async (client, message, args = []) => {
             if (messageImage && iconsAllowed) {
                 try {
                     personalRole.setIcon(messageImage);
-                    editReturnString += `image updated.`;
+                    editReturnString += `Image updated. `;
                 } catch (e) {
                     // console.log(e);
+                    let roleIconSizeLimit = `256kb`;
+                    editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}. `;
                 };
+            } else if (messageImage && !iconsAllowed) {
+                editReturnString += `Failed to update the image, **${message.guild.name}** does not have role icons unlocked. `;
             };
 
             // Re-add role if it got removed
