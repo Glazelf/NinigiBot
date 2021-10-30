@@ -38,8 +38,9 @@ module.exports = async (client, role) => {
                 .setAuthor(`Role Created ⭐`, icon)
                 .addField(`Role:`, `${role} (${role.id})`)
                 .addField(`Role name:`, role.name)
-                .addField('Created by:', `${executor} (${executor.id})`)
-                .addField(`Permissions:`, permissions.join(', '))
+                .addField('Created by:', `${executor} (${executor.id})`);
+            if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
+            createEmbed
                 .setFooter(executor.tag)
                 .setTimestamp();
 
