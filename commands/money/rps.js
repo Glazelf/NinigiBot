@@ -37,18 +37,17 @@ exports.run = async (client, message, args = []) => {
 
         // Randomize bot and compare choices
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
-        let result = (rps.length + 1 + rps.indexOf(playerChoice) - rps.indexOf(botChoice)) % rps.length + 1;
-        let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
-You win ${amount}${currency}. You now have ${balance + amount}${currency}.`;
+        let result = (rps.length + rps.indexOf(playerChoice) - rps.indexOf(botChoice)) % rps.length;
+        let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**. \nYou win ${amount}${currency}. You now have ${balance + amount}${currency}.`;
+
         switch (result) {
-            case 0:
+            case 0: // Tie
                 return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
-                break; // 
-            case 1:
-                returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
-You lose ${amount}${currency}. You now have ${balance - amount}${currency}.`;
                 break;
-            case 2:
+            case 1: // Player wins, no change necessary
+                break;
+            case 2: // Player loss
+                returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**. \nYou lose ${amount}${currency}. You now have ${balance - amount}${currency}.`;
                 amount = Math.abs(amount) * -1;
                 break;
         };
