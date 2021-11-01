@@ -31,27 +31,17 @@ exports.run = async (client, message, args = []) => {
             return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
         };
 
-        // Randomize bot choice
+        // Randomize bot and compare choices
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
-
-        // Compare choices
         let result = (rps.length+1 + rps.indexOf(playerChoice) - rps.indexOf(botChoice)) %rps.length+1;
-        let returnString;
+        let returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
+        > You lose ${amount}${currency}.`;
         switch (result) {
             case 0:
-                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
-                break;
-            case 1:
-                returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
-> You win ${amount}${currency}.`;
-                break;
-            case 2:
-                returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
-> You lose ${amount}${currency}.`;
-            amount = Math.abs(amount) * -1;
-            break;    
-            default:
-                break;
+                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`); break;
+            case 1: returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
+            > You win ${amount}${currency}.`; break;
+            case 2: amount = Math.abs(amount) * -1; break;
         }
 
         // Update currency
