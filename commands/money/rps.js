@@ -37,13 +37,15 @@ exports.run = async (client, message, args = []) => {
         if (botChoice == playerChoice) return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
 
         let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
-> You win ${amount}${currency}.`;
-
-        // Compare choices
-        if ((playerChoice == rps[0] && botChoice == rps[1]) || (playerChoice == rps[1] && botChoice == rps[2]) || (playerChoice == rps[2] && botChoice == rps[0])) {
-            returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
-> You lose ${amount}${currency}.`;
-            amount = Math.abs(amount) * -1;
+You win ${amount}${currency}.`;
+        switch (result) {
+            case 0:
+                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`); break;
+            case 1:
+                returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
+You lose ${amount}${currency}.`;
+                break;
+            case 2: amount = Math.abs(amount) * -1; break;
         };
 
         // Update currency
@@ -54,7 +56,7 @@ exports.run = async (client, message, args = []) => {
 
         return setTimeout(() => {
             cooldown.delete(message.member.id);
-        }, 1500);
+        }, 1000);
 
     } catch (e) {
         // Log error
