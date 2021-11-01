@@ -25,6 +25,8 @@ exports.run = async (client, message, args = []) => {
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to kick **${user.tag}** (${user.id}).`);
 
+        let banFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
+
         let reason = "Not specified.";
         if (args[1]) {
             reason = args.slice(1, args.length + 1);
@@ -48,7 +50,7 @@ exports.run = async (client, message, args = []) => {
             if (e.toString().includes("Missing Permissions")) {
                 return logger(e, client, message);
             } else {
-                return sendMessage(client, message, `Could not find a user by that ID.`);
+                return sendMessage(client, message, banFailString);
             };
         };
         return sendMessage(client, message, kickReturn);

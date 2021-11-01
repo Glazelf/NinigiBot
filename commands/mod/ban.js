@@ -31,6 +31,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let banReturn = null;
+        let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
 
         let reason = "Not specified.";
         if (args[1]) {
@@ -73,7 +74,12 @@ exports.run = async (client, message, args = []) => {
                 // console.log(e);
                 banReturn = `${banReturn} (DM Failed)`;
             };
-            await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
+            try {
+                await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
+            } catch (e) {
+                // console.log(e);
+                return sendMessage(client, message, banFailString);
+            };
 
             // If user isn't found, try to ban by ID
         } else {
@@ -94,7 +100,7 @@ exports.run = async (client, message, args = []) => {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {
-                    return sendMessage(client, message, `Could not find a user by that ID.`);
+                    return sendMessage(client, message, banFailString);
                 };
             };
         };
