@@ -24,7 +24,11 @@ exports.run = async (client, message, args = []) => {
         if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissor\`.`);
 
         if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
+
+        // Enforce flooring
         amount = Math.floor(amount);
+        balance = Math.floor(balance);
+
         if (amount <= 0) return sendMessage(client, message, `Please enter an amount that's equal to or larger than 1.`);
 
         if (amount > balance) {
@@ -35,15 +39,18 @@ exports.run = async (client, message, args = []) => {
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
         let result = (rps.length + 1 + rps.indexOf(playerChoice) - rps.indexOf(botChoice)) % rps.length + 1;
         let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**.
-You win ${amount}${currency}.`;
+You win ${amount}${currency}. You now have ${balance + amount}${currency}.`;
         switch (result) {
             case 0:
-                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`); break;
+                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
+                break; // 
             case 1:
                 returnString = `Sorry. You picked **${playerChoice}** while I picked **${botChoice}**.
-You lose ${amount}${currency}.`;
+You lose ${amount}${currency}. You now have ${balance - amount}${currency}.`;
                 break;
-            case 2: amount = Math.abs(amount) * -1; break;
+            case 2:
+                amount = Math.abs(amount) * -1;
+                break;
         };
 
         // Update currency
