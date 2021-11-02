@@ -12,7 +12,8 @@ exports.run = async (client, message, args = []) => {
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(message.member.id);
         let inputText = "";
-        if (args[1]) inputText = args[1].toLowerCase();
+        if (!args[0] || !args[1]) return sendMessage(client, message, `You need to provide two arguments; Your chosen weapon and an amount to gamble.`);
+        inputText = args[1].toLowerCase();
         if (inputText == "quarter") args[1] = balance / 4;
         if (inputText == "half") args[1] = balance / 2;
         if (inputText == "all") args[1] = balance;
