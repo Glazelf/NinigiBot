@@ -19,8 +19,6 @@ module.exports = async (str) => {
 
         let dashException = returnStr.replace(" ", "-");
         if (exceptions.includes(dashException.toLowerCase())) returnStr = dashException;
-        console.log({ dashException })
-        console.log({ returnStr })
     };
     returnStr = returnStr.charAt(0).toUpperCase() + returnStr.slice(1);
     if (returnStr == "Baby Doll Eyes") returnStr = "Baby-Doll Eyes";
