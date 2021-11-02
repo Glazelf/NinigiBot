@@ -55,7 +55,12 @@ module.exports = async (client, interaction) => {
 
                 // Run the command
                 if (cmd) {
-                    await cmd.run(client, interaction, args);
+                    try {
+                        await cmd.run(client, interaction, args);
+                    } catch (e) {
+                        // console.log(e);
+                        return sendMessage(client, interaction, `An error occurred. This should automatically be logged but consider reporting it just in case:\n<https://github.com/Glazelf/NinigiBot/issues>`);
+                    };
                     return;
                 } else {
                     return;
