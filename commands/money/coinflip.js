@@ -30,11 +30,13 @@ exports.run = async (client, message, args = []) => {
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
         if (amount == "random") amount = randomNumber(1, balance);
-        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
+        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please input a valid number.`);
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
+
+        if (amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
 
         if (amount > balance) return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
 
