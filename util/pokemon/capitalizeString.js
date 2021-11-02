@@ -1,5 +1,5 @@
 module.exports = async (str) => {
-    let exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy"];
+    let exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy", "soul-heart"];
     let exceptionsLowercase = ["v-create", "u-turn"];
 
     let splitStr = str;
