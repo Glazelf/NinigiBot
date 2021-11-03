@@ -7,6 +7,14 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
 
         let returnString = `Here's the link(s) to the assets you requested, **${message.member.user.tag}**:`;
+        let replyMessage = null;
+        let stickerLink = null;
+
+        if (message.reference) {
+            if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
+            input = replyMessage.content;
+            questionAskUser = replyMessage.author;
+        };
 
         //// Would like to have emotes in this too, but currently impossible since bots can't seem to access the urls of emotes they can't personally use. Even though they can do this for stickers, lol.
         // if (!args[0] && !message.stickers.first()) return sendMessage(client, message, `Please provide either a sticker or an emote to convert.`);
@@ -15,10 +23,14 @@ exports.run = async (client, message, args = []) => {
         //     returnString += `\n-Emote link: ${emote}`;
         // };
         if (message.stickers.first()) {
-            returnString += `\n-Sticker link: <${message.stickers.first().url}>`;
+            stickerLink = message.stickers.first().url;
+        } else if (replyMessage && replyMessage.stickers.first()) {
+            stickerLink = replyMessage.stickers.first().url;
         } else {
-            return sendMessage(client, message, `Please provide a sticker to convert.`);
+            return sendMessage(client, message, `Please provide a sticker to convert or reply to a message containing a sticker.`);
         };
+
+        returnString += `\n-Sticker link: <${stickerLink}>`
 
         return sendMessage(client, message, returnString);
 
