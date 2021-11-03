@@ -151,9 +151,7 @@ exports.run = async (client, message, args = []) => {
         // Check Days
         let daysJoined = await checkDays(member.joinedAt, client);
         let daysBoosting;
-        if (member.premiumSince > 0) {
-            daysBoosting = await checkDays(member.premiumSince, client);
-        };
+        if (member.premiumSince > 0) daysBoosting = await checkDays(member.premiumSince, client);
         let daysCreated = await checkDays(user.createdAt, client);
 
         // Buttons
