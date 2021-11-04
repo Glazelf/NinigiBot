@@ -68,7 +68,7 @@ exports.run = async (client, message, args = []) => {
 
             if (messageImage && iconsAllowed) {
                 try {
-                    personalRole.setIcon(messageImage);
+                    await personalRole.setIcon(messageImage);
                     editReturnString += `Image updated. `;
                 } catch (e) {
                     // console.log(e);
