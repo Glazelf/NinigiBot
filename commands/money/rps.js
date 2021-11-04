@@ -22,7 +22,7 @@ exports.run = async (client, message, args = []) => {
 
         // Get input
         let rps = ["rock", "paper", "scissors"];
-        if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissor\`.`);
+        if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissors\`.`);
 
         if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
 
