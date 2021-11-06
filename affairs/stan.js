@@ -45,7 +45,7 @@ module.exports = async (client) => {
             const { data } = await giphyRandom(config.giphy, {
                 tag: randomElement
             });
-            return data.image_url;
+            return data.images.original.url;
         };
 
     } catch (e) {
