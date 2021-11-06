@@ -94,7 +94,13 @@ module.exports = async (client, member, newMember) => {
 
             async function deleteBoosterRole() {
                 let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
-                if (oldRole) await oldRole.delete();
+                if (oldRole) {
+                    try {
+                        await oldRole.delete();
+                    } catch (e) {
+                        // console.log(e);
+                    };
+                };
                 await roleDB.destroy();
             };
 
