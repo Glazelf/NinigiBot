@@ -113,7 +113,12 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            try {
+                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            } catch (e) {
+                // console.log(e);
+                return;
+            };
         } else {
             return;
         };

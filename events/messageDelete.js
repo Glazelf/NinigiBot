@@ -80,7 +80,12 @@ module.exports = async (client, message) => {
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            try {
+                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+            } catch (e) {
+                // console.log(e);
+                return;
+            };
         } else {
             return;
         };
