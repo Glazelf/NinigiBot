@@ -63,7 +63,6 @@ ${Konohana.user.username} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
 ${Glaceon.user.username} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
 ${BingoBot.user.username} (%): ${BingoBotStatus} (\`${Mingus.tag}\`)
 ${PsyBot.user.username} (^): ${PsyBotStatus} (\`${Phoenix.tag}\`)
-
 **ACNH bots:**
 ${Ribbot.user.username} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
 ${TimTomBot.user.username} (%): ${TimTomBotStatus} (\`${Mingus.tag}\`)
