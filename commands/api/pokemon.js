@@ -32,12 +32,12 @@ exports.run = async (client, message, args = []) => {
                         // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
                         // English entries always seem to be either the only or the last entry, so this should work. For now.
                         let abilityDescription;
-                        let englishEntry = response.effect_entries[response.effect_entries.length - 1];
+                        let englishEntry = response.effect_entries.find(element => element.language.name == "en");
 
                         if (englishEntry) {
                             abilityDescription = englishEntry.short_effect;
                         } else {
-                            englishEntry = response.flavor_text_entries[response.flavor_text_entries.length - 1];
+                            englishEntry = response.flavor_text_entries.find(element => element.language.name == "en");
                             abilityDescription = englishEntry.flavor_text;
                         };
 
@@ -70,12 +70,15 @@ exports.run = async (client, message, args = []) => {
                         let author = await capitalizeString(response.name);
                         let category = await capitalizeString(response.category.name);
 
+                        let effectEntry = response.effect_entries.find(element => element.language.name == "en");
+                        let description = effectEntry.short_effect;
+
                         const itemEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", category, true)
-                            .addField("Description:", response.effect_entries[0].short_effect, false)
+                            .addField("Description:", description, false)
                             .setImage(itemImage)
                             .setFooter(user.tag)
                             .setTimestamp();
@@ -98,7 +101,8 @@ exports.run = async (client, message, args = []) => {
                     .then(async function (response) {
                         let description;
                         try {
-                            description = response.effect_entries[0].short_effect.replace("$effect_chance", response.effect_chance);
+                            let effectEntry = response.effect_entries.find(element => element.language.name == "en");
+                            description = effectEntry.short_effect.replace("$effect_chance", response.effect_chance);
                         } catch (e) {
                             description = null;
                         };
