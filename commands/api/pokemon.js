@@ -17,11 +17,11 @@ exports.run = async (client, message, args = []) => {
 
         let subCommand = args[0].toLowerCase();
         let subArgument;
-        if (args[1]) {
-            subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
-        };
+        if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
 
         let user = message.member.user;
+        let arrowUp = "<:arrow_up_red:909901820732784640>";
+        let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
         switch (subCommand) {
             // Abilities
@@ -138,7 +138,36 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
 
-            // Pokémon
+            case "nature":
+                P.getNatureByName(subArgument)
+                    .then(async function (response) {
+                        let author = await capitalizeString(response.name);
+                        let statUp = await capitalizeString(response.increased_stat.name);
+                        let statDown = await capitalizeString(response.decreased_stat.name);
+                        let flavourUp = await capitalizeString(response.likes_flavor.name);
+                        let flavourDown = await capitalizeString(response.hates_flavor.name);
+
+                        const natureEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor(author)
+                            .addField("Stats:", `${arrowUp} ${statUp}\n${arrowDown} ${statDown}`)
+                            .addField("Flavours:", `${arrowUp} ${flavourUp}\n${arrowDown} ${flavourDown}`)
+                            .setFooter(user.tag)
+                            .setTimestamp();
+
+                        return sendMessage(client, message, null, natureEmbed);
+
+                    }).catch(function (e) {
+                        // console.log(e);
+                        if (e.toString().includes("Missing Permissions")) {
+                            return logger(e, client, message);
+                        } else {
+                            return sendMessage(client, message, `Could not find the specified nature.`);
+                        };
+                    });
+                break;
+
+            // Default: Pokémon
             default:
                 // Public variables
                 var pokemonName = args;
