@@ -188,14 +188,8 @@ exports.run = async (client, message, args = []) => {
                         // Log for testing, remove later
                         // console.log(response);
 
-                        let pkmEmbed = await getPokemon(client, message, response);
-
-                        // Buttons
-                        let pkmButtons = new Discord.MessageActionRow()
-                            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️' }))
-                            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️' }));
-
-                        return sendMessage(client, message, null, pkmEmbed, null, true, pkmButtons);
+                        let messageObject = await getPokemon(client, message, response);
+                        return sendMessage(client, message, null, messageObject.embed, null, true, messageObject.buttons);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -259,6 +253,15 @@ module.exports.config = {
             name: "move-name",
             type: "STRING",
             description: "Get move info by its English name.",
+        }]
+    }, {
+        name: "nature",
+        type: "SUB_COMMAND",
+        description: "Get info on a nature.",
+        options: [{
+            name: "nature-name",
+            type: "STRING",
+            description: "Get nature info by its English name.",
         }]
     }, {
         name: "pokemon",

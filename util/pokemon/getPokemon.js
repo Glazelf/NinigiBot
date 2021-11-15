@@ -231,7 +231,44 @@ BST: ${BST}`, false)
             .setFooter(footer)
             .setTimestamp();
 
-        return pkmEmbed;
+        let previousPokemon = null;
+        let nextPokemon = null;
+        let previousPokemonName = null;
+        let nextPokemonName = null;
+        let firstPokemon = "Bulbasaur"; // First Pokémon in the Pokédex
+        let finalPokemon = "Calyrex"; // Final Pokémon in the Pokédex
+        let maxPkmID = 898; // Calyrex
+        let searchIndex = response.id - 2; // List is indexed from 0, -1 for previous Pokémon and -1 to go from ID to index
+        let searchAmount = 3;
+
+        if (searchIndex < 0) {
+            searchIndex = 0;
+            searchAmount = 2;
+        } else if (searchIndex > maxPkmID) searchIndex = response.species.url.replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", "") - 2;
+
+        await P.getPokemonsList({ limit: searchAmount, offset: searchIndex }).then(async function (response) {
+            previousPokemonName = response.results[0].name;
+            if (response.results[2]) nextPokemonName = response.results[2].name;
+            if (response.results[0].name == "bulbasaur") {
+                previousPokemon = finalPokemon;
+                nextPokemonName = response.results[1].name;
+            };
+            if (response.results[1].name == "calyrex") nextPokemon = firstPokemon;
+            if (!previousPokemon) previousPokemon = await capitalizeString(previousPokemonName);
+            if (!nextPokemon) nextPokemon = await capitalizeString(nextPokemonName);
+        }).catch(function (e) {
+            // console.log(e);
+            previousPokemon = null;
+            nextPokemon = null;
+        });
+
+        // Buttons
+        let pkmButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon }))
+            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon }));
+
+        let messageObject = { embed: pkmEmbed, buttons: pkmButtons };
+        return messageObject;
 
         function calcHP(base) {
             let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);

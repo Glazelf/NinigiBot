@@ -72,8 +72,8 @@ module.exports = async (client, interaction) => {
                         // Pokémon command
                         if (interaction.customId == 'pkmleft' || interaction.customId == 'pkmright') {
                             try {
-                                var Pokedex = require('pokedex-promise-v2');
-                                var P = new Pokedex();
+                                let Pokedex = require('pokedex-promise-v2');
+                                let P = new Pokedex();
 
                                 let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
                                 let newPkmID = pkmID;
@@ -91,20 +91,20 @@ module.exports = async (client, interaction) => {
                                     newPkmID = 1;
                                 };
 
-                                let pkmEmbed = null;
+                                let messageObject = null;
 
                                 try {
                                     await P.getPokemonByName(newPkmID)
                                         .then(async function (response) {
-                                            pkmEmbed = await getPokemon(client, interaction, response, interaction);
+                                            messageObject = await getPokemon(client, interaction, response, interaction);
                                         });
                                 } catch (e) {
-                                    console.log(e);
+                                    // console.log(e);
                                     return;
                                 };
-                                if (!pkmEmbed) return;
+                                if (!messageObject) return;
 
-                                await interaction.update({ embeds: [pkmEmbed] });
+                                await interaction.update({ embeds: [messageObject.embed], components: [messageObject.buttons] });
                                 return;
 
                             } catch (e) {
