@@ -18,7 +18,7 @@ exports.run = async (client, message, args = []) => {
         // Heads / Tails + Amounts
         let winSide = "heads";
         let loseSide = "tails";
-        amount = args[0];
+        let amount = args[0];
         if (inputText == "tails" || args[1] == "tails") {
             winSide = "tails";
             loseSide = "heads";

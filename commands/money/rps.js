@@ -6,19 +6,22 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const randomNumber = require('../../util/randomNumber');
         if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(message.member.id);
-        let inputText = "";
+
         if (!args[0] || !args[1]) return sendMessage(client, message, `You need to provide two arguments; Your chosen weapon and an amount to gamble.`);
-        inputText = args[1].toLowerCase();
-        if (inputText == "quarter") args[1] = balance / 4;
-        if (inputText == "half") args[1] = balance / 2;
-        if (inputText == "all") args[1] = balance;
+
+        let amount;
+        if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
+        if (amount == "quarter") amount = balance / 4;
+        if (amount == "half") amount = balance / 2;
+        if (amount == "all") amount = balance;
+        if (amount == "random") amount = randomNumber(1, balance);
         let playerChoice = args[0].toLowerCase();
-        amount = args[1];
 
         // Get input
         let rps = ["rock", "paper", "scissors"];
