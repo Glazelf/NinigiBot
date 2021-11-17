@@ -238,7 +238,7 @@ BST: ${BST}`, false)
         let firstPokemon = "Bulbasaur"; // First Pokémon in the Pokédex
         let finalPokemon = "Calyrex"; // Final Pokémon in the Pokédex
         let maxPkmID = 898; // Calyrex
-        let searchIndex = pokemonID - 2; // List is indexed from 0, -1 for previous Pokémon and -1 to go from ID to index
+        let searchIndex = pokemonID.replace(/[^0-9]/ig, "") - 2; // List is indexed from 0, -1 for previous Pokémon and -1 to go from ID to index. Regex is to make sure only numeric characters from the ID are kept in case of forms.
         let searchAmount = 3;
 
         if (searchIndex < 0) {
