@@ -142,16 +142,31 @@ exports.run = async (client, message, args = []) => {
                 P.getNatureByName(subArgument)
                     .then(async function (response) {
                         let author = await capitalizeString(response.name);
-                        let statUp = await capitalizeString(response.increased_stat.name);
-                        let statDown = await capitalizeString(response.decreased_stat.name);
-                        let flavourUp = await capitalizeString(response.likes_flavor.name);
-                        let flavourDown = await capitalizeString(response.hates_flavor.name);
+                        let statUp;
+                        let statDown;
+                        let statString;
+                        let flavourUp;
+                        let flavourDown;
+                        let flavourString;
+
+                        if (response.increased_stat && response.increased_stat.name) {
+                            statUp = await capitalizeString(response.increased_stat.name);
+                            statDown = await capitalizeString(response.decreased_stat.name);
+                            statString = `${arrowUp} ${statUp}\n${arrowDown} ${statDown}`;
+
+                            flavourUp = await capitalizeString(response.likes_flavor.name);
+                            flavourDown = await capitalizeString(response.hates_flavor.name);
+                            flavourString = `${arrowUp} ${flavourUp}\n${arrowDown} ${flavourDown}`;
+                        } else {
+                            statString = "Neutral";
+                            flavourString = statString
+                        }
 
                         const natureEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor(author)
-                            .addField("Stats:", `${arrowUp} ${statUp}\n${arrowDown} ${statDown}`)
-                            .addField("Flavours:", `${arrowUp} ${flavourUp}\n${arrowDown} ${flavourDown}`)
+                            .addField("Stats:", statString)
+                            .addField("Flavours:", flavourString)
                             .setFooter(user.tag)
                             .setTimestamp();
 
