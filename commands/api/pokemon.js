@@ -159,8 +159,8 @@ exports.run = async (client, message, args = []) => {
                             flavourString = `${arrowUp} ${flavourUp}\n${arrowDown} ${flavourDown}`;
                         } else {
                             statString = "Neutral";
-                            flavourString = statString
-                        }
+                            flavourString = statString;
+                        };
 
                         const natureEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
