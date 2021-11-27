@@ -72,8 +72,8 @@ module.exports = async (client, interaction) => {
                         // Pokémon command
                         if (interaction.customId == 'pkmleft' || interaction.customId == 'pkmright') {
                             try {
-                                let Pokedex = require('pokedex-promise-v2');
-                                let P = new Pokedex();
+                                let Pokedex = import('pokedex-promise-v2');
+                                let P = new Pokedex.default();
 
                                 let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
                                 let newPkmID = pkmID;

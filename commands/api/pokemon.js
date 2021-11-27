@@ -5,8 +5,8 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        var Pokedex = require('pokedex-promise-v2');
-        var P = new Pokedex();
+        var Pokedex = await import('pokedex-promise-v2');
+        var P = new Pokedex.default();
         const correctionName = require('../../objects/pokemon/correctionName.json');
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const getPokemon = require('../../util/pokemon/getPokemon');

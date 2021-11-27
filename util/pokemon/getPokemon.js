@@ -4,8 +4,8 @@ module.exports = async (client, message, response) => {
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
-        var Pokedex = require('pokedex-promise-v2');
-        var P = new Pokedex();
+        var Pokedex = await import('pokedex-promise-v2');
+        var P = new Pokedex.default();
         const correctionDisplay = require('../../objects/pokemon/correctionDisplay.json');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
