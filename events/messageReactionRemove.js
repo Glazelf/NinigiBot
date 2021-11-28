@@ -47,7 +47,7 @@ module.exports = async (client, messageReaction) => {
 
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`⭐${messageReaction.count}`, avatar)
+            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)
             .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
         if (isReply && replyMessage) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);

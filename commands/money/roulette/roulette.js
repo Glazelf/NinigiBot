@@ -46,7 +46,7 @@ exports.run = async (client, message) => {
 
                 const results = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setAuthor(`Roulette`, avatar)
+                    .setAuthor({ name: `Roulette`, iconURL: avatar })
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... ** ${result} ** !`)
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
@@ -56,7 +56,7 @@ exports.run = async (client, message) => {
 
             const welcome = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Roulette`, avatar)
+                .setAuthor({ name: `Roulette`, iconURL: avatar })
                 .setDescription('Welcome to the roulette! We hope to see you here!')
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${prefix}bet <money>, <numbers or intervals>\`
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.

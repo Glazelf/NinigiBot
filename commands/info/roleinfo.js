@@ -31,7 +31,7 @@ exports.run = async (client, message, args = []) => {
             });
             const noRoleEmbed = new Discord.MessageEmbed()
                 .setColor(DefaultEmbedColor)
-                .setAuthor(`Users in ${message.guild.name} without a role`, avatar)
+                .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
                 .addField("Members:", noRoleMembers.toString(), true)
                 .setFooter(user.tag)
                 .setTimestamp();
@@ -59,7 +59,7 @@ exports.run = async (client, message, args = []) => {
         // Embed
         const roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor(`${role.name} (${role.id})`, avatar)
+            .setAuthor({ name: `${role.name} (${role.id})`, iconURL: avatar })
             .setThumbnail(icon)
             .addField("Role:", role.toString(), true)
             .addField("Color:", role.hexColor, true)

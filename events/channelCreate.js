@@ -37,7 +37,7 @@ module.exports = async (client, channel) => {
 
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${channelType} Channel Created ⭐`, icon)
+                .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
                 .addField(`Channel:`, `${channel} (${channel.id})`)
                 .addField(`Channel name:`, channel.name)
                 .setFooter(footer)

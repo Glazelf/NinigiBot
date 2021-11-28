@@ -42,7 +42,7 @@ module.exports = async (client, guildBan) => {
 
             const banEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Member Banned 💔`, avatarExecutor)
+                .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
                 .addField(`User:`, `${target} (${target.id})`, false)

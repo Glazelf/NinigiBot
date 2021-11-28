@@ -52,7 +52,7 @@ Dango, Jojo, Stitch, Kuzco`;
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`${gifArgumentCapitalized} Gif`, avatar)
+                .setAuthor({ name: `${gifArgumentCapitalized} Gif`, iconURL: avatar })
                 .setDescription(gifString)
                 .setImage(gif)
                 .setFooter(author.tag)
@@ -85,7 +85,7 @@ Dango, Jojo, Stitch, Kuzco`;
 
         // const gifEmbed = new Discord.MessageEmbed()
         //     .setColor(globalVars.embedColor)
-        //     .setAuthor(`Gif (${args})`, avatar)
+        //     .setAuthor({ name: `Gif (${args})`, iconURL: avatar })
         //     .setDescription(`Here's your gif, ${message.member}:`)
         //     .setImage(randomGif)
         //     .setFooter(author.tag)

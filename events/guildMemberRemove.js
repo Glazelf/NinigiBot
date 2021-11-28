@@ -61,7 +61,7 @@ module.exports = async (client, member) => {
                     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 
                 leaveEmbed
-                    .setAuthor(embedAuthor, icon)
+                    .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
                     .addField(`User: `, `${member} (${member.id})`, false);
                 if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);

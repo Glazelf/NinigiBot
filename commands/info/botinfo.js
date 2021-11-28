@@ -105,7 +105,7 @@ exports.run = async (client, message) => {
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(client.user.username, avatar)
+            .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
             .addField("Account:", client.user.toString(), true)
             .addField("Author:", owner, true)

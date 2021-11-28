@@ -96,7 +96,7 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
 
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(`Available roles: `, avatar)
+                .setAuthor({ name: `Available roles: `, iconURL: avatar })
                 .setDescription(roleHelpMessage)
                 .setFooter(user.tag)
                 .setTimestamp();

@@ -7,11 +7,12 @@ exports.run = async (client, message) => {
         const Discord = require("discord.js");
 
         let user = message.member.user;
+        let botAvatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Structure lazy help embed with mostly just links lol
         const helpEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`Help has arrived!`, client.user.displayAvatarURL(globalVars.displayAvatarSettings))
+            .setAuthor({ name: `Help has arrived!`, iconURL: botAvatar })
             .addField("Commands:", `[List](https://github.com/Glazelf/NinigiBot/wiki/Commands 'Commands List')`, false)
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Support:", `[Paypal](https://paypal.me/glazelf 'Paypal')

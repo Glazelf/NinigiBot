@@ -121,7 +121,7 @@ exports.run = async (client, message) => {
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${guild.name} (${guild.id})`, icon)
+            .setAuthor({ name: `${guild.name} (${guild.id})`, iconURL: icon })
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed

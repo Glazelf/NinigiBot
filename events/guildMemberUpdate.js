@@ -79,7 +79,7 @@ module.exports = async (client, member, newMember) => {
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor(topText, icon)
+                .setAuthor({ name: topText, iconURL: icon })
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);
             updateEmbed

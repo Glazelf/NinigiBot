@@ -160,7 +160,7 @@ exports.run = async (client, message, args = []) => {
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor(`${user.username} (${user.id})`, avatar)
+            .setAuthor({ name: `${user.username} (${user.id})`, iconURL: avatar })
             .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);

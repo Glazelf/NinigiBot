@@ -30,7 +30,7 @@ exports.run = async (client, message, args = []) => {
 
                 leaderboardEmbed
                     .setDescription(leaderboardStringGlobal)
-                    .setAuthor(`Global Leaderboard:`, avatar);
+                    .setAuthor({ name: `Global Leaderboard:`, iconURL: avatar });
 
                 // Leaderboard with IDs
             } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
@@ -42,7 +42,7 @@ exports.run = async (client, message, args = []) => {
 
                 leaderboardEmbed
                     .setDescription(leaderboardStringID)
-                    .setAuthor(`ID Leaderboard:`, avatar);
+                    .setAuthor({ name: `ID Leaderboard:`, iconURL: avatar });
 
             } else {
                 serverLB();
@@ -65,7 +65,7 @@ exports.run = async (client, message, args = []) => {
 
             leaderboardEmbed
                 .setDescription(leaderboardString)
-                .setAuthor(`Leaderboard:`, avatar);
+                .setAuthor({ name: `Leaderboard:`, iconURL: avatar });
         };
 
     } catch (e) {

@@ -45,7 +45,7 @@ exports.run = async (client, message, args = []) => {
 
                         const abilityEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(author)
+                            .setAuthor({ name: author })
                             .addField("Description:", abilityDescription, false)
                             .setFooter(user.tag)
                             .setTimestamp();
@@ -75,7 +75,7 @@ exports.run = async (client, message, args = []) => {
 
                         const itemEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(author)
+                            .setAuthor({ name: author })
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", category, true)
                             .addField("Description:", description, false)
@@ -113,7 +113,7 @@ exports.run = async (client, message, args = []) => {
 
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(author)
+                            .setAuthor({ name: author })
                             .addField("Type:", type, true)
                             .addField("Category:", category, true);
                         if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
@@ -164,7 +164,7 @@ exports.run = async (client, message, args = []) => {
 
                         const natureEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor(author)
+                            .setAuthor({ name: author })
                             .addField("Stats:", statString)
                             .addField("Flavours:", flavourString)
                             .setFooter(user.tag)
@@ -200,9 +200,6 @@ exports.run = async (client, message, args = []) => {
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
-                        // Log for testing, remove later
-                        // console.log(response);
-
                         let messageObject = await getPokemon(client, message, response);
                         return sendMessage(client, message, null, messageObject.embed, null, true, messageObject.buttons);
 

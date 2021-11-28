@@ -44,7 +44,7 @@ exports.run = async (client, message, args = []) => {
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
-            .setAuthor(`${user.username}'s avatar(s):`)
+            .setAuthor({ name: `${user.username}'s avatar(s):` })
             .setImage(serverAvatar)
             .setFooter(user.tag)
             .setTimestamp();

@@ -210,7 +210,7 @@ module.exports = async (client, message, response) => {
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor(`${pokemonID.toUpperCase()}: ${pokemonName}`, icon)
+            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemonName}`, iconURL: icon })
             .setThumbnail(sprite)
             .addField("Type:", typeString, true)
             .addField("Metrics:", `Weight: ${weight}
