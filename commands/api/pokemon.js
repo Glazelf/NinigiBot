@@ -110,6 +110,8 @@ exports.run = async (client, message, args = []) => {
                         let type = await getTypeEmotes(response.type.name);
                         let category = await capitalizeString(response.damage_class.name);
                         let target = await capitalizeString(response.target.name);
+                        let ppString;
+                        if (response.pp) ppString = `${response.pp}|${response.pp * 1.2}|${response.pp * 1.4}|${response.pp * 1.6}`;
 
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
@@ -118,6 +120,7 @@ exports.run = async (client, message, args = []) => {
                             .addField("Category:", category, true);
                         if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
                         if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
+                        if (response.pp) moveEmbed.addField("PP:", ppString, true)
                         if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority.toString(), true);
                         moveEmbed
                             .addField("Target:", target, true);
