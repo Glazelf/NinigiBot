@@ -154,7 +154,8 @@ module.exports = async (client, message, response) => {
         // let speciesInfo = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${numericID}/`)).json();
 
         // Official art
-        let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+        let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`; // Use Serebii images
+        // let banner = response.sprites.other.home.front_default; // Use Home renders
 
         // Shuffle icons, only works for pokemon in pokemon shuffle
         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
