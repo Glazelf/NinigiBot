@@ -18,7 +18,7 @@ module.exports = async (client, message) => {
             };
         };
 
-        let executor;
+        let executor = null;
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
                 limit: 1,
@@ -26,10 +26,11 @@ module.exports = async (client, message) => {
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) executor = deleteLog.executor;
+            // Date.now() - 5000 is to make sure log is <5 seconds ago
             if (deleteLog.extra.channel != message.channel || deleteLog.target.id != message.member.id || deleteLog.createdTimestamp < (Date.now() - 5000)) executor = null;
         } catch (e) {
             // console.log(e);
-            if (e.toString().includes("Missing Permissions")) executor = null;
+            executor = null;
         };
 
         // Get log
