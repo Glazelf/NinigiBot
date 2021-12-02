@@ -108,7 +108,7 @@ module.exports = async (client, interaction) => {
                                 return;
 
                             } catch (e) {
-                                console.log(e);
+                                // console.log(e);
                                 return;
                             };
                         } else {
