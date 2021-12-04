@@ -42,7 +42,7 @@ exports.run = async (client, message, args = []) => {
                         };
 
                         let abilityName = await capitalizeString(response.name);
-                        let nameBulbapedia = abilityName.replace(" ", "_");
+                        let nameBulbapedia = abilityName.replaceAll(" ", "_");
 
                         // Buttons
                         let abilityButtons = new Discord.MessageActionRow()
@@ -74,7 +74,7 @@ exports.run = async (client, message, args = []) => {
                         let itemName = response.name.replace("-", "").toLowerCase();
                         let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
                         let itemAuthorName = await capitalizeString(response.name);
-                        let nameBulbapedia = itemAuthorName.replace(" ", "_");
+                        let nameBulbapedia = itemAuthorName.replaceAll(" ", "_");
                         let category = await capitalizeString(response.category.name);
 
                         let effectEntry = response.effect_entries.find(element => element.language.name == "en");
@@ -118,7 +118,7 @@ exports.run = async (client, message, args = []) => {
                             description = null;
                         };
                         let moveName = await capitalizeString(response.name);
-                        let nameBulbapedia = moveName.replace(" ", "_");
+                        let nameBulbapedia = moveName.replaceAll(" ", "_");
                         let type = await getTypeEmotes(response.type.name);
                         let category = await capitalizeString(response.damage_class.name);
                         let target = await capitalizeString(response.target.name);
