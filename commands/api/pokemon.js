@@ -41,15 +41,21 @@ exports.run = async (client, message, args = []) => {
                             abilityDescription = englishEntry.flavor_text;
                         };
 
-                        let author = await capitalizeString(response.name);
+                        let abilityName = await capitalizeString(response.name);
+                        let nameBulbapedia = abilityName.replace(" ", "_");
+
+                        // Buttons
+                        let abilityButtons = new Discord.MessageActionRow()
+                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)` }));
 
                         const abilityEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: author })
+                            .setAuthor({ name: abilityName })
                             .addField("Description:", abilityDescription, false)
                             .setFooter(user.tag)
                             .setTimestamp();
-                        return sendMessage(client, message, null, abilityEmbed);
+
+                        return sendMessage(client, message, null, abilityEmbed, null, null, abilityButtons);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -67,15 +73,20 @@ exports.run = async (client, message, args = []) => {
                     .then(async function (response) {
                         let itemName = response.name.replace("-", "").toLowerCase();
                         let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
-                        let author = await capitalizeString(response.name);
+                        let itemAuthorName = await capitalizeString(response.name);
+                        let nameBulbapedia = itemAuthorName.replace(" ", "_");
                         let category = await capitalizeString(response.category.name);
 
                         let effectEntry = response.effect_entries.find(element => element.language.name == "en");
                         let description = effectEntry.short_effect;
 
+                        // Buttons
+                        let itemButtons = new Discord.MessageActionRow()
+                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
+
                         const itemEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: author })
+                            .setAuthor({ name: itemName })
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", category, true)
                             .addField("Description:", description, false)
@@ -83,7 +94,7 @@ exports.run = async (client, message, args = []) => {
                             .setFooter(user.tag)
                             .setTimestamp();
 
-                        return sendMessage(client, message, null, itemEmbed);
+                        return sendMessage(client, message, null, itemEmbed, null, null, itemButtons);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -106,16 +117,21 @@ exports.run = async (client, message, args = []) => {
                         } catch (e) {
                             description = null;
                         };
-                        let author = await capitalizeString(response.name);
+                        let moveName = await capitalizeString(response.name);
+                        let nameBulbapedia = moveName.replace(" ", "_");
                         let type = await getTypeEmotes(response.type.name);
                         let category = await capitalizeString(response.damage_class.name);
                         let target = await capitalizeString(response.target.name);
                         let ppString;
                         if (response.pp) ppString = `${response.pp}|${response.pp * 1.2}|${response.pp * 1.4}|${response.pp * 1.6}`;
 
+                        // Buttons
+                        let moveButtons = new Discord.MessageActionRow()
+                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)` }));
+
                         const moveEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: author })
+                            .setAuthor({ name: moveName })
                             .addField("Type:", type, true)
                             .addField("Category:", category, true);
                         if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
@@ -129,7 +145,7 @@ exports.run = async (client, message, args = []) => {
                             .setFooter(user.tag)
                             .setTimestamp();
 
-                        return sendMessage(client, message, null, moveEmbed);
+                        return sendMessage(client, message, null, moveEmbed, null, null, moveButtons);
 
                     }).catch(function (e) {
                         // console.log(e);
