@@ -146,7 +146,9 @@ exports.run = async (client, message, args = []) => {
         let badgesString = badgesArray.join(" ");
 
         // JoinRank
-        let joinRank = `${await getJoinRank(user.id, message.guild)}/${message.guild.memberCount}`;
+        let joinRank = await getJoinRank(user.id, message.guild);
+        let joinPercentage = Math.ceil(joinRank / message.guild.memberCount * 100);
+        let joinRankText = `${joinRank}/${message.guild.memberCount} (${joinPercentage}%)`;
 
         // Check Days
         let daysJoined = await checkDays(member.joinedAt, client);
@@ -170,7 +172,7 @@ exports.run = async (client, message, args = []) => {
         if (actBool == true && member.presence) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
-            .addField("Join Ranking:", joinRank, true)
+            .addField("Join Ranking:", joinRankText, true)
             .addField("Roles:", rolesSorted, false)
             .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
