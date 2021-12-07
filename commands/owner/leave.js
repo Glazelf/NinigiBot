@@ -8,8 +8,10 @@ exports.run = async (client, message, args = []) => {
         if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
 
         let devServer = await client.guilds.fetch(globalVars.botServerID);
+        console.log(devServer)
         let devChannel = await devServer.channels.fetch(globalVars.botChannelID);
 
+        await message.channel.send({ content: `Leaving **${message.guild.name}**, **${message.author.tag}**.` });
         await message.guild.leave();
 
         return devChannel.send({ content: `Left **${message.guild.name}**.` });
