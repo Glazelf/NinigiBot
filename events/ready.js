@@ -13,7 +13,7 @@ module.exports = async (client) => {
 
         // Daily rate limit of 200 interactions should only go up if they are fully deleted and readded, not on every boot.
         // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
-        let commandsExclude = ["countdown", "sysbot", "rule", "clearinteractions", "dm", "eval", "item", "kill", "moneyadd", "reload", "restart", "leave"];
+        let commandsExclude = ["countdown", "sysbot", "rule", "clearinteractions", "dm", "eval", "item", "kill", "moneyadd", "reload", "restart"];
 
         let NinigiUserID = "592760951103684618";
 
