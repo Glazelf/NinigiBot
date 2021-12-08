@@ -19,7 +19,10 @@ module.exports = async (client, member, newMember) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+            let oldBanner = member.bannerURL(globalVars.displayAvatarSettings);
+            let banner = newMember.bannerURL(globalVars.displayAvatarSettings);
 
+            let thumbnail = oldAvatar;
             let updateCase = null;
             let topText = null;
             let changeText = null;
@@ -27,7 +30,8 @@ module.exports = async (client, member, newMember) => {
             if (member.nickname !== newMember.nickname) updateCase = "nickname";
             if (!member.premiumSince && newMember.premiumSince) updateCase = "nitroStart";
             if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
-            if (oldAvatar !== avatar) updateCase = "guildAvatar";
+            if (oldAvatar !== avatar) updateCase = "memberAvatar";
+            if (oldBanner !== banner) updateCase = "guildBanner";
             if (!updateCase) return;
 
             let fetchedLogs
@@ -69,9 +73,14 @@ module.exports = async (client, member, newMember) => {
                     topText = "Stopped Nitro Boosting ⚒️";
                     changeText = `**${member.guild.name}** will lose this Nitro Boost in 3 days.`;
                     break;
-                case "guildAvatar":
-                    topText = "Updated Server Avatar ⚒️";
+                case "memberAvatar":
+                    topText = "Updated Member Avatar ⚒️";
                     image = avatar;
+                    break;
+                case "guildBanner":
+                    topText = "Updated Member Banner ⚒️"
+                    image = banner;
+                    thumbnail = oldBanner;
                     break;
                 default:
                     return;
