@@ -34,8 +34,9 @@ exports.run = async (client, message, args = []) => {
         // Get banner
         // To do: (testing) What happens if a user has no banner and/or no server banner
         let banner = null;
-        if (user.bannerURL()) banner = await user.bannerURL({ format: "png", dynamic: true, size: 512 });
-        let serverBanner = await member.bannerURL(globalVars.displayAvatarSettings);
+        let serverBanner = null;
+        if (user.bannerURL()) banner = await user.bannerURL(globalVars.displayBannerSettings);
+        if (member.bannerURL()) serverBanner = await member.bannerURL(globalVars.displayAvatarSettings);
         if (!banner && !serverBanner) return sendMessage(client, message, `**${user.tag}** doesn't have a banner.`);
         if (!serverBanner) {
             serverBanner = banner;

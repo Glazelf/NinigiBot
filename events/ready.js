@@ -79,3 +79,4 @@ module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.presence = initPresence();
 module.exports.displayAvatarSettings = { size: 256, format: "png", dynamic: true };
+module.exports.displayBannerSettings = { size: 512, format: "png", dynamic: true };
