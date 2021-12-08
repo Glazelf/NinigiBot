@@ -44,7 +44,7 @@ exports.run = async (client, message, args = []) => {
             targetImageHeight = message.attachments.values().next().value.height;
             totalMessage = `Here you go, your inverted image:`;
         } else {
-            if (user.avatarURL()) avatar = user.avatarURL({ format: "png", dynamic: true, size: 512 });
+            if (user.avatarURL()) avatar = user.avatarURL(globalVars.displayBannerSettings);
             if (!avatar) return message.channel.send({ content: `**${user.tag}** doesn't have an avatar.` });
             targetImage = avatar;
             targetImageWidth = 128;
