@@ -33,9 +33,10 @@ exports.run = async (client, message, args = []) => {
 
         // Get avatar
         let avatar = null;
+        let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL({ format: "png", dynamic: true, size: 512 });
-        if (!avatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
-        let serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+        if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+        if (!avatar && !serverAvatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
