@@ -34,9 +34,12 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         messageObject['ephemeral'] = ephemeral;
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (message.type != "APPLICATION_COMMAND") return message.channel.send(messageObject);
-
-        return message.reply(messageObject);
+        try {
+            return message.reply(messageObject);
+        } catch (e) {
+            // console.log(e);
+            return message.channel.send(messageObject);
+        };
 
     } catch (e) {
         // Log error
