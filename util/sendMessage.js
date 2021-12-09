@@ -34,7 +34,7 @@ module.exports = async (client, message, replyText, embeds = null, files = null,
         messageObject['ephemeral'] = ephemeral;
         if (message.type != "APPLICATION_COMMAND") messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
-        if (message.type != "APPLICATION_COMMAND" && message.deleted == true) return message.channel.send(messageObject);
+        if (message.type != "APPLICATION_COMMAND") return message.channel.send(messageObject);
         return message.reply(messageObject);
 
     } catch (e) {

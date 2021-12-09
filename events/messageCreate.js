@@ -122,8 +122,6 @@ module.exports = async (client, message) => {
         //     cmd = client.commands.get(client.aliases.get(commandName));
         // } else return;
 
-        if (message.deleted) return;
-
         // Run the command
         if (cmd) {
             // Ignore messages sent in a disabled channel
