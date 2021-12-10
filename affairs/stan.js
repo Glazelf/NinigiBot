@@ -3,15 +3,14 @@ module.exports = async (client) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
+        const Discord = require("discord.js");
+        const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'cest';
         const time = '00 00 20 * * *'; //Sec Min Hour, 8pm
         // const time = '* * * * *'; //Sec Min Hour testing
-        const guildID = client.config.botServerID;
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
-        const Discord = require("discord.js");
-        const giphyRandom = require("giphy-random");
-        const config = require("../config.json");
+        const guildID = client.config.botServerID;
 
         if (client.user.id != "592760951103684618") return;
 
@@ -23,10 +22,11 @@ module.exports = async (client) => {
             let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
             if (candidates.length < 1) return;
 
-            // Random gif
-            const randomGif = await getRandomGif();
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
             let candidateRandom = candidates[randomPick];
+
+            // Random gif
+            const randomGif = await getRandomGif(gifTags);
 
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
@@ -37,16 +37,6 @@ module.exports = async (client) => {
                 .setTimestamp();
             channel.send({ content: candidateRandom.toString(), embeds: [gifEmbed] });
         }, timeZone = timezone, start = true);
-
-        // Get random gif
-        const getRandomGif = async () => {
-            const randomElement = gifTags[Math.floor(Math.random() * gifTags.length)];
-
-            const { data } = await giphyRandom(config.giphy, {
-                tag: randomElement
-            });
-            return data.images.original.url;
-        };
 
     } catch (e) {
         // Log error

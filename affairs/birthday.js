@@ -3,6 +3,7 @@ module.exports = async (client) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
+        const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'cest';
         const time = '05 00 00 * * *'; //Sec Min Hour 
@@ -10,19 +11,23 @@ module.exports = async (client) => {
         const channelID = globalVars.eventChannelID;
         const Discord = require("discord.js");
         const { bank } = require('../database/bank');
-        const { search } = require('../util/search');
+        const gifTags = ["birthday"];
 
         // Create cron job
         new cron.CronJob(time, async () => {
-            let globalVars = require('../events/ready');
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
+
             const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
             if (!birthdayRole) return;
+
             let yesterdayCuties = birthdayRole.members;
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
+
             const cuties = [];
+
             await guild.members.fetch();
+
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
@@ -40,11 +45,14 @@ module.exports = async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === channelID);
 
+            // Random gif
+            const randomGif = await getRandomGif(gifTags);
+
             // Create embed
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
-                .setImage(search("birthday"))
+                .setImage(randomGif)
                 .setTimestamp();
             channel.send({ embeds: [gifEmbed] });
         }, timeZone = timezone, start = true);
