@@ -57,15 +57,15 @@ exports.run = async (client, message) => {
 
 
         let returnString = `Here's a list of Sysbots and their status:
-**Format:** Bot (prefix): status (\`Host#0001\`)
+Format: Bot Name (optional mode) (prefix): status (\`Host#0001\`)
 **Pokémon bots:**
-${Konohana.user.username} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
-${Glaceon.user.username} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
-${BingoBot.user.username} (%): ${BingoBotStatus} (\`${Mingus.tag}\`)
-${PsyBot.user.username} (^): ${PsyBotStatus} (\`${Phoenix.tag}\`)
+${Konohana.nickname || Konohana.user.username} (&): ${KonohanaStatus} (\`${Glaze.tag}\`)
+${Glaceon.nickname || Glaceon.user.username} (.): ${GlaceonStatus} (\`${Artic.tag}\`)
+${BingoBot.nickname || BingoBot.user.username} (%): ${BingoBotStatus} (\`${Mingus.tag}\`)
+${PsyBot.nickname || PsyBot.user.username} (^): ${PsyBotStatus} (\`${Phoenix.tag}\`)
 **ACNH bots:**
-${Ribbot.user.username} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
-${TimTomBot.user.username} (%): ${TimTomBotStatus} (\`${Mingus.tag}\`)
+${Ribbot.nickname || Ribbot.user.username} (;): ${RibbotStatus} (\`${Glaze.tag}\`)
+${TimTomBot.nickname || TimTomBot.user.username} (%): ${TimTomBotStatus} (\`${Mingus.tag}\`)
 
 Before asking a question make sure your question isn't already answered in either ${message.guild.rulesChannel} or <#${globalVars.botChannelID}>.
 **Bots will be hosted when hosts feel like it and have time**, there is no schedule. Asking or even begging for bots is often useless and can be annoying.
