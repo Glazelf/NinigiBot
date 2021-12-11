@@ -54,7 +54,7 @@ exports.run = async (client, message, args = []) => {
 
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');
-        let background = await Canvas.loadImage('./assets/vs.png');
+        let background = await Canvas.loadImage('./assets/images/pokemon/vs.png');
         ctx.drawImage(background, 0, 0);
         ctx.beginPath();
         for (let i = 0; i < 2; i++) ctx.arc(47 + 147 * i, 36, 29, 0, Math.PI * 2, false);
@@ -70,7 +70,7 @@ exports.run = async (client, message, args = []) => {
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
-        background = await Canvas.loadImage('./assets/battleUI.png');
+        background = await Canvas.loadImage('./assets/images/pokemon/battleUI.png');
         ctx.drawImage(background, 0, 0);
         ctx.font = 'normal bolder 14px Arial';
         ctx.fillStyle = '#FFFFFF';
@@ -78,7 +78,7 @@ exports.run = async (client, message, args = []) => {
             ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
         };
 
-        const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
+        const battleSprite = await Canvas.loadImage('./assets/images/pokemon/battleSprite.png');
 
         for (let i = 0; i < 2; i++) {
             if (shinxes[i].shiny) {
@@ -89,8 +89,8 @@ exports.run = async (client, message, args = []) => {
         const nicks = [];
         const prevColors = [0, 0];
         for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nick);
-        const geasson = await Canvas.loadImage('./assets/geasson.png');
-        const geassoff = await Canvas.loadImage('./assets/geassoff.png');
+        const geasson = await Canvas.loadImage('./assets/images/pokemon/geasson.png');
+        const geassoff = await Canvas.loadImage('./assets/images/pokemon/geassoff.png');
 
         for (let i = 0; i < 2; i++) {
             if (shinxes[i].supergeass || shinxes[i].geass > 0) {
@@ -112,7 +112,7 @@ exports.run = async (client, message, args = []) => {
                 if (result === true) {
                     canvas = Canvas.createCanvas(240, 130);
                     ctx = canvas.getContext('2d');
-                    background = await Canvas.loadImage('./assets/results.png');
+                    background = await Canvas.loadImage('./assets/images/pokemon/results.png');
                     ctx.drawImage(background, 0, 0);
                     ctx.beginPath();
                     for (let i = 0; i < 2; i++) ctx.arc(58 + 134 * i, 83, 40, 0, Math.PI * 2, false);

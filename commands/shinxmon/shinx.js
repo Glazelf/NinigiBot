@@ -101,15 +101,15 @@ exports.run = async (client, message, args = []) => {
         } else if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/data.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/data.png');
 
             ctx.drawImage(img, 0, 0);
             if (shinx.shiny) {
-                const cap = await Canvas.loadImage('./assets/shiny.png');
+                const cap = await Canvas.loadImage('./assets/images/pokemon/shiny.png');
                 ctx.drawImage(cap, 97, 202);
             };
 
-            img = await Canvas.loadImage('./assets/owner.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/owner.png');
             ctx.drawImage(img, 48 * !shinx.user_male, 0, 47 + 9 * !shinx.user_male, 70, 407, 427, 47 + 9 * !shinx.user_male, 70);
             ctx.drawImage(img, 59 * !shinx.user_male, 71, 59 - 5 * !shinx.user_male, 49, 398, 156, 59 - 5 * !shinx.user_male, 49);
             ctx.font = applyText(canvas, shinx.nick, 45, 266);
@@ -135,7 +135,7 @@ exports.run = async (client, message, args = []) => {
             ctx.fillText(shinx.equipment[0].toUpperCase() + shinx.equipment.slice(1), 15, 530);
 
             if (shinx.sleeping) {
-                img = await Canvas.loadImage('./assets/sleepicon.png');
+                img = await Canvas.loadImage('./assets/images/pokemon/sleepicon.png');
                 ctx.drawImage(img, 270, 155);
             };
 
@@ -148,11 +148,11 @@ exports.run = async (client, message, args = []) => {
 
             canvas = Canvas.createCanvas(468, 386);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/room.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/room.png');
             ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/fieldShinx.png');
             let reaction;
             if (shinx.sleeping) {
                 reaction = tapping[0];
@@ -165,12 +165,12 @@ exports.run = async (client, message, args = []) => {
             ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
 
             if (!isNaN(reaction[2])) {
-                img = await Canvas.loadImage('./assets/reactions.png');
+                img = await Canvas.loadImage('./assets/images/pokemon/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
             };
 
             if (now.getHours() > 20 || now.getHours() < 4) {
-                img = await Canvas.loadImage('./assets/winNight.png');
+                img = await Canvas.loadImage('./assets/images/pokemon/winNight.png');
                 ctx.drawImage(img, 198, 52);
             };
 
@@ -188,13 +188,13 @@ exports.run = async (client, message, args = []) => {
 
             canvas = Canvas.createCanvas(471, 355);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/nicks.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/nicks.png');
             ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/fieldShinx.png');
             ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 324, 223, 57, 48);
-            img = await Canvas.loadImage('./assets/reactions.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/reactions.png');
             ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
             const text = `Nickname changed to **${nickname}**!`;
             return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
@@ -208,13 +208,13 @@ exports.run = async (client, message, args = []) => {
             if (shinyCharm.length < 1) return sendMessage(client, message, `You need a Shiny Charm to do this.`);
             canvas = Canvas.createCanvas(255, 192);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/sky.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/sky.png');
             ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/sprite.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/sprite.png');
             ctx.drawImage(img, 94 * !shinx.shiny, 0, 94, 72, 87, 61, 94, 72);
 
             if (!shinx.shiny) {
-                img = await Canvas.loadImage('./assets/sparkle.png');
+                img = await Canvas.loadImage('./assets/images/pokemon/sparkle.png');
                 ctx.drawImage(img, 49, 10);
             };
 
@@ -235,13 +235,13 @@ exports.run = async (client, message, args = []) => {
 
             canvas = Canvas.createCanvas(428, 310);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/frontier.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/frontier.png');
             ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/fieldShinx.png');
             ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
-            img = await Canvas.loadImage('./assets/reactions.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/reactions.png');
             ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
             const text = `Equipment changed to ${equipmentName}!`;
             return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
@@ -261,9 +261,9 @@ exports.run = async (client, message, args = []) => {
 
             canvas = Canvas.createCanvas(393, 299);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/dining.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/dining.png');
             ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/mc.png');
             const guests = await bank.currency.getRandomShinx(2, shinx.user_id, message.guild);
             const userFinder = message.guild.members.cache;
             ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
@@ -279,7 +279,7 @@ exports.run = async (client, message, args = []) => {
                 };
             };
 
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/fieldShinx.png');
             ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
 
             for (let i = 0; i < guests.length; i++) {
@@ -287,11 +287,11 @@ exports.run = async (client, message, args = []) => {
             };
 
             const reaction = eating[Math.floor(Math.random() * eating.length)];
-            img = await Canvas.loadImage('./assets/reactions.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
 
             if (now.getHours() > 20 || now.getHours() < 6) {
-                img = await Canvas.loadImage('./assets/dinNight.png');
+                img = await Canvas.loadImage('./assets/images/pokemon/dinNight.png');
                 ctx.drawImage(img, 199, 0);
             };
 
@@ -300,7 +300,7 @@ exports.run = async (client, message, args = []) => {
         } else if (args[0] == 'play') {
             canvas = Canvas.createCanvas(578, 398);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/landscapes.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/landscapes.png');
             ctx.drawImage(img, 0, 0);
             const now = new Date();
             let time;
@@ -317,7 +317,7 @@ exports.run = async (client, message, args = []) => {
             const layout = visitors[Math.floor(Math.random() * visitors.length)];
             const guests = await bank.currency.getRandomShinx(layout.length, shinx.user_id, message.guild);
             const userFinder = message.guild.members.cache;
-            img = await Canvas.loadImage('./assets/mc.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/mc.png');
             ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
             ctx.font = 'normal bolder 18px Arial';
             ctx.fillStyle = 'purple';
@@ -331,7 +331,7 @@ exports.run = async (client, message, args = []) => {
                 };
             };
 
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/fieldShinx.png');
             ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
 
             for (let i = 0; i < guests.length; i++) {
@@ -346,7 +346,7 @@ exports.run = async (client, message, args = []) => {
                 reaction = playing[Math.floor(Math.random() * (playing.length - 1)) + 1];
             };
 
-            img = await Canvas.loadImage('./assets/reactions.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.play(reaction[2]);
             return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
@@ -359,7 +359,7 @@ exports.run = async (client, message, args = []) => {
         } else {
             canvas = Canvas.createCanvas(256, 160);
             ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/park.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/park.png');
             ctx.drawImage(img, 0, 0);
             let time;
 
@@ -372,9 +372,9 @@ exports.run = async (client, message, args = []) => {
             };
 
             ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
-            img = await Canvas.loadImage('./assets/trainer.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/trainer.png');
             ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
-            img = await Canvas.loadImage('./assets/portraits.png');
+            img = await Canvas.loadImage('./assets/images/pokemon/portraits.png');
             let conversation = await bank.currency.getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
             return sendMessage(client, message, `**${shinx.nick}** ${conversation.quote}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
