@@ -19,6 +19,9 @@ ffmpeg.exe
 README.md
 config.json
 launch.json
-/
 *.dev.js
 /.vscode
+# Roms
+*.gbc
+*.gb
+*.gba
