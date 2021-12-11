@@ -12,6 +12,7 @@ exports.run = async (client, message, args = []) => {
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/pokemon/capitalizeString');
+        const randomNumber = require('../../util/randomNumber');
 
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
 
@@ -207,6 +208,9 @@ exports.run = async (client, message, args = []) => {
                 var pokemonName = args;
                 var pokemonID;
 
+                let minPkmID = 1; // Bulbasaur
+                let maxPkmID = 898; // Calyrex
+
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
 
@@ -216,6 +220,10 @@ exports.run = async (client, message, args = []) => {
 
                 // Easter egg name aliases
                 await correctValue(easterEggName, pokemonName);
+
+                // Random Pokémon if argument is "random"
+                let randomID = await randomNumber(minPkmID, maxPkmID);
+                if (pokemonName.toLowerCase() == "random") pokemonName = randomID;
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
