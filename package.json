@@ -17,7 +17,7 @@
     "owoify-js": "^1.0.7",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^4.0.0",
-    "pureimage": "^0.3.6",
+    "pureimage": "^0.3.7",
     "sequelize": "^6.11.0",
     "sqlite3": "^5.0.2"
   },
