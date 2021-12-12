@@ -25,4 +25,4 @@ launch.json
 *.gbc
 *.gb
 *.gba
-/assets/images/roms/screenshot.png
+/assets/images/roms/screenshot.*
