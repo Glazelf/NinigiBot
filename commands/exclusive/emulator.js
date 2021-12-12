@@ -16,7 +16,6 @@ exports.run = async (client, message) => {
 
         let currentRomName = "PokemonBlue.gb"; // Rom name
         let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}`);
-        let absoluteScreenPath = path.resolve(`./assets/images/roms/screenshot.jpg`);
         let rom = fs.readFileSync(absoluteRomPath); // Read rom
 
         let adminBool = await isAdmin(client, message.member);
@@ -42,11 +41,11 @@ exports.run = async (client, message) => {
             gameboy.pressKey(Gameboy.KEYMAP.A);
 
             setInterval(async function () {
-                await sendScreenshot(gameboy, absoluteScreenPath);
+                await sendScreenshot(gameboy);
             }, 5000);
         }, 0);
 
-        async function sendScreenshot(gameboy, absoluteScreenPath) {
+        async function sendScreenshot(gameboy) {
             let screen = gameboy.getScreen();
             let gameboyWidth = 160;
             let gameboyHeight = 144;
