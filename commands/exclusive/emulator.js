@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -62,7 +62,7 @@ exports.run = async (client, message) => {
         // Sending screenshot
         setInterval(function () {
             sendScreenshot(gameboy);
-        }, 60000); // 1 minute, but only if an input has been made (WIP)
+        }, 10000); // 10 seconds, but only if an input has been made (WIP)
 
         // Saving
         setInterval(function () {
