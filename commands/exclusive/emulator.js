@@ -14,7 +14,7 @@ exports.run = async (client, message) => {
         const Gameboy = require('serverboy');
         const gameboy = new Gameboy();
 
-        let currentRomName = "PokemonBlue.gb"; // Rom name
+        let currentRomName = "PokemonBlue.gb"; // Rom file name. Supported roms: .gb & .gbc
         let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}`);
         let rom = fs.readFileSync(absoluteRomPath); // Read rom
 
@@ -25,25 +25,32 @@ exports.run = async (client, message) => {
         let emuChannelID = "919360126450819102";
         // if (message.channel.id !== emuChannelID) return;
 
+        // Loading rom
+        let saveData; // Implement saving/loading
         sendMessage(client, message, `Starting emulator...`);
-        gameboy.loadRom(rom);
+        gameboy.loadRom(rom, saveData);
 
-        setTimeout(async function () {
-            // Whatever custom logic you need
-            let memory = gameboy.getMemory();
-            if (memory[3000] === 0) {
-                gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
-            };
-            setInterval(async function () {
-                gameboy.doFrame();
-            }, 1000 / 60); // 60 FPS
+        // Logic examples
+        let memory = gameboy.getMemory();
+        if (memory[3000] === 0) {
+            gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
+        };
+        gameboy.pressKey(Gameboy.KEYMAP.A);
+
+        // Advance frame
+        setInterval(async function () {
             gameboy.doFrame();
-            gameboy.pressKey(Gameboy.KEYMAP.A);
+        }, 1000 / 60); // 60 FPS
 
-            setInterval(async function () {
-                await sendScreenshot(gameboy);
-            }, 5000);
-        }, 0);
+        // Sending screenshot
+        setInterval(function () {
+            sendScreenshot(gameboy);
+        }, 5000); // Interval to send screenshot, will probably be altered to after every few inputs or a longer time period
+
+        // Saving
+        setInterval(function () {
+            let saveData = gameboy.getSaveData();
+        }, 900000) // 15 minutes
 
         async function sendScreenshot(gameboy) {
             let screen = gameboy.getScreen();
