@@ -1,0 +1,1 @@
+## Rom screenshots will be (temporarily) saved here.
