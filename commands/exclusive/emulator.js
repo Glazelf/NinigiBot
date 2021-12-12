@@ -9,16 +9,15 @@ exports.run = async (client, message) => {
 
         const fs = require('fs');
         const path = require('path');
-        const { promisify } = require('util');
         const Canvas = require('canvas');
         const { PassThrough } = require('stream');
         const stream = new PassThrough();
         const Gameboy = await import('serverboy');
         const gameboy = new Gameboy.default();
 
-        let currentRomName = "PokemonCrystal.gbc"; // Rom name
+        let currentRomName = "PokemonBlue.gb"; // Rom name
         let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}`);
-        let absoluteScreenPath = path.resolve(`./assets/images/roms/screenshot.png`);
+        let absoluteScreenPath = path.resolve(`./assets/images/roms/screenshot.jpg`);
         let rom = fs.readFileSync(absoluteRomPath); // Read rom
 
         let adminBool = await isAdmin(client, message.member);
@@ -38,20 +37,24 @@ exports.run = async (client, message) => {
                 gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
             };
             gameboy.doFrame();
+            gameboy.pressKey("A")
 
             await sendScreenshot(gameboy, absoluteScreenPath);
         }, 0);
 
         async function sendScreenshot(gameboy, absoluteScreenPath) {
-            const writeFileAsync = promisify(fs.writeFile);
             let screenData = gameboy.getScreen();
             let screenBuffer = Buffer.from(screenData);
-            console.log(screenBuffer);
-            await writeFileAsync(absoluteScreenPath, screenBuffer, function (e) {
-                if (e) logger(e, client, message);
-            });
-            let imageCanvas = await Canvas.loadImage(absoluteScreenPath);
-            sendMessage(client, message, null, null, imageCanvas);
+
+            console.log({ screenData });
+            console.log({ screenBuffer });
+
+            await fs.promises.writeFile(absoluteScreenPath, screenBuffer, "binary");
+            console.log(1)
+            let imageCanvas = await Canvas.loadImage(screenBuffer);
+            console.log(2)
+
+            sendMessage(client, message, "test", null, imageCanvas);
         };
 
     } catch (e) {
