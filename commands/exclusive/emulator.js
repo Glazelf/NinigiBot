@@ -38,7 +38,7 @@ exports.run = async (client, message) => {
         gameboy.pressKey(Gameboy.KEYMAP.A);
 
         // Advance frame
-        setInterval(async function () {
+        setInterval(function () {
             gameboy.doFrame();
         }, 1000 / 60); // 60 FPS
 
@@ -52,7 +52,7 @@ exports.run = async (client, message) => {
             let saveData = gameboy.getSaveData();
         }, 900000) // 15 minutes
 
-        async function sendScreenshot(gameboy) {
+        function sendScreenshot(gameboy) {
             let screen = gameboy.getScreen();
             let gameboyWidth = 160;
             let gameboyHeight = 144;
