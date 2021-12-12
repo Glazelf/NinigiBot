@@ -6,10 +6,11 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
         // Default time the user is muted in minutes
         let muteTime = 60;
+        let maxMuteTime = 10080;
 
         // Get user
         if (!args[0]) return sendMessage(client, message, `Please provide a mentioned user as an argument.`);
@@ -17,7 +18,7 @@ exports.run = async (client, message, args = []) => {
         if (args[1]) {
             muteTime = args[1];
             if (isNaN(muteTime) || 1 > muteTime) return sendMessage(client, message, `Please provide a valid number.`);
-            if (muteTime > 10080) muteTime = 10080;
+            if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         };
 
         let member;
@@ -39,19 +40,20 @@ exports.run = async (client, message, args = []) => {
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && !adminBool) return sendMessage(client, message, `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).`);
 
-        // If already muted, unmute. If not, mute.
-        let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
-        if (isMuted) {
-            // Remove timeout (if possible)
-            // await member.roles.remove(role);
-            return sendMessage(client, message, `Unmuted **${member.user.tag}** (${member.id}).`);
-        } else {
-            // Timeout logic
-            // await member.roles.add(role);
-            // sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
-            // // sets a timeout to unmute the user.
-            // setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
+        let reason = "Not specified.";
+        if (args[2]) {
+            reason = args.slice(2, args.length + 1);
+            reason = reason.join(' ');
         };
+
+        // Timeout logic
+        try {
+            await member.timeout(muteTime, reason);
+            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
+        } catch (e) {
+            // console.log(e);
+            if (e.toString().includes("Missing Permissions")) return sendMessage(client, message, `Failed to time **${user.tag}** out. I probably lack permissions.`);
+        }
 
     } catch (e) {
         // Log error
@@ -61,5 +63,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Mute",
-    type: "USER"
+    type: "USER",
+    aliases: ["timeout"]
 };
