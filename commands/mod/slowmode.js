@@ -8,7 +8,7 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(client, message.member);
 
         if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
-        if (!message.channel.rateLimitPerUser) return sendMessage(client, message, `This channel type doesn't support slowmode.`);
+        if (message.channel.type != "GUILD_TEXT") return sendMessage(client, message, `This channel type doesn't support slowmode.`);
 
         let slowmodeMaxSeconds = 21600;
 

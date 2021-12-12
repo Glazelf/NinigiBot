@@ -25,4 +25,5 @@ launch.json
 *.gbc
 *.gb
 *.gba
+*.sav
 /assets/images/roms/screenshot.*
