@@ -14,9 +14,12 @@ exports.run = async (client, message) => {
         const Gameboy = require('serverboy');
         const gameboy = new Gameboy();
 
-        let currentRomName = "PokemonBlue.gb"; // Rom file name. Supported roms: .gb & .gbc
-        let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}`);
+        let currentRomName = "PokemonBlue"; // Rom file name. Supported roms: .gb & .gbc
+        let romType = ".gb";
+        let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}${romType}`);
+        let absoluteSavePath = absoluteRomPath.replace(romType, ".sav");
         let rom = fs.readFileSync(absoluteRomPath); // Read rom
+        let save = fs.readFileSync(absoluteSavePath); // Read save
 
         let adminBool = await isAdmin(client, message.member);
         if (message.guild.id !== client.config.botServerID || !adminBool) return;
@@ -26,9 +29,8 @@ exports.run = async (client, message) => {
         // if (message.channel.id !== emuChannelID) return;
 
         // Loading rom
-        let saveData; // Implement saving/loading
         sendMessage(client, message, `Starting emulator...`);
-        gameboy.loadRom(rom, saveData);
+        gameboy.loadRom(rom, save);
 
         // Logic examples
         let memory = gameboy.getMemory();
@@ -50,6 +52,8 @@ exports.run = async (client, message) => {
         // Saving
         setInterval(function () {
             let saveData = gameboy.getSaveData();
+            fs.writeFileSync(absoluteSavePath, saveData);
+            sendMessage(client, message, `Saving game data.`);
         }, 900000) // 15 minutes
 
         function sendScreenshot(gameboy) {
