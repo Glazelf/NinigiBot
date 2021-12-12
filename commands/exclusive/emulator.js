@@ -18,8 +18,22 @@ exports.run = async (client, message) => {
         let romType = ".gb";
         let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}${romType}`);
         let absoluteSavePath = absoluteRomPath.replace(romType, ".sav");
-        let rom = fs.readFileSync(absoluteRomPath); // Read rom
-        let save = fs.readFileSync(absoluteSavePath); // Read save
+
+        // Read rom
+        let rom = null;
+        try {
+            rom = fs.readFileSync(absoluteRomPath);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `No rom could be found!`);
+        };
+        // Read save
+        let save = null;
+        try {
+            save = fs.readFileSync(absoluteSavePath);
+        } catch (e) {
+            // console.log(e);
+        };
 
         let adminBool = await isAdmin(client, message.member);
         if (message.guild.id !== client.config.botServerID || !adminBool) return;
@@ -30,6 +44,7 @@ exports.run = async (client, message) => {
 
         // Loading rom
         sendMessage(client, message, `Starting emulator...`);
+
         gameboy.loadRom(rom, save);
 
         // Logic examples
@@ -52,7 +67,8 @@ exports.run = async (client, message) => {
         // Saving
         setInterval(function () {
             let saveData = gameboy.getSaveData();
-            fs.writeFileSync(absoluteSavePath, saveData);
+            let saveBuffer = Buffer.from(saveData);
+            fs.writeFileSync(absoluteSavePath, saveBuffer);
             sendMessage(client, message, `Saving game data.`);
         }, 900000) // 15 minutes
 
