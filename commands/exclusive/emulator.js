@@ -10,8 +10,7 @@ exports.run = async (client, message) => {
         const fs = require('fs');
         const path = require('path');
         const Canvas = require('canvas');
-        const { PassThrough } = require('stream');
-        const stream = new PassThrough();
+        const PNG = require('pngjs').PNG;
         const Gameboy = await import('serverboy');
         const gameboy = new Gameboy.default();
 
@@ -43,18 +42,25 @@ exports.run = async (client, message) => {
         }, 0);
 
         async function sendScreenshot(gameboy, absoluteScreenPath) {
-            let screenData = gameboy.getScreen();
-            let screenBuffer = Buffer.from(screenData);
+            let screen = gameboy.getScreen();
+            let gameboyWidth = 160;
+            let gameboyHeight = 144;
+            let canvas = Canvas.createCanvas(gameboyWidth, gameboyHeight);
+            let ctx = canvas.getContext('2d');
+            let data = ctx.createImageData(gameboyWidth, gameboyHeight);
+            for (let i = 0; i < screen.length; i++) {
+                data[i] = screen[i];
+            };
+            ctx.putImageData(data, 0, 0);
 
-            console.log({ screenData });
-            console.log({ screenBuffer });
+            //write to PNG (using pngjs)
+            let png = new PNG({ width: gameboyWidth, height: gameboyHeight });
+            for (let i = 0; i < screen.length; i++) {
+                png.data[i] = screen[i];
+            };
+            let buffer = PNG.sync.write(png);
 
-            await fs.promises.writeFile(absoluteScreenPath, screenBuffer, "binary");
-            console.log(1)
-            let imageCanvas = await Canvas.loadImage(screenBuffer);
-            console.log(2)
-
-            sendMessage(client, message, "test", null, imageCanvas);
+            sendMessage(client, message, "test", null, buffer);
         };
 
     } catch (e) {
