@@ -11,8 +11,8 @@ exports.run = async (client, message) => {
         const path = require('path');
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
-        const Gameboy = await import('serverboy');
-        const gameboy = new Gameboy.default();
+        const Gameboy = require('serverboy');
+        const gameboy = new Gameboy();
 
         let currentRomName = "PokemonBlue.gb"; // Rom name
         let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}`);
@@ -36,9 +36,11 @@ exports.run = async (client, message) => {
                 gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
             };
             gameboy.doFrame();
-            gameboy.pressKey("A")
+            gameboy.pressKey(Gameboy.KEYMAP.A);
 
-            await sendScreenshot(gameboy, absoluteScreenPath);
+            setInterval(async function () {
+                await sendScreenshot(gameboy, absoluteScreenPath);
+            }, 1000);
         }, 0);
 
         async function sendScreenshot(gameboy, absoluteScreenPath) {
