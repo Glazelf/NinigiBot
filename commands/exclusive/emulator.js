@@ -35,12 +35,15 @@ exports.run = async (client, message) => {
             if (memory[3000] === 0) {
                 gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
             };
+            setInterval(async function () {
+                gameboy.doFrame();
+            }, 1000 / 60); // 60 FPS
             gameboy.doFrame();
             gameboy.pressKey(Gameboy.KEYMAP.A);
 
             setInterval(async function () {
                 await sendScreenshot(gameboy, absoluteScreenPath);
-            }, 1000);
+            }, 5000);
         }, 0);
 
         async function sendScreenshot(gameboy, absoluteScreenPath) {
