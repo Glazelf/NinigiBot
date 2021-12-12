@@ -45,7 +45,7 @@ exports.run = async (client, message) => {
         // Sending screenshot
         setInterval(function () {
             sendScreenshot(gameboy);
-        }, 5000); // Interval to send screenshot, will probably be altered to after every few inputs or a longer time period
+        }, 60000); // 1 minute, but only if an input has been made (WIP)
 
         // Saving
         setInterval(function () {
