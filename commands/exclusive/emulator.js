@@ -16,7 +16,7 @@ exports.run = async (client, message, args = []) => {
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
 
-        let FPS = 120;
+        let FPS = 60; // Amount of frames to advance per second
 
         // Emulator channel
         let emuChannelID = "919360126450819102";
@@ -40,6 +40,11 @@ exports.run = async (client, message, args = []) => {
                 let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}${romType}`);
                 let absoluteSavePath = absoluteRomPath.replace(romType, ".sav");
 
+                // Initiate interval variables
+                let frameInterval;
+                let screenshotInterval;
+                let savingInterval;
+
                 // Read rom
                 let rom = null;
                 try {
@@ -61,23 +66,26 @@ exports.run = async (client, message, args = []) => {
                 client.gameboy.loadRom(rom, save);
 
                 // Advance frame
-                setInterval(function () {
+                frameInterval = setInterval(function () {
                     client.gameboy.doFrame();
                 }, 1000 / FPS); // FPS
 
                 // Sending screenshot
-                setInterval(function () {
+                screenshotInterval = setInterval(function () {
                     if (client.gameboyInput) sendScreenshot(client.gameboy);
                     client.gameboyInput = false;
                 }, 10000); // 10 seconds, but only if an input has been made (WIP)
 
                 // Auto-saving
-                setInterval(function () {
+                savingInterval = setInterval(function () {
                     saveGame(absoluteSavePath);
                 }, 900000) // 15 minutes
                 break;
             case "kill": // Kill instance
                 if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+                clearInterval(frameInterval);
+                clearInterval(screenshotInterval);
+                clearInterval(savingInterval);
                 saveGame(absoluteSavePath); // Save before quitting
                 client.gameboy = null; // Null instance
                 break;
