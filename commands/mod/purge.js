@@ -63,7 +63,7 @@ exports.run = async (client, message, args) => {
             try {
                 let messages = await message.channel.messages.fetch({ limit: amount });
                 await message.channel.bulkDelete(messages);
-                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.` }).then(message => {
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}. This confirmation will be deleted in 10 seconds.` }).then(message => {
                     setTimeout(function () {
                         try {
                             message.delete();
