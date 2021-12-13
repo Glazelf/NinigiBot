@@ -22,7 +22,7 @@ exports.run = async (client, message, args = []) => {
         let subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
-            case "start":
+            case "start": // Start instance and set intervals
                 if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
                 if (client.gameboy) return sendMessage(client, message, `A gameboy is already running.`);
 
@@ -71,6 +71,7 @@ exports.run = async (client, message, args = []) => {
                 // Sending screenshot
                 setInterval(function () {
                     if (client.gameboyInput) sendScreenshot(client.gameboy);
+                    client.gameboyInput = false;
                 }, 10000); // 10 seconds, but only if an input has been made (WIP)
 
                 // Auto-saving
@@ -78,10 +79,14 @@ exports.run = async (client, message, args = []) => {
                     saveGame(absoluteSavePath);
                 }, 900000) // 15 minutes
                 break;
-            case "kill":
+            case "kill": // Kill instance
                 if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
                 saveGame(absoluteSavePath); // Save before quitting
                 client.gameboy = null; // Null instance
+                break;
+
+            default: // Controller inputs
+
                 break;
         };
 
@@ -104,7 +109,6 @@ exports.run = async (client, message, args = []) => {
             };
             let buffer = PNG.sync.write(png);
 
-            client.gameboyInput = false;
             sendMessage(client, message, "test", null, buffer);
         };
 
