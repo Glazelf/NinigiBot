@@ -19,7 +19,7 @@ exports.run = async (client, message, args = []) => {
         // Emulator channel
         let emuChannelID = "919360126450819102";
         await message.guild.channels.fetch();
-        let emuChannel = await message.guild.channels.cache.find(emuChannelID);
+        let emuChannel = await message.guild.channels.cache.get(emuChannelID);
 
         if (!args[0]) return sendMessage(client, message, `This command requires a subcommand.`);
         let subCommand = args[0].toLowerCase();
@@ -61,7 +61,7 @@ exports.run = async (client, message, args = []) => {
                 // Advance frame
                 setInterval(function () {
                     client.gameboy.doFrame();
-                }, 1000 / 60); // 60 FPS
+                }, 1000 / 120); // 120 FPS
 
                 // Sending screenshot
                 setInterval(function () {
@@ -119,7 +119,7 @@ exports.run = async (client, message, args = []) => {
             };
             let buffer = PNG.sync.write(png);
 
-            emuChannel.send({ content: "Game screenshot:", attachments: [buffer] });
+            emuChannel.send({ content: "Game screenshot:", files: [buffer] });
         };
 
         function saveGame(absoluteSavePath) {
