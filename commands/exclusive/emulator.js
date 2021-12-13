@@ -18,7 +18,8 @@ exports.run = async (client, message, args = []) => {
 
         // Emulator channel
         let emuChannelID = "919360126450819102";
-        let emuChannel = message.guild.channels.fetch(emuChannelID);
+        await message.guild.channels.fetch();
+        let emuChannel = await message.guild.channels.cache.find(emuChannelID);
 
         if (!args[0]) return sendMessage(client, message, `This command requires a subcommand.`);
         let subCommand = args[0].toLowerCase();
