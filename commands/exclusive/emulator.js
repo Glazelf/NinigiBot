@@ -65,8 +65,8 @@ exports.run = async (client, message, args = []) => {
                 client.gameboy.loadRom(rom, save);
 
                 // Advance frame
-                frameInterval = setInterval(function () {
-                    client.gameboy.doFrame();
+                frameInterval = setInterval(async function () {
+                    await client.gameboy.doFrame();
                 }, 1000 / FPS); // FPS
 
                 // Sending screenshot
@@ -103,7 +103,7 @@ exports.run = async (client, message, args = []) => {
                 client.gameboyInput = true;
                 // Try to input
                 try {
-                    client.gameboy.pressKeys([Gameboy.KEYMAP[input]]);
+                    await client.gameboy.pressKey(Gameboy.KEYMAP[input]);
                     return message.react('✔️');
                 } catch (e) {
                     console.log(e);
@@ -130,7 +130,7 @@ exports.run = async (client, message, args = []) => {
             };
             let buffer = PNG.sync.write(png);
 
-            emuChannel.send({ content: `${currentRomName} screenshot:`, files: [buffer] });
+            return emuChannel.send({ content: `${currentRomName} screenshot:`, files: [buffer] });
         };
 
         function saveGame(absoluteSavePath) {
