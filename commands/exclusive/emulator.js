@@ -16,6 +16,8 @@ exports.run = async (client, message, args = []) => {
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
 
+        let FPS = 120;
+
         // Emulator channel
         let emuChannelID = "919360126450819102";
         await message.guild.channels.fetch();
@@ -61,7 +63,7 @@ exports.run = async (client, message, args = []) => {
                 // Advance frame
                 setInterval(function () {
                     client.gameboy.doFrame();
-                }, 1000 / 120); // 120 FPS
+                }, 1000 / FPS); // FPS
 
                 // Sending screenshot
                 setInterval(function () {
@@ -126,7 +128,7 @@ exports.run = async (client, message, args = []) => {
             let saveData = client.gameboy.getSaveData();
             let saveBuffer = Buffer.from(saveData);
             fs.writeFileSync(absoluteSavePath, saveBuffer);
-            sendMessage(client, message, `Saving game data.`);
+            emuChannel.send({ content: "Saving game data." });
         };
 
     } catch (e) {
