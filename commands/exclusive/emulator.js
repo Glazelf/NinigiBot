@@ -8,7 +8,7 @@ exports.run = async (client, message, args = []) => {
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
 
-        if (message.guild.id !== globalVars.botServerID) return;
+        if (message.guild.id != client.config.botServerID) return;
 
         const fs = require('fs');
         const path = require('path');
@@ -23,7 +23,7 @@ exports.run = async (client, message, args = []) => {
 
         switch (subCommand) {
             case "start": // Start instance and set intervals
-                if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+                if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
                 if (client.gameboy) return sendMessage(client, message, `A gameboy is already running.`);
 
                 // Init global variables
@@ -86,6 +86,11 @@ exports.run = async (client, message, args = []) => {
                 break;
 
             default: // Controller inputs
+                if (!client.gameboy) return sendMessage(client, message, `No gameboy is currently running.`);
+
+                let keymapOptions = ["RIGHT", "LEFT", "UP", "DOWN", "A", "B", "SELECT", "START"];
+                let input = args[0].toUpperCase();
+                if (!keymapOptions.includes(input)) return sendMessage(client, message, `Please provide a possible button to input. \nOptions: ${keymapOptions}`);
 
                 break;
         };
