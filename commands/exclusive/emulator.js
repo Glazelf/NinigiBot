@@ -12,7 +12,7 @@ exports.run = async (client, message, args = []) => {
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
         const Gameboy = require('serverboy');
-        const gameboy = new Gameboy();
+        client.gameboy = new Gameboy();
 
         let currentRomName = "PokemonBlue"; // Rom file name. Supported roms: .gb & .gbc
         let romType = ".gb";
@@ -45,35 +45,32 @@ exports.run = async (client, message, args = []) => {
         // Loading rom
         sendMessage(client, message, `Starting emulator...`);
 
-        gameboy.loadRom(rom, save);
+        client.gameboy.loadRom(rom, save);
 
         // Logic examples
         let memory = gameboy.getMemory();
         if (memory[3000] === 0) {
-            gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
+            client.gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
         };
-        gameboy.pressKey(Gameboy.KEYMAP.A);
+        client.gameboy.pressKey(Gameboy.KEYMAP.A);
 
         // Advance frame
         setInterval(function () {
-            gameboy.doFrame();
+            client.gameboy.doFrame();
         }, 1000 / 60); // 60 FPS
 
         // Sending screenshot
         setInterval(function () {
-            sendScreenshot(gameboy);
+            sendScreenshot(client.gameboy);
         }, 10000); // 10 seconds, but only if an input has been made (WIP)
 
-        // Saving
+        // Auto-saving
         setInterval(function () {
-            let saveData = gameboy.getSaveData();
-            let saveBuffer = Buffer.from(saveData);
-            fs.writeFileSync(absoluteSavePath, saveBuffer);
-            sendMessage(client, message, `Saving game data.`);
+            saveGame(client.gameboy, absoluteSavePath)
         }, 900000) // 15 minutes
 
-        function sendScreenshot(gameboy) {
-            let screen = gameboy.getScreen();
+        function sendScreenshot() {
+            let screen = client.gameboy.getScreen();
             let gameboyWidth = 160;
             let gameboyHeight = 144;
             let canvas = Canvas.createCanvas(gameboyWidth, gameboyHeight);
@@ -92,6 +89,13 @@ exports.run = async (client, message, args = []) => {
             let buffer = PNG.sync.write(png);
 
             sendMessage(client, message, "test", null, buffer);
+        };
+
+        function saveGame(absoluteSavePath) {
+            let saveData = client.gameboy.getSaveData();
+            let saveBuffer = Buffer.from(saveData);
+            fs.writeFileSync(absoluteSavePath, saveBuffer);
+            sendMessage(client, message, `Saving game data.`);
         };
 
     } catch (e) {
