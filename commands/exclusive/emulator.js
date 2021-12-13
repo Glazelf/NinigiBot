@@ -16,7 +16,16 @@ exports.run = async (client, message, args = []) => {
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
 
+        // Initiate interval variables
+        let frameInterval;
+        let screenshotInterval;
+        let savingInterval;
+
         let FPS = 60; // Amount of frames to advance per second
+        let currentRomName = "PokemonBlue"; // Rom file name
+        let romType = ".gb"; // Rom file extension. Supported: .gb & .gbc
+        let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}${romType}`);
+        let absoluteSavePath = absoluteRomPath.replace(romType, ".sav");
 
         // Emulator channel
         let emuChannelID = "919360126450819102";
@@ -34,16 +43,6 @@ exports.run = async (client, message, args = []) => {
                 // Init global variables
                 client.gameboy = new Gameboy(); // Global instance of emulator
                 client.gameboyInput = true; // Whether or not an input has been made since last screenshot.
-
-                let currentRomName = "PokemonBlue"; // Rom file name. Supported roms: .gb & .gbc
-                let romType = ".gb";
-                let absoluteRomPath = path.resolve(`./assets/roms/${currentRomName}${romType}`);
-                let absoluteSavePath = absoluteRomPath.replace(romType, ".sav");
-
-                // Initiate interval variables
-                let frameInterval;
-                let screenshotInterval;
-                let savingInterval;
 
                 // Read rom
                 let rom = null;
@@ -81,6 +80,9 @@ exports.run = async (client, message, args = []) => {
                     saveGame(absoluteSavePath);
                 }, 900000) // 15 minutes
                 break;
+            case "save": // Manual saving
+                saveGame(absoluteSavePath);
+                break;
             case "kill": // Kill instance
                 if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
                 clearInterval(frameInterval);
@@ -101,8 +103,7 @@ exports.run = async (client, message, args = []) => {
                 client.gameboyInput = true;
                 // Try to input
                 try {
-                    client.gameboy.pressKey(Gameboy.KEYMAP[input]);
-
+                    client.gameboy.pressKeys([Gameboy.KEYMAP[input]]);
                     return message.react('✔️');
                 } catch (e) {
                     console.log(e);
@@ -129,7 +130,7 @@ exports.run = async (client, message, args = []) => {
             };
             let buffer = PNG.sync.write(png);
 
-            emuChannel.send({ content: "Game screenshot:", files: [buffer] });
+            emuChannel.send({ content: `${currentRomName} screenshot:`, files: [buffer] });
         };
 
         function saveGame(absoluteSavePath) {
