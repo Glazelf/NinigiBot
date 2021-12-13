@@ -16,14 +16,16 @@ exports.run = async (client, message, args = []) => {
         const PNG = require('pngjs').PNG;
 
         // Emulator channel
-        let emuChannel = "919360126450819102";
+        let emuChannelID = "919360126450819102";
 
         if (!args[0]) return sendMessage(client, message, `This command requires a subcommand.`);
         let subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
             case "start":
-                if (message.guild.id !== client.config.botServerID || !adminBool) return;
+                if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+                if (client.gameboy) return sendMessage(client, message, `A gameboy is already running.`);
+
                 // Init global variables
                 const Gameboy = require('serverboy');
                 client.gameboy = new Gameboy(); // Global instance of emulator
@@ -73,8 +75,13 @@ exports.run = async (client, message, args = []) => {
 
                 // Auto-saving
                 setInterval(function () {
-                    saveGame(client.gameboy, absoluteSavePath)
+                    saveGame(absoluteSavePath);
                 }, 900000) // 15 minutes
+                break;
+            case "kill":
+                if (message.author.id !== globalVars.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+                saveGame(absoluteSavePath); // Save before quitting
+                client.gameboy = null; // Null instance
                 break;
         };
 
