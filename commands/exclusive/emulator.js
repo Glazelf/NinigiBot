@@ -12,24 +12,25 @@ exports.run = async (client, message, args = []) => {
 
         const fs = require('fs');
         const path = require('path');
+        const Gameboy = require('serverboy');
         const Canvas = require('canvas');
         const PNG = require('pngjs').PNG;
 
         // Emulator channel
         let emuChannelID = "919360126450819102";
+        let emuChannel = message.guild.channels.fetch(emuChannelID);
 
         if (!args[0]) return sendMessage(client, message, `This command requires a subcommand.`);
         let subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
-            case "start": // Start instance and set intervals
+            case "boot": // Start instance and set intervals
                 if (message.author.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
                 if (client.gameboy) return sendMessage(client, message, `A gameboy is already running.`);
 
                 // Init global variables
-                const Gameboy = require('serverboy');
                 client.gameboy = new Gameboy(); // Global instance of emulator
-                client.gameboyInput = false; // Whether or not an input has been made since last screenshot.
+                client.gameboyInput = true; // Whether or not an input has been made since last screenshot.
 
                 let currentRomName = "PokemonBlue"; // Rom file name. Supported roms: .gb & .gbc
                 let romType = ".gb";
@@ -56,13 +57,6 @@ exports.run = async (client, message, args = []) => {
                 sendMessage(client, message, `Starting emulator...`);
                 client.gameboy.loadRom(rom, save);
 
-                // Logic examples
-                let memory = gameboy.getMemory();
-                if (memory[3000] === 0) {
-                    client.gameboy.pressKeys([Gameboy.KEYMAP.RIGHT]);
-                };
-                client.gameboy.pressKey(Gameboy.KEYMAP.A);
-
                 // Advance frame
                 setInterval(function () {
                     client.gameboy.doFrame();
@@ -84,14 +78,24 @@ exports.run = async (client, message, args = []) => {
                 saveGame(absoluteSavePath); // Save before quitting
                 client.gameboy = null; // Null instance
                 break;
-
             default: // Controller inputs
+                if (message.channel != emuChannel) return;
                 if (!client.gameboy) return sendMessage(client, message, `No gameboy is currently running.`);
 
+                // Check possible inputs
                 let keymapOptions = ["RIGHT", "LEFT", "UP", "DOWN", "A", "B", "SELECT", "START"];
                 let input = args[0].toUpperCase();
-                if (!keymapOptions.includes(input)) return sendMessage(client, message, `Please provide a possible button to input. \nOptions: ${keymapOptions}`);
+                if (!keymapOptions.includes(input)) return sendMessage(client, message, `Please provide a possible button to input.\nOptions: ${keymapOptions}`);
 
+                client.gameboyInput = true;
+                // Try to input
+                try {
+                    client.gameboy.pressKey(Gameboy.KEYMAP[input]);
+
+                    return message.react('✔️');
+                } catch (e) {
+                    console.log(e);
+                };
                 break;
         };
 
@@ -114,7 +118,7 @@ exports.run = async (client, message, args = []) => {
             };
             let buffer = PNG.sync.write(png);
 
-            sendMessage(client, message, "test", null, buffer);
+            emuChannel.send({ content: "Game screenshot:", attachments: [buffer] });
         };
 
         function saveGame(absoluteSavePath) {
