@@ -19,12 +19,15 @@ exports.run = async (client, message, args = []) => {
             // console.log(e);
         };
 
-        if (!targetUser) {
-            return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
-        };
+        if (!targetUser) return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
 
-        await targetUser.send({ content: textMessage });
-        return sendMessage(client, message, `Message succesfully sent to **${targetUser.tag}** (${targetUser.id}).`);
+        try {
+            await targetUser.send({ content: textMessage });
+            return sendMessage(client, message, `Message succesfully sent to **${targetUser.tag}** (${targetUser.id}).`);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage(client, message, `Failed to message **${targetUser.tag}**. They probably have their DMs closed.`);
+        };
 
     } catch (e) {
         // Log error
