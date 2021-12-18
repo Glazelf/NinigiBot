@@ -12,7 +12,6 @@ module.exports = async (client) => {
         if (!client.application?.owner) await client.application?.fetch();
 
         // Daily rate limit of 200 interactions should only go up if they are fully deleted and readded, not on every boot.
-        // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
         let commandsExclude = [
             // Serverlocked commands
             "countdown",
