@@ -4,11 +4,11 @@
   "description": "NinigiBot for Discord",
   "main": "forever.js",
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.7",
+    "@mapbox/node-pre-gyp": "^1.0.8",
     "@sapphire/async-queue": "^1.1.9",
     "canvas": "^2.8.0",
     "cron": "^1.8.2",
-    "discord.js": "^13.4.0-dev.1639137780.ee91f5a",
+    "discord.js": "^13.4.0-dev.1639656190.b9b60a3",
     "enmap": "^5.8.7",
     "forever": "^4.0.1",
     "forever-monitor": "^3.0.3",
@@ -17,8 +17,8 @@
     "owoify-js": "^1.0.7",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^4.0.0",
-    "pureimage": "^0.3.7",
-    "sequelize": "^6.11.0",
+    "pureimage": "^0.3.8",
+    "sequelize": "^6.12.0",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {

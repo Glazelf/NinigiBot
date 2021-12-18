@@ -63,7 +63,15 @@ exports.run = async (client, message, args) => {
             try {
                 let messages = await message.channel.messages.fetch({ limit: amount });
                 await message.channel.bulkDelete(messages);
-                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.` });
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.\nThis message will be deleted in 10 seconds.` }).then(message => {
+                    setTimeout(function () {
+                        try {
+                            message.delete();
+                        } catch (e) {
+                            // console.log(e);
+                        };
+                    }, 10000); // delete after 10 seconds
+                });
                 return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
