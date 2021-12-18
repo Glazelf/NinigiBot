@@ -26,11 +26,7 @@ module.exports = async (client) => {
             "kill",
             "moneyadd",
             "reload",
-            "restart",
-            // Commands that already have existing interactions
-            "ban",
-            "kick",
-            "mute"
+            "restart"
         ];
 
         let NinigiUserID = "592760951103684618";
