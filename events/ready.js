@@ -31,6 +31,7 @@ module.exports = async (client) => {
                             guild = await client.guilds.fetch(command.config.serverID);
                             if (guild) slashCommand = await guild.commands.create(command.config);
                         } catch (e) {
+                            if (!command.config.name) console.log(command.config);
                             console.log(`Failed to set ${command.config.name} as a slash command in ${guild.name}. Probably lacking permissions.`);
                         };
                     } else { // Global commands
