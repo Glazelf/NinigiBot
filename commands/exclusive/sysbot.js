@@ -83,5 +83,5 @@ module.exports.config = {
     name: "sysbot",
     aliases: ["sb"],
     description: "Sends status of all sysbots.",
-    serverID: client.config.botServerID
+    serverID: "549214833858576395"
 };

@@ -45,7 +45,7 @@ module.exports.config = {
     name: "rules",
     aliases: ["faq", "rule"],
     description: "Sends a rule.",
-    serverID: client.config.botServerID,
+    serverID: "549214833858576395",
     options: [{
         name: "rule-id",
         type: "INTEGER",
