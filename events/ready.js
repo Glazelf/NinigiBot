@@ -25,10 +25,11 @@ module.exports = async (client) => {
         if (client.user.id == NinigiUserID) {
             await client.commands.forEach(async (command) => {
                 let slashCommand;
+                let guild;
                 try {
                     if (command.config.interaction === false) return;
                     if (command.config.serverID) { // Set guild commands
-                        let guild = await client.guilds.fetch(command.config.serverID);
+                        guild = await client.guilds.fetch(command.config.serverID);
                         try {
                             if (guild) slashCommand = await guild.commands.create(command.config);
                         } catch (e) {
@@ -37,7 +38,10 @@ module.exports = async (client) => {
                     } else { // Global commands
                         slashCommand = await client.application?.commands.create(command.config);
                     };
-                    if (command.config.permission === "owner") slashCommand.permissions.add({ ownerPerm }); // Owner exclusive commands
+                    if (command.config.permission === "owner") { // Owner exclusive commands
+                        slashCommand = guild.commands.fetch(slashCommand.id);
+                        await slashCommand.permissions.add({ ownerPerm });
+                    };
                 } catch (e) {
                     console.log(e);
                 };
