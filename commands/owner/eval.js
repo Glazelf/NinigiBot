@@ -46,6 +46,8 @@ module.exports.config = {
     name: "eval",
     aliases: ["js"],
     description: "Execute JS.",
+    permission: "owner",
+    defaultPermission: false,
     options: [{
         name: "input",
         type: "STRING",

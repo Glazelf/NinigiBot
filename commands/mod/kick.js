@@ -45,6 +45,7 @@ exports.run = async (client, message, args = []) => {
         };
         try {
             await member.kick([`${reason} -${author.tag} (${time})`]);
+            return sendMessage(client, message, kickReturn, null, null, false);
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {
@@ -53,7 +54,6 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, banFailString);
             };
         };
-        return sendMessage(client, message, kickReturn);
 
     } catch (e) {
         // Log error

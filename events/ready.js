@@ -11,35 +11,29 @@ module.exports = async (client) => {
         // Set interactions
         if (!client.application?.owner) await client.application?.fetch();
 
-        // Daily rate limit of 200 interactions should only go up if they are fully deleted and readded, not on every boot.
-        // let GlobalCommands = ["pokemon", "role", "botinfo", "help", "roleinfo", "serverinfo", "userinfo", "ban", "kick", "mute", "slowmode"];
-        let commandsExclude = [
-            // Serverlocked commands
-            "countdown",
-            "sysbot",
-            "rule",
-            // Owner exclusive commands
-            "clearinteractions",
-            "dm",
-            "eval",
-            "item",
-            "kill",
-            "moneyadd",
-            "reload",
-            "restart"
+        let ownerPerm = [
+            {
+                id: client.config.ownerID,
+                type: 'USER',
+                permission: true
+            }
         ];
 
         let NinigiUserID = "592760951103684618";
-
+        // check owner perm
+        // server command
         if (client.user.id == NinigiUserID) {
             await client.commands.forEach(command => {
+                let command;
                 try {
-                    if (commandsExclude.includes(command.config.name)) return;
-                    client.application?.commands.create(command.config);
-                    // console.log(`Loaded interaction: ${command.config.name} ✔`);
-                    // Server exclusive interactions:
-                    // let guild = await client.guilds.fetch(client.config.botServerID);
-                    // if (guild) guild.commands.create(command.config);
+                    if (command.config.interaction === false) return;
+                    if (command.config.serverID) { // Set guild commands
+                        let guild = await client.guilds.fetch(command.config.serverID);
+                        if (guild) command = await guild.commands.create(command.config);
+                    } else { // Global commands
+                        command = await client.application?.commands.create(command.config);
+                    };
+                    if (command.config.permission === "owner") command.permissions.add({ ownerPerm }); // Owner exclusive commands
                 } catch (e) {
                     console.log(e);
                 };

@@ -52,5 +52,7 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "kill",
     aliases: ["destroy"],
-    description: "Shuts down bot."
+    description: "Shuts down bot.",
+    permission: "owner",
+    defaultPermission: false
 };

@@ -95,6 +95,7 @@ exports.run = async (client, message, args = []) => {
             // Ban
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag}` });
+                return sendMessage(client, message, banReturn, null, null, false);
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
@@ -104,8 +105,6 @@ exports.run = async (client, message, args = []) => {
                 };
             };
         };
-
-        return sendMessage(client, message, banReturn);
 
     } catch (e) {
         // Log error

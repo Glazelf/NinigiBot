@@ -50,7 +50,7 @@ exports.run = async (client, message, args = []) => {
             return sendMessage(client, message, `Unmuted **${member.user.tag}** (${member.id}).`);
         } else {
             await member.roles.add(role);
-            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
+            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`, null, null, false);
             // sets a timeout to unmute the user.
             setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
         };
