@@ -29,7 +29,11 @@ module.exports = async (client) => {
                     if (command.config.interaction === false) return;
                     if (command.config.serverID) { // Set guild commands
                         let guild = await client.guilds.fetch(command.config.serverID);
-                        if (guild) slashCommand = await guild.commands.create(command.config);
+                        try {
+                            if (guild) slashCommand = await guild.commands.create(command.config);
+                        } catch (e) {
+                            // console.log(e);
+                        };
                     } else { // Global commands
                         slashCommand = await client.application?.commands.create(command.config);
                     };
