@@ -62,6 +62,9 @@ exports.run = async (client, message, args = []) => {
                 case "pink":
                     roleColor = "f6a6ff";
                     break;
+                case "burgundy":
+                    roleColor = "a62460";
+                    break;
                 case "black":
                     roleColor = "000001"; // 000000 becomes transparent
                     break;
