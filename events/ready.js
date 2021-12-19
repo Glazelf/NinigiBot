@@ -20,8 +20,6 @@ module.exports = async (client) => {
         ];
 
         let NinigiUserID = "592760951103684618";
-        // check owner perm
-        // server command
         if (client.user.id == NinigiUserID) {
             await client.commands.forEach(async (command) => {
                 let slashCommand;
@@ -29,8 +27,8 @@ module.exports = async (client) => {
                 try {
                     if (command.config.interaction === false) return;
                     if (command.config.serverID) { // Set guild commands
-                        guild = await client.guilds.fetch(command.config.serverID);
                         try {
+                            guild = await client.guilds.fetch(command.config.serverID);
                             if (guild) slashCommand = await guild.commands.create(command.config);
                         } catch (e) {
                             console.log(`Failed to set ${command.config.name} as a slash command in ${guild.name}. Probably lacking permissions.`);
@@ -38,10 +36,11 @@ module.exports = async (client) => {
                     } else { // Global commands
                         slashCommand = await client.application?.commands.create(command.config);
                     };
-                    if (command.config.permission === "owner") { // Owner exclusive commands
-                        slashCommand = guild.commands.fetch(slashCommand.id);
-                        await slashCommand.permissions.add({ ownerPerm });
-                    };
+                    // if (command.config.permission === "owner") { // Owner exclusive commands. Commented out now because would need to bed one for each individual server.
+                    //     console.log(slashCommand)
+                    //     console.log(slashCommand.permissions)
+                    //     await slashCommand.permissions.add({ ownerPerm });
+                    // };
                 } catch (e) {
                     console.log(e);
                 };
