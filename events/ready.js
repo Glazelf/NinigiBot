@@ -23,7 +23,7 @@ module.exports = async (client) => {
         // check owner perm
         // server command
         if (client.user.id == NinigiUserID) {
-            await client.commands.forEach(command => {
+            await client.commands.forEach(async (command) => {
                 let slashCommand;
                 try {
                     if (command.config.interaction === false) return;
