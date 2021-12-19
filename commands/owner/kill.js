@@ -19,20 +19,16 @@ exports.run = async (client, message, args = []) => {
 
             // Delete all global commands
             await client.application.commands.set([]);
+
+            // Delete all guild commands
+            await client.guilds.cache.forEach(guild => {
+                try {
+                    guild.commands.set([]);
+                } catch (e) {
+                    // console.log(e);
+                };
+            });
         };
-
-        // Delete all guild commands, disabled because we don't use guild-specific commands
-        // await client.guilds.cache.forEach(guild => {
-        //     try {
-        //         guild.commands.set([]);
-        //     } catch (e) {
-        //         // console.log(e);
-        //     };
-        // });
-
-        // Delete SAC specific commands
-        // let guild = await client.guilds.fetch(client.config.botServerID);
-        // await guild.commands.set([]);
 
         // Ignore forever if fails, mostly for test-bots not running it.
         try {
