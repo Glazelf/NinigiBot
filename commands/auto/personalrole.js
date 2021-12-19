@@ -36,7 +36,7 @@ exports.run = async (client, message, args = []) => {
             roleColor = roleColor.toLowerCase();
 
             // Default colors
-            let greyHex = "36393e";
+            let greyHex = "36393f";
             switch (roleColor) {
                 case "red":
                     roleColor = "ff2121";
