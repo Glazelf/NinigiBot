@@ -34,7 +34,12 @@ exports.run = async (client, message, args = []) => {
         // let guild = await client.guilds.fetch(client.config.botServerID);
         // await guild.commands.set([]);
 
-        forever.stopAll();
+        // Ignore forever if fails, mostly for test-bots not running it.
+        try {
+            forever.stopAll();
+        } catch (e) {
+            // console.log(e);
+        };
 
         // Return confirm
         await sendMessage(client, message, `Shutdown completed.`);
