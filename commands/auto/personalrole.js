@@ -35,6 +35,7 @@ exports.run = async (client, message, args = []) => {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
 
+            console.log(roleColor)
             // Default colors
             switch (roleColor) {
                 case "red":
@@ -59,7 +60,10 @@ exports.run = async (client, message, args = []) => {
                     roleColor = "ffffff";
                 case "grey":
                     roleColor = "36393e";
+                default:
+                    break;
             };
+            console.log(roleColor)
 
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
