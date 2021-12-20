@@ -47,6 +47,7 @@ exports.run = async (client, message, args = []) => {
                 // Get icon, description and game appearances
                 let monsterIcon;
                 let monsterDescription;
+                let monsterDanger;
                 let gameAppearances = "";
                 let mostRecentMainlineGame = "Monster Hunter Rise";
                 let fallbackGame1 = "Monster Hunter World";
@@ -59,12 +60,15 @@ exports.run = async (client, message, args = []) => {
                     if (game.game == mostRecentMainlineGame) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
                         monsterDescription = game.info;
+                        monsterDanger = game.danger;
                     } else if (game.game == fallbackGame1) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
                         monsterDescription = game.info;
+                        monsterDanger = game.danger;
                     } else if (game.game == fallbackGame2) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
                         monsterDescription = game.info;
+                        monsterDanger = game.danger;
                     };
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
@@ -108,7 +112,8 @@ exports.run = async (client, message, args = []) => {
                 if (monsterDescription) monsterEmbed.setDescription(monsterDescription);
                 monsterEmbed
                     .addField("Size:", monsterSize, true)
-
+                    .addField("Species:", monsterData.type, true);
+                if (monsterDanger) monsterEmbed.addField("Danger:", monsterDanger, true);
                 if (monsterElements.length > 0) monsterEmbed.addField("Element(s):", monsterElements, true);
                 if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
                 if (monsterWeaknesses.length > 0) monsterEmbed.addField("Weakness(es):", monsterWeaknesses, true);
