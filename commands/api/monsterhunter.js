@@ -56,16 +56,8 @@ exports.run = async (client, message, args = []) => {
                 await monsterData.games.forEach(game => {
                     // Add to game appearances list
                     gameAppearances += game.game + "\n";
-                    // holy shit this is ugly but whatever
-                    if (game.game == mostRecentMainlineGame) {
-                        monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
-                        monsterDescription = game.info;
-                        monsterDanger = game.danger;
-                    } else if (game.game == fallbackGame1) {
-                        monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
-                        monsterDescription = game.info;
-                        monsterDanger = game.danger;
-                    } else if (game.game == fallbackGame2) {
+                    // Works because games are in chronological order
+                    if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
                         monsterDescription = game.info;
                         monsterDanger = game.danger;
@@ -73,7 +65,8 @@ exports.run = async (client, message, args = []) => {
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
-                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
+                if (!monsterDescription) monsterDescription = mostRecentMainlineGame.info;
+                if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
 
                 // Format size
                 let monsterSize = "Small";
