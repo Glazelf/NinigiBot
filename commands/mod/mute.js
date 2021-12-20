@@ -8,6 +8,10 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(client, message.member);
         if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
+        return sendMessage(client, message, `Muting has been disabled temporarily while we wait for Discord.JS support for timing users out through bots.
+Muting through a role was a work-around from the very start, so with an actual feature to replace it with around the corner the old, disgusting code has been disabled to save ram, database writes, and many more resources.
+Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
+
         // Minutes the user is muted
         let muteTime = 60;
         let muteRoleName = "muted";
