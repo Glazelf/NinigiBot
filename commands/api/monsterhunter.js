@@ -21,8 +21,12 @@ exports.run = async (client, message, args = []) => {
 
         switch (subCommand) {
             // Quests
-            case "quest":
-                return sendMessage(client, message, "Quest searching has not been implemented yet! Try searching a monster for now.");
+            // case "quest":
+            //     return sendMessage(client, message, "Quest searching has not been implemented yet! Try searching a monster for now.");
+
+            // Endemic Life
+            // case "endemic":
+            //     return sendMessage(client, message "Endemic Life searching has not been implemented yet! Try searching a monster for now.");
 
             // Default: Monsters
             default:
@@ -76,10 +80,11 @@ exports.run = async (client, message, args = []) => {
                 let monsterWeaknesses = "";
                 if (monsterData.elements) {
                     monsterData.elements.forEach(element => {
+                        let elementString = `${elementEmotes[element]}${element}`;
                         if (monsterElements.length == 0) {
-                            monsterElements = element;
+                            monsterElements = elementString;
                         } else {
-                            monsterElements += `, ${element}`;
+                            monsterElements += `, ${elementString}`;
                         };
                     });
                 };
@@ -93,11 +98,12 @@ exports.run = async (client, message, args = []) => {
                     });
                 };
                 if (monsterData.weakness) {
-                    monsterData.weakness.forEach(weakness => {
+                    monsterData.weakness.forEach(element => {
+                        let elementString = `${elementEmotes[element]}${element}`;
                         if (monsterWeaknesses.length == 0) {
-                            monsterWeaknesses = weakness;
+                            monsterWeaknesses = elementString;
                         } else {
-                            monsterWeaknesses += `, ${weakness}`;
+                            monsterWeaknesses += `, ${elementString}`;
                         };
                     });
                 };
