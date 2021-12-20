@@ -18,17 +18,17 @@ exports.run = async (client, message, args = []) => {
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
 
         let subCommand = args[0].toLowerCase();
-        let subArgument = args.join(" ").toLowerCase();
+        let subArgument;
+        if (args[1]) subArgument = args.slice(1).join(" ").toLowerCase();
 
         switch (subCommand) {
             // Specific quest
             case "quest":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a quest name to show details of.`);
-                let questNameArgument = args.slice(1).join(" ").toLowerCase();
 
                 let questData;
                 questsJSON.quests.forEach(quest => {
-                    if (quest.name.toLowerCase() == questNameArgument) questData = quest;
+                    if (quest.name.toLowerCase() == subArgument) questData = quest;
                 });
                 if (!questData) return sendMessage(client, message, "Could not find the specified quest.");
 
@@ -71,7 +71,9 @@ exports.run = async (client, message, args = []) => {
 
             // Default: Monsters
             default:
-                let monsterName = subArgument;
+                let monsterName = args;
+                if (message.type == 'APPLICATION_COMMAND') monsterName = monsterName.slice(1);
+                monsterName = monsterName.join(" ").toLowerCase();
 
                 // Get monster
                 let monsterData;
@@ -197,10 +199,14 @@ module.exports.config = {
             type: "STRING",
             description: "Specify game by name or abbreviation.",
         }]
-    },
-    {
-        name: "monster-name",
-        type: "STRING",
-        description: "Specify monster by name."
+    }, {
+        name: "monster",
+        type: "SUB_COMMAND",
+        description: "Get info on a monster.",
+        options: [{
+            name: "monster-name",
+            type: "STRING",
+            description: "Specify monster by its English name.",
+        }]
     }]
 };
