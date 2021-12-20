@@ -30,6 +30,7 @@ exports.run = async (client, message, args = []) => {
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questNameArgument) questData = quest;
                 });
+                if (!questData) return sendMessage(client, message, "Could not find the specified quest.");
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
@@ -84,7 +85,6 @@ exports.run = async (client, message, args = []) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-
                 if (!monsterData) return sendMessage(client, message, "Could not find the specified monster.");
 
                 // Get icon, description and game appearances
