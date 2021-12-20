@@ -75,27 +75,33 @@ exports.run = async (client, message, args = []) => {
                 let monsterElements = "";
                 let monsterAilments = "";
                 let monsterWeaknesses = "";
-                await monsterData.elements.forEach(element => {
-                    if (monsterElements.length == 0) {
-                        monsterElements = element;
-                    } else {
-                        monsterElements += `, ${element}`;
-                    };
-                });
-                await monsterData.ailments.forEach(ailment => {
-                    if (monsterAilments.length == 0) {
-                        monsterAilments = ailment;
-                    } else {
-                        monsterAilments += `, ${ailment}`;
-                    };
-                });
-                await monsterData.weakness.forEach(weakness => {
-                    if (monsterWeaknesses.length == 0) {
-                        monsterWeaknesses = weakness;
-                    } else {
-                        monsterWeaknesses += `, ${weakness}`;
-                    };
-                });
+                if (monsterData.elements) {
+                    await monsterData.elements.forEach(element => {
+                        if (monsterElements.length == 0) {
+                            monsterElements = element;
+                        } else {
+                            monsterElements += `, ${element}`;
+                        };
+                    });
+                };
+                if (monsterData.ailments) {
+                    await monsterData.ailments.forEach(ailment => {
+                        if (monsterAilments.length == 0) {
+                            monsterAilments = ailment;
+                        } else {
+                            monsterAilments += `, ${ailment}`;
+                        };
+                    });
+                };
+                if (monsterData.weakness) {
+                    await monsterData.weakness.forEach(weakness => {
+                        if (monsterWeaknesses.length == 0) {
+                            monsterWeaknesses = weakness;
+                        } else {
+                            monsterWeaknesses += `, ${weakness}`;
+                        };
+                    });
+                };
 
                 // Make embed
                 let monsterEmbed = new Discord.MessageEmbed()
