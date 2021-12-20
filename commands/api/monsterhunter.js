@@ -36,7 +36,7 @@ exports.run = async (client, message, args = []) => {
                     monsterData = monstersJSON.monsters[randomIndex];
                 } else {
                     // Get named monster
-                    await monstersJSON.monsters.forEach(monster => {
+                    monstersJSON.monsters.forEach(monster => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
@@ -52,7 +52,7 @@ exports.run = async (client, message, args = []) => {
                 let fallbackGame1 = "Monster Hunter World";
                 let fallbackGame2 = "Monster Hunter Generations Ultimate";
                 let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
-                await monsterData.games.forEach(game => {
+                monsterData.games.forEach(game => {
                     // Add to game appearances list
                     gameAppearances += game.game + "\n";
                     // Works because games are in chronological order
@@ -75,7 +75,7 @@ exports.run = async (client, message, args = []) => {
                 let monsterAilments = "";
                 let monsterWeaknesses = "";
                 if (monsterData.elements) {
-                    await monsterData.elements.forEach(element => {
+                    monsterData.elements.forEach(element => {
                         if (monsterElements.length == 0) {
                             monsterElements = element;
                         } else {
@@ -84,7 +84,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 };
                 if (monsterData.ailments) {
-                    await monsterData.ailments.forEach(ailment => {
+                    monsterData.ailments.forEach(ailment => {
                         if (monsterAilments.length == 0) {
                             monsterAilments = ailment;
                         } else {
@@ -93,7 +93,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 };
                 if (monsterData.weakness) {
-                    await monsterData.weakness.forEach(weakness => {
+                    monsterData.weakness.forEach(weakness => {
                         if (monsterWeaknesses.length == 0) {
                             monsterWeaknesses = weakness;
                         } else {
