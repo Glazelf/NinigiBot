@@ -139,4 +139,9 @@ module.exports.config = {
     name: "monsterhunter",
     aliases: ["monster"],
     description: "Shows Monster Hunter data.",
+    options: [{
+        name: "monster-name",
+        type: "STRING",
+        description: "Specify monster by name."
+    }]
 };
