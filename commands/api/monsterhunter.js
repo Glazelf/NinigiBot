@@ -53,7 +53,8 @@ exports.run = async (client, message, args = []) => {
                 let fallbackGame2 = "Monster Hunter Generations Ultimate";
                 let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
                 await monsterData.games.forEach(game => {
-                    gameAppearances += game.game + "\n"; // Add to game appearances list
+                    // Add to game appearances list
+                    gameAppearances += game.game + "\n";
                     // holy shit this is ugly but whatever
                     if (game.game == mostRecentMainlineGame) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
@@ -73,6 +74,31 @@ exports.run = async (client, message, args = []) => {
                 // Format size
                 let monsterSize = "Small";
                 if (monsterData.isLarge) monsterSize = "Large";
+                // Get elements, ailments and weaknesses
+                let monsterElements = "";
+                let monsterAilments = "";
+                let monsterWeaknesses = "";
+                await monsterData.elements.forEach(element => {
+                    if (monsterElements.length == 0) {
+                        monsterElements = element;
+                    } else {
+                        monsterElements += `, ${element}`;
+                    };
+                });
+                await monsterData.ailments.forEach(ailment => {
+                    if (monsterAilments.length == 0) {
+                        monsterAilments = ailment;
+                    } else {
+                        monsterAilments += `, ${ailment}`;
+                    };
+                });
+                await monsterData.weakness.forEach(weakness => {
+                    if (monsterWeaknesses.length == 0) {
+                        monsterWeaknesses = weakness;
+                    } else {
+                        monsterWeaknesses += `, ${weakness}`;
+                    };
+                });
 
                 // Make embed
                 let monsterEmbed = new Discord.MessageEmbed()
@@ -82,7 +108,12 @@ exports.run = async (client, message, args = []) => {
                 if (monsterDescription) monsterEmbed.setDescription(monsterDescription);
                 monsterEmbed
                     .addField("Size:", monsterSize, true)
-                    .addField("Games:", gameAppearances, true)
+
+                if (monsterElements.length > 0) monsterEmbed.addField("Element(s):", monsterElements, true);
+                if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
+                if (monsterWeaknesses.length > 0) monsterEmbed.addField("Weakness(es):", monsterWeaknesses, true);
+                monsterEmbed
+                    .addField("Game(s):", gameAppearances, true)
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
