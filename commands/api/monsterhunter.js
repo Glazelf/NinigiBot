@@ -20,13 +20,13 @@ exports.run = async (client, message, args = []) => {
         let subArgument = args.join(" ");
 
         switch (subCommand) {
-            // Quests
-            // case "quest":
-            //     return sendMessage(client, message, "Quest searching has not been implemented yet! Try searching a monster for now.");
+            // Specific quest
+            case "quest":
+                if (!args[1]) return sendMessage(client, message, `You need to provide a quest name to show details of.`);
 
-            // Endemic Life
-            // case "endemic":
-            //     return sendMessage(client, message "Endemic Life searching has not been implemented yet! Try searching a monster for now.");
+            // All quests from a game
+            case "quests":
+                if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
 
             // Default: Monsters
             default:
@@ -139,6 +139,26 @@ module.exports.config = {
     aliases: ["monster"],
     description: "Shows Monster Hunter data.",
     options: [{
+        name: "quest",
+        type: "SUB_COMMAND",
+        description: "Get info on a specific quest.",
+        options: [{
+            name: "ability-name",
+            type: "STRING",
+            description: "Specify quest by name.",
+        }]
+    },
+    {
+        name: "quests",
+        type: "SUB_COMMAND",
+        description: "List all quests from a game.",
+        options: [{
+            name: "game-name",
+            type: "STRING",
+            description: "Specify game by name or abbreviation.",
+        }]
+    },
+    {
         name: "monster-name",
         type: "STRING",
         description: "Specify monster by name."
