@@ -31,7 +31,7 @@ exports.run = async (client, message, args = []) => {
                     if (quest.name.toLowerCase() == questNameArgument) questData = quest;
                 });
 
-                let questTitle = `${questData.name} ${questData.difficulty}⭐`;
+                let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
                 if (questData.isKey) questTitle += ` 🔑`;
 
                 let targets = "";
