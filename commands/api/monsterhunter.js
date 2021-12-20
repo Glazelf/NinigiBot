@@ -7,9 +7,12 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         const fs = require('fs');
         const path = require('path');
-        const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
         const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
+
+        // Load JSON
+        let monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
+        const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
 
@@ -23,9 +26,6 @@ exports.run = async (client, message, args = []) => {
 
             // Default: Monsters
             default:
-                // Load JSON
-                let monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
-
                 let monsterName = subArgument;
 
                 // Get monster
