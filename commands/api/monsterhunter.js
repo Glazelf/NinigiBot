@@ -18,7 +18,7 @@ exports.run = async (client, message, args = []) => {
         switch (subCommand) {
             // Quests
             case "quest":
-                break;
+                return sendMessage(client, message, "Quest searching has not been implemented yet! Try searching a monster for now.");
 
             // Default: Monsters
             default:
