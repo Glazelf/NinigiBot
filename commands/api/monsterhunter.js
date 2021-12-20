@@ -31,11 +31,13 @@ exports.run = async (client, message, args = []) => {
                     if (quest.name.toLowerCase() == questNameArgument) questData = quest;
                 });
 
+                // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
                 if (questData.isKey) questTitle += ` 🔑`;
 
+                // Set up quest targets
                 let targets = "";
-                if (questData.targets > 1) {
+                if (questData.targets.length > 1) {
                     questData.targets.forEach(target => {
                         if (targets.length == 0) {
                             targets = target;
@@ -45,6 +47,7 @@ exports.run = async (client, message, args = []) => {
                     });
                 };
 
+                // Make embed
                 let questEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: questTitle })
@@ -58,7 +61,7 @@ exports.run = async (client, message, args = []) => {
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
-                return sendMessage(client, message, null, questEmbed)
+                return sendMessage(client, message, null, questEmbed);
 
             // All quests from a game
             case "quests":
@@ -173,7 +176,7 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "monsterhunter",
-    aliases: ["monster"],
+    aliases: ["monster", "mh"],
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
