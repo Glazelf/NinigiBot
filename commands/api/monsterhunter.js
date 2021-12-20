@@ -68,7 +68,11 @@ exports.run = async (client, message, args = []) => {
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
-                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info
+                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
+
+                // Format size
+                let monsterSize = "Small";
+                if (monsterData.isLarge) monsterSize = "Large";
 
                 // Make embed
                 let monsterEmbed = new Discord.MessageEmbed()
@@ -77,7 +81,8 @@ exports.run = async (client, message, args = []) => {
                     .setThumbnail(monsterIcon);
                 if (monsterDescription) monsterEmbed.setDescription(monsterDescription);
                 monsterEmbed
-                    .addField("Games:", gameAppearances)
+                    .addField("Size:", monsterSize, true)
+                    .addField("Games:", gameAppearances, true)
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
