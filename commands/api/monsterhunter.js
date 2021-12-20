@@ -5,6 +5,8 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const fs = require('fs');
+        const path = require('path');
         const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
@@ -24,6 +26,10 @@ exports.run = async (client, message, args = []) => {
 
             // Default: Monsters
             default:
+                let absoluteMonsterPath = path.resolve("./submodules/monster-hunter-DB/monsters.json");
+                let rawData = fs.readFileSync(absoluteMonsterPath);
+                let monstersJSON = JSON.parse(rawData);
+                console.log(monstersJSON)
 
                 break;
         };
