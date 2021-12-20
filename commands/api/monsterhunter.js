@@ -17,7 +17,7 @@ exports.run = async (client, message, args = []) => {
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
 
         let subCommand = args[0].toLowerCase();
-        let subArgument = args.join(" ");
+        let subArgument = args.join(" ").toLowerCase();
 
         switch (subCommand) {
             // Specific quest
@@ -27,6 +27,8 @@ exports.run = async (client, message, args = []) => {
             // All quests from a game
             case "quests":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
+
+                let gameNameArgument = args.slice(1).join(" ").toLowerCase();
 
             // Default: Monsters
             default:
