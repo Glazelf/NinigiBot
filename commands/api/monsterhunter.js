@@ -12,6 +12,7 @@ exports.run = async (client, message, args = []) => {
 
         // Load JSON
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
+        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
@@ -23,11 +24,45 @@ exports.run = async (client, message, args = []) => {
             // Specific quest
             case "quest":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a quest name to show details of.`);
+                let questNameArgument = args.slice(1).join(" ").toLowerCase();
+
+                let questData;
+                questsJSON.quests.forEach(quest => {
+                    if (quest.name.toLowerCase() == questNameArgument) questData = quest;
+                });
+
+                let questTitle = `${questData.name} ${questData.difficulty}⭐`;
+                if (questData.isKey) questTitle += ` 🔑`;
+
+                let targets = "";
+                if (questData.targets > 1) {
+                    questData.targets.forEach(target => {
+                        if (targets.length == 0) {
+                            targets = target;
+                        } else {
+                            targets += `, ${target}`;
+                        };
+                    });
+                };
+
+                let questEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setAuthor({ name: questTitle })
+                    .setDescription(`${questData.description} -${questData.client}`)
+                    .addField("Game:", questData.game, true)
+                    .addField("Type:", questData.questType, true)
+                    .addField("Map:", questData.map, true)
+                    .addField("Objective:", questData.objective, true);
+                if (targets.length > 0) questEmbed.addField("Targets:", targets, true);
+                questEmbed
+                    .setFooter(message.member.user.tag)
+                    .setTimestamp();
+
+                return sendMessage(client, message, null, questEmbed)
 
             // All quests from a game
             case "quests":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
-
                 let gameNameArgument = args.slice(1).join(" ").toLowerCase();
 
             // Default: Monsters
@@ -78,8 +113,8 @@ exports.run = async (client, message, args = []) => {
                 if (monsterData.isLarge) monsterSize = "Large";
                 // Get elements, ailments and weaknesses
                 let monsterElements = "";
-                let monsterAilments = "";
                 let monsterWeaknesses = "";
+                let monsterAilments = "";
                 if (monsterData.elements) {
                     monsterData.elements.forEach(element => {
                         let elementString = `${elementEmotes[element]}${element}`;
@@ -90,15 +125,6 @@ exports.run = async (client, message, args = []) => {
                         };
                     });
                 };
-                if (monsterData.ailments) {
-                    monsterData.ailments.forEach(ailment => {
-                        if (monsterAilments.length == 0) {
-                            monsterAilments = ailment;
-                        } else {
-                            monsterAilments += `, ${ailment}`;
-                        };
-                    });
-                };
                 if (monsterData.weakness) {
                     monsterData.weakness.forEach(element => {
                         let elementString = `${elementEmotes[element]}${element}`;
@@ -106,6 +132,15 @@ exports.run = async (client, message, args = []) => {
                             monsterWeaknesses = elementString;
                         } else {
                             monsterWeaknesses += `, ${elementString}`;
+                        };
+                    });
+                };
+                if (monsterData.ailments) {
+                    monsterData.ailments.forEach(ailment => {
+                        if (monsterAilments.length == 0) {
+                            monsterAilments = ailment;
+                        } else {
+                            monsterAilments += `, ${ailment}`;
                         };
                     });
                 };
@@ -127,7 +162,7 @@ exports.run = async (client, message, args = []) => {
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
-                return sendMessage(client, message, null, monsterEmbed)
+                return sendMessage(client, message, null, monsterEmbed);
         };
 
     } catch (e) {
