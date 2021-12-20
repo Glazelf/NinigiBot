@@ -63,6 +63,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Mute",
-    type: "USER",
-    aliases: ["timeout"]
+    aliases: ["timeout"],
+    description: "Mutes target user."
 }; 
