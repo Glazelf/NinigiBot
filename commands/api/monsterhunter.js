@@ -31,12 +31,20 @@ exports.run = async (client, message, args = []) => {
 
                 // Get monster
                 let monsterData;
-                await monstersJSON.monsters.forEach(monster => {
-                    if (monster.name.toLowerCase() == monsterName) monsterData = monster;
-                });
+                if (monsterName == "random") {
+                    // Get random monster
+                    let randomIndex = randomNumber(0, monstersJSON.monsters.length);
+                    monsterData = monstersJSON.monsters[randomIndex];
+                } else {
+                    // Get named monster
+                    await monstersJSON.monsters.forEach(monster => {
+                        if (monster.name.toLowerCase() == monsterName) monsterData = monster;
+                    });
+                };
+
                 if (!monsterData) return sendMessage(client, message, "Could not find the specified monster.");
 
-                // Get icon
+                // Get icon, description and game appearances
                 let monsterIcon;
                 let monsterDescription;
                 let gameAppearances = "";
@@ -45,7 +53,7 @@ exports.run = async (client, message, args = []) => {
                 let fallbackGame2 = "Monster Hunter Generations Ultimate";
                 let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
                 await monsterData.games.forEach(game => {
-                    gameAppearances += game.game + "\n";
+                    gameAppearances += game.game + "\n"; // Add to game appearances list
                     // holy shit this is ugly but whatever
                     if (game.game == mostRecentMainlineGame) {
                         monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
@@ -62,6 +70,7 @@ exports.run = async (client, message, args = []) => {
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
                 if (!monsterDescription) monsterDescription = mostRecentGameEntry.info
 
+                // Make embed
                 let monsterEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: monsterData.name })
