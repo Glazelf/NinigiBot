@@ -10,6 +10,7 @@ exports.run = async (client, message, args = []) => {
 
         return sendMessage(client, message, `Muting has been disabled temporarily while we wait for Discord.JS support for timing users out through bots.
 Muting through a role was a work-around from the very start, so with an actual feature to replace it with around the corner the old, disgusting code has been disabled to save ram, database writes, and many more resources.
+If you used Ninigi in the past to mute: First of all, thanks a lot! Secondly, you can safely delete your "Muted" role! :)
 Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
 
         // Minutes the user is muted
