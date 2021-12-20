@@ -67,7 +67,8 @@ exports.run = async (client, message, args = []) => {
             // All quests from a game
             case "quests":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
-                let gameNameArgument = args.slice(1).join(" ").toLowerCase();
+
+                return sendMessage(client, message, "This command will eventually list all quests for a specific game, but it is a WIP for now.");
 
             // Default: Monsters
             default:
