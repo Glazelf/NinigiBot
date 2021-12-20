@@ -12,21 +12,58 @@ exports.run = async (client, message, args = []) => {
 
         // Load JSON
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
+        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
 
         let subCommand = args[0].toLowerCase();
-        let subArgument = args.join(" ");
+        let subArgument = args.join(" ").toLowerCase();
 
         switch (subCommand) {
-            // Quests
-            // case "quest":
-            //     return sendMessage(client, message, "Quest searching has not been implemented yet! Try searching a monster for now.");
+            // Specific quest
+            case "quest":
+                if (!args[1]) return sendMessage(client, message, `You need to provide a quest name to show details of.`);
+                let questNameArgument = args.slice(1).join(" ").toLowerCase();
 
-            // Endemic Life
-            // case "endemic":
-            //     return sendMessage(client, message "Endemic Life searching has not been implemented yet! Try searching a monster for now.");
+                let questData;
+                questsJSON.quests.forEach(quest => {
+                    if (quest.name.toLowerCase() == questNameArgument) questData = quest;
+                });
+
+                let questTitle = `${questData.name} ${questData.difficulty}⭐`;
+                if (questData.isKey) questTitle += ` 🔑`;
+
+                let targets = "";
+                if (questData.targets > 1) {
+                    questData.targets.forEach(target => {
+                        if (targets.length == 0) {
+                            targets = target;
+                        } else {
+                            targets += `, ${target}`;
+                        };
+                    });
+                };
+
+                let questEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setAuthor({ name: questTitle })
+                    .setDescription(`${questData.description} -${questData.client}`)
+                    .addField("Game:", questData.game, true)
+                    .addField("Type:", questData.questType, true)
+                    .addField("Map:", questData.map, true)
+                    .addField("Objective:", questData.objective, true);
+                if (targets.length > 0) questEmbed.addField("Targets:", targets, true);
+                questEmbed
+                    .setFooter(message.member.user.tag)
+                    .setTimestamp();
+
+                return sendMessage(client, message, null, questEmbed)
+
+            // All quests from a game
+            case "quests":
+                if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
+                let gameNameArgument = args.slice(1).join(" ").toLowerCase();
 
             // Default: Monsters
             default:
@@ -76,8 +113,8 @@ exports.run = async (client, message, args = []) => {
                 if (monsterData.isLarge) monsterSize = "Large";
                 // Get elements, ailments and weaknesses
                 let monsterElements = "";
-                let monsterAilments = "";
                 let monsterWeaknesses = "";
+                let monsterAilments = "";
                 if (monsterData.elements) {
                     monsterData.elements.forEach(element => {
                         let elementString = `${elementEmotes[element]}${element}`;
@@ -88,15 +125,6 @@ exports.run = async (client, message, args = []) => {
                         };
                     });
                 };
-                if (monsterData.ailments) {
-                    monsterData.ailments.forEach(ailment => {
-                        if (monsterAilments.length == 0) {
-                            monsterAilments = ailment;
-                        } else {
-                            monsterAilments += `, ${ailment}`;
-                        };
-                    });
-                };
                 if (monsterData.weakness) {
                     monsterData.weakness.forEach(element => {
                         let elementString = `${elementEmotes[element]}${element}`;
@@ -104,6 +132,15 @@ exports.run = async (client, message, args = []) => {
                             monsterWeaknesses = elementString;
                         } else {
                             monsterWeaknesses += `, ${elementString}`;
+                        };
+                    });
+                };
+                if (monsterData.ailments) {
+                    monsterData.ailments.forEach(ailment => {
+                        if (monsterAilments.length == 0) {
+                            monsterAilments = ailment;
+                        } else {
+                            monsterAilments += `, ${ailment}`;
                         };
                     });
                 };
@@ -125,7 +162,7 @@ exports.run = async (client, message, args = []) => {
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
-                return sendMessage(client, message, null, monsterEmbed)
+                return sendMessage(client, message, null, monsterEmbed);
         };
 
     } catch (e) {
@@ -139,6 +176,26 @@ module.exports.config = {
     aliases: ["monster"],
     description: "Shows Monster Hunter data.",
     options: [{
+        name: "quest",
+        type: "SUB_COMMAND",
+        description: "Get info on a specific quest.",
+        options: [{
+            name: "ability-name",
+            type: "STRING",
+            description: "Specify quest by name.",
+        }]
+    },
+    {
+        name: "quests",
+        type: "SUB_COMMAND",
+        description: "List all quests from a game.",
+        options: [{
+            name: "game-name",
+            type: "STRING",
+            description: "Specify game by name or abbreviation.",
+        }]
+    },
+    {
         name: "monster-name",
         type: "STRING",
         description: "Specify monster by name."
