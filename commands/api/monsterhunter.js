@@ -11,7 +11,7 @@ exports.run = async (client, message, args = []) => {
         const randomNumber = require('../../util/randomNumber');
 
         // Load JSON
-        let monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
+        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
@@ -111,18 +111,17 @@ exports.run = async (client, message, args = []) => {
                 // Make embed
                 let monsterEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setAuthor({ name: monsterData.name })
+                    .setAuthor({ name: `${monsterData.name} (${monsterData.type})` })
                     .setThumbnail(monsterIcon);
                 if (monsterDescription) monsterEmbed.setDescription(monsterDescription);
                 monsterEmbed
                     .addField("Size:", monsterSize, true)
-                    .addField("Species:", monsterData.type, true);
                 if (monsterDanger) monsterEmbed.addField("Danger:", monsterDanger, true);
                 if (monsterElements.length > 0) monsterEmbed.addField("Element(s):", monsterElements, true);
                 if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
                 if (monsterWeaknesses.length > 0) monsterEmbed.addField("Weakness(es):", monsterWeaknesses, true);
                 monsterEmbed
-                    .addField("Game(s):", gameAppearances, true)
+                    .addField("Game(s):", gameAppearances, false)
                     .setFooter(message.member.user.tag)
                     .setTimestamp();
 
