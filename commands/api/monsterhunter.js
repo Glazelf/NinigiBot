@@ -118,8 +118,8 @@ exports.run = async (client, message, args = []) => {
                     .addField("Size:", monsterSize, true)
                 if (monsterDanger) monsterEmbed.addField("Danger:", monsterDanger, true);
                 if (monsterElements.length > 0) monsterEmbed.addField("Element(s):", monsterElements, true);
-                if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
                 if (monsterWeaknesses.length > 0) monsterEmbed.addField("Weakness(es):", monsterWeaknesses, true);
+                if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
                 monsterEmbed
                     .addField("Game(s):", gameAppearances, false)
                     .setFooter(message.member.user.tag)
