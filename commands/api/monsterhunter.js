@@ -68,6 +68,74 @@ exports.run = async (client, message, args = []) => {
             case "quests":
                 if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
 
+                let gameInput = subArgument;
+
+                // Generalize game names and abbreviations
+                // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
+                let MH3Titles = [
+                    "monster hunter 3",
+                    "monster hunter 3u",
+                    "mh3",
+                    "mh3u",
+                    "3",
+                    "3u"
+                ];
+                let MH4Titles = [
+                    "monster hunter 4",
+                    "monster hunter 4u",
+                    "mh4",
+                    "mh4u",
+                    "3",
+                    "3u"
+                ];
+                let MHGUTitles = [
+                    "monster hunter generations",
+                    "monster hunter generations u",
+                    "mhg",
+                    "mhgu",
+                    "g",
+                    "gu"
+                ];
+                let MH5Titles = [
+                    "monster hunter 5",
+                    "monster hunter world iceborne",
+                    "mh5",
+                    "mhw",
+                    "mhwi",
+                    "world"
+                ];
+                let MH5PTitles = [
+                    "monster hunter 5 portable",
+                    "monster hunter rise sunbreak",
+                    "mhr",
+                    "mh5p",
+                    "rise"
+                ];
+                let MHSTTitles = [
+                    "mhs",
+                    "mhst",
+                    "stories"
+                ];
+                let MHST2Titles = [
+                    "monster hunter stories 2 wings of ruin",
+                    "mhs2",
+                    "mhst2",
+                    "stories 2"
+                ];
+                if (MH3Titles.includes(gameInput)) gameInput = "monster hunter 3 ultimate";
+                if (MH4Titles.includes(gameInput)) gameInput = "monster hunter 4 ultimate";
+                if (MHGUTitles.includes(gameInput)) gameInput = "monster hunter generations ultimate";
+                if (MH5Titles.includes(gameInput)) gameInput = "monster hunter world";
+                if (MH5PTitles.includes(gameInput)) gameInput = "monster hunter rise";
+                if (MHSTTitles.includes(gameInput)) gameInput = "monster hunter stories";
+                if (MHST2Titles.includes(gameInput)) gameInput = "monster hunter stories 2";
+
+                // Add quests matching game title to an array
+                let quests = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameInput);
+                if (quests.length == 0) return sendMessage(client, message, "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.");
+
+                console.log(quests);
+
                 return sendMessage(client, message, "This command will eventually list all quests for a specific game, but it is a WIP for now.");
 
             // Default: Monsters
