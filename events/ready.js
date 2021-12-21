@@ -84,6 +84,7 @@ function initPresence() {
 
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "747878956434325626";
+module.exports.NinigiID = "592760951103684618";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";

@@ -13,6 +13,8 @@ module.exports = async (client) => {
         const { bank } = require('../database/bank');
         const gifTags = ["birthday"];
 
+        if (client.user.id != globalVars.NinigiID) return;
+
         // Create cron job
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
