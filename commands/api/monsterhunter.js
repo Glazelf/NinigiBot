@@ -168,7 +168,7 @@ exports.run = async (client, message, args = []) => {
                 questsPaged[currentPage - 1].forEach(quest => {
                     let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
                     if (quest.isKey) questTitle += ` 🔑`;
-                    questsEmbed.addField(`${questTitle}:`, `${quest.objective} in ${quest.map}`, false);
+                    questsEmbed.addField(`${questTitle}`, `${quest.objective} in ${quest.map}`, false);
                 });
 
                 let startIndex = currentPage + pageLength * currentPage;
