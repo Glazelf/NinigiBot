@@ -1,10 +1,10 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.guild.id !== "861884184787550218") return;
+        if (interaction.guild.id !== "861884184787550218") return;
 
         let targetDate = new Date("Nov 20, 2021 19:47:00").getTime();
         let now = new Date().getTime();
@@ -19,11 +19,11 @@ exports.run = async (client, message) => {
         let returnString = `${days}d ${hours}h ${minutes}m ${seconds}s left.`;
         if (distance <= 0) returnString = `If you read this you have the big gay 😳.`;
 
-        return sendMessage(client, message, returnString);
+        return sendMessage(client, interaction, returnString);
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
