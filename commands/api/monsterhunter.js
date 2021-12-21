@@ -5,9 +5,6 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const fs = require('fs');
-        const path = require('path');
-        const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
         // Load JSON
@@ -73,6 +70,7 @@ exports.run = async (client, message, args = []) => {
                 // Generalize game names and abbreviations
                 // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
                 let MH3Titles = [
+                    "monster hunter 3 ultimate",
                     "monster hunter 3",
                     "monster hunter 3u",
                     "mh3",
@@ -81,6 +79,7 @@ exports.run = async (client, message, args = []) => {
                     "3u"
                 ];
                 let MH4Titles = [
+                    "monster hunter 4 ultimate",
                     "monster hunter 4",
                     "monster hunter 4u",
                     "mh4",
@@ -89,6 +88,7 @@ exports.run = async (client, message, args = []) => {
                     "3u"
                 ];
                 let MHGUTitles = [
+                    "monster hunter generations ultimate",
                     "monster hunter generations",
                     "monster hunter generations u",
                     "mhg",
@@ -97,6 +97,7 @@ exports.run = async (client, message, args = []) => {
                     "gu"
                 ];
                 let MH5Titles = [
+                    "monster hunter world",
                     "monster hunter 5",
                     "monster hunter world iceborne",
                     "mh5",
@@ -105,6 +106,7 @@ exports.run = async (client, message, args = []) => {
                     "world"
                 ];
                 let MH5PTitles = [
+                    "monster hunter rise",
                     "monster hunter 5 portable",
                     "monster hunter rise sunbreak",
                     "mhr",
@@ -112,31 +114,75 @@ exports.run = async (client, message, args = []) => {
                     "rise"
                 ];
                 let MHSTTitles = [
+                    "monster hunter stories",
                     "mhs",
                     "mhst",
                     "stories"
                 ];
                 let MHST2Titles = [
+                    "monster hunter stories 2",
                     "monster hunter stories 2 wings of ruin",
                     "mhs2",
                     "mhst2",
                     "stories 2"
                 ];
-                if (MH3Titles.includes(gameInput)) gameInput = "monster hunter 3 ultimate";
-                if (MH4Titles.includes(gameInput)) gameInput = "monster hunter 4 ultimate";
-                if (MHGUTitles.includes(gameInput)) gameInput = "monster hunter generations ultimate";
-                if (MH5Titles.includes(gameInput)) gameInput = "monster hunter world";
-                if (MH5PTitles.includes(gameInput)) gameInput = "monster hunter rise";
-                if (MHSTTitles.includes(gameInput)) gameInput = "monster hunter stories";
-                if (MHST2Titles.includes(gameInput)) gameInput = "monster hunter stories 2";
+                if (MH3Titles.includes(gameInput)) gameInput = "Monster Hunter 3 Ultimate"
+                if (MH4Titles.includes(gameInput)) gameInput = "Monster Hunter 4 Ultimate";
+                if (MHGUTitles.includes(gameInput)) gameInput = "Monster Hunter Generations Ultimate";
+                if (MH5Titles.includes(gameInput)) gameInput = "Monster Hunter World";
+                if (MH5PTitles.includes(gameInput)) gameInput = "Monster Hunter Rise";
+                if (MHSTTitles.includes(gameInput)) gameInput = "Monster Hunter Stories";
+                if (MHST2Titles.includes(gameInput)) gameInput = "Monster Hunter Stories 2";
 
                 // Add quests matching game title to an array
-                let quests = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameInput);
-                if (quests.length == 0) return sendMessage(client, message, "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.");
+                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
+                if (questsTotal.length == 0) return sendMessage(client, message, "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.");
 
-                console.log(quests);
+                // Sort by difficulty
+                questsTotal = questsTotal.sort(compare);
 
-                return sendMessage(client, message, "This command will eventually list all quests for a specific game, but it is a WIP for now.");
+                // Make embed
+                let questsEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setAuthor({ name: `${gameInput} Quests` }) // Game name instead of input because of capitalization
+                    .setTimestamp();
+
+                let totalQuests = questsTotal.length;
+                let pageLength = 10;
+                let currentPage = 1; // Load page 1 on command use (duh)
+                let questsPaged = questsTotal.reduce((questsTotal, item, index) => {
+                    const chunkIndex = Math.floor(index / pageLength);
+
+                    // start a new chunk
+                    if (!questsTotal[chunkIndex]) questsTotal[chunkIndex] = [];
+
+                    questsTotal[chunkIndex].push(item);
+                    return questsTotal;
+                }, []);
+                let totalPages = questsPaged.length;
+
+                console.log(questsPaged)
+                console.log(questsTotal.length)
+                console.log(questsPaged.length)
+
+                questsPaged[currentPage - 1].forEach(quest => {
+                    let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
+                    if (quest.isKey) questTitle += ` 🔑`;
+                    questsEmbed.addField(`${questTitle}:`, `${quest.objective} in ${quest.map}`, false);
+                });
+
+                let startIndex = currentPage + pageLength * currentPage;
+                let endIndex = startIndex + pageLength - 1;
+                questsEmbed.setFooter(`Page ${currentPage}/${totalPages}`);
+
+                return sendMessage(client, message, null, questsEmbed);
+
+                // Function to sort by difficulty
+                function compare(a, b) {
+                    if (a.difficulty > b.difficulty) return -1;
+                    if (a.difficulty < b.difficulty) return 1;
+                    return 0;
+                };
 
             // Default: Monsters
             default:
