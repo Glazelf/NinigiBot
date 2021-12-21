@@ -49,6 +49,7 @@ module.exports.config = {
     options: [{
         name: "rule-id",
         type: "INTEGER",
-        description: "Number of the rule to send."
+        description: "Number of the rule to send.",
+        required: true
     }]
 };

@@ -112,13 +112,9 @@ module.exports.config = {
     permission: "owner",
     defaultPermission: false,
     options: [{
-        name: "user-mention",
+        name: "user",
         type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by id."
+        description: "Specify user."
     }, {
         name: "item",
         type: "STRING",
