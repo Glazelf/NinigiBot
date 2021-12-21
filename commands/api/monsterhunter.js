@@ -184,8 +184,8 @@ exports.run = async (client, message, args = []) => {
                     return 0;
                 };
 
-            // Default: Monsters
-            default:
+            // Monsters
+            case "monster":
                 let monsterName = args;
                 if (message.type == 'APPLICATION_COMMAND') monsterName = monsterName.slice(1);
                 monsterName = monsterName.join(" ").toLowerCase();

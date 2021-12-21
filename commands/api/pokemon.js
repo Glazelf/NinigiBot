@@ -202,8 +202,8 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
 
-            // Default: Pokémon
-            default:
+            // Pokémon
+            case "pokemon":
                 // Public variables
                 var pokemonName = args;
                 var pokemonID;
