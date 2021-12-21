@@ -211,9 +211,6 @@ exports.run = async (client, message, args = []) => {
                 let minPkmID = 1; // Bulbasaur
                 let maxPkmID = 898; // Calyrex
 
-                // Catch Slash Command structure
-                if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
-
                 // Edgecase name corrections
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
                 await correctValue(correctionName, pokemonName);
