@@ -161,10 +161,6 @@ exports.run = async (client, message, args = []) => {
                 }, []);
                 let totalPages = questsPaged.length;
 
-                console.log(questsPaged)
-                console.log(questsTotal.length)
-                console.log(questsPaged.length)
-
                 questsPaged[currentPage - 1].forEach(quest => {
                     let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
                     if (quest.isKey) questTitle += ` 🔑`;
