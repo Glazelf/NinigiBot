@@ -12,7 +12,7 @@ module.exports = async (client) => {
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = client.config.botServerID;
 
-        if (client.user.id != "592760951103684618") return;
+        if (client.user.id != globalVars.NinigiID) return;
 
         // Create cronjob
         new cron.CronJob(time, async () => {
