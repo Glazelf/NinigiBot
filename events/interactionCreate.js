@@ -13,31 +13,10 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND":
                 if (!interaction.member) return sendMessage(client, interaction, `Sorry, you're not allowed to use commands in private messages!`);
 
-                const { DisabledChannels } = require('../database/dbObjects');
-                const dbChannels = await DisabledChannels.findAll();
-
-                // Format options into same structure as regular args[], holy shit this is ugly code but it works for now
-                let args = [];
-
-                if (interaction.options._subcommand) args.push(interaction.options._subcommand);
-                await interaction.options._hoistedOptions.forEach(async option => {
-                    if (option.hasOwnProperty("options")) {
-                        await option.options.forEach(async option => {
-                            args.push(option.value);
-                            if (option.hasOwnProperty("options")) {
-                                await option.options.forEach(async option => {
-                                    args.push(option.value);
-                                });
-                            };
-                        });
-                    } else {
-                        args.push(option.value);
-                    };
-                });
-
                 // Grab the command data from the client.commands Enmap
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
+
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
                     if (command.config.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
@@ -46,17 +25,10 @@ module.exports = async (client, interaction) => {
                     if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
                 };
 
-                // Probably faster command checker, but fails when command uses capitalization (i.e. context menu)
-                // if (client.commands.has(commandName)) {
-                //     cmd = client.commands.get(commandName);
-                // } else if (client.aliases.has(commandName)) {
-                //     cmd = client.commands.get(client.aliases.get(commandName));
-                // } else return;
-
                 // Run the command
                 if (cmd) {
                     try {
-                        await cmd.run(client, interaction, args);
+                        await cmd.run(client, interaction);
                     } catch (e) {
                         // console.log(e);
                         return;
