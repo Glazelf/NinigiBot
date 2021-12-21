@@ -303,6 +303,7 @@ module.exports.config = {
             name: "ability-name",
             type: "STRING",
             description: "Specify quest by name.",
+            required: true
         }]
     },
     {
@@ -313,6 +314,7 @@ module.exports.config = {
             name: "game-name",
             type: "STRING",
             description: "Specify game by name or abbreviation.",
+            required: true
         }]
     }, {
         name: "monster",
@@ -322,6 +324,7 @@ module.exports.config = {
             name: "monster-name",
             type: "STRING",
             description: "Specify monster by its English name.",
+            required: true
         }]
     }]
 };

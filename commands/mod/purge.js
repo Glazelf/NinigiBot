@@ -99,6 +99,7 @@ module.exports.config = {
     options: [{
         name: "amount",
         type: "INTEGER",
-        description: "The amount of messages to delete."
+        description: "The amount of messages to delete.",
+        required: true
     }]
 };

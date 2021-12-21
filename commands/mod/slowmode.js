@@ -32,6 +32,7 @@ module.exports.config = {
     options: [{
         name: "seconds",
         type: "INTEGER",
-        description: "The amount of slowmode in seconds."
+        description: "The amount of slowmode in seconds.",
+        required: true
     }]
 };

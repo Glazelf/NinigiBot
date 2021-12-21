@@ -194,12 +194,8 @@ module.exports.config = {
     aliases: ["challenge"],
     description: "Battle someone's Shinx.",
     options: [{
-        name: "user-mention",
+        name: "user",
         type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
+        description: "Specify user."
     }]
 };
