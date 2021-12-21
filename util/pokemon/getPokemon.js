@@ -1,4 +1,4 @@
-module.exports = async (client, message, response) => {
+module.exports = async (client, interaction, response) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -137,7 +137,7 @@ module.exports = async (client, message, response) => {
                 })
                 .catch(function (e) {
                     // console.log(e);
-                    return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                    return sendMessage(client, interaction, `Could not find the specified Pokémon.`);
                 });
         };
 
@@ -206,7 +206,7 @@ module.exports = async (client, message, response) => {
         pokemonName = await capitalizeString(pokemonName);
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
-        let footer = message.member.user.tag;
+        let footer = interaction.member.user.tag;
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()

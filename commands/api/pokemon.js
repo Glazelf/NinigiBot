@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -14,20 +14,16 @@ exports.run = async (client, message, args = []) => {
         const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
-
-        let subCommand = args[0].toLowerCase();
-        let subArgument;
-        if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
+        let argument = args[0].value.toLowerCase();
 
         let user = message.member.user;
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
-        switch (subCommand) {
+        switch (interaction.options._subcommand) {
             // Abilities
             case "ability":
-                P.getAbilityByName(subArgument)
+                P.getAbilityByName(argument)
                     .then(async function (response) {
                         // Why are german entries still tagged as English?
                         // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
@@ -70,7 +66,7 @@ exports.run = async (client, message, args = []) => {
 
             // Items
             case "item":
-                P.getItemByName(subArgument)
+                P.getItemByName(argument)
                     .then(async function (response) {
                         let itemName = response.name.replace("-", "").toLowerCase();
                         let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
@@ -109,7 +105,7 @@ exports.run = async (client, message, args = []) => {
 
             // Moves
             case "move":
-                P.getMoveByName(subArgument)
+                P.getMoveByName(argument)
                     .then(async function (response) {
                         let description;
                         try {
@@ -159,7 +155,7 @@ exports.run = async (client, message, args = []) => {
                 break;
 
             case "nature":
-                P.getNatureByName(subArgument)
+                P.getNatureByName(argument)
                     .then(async function (response) {
                         let author = await capitalizeString(response.name);
                         let statUp;
@@ -212,7 +208,7 @@ exports.run = async (client, message, args = []) => {
                 let maxPkmID = 898; // Calyrex
 
                 // Edgecase name corrections
-                pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
+                pokemonName = pokemonName.replace(" ", "-").replace(":", "").toLowerCase();
                 await correctValue(correctionName, pokemonName);
 
                 // Easter egg name aliases
