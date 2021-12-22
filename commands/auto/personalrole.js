@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,31 +6,34 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
-        let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
-        if (!serverID) return sendMessage(client, message, `Personal Roles are disabled in **${message.guild.name}**.`);
+        let adminBool = await isAdmin(client, interaction.member);
+        let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
+        if (!serverID) return sendMessage(client, interaction, `Personal Roles are disabled in **${interaction.guild.name}**.`);
 
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
+        let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
 
         // Check if icons are possible
         let iconsAllowed = false;
         let nitroLevel2Req = 7;
-        if (message.guild.premiumSubscriptionCount > nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
+        if (interaction.guild.premiumSubscriptionCount > nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
 
         // Get Nitro Booster position
-        let boosterRole = await message.guild.roles.premiumSubscriberRole;
-        if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
+        let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
+        if (!boosterRole) return sendMessage(client, interaction, `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
         let personalRolePosition = boosterRole.position + 1;
 
-        if (!message.member.roles.cache.has(boosterRole.id) && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, interaction, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
-        // if (message.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
+        // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
-        if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, message, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
+        if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, interaction, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
 
         // Color catch
-        let roleColor = args[0];
+        let colorArgument = args.find(element => element.name == 'color-hex');
+        let roleColor = null;
+        if (colorArgument) roleColor = colorArgument.value;
+
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
@@ -88,17 +91,17 @@ exports.run = async (client, message, args = []) => {
         if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         let messageImage = null;
-        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+        if (interaction.attachments.size > 0) messageImage = interaction.attachments.first().url;
 
-        let user = message.member.user;
+        let user = interaction.member.user;
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-        if (!boosterRole && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
             let editReturnString = `Updated your role successfully; `;
-            let personalRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
+            let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
             if (!args[0]) roleColor = personalRole.color;
@@ -111,7 +114,7 @@ exports.run = async (client, message, args = []) => {
                 position: personalRolePosition
             }).catch(e => {
                 // console.log(e);
-                return sendMessage(client, message, `An error occurred.`);
+                return sendMessage(client, interaction, `An error occurred.`);
             });
 
             if (messageImage && iconsAllowed) {
@@ -124,13 +127,13 @@ exports.run = async (client, message, args = []) => {
                     editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}. `;
                 };
             } else if (messageImage && !iconsAllowed) {
-                editReturnString += `Failed to update the image, **${message.guild.name}** does not have role icons unlocked. `;
+                editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
             };
 
             // Re-add role if it got removed
-            if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
+            if (!interaction.member.roles.cache.find(r => r.name == user.tag)) interaction.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, editReturnString);
+            return sendMessage(client, interaction, editReturnString);
 
         } else {
             // Create role if it doesn't exit yet
@@ -139,14 +142,14 @@ exports.run = async (client, message, args = []) => {
 
         async function createRole() {
             // Clean up possible old entry
-            let oldEntry = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
+            let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
             if (oldEntry) await oldEntry.destroy();
 
             if (!args[0]) roleColor = 0;
 
             // Create role
             try {
-                await message.guild.roles.create({
+                await interaction.guild.roles.create({
                     name: user.tag,
                     color: roleColor,
                     position: personalRolePosition,
@@ -155,39 +158,39 @@ exports.run = async (client, message, args = []) => {
             } catch (e) {
                 // console.log(error);
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, message);
+                    return logger(e, client, interaction);
                 } else {
-                    return sendMessage(client, message, `An error occurred creating a role.`);
+                    return sendMessage(client, interaction, `An error occurred creating a role.`);
                 };
             };
 
-            let createdRole = await message.guild.roles.cache.find(role => role.name == user.tag);
+            let createdRole = await interaction.guild.roles.cache.find(role => role.name == user.tag);
             try {
                 if (messageImage && iconsAllowed) createdRole.setIcon(messageImage);
             } catch (e) {
                 // console.log(e);
             };
 
-            message.member.roles.add(createdRole.id);
-            await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
+            interaction.member.roles.add(createdRole.id);
+            await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.member.id, role_id: createdRole.id });
 
-            return sendMessage(client, message, `Created a personal role for you successfully.`);
+            return sendMessage(client, interaction, `Created a personal role for you successfully.`);
         };
 
         async function deleteRole(successString, failString) {
             if (roleDB) {
-                let oldRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
+                let oldRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
                 if (oldRole) await oldRole.delete();
                 await roleDB.destroy();
-                return sendMessage(client, message, successString);
+                return sendMessage(client, interaction, successString);
             } else {
-                return sendMessage(client, message, failString);
+                return sendMessage(client, interaction, failString);
             };
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
