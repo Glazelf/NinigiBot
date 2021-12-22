@@ -33,13 +33,14 @@ exports.run = async (client, message, args) => {
         };
 
         let author = message.member.user;
+        let maxMessageFetch = 100;
+        if (numberFromMessage > maxMessageFetch) numberFromMessage = maxMessageFetch;
 
         await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
-                let maxMessageFetch = 100;
                 let messages = await message.channel.messages.fetch({ limit: maxMessageFetch });
                 messages = await messages.filter(m => m.author.id == user.id).array().slice(0, amount);
                 try {
