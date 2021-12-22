@@ -48,6 +48,8 @@ exports.run = async (client, message, args = []) => {
         };
 
         muteTime = muteTime * 1000 * 60; // Convert to minutes
+        let maxMuteTime = 2.419e+9; // Max time is 28 days
+        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`;
         if (member.communicationDisabledUntil) {
             muteTime = null;
