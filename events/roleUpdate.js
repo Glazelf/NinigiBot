@@ -36,9 +36,12 @@ module.exports = async (client, oldRole, newRole) => {
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
                 .addField(`Role:`, `${newRole} (${newRole.id})`);
-            if (executor) updateEmbed.addField('Updated by:', `${executor} (${executor.id})`);
+            if (executor) {
+                updateEmbed
+                    .addField('Updated by:', `${executor} (${executor.id})`)
+                    .setFooter(executor.tag);
+            };
             updateEmbed
-                .setFooter(executor.tag)
                 .setTimestamp();
 
             if (oldRole.name !== newRole.name) {
