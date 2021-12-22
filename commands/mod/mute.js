@@ -31,6 +31,7 @@ exports.run = async (client, message, args = []) => {
                 member = await message.guild.members.fetch(memberID);
             } catch (e) {
                 // console.log(e);
+                member = null;
             };
         };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
@@ -46,14 +47,23 @@ exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
+        muteTime = muteTime * 1000 * 60; // Convert to minutes
+        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`;
+        if (member.communicationDisabledUntil) {
+            muteTime = null;
+            muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
+        };
+
         // Timeout logic
         try {
             await member.timeout(muteTime, reason);
-            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`);
+            return sendMessage(client, message, muteReturnString);
         } catch (e) {
             // console.log(e);
-            if (e.toString().includes("Missing Permissions")) return sendMessage(client, message, `Failed to time **${user.tag}** out. I probably lack permissions.`);
-        }
+            if (e.toString().includes("Missing Permissions")) return sendMessage(client, message, `Failed to toggle timeout on **${user.tag}**. I probably lack permissions.`);
+            // Log error
+            logger(e, client, message);
+        };
 
     } catch (e) {
         // Log error
