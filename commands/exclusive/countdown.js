@@ -4,7 +4,6 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (interaction.guild.id !== "861884184787550218") return;
 
         let targetDate = new Date("Nov 20, 2021 19:47:00").getTime();
         let now = new Date().getTime();

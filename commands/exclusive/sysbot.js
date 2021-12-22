@@ -6,8 +6,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        if (interaction.guild.id !== client.config.botServerID) return;
-
         // Bot hosts
         let Glaze = await client.users.fetch(client.config.ownerID);
         let Artic = await client.users.fetch("353184551096418316");

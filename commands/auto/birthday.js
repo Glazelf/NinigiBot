@@ -7,7 +7,6 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
 
         // Check and sanitize birthday
-        if (args.length < 1) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
         let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(args);
         if (!birthday) return sendMessage(client, message, `Please specify a valid birthday in dd-mm format.`);
 
