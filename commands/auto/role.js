@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,22 +6,17 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const isAdmin = require("../../util/isAdmin");
-        const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
+        const { EligibleRoles } = require('../../database/dbObjects');
 
-        await message.guild.roles.fetch();
+        await interaction.guild.roles.fetch();
 
-        let member = message.member;
-        let user = message.member.user;
+        let member = interaction.member;
+        let user = interaction.member.user;
 
-
-        let requestRole = args.join(' ').toLowerCase();
-        let adminBoolBot = await isAdmin(client, message.guild.me);
+        let roleArgument = args.find(element => element.name == 'role');
+        let requestRole = null;
+        if (roleArgument) requestRole = roleArgument.value;
+        let adminBoolBot = await isAdmin(client, interaction.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
@@ -46,11 +41,11 @@ exports.run = async (client, message, args = []) => {
         let roleHelpMessage = "";
         let rolesArray = [];
 
-        if (!args[0] || args[0] == "help") {
+        if (!requestRole) {
             // Select Menu
             if (!args[0] && roleText.length <= selectOptionLimit) {
                 await db.forEach(async (eligibleRole) => {
-                    let currentRole = await message.guild.roles.fetch(eligibleRole.role_id);
+                    let currentRole = await interaction.guild.roles.fetch(eligibleRole.role_id);
                     if (!currentRole) return;
                     roles.push({
                         role: currentRole,
@@ -60,7 +55,7 @@ exports.run = async (client, message, args = []) => {
                 });
                 roles = Object.entries(roles).sort((a, b) => b[1].role.position - a[1].role.position);
                 for await (const [key, value] of Object.entries(roles)) {
-                    let currentRole = await message.guild.roles.fetch(value[1].role.id);
+                    let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                     if (!currentRole) continue;
                     rolesArray.push({
                         label: currentRole.name,
@@ -68,11 +63,11 @@ exports.run = async (client, message, args = []) => {
                         description: value[1].description,
                     });
                 };
-                if (rolesArray.length < 1) return sendMessage(client, message, `There are no roles available to be selfassigned in **${message.guild.name}**.`);
+                if (rolesArray.length < 1) return sendMessage(client, interaction, `There are no roles available to be selfassigned in **${interaction.guild.name}**.`);
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
-                return sendMessage(client, message, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
+                return sendMessage(client, interaction, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
             };
 
             // Help menu
@@ -81,16 +76,9 @@ exports.run = async (client, message, args = []) => {
         > ${i + 1}. <@&${roleText[i]}>`;
             };
 
-            if (roleHelpMessage.length > 0) {
-                roleHelpMessage = `${roleHelpMessage}
-Please don't tag these roles, just put the name.
-Example: \`${prefix}role Minecraft\`
-If you wish to use a select menu, use \`${prefix}role\` while having ${selectOptionLimit} or less selfassignable roles.`;
-            } else {
-                return sendMessage(client, message, `No roles have been made selfassignable yet. Moderators can use \`${prefix}addrole\` to add roles to this list.`);
-            };
+            if (roleHelpMessage.length == 0) return sendMessage(client, interaction, `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.`);
 
-            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, message, `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.`);
+            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, interaction, `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.`);
 
             let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -100,40 +88,41 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
                 .setDescription(roleHelpMessage)
                 .setFooter(user.tag)
                 .setTimestamp();
-            return sendMessage(client, message, null, rolesHelp);
+            return sendMessage(client, interaction, null, rolesHelp);
         } else {
-            // Give role to self through command
-            const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === requestRole);
 
-            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`${prefix}role help\` to see the available roles.`;
-            if (!role) return sendMessage(client, message, invalidRoleText);
-            if (!roleIDs.includes(role.id)) return sendMessage(client, message, invalidRoleText);
-            if (role.managed == true) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-            if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage(client, message, `I can't manage the **${role.name}** role because it is above my highest role.`);
+            // Give role to self through command
+            const role = interaction.guild.roles.cache.find(role => role == requestRole);
+
+            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without an argument to see available roles.`;
+            if (!role) return sendMessage(client, interaction, invalidRoleText);
+            if (!roleIDs.includes(role.id)) return sendMessage(client, interaction, invalidRoleText);
+            if (role.managed == true) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
+            if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is above my highest role.`);
 
             if (member.roles.cache.has(role.id)) {
                 await member.roles.remove(role);
-                return sendMessage(client, message, `You no longer have the **${role.name}** role, **${member.user.tag}**!`);
+                return sendMessage(client, interaction, `You no longer have the **${role.name}** role, **${member.user.tag}**!`);
 
             } else {
                 await member.roles.add(role);
-                return sendMessage(client, message, `You now have the **${role.name}** role, **${member.user.tag}**!`);
+                return sendMessage(client, interaction, `You now have the **${role.name}** role, **${member.user.tag}**!`);
             };
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "role",
     aliases: ["roles", "rank"],
-    description: "Toggles an eligible role.",
+    description: "Toggles an available role. Use without argument to see roles.",
     options: [{
-        name: "role-name",
-        type: "STRING",
-        description: "Specify the role name. Type \"help\" to see a list of eligible roles."
+        name: "role",
+        type: "ROLE",
+        description: "Specify the role."
     }]
 };
