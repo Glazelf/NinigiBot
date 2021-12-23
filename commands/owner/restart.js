@@ -22,6 +22,15 @@ exports.run = async (client, message, args = []) => {
 
             // Delete all global commands
             await client.application.commands.set([]);
+
+            // Delete all guild commands
+            await client.guilds.cache.forEach(guild => {
+                try {
+                    guild.commands.set([]);
+                } catch (e) {
+                    // console.log(e);
+                };
+            });
         };
 
         // Destroy, will reboot thanks to forever package
@@ -43,5 +52,7 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "restart",
     aliases: [],
-    description: "Restart bot and reload all files."
+    description: "Restart bot and reload all files.",
+    permission: "owner",
+    defaultPermission: false
 };

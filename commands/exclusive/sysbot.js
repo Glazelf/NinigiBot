@@ -82,5 +82,6 @@ Check the pins in <#${globalVars.botChannelID}> for information and ways to supp
 module.exports.config = {
     name: "sysbot",
     aliases: ["sb"],
-    description: "Sends status of all sysbots."
+    description: "Sends status of all sysbots.",
+    serverID: "549214833858576395"
 };

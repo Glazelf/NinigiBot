@@ -15,7 +15,7 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
-        return sendMessage(client, message, `I got tired of manually updating the text so untill I've made this adaptive I disabled this command haha. For progress: <https://github.com/Glazelf/NinigiBot/issues/105>.`);
+        return sendMessage(client, message, `I got tired of manually updating the text so untill I've made this adaptive I disabled this command haha. For progress: <https://github.com/Glazelf/NinigiBot/issues/105>.`, null, null, false);
 
         async function getRule(object, input) {
             var keyList = Object.keys(object);
@@ -45,9 +45,11 @@ module.exports.config = {
     name: "rules",
     aliases: ["faq", "rule"],
     description: "Sends a rule.",
+    serverID: "549214833858576395",
     options: [{
         name: "rule-id",
         type: "INTEGER",
-        description: "Number of the rule to send."
+        description: "Number of the rule to send.",
+        required: true
     }]
 };

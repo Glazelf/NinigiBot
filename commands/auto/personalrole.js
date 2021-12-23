@@ -33,6 +33,54 @@ exports.run = async (client, message, args = []) => {
         let roleColor = args[0];
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
+            roleColor = roleColor.toLowerCase();
+
+            // Default colors
+            let greyHex = "36393f";
+            switch (roleColor) {
+                case "red":
+                    roleColor = "ff2121";
+                    break;
+                case "orange":
+                    roleColor = "ff6426";
+                    break;
+                case "yellow":
+                    roleColor = "ffc338";
+                    break;
+                case "green":
+                    roleColor = "7dff45";
+                    break;
+                case "turqouise":
+                    roleColor = "45ffb5";
+                    break;
+                case "blue":
+                    roleColor = "084dff";
+                    break;
+                case "purple":
+                    roleColor = "842bff";
+                    break;
+                case "pink":
+                    roleColor = "f6a6ff";
+                    break;
+                case "burgundy":
+                    roleColor = "a62460";
+                    break;
+                case "black":
+                    roleColor = "000001"; // 000000 becomes transparent
+                    break;
+                case "white":
+                    roleColor = "ffffff";
+                    break;
+                case "grey":
+                    roleColor = greyHex;
+                    break;
+                case "gray":
+                    roleColor = greyHex;
+                    break;
+                default:
+                    break;
+            };
+
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };

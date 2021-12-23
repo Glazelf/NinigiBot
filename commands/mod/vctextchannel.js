@@ -44,12 +44,8 @@ module.exports.config = {
     aliases: ["vtc", "voicetext", "vcchannel"],
     description: "Choose a channel to be linked to vc's.",
     options: [{
-        name: "channel-tag",
+        name: "channel",
         type: "CHANNEL",
-        description: "Specify channel by mention."
-    }, {
-        name: "channel-id",
-        type: "STRING",
-        description: "Specify channel by name or ID."
+        description: "Specify channel."
     }]
 };

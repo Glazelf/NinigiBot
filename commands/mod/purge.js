@@ -33,13 +33,14 @@ exports.run = async (client, message, args) => {
         };
 
         let author = message.member.user;
+        let maxMessageFetch = 100;
+        if (numberFromMessage > maxMessageFetch) numberFromMessage = maxMessageFetch;
 
         await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
-                let maxMessageFetch = 100;
                 let messages = await message.channel.messages.fetch({ limit: maxMessageFetch });
                 messages = await messages.filter(m => m.author.id == user.id).array().slice(0, amount);
                 try {
@@ -63,7 +64,7 @@ exports.run = async (client, message, args) => {
             try {
                 let messages = await message.channel.messages.fetch({ limit: amount });
                 await message.channel.bulkDelete(messages);
-                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.\nThis message will be deleted in 10 seconds.` }).then(message => {
+                await message.channel.send({ content: `Deleted ${numberFromMessage} messages, ${author}.\nThis message will be deleted in 10 seconds.`, ephemeral: false }).then(message => {
                     setTimeout(function () {
                         try {
                             message.delete();
@@ -99,6 +100,7 @@ module.exports.config = {
     options: [{
         name: "amount",
         type: "INTEGER",
-        description: "The amount of messages to delete."
+        description: "The amount of messages to delete.",
+        required: true
     }]
 };

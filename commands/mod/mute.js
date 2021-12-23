@@ -8,7 +8,6 @@ exports.run = async (client, message, args = []) => {
         let adminBool = await isAdmin(client, message.member);
         if (!message.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        // Default time the user is muted in minutes
         let muteTime = 60;
         let maxMuteTime = 2.419e+9; // Max time is 28 days
 

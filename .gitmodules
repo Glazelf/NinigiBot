@@ -1,0 +1,3 @@
+[submodule "monster-hunter-DB"]
+	path = submodules/monster-hunter-DB
+	url = https://github.com/CrimsonNynja/monster-hunter-DB.git

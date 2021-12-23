@@ -45,6 +45,8 @@ module.exports.config = {
     name: "moneyadd",
     aliases: ["addmoney"],
     description: "Add money to a user.",
+    permission: "owner",
+    defaultPermission: false,
     options: [{
         name: "amount",
         type: "INTEGER",

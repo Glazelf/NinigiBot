@@ -11,39 +11,43 @@ module.exports = async (client) => {
         // Set interactions
         if (!client.application?.owner) await client.application?.fetch();
 
-        // Daily rate limit of 200 interactions should only go up if they are fully deleted and readded, not on every boot.
-        let commandsExclude = [
-            // Serverlocked commands
-            "countdown",
-            "sysbot",
-            "rule",
-            // Owner exclusive commands
-            "clearinteractions",
-            "dm",
-            "eval",
-            "item",
-            "kill",
-            "moneyadd",
-            "reload",
-            "restart"
+        let ownerPerm = [
+            {
+                id: client.config.ownerID,
+                type: 'USER',
+                permission: true
+            }
         ];
 
-        let NinigiUserID = "592760951103684618";
-
-        if (client.user.id == NinigiUserID) {
-            await client.commands.forEach(command => {
-                try {
-                    if (commandsExclude.includes(command.config.name)) return;
-                    client.application?.commands.create(command.config);
-                    // console.log(`Loaded interaction: ${command.config.name} ✔`);
-                    // Server exclusive interactions:
-                    // let guild = await client.guilds.fetch(client.config.botServerID);
-                    // if (guild) guild.commands.create(command.config);
-                } catch (e) {
-                    console.log(e);
+        await client.commands.forEach(async (command) => {
+            let slashCommand;
+            let guild;
+            try {
+                if (command.config.interaction === false) return;
+                if (command.config.serverID) { // Set guild commands
+                    try {
+                        guild = await client.guilds.fetch(command.config.serverID);
+                        if (guild) slashCommand = await guild.commands.create(command.config);
+                    } catch (e) {
+                        // console.log(e);
+                        if (guild) {
+                            console.log(`Failed to set ${command.config.name} as a slash command in ${guild.name}. Probably lacking permissions.`);
+                        } else {
+                            console.log(`Failed to set ${command.config.name} as a command in server ${command.config.serverID}. I'm probably not in this server.`);
+                        };
+                    };
+                } else { // Global commands
+                    slashCommand = await client.application?.commands.create(command.config);
                 };
-            });
-        };
+                // if (command.config.permission === "owner") { // Owner exclusive commands. Commented out now because would need to bed one for each individual server.
+                //     console.log(slashCommand)
+                //     console.log(slashCommand.permissions)
+                //     await slashCommand.permissions.add({ ownerPerm });
+                // };
+            } catch (e) {
+                console.log(e);
+            };
+        });
         console.log("Loaded interactions!");
 
         await client.guilds.fetch();
@@ -80,6 +84,7 @@ function initPresence() {
 
 module.exports.birthdayRole = "744719808058228796";
 module.exports.botChannelID = "747878956434325626";
+module.exports.NinigiID = "592760951103684618";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";

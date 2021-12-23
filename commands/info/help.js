@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
 [Github](https://github.com/sponsors/Glazelf)
 [Patreon](https://patreon.com/glazelf 'Patreon')
 [Ko-fi](https://ko-fi.com/glaze0388 'Ko-fi')`, false)
-            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8 'Bot Invite')`, true)
+            .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8 'Bot Invite')`, true)
             .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
             .setFooter(user.tag)
             .setTimestamp();

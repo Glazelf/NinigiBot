@@ -62,6 +62,9 @@ exports.run = async (client, message, args = []) => {
             };
             if (shortenedRoles) rolesSorted = `${rolesSorted} and more!`;
         };
+        let roleCount = memberRoles.size;
+        let roleTitle = `Roles:`;
+        if (roleCount > 0) roleTitle = `Roles: (${roleCount})`;
 
         // Clear up status wording
         let userStatus;
@@ -173,7 +176,7 @@ exports.run = async (client, message, args = []) => {
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
             .addField("Join Ranking:", joinRankText, true)
-            .addField("Roles:", rolesSorted, false)
+            .addField(roleTitle, rolesSorted, false)
             .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
             .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);

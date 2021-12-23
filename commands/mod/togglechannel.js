@@ -48,12 +48,9 @@ module.exports.config = {
     aliases: ["tc"],
     description: "Toggles commands in a channel.",
     options: [{
-        name: "channel-tag",
+        name: "channel",
         type: "CHANNEL",
-        description: "Specify channel by mention."
-    }, {
-        name: "channel-id",
-        type: "STRING",
-        description: "Specify channel by name or ID."
+        description: "Specify channel.",
+        required: true
     }]
 };

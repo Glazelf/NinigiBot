@@ -274,6 +274,7 @@ module.exports.config = {
             name: "ability-name",
             type: "STRING",
             description: "Get ability info by its English name.",
+            required: true
         }]
     }, {
         name: "item",
@@ -283,6 +284,7 @@ module.exports.config = {
             name: "item-name",
             type: "STRING",
             description: "Get item info by its English name.",
+            required: true
         }]
     }, {
         name: "move",
@@ -292,6 +294,7 @@ module.exports.config = {
             name: "move-name",
             type: "STRING",
             description: "Get move info by its English name.",
+            required: true
         }]
     }, {
         name: "nature",
@@ -301,6 +304,7 @@ module.exports.config = {
             name: "nature-name",
             type: "STRING",
             description: "Get nature info by its English name.",
+            required: true
         }]
     }, {
         name: "pokemon",
@@ -310,10 +314,7 @@ module.exports.config = {
             name: "pokemon-name",
             type: "STRING",
             description: "Get Pokémon info by its English name.",
-        }, {
-            name: "pokemon-id",
-            type: "INTEGER",
-            description: "Get Pokémon info by Pokédex number.",
+            required: true
         }]
     }]
 };

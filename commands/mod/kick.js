@@ -45,6 +45,7 @@ exports.run = async (client, message, args = []) => {
         };
         try {
             await member.kick([`${reason} -${author.tag} (${time})`]);
+            return sendMessage(client, message, kickReturn, null, null, false);
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {
@@ -53,7 +54,6 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage(client, message, banFailString);
             };
         };
-        return sendMessage(client, message, kickReturn);
 
     } catch (e) {
         // Log error
@@ -64,14 +64,5 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "kick",
     aliases: [],
-    description: "Kick a target user from the server.",
-    options: [{
-        name: "user-mention",
-        type: "MENTIONABLE",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
-    }]
+    description: "Kick a target user from the server."
 };
