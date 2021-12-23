@@ -50,9 +50,12 @@ exports.run = async (client, message, args = []) => {
         muteTime = muteTime * 1000 * 60; // Convert to minutes
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s).`;
+
         if (member.communicationDisabledUntil) {
-            muteTime = null;
-            muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
+            if (member.communicationDisabledUntil > Date.now()) {
+                muteTime = null;
+                muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
+            };
         };
 
         // Timeout logic
