@@ -6,16 +6,10 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
 
-        return sendMessage(client, message, `Muting has been disabled temporarily while we wait for Discord.JS support for timing users out through bots.
-Muting through a role was a work-around from the very start, so with an actual feature to replace it with around the corner the old, disgusting code has been disabled to save ram, database writes, and many more resources.
-If you used Ninigi in the past to mute: First of all, thanks a lot! Secondly, you can safely delete your "Muted" role! :)
-Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
-
-        // Minutes the user is muted
         let muteTime = 60;
-        let muteRoleName = "muted";
+        let maxMuteTime = 2.419e+9; // Max time is 28 days
 
         // Get user
         if (!args[0]) return sendMessage(client, message, `Please provide a mentioned user as an argument.`);
@@ -23,7 +17,7 @@ Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
         if (args[1]) {
             muteTime = args[1];
             if (isNaN(muteTime) || 1 > muteTime) return sendMessage(client, message, `Please provide a valid number.`);
-            if (muteTime > 10080) muteTime = 10080;
+            if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         };
 
         let member;
@@ -36,28 +30,40 @@ Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
                 member = await message.guild.members.fetch(memberID);
             } catch (e) {
                 // console.log(e);
+                member = null;
             };
-            if (!member) member = message.guild.members.cache.find(member => member.user.username.toLowerCase() == args[0].toString().toLowerCase());
         };
         if (!member) return sendMessage(client, message, `Please use a proper mention if you want to mute someone.`);
-        const role = member.guild.roles.cache.find(role => role.name.toLowerCase() == muteRoleName);
-        if (!role) return sendMessage(client, message, `There is no mute role. In order to mute someone, you need to create a role called "Muted".`);
 
         // Check permissions
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).`);
+        if (targetRole.position >= userRole.position && !adminBool) return sendMessage(client, message, `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).`);
 
-        // If already muted, unmute. If not, mute.
-        let isMuted = member.roles.cache.find(r => r.name.toLowerCase() == muteRoleName);
-        if (isMuted) {
-            await member.roles.remove(role);
-            return sendMessage(client, message, `Unmuted **${member.user.tag}** (${member.id}).`);
-        } else {
-            await member.roles.add(role);
-            sendMessage(client, message, `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`, null, null, false);
-            // sets a timeout to unmute the user.
-            setTimeout(async () => { await member.roles.remove(role) }, muteTime * 60 * 1000);
+        let reason = "Not specified.";
+        if (args[2]) {
+            reason = args.slice(2, args.length + 1);
+            reason = reason.join(' ');
+        };
+
+        let displayTime = muteTime; // Save time for return strings
+        muteTime = muteTime * 1000 * 60; // Convert to minutes
+        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
+        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s).`;
+        if (member.communicationDisabledUntil) {
+            muteTime = null;
+            muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
+        };
+
+        // Timeout logic
+        try {
+            await member.timeout(muteTime, reason);
+            return sendMessage(client, message, muteReturnString);
+        } catch (e) {
+            // console.log(e);
+            if (e.toString().includes("Missing Permissions")) return sendMessage(client, message, `Failed to toggle timeout on **${user.tag}**. I probably lack permissions.`);
+            // Log error
+            logger(e, client, message);
         };
 
     } catch (e) {
@@ -68,5 +74,6 @@ Follow progress here: <https://github.com/Glazelf/NinigiBot/issues/229>`);
 
 module.exports.config = {
     name: "Mute",
-    type: "USER"
-};
+    aliases: ["timeout"],
+    description: "Mutes target user."
+}; 
