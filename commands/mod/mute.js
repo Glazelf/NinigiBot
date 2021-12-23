@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
 
         // Default time the user is muted in minutes
         let muteTime = 60;
-        let maxMuteTime = 10080;
+        let maxMuteTime = 2.419e+9; // Max time is 28 days
 
         // Get user
         if (!args[0]) return sendMessage(client, message, `Please provide a mentioned user as an argument.`);
@@ -47,10 +47,10 @@ exports.run = async (client, message, args = []) => {
             reason = reason.join(' ');
         };
 
+        let displayTime = muteTime; // Save time for return strings
         muteTime = muteTime * 1000 * 60; // Convert to minutes
-        let maxMuteTime = 2.419e+9; // Max time is 28 days
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
-        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${muteTime} minute(s).`;
+        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s).`;
         if (member.communicationDisabledUntil) {
             muteTime = null;
             muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
