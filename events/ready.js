@@ -24,21 +24,22 @@ module.exports = async (client) => {
             let guild;
             try {
                 if (command.config.interaction === false) return;
-                if (command.config.serverID) { // Set guild commands
-                    try {
-                        guild = await client.guilds.fetch(command.config.serverID);
-                        if (guild) slashCommand = await guild.commands.create(command.config);
-                    } catch (e) {
-                        // console.log(e);
-                        if (guild) {
-                            console.log(`Failed to set ${command.config.name} as a slash command in ${guild.name}. Probably lacking permissions.`);
-                        } else {
-                            console.log(`Failed to set ${command.config.name} as a command in server ${command.config.serverID}. I'm probably not in this server.`);
-                        };
+                // if (command.config.serverID) { // Set guild commands
+                try {
+                    guild = await client.guilds.fetch(client.config.botServerID); // Swap back to commadn.config.serverID for release
+                    if (guild) slashCommand = await guild.commands.create(command.config);
+                } catch (e) {
+                    // console.log(e);
+                    if (guild) {
+                        console.log(`Failed to set ${command.config.name} as a slash command in ${guild.name}. Probably lacking permissions.`);
+                    } else {
+                        console.log(`Failed to set ${command.config.name} as a command in server ${command.config.serverID}. I'm probably not in this server.`);
                     };
-                } else { // Global commands
-                    slashCommand = await client.application?.commands.create(command.config);
                 };
+                // } else { // Global commands
+                //     slashCommand = await client.application?.commands.create(command.config);
+                // };
+
                 // if (command.config.permission === "owner") { // Owner exclusive commands. Commented out now because would need to bed one for each individual server.
                 //     console.log(slashCommand)
                 //     console.log(slashCommand.permissions)
