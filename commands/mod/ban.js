@@ -69,10 +69,10 @@ exports.run = async (client, message, args = []) => {
             banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
             try {
                 await user.send({ content: dmString });
-                banReturn = `${banReturn} (DM Succeeded)`;
+                banReturn += " (DM Succeeded)";
             } catch (e) {
                 // console.log(e);
-                banReturn = `${banReturn} (DM Failed)`;
+                banReturn += " (DM Failed)";
             };
             try {
                 await member.ban({ days: 0, reason: `${reason} -${author.tag}` });

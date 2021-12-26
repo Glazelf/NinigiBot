@@ -36,12 +36,13 @@ exports.run = async (client, message, args = []) => {
         let time = await getTime(client);
 
         // Kick
-        let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Succeeded)`;
+        let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`.`;
         try {
             await user.send({ content: `You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\`` });
+            kickReturn += " (DM Succeeded)";
         } catch (e) {
             // console.log(e);
-            kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`. (DM Failed)`;
+            kickReturn += " (DM Failed)";
         };
         try {
             await member.kick([`${reason} -${author.tag} (${time})`]);
