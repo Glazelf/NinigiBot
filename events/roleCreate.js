@@ -38,11 +38,15 @@ module.exports = async (client, role) => {
                 .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
                 .addField(`Role:`, `${role} (${role.id})`)
                 .addField(`Role name:`, role.name)
-                .addField('Created by:', `${executor} (${executor.id})`);
-            if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
-            createEmbed
-                .setFooter(executor.tag)
                 .setTimestamp();
+
+            if (executor) {
+                createEmbed
+                    .addField('Created by:', `${executor} (${executor.id})`)
+                    .setFooter(executor.tag);
+            };
+
+            if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
