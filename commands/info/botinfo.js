@@ -94,12 +94,6 @@ exports.run = async (client, message) => {
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-        // Channels
-        let channelCount = 0;
-        client.channels.cache.forEach(channel => {
-            if (channel.isText() || channel.isVoice()) channelCount += 1;
-        });
-
         // Owner
         let owner = "Glaze#6669";
 
@@ -107,7 +101,6 @@ exports.run = async (client, message) => {
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
-            .addField("Account:", client.user.toString(), true)
             .addField("Author:", owner, true)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
@@ -118,7 +111,6 @@ exports.run = async (client, message) => {
             .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
-            .addField("Channels:", channelCount.toString(), true)
             .addField("Uptime:", uptime, false)
             .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
             .setFooter(user.tag)
