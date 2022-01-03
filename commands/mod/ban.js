@@ -75,7 +75,7 @@ exports.run = async (client, message, args = []) => {
                 banReturn += " (DM Failed)";
             };
             try {
-                await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
+                await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
             } catch (e) {
                 // console.log(e);
                 return sendMessage(client, message, banFailString);
