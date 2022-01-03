@@ -94,7 +94,7 @@ exports.run = async (client, message, args = []) => {
 
             // Ban
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag}` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag} (${time})` });
                 return sendMessage(client, message, banReturn, null, null, false);
             } catch (e) {
                 // console.log(e);
