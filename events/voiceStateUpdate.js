@@ -1,6 +1,13 @@
 module.exports = async (client, oldMember, newMember) => {
+    const logger = require('../util/logger');
+    // Import globals
+    let globalVars = require('./ready');
     try {
         const { VCTextChannels } = require('../database/dbObjects');
+        const isAdmin = require('../util/isAdmin');
+        let adminBool = await isAdmin(client, newMember);
+        if (adminBool == true) return;
+
         let oldID = null;
         let newID = null;
         if (oldMember.channelId) oldID = oldMember.channelId;
@@ -50,6 +57,6 @@ module.exports = async (client, oldMember, newMember) => {
 
     } catch (e) {
         // Log error
-        console.log(e);
+        logger(e, client);
     };
 };

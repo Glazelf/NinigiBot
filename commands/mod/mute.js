@@ -51,8 +51,8 @@ exports.run = async (client, message, args = []) => {
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s).`;
 
-        if (member.communicationDisabledUntil) {
-            if (member.communicationDisabledUntil > Date.now()) {
+        if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
+            if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
                 muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
             };

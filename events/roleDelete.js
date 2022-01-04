@@ -36,9 +36,13 @@ module.exports = async (client, role) => {
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Deleted ❌`, iconURL: icon })
                 .addField(`Role:`, `${role.name} (${role.id})`)
-                .addField('Deleted by:', `${executor} (${executor.id})`)
-                .setFooter(executor.tag)
                 .setTimestamp();
+
+            if (executor) {
+                deleteEmbed
+                    .addField('Deleted by:', `${executor} (${executor.id})`)
+                    .setFooter(executor.tag)
+            };
 
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

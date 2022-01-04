@@ -69,13 +69,13 @@ exports.run = async (client, message, args = []) => {
             banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
             try {
                 await user.send({ content: dmString });
-                banReturn = `${banReturn} (DM Succeeded)`;
+                banReturn += " (DM Succeeded)";
             } catch (e) {
                 // console.log(e);
-                banReturn = `${banReturn} (DM Failed)`;
+                banReturn += " (DM Failed)";
             };
             try {
-                await member.ban({ days: 0, reason: `${reason} -${author.tag}` });
+                await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
             } catch (e) {
                 // console.log(e);
                 return sendMessage(client, message, banFailString);
@@ -94,7 +94,7 @@ exports.run = async (client, message, args = []) => {
 
             // Ban
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag}` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag} (${time})` });
                 return sendMessage(client, message, banReturn, null, null, false);
             } catch (e) {
                 // console.log(e);
