@@ -162,7 +162,7 @@ module.exports = async (client, message, response) => {
         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
         // let icon = `https://www.smogon.com/forums//media/minisprites/${pokemonName}.png`;
         // Gen 8 party icons, filled with gen 7 icons where needed, very small
-        // let icon = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${response.name}.png?raw=true`;
+        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${response.name}.png?raw=true`;
 
         // High res SwSh sprites
         let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
@@ -213,7 +213,7 @@ module.exports = async (client, message, response) => {
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemonName}`, iconURL: icon })
+            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemonName}`, iconURL: iconParty })
             .setThumbnail(sprite)
             .addField("Type:", typeString, true)
             .addField("Metrics:", `Weight: ${weight}
@@ -231,7 +231,7 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
             .setImage(banner)
-            .setFooter(footer)
+            .setFooter({ text: footer, iconURL: icon })
             .setTimestamp();
 
         let previousPokemon = null;
