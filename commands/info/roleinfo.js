@@ -21,6 +21,10 @@ exports.run = async (client, message, args = []) => {
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
         if (!role) role = await message.guild.roles.fetch(input);
 
+        let roleEmbed = new Discord.MessageEmbed()
+            .setFooter({ text: user.tag })
+            .setTimestamp();
+
         if (input.toLowerCase() == "none" && !role) {
             let fetchedMembers = await message.guild.members.fetch();
             let noRoleMembers = 0;
@@ -29,14 +33,12 @@ exports.run = async (client, message, args = []) => {
                     noRoleMembers += 1;
                 };
             });
-            const noRoleEmbed = new Discord.MessageEmbed()
+            roleEmbed
                 .setColor(DefaultEmbedColor)
                 .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
-                .addField("Members:", noRoleMembers.toString(), true)
-                .setFooter({ text: user.tag })
-                .setTimestamp();
+                .addField("Members:", noRoleMembers.toString(), true);
 
-            return sendMessage(client, message, null, noRoleEmbed);
+            return sendMessage(client, message, null, roleEmbed);
         };
 
         if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
@@ -57,7 +59,7 @@ exports.run = async (client, message, args = []) => {
         if (roleProperties.length == 0) roleProperties = "None";
 
         // Embed
-        const roleEmbed = new Discord.MessageEmbed()
+        roleEmbed
             .setColor(embedColor)
             .setAuthor({ name: `${role.name} (${role.id})`, iconURL: avatar })
             .setThumbnail(icon)
@@ -65,9 +67,7 @@ exports.run = async (client, message, args = []) => {
             .addField("Color:", role.hexColor, true)
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
-            .addField("Properties:", roleProperties, false)
-            .setFooter({ text: user.tag })
-            .setTimestamp();
+            .addField("Properties:", roleProperties, false);
 
         return sendMessage(client, message, null, roleEmbed);
 

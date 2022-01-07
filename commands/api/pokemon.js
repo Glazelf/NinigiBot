@@ -20,13 +20,12 @@ exports.run = async (client, message, args = []) => {
         let subArgument;
         if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
 
-        let user = message.member.user;
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: user.tag })
+            .setFooter({ text: message.member.user.tag })
             .setTimestamp();
 
         let pokemonButtons = new Discord.MessageActionRow();
