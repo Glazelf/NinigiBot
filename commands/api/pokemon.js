@@ -24,10 +24,17 @@ exports.run = async (client, message, args = []) => {
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
+        let pokemonEmbed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor)
+            .setFooter({ text: user.tag })
+            .setTimestamp();
+
+        let pokemonButtons = new Discord.MessageActionRow();
+
         switch (subCommand) {
             // Abilities
             case "ability":
-                P.getAbilityByName(subArgument)
+                await P.getAbilityByName(subArgument)
                     .then(async function (response) {
                         // Why are german entries still tagged as English?
                         // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
@@ -46,20 +53,15 @@ exports.run = async (client, message, args = []) => {
                         let nameBulbapedia = abilityName.replaceAll(" ", "_");
 
                         // Buttons
-                        let abilityButtons = new Discord.MessageActionRow()
+                        pokemonButtons
                             .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)` }));
 
-                        const abilityEmbed = new Discord.MessageEmbed()
-                            .setColor(globalVars.embedColor)
+                        pokemonEmbed
                             .setAuthor({ name: abilityName })
-                            .addField("Description:", abilityDescription, false)
-                            .setFooter({ text: user.tag })
-                            .setTimestamp();
-
-                        return sendMessage(client, message, null, abilityEmbed, null, null, abilityButtons);
+                            .addField("Description:", abilityDescription, false);
 
                     }).catch(function (e) {
-                        // console.log(e);
+                        console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
@@ -70,7 +72,7 @@ exports.run = async (client, message, args = []) => {
 
             // Items
             case "item":
-                P.getItemByName(subArgument)
+                await P.getItemByName(subArgument)
                     .then(async function (response) {
                         let itemName = response.name.replace("-", "").toLowerCase();
                         let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
@@ -81,21 +83,15 @@ exports.run = async (client, message, args = []) => {
                         let effectEntry = response.effect_entries.find(element => element.language.name == "en");
                         let description = effectEntry.short_effect;
 
-                        // Buttons
-                        let itemButtons = new Discord.MessageActionRow()
+                        pokemonButtons
                             .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
 
-                        const itemEmbed = new Discord.MessageEmbed()
-                            .setColor(globalVars.embedColor)
+                        pokemonEmbed
                             .setAuthor({ name: itemName })
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", category, true)
                             .addField("Description:", description, false)
-                            .setImage(itemImage)
-                            .setFooter({ text: user.tag })
-                            .setTimestamp();
-
-                        return sendMessage(client, message, null, itemEmbed, null, null, itemButtons);
+                            .setImage(itemImage);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -109,7 +105,7 @@ exports.run = async (client, message, args = []) => {
 
             // Moves
             case "move":
-                P.getMoveByName(subArgument)
+                await P.getMoveByName(subArgument)
                     .then(async function (response) {
                         let description;
                         try {
@@ -126,27 +122,20 @@ exports.run = async (client, message, args = []) => {
                         let ppString;
                         if (response.pp) ppString = `${response.pp}|${response.pp * 1.2}|${response.pp * 1.4}|${response.pp * 1.6}`;
 
-                        // Buttons
-                        let moveButtons = new Discord.MessageActionRow()
+                        pokemonButtons
                             .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)` }));
 
-                        const moveEmbed = new Discord.MessageEmbed()
-                            .setColor(globalVars.embedColor)
+                        pokemonEmbed
                             .setAuthor({ name: moveName })
                             .addField("Type:", type, true)
                             .addField("Category:", category, true);
-                        if (response.power) moveEmbed.addField("Power:", response.power.toString(), true);
-                        if (response.accuracy) moveEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
-                        if (response.pp) moveEmbed.addField("PP:", ppString, true)
-                        if (response.priority !== 0) moveEmbed.addField("Priority:", response.priority.toString(), true);
-                        moveEmbed
+                        if (response.power) pokemonEmbed.addField("Power:", response.power.toString(), true);
+                        if (response.accuracy) pokemonEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
+                        if (response.pp) pokemonEmbed.addField("PP:", ppString, true)
+                        if (response.priority !== 0) pokemonEmbed.addField("Priority:", response.priority.toString(), true);
+                        pokemonEmbed
                             .addField("Target:", target, true);
-                        if (description) moveEmbed.addField("Description:", description, false);
-                        moveEmbed
-                            .setFooter({ text: user.tag })
-                            .setTimestamp();
-
-                        return sendMessage(client, message, null, moveEmbed, null, null, moveButtons);
+                        if (description) pokemonEmbed.addField("Description:", description, false);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -159,7 +148,7 @@ exports.run = async (client, message, args = []) => {
                 break;
 
             case "nature":
-                P.getNatureByName(subArgument)
+                await P.getNatureByName(subArgument)
                     .then(async function (response) {
                         let author = await capitalizeString(response.name);
                         let statUp;
@@ -182,15 +171,10 @@ exports.run = async (client, message, args = []) => {
                             flavourString = statString;
                         };
 
-                        const natureEmbed = new Discord.MessageEmbed()
-                            .setColor(globalVars.embedColor)
+                        pokemonEmbed
                             .setAuthor({ name: author })
                             .addField("Stats:", statString)
                             .addField("Flavours:", flavourString)
-                            .setFooter({ text: user.tag })
-                            .setTimestamp();
-
-                        return sendMessage(client, message, null, natureEmbed);
 
                     }).catch(function (e) {
                         // console.log(e);
@@ -240,6 +224,10 @@ exports.run = async (client, message, args = []) => {
                     });
                 break;
         };
+
+        // Send fucntion for all except default
+        if (pokemonEmbed.author) sendMessage(client, message, null, pokemonEmbed, null, true, pokemonButtons);
+        return;
 
         // Correct common name discrepancies
         async function correctValue(object, input) {
