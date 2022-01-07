@@ -17,7 +17,7 @@ exports.run = async (client, message) => {
             .addField("Shinxmon:", `[Guide](https://github.com/Glazelf/NinigiBot/wiki/Shinxmon 'Shinxmon Guide')`, false)
             .addField("Bot Invite:", `[Invite](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8 'Bot Invite')`, true)
             .addField("Server Invite:", `[Invite](https://discord.gg/2gkybyu 'Server Invite')`, true)
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage(client, message, null, helpEmbed);

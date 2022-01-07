@@ -39,7 +39,7 @@ module.exports = async (client, channel) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
                 .addField(`Channel:`, channel.name)
-                .setFooter(footer)
+                .setFooter({ text: footer })
                 .setTimestamp();
 
             if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);

@@ -56,7 +56,7 @@ exports.run = async (client, message, args = []) => {
                     .addField("Objective:", questData.objective, true);
                 if (targets.length > 0) questEmbed.addField("Targets:", targets, true);
                 questEmbed
-                    .setFooter(message.member.user.tag)
+                    .setFooter({ text: message.member.user.tag })
                     .setTimestamp();
 
                 return sendMessage(client, message, null, questEmbed);
@@ -169,7 +169,7 @@ exports.run = async (client, message, args = []) => {
 
                 let startIndex = currentPage + pageLength * currentPage;
                 let endIndex = startIndex + pageLength - 1;
-                questsEmbed.setFooter(`Page ${currentPage}/${totalPages}`);
+                questsEmbed.setFooter({ text: `Page ${currentPage}/${totalPages}` });
 
                 return sendMessage(client, message, null, questsEmbed);
 
@@ -275,7 +275,7 @@ exports.run = async (client, message, args = []) => {
                 if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
                 monsterEmbed
                     .addField("Game(s):", gameAppearances, false)
-                    .setFooter(message.member.user.tag)
+                    .setFooter({ text: message.member.user.tag })
                     .setTimestamp();
 
                 return sendMessage(client, message, null, monsterEmbed);

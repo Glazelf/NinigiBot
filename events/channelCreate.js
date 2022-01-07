@@ -40,7 +40,7 @@ module.exports = async (client, channel) => {
                 .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
                 .addField(`Channel:`, `${channel} (${channel.id})`)
                 .addField(`Channel name:`, channel.name)
-                .setFooter(footer)
+                .setFooter({ text: footer })
                 .setTimestamp();
 
             if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);

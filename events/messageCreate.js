@@ -49,7 +49,7 @@ module.exports = async (client, message) => {
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
-                .setFooter(message.author.tag)
+                .setFooter({ text: message.author.tag })
                 .setTimestamp();
 
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };

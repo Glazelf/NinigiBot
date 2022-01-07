@@ -53,7 +53,7 @@ exports.run = async (client, message, args = []) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: abilityName })
                             .addField("Description:", abilityDescription, false)
-                            .setFooter(user.tag)
+                            .setFooter({ text: user.tag })
                             .setTimestamp();
 
                         return sendMessage(client, message, null, abilityEmbed, null, null, abilityButtons);
@@ -92,7 +92,7 @@ exports.run = async (client, message, args = []) => {
                             .addField("Category:", category, true)
                             .addField("Description:", description, false)
                             .setImage(itemImage)
-                            .setFooter(user.tag)
+                            .setFooter({ text: user.tag })
                             .setTimestamp();
 
                         return sendMessage(client, message, null, itemEmbed, null, null, itemButtons);
@@ -143,7 +143,7 @@ exports.run = async (client, message, args = []) => {
                             .addField("Target:", target, true);
                         if (description) moveEmbed.addField("Description:", description, false);
                         moveEmbed
-                            .setFooter(user.tag)
+                            .setFooter({ text: user.tag })
                             .setTimestamp();
 
                         return sendMessage(client, message, null, moveEmbed, null, null, moveButtons);
@@ -187,7 +187,7 @@ exports.run = async (client, message, args = []) => {
                             .setAuthor({ name: author })
                             .addField("Stats:", statString)
                             .addField("Flavours:", flavourString)
-                            .setFooter(user.tag)
+                            .setFooter({ text: user.tag })
                             .setTimestamp();
 
                         return sendMessage(client, message, null, natureEmbed);

@@ -33,7 +33,7 @@ exports.run = async (client, message, args = []) => {
                 .setColor(DefaultEmbedColor)
                 .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
                 .addField("Members:", noRoleMembers.toString(), true)
-                .setFooter(user.tag)
+                .setFooter({ text: user.tag })
                 .setTimestamp();
 
             return sendMessage(client, message, null, noRoleEmbed);
@@ -66,7 +66,7 @@ exports.run = async (client, message, args = []) => {
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage(client, message, null, roleEmbed);

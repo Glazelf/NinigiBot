@@ -150,7 +150,7 @@ exports.run = async (client, message) => {
             .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
         if (banner) serverEmbed.setImage(banner);
         serverEmbed
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage(client, message, null, serverEmbed);

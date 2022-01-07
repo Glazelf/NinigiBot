@@ -67,7 +67,7 @@ module.exports = async (client, member) => {
                 if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
                 leaveEmbed
                     .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-                    .setFooter(member.user.tag);
+                    .setFooter({ text: member.user.tag });
                 if (kicked == true) {
                     leaveEmbed.addField(`Reason:`, reasonText, false);
                     if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);

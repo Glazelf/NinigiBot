@@ -76,7 +76,7 @@ module.exports = async (client, message) => {
             if (isReply && replyMessage) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
             if (executor) deleteEmbed.addField('Executor:', `${executor} (${executor.id})`, true)
             deleteEmbed
-                .setFooter(message.author.tag)
+                .setFooter({ text: message.author.tag })
                 .setTimestamp(message.createdTimestamp);
 
             return log.send({ embeds: [deleteEmbed] });

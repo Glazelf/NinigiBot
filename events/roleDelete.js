@@ -41,7 +41,7 @@ module.exports = async (client, role) => {
             if (executor) {
                 deleteEmbed
                     .addField('Deleted by:', `${executor} (${executor.id})`)
-                    .setFooter(executor.tag)
+                    .setFooter({ text: executor.tag });
             };
 
             return log.send({ embeds: [deleteEmbed] });

@@ -47,7 +47,7 @@ exports.run = async (client, message, args = []) => {
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
             .setImage(serverAvatar)
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage(client, message, null, avatarEmbed);
