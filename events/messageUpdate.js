@@ -1,4 +1,4 @@
-module.exports = async (client, interaction, newMessage) => {
+module.exports = async (client, message, newMessage) => {
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
@@ -87,6 +87,6 @@ module.exports = async (client, interaction, newMessage) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, interaction);
+        logger(e, client, message);
     };
 };
