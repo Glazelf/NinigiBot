@@ -55,5 +55,5 @@ module.exports.config = {
     aliases: ["destroy"],
     description: "Shuts down bot.",
     permission: "owner",
-    defaultPermission: false
+    defaultPermission: true // set to false
 };
