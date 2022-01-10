@@ -1,6 +1,6 @@
 module.exports = async (client, interaction, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false) => {
     try {
-        if (!message) return;
+        if (!interaction) return; // Note: interaction can be a message instead
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
@@ -23,7 +23,7 @@ module.exports = async (client, interaction, replyText, embeds = null, files = n
         };
 
         // Don't add components to slash commands unless specifically told to do so
-        if (components && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type != 'APPLICATION_COMMAND')) {
+        if (components && ((slashComponents && interaction.type == 'APPLICATION_COMMAND') || interaction.type != 'APPLICATION_COMMAND')) {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
@@ -35,10 +35,10 @@ module.exports = async (client, interaction, replyText, embeds = null, files = n
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
         try {
-            return message.reply(messageObject);
+            return interaction.reply(messageObject);
         } catch (e) {
             // console.log(e);
-            return message.channel.send(messageObject);
+            return interaction.channel.send(messageObject);
         };
 
     } catch (e) {
