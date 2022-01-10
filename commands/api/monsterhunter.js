@@ -12,12 +12,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
-        let argument = args[0].value.toLowerCase();
-
         switch (interaction.options._subcommand) {
             // Specific quest
             case "quest":
-                let questName = argument;
+                let questName = args.find(element => element.name == "quest-name").value.toLowerCase();
                 let questData;
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
@@ -58,7 +56,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // All quests from a game
             case "quests":
-                let gameName = argument;
+                let gameName = args.find(element => element.name == "game-name").value.toLowerCase();
 
                 // Generalize game names and abbreviations
                 // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
@@ -175,7 +173,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Monsters
             case "monster":
-                let monsterName = argument;
+                let monsterName = args.find(element => element.name == "monster-name").value.toLowerCase();
 
                 // Get monster
                 let monsterData;

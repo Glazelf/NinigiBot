@@ -14,8 +14,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
-        let argument = args[0].value.toLowerCase();
-
         let user = message.member.user;
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
@@ -23,7 +21,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         switch (interaction.options._subcommand) {
             // Abilities
             case "ability":
-                P.getAbilityByName(argument)
+                let abilitySearch = args.find(element => element.name == "ability-name").value.toLowerCase();
+                P.getAbilityByName(abilitySearch)
                     .then(async function (response) {
                         // Why are german entries still tagged as English?
                         // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
@@ -66,7 +65,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Items
             case "item":
-                P.getItemByName(argument)
+                let itemSearch = args.find(element => element.name == "item-name").value.toLowerCase();
+                P.getItemByName(itemSearch)
                     .then(async function (response) {
                         let itemName = response.name.replace("-", "").toLowerCase();
                         let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
@@ -105,7 +105,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Moves
             case "move":
-                P.getMoveByName(argument)
+                let moveSearch = args.find(element => element.name == "move-name").value.toLowerCase();
+                P.getMoveByName(moveSearch)
                     .then(async function (response) {
                         let description;
                         try {
@@ -155,7 +156,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
 
             case "nature":
-                P.getNatureByName(argument)
+                let natureSearch = args.find(element => element.name == "nature-name").value.toLowerCase();
+                P.getNatureByName(natureSearch)
                     .then(async function (response) {
                         let author = await capitalizeString(response.name);
                         let statUp;
@@ -201,7 +203,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Pokémon
             case "pokemon":
                 // Public variables
-                var pokemonName = args;
+                var pokemonName = args.find(element => element.name == "pokemon-name").value.toLowerCase();
                 var pokemonID;
 
                 let minPkmID = 1; // Bulbasaur
