@@ -23,7 +23,6 @@ module.exports = async (client) => {
             let slashCommand;
             let guild;
             try {
-                if (command.config.interaction === false) return;
                 // if (command.config.serverID) { // Set guild commands
                 try {
                     guild = await client.guilds.fetch(client.config.botServerID); // Swap back to commadn.config.serverID for release
