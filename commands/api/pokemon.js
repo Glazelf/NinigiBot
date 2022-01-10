@@ -56,7 +56,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
+                            return logger(e, client, interaction);
                         } else {
                             return sendMessage(client, message, `Could not find the specified ability.`);
                         };
@@ -96,7 +96,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
+                            return logger(e, client, interaction);
                         } else {
                             return sendMessage(client, message, `Could not find the specified item.`);
                         };
@@ -148,7 +148,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
+                            return logger(e, client, interaction);
                         } else {
                             return sendMessage(client, message, `Could not find the specified move.`);
                         };
@@ -193,7 +193,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
+                            return logger(e, client, interaction);
                         } else {
                             return sendMessage(client, message, `Could not find the specified nature.`);
                         };
@@ -228,7 +228,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
+                            return logger(e, client, interaction);
                         } else {
                             return sendMessage(client, message, `Could not find the specified Pokémon.`);
                         };
@@ -253,7 +253,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
