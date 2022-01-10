@@ -37,18 +37,9 @@ exports.run = async (client, message, args = []) => {
                 // If error: execute regular quoteless say
                 return message.channel.send({ content: textMessage });
             };
-        } else if (adminBool) {
-            // Return plain message if member is admin
-            return message.channel.send({ content: textMessage });
         } else {
-            // Prevent using bot to go around ping permissions, should be caught in message handler
-            // if (textMessage.includes("@")) {
-            //     return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`);
-            // };
-
-            // Add credits to avoid anonymous abuse by people who are admin nor owner
-            textMessage = `"\`${textMessage}\`"\n-${message.member}`;
-            return sendMessage(client, message, textMessage);
+            // Return plain message
+            return message.channel.send({ content: textMessage });
         };
 
     } catch (e) {
