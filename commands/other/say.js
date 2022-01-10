@@ -4,16 +4,6 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { Prefixes } = require('../../database/dbObjects');
-        const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
-
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
 
         // Split off command
         if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
