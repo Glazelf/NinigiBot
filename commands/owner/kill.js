@@ -1,29 +1,30 @@
-exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const forever = require('forever');
+        let forever;
+        if (client.config.forever) forever = require('forever');
         const getTime = require('../../util/getTime');
 
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (interaction.member.id !== client.config.ownerID) return sendMessage(client, interaction, globalVars.lackPerms);
 
         let timestamp = await getTime(client);
 
-        let user = message.member.user;
+        let user = interaction.member.user;
 
         if (args[0] != 'soft') {
-            // Return message then destroy
-            await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
+            // Return interaction then destroy
+            await sendMessage(client, interaction, `Shutting down.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
 
             // Delete all global commands
             await client.application.commands.set([]);
 
             // Delete all guild commands
-            await client.guilds.cache.forEach(guild => {
+            await client.guilds.cache.forEach(async (guild) => {
                 try {
-                    guild.commands.set([]);
+                    await guild.commands.set([]);
                 } catch (e) {
                     // console.log(e);
                 };
@@ -31,14 +32,14 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
         };
 
         // Ignore forever if fails, mostly for test-bots not running it.
-        try {
-            forever.stopAll();
-        } catch (e) {
-            // console.log(e);
+        if (forever) {
+            try {
+                forever.stopAll();
+            } catch (e) {
+                console.log(e);
+            };
         };
 
-        // Return confirm
-        await sendMessage(client, message, `Shutdown completed.`);
         console.log(`Bot killed by ${user.tag}. (${timestamp})`);
 
         await client.destroy();
@@ -46,7 +47,7 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
@@ -55,5 +56,5 @@ module.exports.config = {
     aliases: ["destroy"],
     description: "Shuts down bot.",
     permission: "owner",
-    defaultPermission: true // set to false
+    defaultPermission: false
 };
