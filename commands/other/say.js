@@ -4,16 +4,6 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { Prefixes } = require('../../database/dbObjects');
-        const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
-
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
 
         // Split off command
         if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
@@ -41,11 +31,6 @@ exports.run = async (client, message, args = []) => {
             // Return plain message if member is admin
             return message.channel.send({ content: textMessage });
         } else {
-            // Prevent using bot to go around ping permissions, should be caught in message handler
-            // if (textMessage.includes("@")) {
-            //     return sendMessage(client, message, `You need to have Administrator permissions to tag people using \`${prefix}say\`.`);
-            // };
-
             // Add credits to avoid anonymous abuse by people who are admin nor owner
             textMessage = `"\`${textMessage}\`"\n-${message.member}`;
             return sendMessage(client, message, textMessage);

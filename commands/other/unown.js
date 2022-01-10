@@ -5,13 +5,11 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
 
         // Split off command
         if (!args[0]) return sendMessage(client, message, `Please provide text to say.`);
         let channelID = args[0];
         let textMessage = args.join(" ");
-        let remoteMessage = textMessage.slice(channelID.length + 1);
 
         // Catch empty argument
         if (textMessage.length < 1) {
