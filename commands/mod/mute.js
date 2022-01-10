@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -66,12 +66,12 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) return sendMessage(client, message, `Failed to toggle timeout on **${user.tag}**. I probably lack permissions.`);
             // Log error
-            logger(e, client, message);
+            logger(e, client, interaction);
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 

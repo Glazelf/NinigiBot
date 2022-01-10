@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../../util/logger');
     // Import globals
     let globalVars = require('../../../events/ready');
@@ -72,7 +72,7 @@ After some time, the roulette spins and we get the winner(s), who gets 36x the b
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 

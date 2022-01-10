@@ -1,4 +1,4 @@
-module.exports = async (client, message) => {
+module.exports = async (client, interaction) => {
     const Discord = require("discord.js");
     let getTime = require('../util/getTime');
     const isAdmin = require('./isAdmin');

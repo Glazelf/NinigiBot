@@ -1,4 +1,4 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, interaction, args) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -36,7 +36,7 @@ exports.run = async (client, message, args) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 

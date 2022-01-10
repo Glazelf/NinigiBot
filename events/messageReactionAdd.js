@@ -1,4 +1,4 @@
-module.exports = async (client, messageReaction) => {
+module.exports = async (client, interactionReaction) => {
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');

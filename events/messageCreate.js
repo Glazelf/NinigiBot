@@ -1,6 +1,6 @@
 const talkedRecently = new Set();
 
-module.exports = async (client, message) => {
+module.exports = async (client, interaction) => {
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
@@ -70,6 +70,6 @@ module.exports = async (client, message) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };

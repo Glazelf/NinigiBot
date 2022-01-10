@@ -1,4 +1,4 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, interaction, args) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -48,14 +48,14 @@ exports.run = async (client, message, args) => {
                     await message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
                 } catch (e) {
                     if (e.toString().includes("Missing Permissions")) {
-                        return logger(e, client, message);
+                        return logger(e, client, interaction);
                     } else {
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
                     };
                 };
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, message);
+                    return logger(e, client, interaction);
                 } else {
                     return message.channel.send({ content: `An error occurred while bulk deleting.` });
                 };
@@ -76,10 +76,10 @@ exports.run = async (client, message, args) => {
                 return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, message);
+                    return logger(e, client, interaction);
                 } else {
                     if (e.toString().includes("Missing Permissions")) {
-                        return logger(e, client, message);
+                        return logger(e, client, interaction);
                     } else {
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
                     };
@@ -89,7 +89,7 @@ exports.run = async (client, message, args) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 

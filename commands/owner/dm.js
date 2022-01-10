@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -31,7 +31,7 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
