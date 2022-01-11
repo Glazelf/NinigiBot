@@ -41,7 +41,7 @@ module.exports = async (client, oldRole, newRole) => {
             if (executor) {
                 updateEmbed
                     .addField('Updated by:', `${executor} (${executor.id})`)
-                    .setFooter(executor.tag);
+                    .setFooter({ text: executor.tag });
             };
 
             if (oldRole.name !== newRole.name) {

@@ -68,13 +68,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Ban
             banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
             try {
-                await user.send({ content: dmString });
-                banReturn += " (DM Succeeded)";
-            } catch (e) {
-                // console.log(e);
-                banReturn += " (DM Failed)";
-            };
-            try {
+                try {
+                    await user.send({ content: dmString });
+                    banReturn += " (DM Succeeded)";
+                } catch (e) {
+                    // console.log(e);
+                    banReturn += " (DM Failed)";
+                };
+
                 await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
             } catch (e) {
                 // console.log(e);

@@ -62,7 +62,7 @@ exports.run = async (client, interaction) => {
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
 After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`, null, null, false)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
-                .setFooter(user.tag)
+                .setFooter({ text: user.tag })
                 .setTimestamp();
             sendMessage(client, message, null, welcome, null, false);
         } else {

@@ -12,6 +12,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
+        let mhEmbed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor)
+            .setFooter({ text: message.member.user.tag })
+            .setTimestamp();
+
         switch (interaction.options._subcommand) {
             // Specific quest
             case "quest":
@@ -38,21 +43,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     });
                 };
 
-                // Make embed
-                let questEmbed = new Discord.MessageEmbed()
-                    .setColor(globalVars.embedColor)
+                mhEmbed
                     .setAuthor({ name: questTitle })
                     .setDescription(`${questData.description} -${questData.client}`)
                     .addField("Game:", questData.game, true)
                     .addField("Type:", questData.questType, true)
                     .addField("Map:", questData.map, true)
                     .addField("Objective:", questData.objective, true);
-                if (targets.length > 0) questEmbed.addField("Targets:", targets, true);
-                questEmbed
-                    .setFooter(interaction.member.user.tag)
-                    .setTimestamp();
-
-                return sendMessage(client, interaction, null, questEmbed);
+                if (targets.length > 0) mhEmbed.addField("Targets:", targets, true);
+                break;
 
             // All quests from a game
             case "quests":
@@ -132,11 +131,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
 
-                // Make embed
-                let questsEmbed = new Discord.MessageEmbed()
+                mhEmbed
                     .setColor(globalVars.embedColor)
-                    .setAuthor({ name: `${gameName} Quests` }) // Game name instead of input because of capitalization
-                    .setTimestamp();
+                    .setAuthor({ name: `${gameInput} Quests` }); // Game name instead of input because of capitalization
 
                 let totalQuests = questsTotal.length;
                 let pageLength = 10;
@@ -155,14 +152,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 questsPaged[currentPage - 1].forEach(quest => {
                     let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
                     if (quest.isKey) questTitle += ` 🔑`;
-                    questsEmbed.addField(`${questTitle}`, `${quest.objective} in ${quest.map}`, false);
+                    mhEmbed.addField(`${questTitle}`, `${quest.objective} in ${quest.map}`, false);
                 });
 
                 let startIndex = currentPage + pageLength * currentPage;
                 let endIndex = startIndex + pageLength - 1;
-                questsEmbed.setFooter(`Page ${currentPage}/${totalPages}`);
-
-                return sendMessage(client, interaction, null, questsEmbed);
+                mhEmbed.setFooter({ text: `Page ${currentPage}/${totalPages}` });
 
                 // Function to sort by difficulty
                 function compare(a, b) {
@@ -170,6 +165,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     if (a.difficulty < b.difficulty) return 1;
                     return 0;
                 };
+                break;
 
             // Monsters
             case "monster":
@@ -250,25 +246,22 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     });
                 };
 
-                // Make embed
-                let monsterEmbed = new Discord.MessageEmbed()
-                    .setColor(globalVars.embedColor)
+                mhEmbed
                     .setAuthor({ name: `${monsterData.name} (${monsterData.type})` })
                     .setThumbnail(monsterIcon);
-                if (monsterDescription) monsterEmbed.setDescription(monsterDescription);
-                monsterEmbed
+                if (monsterDescription) mhEmbed.setDescription(monsterDescription);
+                mhEmbed
                     .addField("Size:", monsterSize, true)
-                if (monsterDanger) monsterEmbed.addField("Danger:", monsterDanger, true);
-                if (monsterElements.length > 0) monsterEmbed.addField("Element(s):", monsterElements, true);
-                if (monsterWeaknesses.length > 0) monsterEmbed.addField("Weakness(es):", monsterWeaknesses, true);
-                if (monsterAilments.length > 0) monsterEmbed.addField("Ailment(s):", monsterAilments, true);
-                monsterEmbed
-                    .addField("Game(s):", gameAppearances, false)
-                    .setFooter(interaction.member.user.tag)
-                    .setTimestamp();
-
-                return sendMessage(client, interaction, null, monsterEmbed);
+                if (monsterDanger) mhEmbed.addField("Danger:", monsterDanger, true);
+                if (monsterElements.length > 0) mhEmbed.addField("Element(s):", monsterElements, true);
+                if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness(es):", monsterWeaknesses, true);
+                if (monsterAilments.length > 0) mhEmbed.addField("Ailment(s):", monsterAilments, true);
+                mhEmbed
+                    .addField("Game(s):", gameAppearances, false);
+                break;
         };
+
+        return sendMessage(client, message, null, mhEmbed);
 
     } catch (e) {
         // Log error

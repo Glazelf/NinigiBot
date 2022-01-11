@@ -182,7 +182,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
         if (banner) profileEmbed.setImage(banner);
         profileEmbed
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage(client, message, null, profileEmbed, null, true, profileButtons);

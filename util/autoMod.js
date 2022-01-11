@@ -82,7 +82,7 @@ module.exports = async (client, message) => {
     };
 
     // Slurs
-    if (slurRegex.test(message.content) || scamRegex.test(messageNormalized)) {
+    if (slurRegex.test(message.content) || slurRegex.test(messageNormalized)) {
         reason = "Using slurs.";
         await msgDelete();
         return true;

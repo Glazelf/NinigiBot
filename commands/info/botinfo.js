@@ -113,7 +113,7 @@ exports.run = async (client, interaction) => {
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Uptime:", uptime, false)
             .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
-            .setFooter(user.tag)
+            .setFooter({ text: user.tag })
             .setTimestamp();
 
         // Buttons

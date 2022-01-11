@@ -31,7 +31,7 @@ module.exports = async (client, member) => {
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .addField(`User: `, `${member} (${member.id})`)
                 .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-                .setFooter(member.user.tag)
+                .setFooter({ text: member.user.tag })
                 .setTimestamp();
 
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });

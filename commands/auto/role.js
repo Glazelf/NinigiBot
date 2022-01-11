@@ -86,7 +86,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: avatar })
                 .setDescription(roleHelpMessage)
-                .setFooter(user.tag)
+                .setFooter({ text: user.tag })
                 .setTimestamp();
             return sendMessage(client, interaction, null, rolesHelp);
         } else {
