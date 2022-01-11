@@ -6,14 +6,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        const { Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
-
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;

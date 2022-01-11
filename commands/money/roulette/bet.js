@@ -5,22 +5,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../../util/sendMessage');
         const roulette = require('../../../affairs/roulette')
-        const { Prefixes } = require('../../../database/dbObjects');
         const { bank } = require('../../../database/bank');
 
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
-
-        if (!roulette.on) return sendMessage(client, message, `There is currently no roulette going on. Use ${prefix}roulette to start one.`);
+        if (!roulette.on) return sendMessage(client, message, `There is currently no roulette going on. Use \`/roulette start\` to start one.`); // Add /roulette start functionality
         if (roulette.hadBet(message.member.id)) return message.react('✋');
 
         args = args.join(' ');
 
-        if (args.includes('help')) return sendMessage(client, message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, null, null, false);
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
 
         const money = parseInt(args.slice(0, args.indexOf(',')).trim())

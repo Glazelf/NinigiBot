@@ -72,7 +72,6 @@ module.exports.NinigiID = "592760951103684618";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";
-module.exports.prefix = "?";
 module.exports.eventChannelID = "752626723345924157"; // General2
 //module.exports.eventChannelID = "665274079397281835"; // Old stan channel
 //module.exports.eventChannelID = "593014621095329812";  // Testing

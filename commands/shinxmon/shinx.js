@@ -55,14 +55,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
-        const { Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
 
         let shinx;
         let master;
@@ -78,7 +70,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 shinx = await bank.currency.getShinx(targetId);
                 master = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`${prefix}shinx <target> <usual command>\`.`);
+            } else return sendMessage(client, message, `The syntax is \`/shinx <target> <usual command>\`.`); // Shinx rewrite !? :(
         } else {
             master = message.member.user;
             shinx = await bank.currency.getShinx(master.id);

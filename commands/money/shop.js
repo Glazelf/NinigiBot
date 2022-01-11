@@ -8,15 +8,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const { Equipments, Foods, KeyItems, Room, CurrencyShop, Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
-
-        let failString = `That is not an existing shop. Please use \`${prefix}shop\` followed by a category: equipment, food.`;
+        const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
+        // Make subcommands for the different shops
         if (!args[0]) return sendMessage(client, message, failString);
 
         const input = args[0].toLowerCase();

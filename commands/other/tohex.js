@@ -5,20 +5,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const { Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
 
         let user = message.member.user;
 
         if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
         let input = args[0];
 
-        if (message.content.toLowerCase().startsWith(`${prefix}todecimal`)) {
+        // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal"
+        if (message.content.toLowerCase().startsWith(`/todecimal`)) {
             try {
                 while (input.length < 6) input = "0" + input;
                 let argHex = `0x${input}`;

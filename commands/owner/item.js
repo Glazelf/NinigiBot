@@ -19,7 +19,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             if (expectedId && expectedId[1] == targetId) {
                 target = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`${prefix}item <target> <item name>\`.`);
+            } else return sendMessage(client, message, `The syntax is \`/item <target> <item name>\`.`); // God I dread having to rewrite these commands
         } else {
             target = message.member.user;
         };
