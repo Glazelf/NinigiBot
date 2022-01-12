@@ -12,9 +12,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
+        let ephemeral = true;
+        let argEphemeral = args.find(element => element.name == "ephemeral");
+        if (argEphemeral) ephemeral = argEphemeral.value;
+
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: message.member.user.tag })
+            .setFooter({ text: interaction.member.user.tag })
             .setTimestamp();
 
         switch (interaction.options._subcommand) {
@@ -25,7 +29,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage(client, interaction, "Could not find the specified quest.");
+                if (!questData) return sendMessage(client, interaction, "Could not find the specified quest.", null, null, true);
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
@@ -261,7 +265,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
         };
 
-        return sendMessage(client, message, null, mhEmbed);
+        return sendMessage(client, interaction, null, mhEmbed, null, ephemeral);
 
     } catch (e) {
         // Log error
@@ -281,6 +285,11 @@ module.exports.config = {
             type: "STRING",
             description: "Specify quest by name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     },
     {
@@ -292,6 +301,11 @@ module.exports.config = {
             type: "STRING",
             description: "Specify game by name or abbreviation.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "monster",
@@ -302,6 +316,11 @@ module.exports.config = {
             type: "STRING",
             description: "Specify monster by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }]
 };

@@ -17,9 +17,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
+        let ephemeral = true;
+        let argEphemeral = args.find(element => element.name == "ephemeral");
+        if (argEphemeral) ephemeral = argEphemeral.value;
+
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: message.member.user.tag })
+            .setFooter({ text: interaction.member.user.tag })
             .setTimestamp();
 
         let pokemonButtons = new Discord.MessageActionRow();
@@ -59,7 +63,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified ability.`);
+                            return sendMessage(client, interaction, `Could not find the specified ability.`);
                         };
                     });
                 break;
@@ -93,7 +97,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified item.`);
+                            return sendMessage(client, interaction, `Could not find the specified item.`);
                         };
                     });
                 break;
@@ -138,7 +142,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified move.`);
+                            return sendMessage(client, interaction, `Could not find the specified move.`);
                         };
                     });
                 break;
@@ -178,7 +182,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified nature.`);
+                            return sendMessage(client, interaction, `Could not find the specified nature.`);
                         };
                     });
                 break;
@@ -205,22 +209,22 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
-                        let messageObject = await getPokemon(client, message, response);
-                        return sendMessage(client, message, null, messageObject.embed, null, true, messageObject.buttons);
+                        let messageObject = await getPokemon(client, interaction, response);
+                        return sendMessage(client, interaction, null, messageObject.embed, null, ephemeral, messageObject.buttons);
 
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                            return sendMessage(client, interaction, `Could not find the specified Pokémon.`);
                         };
                     });
                 break;
         };
 
-        // Send fucntion for all except default
-        if (pokemonEmbed.author) sendMessage(client, message, null, pokemonEmbed, null, true, pokemonButtons);
+        // Send function for all except default
+        if (pokemonEmbed.author) sendMessage(client, interaction, null, pokemonEmbed, null, ephemeral, pokemonButtons);
         return;
 
         // Correct common name discrepancies
@@ -256,6 +260,11 @@ module.exports.config = {
             type: "STRING",
             description: "Get ability info by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "item",
@@ -266,6 +275,11 @@ module.exports.config = {
             type: "STRING",
             description: "Get item info by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "move",
@@ -276,6 +290,11 @@ module.exports.config = {
             type: "STRING",
             description: "Get move info by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "nature",
@@ -286,6 +305,11 @@ module.exports.config = {
             type: "STRING",
             description: "Get nature info by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "pokemon",
@@ -296,6 +320,11 @@ module.exports.config = {
             type: "STRING",
             description: "Get Pokémon info by its English name.",
             required: true
+        },
+        {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }]
 };
