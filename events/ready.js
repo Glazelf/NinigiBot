@@ -20,7 +20,6 @@ module.exports = async (client) => {
         ];
 
         await client.commands.forEach(async (command) => {
-            console.log(command.config.options[0].type)
             try {
                 slashCommand = await client.application.commands.create(command.config, [client.config.botServerID]); // Swap to commadn.config.serverID for release
 
