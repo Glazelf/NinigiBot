@@ -1,10 +1,10 @@
-module.exports = async ({ client, message, replyText, embeds = null, files = null, ephemeral = true, components = null }) => {
+module.exports = async ({ client, message, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!message) return;
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
-        if (replyText) messageObject['content'] = replyText;
+        if (content) messageObject['content'] = content;
         if (embeds) {
             if (Array.isArray(embeds)) {
                 messageObject['embeds'] = embeds;
