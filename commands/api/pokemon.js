@@ -264,7 +264,7 @@ module.exports.config = {
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }, {
@@ -279,7 +279,7 @@ module.exports.config = {
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }, {
@@ -294,7 +294,7 @@ module.exports.config = {
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }, {
@@ -309,7 +309,7 @@ module.exports.config = {
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }, {
@@ -324,7 +324,7 @@ module.exports.config = {
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }]
