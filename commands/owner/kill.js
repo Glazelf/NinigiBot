@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         const forever = require('forever');
         const getTime = require('../../util/getTime');
 
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
         let timestamp = await getTime(client);
 
@@ -15,7 +15,7 @@ exports.run = async (client, message, args = []) => {
 
         if (args[0] != 'soft') {
             // Return message then destroy
-            await sendMessage(client, message, `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
+            await sendMessage({ client: client, message: message, content: `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.` });
 
             // Delete all global commands
             await client.application.commands.set([]);
@@ -38,7 +38,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Return confirm
-        await sendMessage(client, message, `Shutdown completed.`);
+        await sendMessage({ client: client, message: message, content: `Shutdown completed.` });
         console.log(`Bot killed by ${user.tag}. (${timestamp})`);
 
         await client.destroy();

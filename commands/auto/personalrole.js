@@ -8,7 +8,7 @@ exports.run = async (client, message, args = []) => {
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
-        if (!serverID) return sendMessage(client, message, `Personal Roles are disabled in **${message.guild.name}**.`);
+        if (!serverID) return sendMessage({ client: client, message: message, content: `Personal Roles are disabled in **${message.guild.name}**.` });
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: message.guild.id, user_id: message.member.id } });
 
@@ -19,15 +19,15 @@ exports.run = async (client, message, args = []) => {
 
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
-        if (!boosterRole) return sendMessage(client, message, `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
+        if (!boosterRole) return sendMessage({ client: client, message: message, content: `**${message.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.` });
         let personalRolePosition = boosterRole.position + 1;
 
-        if (!message.member.roles.cache.has(boosterRole.id) && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, message, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!message.member.roles.cache.has(boosterRole.id) && !message.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage({ client: client, message: message, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
 
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (message.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
-        if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, message, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
+        if (message.guild.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, message: message, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
 
         // Color catch
         let roleColor = args[0];
@@ -111,7 +111,7 @@ exports.run = async (client, message, args = []) => {
                 position: personalRolePosition
             }).catch(e => {
                 // console.log(e);
-                return sendMessage(client, message, `An error occurred.`);
+                return sendMessage({ client: client, message: message, content: `An error occurred.` });
             });
 
             if (messageImage && iconsAllowed) {
@@ -130,7 +130,7 @@ exports.run = async (client, message, args = []) => {
             // Re-add role if it got removed
             if (!message.member.roles.cache.find(r => r.name == user.tag)) message.member.roles.add(personalRole.id);
 
-            return sendMessage(client, message, editReturnString);
+            return sendMessage({ client: client, message: message, content: editReturnString });
 
         } else {
             // Create role if it doesn't exit yet
@@ -157,7 +157,7 @@ exports.run = async (client, message, args = []) => {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {
-                    return sendMessage(client, message, `An error occurred creating a role.`);
+                    return sendMessage({ client: client, message: message, content: `An error occurred creating a role.` });
                 };
             };
 
@@ -171,7 +171,7 @@ exports.run = async (client, message, args = []) => {
             message.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: message.guild.id, user_id: message.member.id, role_id: createdRole.id });
 
-            return sendMessage(client, message, `Created a personal role for you successfully.`);
+            return sendMessage({ client: client, message: message, content: `Created a personal role for you successfully.` });
         };
 
         async function deleteRole(successString, failString) {
@@ -179,9 +179,9 @@ exports.run = async (client, message, args = []) => {
                 let oldRole = message.guild.roles.cache.find(r => r.id == roleDB.role_id);
                 if (oldRole) await oldRole.delete();
                 await roleDB.destroy();
-                return sendMessage(client, message, successString);
+                return sendMessage({ client: client, message: message, content: successString });
             } else {
-                return sendMessage(client, message, failString);
+                return sendMessage({ client: client, message: message, content: failString });
             };
         };
 

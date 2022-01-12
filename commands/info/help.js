@@ -20,7 +20,7 @@ exports.run = async (client, message) => {
             .setFooter({ text: user.tag })
             .setTimestamp();
 
-        return sendMessage(client, message, null, helpEmbed);
+        return sendMessage({ client: client, message: message, embeds: helpEmbed });
 
     } catch (e) {
         // Log error

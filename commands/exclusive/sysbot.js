@@ -71,7 +71,7 @@ Before asking a question make sure your question isn't already answered in eithe
 **Bots will be hosted when hosts feel like it and have time**, there is no schedule. Asking or even begging for bots is often useless and can be annoying.
 Check the pins in <#${globalVars.botChannelID}> for information and ways to support more uptime or donate!`;
 
-        return sendMessage(client, message, returnString, null, null, false, sysbotButtons);
+        return sendMessage({ client: client, message: message, content: returnString, components: sysbotButtons });
 
     } catch (e) {
         // Log error

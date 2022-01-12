@@ -12,7 +12,7 @@ exports.run = async (client, message, args = []) => {
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Monster to look up.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Monster to look up.` });
 
         let subCommand = args[0].toLowerCase();
         let subArgument;
@@ -26,13 +26,13 @@ exports.run = async (client, message, args = []) => {
         switch (subCommand) {
             // Specific quest
             case "quest":
-                if (!args[1]) return sendMessage(client, message, `You need to provide a quest name to show details of.`);
+                if (!args[1]) return sendMessage({ client: client, message: message, content: `You need to provide a quest name to show details of.` });
 
                 let questData;
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == subArgument) questData = quest;
                 });
-                if (!questData) return sendMessage(client, message, "Could not find the specified quest.");
+                if (!questData) return sendMessage({ client: client, message: message, content: "Could not find the specified quest." });
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
@@ -62,7 +62,7 @@ exports.run = async (client, message, args = []) => {
 
             // All quests from a game
             case "quests":
-                if (!args[1]) return sendMessage(client, message, `You need to provide a game to list quests from.`);
+                if (!args[1]) return sendMessage({ client: client, message: message, content: `You need to provide a game to list quests from.` });
 
                 let gameInput = subArgument;
 
@@ -135,7 +135,7 @@ exports.run = async (client, message, args = []) => {
 
                 // Add quests matching game title to an array
                 let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
-                if (questsTotal.length == 0) return sendMessage(client, message, "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.");
+                if (questsTotal.length == 0) return sendMessage({ client: client, message: message, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
 
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
@@ -194,7 +194,7 @@ exports.run = async (client, message, args = []) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage(client, message, "Could not find the specified monster.");
+                if (!monsterData) return sendMessage({ client: client, message: message, content: "Could not find the specified monster." });
 
                 // Get icon, description and game appearances
                 let monsterIcon;
@@ -272,7 +272,7 @@ exports.run = async (client, message, args = []) => {
                 break;
         };
 
-        return sendMessage(client, message, null, mhEmbed);
+        return sendMessage({ client: client, message: message, embeds: mhEmbed });
 
     } catch (e) {
         // Log error

@@ -14,7 +14,7 @@ exports.run = async (client, message, args = []) => {
         const capitalizeString = require('../../util/pokemon/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide either a subcommand or a Pokémon to look up.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Pokémon to look up.` });
 
         let subCommand = args[0].toLowerCase();
         let subArgument;
@@ -64,7 +64,7 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified ability.`);
+                            return sendMessage({ client: client, message: message, content: `Could not find the specified ability.` });
                         };
                     });
                 break;
@@ -97,7 +97,7 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified item.`);
+                            return sendMessage({ client: client, message: message, content: `Could not find the specified item.` });
                         };
                     });
                 break;
@@ -141,7 +141,7 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified move.`);
+                            return sendMessage({ client: client, message: message, content: `Could not find the specified move.` });
                         };
                     });
                 break;
@@ -180,7 +180,7 @@ exports.run = async (client, message, args = []) => {
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified nature.`);
+                            return sendMessage({ client: client, message: message, content: `Could not find the specified nature.` });
                         };
                     });
                 break;
@@ -211,21 +211,21 @@ exports.run = async (client, message, args = []) => {
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
                         let messageObject = await getPokemon(client, message, response);
-                        return sendMessage(client, message, null, messageObject.embed, null, true, messageObject.buttons);
+                        return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
 
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, message);
                         } else {
-                            return sendMessage(client, message, `Could not find the specified Pokémon.`);
+                            return sendMessage({ client: client, message: message, content: `Could not find the specified Pokémon.` });
                         };
                     });
                 break;
         };
 
         // Send fucntion for all except default
-        if (pokemonEmbed.author) sendMessage(client, message, null, pokemonEmbed, null, true, pokemonButtons);
+        if (pokemonEmbed.author) sendMessage({ client: client, message: message, embeds: pokemonEmbed, components: pokemonButtons });
         return;
 
         // Correct common name discrepancies

@@ -11,7 +11,7 @@ module.exports = async (client, interaction) => {
 
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
-                if (!interaction.member) return sendMessage(client, interaction, `Sorry, you're not allowed to use commands in private messages!`);
+                if (!interaction.member) return sendMessage({ client: client, message: interaction, content: `Sorry, you're not allowed to use commands in private messages!` });
 
                 const { DisabledChannels } = require('../database/dbObjects');
                 const dbChannels = await DisabledChannels.findAll();
@@ -122,25 +122,25 @@ module.exports = async (client, interaction) => {
                                 // Toggle selected role
                                 const { EligibleRoles } = require('../database/dbObjects');
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
-                                if (!role) return sendMessage(client, interaction, `This role does not exist.`);
+                                if (!role) return sendMessage({ client: client, message: interaction, content: `This role does not exist.` });
                                 let adminBool = await isAdmin(client, interaction.guild.me);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
-                                if (!checkRoleEligibility) return sendMessage(client, interaction, `This role is not available anymore.`);
+                                if (!checkRoleEligibility) return sendMessage({ client: client, message: interaction, content: `This role is not available anymore.` });
 
-                                if (role.managed) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage(client, interaction, `I do not have permission to manage this role.`);
+                                if (role.managed) return sendMessage({ client: client, message: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
+                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, message: interaction, content: `I do not have permission to manage this role.` });
 
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        return sendMessage(client, interaction, `You no longer have the **${role.name}** role!`);
+                                        return sendMessage({ client: client, message: interaction, content: `You no longer have the **${role.name}** role!` });
                                     } else {
                                         await interaction.member.roles.add(role);
-                                        return sendMessage(client, interaction, `You now have the **${role.name}** role!`);
+                                        return sendMessage({ client: client, message: interaction, content: `You now have the **${role.name}** role!` });
                                     };
                                 } catch (e) {
-                                    return sendMessage(client, interaction, `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, null, null, false);
+                                    return sendMessage({ client: client, message: interaction, content: `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, ephemeral: false });
                                 };
                             } catch (e) {
                                 console.log(e);
