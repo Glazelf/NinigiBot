@@ -139,14 +139,19 @@ exports.run = async (client, message, args = []) => {
 
         // Profile badges
         let badgesArray = [];
-        if (user.bot) badgesArray.push("🤖");
-        if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
-        if (user.flags) {
-            for (const [key, value] of Object.entries(badgeEmotes)) {
-                if (user.flags.has(key)) badgesArray.push(value);
+        let badgesString = "";
+        try {
+            if (user.bot) badgesArray.push("🤖");
+            if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
+            if (user.flags) {
+                for (const [key, value] of Object.entries(badgeEmotes)) {
+                    if (user.flags.has(key)) badgesArray.push(value);
+                };
             };
+            badgesString = badgesArray.join(" ");
+        } catch (e) {
+            // console.log(e);
         };
-        let badgesString = badgesArray.join(" ");
 
         // JoinRank
         let joinRank = await getJoinRank(user.id, message.guild);
