@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
         let returnString = `${days}d ${hours}h ${minutes}m ${seconds}s left.`;
         if (distance <= 0) returnString = `If you read this you have the big gay 😳.`;
 
-        return sendMessage(client, message, returnString);
+        return sendMessage({ client: client, message: message, content: returnString });
 
     } catch (e) {
         // Log error
