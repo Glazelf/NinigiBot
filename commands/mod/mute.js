@@ -77,7 +77,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "mute",
-    type: 2,
+    description: "Times the target out.",
     options: [{
         name: "user",
         type: 6,
