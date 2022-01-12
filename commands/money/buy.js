@@ -57,7 +57,7 @@ module.exports.config = {
     description: "Buy an item from the shop.",
     options: [{
         name: "item-name",
-        type: "STRING",
+        type: 3,
         description: "The name of the item you want to buy.",
         required: true
     }]

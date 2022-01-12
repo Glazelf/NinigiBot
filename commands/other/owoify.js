@@ -29,7 +29,7 @@ module.exports.config = {
     description: "OwOifies text.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: 3,
         description: "Text to owoify",
         required: true
     }]

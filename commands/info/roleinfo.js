@@ -83,7 +83,7 @@ module.exports.config = {
     description: "Sends info about a role.",
     options: [{
         name: "role-name",
-        type: "STRING",
+        type: 3,
         description: "Specify role by name or ID."
 
     }]

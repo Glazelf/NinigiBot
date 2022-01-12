@@ -113,11 +113,11 @@ module.exports.config = {
     defaultPermission: false,
     options: [{
         name: "user",
-        type: "MENTIONABLE",
+        type: 6,
         description: "Specify user."
     }, {
         name: "item",
-        type: "STRING",
+        type: 3,
         description: "Item to use.",
     }]
 };

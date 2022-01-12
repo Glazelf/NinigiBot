@@ -46,7 +46,7 @@ module.exports.config = {
     description: "Choose a starboard channel.",
     options: [{
         name: "channel",
-        type: "CHANNEL",
+        type: 7,
         description: "Specify channel.",
         required: true
     }]

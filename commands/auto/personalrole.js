@@ -197,7 +197,7 @@ module.exports.config = {
     description: "Updates your personal role color.",
     options: [{
         name: "color-hex",
-        type: "STRING",
+        type: 3,
         description: "Specify the color you want. Type \"delete\" to delete your role."
     }]
 };

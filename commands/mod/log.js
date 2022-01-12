@@ -46,7 +46,7 @@ module.exports.config = {
     description: "Choose a channel to log to.",
     options: [{
         name: "channel",
-        type: "CHANNEL",
+        type: 7,
         description: "Specify channel.",
         required: true
     }]

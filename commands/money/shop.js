@@ -58,11 +58,11 @@ module.exports.config = {
     description: "Displays items in the shop.",
     options: [{
         name: "equipment",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Equipment shop."
     }, {
         name: "food",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Food shop."
     }]
 };

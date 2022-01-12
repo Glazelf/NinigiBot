@@ -215,6 +215,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Userinfo",
-    type: "USER",
+    type: 2,
     aliases: ["user", "profile"]
 };

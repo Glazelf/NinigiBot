@@ -60,6 +60,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: "USER",
+    type: 2,
     aliases: ["avi", "pfp"]
 };

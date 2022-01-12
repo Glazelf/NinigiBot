@@ -405,47 +405,47 @@ module.exports.config = {
     description: "Interact with your Shinx.",
     options: [{
         name: "gender",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Toggle your trainer's gender."
     }, {
         name: "data",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Shinx summary."
     }, {
         name: "tap",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Tap Shinx!"
     }, {
         name: "nick",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Change Shinx's nickname.",
         options: [{
             name: "input",
-            type: "STRING",
+            type: 3,
             description: "What should Shinx's name be?",
             required: true
         }]
     }, {
         name: "equip",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Equip an item to Shinx.",
         options: [{
             name: "input",
-            type: "STRING",
+            type: 3,
             description: "Item to equip."
         }]
     }, {
         name: "feed",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Feed Shinx.",
         options: [{
             name: "input",
-            type: "STRING",
+            type: 3,
             description: "Item to feed."
         }]
     }, {
         name: "play",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Play with Shinx."
     }]
 };

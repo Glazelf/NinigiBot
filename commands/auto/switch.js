@@ -34,7 +34,7 @@ module.exports.config = {
     description: "Updates your Switch friend code.",
     options: [{
         name: "switch-fc",
-        type: "STRING",
+        type: 3,
         description: "SW-1234-1234-1234"
     }]
 };

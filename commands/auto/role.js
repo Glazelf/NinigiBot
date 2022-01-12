@@ -134,7 +134,7 @@ module.exports.config = {
     description: "Toggles an eligible role.",
     options: [{
         name: "role-name",
-        type: "STRING",
+        type: 3,
         description: "Specify the role name. Type \"help\" to see a list of eligible roles."
     }]
 };
