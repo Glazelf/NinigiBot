@@ -251,13 +251,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
+    type: 1,
     options: [{
         name: "ability",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on an ability.",
         options: [{
             name: "ability-name",
-            type: "STRING",
+            type: 3,
             description: "Get ability info by its English name.",
             required: true
         },
@@ -268,11 +269,11 @@ module.exports.config = {
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on an item.",
         options: [{
             name: "item-name",
-            type: "STRING",
+            type: 3,
             description: "Get item info by its English name.",
             required: true
         },
@@ -283,11 +284,11 @@ module.exports.config = {
         }]
     }, {
         name: "move",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on a move.",
         options: [{
             name: "move-name",
-            type: "STRING",
+            type: 3,
             description: "Get move info by its English name.",
             required: true
         },
@@ -298,11 +299,11 @@ module.exports.config = {
         }]
     }, {
         name: "nature",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on a nature.",
         options: [{
             name: "nature-name",
-            type: "STRING",
+            type: 3,
             description: "Get nature info by its English name.",
             required: true
         },
@@ -313,11 +314,11 @@ module.exports.config = {
         }]
     }, {
         name: "pokemon",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon-name",
-            type: "STRING",
+            type: 3,
             description: "Get Pokémon info by its English name.",
             required: true
         },

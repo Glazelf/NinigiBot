@@ -42,12 +42,12 @@ module.exports.config = {
     permission: "owner",
     options: [{
         name: "user-id",
-        type: "STRING",
+        type: 3,
         description: "Specify user by ID.",
         required: true
     }, {
         name: "input",
-        type: "STRING",
+        type: 3,
         description: "Text message to DM.",
         required: true
     }]

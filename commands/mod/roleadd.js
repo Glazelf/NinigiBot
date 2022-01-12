@@ -62,7 +62,7 @@ module.exports.config = {
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{
         name: "role-name",
-        type: "STRING",
+        type: 3,
         description: "Specify role by name."
     }]
 };

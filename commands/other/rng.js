@@ -33,7 +33,7 @@ module.exports.config = {
     description: "Generate a random number.",
     options: [{
         name: "numbers",
-        type: "STRING",
+        type: 3,
         description: "Two numbers seperated by a comma.",
         required: true
     }]

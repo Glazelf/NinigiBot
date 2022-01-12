@@ -60,5 +60,5 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "Avatar",
-    type: "USER"
+    type: 2
 };

@@ -278,48 +278,48 @@ module.exports.config = {
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on a specific quest.",
         options: [{
             name: "quest-name",
-            type: "STRING",
+            type: 3,
             description: "Specify quest by name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     },
     {
         name: "quests",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "List all quests from a game.",
         options: [{
             name: "game-name",
-            type: "STRING",
+            type: 3,
             description: "Specify game by name or abbreviation.",
             required: true
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "monster",
-        type: "SUB_COMMAND",
+        type: 1,
         description: "Get info on a monster.",
         options: [{
             name: "monster-name",
-            type: "STRING",
+            type: 3,
             description: "Specify monster by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: 5,
             description: "Whether this command is only visible to you."
         }]
     }]

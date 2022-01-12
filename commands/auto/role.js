@@ -122,7 +122,7 @@ module.exports.config = {
     description: "Toggles an available role. Use without argument to see roles.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: 8,
         description: "Specify the role."
     }]
 };

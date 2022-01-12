@@ -66,7 +66,7 @@ module.exports.config = {
     description: "Calculate.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: 3,
         description: "Input to calculate.",
         required: true
     }]

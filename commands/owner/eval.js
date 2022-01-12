@@ -49,7 +49,7 @@ module.exports.config = {
     defaultPermission: false,
     options: [{
         name: "input",
-        type: "STRING",
+        type: 3,
         description: "JS to execute."
     }]
 };

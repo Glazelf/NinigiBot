@@ -23,7 +23,7 @@ module.exports.config = {
     description: "Ask the magic 8ball for knowledge.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: 3,
         description: "Your burning question.",
         required: true
     }]

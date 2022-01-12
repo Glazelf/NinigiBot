@@ -64,57 +64,57 @@ module.exports.config = {
     options: [{
         name: "fahrenheit",
         description: "Convert from Fahrenheit to Celsius.",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of Fahrenheits.",
-            type: "INTEGER"
+            type: 4
         }
         ]
     }, {
         name: "feet",
         description: "Convert from feet to meters.",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of feet.",
-            type: "INTEGER"
+            type: 4
         }]
     }, {
         name: "gallons",
         description: "Convert from gallons to liters.",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of gallons.",
-            type: "INTEGER"
+            type: 4
         }]
     }, {
         name: "horsepower",
         description: "Convert from horsepower to watts.",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of horsepower.",
-            type: "INTEGER"
+            type: 4
         }]
     }, {
         name: "inches",
         description: "Convert from inches to centimeters.",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of inches.",
-            type: "INTEGER"
+            type: 4
         }]
     }, {
         name: "lbs",
         description: "Convert from lbs to kilos",
-        type: "SUB_COMMAND",
+        type: 1,
         options: [{
             name: "amount",
             description: "The amount of lbs.",
-            type: "INTEGER"
+            type: 4
         }]
     }]
 };

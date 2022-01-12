@@ -49,7 +49,7 @@ module.exports.config = {
     description: "Give money to another user.",
     options: [{
         name: "user",
-        type: "MENTIONABLE",
+        type: 6,
         description: "Specify user.",
         required: true
     }]

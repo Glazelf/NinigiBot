@@ -48,16 +48,16 @@ module.exports.config = {
     permission: "owner",
     options: [{
         name: "amount",
-        type: "INTEGER",
+        type: 4,
         description: "Amount of money to add.",
         required: true
     }, {
         name: "user-mention",
-        type: "MENTIONABLE",
+        type: 6,
         description: "Specify user by mention."
     }, {
         name: "user-id",
-        type: "STRING",
+        type: 3,
         description: "Specify user by ID."
     }]
 };
