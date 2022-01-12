@@ -12,21 +12,21 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Split off command
         let input = args.join(" ");
 
-        let user = message.member.user;
+        let user = interaction.member.user;
 
         // Author avatar
-        let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+        let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Check for role
-        let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
-        if (!role) role = await message.guild.roles.fetch(input);
+        let role = interaction.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
+        if (!role) role = await interaction.guild.roles.fetch(input);
 
         let roleEmbed = new Discord.MessageEmbed()
             .setFooter({ text: user.tag })
             .setTimestamp();
 
         if (input.toLowerCase() == "none" && !role) {
-            let fetchedMembers = await message.guild.members.fetch();
+            let fetchedMembers = await interaction.guild.members.fetch();
             let noRoleMembers = 0;
             fetchedMembers.forEach(member => {
                 if (member.roles.cache.size == 1) {
@@ -35,7 +35,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             });
             roleEmbed
                 .setColor(DefaultEmbedColor)
-                .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
+                .setAuthor({ name: `Users in ${interaction.guild.name} without a role`, iconURL: avatar })
                 .addField("Members:", noRoleMembers.toString(), true);
 
             return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });
@@ -49,7 +49,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
         // Member count
-        let memberCount = message.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
+        let memberCount = interaction.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
 
         // Properties
         let roleProperties = "";

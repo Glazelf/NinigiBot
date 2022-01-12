@@ -9,7 +9,7 @@ exports.run = async (client, interaction) => {
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
 
-        let guild = message.guild;
+        let guild = interaction.guild;
         await guild.members.fetch();
         await guild.channels.fetch();
 
@@ -21,7 +21,7 @@ exports.run = async (client, interaction) => {
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
 
-        let user = message.member.user;
+        let user = interaction.member.user;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 
