@@ -1,4 +1,4 @@
-module.exports = async ({ client, message, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false }) => {
+module.exports = async ({ client, message, replyText, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!message) return;
 
@@ -23,7 +23,7 @@ module.exports = async ({ client, message, replyText, embeds = null, files = nul
         };
 
         // Don't add components to slash commands unless specifically told to do so
-        if (components && components.components.length != 0 && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type != 'APPLICATION_COMMAND')) {
+        if (components && components.components.length != 0) {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
