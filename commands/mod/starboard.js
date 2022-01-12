@@ -42,7 +42,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "starboard",
-    aliases: [],
     description: "Choose a starboard channel.",
     options: [{
         name: "channel",

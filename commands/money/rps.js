@@ -74,7 +74,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "rps",
-    aliases: [],
     description: "Bet money on a game of rock, paper, scissors.",
     options: [{
         name: "rock",

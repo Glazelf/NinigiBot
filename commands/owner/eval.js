@@ -44,7 +44,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "eval",
-    aliases: ["js"],
     description: "Execute JS.",
     permission: "owner",
     defaultPermission: false,

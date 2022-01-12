@@ -28,6 +28,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "togglemod",
-    aliases: ["tm", "automod"],
     description: "Toggle automated moderation features."
 };

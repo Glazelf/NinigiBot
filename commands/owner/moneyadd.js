@@ -43,10 +43,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "moneyadd",
-    aliases: ["addmoney"],
     description: "Add money to a user.",
-    permission: "owner",
     defaultPermission: false,
+    permission: "owner",
     options: [{
         name: "amount",
         type: "INTEGER",

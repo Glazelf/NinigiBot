@@ -66,6 +66,5 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "kick",
-    aliases: [],
     description: "Kick a target user from the server."
 };

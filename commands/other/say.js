@@ -40,7 +40,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "say",
-    aliases: [],
     description: "Makes the bot repeat text.",
     options: [{
         name: "input",

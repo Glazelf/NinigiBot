@@ -30,7 +30,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "rng",
-    aliases: ["random", "number"],
     description: "Generate a random number.",
     options: [{
         name: "numbers",

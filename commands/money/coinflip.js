@@ -65,7 +65,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "coinflip",
-    aliases: ["cf", "flip"],
     description: "Bet money on a coinflip.",
     options: [{
         name: "bet-amount",

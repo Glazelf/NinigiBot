@@ -246,7 +246,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "pokemon",
-    aliases: ["pkm", "pkmn"],
     description: "Shows Pokémon data.",
     options: [{
         name: "ability",

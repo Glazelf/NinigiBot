@@ -11,7 +11,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let input = args.join(" ");
         let severity = "owo";
-        if (message.type != "APPLICATION_COMMAND") severity = message.content.substring(1, 4).toLowerCase();
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 
@@ -25,7 +24,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "owoify",
-    aliases: ["owo", "uwuify", "uwu", "uvuify", "uvu"],
     description: "OwOifies text.",
     options: [{
         name: "input",

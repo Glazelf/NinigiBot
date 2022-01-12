@@ -154,6 +154,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "botinfo",
-    aliases: ["bot", "info"],
     description: `Displays info on this bot.`
 };

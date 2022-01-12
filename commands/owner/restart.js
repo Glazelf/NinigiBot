@@ -51,8 +51,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "restart",
-    aliases: [],
     description: "Restart bot and reload all files.",
+    defaultPermission: false,
     permission: "owner",
-    defaultPermission: false
 };

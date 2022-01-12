@@ -170,6 +170,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["server", "guild", "guildinfo"],
     description: "Sends info about the server.",
 };

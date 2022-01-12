@@ -48,7 +48,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "hexcolor",
-    aliases: ["hexcolour", "colorhex", "colourhex"],
     description: "Sends image from hex code.",
     options: [{
         name: "hex",

@@ -89,7 +89,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "invert",
-    aliases: [],
     description: "Invert a user's profile picture.",
     options: [{
         name: "user",

@@ -79,7 +79,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "roleinfo",
-    aliases: [],
     description: "Sends info about a role.",
     options: [{
         name: "role-name",

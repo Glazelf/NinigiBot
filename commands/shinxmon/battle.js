@@ -191,7 +191,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "battle",
-    aliases: ["challenge"],
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",

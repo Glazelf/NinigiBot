@@ -41,7 +41,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "vctextchannel",
-    aliases: ["vtc", "voicetext", "vcchannel"],
     description: "Choose a channel to be linked to vc's.",
     options: [{
         name: "channel",

@@ -46,7 +46,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "transfer",
-    aliases: ["give"],
     description: "Give money to another user.",
     options: [{
         name: "user",

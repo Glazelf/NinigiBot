@@ -28,7 +28,6 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "countdown",
-    aliases: ["timeleft"],
     description: "Returns the time left remaining, duh.",
     serverID: "861884184787550218"
 };

@@ -42,7 +42,6 @@ exports.run = async (client, interaction, args) => {
 
 module.exports.config = {
     name: "log",
-    aliases: [],
     description: "Choose a channel to log to.",
     options: [{
         name: "channel",

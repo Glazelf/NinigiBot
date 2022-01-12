@@ -68,6 +68,5 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "inventory",
-    aliases: ["inv", "items"],
     description: "Sends a list of items in your inventory."
 };

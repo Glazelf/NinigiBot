@@ -27,7 +27,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "slowmode",
-    aliases: ["slow"],
     description: "Set slowmode in the current channel.",
     options: [{
         name: "seconds",

@@ -381,7 +381,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
     name: "shinx",
-    aliases: [],
     description: "Interact with your Shinx.",
     options: [{
         name: "gender",

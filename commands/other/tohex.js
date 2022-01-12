@@ -11,7 +11,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!args[0]) return sendMessage(client, message, `Please provid an argument.`);
         let input = args[0];
 
-        // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal"
+        // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
         if (message.content.toLowerCase().startsWith(`/todecimal`)) {
             try {
                 while (input.length < 6) input = "0" + input;
@@ -38,7 +38,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "tohex",
-    aliases: ["todecimal"],
     description: "Convert a number to hexadecimal.",
     options: [{
         name: "input",

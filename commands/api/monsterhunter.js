@@ -271,7 +271,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "monsterhunter",
-    aliases: ["monster", "mh"],
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",

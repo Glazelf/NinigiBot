@@ -39,7 +39,6 @@ exports.run = async (client, interaction, args) => {
 
 module.exports.config = {
     name: "starlimit",
-    aliases: ["sl"],
     description: "Change the star amount to appear on starboard.",
     options: [{
         name: "amount",

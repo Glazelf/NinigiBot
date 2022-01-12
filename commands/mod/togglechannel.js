@@ -45,7 +45,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "togglechannel",
-    aliases: ["tc"],
     description: "Toggles commands in a channel.",
     options: [{
         name: "channel",

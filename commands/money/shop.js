@@ -47,7 +47,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "shop",
-    aliases: ["store"],
     description: "Displays items in the shop.",
     options: [{
         name: "equipment",

@@ -53,8 +53,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "kill",
-    aliases: ["destroy"],
     description: "Shuts down bot.",
+    defaultPermission: false,
     permission: "owner",
-    defaultPermission: false
 };

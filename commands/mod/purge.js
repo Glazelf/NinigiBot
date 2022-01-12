@@ -95,7 +95,6 @@ exports.run = async (client, interaction, args) => {
 
 module.exports.config = {
     name: "purge",
-    aliases: ["clear"],
     description: "Bulk delete messages.",
     options: [{
         name: "amount",

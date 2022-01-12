@@ -20,7 +20,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "8ball",
-    aliases: ["magicconch", "mc"],
     description: "Ask the magic 8ball for knowledge.",
     options: [{
         name: "input",

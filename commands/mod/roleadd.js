@@ -59,7 +59,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "roleadd",
-    aliases: ["addrole"],
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{
         name: "role-name",

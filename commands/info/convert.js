@@ -60,7 +60,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "convert",
-    aliases: ["conv"],
     description: "Converts from dumb American units to epic global units.",
     options: [{
         name: "fahrenheit",

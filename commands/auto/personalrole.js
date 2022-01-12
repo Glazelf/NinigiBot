@@ -196,7 +196,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "personalrole",
-    aliases: ["pr"],
     description: "Updates your personal role color.",
     options: [{
         name: "color-hex",

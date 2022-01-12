@@ -28,6 +28,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "togglepersonalroles",
-    aliases: ["tpr"],
     description: "Toggle personal roles in this server."
 };
