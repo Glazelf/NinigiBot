@@ -79,7 +79,6 @@ module.exports.config = {
     name: "mute",
     type: 2,
     aliases: ["timeout"],
-    description: "Mutes target user.",
     options: [{
         name: "user",
         type: 6,
