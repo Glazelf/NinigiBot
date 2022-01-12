@@ -38,7 +38,8 @@ module.exports = async (client) => {
 
         // Set bot status
         let presence = initPresence();
-        client.user.setPresence(presence);
+        await client.user.setPresence(presence);
+        console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
 
         // List and fetch servers the bot is connected to
         // await client.guilds.cache.forEach(async (guild) => {
@@ -60,9 +61,7 @@ Connected as ${client.user.tag}. (${timestamp})`);
 };
 
 function initPresence() {
-    // Alter activity string
-    // let presence = { activities: [{ name: 'over Sinnoh', type: 'WATCHING' }], status: 'idle' };
-    let presence = { activities: [{ name: 'the Sinnoh League', type: 'COMPETING' }], status: 'idle' };
+    let presence = { activities: [{ name: 'to the lake theme', type: 2 }], status: 'idle' };
     return presence;
 };
 
