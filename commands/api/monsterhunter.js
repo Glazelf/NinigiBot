@@ -29,7 +29,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage(client, interaction, "Could not find the specified quest.", null, null, true);
+                if (!questData) return sendMessage(client, interaction, "Could not find the specified quest.");
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
