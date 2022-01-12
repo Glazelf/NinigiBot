@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (client.config.forever) forever = require('forever');
         const getTime = require('../../util/getTime');
 
-        if (interaction.member.id !== client.config.ownerID) return sendMessage(client, interaction, globalVars.lackPerms);
+        if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let timestamp = await getTime(client);
 
@@ -16,7 +16,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (args[0] != 'soft') {
             // Return interaction then destroy
-            await sendMessage(client, interaction, `Shutting down.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.`);
+            await sendMessage({ client: client, interaction: interaction, content: `Shutting down.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.` });
 
             // Delete all global commands
             await client.application.commands.set([]);

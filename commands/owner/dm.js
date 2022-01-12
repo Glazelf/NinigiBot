@@ -4,9 +4,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
-        if (!args[1]) return sendMessage(client, message, `You need to provide a message to send.`);
+        if (!args[1]) return sendMessage({ client: client, message: message, content: `You need to provide a message to send.` });
 
         // Split off command
         let textMessage = args.slice(1).join(" ");
@@ -19,14 +19,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // console.log(e);
         };
 
-        if (!targetUser) return sendMessage(client, message, `I could not find that ID, it's likely I don't share a server with them or they don't exist.`);
+        if (!targetUser) return sendMessage({ client: client, message: message, content: `I could not find that ID, it's likely I don't share a server with them or they don't exist.` });
 
         try {
             await targetUser.send({ content: textMessage });
-            return sendMessage(client, message, `Message succesfully sent to **${targetUser.tag}** (${targetUser.id}).`);
+            return sendMessage({ client: client, message: message, content: `Message succesfully sent to **${targetUser.tag}** (${targetUser.id}).` });
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `Failed to message **${targetUser.tag}**. They probably have their DMs closed.`);
+            return sendMessage({ client: client, message: message, content: `Failed to message **${targetUser.tag}**. They probably have their DMs closed.` });
         };
 
     } catch (e) {

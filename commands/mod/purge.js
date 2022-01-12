@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
         let numberFromMessage = args[0];
 
@@ -14,7 +14,7 @@ exports.run = async (client, interaction, args) => {
         let maxNumberOfMessages = 100;
         let numberOfMessages = numberFromMessagestoNumber + 1;
         if (isNaN(numberOfMessages)) numberFromMessage = args[1];
-        if (isNaN(numberOfMessages)) return sendMessage(client, message, `Please provide a valid number.`);
+        if (isNaN(numberOfMessages)) return sendMessage({ client: client, message: message, content: `Please provide a valid number.` });
 
         // Max number of messages allowed to be deleted at once
         if (numberOfMessages > maxNumberOfMessages) numberOfMessages = maxNumberOfMessages;

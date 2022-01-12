@@ -63,11 +63,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         description: value[1].description,
                     });
                 };
-                if (rolesArray.length < 1) return sendMessage(client, interaction, `There are no roles available to be selfassigned in **${interaction.guild.name}**.`);
+                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `There are no roles available to be selfassigned in **${message.guild.name}**.` });
+
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
-                return sendMessage(client, interaction, `Choose a role to assign to yourself: `, null, null, true, rolesSelects);
+                return sendMessage({ client: client, interaction: interaction, content: `Choose a role to assign to yourself: `, components: rolesSelects });
             };
 
             // Help menu
@@ -76,9 +77,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         > ${i + 1}. <@&${roleText[i]}>`;
             };
 
-            if (roleHelpMessage.length == 0) return sendMessage(client, interaction, `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.`);
+            if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.` });
 
-            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage(client, interaction, `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.`);
+            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -88,26 +89,26 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .setDescription(roleHelpMessage)
                 .setFooter({ text: user.tag })
                 .setTimestamp();
-            return sendMessage(client, interaction, null, rolesHelp);
+            return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp });
         } else {
 
             // Give role to self through command
             const role = interaction.guild.roles.cache.find(role => role == requestRole);
 
-            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without an argument to see available roles.`;
-            if (!role) return sendMessage(client, interaction, invalidRoleText);
-            if (!roleIDs.includes(role.id)) return sendMessage(client, interaction, invalidRoleText);
-            if (role.managed == true) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is being automatically managed by an integration.`);
-            if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage(client, interaction, `I can't manage the **${role.name}** role because it is above my highest role.`);
+            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role help\` to see the available roles.`;
+            if (!role || !roleIDs.includes(role.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
+            if (role.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
+            if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
 
+            let returnString;
             if (member.roles.cache.has(role.id)) {
                 await member.roles.remove(role);
-                return sendMessage(client, interaction, `You no longer have the **${role.name}** role, **${member.user.tag}**!`);
-
+                returnString = `You no longer have the **${role.name}** role, **${member.user.tag}**!`;
             } else {
                 await member.roles.add(role);
-                return sendMessage(client, interaction, `You now have the **${role.name}** role, **${member.user.tag}**!`);
+                returnString = `You now have the **${role.name}** role, **${member.user.tag}**!`;
             };
+            return sendMessage({ client: client, interaction: interaction, content: returnString });
         };
 
     } catch (e) {

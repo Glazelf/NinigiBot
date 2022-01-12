@@ -5,12 +5,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide something for the 8ball to consider.`);
+        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide something for the 8ball to consider.` });
 
         const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
 
-        return sendMessage(client, message, `The 8ball says: "${randomAnswer}.".`);
+        return sendMessage({ client: client, interaction: interaction, content: `The 8ball says: "${randomAnswer}.".` });
 
     } catch (e) {
         // Log error

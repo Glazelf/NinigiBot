@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, interaction.member);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
-        if (!serverID) return sendMessage(client, interaction, `Personal Roles are disabled in **${interaction.guild.name}**.`);
+        if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
 
@@ -19,15 +19,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
-        if (!boosterRole) return sendMessage(client, interaction, `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.`);
+        if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.` });
         let personalRolePosition = boosterRole.position + 1;
 
-        if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage(client, interaction, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
 
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
 
-        if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage(client, interaction, `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.`);
+        if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
 
         // Color catch
         let colorArgument = args.find(element => element.name == 'color-hex');
@@ -114,7 +114,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 position: personalRolePosition
             }).catch(e => {
                 // console.log(e);
-                return sendMessage(client, interaction, `An error occurred.`);
+                return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
 
             if (messageImage && iconsAllowed) {
@@ -133,7 +133,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Re-add role if it got removed
             if (!interaction.member.roles.cache.find(r => r.name == user.tag)) interaction.member.roles.add(personalRole.id);
 
-            return sendMessage(client, interaction, editReturnString);
+            return sendMessage({ client: client, interaction: interaction, content: editReturnString });
 
         } else {
             // Create role if it doesn't exit yet
@@ -160,7 +160,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
-                    return sendMessage(client, interaction, `An error occurred creating a role.`);
+                    return sendMessage({ client: client, interaction: interaction, content: `An error occurred creating a role.` });
                 };
             };
 
@@ -174,7 +174,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             interaction.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.member.id, role_id: createdRole.id });
 
-            return sendMessage(client, interaction, `Created a personal role for you successfully.`);
+            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you successfully.` });
         };
 
         async function deleteRole(successString, failString) {
@@ -182,9 +182,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let oldRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
                 if (oldRole) await oldRole.delete();
                 await roleDB.destroy();
-                return sendMessage(client, interaction, successString);
+                return sendMessage({ client: client, interaction: interaction, content: successString });
             } else {
-                return sendMessage(client, interaction, failString);
+                return sendMessage({ client: client, interaction: interaction, content: failString });
             };
         };
 

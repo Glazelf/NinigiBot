@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let maxMessageLength = 2000;
 
         let noInputString = `You need to provide something to calculate`;
-        if (!args[0]) return sendMessage(client, message, noInputString);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: noInputString });
 
         // Split input
         const input = args.join(' ');
@@ -35,13 +35,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             calcInput = calcInput.replace(value, "");
         });
 
-        if (!calcInput) return sendMessage(client, message, noInputString);
+        if (!calcInput) return sendMessage({ client: client, message: message, content: noInputString });
 
         try {
             var evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `You need to provide a valid input.`);
+            return sendMessage({ client: client, message: message, content: `You need to provide a valid input.` });
         };
 
         // Test out rounding based on remainder sometime
@@ -53,7 +53,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let output = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
         let returnString = output;
         if (output.length > maxMessageLength) returnString = Discord.Formatters.codeBlock("js", rounded.toString());
-        return sendMessage(client, message, returnString);
+        return sendMessage({ client: client, message: message, content: returnString });
 
     } catch (e) {
         // Log error

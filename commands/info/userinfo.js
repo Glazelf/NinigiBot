@@ -36,7 +36,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             member = await message.guild.members.fetch(user.id);
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `No member information could be found for this user.`);
+            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
         };
 
         // Balance check
@@ -185,7 +185,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setFooter({ text: user.tag })
             .setTimestamp();
 
-        return sendMessage(client, message, null, profileEmbed, null, true, profileButtons);
+        return sendMessage({ client: client, message: message, embeds: profileEmbed, components: profileButtons });
 
         async function getJoinRank(userID, guild) {
             let user = await guild.members.fetch(userID);

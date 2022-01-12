@@ -1,10 +1,10 @@
-module.exports = async (client, interaction, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false) => {
+module.exports = async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
-        if (replyText) messageObject['content'] = replyText;
+        if (content) messageObject['content'] = content;
         if (embeds) {
             if (Array.isArray(embeds)) {
                 messageObject['embeds'] = embeds;
@@ -23,7 +23,7 @@ module.exports = async (client, interaction, replyText, embeds = null, files = n
         };
 
         // Don't add components to slash commands unless specifically told to do so
-        if (components && components.components.length != 0 && ((slashComponents && message.type == 'APPLICATION_COMMAND') || message.type != 'APPLICATION_COMMAND')) {
+        if (components && components.components.length != 0) {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;

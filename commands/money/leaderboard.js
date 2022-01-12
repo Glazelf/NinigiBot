@@ -51,7 +51,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             serverLB();
         };
 
-        return sendMessage(client, message, null, leaderboardEmbed);
+        return sendMessage({ client: client, message: message, embeds: leaderboardEmbed });
 
         function serverLB() {
             let leaderboardString = bank.currency.sort((a, b) => b.balance - a.balance)
@@ -61,7 +61,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
                 .join('\n');
 
-            if (leaderboardString.length < 1) return sendMessage(client, message, "Noone in this server has any currency yet.");
+            if (leaderboardString.length < 1) return sendMessage({ client: client, message: message, content: "Noone in this server has any currency yet." });
 
             leaderboardEmbed
                 .setDescription(leaderboardString)

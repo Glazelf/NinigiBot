@@ -9,16 +9,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide the name of the item you want to buy.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide the name of the item you want to buy.` });
         const commandArgs = args.join(' ').match(/(\w+(?:\s+\w+)*)/);
 
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs[1] } } });
             if (item) {
-                if (item.cost === 0) return sendMessage(client, message, `That item doesn't exist.`);
+                if (item.cost === 0) return sendMessage({ client: client, message: message, content: `That item doesn't exist.` });
                 let dbBalance = await bank.currency.getBalance(message.member.id);
                 if (item.cost > dbBalance) {
-                    return sendMessage(client, message, `You don't have enough currency.\nThe ${item.name} costs ${item.cost}${globalVars.currency} but you only have ${Math.floor(dbBalance)}${globalVars.currency}.`);
+                    return sendMessage({ client: client, message: message, content: `You don't have enough currency.\nThe ${item.name} costs ${item.cost}${globalVars.currency} but you only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
                 };
                 const user = await Users.findOne({ where: { user_id: message.member.id } });
 
@@ -40,10 +40,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     //     await user.changeRoom(item);
                 }
 
-                return sendMessage(client, message, `You've bought a ${item.name}.`);
+                return sendMessage({ client: client, message: message, content: `You've bought a ${item.name}.` });
             };
         };
-        return sendMessage(client, message, `That item doesn't exist.`);
+        return sendMessage({ client: client, message: message, content: `That item doesn't exist.` });
 
     } catch (e) {
         // Log error

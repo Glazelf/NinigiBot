@@ -29,7 +29,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage(client, interaction, "Could not find the specified quest.");
+                if (!questData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified quest." });
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
@@ -129,8 +129,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (MHST2Titles.includes(gameName)) gameName = "Monster Hunter Stories 2";
 
                 // Add quests matching game title to an array
-                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
-                if (questsTotal.length == 0) return sendMessage(client, interaction, "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.");
+                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
+                if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
 
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
@@ -187,7 +187,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage(client, interaction, "Could not find the specified monster.");
+                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
 
                 // Get icon, description and game appearances
                 let monsterIcon;
@@ -265,7 +265,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
         };
 
-        return sendMessage(client, interaction, null, mhEmbed, null, ephemeral);
+        return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

@@ -63,7 +63,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, interaction, `Could not find the specified ability.`);
+                            return sendMessage({ client: client, interaction: interaction, content: `Could not find the specified ability.` });
                         };
                     });
                 break;
@@ -97,7 +97,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, interaction, `Could not find the specified item.`);
+                            return sendMessage({ client: client, interaction: interaction, content: `Could not find the specified item.` });
                         };
                     });
                 break;
@@ -142,7 +142,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, interaction, `Could not find the specified move.`);
+                            return sendMessage({ client: client, interaction: interaction, content: `Could not find the specified move.` });
                         };
                     });
                 break;
@@ -182,7 +182,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, interaction, `Could not find the specified nature.`);
+                            return sendMessage({ client: client, interaction: interaction, content: `Could not find the specified nature.` });
                         };
                     });
                 break;
@@ -210,21 +210,21 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 P.getPokemonByName(pokemonName)
                     .then(async function (response) {
                         let messageObject = await getPokemon(client, interaction, response);
-                        return sendMessage(client, interaction, null, messageObject.embed, null, ephemeral, messageObject.buttons);
+                        return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons });
 
                     }).catch(function (e) {
                         // console.log(e);
                         if (e.toString().includes("Missing Permissions")) {
                             return logger(e, client, interaction);
                         } else {
-                            return sendMessage(client, interaction, `Could not find the specified Pokémon.`);
+                            return sendMessage({ client: client, interaction: interaction, content: `Could not find the specified Pokémon.` });
                         };
                     });
                 break;
         };
 
-        // Send function for all except default
-        if (pokemonEmbed.author) sendMessage(client, interaction, null, pokemonEmbed, null, ephemeral, pokemonButtons);
+        // Send fucntion for all except default
+        if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
         return;
 
         // Correct common name discrepancies

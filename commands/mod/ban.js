@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage(client, message, globalVars.lackPerms);
+        if (!message.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
         // Get user
         let user;
@@ -16,7 +16,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             user = message.mentions.users.first();
             member = message.mentions.members.first();
         } else {
-            if (!args[0]) return sendMessage(client, message, `You need to provide a user to ban.`);
+            if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide a user to ban.` });
             try {
                 user = await client.users.fetch(args[0]);
             } catch (e) {
@@ -58,11 +58,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Check permissions
             let userRole = message.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage(client, message, `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).`);
+            if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage({ client: client, message: message, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
 
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(member.id)) return sendMessage(client, message, `**${member.user.tag}** (${member.id}) is already banned.`);
+                if (bansFetch.has(member.id)) return sendMessage({ client: client, message: message, content: `**${member.user.tag}** (${member.id}) is already banned.` });
             };
 
             // Ban
@@ -79,7 +79,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
             } catch (e) {
                 // console.log(e);
-                return sendMessage(client, message, banFailString);
+                return sendMessage({ client: client, message: message, content: banFailString });
             };
 
             // If user isn't found, try to ban by ID
@@ -88,7 +88,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(memberID)) return sendMessage(client, message, `<@${memberID}> (${memberID}) is already banned.`);
+                if (bansFetch.has(memberID)) return sendMessage({ client: client, message: message, content: `<@${memberID}> (${memberID}) is already banned.` });
             };
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
@@ -96,13 +96,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Ban
             try {
                 await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag} (${time})` });
-                return sendMessage(client, message, banReturn, null, null, false);
+                return sendMessage({ client: client, message: message, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
-                    return sendMessage(client, message, banFailString);
+                    return sendMessage({ client: client, message: message, content: banFailString });
                 };
             };
         };

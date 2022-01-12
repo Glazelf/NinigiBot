@@ -33,7 +33,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
         if (interaction) message = interaction;
 
-        if (input.length < 1) return sendMessage(client, message, `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.`);
+        if (input.length < 1) return sendMessage({ client: client, message: message, content: `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.` });
 
         let question = input.replaceAll("+", "%2B").replaceAll(" ", "+").normalize("NFD");
         let googleLink = `https://www.google.com/search?q=${question}`;
@@ -47,7 +47,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        return sendMessage(client, message, returnString, null, null, false, googleButton, true);
+        return sendMessage({ client: client, message: message, content: returnString, components: googleButton, ephemeral: false });
 
     } catch (e) {
         // Log error

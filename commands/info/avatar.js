@@ -28,7 +28,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             member = await message.guild.members.fetch(user.id);
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `No member information could be found for this user.`);
+            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
         };
 
         // Get avatar
@@ -36,7 +36,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL({ format: "png", dynamic: true, size: 512 });
         if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (!avatar && !serverAvatar) return sendMessage(client, message, `**${user.tag}** doesn't have an avatar.`);
+        if (!avatar && !serverAvatar) return sendMessage({ client: client, message: message, content: `**${user.tag}** doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
@@ -50,7 +50,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setFooter({ text: user.tag })
             .setTimestamp();
 
-        return sendMessage(client, message, null, avatarEmbed);
+        return sendMessage({ client: client, message: message, embeds: avatarEmbed });
 
     } catch (e) {
         // Log error

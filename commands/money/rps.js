@@ -1,5 +1,3 @@
-const cooldown = new Set();
-
 exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -7,13 +5,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
-        if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(message.member.id);
 
-        if (!args[0] || !args[1]) return sendMessage(client, message, `You need to provide two arguments; Your chosen weapon and an amount to gamble.`);
+        if (!args[0] || !args[1]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide two arguments; Your chosen weapon and an amount to gamble.` });
 
         let amount;
         if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
@@ -25,18 +22,18 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Get input
         let rps = ["rock", "paper", "scissors"];
-        if (!rps.includes(playerChoice)) return sendMessage(client, message, `You need to choose between \`rock\`, \`paper\` and \`scissors\`.`);
+        if (!rps.includes(playerChoice)) return sendMessage({ client: client, interaction: interaction, content: `You need to choose between \`rock\`, \`paper\` and \`scissors\`.` });
 
-        if (!amount || isNaN(amount)) return sendMessage(client, message, `You need to specify a valid number to gamble.`);
+        if (!amount || isNaN(amount)) return sendMessage({ client: client, interaction: interaction, content: `You need to specify a valid number to gamble.` });
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
 
-        if (amount <= 0) return sendMessage(client, message, `Please enter an amount that's equal to or larger than 1.`);
+        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount that's equal to or larger than 1.` });
 
         if (amount > balance) {
-            return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
+            return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
         };
 
         // Randomize bot and compare choices
@@ -46,7 +43,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         switch (result) {
             case 0: // Tie
-                return sendMessage(client, message, `It's a tie. We both picked **${playerChoice}**.`);
+                return sendMessage({ client: client, interaction: interaction, content: `It's a tie. We both picked **${playerChoice}**.` });
                 break;
             case 1: // Player wins, no change necessary
                 break;
@@ -58,13 +55,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Update currency
         bank.currency.add(message.member.id, amount);
-        sendMessage(client, message, returnString);
-
-        cooldown.add(message.member.id);
-
-        return setTimeout(() => {
-            cooldown.delete(message.member.id);
-        }, 1000);
+        sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
         // Log error

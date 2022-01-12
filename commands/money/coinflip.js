@@ -1,5 +1,3 @@
-const cooldown = new Set();
-
 exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -7,7 +5,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
-        if (cooldown.has(message.member.id)) return sendMessage(client, message, `You are currently on cooldown from using this command.`);
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
@@ -30,15 +27,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (amount == "half") amount = balance / 2;
         if (amount == "all") amount = balance;
         if (amount == "random") amount = randomNumber(1, balance);
-        if (!amount || isNaN(amount) || amount <= 0) return sendMessage(client, message, `Please input a valid number.`);
+        if (!amount || isNaN(amount) || amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please input a valid number.` });
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
 
-        if (amount <= 0) return sendMessage(client, message, `Please make sure the amount you entered is equal to or larger than 1.`);
+        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please make sure the amount you entered is equal to or larger than 1.` });
 
-        if (amount > balance) return sendMessage(client, message, `You only have ${Math.floor(balance)}${currency}.`);
+        if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
 
         let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}. You now have ${balance + amount}${currency}.`;
 
@@ -49,13 +46,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         bank.currency.add(message.member.id, amount);
-        sendMessage(client, message, returnString);
-
-        cooldown.add(message.member.id);
-
-        return setTimeout(() => {
-            cooldown.delete(message.member.id);
-        }, 1500);
+        sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
         // Log error

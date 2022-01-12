@@ -7,8 +7,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let conversionType = args[0];
         let conversionValue = args[1];
 
-        if (args.length < 2) return sendMessage(client, message, `You need to provide a conversion type and a number to convert.`);
-        if (isNaN(conversionValue)) return sendMessage(client, message, `What you provided isn't a number.`);
+        if (args.length < 2) return sendMessage({ client: client, message: message, content: `You need to provide a conversion type and a number to convert.` });
+        if (isNaN(conversionValue)) return sendMessage({ client: client, message: message, content: `What you provided isn't a number.` });
         parseFloat(conversionValue);
 
         conversionType = conversionType.toLowerCase();
@@ -46,11 +46,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 typeReturn = "kilos";
                 break;
             default:
-                return sendMessage(client, message, `You didn't return a supported conversion type, the currently supported types are Fahrenheit, feet, gallons, horsepower, inches, and lbs.`);
+                return sendMessage({ client: client, message: message, content: `You didn't return a supported conversion type.` });
         };
         conversionReturn = Math.round(conversionReturn * 100) / 100;
 
-        return sendMessage(client, message, `${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}.`);
+        return sendMessage({ client: client, message: message, content: `${conversionValue} ${typeCapitalized} equals ${conversionReturn} ${typeReturn}.` });
 
     } catch (e) {
         // Log error

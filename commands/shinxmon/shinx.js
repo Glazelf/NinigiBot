@@ -60,17 +60,17 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let master;
 
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+            if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
             const expectedId = /<@!(\d+)/.exec(args[0]);
             let target = message.mentions.users.first();
-            if (target.bot) return sendMessage(client, message, `**${target.tag}** is a bot.`);
+            if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `**${target.tag}** is a bot.` });
             const targetId = target.id
 
             if (expectedId && expectedId[1] == targetId) {
                 shinx = await bank.currency.getShinx(targetId);
                 master = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`/shinx <target> <usual command>\`.`); // Shinx rewrite !? :(
+            } else return sendMessage({ client: client, interaction: interaction, content: `The syntax is \`/shinx <target> <usual command>\`.` }); // Shinx rewrite !? :(
         } else {
             master = message.member.user;
             shinx = await bank.currency.getShinx(master.id);
@@ -81,14 +81,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const now = new Date();
 
         if (args[0] === 'level') {
-            if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+            if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
-            else return sendMessage(client, message, `Please specify a valid number.`);
-            return sendMessage(client, message, `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}`);
+            else return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid number.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}` });
 
         } else if (args[0] === 'gender') {
-            return shinx.trans() ? sendMessage(client, message, `Your character is now male, ${master}!`) : sendMessage(client, message, `Your character is now female, ${master}!`);
+            return shinx.trans() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
 
         } else if (args[0] == 'data') {
             canvas = Canvas.createCanvas(791, 541);
@@ -131,7 +131,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 ctx.drawImage(img, 270, 155);
             };
 
-            return sendMessage(client, message, null, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, files: messageFile });
 
         } else if (args[0] == 'tap' || shinx.sleeping) {
             if (args[0] == 'tap') {
@@ -166,7 +167,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 ctx.drawImage(img, 198, 52);
             };
 
-            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png'));
+            let welcomeFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
 
         } else if (args[0] == 'nick' || args[0] == 'nickname') {
             args.shift();
@@ -175,7 +177,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Remove non-alphabetical characters
             nickname.replace(/[^a-z]/gi, '');
 
-            if (nickname.length < 2 || nickname.length > 10) return sendMessage(client, message, `Please specify a valid nickname between 2 and 10 characters.`);
+            if (nickname.length < 2 || nickname.length > 10) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid nickname between 2 and 10 characters.` });
             shinx.changeNick(nickname);
 
             canvas = Canvas.createCanvas(471, 355);
@@ -189,7 +191,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
             const text = `Nickname changed to **${nickname}**!`;
-            return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
+
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'shiny') {
             const { Users } = require('../../database/dbObjects');
@@ -197,7 +201,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             const keys = await user.getKeys();
             if (!keys) return;
             const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
-            if (shinyCharm.length < 1) return sendMessage(client, message, `You need a Shiny Charm to do this.`);
+            if (shinyCharm.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You need a Shiny Charm to do this.` });
             canvas = Canvas.createCanvas(255, 192);
             ctx = canvas.getContext('2d');
             img = await Canvas.loadImage('./assets/sky.png');
@@ -211,7 +215,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             const text = shinx.shine() ? `Now your Shinx shines, ${master}!` : `Your Shinx doesnt shine anymore, ${master}.`;
-            return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
@@ -220,9 +225,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             const user = await Users.findOne({ where: { user_id: master.id } });
             const equipments = await user.getEquipments();
-            if (!equipments) return sendMessage(client, message, `You don't have any equipment, ${master}.`);
+            if (!equipments) return sendMessage({ client: client, interaction: interaction, content: `You don't have any equipment, ${master}.` });
             const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
-            if (equipment.length < 1) return sendMessage(client, message, `You don't have that equipment, ${master}.`);
+            if (equipment.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that equipment, ${master}.` });
             shinx.equip(equipment[0].equipment.name)
 
             canvas = Canvas.createCanvas(428, 310);
@@ -236,7 +241,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
             const text = `Equipment changed to ${equipmentName}!`;
-            return sendMessage(client, message, text, null, new Discord.MessageAttachment(canvas.toBuffer()));
+
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'feed') {
             const { Users } = require('../../database/dbObjects');
@@ -245,9 +252,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             const user = await Users.findOne({ where: { user_id: master.id } });
             const foods = await user.getFoods();
-            if (!foods) return sendMessage(client, message, `You don't have any food to give, ${master}.`);
+            if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food to give, ${master}.` });
             const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
-            if (food.length < 1) return sendMessage(client, message, `You don't have that food, ${master}.`);
+            if (food.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that food, ${master}.` });
             user.removeFood(food[0]);
             shinx.feed(food[0].food.recovery);
 
@@ -287,7 +294,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 ctx.drawImage(img, 199, 0);
             };
 
-            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
 
         } else if (args[0] == 'play') {
             canvas = Canvas.createCanvas(578, 398);
@@ -341,12 +349,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             img = await Canvas.loadImage('./assets/reactions.png');
             ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
             shinx.play(reaction[2]);
-            return sendMessage(client, message, `**${shinx.nick}** ${reaction[0]}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
 
         } else if (args[0] == "release") {
             await shinx.destroy();
 
-            return sendMessage(client, message, `Successfully released Shinx and reset all it's values.`);
+            return sendMessage({ client: client, interaction: interaction, content: `Successfully released Shinx and reset all it's values.` });
 
         } else {
             canvas = Canvas.createCanvas(256, 160);
@@ -369,7 +379,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             img = await Canvas.loadImage('./assets/portraits.png');
             let conversation = await bank.currency.getRandomReaction();
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
-            return sendMessage(client, message, `**${shinx.nick}** ${conversation.quote}`, null, new Discord.MessageAttachment(canvas.toBuffer()));
+
+            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, files: messageFile });
         };
 
     } catch (e) {
