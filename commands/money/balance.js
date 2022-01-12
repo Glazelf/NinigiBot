@@ -29,11 +29,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             member = await message.guild.members.fetch(target);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
+            return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user.` });
         };
 
         let dbBalance = await bank.currency.getBalance(target.id);
-        return sendMessage({ client: client, message: message, content: `**${target.tag}** has ${Math.floor(dbBalance)}${globalVars.currency}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `**${target.tag}** has ${Math.floor(dbBalance)}${globalVars.currency}.` });
 
     } catch (e) {
         // Log error

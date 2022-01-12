@@ -6,14 +6,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const input = args.join(" ");
         try {
             var evaled = eval(input);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, message: message, content: `An error occurred and has been logged.` });
+            return sendMessage({ client: client, interaction: interaction, content: `An error occurred and has been logged.` });
         };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
@@ -22,12 +22,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
         for (const [key, value] of Object.entries(client.config)) {
-            if (evaled.includes(value)) return sendMessage({ client: client, message: message, content: `For security reasons this content can't be returned.` });
+            if (evaled.includes(value)) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
 
         let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
 
-        return sendMessage({ client: client, message: message, content: returnString });
+        return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {
             if (typeof (text) === "string")

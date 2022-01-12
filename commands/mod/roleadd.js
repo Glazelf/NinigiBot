@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         let adminBoolBot = await isAdmin(client, message.guild.me);
         let adminBoolUser = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get role and description
         let splitDescriptionCharacter = ";";
@@ -20,19 +20,19 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             inputArray = requestRole.split(splitDescriptionCharacter);
             requestRole = inputArray[0].trim();
             description = inputArray[1].trim();
-            if (description.length > selectDescriptionCharacterLimit) return sendMessage({ client: client, message: message, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
+            if (description.length > selectDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
         };
 
         requestRole = requestRole.toLowerCase();
 
-        if (requestRole.length < 1) return sendMessage({ client: client, message: message, content: `Please provide a role.` });
+        if (requestRole.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Please provide a role.` });
         const role = message.guild.roles.cache.find(role => role.name.toLowerCase() == requestRole);
-        if (!role) return sendMessage({ client: client, message: message, content: `That role does not exist.` });
+        if (!role) return sendMessage({ client: client, interaction: interaction, content: `That role does not exist.` });
         let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });
 
-        if (role.managed == true) return sendMessage({ client: client, message: message, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
-        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, message: message, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
-        if (message.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: client, message: message, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
+        if (role.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
+        if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
+        if (message.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
 
         // Database
         if (roleIDs.length > 0) {
@@ -40,7 +40,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             for await (const roleID of roleIDs) {
                 roleID.destroy();
             };
-            return sendMessage({ client: client, message: message, content: `The **${roleTag}** role is no longer eligible to be selfassigned.` });
+            return sendMessage({ client: client, interaction: interaction, content: `The **${roleTag}** role is no longer eligible to be selfassigned.` });
         } else {
             if (description) {
                 await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase(), description: description });
@@ -48,7 +48,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 await EligibleRoles.upsert({ role_id: role.id, name: requestRole.toLowerCase() });
             };
 
-            return sendMessage({ client: client, message: message, content: `The **${role.name}** role is now eligible to be selfassigned.` });
+            return sendMessage({ client: client, interaction: interaction, content: `The **${role.name}** role is now eligible to be selfassigned.` });
         };
 
     } catch (e) {

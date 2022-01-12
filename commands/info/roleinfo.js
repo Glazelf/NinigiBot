@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
-        if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide a role name or ID.` });
+        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide a role name or ID.` });
 
         // Split off command
         let input = args.join(" ");
@@ -38,10 +38,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
                 .addField("Members:", noRoleMembers.toString(), true);
 
-            return sendMessage({ client: client, message: message, embeds: roleEmbed });
+            return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });
         };
 
-        if (!role) return sendMessage({ client: client, message: message, content: `I couldn't find that role. Make sure you provide a valid name or ID.` });
+        if (!role) return sendMessage({ client: client, interaction: interaction, content: `I couldn't find that role. Make sure you provide a valid name or ID.` });
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -69,7 +69,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false);
 
-        return sendMessage({ client: client, message: message, embeds: roleEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });
 
     } catch (e) {
         // Log error

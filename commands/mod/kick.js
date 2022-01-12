@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get user
         let user;
@@ -16,14 +16,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             user = message.mentions.users.first();
             member = message.mentions.members.first();
         };
-        if (!member || !user) return sendMessage({ client: client, message: message, content: `Please mention someone to kick.` });
+        if (!member || !user) return sendMessage({ client: client, interaction: interaction, content: `Please mention someone to kick.` });
 
         let author = message.member.user;
 
         // Check permissions
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage({ client: client, message: message, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
+        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
 
         let banFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
 
@@ -48,13 +48,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             await member.kick([`${reason} -${author.tag} (${time})`]);
-            return sendMessage({ client: client, message: message, content: kickReturn, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: kickReturn, ephemeral: false });
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {
                 return logger(e, client, interaction);
             } else {
-                return sendMessage({ client: client, message: message, content: banFailString });
+                return sendMessage({ client: client, interaction: interaction, content: banFailString });
             };
         };
 

@@ -113,7 +113,7 @@ exports.run = async (client, interaction) => {
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
 
-        return sendMessage({ client: client, message: message, embeds: botEmbed, components: botButtons, ephemeral: true, });
+        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });
 
         function checkDays(date) {
             let now = new Date();

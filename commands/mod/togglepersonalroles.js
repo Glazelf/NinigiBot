@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, message.member);
-        if (!adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (!adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { PersonalRoleServers } = require('../../database/dbObjects');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: message.guild.id } });
@@ -14,10 +14,10 @@ exports.run = async (client, interaction) => {
         // Database
         if (serverID) {
             await serverID.destroy();
-            return sendMessage({ client: client, message: message, content: `Personal Roles can no longer be managed by users in **${message.guild.name}**.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can no longer be managed by users in **${message.guild.name}**.` });
         } else {
             await PersonalRoleServers.upsert({ server_id: message.guild.id });
-            return sendMessage({ client: client, message: message, content: `Personal Roles can now be managed by users in **${message.guild.name}**.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can now be managed by users in **${message.guild.name}**.` });
         };
 
     } catch (e) {

@@ -7,20 +7,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const randomNumber = require('../../util/randomNumber');
         let inputNumbers = args.join(" ").replace(", ", " ").split(" ");
 
-        if (!inputNumbers[1]) return sendMessage({ client: client, message: message, content: `You need to provide 2 numbers.` });
+        if (!inputNumbers[1]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide 2 numbers.` });
         let lowNumber = inputNumbers[0];
         let highNumber = inputNumbers[1];
         if (lowNumber.startsWith("-")) lowNumber = lowNumber.substring(1, lowNumber.length + 1) * -1;
         if (highNumber.startsWith("-")) highNumber = highNumber.substring(1, highNumber.length + 1) * -1;
 
-        if (isNaN(lowNumber) || isNaN(highNumber)) return sendMessage({ client: client, message: message, content: `Make sure both values provided are numbers.` });
+        if (isNaN(lowNumber) || isNaN(highNumber)) return sendMessage({ client: client, interaction: interaction, content: `Make sure both values provided are numbers.` });
         lowNumber = parseInt(lowNumber);
         highNumber = parseInt(highNumber);
-        if (lowNumber > highNumber) return sendMessage({ client: client, message: message, content: `Make sure the first number is lower than the second number.` });
+        if (lowNumber > highNumber) return sendMessage({ client: client, interaction: interaction, content: `Make sure the first number is lower than the second number.` });
 
         let randomValue = randomNumber(lowNumber, highNumber);
 
-        return sendMessage({ client: client, message: message, content: `Your random number is \`${randomValue}\`.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Your random number is \`${randomValue}\`.` });
 
     } catch (e) {
         // Log error

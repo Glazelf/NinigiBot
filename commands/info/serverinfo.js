@@ -153,7 +153,7 @@ exports.run = async (client, interaction) => {
             .setFooter({ text: user.tag })
             .setTimestamp();
 
-        return sendMessage({ client: client, message: message, embeds: serverEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed });
 
         function checkDays(date) {
             let now = new Date();
