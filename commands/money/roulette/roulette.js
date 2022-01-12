@@ -27,7 +27,7 @@ exports.run = async (client, message) => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return sendMessage(client, message, `No one wants to play any more Roulette? Well, see you next time!`, null, null, false);
+                    return sendMessage({ client: client, message: message, content: `No one wants to play any more Roulette? Well, see you next time!`, ephemeral: false });
                 };
 
                 const result = Math.floor(Math.random() * 37);
@@ -51,7 +51,7 @@ exports.run = async (client, message) => {
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
-                sendMessage(client, message, null, results, null, false);
+                sendMessage({ client: client, message: message, embeds: results, ephemeral: false });
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
@@ -60,14 +60,14 @@ exports.run = async (client, message) => {
                 .setDescription('Welcome to the roulette! We hope to see you here!')
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${prefix}bet <money>, <numbers or intervals>\`
 For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
-After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`, null, null, false)
+After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setFooter({ text: user.tag })
                 .setTimestamp();
-            sendMessage(client, message, null, welcome, null, false);
+            sendMessage({ client: client, message: message, embeds: welcome, ephemeral: false });
         } else {
             clearInterval(process);
-            sendMessage(client, message, `Roulette closed! Hope to see you all again!`, null, null, false);
+            sendMessage({ client: client, message: message, content: `Roulette closed! Hope to see you all again!`, ephemeral: false });
         };
 
     } catch (e) {

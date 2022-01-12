@@ -15,12 +15,12 @@ exports.run = async (client, message, args = []) => {
             prefix = globalVars.prefix;
         };
 
-        if (!roulette.on) return sendMessage(client, message, `There is currently no roulette going on. Use ${prefix}roulette to start one.`);
+        if (!roulette.on) return sendMessage({ client: client, message: message, content: `There is currently no roulette going on. Use ${prefix}roulette to start one.` });
         if (roulette.hadBet(message.member.id)) return message.react('✋');
 
         args = args.join(' ');
 
-        if (args.includes('help')) return sendMessage(client, message, `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6`, null, null, false);
+        if (args.includes('help')) return sendMessage({ client: client, message: message, content: `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6` });
         if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
 
         const money = parseInt(args.slice(0, args.indexOf(',')).trim())
@@ -38,7 +38,7 @@ exports.run = async (client, message, args = []) => {
 
         let dbBalance = await bank.currency.getBalance(message.member.id);
         if (bets.size * money > dbBalance) {
-            return sendMessage(client, message, `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.`, null, null, false);
+            return sendMessage({ client: client, message: message, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
         bets.forEach(bet => {
             roulette.addBet(bet, message.member.id, 36 * money);

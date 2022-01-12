@@ -56,7 +56,7 @@ module.exports = async (client, message) => {
 
             if (message.content.indexOf(prefix) == 0) {
                 try {
-                    sendMessage(client, message, `Sorry, you're not allowed to use commands in private messages!`);
+                    sendMessage({ client: client, message: message, content: `Sorry, you're not allowed to use commands in private messages!` });
                 } catch (e) {
                     return DMChannel.send(dmLogObject);
                 };
@@ -125,7 +125,7 @@ module.exports = async (client, message) => {
         // Run the command
         if (cmd) {
             // Ignore messages sent in a disabled channel
-            if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage(client, message, `Commands have been disabled in this channel.`);
+            if (channels.includes(message.channel.id) && !message.member.permissions.has("MANAGE_CHANNELS")) return sendMessage({ client: client, message: message, content: `Commands have been disabled in this channel.` });
 
             try {
                 await message.channel.sendTyping();

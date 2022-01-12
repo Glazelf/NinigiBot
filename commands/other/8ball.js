@@ -17,12 +17,12 @@ exports.run = async (client, message, args = []) => {
             if (!message.content.toLowerCase().startsWith(`${prefix}8ball`)) commandName = "Magic Conch";
         };
 
-        if (!args[0]) return sendMessage(client, message, `You need to provide something for the ${commandName} to consider.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide something for the ${commandName} to consider.` });
 
         const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
 
-        return sendMessage(client, message, `The ${commandName} says: "${randomAnswer}.".`);
+        return sendMessage({ client: client, message: message, content: `The ${commandName} says: "${randomAnswer}.".` });
 
     } catch (e) {
         // Log error

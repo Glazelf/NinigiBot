@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
-        if (!args[0]) return sendMessage(client, message, `Please provide an input to owoify.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide an input to owoify.` });
 
         let input = args.join(" ");
         let severity = "owo";
@@ -15,7 +15,7 @@ exports.run = async (client, message, args = []) => {
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 
-        return sendMessage(client, message, returnString);
+        return sendMessage({ client: client, message: message, content: returnString });
 
     } catch (e) {
         // Log error

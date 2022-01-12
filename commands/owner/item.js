@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
         // Target finding can be optimized later, but it's an owner-only command so this has very low priority
         let target;
@@ -19,7 +19,7 @@ exports.run = async (client, message, args = []) => {
             if (expectedId && expectedId[1] == targetId) {
                 target = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return sendMessage(client, message, `The syntax is \`${prefix}item <target> <item name>\`.`);
+            } else return sendMessage({ client: client, message: message, content: `The syntax is \`${prefix}item <target> <item name>\`.` });
         } else {
             target = message.member.user;
         };
@@ -34,14 +34,14 @@ exports.run = async (client, message, args = []) => {
                         const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === itemName.toLowerCase());
                         if (equipment.length >= 1) {
                             await user.removeEquipment(item)
-                            return sendMessage(client, message, `Removed ${itemName} from ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Removed ${itemName} from ${target}!` });
                         } else {
                             await user.addEquipment(item);
-                            return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
                         };
                     };
                     await user.addEquipment(item);
-                    return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                    return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
 
                 } else if (i === 1) {
                     const foods = await user.getFoods();
@@ -49,14 +49,14 @@ exports.run = async (client, message, args = []) => {
                         const food = foods.filter(i => i.food.name.toLowerCase() === itemName.toLowerCase());
                         if (food.length >= 1) {
                             await user.removeFood(item)
-                            return sendMessage(client, message, `Removed ${itemName} from ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Removed ${itemName} from ${target}!` });
                         } else {
                             await user.addFood(item);
-                            return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
                         };
                     };
                     await user.addFood(item);
-                    return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                    return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
 
                 } else if (i === 2) {
                     const keys = await user.getKeys();
@@ -64,14 +64,14 @@ exports.run = async (client, message, args = []) => {
                         const key = keys.filter(i => i.key.name.toLowerCase() === itemName.toLowerCase());
                         if (key.length >= 1) {
                             await user.removeKey(item)
-                            return sendMessage(client, message, `Removed ${itemName} from ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Removed ${itemName} from ${target}!` });
                         } else {
                             await user.addKey(item);
-                            return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
                         };
                     };
                     await user.addKey(item);
-                    return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                    return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
 
                 } else if (i === 3) {
                     const items = await user.getItems();
@@ -79,24 +79,24 @@ exports.run = async (client, message, args = []) => {
                         const item = items.filter(i => i.item.name.toLowerCase() === itemName.toLowerCase());
                         if (item.length >= 1) {
                             await user.removeItem(item)
-                            return sendMessage(client, message, `Removed ${itemName} from ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Removed ${itemName} from ${target}!` });
                         } else {
                             await user.addItem(item);
-                            return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                            return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
                         };
                     };
                     await user.addItem(item);
-                    return sendMessage(client, message, `Added ${itemName} to ${target}!`);
+                    return sendMessage({ client: client, message: message, content: `Added ${itemName} to ${target}!` });
                 }/* else{
                     await user.changeRoom(item);
                     
                 } */
 
-                return sendMessage(client, message, `You've bought a ${item.name}.`);
+                return sendMessage({ client: client, message: message, content: `You've bought a ${item.name}.` });
 
             };
         };
-        return sendMessage(client, message, `That item doesn't exist.`);
+        return sendMessage({ client: client, message: message, content: `That item doesn't exist.` });
 
 
     } catch (e) {

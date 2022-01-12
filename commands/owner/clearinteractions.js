@@ -4,10 +4,10 @@ exports.run = async (client, message, args = []) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.member.id !== client.config.ownerID) return sendMessage(client, message, globalVars.lackPerms);
+        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
 
-        await sendMessage(client, message, `Removing all slash commands, context menus etc. might take a while. It might take up to an hour for them to vanish on Discord's end.`)
+        await sendMessage({ client: client, message: message, content: `Removing all slash commands, context menus etc. might take a while. It might take up to an hour for them to vanish on Discord's end.` })
         // Delete all global commands
         await client.application.commands.set([]);
 
@@ -20,7 +20,7 @@ exports.run = async (client, message, args = []) => {
             };
         });
 
-        return sendMessage(client, message, `Removed all slash commands, context menus etc.`);
+        return sendMessage({ client: client, message: message, content: `Removed all slash commands, context menus etc.` });
 
     } catch (e) {
         // Log error

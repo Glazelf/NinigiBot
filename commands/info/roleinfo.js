@@ -7,7 +7,7 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
-        if (!args[0]) return sendMessage(client, message, `Please provide a role name or ID.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide a role name or ID.` });
 
         // Split off command
         let input = args.join(" ");
@@ -38,10 +38,10 @@ exports.run = async (client, message, args = []) => {
                 .setAuthor({ name: `Users in ${message.guild.name} without a role`, iconURL: avatar })
                 .addField("Members:", noRoleMembers.toString(), true);
 
-            return sendMessage(client, message, null, roleEmbed);
+            return sendMessage({ client: client, message: message, embeds: roleEmbed });
         };
 
-        if (!role) return sendMessage(client, message, `I couldn't find that role. Make sure you provide a valid name or ID.`);
+        if (!role) return sendMessage({ client: client, message: message, content: `I couldn't find that role. Make sure you provide a valid name or ID.` });
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -69,7 +69,7 @@ exports.run = async (client, message, args = []) => {
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false);
 
-        return sendMessage(client, message, null, roleEmbed);
+        return sendMessage({ client: client, message: message, embeds: roleEmbed });
 
     } catch (e) {
         // Log error

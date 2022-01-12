@@ -29,11 +29,11 @@ exports.run = async (client, message, args = []) => {
             member = await message.guild.members.fetch(target);
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `No member information could be found for this user.`);
+            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
         };
 
         let dbBalance = await bank.currency.getBalance(target.id);
-        return sendMessage(client, message, `**${target.tag}** has ${Math.floor(dbBalance)}${globalVars.currency}.`);
+        return sendMessage({ client: client, message: message, content: `**${target.tag}** has ${Math.floor(dbBalance)}${globalVars.currency}.` });
 
     } catch (e) {
         // Log error

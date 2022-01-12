@@ -17,7 +17,7 @@ exports.run = async (client, message, args = []) => {
             member = await message.guild.members.fetch(target.id);
         } catch (e) {
             // console.log(e);
-            return sendMessage(client, message, `No member information could be found for this user.`);
+            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
         };
 
         if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
@@ -28,16 +28,16 @@ exports.run = async (client, message, args = []) => {
             // Display inventory per item category
             if (args[0] === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no food!`);
-                return sendMessage(client, message, `${target.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}`);
+                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no food!` });
+                return sendMessage({ client: client, message: message, content: `${target.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
             } else if (args[0] === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no equipment!`);
-                return sendMessage(client, message, `${target.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}`);
+                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no equipment!` });
+                return sendMessage({ client: client, message: message, content: `${target.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
             } else if (args[0] === 'keys') {
                 items = await user.getKeys();
-                if (!items.length) return sendMessage(client, message, `**${target.tag}** has no key items!`);
-                return sendMessage(client, message, `${target.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}`);
+                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no key items!` });
+                return sendMessage({ client: client, message: message, content: `${target.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
             } else {
                 let description = `**${target.tag}**'s inventory:`;
                 const length = description.length;
@@ -54,11 +54,11 @@ exports.run = async (client, message, args = []) => {
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return sendMessage(client, message, `**${target.tag}** has nothing!`);
-                return sendMessage(client, message, description);
+                if (description.length === length) if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has nothing!` });
+                return sendMessage({ client: client, message: message, content: description });
             };
         };
-        return sendMessage(client, message, `Please specify a category: items, food or equipment.`);
+        return sendMessage({ client: client, message: message, content: `Please specify a category: items, food or equipment.` });
 
     } catch (e) {
         // Log error

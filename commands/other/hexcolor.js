@@ -8,7 +8,7 @@ exports.run = async (client, message, args = []) => {
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
 
-        if (!args[0]) return sendMessage(client, message, `Please provide a hex to convert.`);
+        if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide a hex to convert.` });
 
         let hex = args[0];
         while (hex.length < 6) hex = "0" + hex;
@@ -16,7 +16,7 @@ exports.run = async (client, message, args = []) => {
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return sendMessage(client, message, `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.`);
+        if (!rgb) return sendMessage({ client: client, message: message, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
 
         let imgWidth = 225;
         let imgHeight = 100;
@@ -28,7 +28,7 @@ exports.run = async (client, message, args = []) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        await sendMessage(client, message, `Here's the color for ${formattingHash}${hex}:`, null, stream);
+        await sendMessage({ client: client, message: message, content: `Here's the color for ${formattingHash}${hex}:`, files: stream });
 
         return;
 

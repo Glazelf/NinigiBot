@@ -27,16 +27,16 @@ exports.run = async (client, message, args = []) => {
         let userBalance = `${Math.floor(currentAmount)}${globalVars.currency}`;
 
         // Catch errors
-        if (transferTarget == user) return sendMessage(client, message, `You can't transfer money to yourself.`)
-        if (!transferAmount || isNaN(transferAmount)) return sendMessage(client, message, `You need to specify a valid number to transfer.`);
-        if (transferAmount > currentAmount) return sendMessage(client, message, `You don't have enough money to transfer that much, you only have ${userBalance}.`);
-        if (transferAmount <= 0) return sendMessage(client, message, `Please enter an amount greater than zero.`);
+        if (transferTarget == user) return sendMessage({ client: client, message: message, content: `You can't transfer money to yourself.` });
+        if (!transferAmount || isNaN(transferAmount)) return sendMessage({ client: client, message: message, content: `You need to specify a valid number to transfer.` });
+        if (transferAmount > currentAmount) return sendMessage({ client: client, message: message, content: `You don't have enough money to transfer that much, you only have ${userBalance}.` });
+        if (transferAmount <= 0) return sendMessage({ client: client, message: message, content: `Please enter an amount greater than zero.` });
 
         // Database
         bank.currency.add(message.member.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return sendMessage(client, message, `Successfully transferred ${transferAmount}${globalVars.currency} to **${transferTarget.tag}**.`);
+        return sendMessage({ client: client, message: message, content: `Successfully transferred ${transferAmount}${globalVars.currency} to **${transferTarget.tag}**.` });
 
     } catch (e) {
         // Log error
