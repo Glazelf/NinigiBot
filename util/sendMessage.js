@@ -1,4 +1,4 @@
-module.exports = async (client, message, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false) => {
+module.exports = async ({ client, message, replyText, embeds = null, files = null, ephemeral = true, components = null, slashComponents = false }) => {
     try {
         if (!message) return;
 
