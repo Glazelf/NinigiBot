@@ -28,7 +28,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let pokemonButtons = new Discord.MessageActionRow();
 
-        switch (interaction.options._subcommand) {
+        switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
                 let abilitySearch = args.find(element => element.name == "ability-name").value.toLowerCase();

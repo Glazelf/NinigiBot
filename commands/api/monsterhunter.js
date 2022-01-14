@@ -21,7 +21,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setFooter({ text: interaction.member.user.tag })
             .setTimestamp();
 
-switch (interaction.options.getSubcommand()) {
+        switch (interaction.options.getSubcommand()) {
             // Specific quest
             case "quest":
                 let questName = args.find(element => element.name == "quest-name").value.toLowerCase();
