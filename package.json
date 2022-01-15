@@ -10,7 +10,7 @@
     "cron": "^1.8.2",
     "discord.js": "^13.5.1",
     "enmap": "^5.8.7",
-    "forever": "^4.0.1",
+    "forever": "^4.0.2",
     "forever-monitor": "^3.0.3",
     "giphy-random": "^2.0.8",
     "node-fetch": "^3.1.0",
