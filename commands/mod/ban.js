@@ -77,6 +77,7 @@ exports.run = async (client, message, args = []) => {
                 };
 
                 await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
+                return sendMessage({ client: client, message: message, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);
                 return sendMessage({ client: client, message: message, content: banFailString });
