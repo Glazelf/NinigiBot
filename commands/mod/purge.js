@@ -41,15 +41,19 @@ exports.run = async (client, message, args) => {
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
-                let messages = await message.channel.messages.fetch({ limit: maxMessageFetch });
-                messages = await messages.filter(m => m.author.id == user.id).array().slice(0, amount);
+                amount -= 1; // Correct amount
+                let messagesAll = await message.channel.messages.fetch({ limit: maxMessageFetch });
+                let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
+                let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
+
                 try {
                     await message.channel.bulkDelete(messages);
-                    await message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
+                    return message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
                 } catch (e) {
                     if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
                     } else {
+                        // console.log(e);
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
                     };
                 };
@@ -57,6 +61,7 @@ exports.run = async (client, message, args) => {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, message);
                 } else {
+                    // console.log(e);
                     return message.channel.send({ content: `An error occurred while bulk deleting.` });
                 };
             };
@@ -81,6 +86,7 @@ exports.run = async (client, message, args) => {
                     if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
                     } else {
+                        // console.log(e);
                         return message.channel.send({ content: `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days, ${author}.` });
                     };
                 };
