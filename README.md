@@ -7,8 +7,9 @@ For questions or support either [create a discussion](https://github.com/Glazelf
 [<img src="https://canary.discordapp.com/api/guilds/549214833858576395/widget.png?style=banner2">](https://discord.gg/2gkybyu)
 
 ## Credits
-[Serebii](https://serebii.net): All Pokémon art and shiny sprites.  
+[Pokeapi](https://pokeapi.co/): Pokémon data.  
+[Serebii](https://serebii.net): Pokémon art and shiny sprites.  
 [PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
 [Pokesprite](https://github.com/msikma/pokesprite): Pokémon party icons.  
-[Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): All Monster Hunter data.  
+[Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): Monster Hunter data and icons.  
 [MHRise-Database](https://github.com/RoboMechE/MHRise-Database): Data PNGs for monsters.  
