@@ -10,4 +10,5 @@ For questions or support either [create a discussion](https://github.com/Glazelf
 [Serebii](https://serebii.net): All Pokémon art and shiny sprites.  
 [PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
 [Pokesprite](https://github.com/msikma/pokesprite): Pokémon party icons.  
-[Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): All Monster Hunter data  
+[Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): All Monster Hunter data.  
+[MHRise-Database](https://github.com/RoboMechE/MHRise-Database): Data PNGs for monsters.  

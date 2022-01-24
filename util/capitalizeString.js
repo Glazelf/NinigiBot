@@ -4,6 +4,7 @@ module.exports = async (str) => {
 
     let splitStr = str;
     if (!exceptionsLowercase.includes(str)) splitStr = str.split('-');
+    if (splitStr.length) splitStr = str.split(" "); // experimental catch for monster hunter usage?
 
     if (str.toLowerCase() == "rks-system") {
         splitStr = "RKS System";

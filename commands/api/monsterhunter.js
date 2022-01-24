@@ -199,6 +199,7 @@ exports.run = async (client, message, args = []) => {
 
                 // Get icon, description and game appearances
                 let monsterIcon;
+                let monsterBanner = null;
                 let monsterDescription;
                 let monsterDanger;
                 let gameAppearances = "";
@@ -220,6 +221,15 @@ exports.run = async (client, message, args = []) => {
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
                 if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
                 if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
+
+                // Get MHRise-Database image
+                if (gameAppearances.includes("Monster Hunter Rise")) {
+                    let monsterSize = "monster";
+                    if (!monsterData.isLarge) monsterSize = "small_monster";
+                    let monsterURLName = await capitalizeString(monsterData.name);
+                    monsterURLName = monsterURLName.replaceAll(" ", "_");
+                    monsterBanner = `https://github.com/RoboMechE/MHRise-Database/blob/main/${monsterSize}/${monsterURLName}_HZV.png?raw=true`;
+                };
 
                 // Format size
                 let monsterSize = "Small";
@@ -269,7 +279,8 @@ exports.run = async (client, message, args = []) => {
                 if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness(es):", monsterWeaknesses, true);
                 if (monsterAilments.length > 0) mhEmbed.addField("Ailment(s):", monsterAilments, true);
                 mhEmbed
-                    .addField("Game(s):", gameAppearances, false);
+                    .addField("Game(s):", gameAppearances, false)
+                    .setImage(monsterBanner);
                 break;
         };
 
