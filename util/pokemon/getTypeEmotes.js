@@ -1,6 +1,6 @@
 module.exports = async (type1, type2, bold) => {
     const typeEmoteList = require('../../objects/pokemon/typeEmotes.json');
-    const capitalizeString = require('./capitalizeString');
+    const capitalizeString = require('../capitalizeString');
     let type1Emote = typeEmoteList[type1];
     let type1Name = await capitalizeString(type1);
     if (bold == true) type1Name = `**${type1Name}**`;

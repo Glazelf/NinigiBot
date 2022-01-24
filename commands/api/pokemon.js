@@ -11,7 +11,7 @@ exports.run = async (client, message, args = []) => {
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
-        const capitalizeString = require('../../util/pokemon/capitalizeString');
+        const capitalizeString = require('../../util/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Pokémon to look up.` });

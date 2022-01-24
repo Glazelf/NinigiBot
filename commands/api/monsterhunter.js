@@ -6,6 +6,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const randomNumber = require('../../util/randomNumber');
+        const capitalizeString = require('../../util/capitalizeString');
 
         // Load JSON
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
@@ -217,7 +218,7 @@ exports.run = async (client, message, args = []) => {
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
-                if (!monsterDescription) monsterDescription = mostRecentMainlineGame.info;
+                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
                 if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
 
                 // Format size
