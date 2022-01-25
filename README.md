@@ -12,4 +12,4 @@ For questions or support either [create a discussion](https://github.com/Glazelf
 [PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
 [Pokesprite](https://github.com/msikma/pokesprite): Pokémon party icons.  
 [Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): Monster Hunter data and icons.  
-[MHRise-Database](https://github.com/RoboMechE/MHRise-Database): Data PNGs for monsters.  
+[MHRise-Database](https://github.com/RoboMechE/MHRise-Database), [MHW-Database](https://github.com/RoboMechE/MHW-Database), [MHGU-Database](https://github.com/RoboMechE/MHGU-Database): Data PNGs for monsters.  

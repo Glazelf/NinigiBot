@@ -197,15 +197,20 @@ exports.run = async (client, message, args = []) => {
                 };
                 if (!monsterData) return sendMessage({ client: client, message: message, content: "Could not find the specified monster." });
 
+                // Game names
+                let MHRise = "Monster Hunter Rise";
+                let MHW = "Monster Hunter World";
+                let MHGU = "Monster Hunter Generations Ultimate";
+
                 // Get icon, description and game appearances
                 let monsterIcon;
                 let monsterBanner = null;
                 let monsterDescription;
                 let monsterDanger;
                 let gameAppearances = "";
-                let mostRecentMainlineGame = "Monster Hunter Rise";
-                let fallbackGame1 = "Monster Hunter World";
-                let fallbackGame2 = "Monster Hunter Generations Ultimate";
+                let mostRecentMainlineGame = MHRise;
+                let fallbackGame1 = MHW;
+                let fallbackGame2 = MHGU;
                 let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
                 monsterData.games.forEach(game => {
                     // Add to game appearances list
@@ -223,12 +228,32 @@ exports.run = async (client, message, args = []) => {
                 if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
 
                 // Get MHRise-Database image
-                if (gameAppearances.includes("Monster Hunter Rise")) {
+                let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
+
+                if (isInImageDBGame) {
+                    let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
+                    let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
+                    let gameDBName = "MHRise";
+                    let gameDBBranchName = "main";
+
                     let monsterSize = "monster";
-                    if (!monsterData.isLarge) monsterSize = "small_monster";
+                    if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
+
                     let monsterURLName = await capitalizeString(monsterData.name);
                     monsterURLName = monsterURLName.replaceAll(" ", "_");
-                    monsterBanner = `https://github.com/RoboMechE/MHRise-Database/blob/main/${monsterSize}/${monsterURLName}_HZV.png?raw=true`;
+
+                    if (isOnlyInGU) {
+                        gameDBName = "MHGU";
+                        gameDBBranchName = "master"
+                    };
+                    if (newestGameIsWorld) {
+                        gameDBName = "MHW";
+                        gameDBBranchName = "gh-pages"
+                        monsterURLName = `${monsterURLName}_HZV`;
+                    };
+                    if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
+
+                    monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${monsterURLName}.png?raw=true`;
                 };
 
                 // Format size
