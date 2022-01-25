@@ -284,13 +284,18 @@ exports.run = async (client, message, args = []) => {
                     });
                 };
                 if (monsterData.ailments) {
-                    monsterData.ailments.forEach(ailment => {
-                        if (monsterAilments.length == 0) {
-                            monsterAilments = ailment;
-                        } else {
-                            monsterAilments += `, ${ailment}`;
-                        };
-                    });
+                    // Temporary fix for kulu-ya-ku untill https://github.com/CrimsonNynja/monster-hunter-DB/pull/26 gets accepted
+                    if (typeof monsterData.ailments == 'string') {
+                        monsterAilments = monsterData.ailments;
+                    } else {
+                        monsterData.ailments.forEach(ailment => {
+                            if (monsterAilments.length == 0) {
+                                monsterAilments = ailment;
+                            } else {
+                                monsterAilments += `, ${ailment}`;
+                            };
+                        });
+                    };
                 };
 
                 mhEmbed
