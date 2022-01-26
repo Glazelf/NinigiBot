@@ -61,7 +61,7 @@ Connected as ${client.user.tag}. (${timestamp})`);
 };
 
 function initPresence() {
-    let presence = { activities: [{ name: 'to the lake theme', type: 2 }], status: 'idle' };
+    let presence = { activities: [{ name: 'the lake theme', type: 2 }], status: 'idle' };
     return presence;
 };
 
