@@ -39,6 +39,8 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
                 };
             } else if (baseMessage.includes("Missing Access")) {
                 return;
+            } else if (baseMessage.includes("Internal Server Error")) {
+                return;
             } else {
                 let errorReturnText = `An error has occurred. 
 The error has already been logged but please also report this as an issue on Github: 
