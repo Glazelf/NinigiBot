@@ -240,20 +240,19 @@ exports.run = async (client, message, args = []) => {
                     if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
 
                     let monsterURLName = await capitalizeString(monsterData.name);
-                    monsterURLName = monsterURLName.replaceAll(" ", "_");
+                    if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
 
                     if (isOnlyInGU) {
                         gameDBName = "MHGU";
-                        gameDBBranchName = "master"
+                        gameDBBranchName = "master";
                     };
                     if (newestGameIsWorld) {
                         gameDBName = "MHW";
-                        gameDBBranchName = "gh-pages"
+                        gameDBBranchName = "gh-pages";
                         monsterURLName = `${monsterURLName}_HZV`;
                     };
                     if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
-
-                    monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${monsterURLName}.png?raw=true`;
+                    monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
                 };
 
                 // Format size

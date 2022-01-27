@@ -22,8 +22,6 @@ module.exports = async (str) => {
     returnStr = splitStr.join(' ');
     let dashException = returnStr.replaceAll(" ", "-");
     if (exceptions.includes(dashException.toLowerCase())) returnStr = dashException;
-    console.log(dashException.toLowerCase())
-    console.log(exceptions.includes(dashException.toLowerCase()))
 
     returnStr = returnStr.charAt(0).toUpperCase() + returnStr.slice(1);
     if (returnStr == "Baby Doll Eyes") returnStr = "Baby-Doll Eyes";
@@ -31,5 +29,6 @@ module.exports = async (str) => {
     if (returnStr == "Trick Or Treat") returnStr = "Trick-or-Treat";
     if (returnStr == "Wake Up Slap") returnStr = "Wake-Up Slap";
     if (returnStr == "Type Null") returnStr = "Type: Null";
+    if (returnStr == "Yian Kut Ku") returnStr = "Yian Kut-Ku";
     return returnStr;
 };
