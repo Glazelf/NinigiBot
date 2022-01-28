@@ -7,7 +7,6 @@ exports.run = async (client, message, args = []) => {
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
-        const checkDays = require('../../util/checkDays');
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
@@ -158,12 +157,6 @@ exports.run = async (client, message, args = []) => {
         let joinPercentage = Math.ceil(joinRank / message.guild.memberCount * 100);
         let joinRankText = `${joinRank}/${message.guild.memberCount} (${joinPercentage}%)`;
 
-        // Check Days
-        let daysJoined = await checkDays(member.joinedAt, client);
-        let daysBoosting;
-        if (member.premiumSince > 0) daysBoosting = await checkDays(member.premiumSince, client);
-        let daysCreated = await checkDays(user.createdAt, client);
-
         // Buttons
         let profileButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
@@ -182,9 +175,9 @@ exports.run = async (client, message, args = []) => {
         profileEmbed
             .addField("Join Ranking:", joinRankText, true)
             .addField(roleTitle, rolesSorted, false)
-            .addField("Created:", `${user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
-            .addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
-        if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `${member.premiumSince.toUTCString().substr(5,)}\n${daysBoosting}`, true);
+            .addField("Created:", `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:R>`, true)
+            .addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
+        if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
         if (banner) profileEmbed.setImage(banner);
         profileEmbed
             .setFooter({ text: user.tag })

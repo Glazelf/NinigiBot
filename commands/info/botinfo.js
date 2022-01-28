@@ -95,13 +95,13 @@ exports.run = async (client, message) => {
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Owner
-        let owner = "Glaze#6669";
+        let owner = "Glaze#6669 (232875725898645504)";
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
-            .addField("Author:", owner, true)
+            .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
             .addField("Prefix:", prefix, true);
@@ -111,8 +111,8 @@ exports.run = async (client, message) => {
             .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
+            .addField("Created:", `<t:${Math.floor(client.user.createdAt.valueOf() / 1000)}:R>`, true)
             .addField("Uptime:", uptime, false)
-            .addField("Created:", `${client.user.createdAt.toUTCString().substr(5,)}\n${checkDays(client.user.createdAt)}`, false)
             .setFooter({ text: user.tag })
             .setTimestamp();
 
@@ -122,13 +122,6 @@ exports.run = async (client, message) => {
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
 
         return sendMessage({ client: client, message: message, embeds: botEmbed, components: botButtons, ephemeral: true, });
-
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
 
         async function getUsers() {
             // Fast but inaccurate method

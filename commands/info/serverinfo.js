@@ -125,7 +125,7 @@ exports.run = async (client, message) => {
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
-            .addField("Owner:", guildOwner.toString(), true);
+            .addField("Owner:", `${guildOwner} (${guildOwner.id})`, false);
         if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
@@ -147,20 +147,13 @@ exports.run = async (client, message) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `${guild.createdAt.toUTCString().substr(5,)}\n${checkDays(guild.createdAt)}`, false);
+            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true);
         if (banner) serverEmbed.setImage(banner);
         serverEmbed
             .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage({ client: client, message: message, embeds: serverEmbed });
-
-        function checkDays(date) {
-            let now = new Date();
-            let diff = now.getTime() - date.getTime();
-            let days = Math.floor(diff / 86400000);
-            return days + (days == 1 ? " day" : " days") + " ago";
-        };
 
     } catch (e) {
         // Log error

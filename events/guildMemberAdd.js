@@ -5,7 +5,6 @@ module.exports = async (client, member) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbObjects');
-        const checkDays = require('../util/checkDays');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
@@ -18,8 +17,6 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            let daysCreated = await checkDays(member.user.createdAt, client);
-
             // Buttons
             let joinButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
@@ -29,8 +26,8 @@ module.exports = async (client, member) => {
                 .setAuthor({ name: `Member Joined ❤️`, iconURL: icon })
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${member} (${member.id})`)
-                .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                .addField(`User: `, `${member} (${member.id})`, false)
+                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:R>`, true)
                 .setFooter({ text: member.user.tag })
                 .setTimestamp();
 

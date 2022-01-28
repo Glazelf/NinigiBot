@@ -5,7 +5,6 @@ module.exports = async (client, member) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
-        const checkDays = require('../util/checkDays');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
@@ -35,11 +34,6 @@ module.exports = async (client, member) => {
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-                // Check Days
-                let daysJoined = null;
-                if (member.joinedAt) daysJoined = await checkDays(member.joinedAt);
-                let daysCreated = await checkDays(member.user.createdAt);
-
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_KICK',
@@ -64,9 +58,9 @@ module.exports = async (client, member) => {
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
                     .addField(`User: `, `${member} (${member.id})`, false);
-                if (daysJoined) leaveEmbed.addField("Joined:", `${member.joinedAt.toUTCString().substr(5,)}\n${daysJoined}`, true);
+                if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
                 leaveEmbed
-                    .addField("Created:", `${member.user.createdAt.toUTCString().substr(5,)}\n${daysCreated}`, true)
+                    .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:R>`, true)
                     .setFooter({ text: member.user.tag });
                 if (kicked == true) {
                     leaveEmbed.addField(`Reason:`, reasonText, false);
