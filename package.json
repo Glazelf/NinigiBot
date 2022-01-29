@@ -5,7 +5,7 @@
   "main": "forever.js",
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "@sapphire/async-queue": "^1.1.9",
+    "@sapphire/async-queue": "^1.2.0",
     "canvas": "^2.9.0",
     "cron": "^1.8.2",
     "discord.js": "^13.6.0",
