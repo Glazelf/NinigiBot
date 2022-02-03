@@ -21,7 +21,9 @@ module.exports = async (client) => {
 
         await client.commands.forEach(async (command) => {
             try {
-                slashCommand = await client.application.commands.create(command.config, [client.config.botServerID]); // Swap to commadn.config.serverID for release
+                let commandServerID = null;
+                if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
+                slashCommand = await client.application.commands.create(command.config, commandServerID);
 
                 // if (command.config.permission === "owner") { // Owner exclusive commands. Commented out now because would need to loop per server.
                 //     console.log(slashCommand)
