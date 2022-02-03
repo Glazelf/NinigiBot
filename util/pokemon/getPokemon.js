@@ -10,7 +10,7 @@ module.exports = async (client, interaction, response) => {
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
         const getTypeEmotes = require('./getTypeEmotes');
-        const capitalizeString = require('./capitalizeString');
+        const capitalizeString = require('../capitalizeString');
 
         if (!response) return;
 

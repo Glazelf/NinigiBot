@@ -39,6 +39,8 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
                 };
             } else if (baseMessage.includes("Missing Access")) {
                 return;
+            } else if (baseMessage.includes("Internal Server Error")) {
+                return;
             } else {
                 return devChannel.send({ content: baseMessage });
             };

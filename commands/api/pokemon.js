@@ -11,7 +11,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
-        const capitalizeString = require('../../util/pokemon/capitalizeString');
+        const capitalizeString = require('../../util/capitalizeString');
         const randomNumber = require('../../util/randomNumber');
 
         let arrowUp = "<:arrow_up_red:909901820732784640>";

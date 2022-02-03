@@ -5,24 +5,24 @@
   "main": "forever.js",
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "@sapphire/async-queue": "^1.1.9",
-    "canvas": "^2.8.0",
+    "@sapphire/async-queue": "^1.2.0",
+    "canvas": "^2.9.0",
     "cron": "^1.8.2",
     "discord.js": "^13.6.0",
     "enmap": "^5.8.7",
-    "forever": "^4.0.2",
+    "forever": "^4.0.3",
     "forever-monitor": "^3.0.3",
     "giphy-random": "^2.0.8",
-    "node-fetch": "^3.1.0",
+    "node-fetch": "^3.2.0",
     "owoify-js": "^1.0.7",
     "path": "^0.12.7",
     "pokedex-promise-v2": "^4.0.0",
     "pureimage": "^0.3.8",
-    "sequelize": "^6.13.0",
+    "sequelize": "^6.14.1",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
-    "mocha": "^9.1.4"
+    "mocha": "^9.2.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

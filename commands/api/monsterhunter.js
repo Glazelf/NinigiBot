@@ -6,6 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const randomNumber = require('../../util/randomNumber');
+        const capitalizeString = require('../../util/capitalizeString');
 
         // Load JSON
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
@@ -189,14 +190,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 };
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
 
+                // Game names
+                let MHRise = "Monster Hunter Rise";
+                let MHW = "Monster Hunter World";
+                let MHGU = "Monster Hunter Generations Ultimate";
+
                 // Get icon, description and game appearances
                 let monsterIcon;
+                let monsterBanner = null;
                 let monsterDescription;
                 let monsterDanger;
                 let gameAppearances = "";
-                let mostRecentMainlineGame = "Monster Hunter Rise";
-                let fallbackGame1 = "Monster Hunter World";
-                let fallbackGame2 = "Monster Hunter Generations Ultimate";
+                let mostRecentMainlineGame = MHRise;
+                let fallbackGame1 = MHW;
+                let fallbackGame2 = MHGU;
                 let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
                 monsterData.games.forEach(game => {
                     // Add to game appearances list
@@ -210,8 +217,36 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
                 if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
-                if (!monsterDescription) monsterDescription = mostRecentMainlineGame.info;
+                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
                 if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
+
+                // Get MHRise-Database image
+                let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
+
+                if (isInImageDBGame) {
+                    let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
+                    let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
+                    let gameDBName = "MHRise";
+                    let gameDBBranchName = "main";
+
+                    let monsterSize = "monster";
+                    if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
+
+                    let monsterURLName = await capitalizeString(monsterData.name);
+                    if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
+
+                    if (isOnlyInGU) {
+                        gameDBName = "MHGU";
+                        gameDBBranchName = "master";
+                    };
+                    if (newestGameIsWorld) {
+                        gameDBName = "MHW";
+                        gameDBBranchName = "gh-pages";
+                        monsterURLName = `${monsterURLName}_HZV`;
+                    };
+                    if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
+                    monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
+                };
 
                 // Format size
                 let monsterSize = "Small";
@@ -241,13 +276,18 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     });
                 };
                 if (monsterData.ailments) {
-                    monsterData.ailments.forEach(ailment => {
-                        if (monsterAilments.length == 0) {
-                            monsterAilments = ailment;
-                        } else {
-                            monsterAilments += `, ${ailment}`;
-                        };
-                    });
+                    // Temporary fix for kulu-ya-ku untill https://github.com/CrimsonNynja/monster-hunter-DB/pull/26 gets accepted
+                    if (typeof monsterData.ailments == 'string') {
+                        monsterAilments = monsterData.ailments;
+                    } else {
+                        monsterData.ailments.forEach(ailment => {
+                            if (monsterAilments.length == 0) {
+                                monsterAilments = ailment;
+                            } else {
+                                monsterAilments += `, ${ailment}`;
+                            };
+                        });
+                    };
                 };
 
                 mhEmbed
@@ -261,7 +301,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness(es):", monsterWeaknesses, true);
                 if (monsterAilments.length > 0) mhEmbed.addField("Ailment(s):", monsterAilments, true);
                 mhEmbed
-                    .addField("Game(s):", gameAppearances, false);
+                    .addField("Game(s):", gameAppearances, false)
+                    .setImage(monsterBanner);
                 break;
         };
 

@@ -8,7 +8,7 @@ module.exports = async (client) => {
             + currentdate.getFullYear() + " @ "
             + currentdate.getHours() + ":"
             + currentdate.getMinutes() + ":"
-            + currentdate.getSeconds();
+            + currentdate.getSeconds() + " CEST";
         return datetime;
 
     } catch (e) {
