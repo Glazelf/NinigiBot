@@ -6,7 +6,6 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
-        let adminBool = await isAdmin(client, message.guild.me);
 
         if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
@@ -28,6 +27,7 @@ exports.run = async (client, message, args = []) => {
             // Delete all guild commands
             await client.guilds.cache.forEach(guild => {
                 try {
+                    let adminBool = await isAdmin(client, guild.me);
                     if (adminBool) guild.commands.set([]);
                 } catch (e) {
                     console.log(e);
