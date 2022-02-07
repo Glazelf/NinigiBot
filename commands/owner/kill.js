@@ -22,7 +22,7 @@ exports.run = async (client, message, args = []) => {
             await client.application.commands.set([]);
 
             // Delete all guild commands
-            await client.guilds.cache.forEach(guild => {
+            await client.guilds.cache.forEach(async (guild) => {
                 try {
                     let adminBool = await isAdmin(client, guild.me);
                     if (adminBool) guild.commands.set([]);
