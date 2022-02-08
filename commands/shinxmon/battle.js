@@ -197,7 +197,7 @@ module.exports.config = {
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",
-        type: 6,
+        type: "USER",
         description: "Specify user."
     }]
 };

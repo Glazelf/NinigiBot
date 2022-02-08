@@ -68,29 +68,29 @@ module.exports.config = {
     description: "Bet money on a game of rock, paper, scissors.",
     options: [{
         name: "rock",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Bet on rock.",
         options: [{
             name: "bet-amount",
-            type: 4,
+            type: "INTEGER",
             description: "The amount of money you want to bet.",
         }]
     }, {
         name: "paper",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Bet on paper.",
         options: [{
             name: "bet-amount",
-            type: 4,
+            type: "INTEGER",
             description: "The amount of money you want to bet.",
         }]
     }, {
         name: "scissors",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Bet on scissors.",
         options: [{
             name: "bet-amount",
-            type: 4,
+            type: "INTEGER",
             description: "The amount of money you want to bet.",
         }]
     }]

@@ -104,7 +104,7 @@ module.exports.config = {
     description: "Bulk delete messages.",
     options: [{
         name: "amount",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of messages to delete.",
         required: true
     }]

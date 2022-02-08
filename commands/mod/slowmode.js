@@ -30,7 +30,7 @@ module.exports.config = {
     description: "Set slowmode in the current channel.",
     options: [{
         name: "seconds",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of slowmode in seconds.",
         required: true
     }]

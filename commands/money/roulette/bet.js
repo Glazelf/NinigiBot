@@ -50,12 +50,12 @@ module.exports.config = {
     description: "Bet on ongoing roulette.",
     options: [{
         name: "slot-amount",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of slots you want to bet on.",
         required: true
     }, {
         name: "bet-amount",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of money you want to bet on each slot.",
         required: true
     }]

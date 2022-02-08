@@ -251,80 +251,80 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
-    type: 1,
+    type: "SUB_COMMAND",
     options: [{
         name: "ability",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on an ability.",
         options: [{
             name: "ability-name",
-            type: 3,
+            type: "STRING",
             description: "Get ability info by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: 5,
+            type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "item",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on an item.",
         options: [{
             name: "item-name",
-            type: 3,
+            type: "STRING",
             description: "Get item info by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: 5,
+            type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "move",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on a move.",
         options: [{
             name: "move-name",
-            type: 3,
+            type: "STRING",
             description: "Get move info by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: 5,
+            type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "nature",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on a nature.",
         options: [{
             name: "nature-name",
-            type: 3,
+            type: "STRING",
             description: "Get nature info by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: 5,
+            type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "pokemon",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon-name",
-            type: 3,
+            type: "STRING",
             description: "Get Pokémon info by its English name.",
             required: true
         },
         {
             name: "ephemeral",
-            type: 5,
+            type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     }]

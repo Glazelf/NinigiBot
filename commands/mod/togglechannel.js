@@ -48,7 +48,7 @@ module.exports.config = {
     description: "Toggles commands in a channel.",
     options: [{
         name: "channel",
-        type: 7,
+        type: "CHANNEL",
         description: "Specify channel.",
         required: true
     }]

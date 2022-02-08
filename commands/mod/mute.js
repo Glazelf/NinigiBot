@@ -80,12 +80,12 @@ module.exports.config = {
     description: "Times the target out.",
     options: [{
         name: "user",
-        type: 6,
+        type: "USER",
         description: "Specify user.",
         required: true
     }, {
         name: "time",
-        type: 4,
+        type: "INTEGER",
         description: "Amount of minutes to mute."
     }]
 }; 

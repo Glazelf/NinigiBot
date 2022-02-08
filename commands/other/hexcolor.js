@@ -51,7 +51,7 @@ module.exports.config = {
     description: "Sends image from hex code.",
     options: [{
         name: "hex",
-        type: 3,
+        type: "STRING",
         description: "Hex code to convert."
     }]
 };

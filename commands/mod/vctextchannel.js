@@ -44,7 +44,7 @@ module.exports.config = {
     description: "Choose a channel to be linked to vc's.",
     options: [{
         name: "channel",
-        type: 7,
+        type: "CHANNEL",
         description: "Specify channel."
     }]
 };

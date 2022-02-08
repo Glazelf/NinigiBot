@@ -41,7 +41,7 @@ module.exports.config = {
     description: "Convert a number to hexadecimal.",
     options: [{
         name: "input",
-        type: 4,
+        type: "INTEGER",
         description: "Input number."
     }]
 };

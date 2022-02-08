@@ -59,7 +59,7 @@ module.exports.config = {
     description: "Bet money on a coinflip.",
     options: [{
         name: "bet-amount",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of money you want to bet.",
         required: true
     }]

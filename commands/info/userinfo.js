@@ -213,5 +213,5 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "Userinfo",
-    type: 2
+    type: "USER"
 };

@@ -42,7 +42,7 @@ module.exports.config = {
     description: "Change the star amount to appear on starboard.",
     options: [{
         name: "amount",
-        type: 4,
+        type: "INTEGER",
         description: "Amount of stars required."
     }]
 };

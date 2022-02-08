@@ -25,7 +25,7 @@ module.exports.config = {
     description: "Updates your birthday",
     options: [{
         name: "birthday",
-        type: 3,
+        type: "STRING",
         description: "Birthday in \"dd-mm\" format.",
         required: true
     }]

@@ -43,7 +43,7 @@ module.exports.config = {
     description: "Makes the bot repeat text.",
     options: [{
         name: "input",
-        type: 3,
+        type: "STRING",
         description: "Text to make the bot say."
     }]
 };

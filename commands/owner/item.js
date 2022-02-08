@@ -112,11 +112,11 @@ module.exports.config = {
     permission: "owner",
     options: [{
         name: "user",
-        type: 6,
+        type: "USER",
         description: "Specify user."
     }, {
         name: "item",
-        type: 3,
+        type: "STRING",
         description: "Item to use.",
     }]
 };
