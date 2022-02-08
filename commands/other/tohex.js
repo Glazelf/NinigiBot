@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -48,7 +48,7 @@ module.exports.config = {
     description: "Convert a number to hexadecimal.",
     options: [{
         name: "input",
-        type: 4,
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Input number."
     }]
 };

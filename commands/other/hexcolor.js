@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -52,7 +53,7 @@ module.exports.config = {
     description: "Sends image from hex code.",
     options: [{
         name: "hex",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Hex code to convert."
     }]
 };

@@ -211,7 +211,7 @@ module.exports = async (client, message, response) => {
         let footer = message.member.user.tag;
 
         // Embed building
-        const pkmEmbed = new Discord.MessageEmbed()
+        const pkmEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemonName}`, iconURL: iconParty })
             .setThumbnail(sprite)
@@ -266,9 +266,9 @@ BST: ${BST}`, false)
         });
 
         // Buttons
-        let pkmButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon }))
-            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon }));
+        let pkmButtons = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ customId: 'pkmleft', style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon }))
+            .addComponents(new Discord.ButtonComponent({ customId: 'pkmright', style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon }));
 
         let messageObject = { embed: pkmEmbed, buttons: pkmButtons };
         return messageObject;

@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 const { ne } = Sequelize.Op;
 
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { Equipments, Foods, KeyItems, Room, CurrencyShop, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
         if (prefix) {
@@ -58,11 +58,11 @@ module.exports.config = {
     description: "Displays items in the shop.",
     options: [{
         name: "equipment",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Equipment shop."
     }, {
         name: "food",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Food shop."
     }]
 };

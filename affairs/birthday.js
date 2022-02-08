@@ -51,7 +51,7 @@ module.exports = async (client) => {
             const randomGif = await getRandomGif(gifTags);
 
             // Create embed
-            const gifEmbed = new Discord.MessageEmbed()
+            const gifEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif)

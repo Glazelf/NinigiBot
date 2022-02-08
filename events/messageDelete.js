@@ -68,7 +68,7 @@ module.exports = async (client, message) => {
                 avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
 
-            const deleteEmbed = new Discord.MessageEmbed()
+            const deleteEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Deleted ❌`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)

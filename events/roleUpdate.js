@@ -32,7 +32,7 @@ module.exports = async (client, oldRole, newRole) => {
 
             let icon = newRole.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const updateEmbed = new Discord.MessageEmbed()
+            const updateEmbed = new Discord.Embed()
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
                 .addField(`Role:`, `${newRole} (${newRole.id})`)

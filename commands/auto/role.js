@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles, Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -70,8 +70,8 @@ exports.run = async (client, message, args = []) => {
                 };
                 if (rolesArray.length < 1) return sendMessage({ client: client, message: message, content: `There are no roles available to be selfassigned in **${message.guild.name}**.` });
 
-                let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
+                let rolesSelects = new Discord.ActionRow()
+                    .addComponents(new Discord.SelectMenuComponent({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
                 return sendMessage({ client: client, message: message, content: `Choose a role to assign to yourself: `, components: rolesSelects });
             };
@@ -95,7 +95,7 @@ If you wish to use a select menu, use \`${prefix}role\` while having ${selectOpt
 
             let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            const rolesHelp = new Discord.MessageEmbed()
+            const rolesHelp = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: avatar })
                 .setDescription(roleHelpMessage)
@@ -134,7 +134,7 @@ module.exports.config = {
     description: "Toggles an eligible role.",
     options: [{
         name: "role-name",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify the role name. Type \"help\" to see a list of eligible roles."
     }]
 };

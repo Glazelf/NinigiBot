@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         if (message.guild.id !== client.config.botServerID) return;
 
@@ -45,11 +45,11 @@ exports.run = async (client, message) => {
         if (!Ribbot || !Ribbot.presence || Ribbot.presence.status == offlineStatus) RibbotStatus = offlineString;
 
         // Buttons
-        let sysbotButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Rules', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.guild.rulesChannel.id}` }))
-            .addComponents(new Discord.MessageButton({ label: 'Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/747878956434325626` }))
-            .addComponents(new Discord.MessageButton({ label: 'PKM Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/797885250667282444` }))
-            .addComponents(new Discord.MessageButton({ label: 'ACNH Bot Channel', style: 'LINK', url: `discord://-/channels/${message.guild.id}/614979959156375567` }));
+        let sysbotButtons = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ label: 'Rules', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.guild.rulesChannel.id}` }))
+            .addComponents(new Discord.ButtonComponent({ label: 'Bot Channel', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/747878956434325626` }))
+            .addComponents(new Discord.ButtonComponent({ label: 'PKM Bot Channel', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/797885250667282444` }))
+            .addComponents(new Discord.ButtonComponent({ label: 'ACNH Bot Channel', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/614979959156375567` }));
 
 
         let returnString = `Here's a list of Sysbots and their status:

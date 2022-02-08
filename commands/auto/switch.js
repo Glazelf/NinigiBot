@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -34,7 +35,7 @@ module.exports.config = {
     description: "Updates your Switch friend code.",
     options: [{
         name: "switch-fc",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "SW-1234-1234-1234"
     }]
 };

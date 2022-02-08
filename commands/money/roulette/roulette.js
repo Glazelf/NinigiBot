@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message) => {
     const logger = require('../../../util/logger');
     // Import globals
@@ -6,7 +7,6 @@ exports.run = async (client, message) => {
         const sendMessage = require('../../../util/sendMessage');
         const roulette = require('../../../affairs/roulette');
         const { bank } = require('../../../database/bank');
-        const Discord = require("discord.js");
         let process = null;
 
         const { Prefixes } = require('../../../database/dbObjects');
@@ -44,7 +44,7 @@ exports.run = async (client, message) => {
                     };
                 };
 
-                const results = new Discord.MessageEmbed()
+                const results = new Discord.Embed()
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: `Roulette`, iconURL: avatar })
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... ** ${result} ** !`)
@@ -54,7 +54,7 @@ exports.run = async (client, message) => {
                 sendMessage({ client: client, message: message, embeds: results, ephemeral: false });
             }, 20000);
 
-            const welcome = new Discord.MessageEmbed()
+            const welcome = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Roulette`, iconURL: avatar })
                 .setDescription('Welcome to the roulette! We hope to see you here!')

@@ -26,7 +26,7 @@ module.exports = async (client, member) => {
             let kicked = false;
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
 
-            let leaveEmbed = new Discord.MessageEmbed()
+            let leaveEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
@@ -51,8 +51,8 @@ module.exports = async (client, member) => {
                 };
 
                 // Buttons
-                let leaveButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+                let leaveButtons = new Discord.ActionRow()
+                    .addComponents(new Discord.ButtonComponent({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
 
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })

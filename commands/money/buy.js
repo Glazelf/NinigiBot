@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -57,7 +58,7 @@ module.exports.config = {
     description: "Buy an item from the shop.",
     options: [{
         name: "item-name",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "The name of the item you want to buy.",
         required: true
     }]

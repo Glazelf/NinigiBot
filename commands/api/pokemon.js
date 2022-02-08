@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const Pokedex = await import('pokedex-promise-v2');
         const P = new Pokedex.default();
         const correctionName = require('../../objects/pokemon/correctionName.json');
@@ -23,12 +23,12 @@ exports.run = async (client, message, args = []) => {
         let arrowUp = "<:arrow_up_red:909901820732784640>";
         let arrowDown = "<:arrow_down_blue:909903420054437929>";
 
-        let pokemonEmbed = new Discord.MessageEmbed()
+        let pokemonEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setFooter({ text: message.member.user.tag })
             .setTimestamp();
 
-        let pokemonButtons = new Discord.MessageActionRow();
+        let pokemonButtons = new Discord.ActionRow();
 
         switch (subCommand) {
             // Abilities
@@ -53,7 +53,7 @@ exports.run = async (client, message, args = []) => {
 
                         // Buttons
                         pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)` }));
+                            .addComponents(new Discord.ButtonComponent({ label: 'More info', style: Discord.ButtonStyle.Link, url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)` }));
 
                         pokemonEmbed
                             .setAuthor({ name: abilityName })
@@ -83,7 +83,7 @@ exports.run = async (client, message, args = []) => {
                         let description = effectEntry.short_effect;
 
                         pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
+                            .addComponents(new Discord.ButtonComponent({ label: 'More info', style: Discord.ButtonStyle.Link, url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
 
                         pokemonEmbed
                             .setAuthor({ name: itemName })
@@ -122,7 +122,7 @@ exports.run = async (client, message, args = []) => {
                         if (response.pp) ppString = `${response.pp}|${response.pp * 1.2}|${response.pp * 1.4}|${response.pp * 1.6}`;
 
                         pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)` }));
+                            .addComponents(new Discord.ButtonComponent({ label: 'More info', style: Discord.ButtonStyle.Link, url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)` }));
 
                         pokemonEmbed
                             .setAuthor({ name: moveName })
@@ -253,54 +253,54 @@ module.exports.config = {
     name: "pokemon",
     aliases: ["pkm", "pkmn"],
     description: "Shows Pokémon data.",
-    type: 1,
+    type: Discord.ApplicationCommandOptionType.SubCommand,
     options: [{
         name: "ability",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on an ability.",
         options: [{
             name: "ability-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Get ability info by its English name.",
             required: true
         }]
     }, {
         name: "item",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on an item.",
         options: [{
             name: "item-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Get item info by its English name.",
             required: true
         }]
     }, {
         name: "move",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a move.",
         options: [{
             name: "move-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Get move info by its English name.",
             required: true
         }]
     }, {
         name: "nature",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a nature.",
         options: [{
             name: "nature-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Get nature info by its English name.",
             required: true
         }]
     }, {
         name: "pokemon",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Get Pokémon info by its English name.",
             required: true
         }]

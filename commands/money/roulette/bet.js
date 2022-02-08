@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../../util/logger');
     // Import globals
@@ -60,12 +61,12 @@ module.exports.config = {
     description: "Bet on ongoing roulette.",
     options: [{
         name: "slot-amount",
-        type: 4,
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of slots you want to bet on.",
         required: true
     }, {
         name: "bet-amount",
-        type: 4,
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of money you want to bet on each slot.",
         required: true
     }]

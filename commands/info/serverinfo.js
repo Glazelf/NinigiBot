@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
@@ -119,7 +119,7 @@ exports.run = async (client, message) => {
             // };
         });
 
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name} (${guild.id})`, iconURL: icon })
             .setThumbnail(icon);

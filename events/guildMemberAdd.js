@@ -18,10 +18,10 @@ module.exports = async (client, member) => {
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
             // Buttons
-            let joinButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+            let joinButtons = new Discord.ActionRow()
+                .addComponents(new Discord.ButtonComponent({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
 
-            const joinEmbed = new Discord.MessageEmbed()
+            const joinEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Joined ❤️`, iconURL: icon })
                 .setThumbnail(avatar)

@@ -8,6 +8,7 @@ const addLine = (line) => {
 
 const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
 
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -17,7 +18,6 @@ exports.run = async (client, message, args = []) => {
         const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
-        const Discord = require("discord.js");
 
         let author = message.member.user;
         let target;
@@ -198,7 +198,7 @@ module.exports.config = {
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",
-        type: 6,
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user."
     }]
 };

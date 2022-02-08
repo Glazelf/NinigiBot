@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require('discord.js');
 
         // Get user
         let user;
@@ -42,7 +42,7 @@ exports.run = async (client, message, args = []) => {
             avatar = null;
         };
 
-        const avatarEmbed = new Discord.MessageEmbed()
+        const avatarEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
@@ -60,6 +60,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: 2,
+    type: Discord.ApplicationCommandOptionType.User,
     aliases: ["avi", "pfp"]
 };

@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -34,7 +35,7 @@ module.exports.config = {
     description: "Generate a random number.",
     options: [{
         name: "numbers",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Two numbers seperated by a comma.",
         required: true
     }]

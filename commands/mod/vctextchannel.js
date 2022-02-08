@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -45,7 +46,7 @@ module.exports.config = {
     description: "Choose a channel to be linked to vc's.",
     options: [{
         name: "channel",
-        type: 7,
+        type: Discord.ApplicationCommandOptionType.Channel,
         description: "Specify channel."
     }]
 };

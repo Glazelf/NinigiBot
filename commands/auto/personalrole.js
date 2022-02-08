@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -197,7 +198,7 @@ module.exports.config = {
     description: "Updates your personal role color.",
     options: [{
         name: "color-hex",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify the color you want. Type \"delete\" to delete your role."
     }]
 };

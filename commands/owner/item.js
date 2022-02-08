@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -113,11 +114,11 @@ module.exports.config = {
     defaultPermission: false,
     options: [{
         name: "user",
-        type: 6,
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user."
     }, {
         name: "item",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Item to use.",
     }]
 };

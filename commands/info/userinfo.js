@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
         const parseDate = require('../../util/parseDate')
@@ -158,10 +158,10 @@ exports.run = async (client, message, args = []) => {
         let joinRankText = `${joinRank}/${message.guild.memberCount} (${joinPercentage}%)`;
 
         // Buttons
-        let profileButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
+        let profileButtons = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const profileEmbed = new Discord.Embed()
             .setColor(embedColor)
             .setAuthor({ name: `${user.username} (${user.id})`, iconURL: avatar })
             .setThumbnail(serverAvatar)
@@ -213,6 +213,6 @@ exports.run = async (client, message, args = []) => {
 
 module.exports.config = {
     name: "Userinfo",
-    type: 2,
+    type: Discord.ApplicationCommandOptionType.User,
     aliases: ["user", "profile"]
 };

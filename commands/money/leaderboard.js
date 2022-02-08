@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
 
         let memberFetch = await message.guild.members.fetch();
@@ -13,7 +13,7 @@ exports.run = async (client, message, args = []) => {
 
         let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 
-        const leaderboardEmbed = new Discord.MessageEmbed()
+        const leaderboardEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setFooter({ text: author.tag })
             .setTimestamp();

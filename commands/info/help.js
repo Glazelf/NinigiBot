@@ -1,16 +1,16 @@
+const Discord = require("discord.js");
 exports.run = async (client, message) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         let user = message.member.user;
         let botAvatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Structure lazy help embed with mostly just links lol
-        const helpEmbed = new Discord.MessageEmbed()
+        const helpEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Help has arrived!`, iconURL: botAvatar })
             .addField("Wiki:", `[List](https://github.com/Glazelf/NinigiBot/wiki 'Wiki')`, false)

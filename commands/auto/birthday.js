@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -26,7 +27,7 @@ module.exports.config = {
     description: "Updates your birthday",
     options: [{
         name: "birthday",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Birthday in \"dd-mm\" format.",
         required: true
     }]

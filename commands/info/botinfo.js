@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -97,7 +97,7 @@ exports.run = async (client, message) => {
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
 
-        let botEmbed = new Discord.MessageEmbed()
+        let botEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
@@ -117,9 +117,9 @@ exports.run = async (client, message) => {
             .setTimestamp();
 
         // Buttons
-        let botButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
-            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
+        let botButtons = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ label: 'Invite', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
+            .addComponents(new Discord.ButtonComponent({ label: 'Github', style: Discord.ButtonStyle.Link, url: 'https://github.com/Glazelf/NinigiBot' }));
 
         return sendMessage({ client: client, message: message, embeds: botEmbed, components: botButtons, ephemeral: true, });
 

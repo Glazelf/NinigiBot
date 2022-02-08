@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide an input to owoify.` });
@@ -29,7 +29,7 @@ module.exports.config = {
     description: "OwOifies text.",
     options: [{
         name: "input",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Text to owoify",
         required: true
     }]

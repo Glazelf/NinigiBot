@@ -37,10 +37,10 @@ module.exports = async (client, guildBan) => {
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
             // Buttons
-            let banButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
+            let banButtons = new Discord.ActionRow()
+                .addComponents(new Discord.ButtonComponent({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
 
-            const banEmbed = new Discord.MessageEmbed()
+            const banEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
                 .setThumbnail(avatarTarget)

@@ -48,10 +48,10 @@ module.exports = async (client, messageReaction) => {
         };
 
         // Buttons
-        let starButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+        let starButtons = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
 
-        const starEmbed = new Discord.MessageEmbed()
+        const starEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)

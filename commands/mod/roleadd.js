@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -63,7 +64,7 @@ module.exports.config = {
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{
         name: "role-name",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify role by name."
     }]
 };

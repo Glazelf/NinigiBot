@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         let replyMessage;
         let input;
@@ -42,8 +42,8 @@ exports.run = async (client, message, args = []) => {
         if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
 
         // Button
-        let googleButton = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
+        let googleButton = new Discord.ActionRow()
+            .addComponents(new Discord.ButtonComponent({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
@@ -58,5 +58,5 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "Google",
     aliases: ["lmgtfy"],
-    type: 3
+    type: "MESSAGE"
 };

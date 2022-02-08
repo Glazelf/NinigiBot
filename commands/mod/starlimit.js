@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -43,7 +44,7 @@ module.exports.config = {
     description: "Change the star amount to appear on starboard.",
     options: [{
         name: "amount",
-        type: 4,
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of stars required."
     }]
 };

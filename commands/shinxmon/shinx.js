@@ -47,6 +47,7 @@ const visitors = [
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
 
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -54,7 +55,6 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const Discord = require("discord.js");
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
 
@@ -405,47 +405,47 @@ module.exports.config = {
     description: "Interact with your Shinx.",
     options: [{
         name: "gender",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Toggle your trainer's gender."
     }, {
         name: "data",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Shinx summary."
     }, {
         name: "tap",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Tap Shinx!"
     }, {
         name: "nick",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Change Shinx's nickname.",
         options: [{
             name: "input",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "What should Shinx's name be?",
             required: true
         }]
     }, {
         name: "equip",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Equip an item to Shinx.",
         options: [{
             name: "input",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to equip."
         }]
     }, {
         name: "feed",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Feed Shinx.",
         options: [{
             name: "input",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to feed."
         }]
     }, {
         name: "play",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Play with Shinx."
     }]
 };

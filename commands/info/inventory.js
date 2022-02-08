@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals

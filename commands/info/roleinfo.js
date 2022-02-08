@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide a role name or ID.` });
@@ -21,7 +21,7 @@ exports.run = async (client, message, args = []) => {
         let role = message.guild.roles.cache.find(role => role.name.toLowerCase() === input.toLowerCase());
         if (!role) role = await message.guild.roles.fetch(input);
 
-        let roleEmbed = new Discord.MessageEmbed()
+        let roleEmbed = new Discord.Embed()
             .setFooter({ text: user.tag })
             .setTimestamp();
 
@@ -83,7 +83,7 @@ module.exports.config = {
     description: "Sends info about a role.",
     options: [{
         name: "role-name",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify role by name or ID."
 
     }]

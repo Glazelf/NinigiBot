@@ -33,7 +33,7 @@ module.exports = async (client, role) => {
 
             // the roleCreated event fires immediately upon clicking the add role button,
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
-            const createEmbed = new Discord.MessageEmbed()
+            const createEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
                 .addField(`Role:`, `${role} (${role.id})`)

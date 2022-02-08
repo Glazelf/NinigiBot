@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
@@ -50,7 +50,7 @@ module.exports.config = {
     defaultPermission: false,
     options: [{
         name: "input",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "JS to execute."
     }]
 };

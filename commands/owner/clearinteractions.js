@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -5,7 +6,6 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
-
 
         await sendMessage({ client: client, message: message, content: `Removing all slash commands, context menus etc. might take a while. It might take up to an hour for them to vanish on Discord's end.` })
         // Delete all global commands

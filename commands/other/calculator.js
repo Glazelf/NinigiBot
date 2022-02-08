@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         let maxMessageLength = 2000;
 
@@ -67,7 +67,7 @@ module.exports.config = {
     description: "Calculate.",
     options: [{
         name: "input",
-        type: 3,
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Input to calculate.",
         required: true
     }]

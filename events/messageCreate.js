@@ -38,10 +38,10 @@ module.exports = async (client, message) => {
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             // Buttons
-            let profileButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${message.author.id}` }));
+            let profileButtons = new Discord.ActionRow()
+                .addComponents(new Discord.ButtonComponent({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
 
-            const dmEmbed = new Discord.MessageEmbed()
+            const dmEmbed = new Discord.Embed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `DM Message`, iconURL: avatar })
                 .setThumbnail(avatar)

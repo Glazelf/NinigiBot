@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, message, args = []) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
 
@@ -19,7 +19,7 @@ exports.run = async (client, message, args = []) => {
         let subArgument;
         if (args[1]) subArgument = args.slice(1).join(" ").toLowerCase();
 
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.Embed()
             .setColor(globalVars.embedColor)
             .setFooter({ text: message.member.user.tag })
             .setTimestamp();
@@ -322,32 +322,32 @@ module.exports.config = {
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a specific quest.",
         options: [{
             name: "ability-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify quest by name.",
             required: true
         }]
     },
     {
         name: "quests",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "List all quests from a game.",
         options: [{
             name: "game-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify game by name or abbreviation.",
             required: true
         }]
     }, {
         name: "monster",
-        type: 1,
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a monster.",
         options: [{
             name: "monster-name",
-            type: 3,
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify monster by its English name.",
             required: true
         }]
