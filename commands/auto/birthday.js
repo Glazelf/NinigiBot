@@ -7,8 +7,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../database/bank');
 
         // Check and sanitize birthday
-        if (args.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
-        let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(args);
+        let date = args.find(element => element.name == "date");
+        if (date) {
+            date = date.value;
+        } else {
+            return;
+        };
+        let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(date);
         if (!birthday) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
 
         bank.currency.birthday(interaction.member.id, birthday[1] + birthday[2]);
@@ -24,7 +29,7 @@ module.exports.config = {
     name: "birthday",
     description: "Updates your birthday",
     options: [{
-        name: "birthday",
+        name: "date",
         type: "STRING",
         description: "Birthday in \"dd-mm\" format.",
         required: true
