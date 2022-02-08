@@ -208,8 +208,6 @@ module.exports = async (client, interaction, response) => {
         pokemonName = await capitalizeString(pokemonName);
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
-        let footer = interaction.user.tag;
-
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -231,7 +229,7 @@ SpD: **${baseSpD}** ${SpDstats}
 Spe: **${baseSpe}** ${Spestats}
 BST: ${BST}`, false)
             .setImage(banner)
-            .setFooter({ text: footer, iconURL: icon })
+            .setFooter({ text: interaction.user.tag, iconURL: icon })
             .setTimestamp();
 
         let previousPokemon = null;
