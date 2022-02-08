@@ -8,11 +8,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
 
+        let noCatString = `Please specify a category: \`food\`, \`equipment\` or \`key\`.`;
         let inventoryCat = args.find(element => element.name == "category");
         if (inventoryCat) {
             inventoryCat = inventoryCat.value.toLowerCase();
         } else {
-            return;
+            return sendMessage({ client: client, interaction: interaction, content: noCatString });
         };
 
         if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {
@@ -53,7 +54,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: description });
             };
         };
-        return sendMessage({ client: client, interaction: interaction, content: `Please specify a category: \`food\`, \`equipment\` or \`key\`.` });
+        return sendMessage({ client: client, interaction: interaction, content: noCatString });
 
     } catch (e) {
         // Log error
