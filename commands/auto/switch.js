@@ -13,7 +13,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Present code if no code is supplied as an argument
         if (!switchFC) {
-            if (switchCodeGet && switchCodeGet !== "None") return sendMessage({ client: client, interaction: interaction, content: `Your Nintendo Switch friend code is ${switchCodeGet}.` });
+            if (switchCodeGet && switchCodeGet !== "None") return sendMessage({ client: client, interaction: interaction, content: `Your Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
             return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid Nintendo Switch friend code.` });
         };
 
