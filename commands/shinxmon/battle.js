@@ -19,7 +19,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
 
-        let author = message.member.user;
+        let author = interaction.user;
         let target;
 
         if (message.type != 'APPLICATION_COMMAND') target = message.mentions.users.first();

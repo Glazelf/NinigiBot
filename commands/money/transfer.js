@@ -23,7 +23,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
         if (!transferTarget) return;
 
-        let user = message.member.user;
+        let user = interaction.user;
         let userBalance = `${Math.floor(currentAmount)}${globalVars.currency}`;
 
         // Catch errors

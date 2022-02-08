@@ -208,7 +208,7 @@ module.exports = async (client, interaction, response) => {
         pokemonName = await capitalizeString(pokemonName);
         let abilityStringCapitalized = await capitalizeAbilities(abilityString);
 
-        let footer = interaction.member.user.tag;
+        let footer = interaction.user.tag;
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()

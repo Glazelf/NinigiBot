@@ -12,7 +12,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let timestamp = await getTime(client);
 
-        let user = interaction.member.user;
+        let user = interaction.user;
 
         if (args[0] != 'soft') {
             // Return interaction then destroy

@@ -32,7 +32,7 @@ exports.run = async (client, interaction, args) => {
             user = await client.users.fetch(userID);
         };
 
-        let author = message.member.user;
+        let author = interaction.user;
         let maxMessageFetch = 100;
         if (numberFromMessage > maxMessageFetch) numberFromMessage = maxMessageFetch;
 

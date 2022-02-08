@@ -18,11 +18,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 target = await client.users.fetch(userID);
             } catch (e) {
                 // console.log(e);
-                target = message.member.user;
+                target = interaction.user;
             };
         };
 
-        if (!target) target = message.member.user;
+        if (!target) target = interaction.user;
 
         let member;
         try {

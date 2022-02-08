@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        let user = message.member.user;
+        let user = interaction.user;
 
         if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provid an argument.` });
         let input = args[0];

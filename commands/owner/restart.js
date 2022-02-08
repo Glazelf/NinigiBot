@@ -11,7 +11,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let timestamp = await getTime(client);
 
-        let user = message.member.user;
+        let user = interaction.user;
 
         // Return message then destroy
         await sendMessage({ client: client, interaction: interaction, content: `Restarting for **${user.tag}**.` });

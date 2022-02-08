@@ -23,7 +23,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: interaction.member.user.tag })
+            .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
         let pokemonButtons = new Discord.MessageActionRow();

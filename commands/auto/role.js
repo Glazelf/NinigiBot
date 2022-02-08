@@ -11,7 +11,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         await interaction.guild.roles.fetch();
 
         let member = interaction.member;
-        let user = interaction.member.user;
+        let user = interaction.user;
 
         let roleArgument = args.find(element => element.name == 'role');
         let requestRole = null;

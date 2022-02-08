@@ -21,7 +21,7 @@ exports.run = async (client, interaction) => {
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
 
-        let user = interaction.member.user;
+        let user = interaction.user;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 

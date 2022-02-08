@@ -21,7 +21,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 args.splice(0, 1);
             } else return sendMessage({ client: client, interaction: interaction, content: `The syntax is \`/item <target> <item name>\`.` }); // God I dread having to rewrite these commands
         } else {
-            target = message.member.user;
+            target = interaction.user;
         };
         const itemName = args.join(' ')
         for (let i = 0; i < shops.length; i++) {

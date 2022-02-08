@@ -18,7 +18,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
         if (!member || !user) return sendMessage({ client: client, interaction: interaction, content: `Please mention someone to kick.` });
 
-        let author = message.member.user;
+        let author = interaction.user;
 
         // Check permissions
         let userRole = message.member.roles.highest;

@@ -72,7 +72,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 args.splice(0, 1);
             } else return sendMessage({ client: client, interaction: interaction, content: `The syntax is \`/shinx <target> <usual command>\`.` }); // Shinx rewrite !? :(
         } else {
-            master = message.member.user;
+            master = interaction.user;
             shinx = await bank.currency.getShinx(master.id);
         };
 

@@ -41,7 +41,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let dmString = `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``;
 
-        let author = message.member.user;
+        let author = interaction.user;
 
         let bansFetch;
         try {

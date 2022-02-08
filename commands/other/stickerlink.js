@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        let returnString = `Here's the link(s) to the assets you requested, **${message.member.user.tag}**:`;
+        let returnString = `Here's the link(s) to the assets you requested, **${interaction.user.tag}**:`;
         let replyMessage = null;
         let stickerLink = null;
 

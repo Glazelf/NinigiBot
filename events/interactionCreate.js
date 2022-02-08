@@ -112,7 +112,7 @@ module.exports = async (client, interaction) => {
                                         return sendMessage({ client: client, message: interaction, content: `You now have the **${role.name}** role!` });
                                     };
                                 } catch (e) {
-                                    return sendMessage({ client: client, message: interaction, content: `Failed to toggle **${role.name}** for ${interaction.member.user}, probably because I lack permissions.`, ephemeral: false });
+                                    return sendMessage({ client: client, message: interaction, content: `Failed to toggle **${role.name}** for ${interaction.user}, probably because I lack permissions.`, ephemeral: false });
                                 };
                             } catch (e) {
                                 console.log(e);

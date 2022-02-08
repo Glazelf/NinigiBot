@@ -93,7 +93,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let messageImage = null;
         if (interaction.attachments.size > 0) messageImage = interaction.attachments.first().url;
 
-        let user = interaction.member.user;
+        let user = interaction.user;
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command

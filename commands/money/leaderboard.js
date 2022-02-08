@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let memberFetch = await message.guild.members.fetch();
 
-        let author = message.member.user;
+        let author = interaction.user;
 
         let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 
