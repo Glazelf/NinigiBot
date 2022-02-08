@@ -4,8 +4,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        let forever;
-        if (client.config.forever) forever = require('forever');
+        const isAdmin = require('../../util/isAdmin');
+        const forever = require('forever');
         const getTime = require('../../util/getTime');
 
         if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
@@ -24,9 +24,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
                 try {
-                    await guild.commands.set([]);
+                    let adminBool = await isAdmin(client, guild.me);
+                    if (adminBool) guild.commands.set([]);
                 } catch (e) {
-                    // console.log(e);
+                    console.log(e);
                 };
             });
         };

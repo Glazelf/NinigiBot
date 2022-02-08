@@ -274,10 +274,27 @@ BST: ${BST}`, false)
         return messageObject;
 
         function calcHP(base) {
+            //// Gen 1-2
+            // let min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
+            // let max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
+            // let min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
+            // let max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 100 + 10);
+            //// Gen 3+
             let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
             let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
             let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
             let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+            //// Let's Go
+            // let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+            // let max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
+            // let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+            // let max100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10 + 200);
+            //// Legends: Arceus
+            // let min50 = Math.floor((50 / 100 + 1) * base + 50 + (50 / 2.5));
+            // let max50 = Math.floor((50 / 100 + 1) * base + 50 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+            // let min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
+            // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             if (pokemonName.endsWith("-gmax") || pokemonName.endsWith("-eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
             if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
@@ -285,10 +302,27 @@ BST: ${BST}`, false)
         };
 
         function calcStat(base) {
+            //// Gen 1-2
+            // let min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
+            // let max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
+            // let min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
+            // let max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 5);
+            //// Gen 3+
             let min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
             let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
             let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
             let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+            //// Let's Go
+            // let min50 = Math.floor((((2 * base) * 50) / 100) + 5);
+            // let max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
+            // let min100 = Math.floor((((2 * base) * 100) / 100) + 5);
+            // let max100 = Math.floor((((((2 * base + 31) * 100) / 100) + 5) * 1.1 * 1.1) + 200);
+            //// Legends: Arceus
+            // let min50 = Math.floor((((50 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+            // let max50 = Math.floor(((((50 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+            // let min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+            // let max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };

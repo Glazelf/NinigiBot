@@ -22,7 +22,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         //     let emote = Discord.GuildEmojiManager.resolveId(args[0])
         //     returnString += `\n-Emote link: ${emote}`;
         // };
-        if (message.stickers.first()) {
+        if (message.stickers && message.stickers.first()) {
             stickerLink = message.stickers.first().url;
         } else if (replyMessage && replyMessage.stickers.first()) {
             stickerLink = replyMessage.stickers.first().url;
