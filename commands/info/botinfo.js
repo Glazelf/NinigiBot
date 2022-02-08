@@ -14,13 +14,12 @@ exports.run = async (client, interaction) => {
 
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
         // let userCount = await client.users.fetch();
-        // let memberFetch = await message.guild.members.fetch();
+        // let memberFetch = await interaction.guild.members.fetch();
         // console.log(userCount);
         // console.log(Object.keys(userCount));
 
         let totalGuilds = 0;
         let totalMembers = 0;
-        let botVerifRequirement = 76;
 
         // Get shards (Currently not properly functional)
         if (client.shard) {
@@ -39,7 +38,6 @@ exports.run = async (client, interaction) => {
             totalMembers = await getUsers();
         };
         let averageUsers = Math.round(totalMembers / totalGuilds);
-        if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
 
         // Get unique owner count
         let ownerPool = [];
@@ -47,8 +45,6 @@ exports.run = async (client, interaction) => {
             ownerPool.push(guild.ownerId);
         });
         let uniqueOwners = countUnique(ownerPool);
-
-        let user = message.member.user;
 
         // Calculate the uptime in days, hours, minutes, seconds
         let totalSeconds = (client.uptime / 1000);
@@ -96,7 +92,6 @@ exports.run = async (client, interaction) => {
             .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
-            .addField("Prefix:", prefix, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
@@ -105,7 +100,7 @@ exports.run = async (client, interaction) => {
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Created:", `<t:${Math.floor(client.user.createdAt.valueOf() / 1000)}:R>`, true)
             .addField("Uptime:", uptime, false)
-            .setFooter({ text: user.tag })
+            .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
         // Buttons
