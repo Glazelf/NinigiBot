@@ -31,12 +31,13 @@ exports.run = async (client, message, args = []) => {
         if (!trainers[1]) return sendMessage({ client: client, message: message, content: `Please tag a valid person to battle.` });
         if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, message: message, content: `You cannot battle yourself!` });
         if (globalVars.battling.yes) return sendMessage({ client: client, message: message, content: `Theres already a battle going on.` });
-        shinxes = [];
+        let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
+            if (!shinx) return sendMessage({ client: client, message: message, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`shinx\` to create one.` });
             shinx.see();
-            if (shinx.sleeping) return sendMessage({ client: client, message: message, content: `At least one of your the participating Shinxes is asleep.` });
+            if (shinx.sleeping) return sendMessage({ client: client, message: message, content: `At least one of the participating Shinxes is asleep.` });
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
