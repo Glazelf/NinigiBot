@@ -11,6 +11,8 @@ exports.run = async (client, message, args) => {
         let numberFromMessage = args[0];
 
         let numberFromMessagestoNumber = Number(numberFromMessage);
+        if (!numberFromMessagestoNumber && args[1]) numberFromMessagestoNumber = Number(args[1]);
+        if (!numberFromMessagestoNumber) return sendMessage({ client: client, message: message, content: `Please provide a valid number.` });
         let maxNumberOfMessages = 100;
         let numberOfMessages = numberFromMessagestoNumber + 1;
         if (isNaN(numberOfMessages)) numberFromMessage = args[1];
@@ -23,13 +25,17 @@ exports.run = async (client, message, args) => {
 
         // Get user
         let user;
+        let userTag;
+        let userID;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
             user = message.mentions.users.first();
+            userID = user.id;
+            userTag = user.tag;
         };
 
         if (!user && args[1]) {
-            let userID = args[1];
-            user = await client.users.fetch(userID);
+            userID = args[1];
+            userTag = userID;
         };
 
         let author = message.member.user;
@@ -39,7 +45,7 @@ exports.run = async (client, message, args) => {
         await message.channel.messages.fetch();
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
-        if (user) {
+        if (userTag && userID) {
             try {
                 amount -= 1; // Correct amount
                 let messagesAll = await message.channel.messages.fetch({ limit: maxMessageFetch });
@@ -48,7 +54,7 @@ exports.run = async (client, message, args) => {
 
                 try {
                     await message.channel.bulkDelete(messages);
-                    return message.channel.send({ content: `Deleted ${numberFromMessage} messages from ${user.tag}, ${author}.` });
+                    return message.channel.send({ content: `Deleted ${numberFromMessagestoNumber} messages from ${user.tag}, ${author}.` });
                 } catch (e) {
                     if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, message);
