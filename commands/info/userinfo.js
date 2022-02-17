@@ -10,25 +10,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
-        let user;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            user = await message.mentions.users.first();
-            // force fetch
-            if (user) user = await client.users.fetch(user.id, { force: true });
-        };
-
-        if (!user && args[0]) {
-            try {
-                let userID = args[0];
-                user = await client.users.fetch(userID, { force: true });
-            } catch (e) {
-                // console.log();
-            };
-        };
-
-        if (!user) {
-            user = await client.users.fetch(message.member.id, { force: true });
-        };
+        let user = args[0].user;
 
         let member;
         try {
