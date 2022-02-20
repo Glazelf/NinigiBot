@@ -102,9 +102,9 @@ exports.run = async (client, message, args = []) => {
                 } else {
                     if (activities[act].type) {
                         let actType = activities[act].type;
-                        if (actType == "COMPETING") actType += " IN";
-                        if (actType == "LISTENING") actType += " TO";
                         let activityType = capitalizeString(actType);
+                        if (activityType.toLowerCase() == "competing") activityType = "Competing in";
+                        if (activityType.toLowerCase() == "listening") activityType = "Listening to";
                         activityLog += activityType;
                     };
                     activityLog += activities[act].name;
