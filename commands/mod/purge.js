@@ -12,7 +12,7 @@ exports.run = async (client, interaction, args) => {
 
         let numberFromMessagestoNumber = Number(numberFromMessage);
         if (!numberFromMessagestoNumber && args[1]) numberFromMessagestoNumber = Number(args[1]);
-        if (!numberFromMessagestoNumber) return sendMessage({ client: client, message: message, content: `Please provide a valid number.` });
+        if (!numberFromMessagestoNumber) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
         let maxNumberOfMessages = 100;
         let numberOfMessages = numberFromMessagestoNumber + 1;
         if (isNaN(numberOfMessages)) numberFromMessage = args[1];

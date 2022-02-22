@@ -35,7 +35,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
-            if (!shinx) return sendMessage({ client: client, message: message, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`shinx\` to create one.` });
+            if (!shinx) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`shinx\` to create one.` });
             shinx.see();
             if (shinx.sleeping) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participating Shinxes is asleep.` });
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
