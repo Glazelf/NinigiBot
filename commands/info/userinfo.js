@@ -84,8 +84,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 } else {
                     if (activities[act].type) {
                         let actType = activities[act].type;
-                        if (actType == "COMPETING") actType += " IN";
                         let activityType = capitalizeString(actType);
+                        if (activityType.toLowerCase() == "competing") activityType = "Competing in";
+                        if (activityType.toLowerCase() == "listening") activityType = "Listening to";
                         activityLog += activityType;
                     };
                     activityLog += activities[act].name;
