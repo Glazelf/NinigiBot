@@ -144,8 +144,13 @@ exports.run = async (client, message, args = []) => {
             if (user.bot) badgesArray.push("🤖");
             if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
             if (user.flags) {
+                let userFlagsAll = user.flags.serialize();
+                let flagsArray = Object.entries(userFlagsAll);
+                let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
+                let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
+
                 for (const [key, value] of Object.entries(badgeEmotes)) {
-                    if (user.flags.has(key)) badgesArray.push(value);
+                    if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                 };
             };
             badgesString = badgesArray.join(" ");
