@@ -17,11 +17,11 @@
     "path": "^0.12.7",
     "pokedex-promise-v2": "^4.0.0",
     "pureimage": "^0.3.8",
-    "sequelize": "^6.16.2",
+    "sequelize": "^6.17.0",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
-    "mocha": "^9.2.0"
+    "mocha": "^9.2.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
