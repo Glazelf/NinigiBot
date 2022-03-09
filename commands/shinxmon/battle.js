@@ -23,12 +23,10 @@ exports.run = async (client, message, args = []) => {
         let target;
 
         if (message.type != 'APPLICATION_COMMAND') target = message.mentions.users.first();
-        if (!target) target = client.users.fetch(args[0]);
-
-        if (!target || target.length < 1 || (message.mentions && (!message.mentions.members && !message.mentions.repliedUser))) return sendMessage({ client: client, message: message, content: `Please specify a user to battle.` });
+        if (!target) return sendMessage({ client: client, message: message, content: `Please tag the user you would like to battle.` });
+        if (target.bot) return sendMessage({ client: client, message: message, content: `You can not battle a bot.` });
 
         const trainers = [author, target];
-        if (!trainers[1]) return sendMessage({ client: client, message: message, content: `Please tag a valid person to battle.` });
         if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, message: message, content: `You cannot battle yourself!` });
         if (globalVars.battling.yes) return sendMessage({ client: client, message: message, content: `Theres already a battle going on.` });
         let shinxes = [];
