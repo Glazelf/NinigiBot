@@ -224,7 +224,7 @@ exports.run = async (client, message, args = []) => {
                 break;
         };
 
-        // Send fucntion for all except default
+        // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, message: message, embeds: pokemonEmbed, components: pokemonButtons });
         return;
 
