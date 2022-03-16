@@ -65,11 +65,13 @@
     "toxtricity-low-key": "849-l",
     "eiscue-noice": "875-n",
     "indeedee-female": "876-f",
+    "morpeko-full-belly": "877",
+    "morpeko-hangry": "877-h",
     "zacian-crowned": "888-c",
     "zamazenta-crowned": "889-c",
     "eternatus-eternamax": "890-e",
     "urshifu-rapid-strike": "892-r",
     "urshifu-rapid-strike-gmax": "892-rgi",
-    "calyrex-ice-rider": "898-i",
-    "calyrex-shadow-rider": "898-s"
+    "calyrex-ice": "898-i",
+    "calyrex-shadow": "898-s"
 }
