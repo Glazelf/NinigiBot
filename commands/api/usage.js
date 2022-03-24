@@ -45,7 +45,7 @@ exports.run = async (client, message, args = []) => {
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
         if (wasSuccessful) {
-            console.log(JSONresponse);
+            // console.log(JSONresponse);
             if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} so there's not enough data to form an embed!` });
 
             let moveStats = "";
@@ -80,7 +80,7 @@ exports.run = async (client, message, args = []) => {
                 .setColor(globalVars.embedColor)
                 .setFooter({ text: message.member.user.tag })
                 .setTimestamp()
-                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} (${month}/${year})` })
+                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${month} / ${year})` })
                 .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
                 .addField("Moves:", moveStats, true)
                 .addField("Items:", itemStats, true)
