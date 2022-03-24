@@ -5,12 +5,13 @@ exports.run = async (client, message, args = []) => {
     try {
         // When converting to slash commands: add support for options below!
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const axios = require("axios");
         let JSONresponse;
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: "Please specify a Pokémon." });
 
-        // Initialize function
+        // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
         const getData = async url => {
             try {
                 const response = await axios.get(url);
@@ -25,7 +26,7 @@ exports.run = async (client, message, args = []) => {
                         text = "No usage data found for " + pokemon + ".";
                     };
                 } else {
-                    error(new Date().toLocaleString() + error);
+                    // console.log(error);
                 };
             };
         };
@@ -44,17 +45,40 @@ exports.run = async (client, message, args = []) => {
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
         if (wasSuccessful) {
-            console.log(JSONresponse)
+            console.log(JSONresponse);
+
+            let moveStats;
+            let itemStats;
+            let abilityStats;
+            let spreadStats;
+            let teammateStats;
+
+            let usageEmbed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setFooter({ text: message.member.user.tag })
+                .setTimestamp()
+                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} (${month}/${year})` })
+                .setDescription(`Usage: ${JSONresponse.usage}`)
+                .addField("Moves:", moveStats)
+                .addField("Items:", itemStats)
+                .addField("Abilities:", abilityStats)
+                .addField("Spreads:", spreadStats)
+                .addField("Teammates:", teammateStats);
+
+            return sendMessage({ client: client, message: message, embeds: usageEmbed });
 
         } else {
             // make generic embed to guide people to usage statistics :)
-            const pikalytics = "https://pikalytics.com";
-            const psUsage = `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt`;
-            const psDetailedUsage = `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt`;
+            // Buttons
+            let usageButtons = new Discord.MessageActionRow()
+                .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
+                .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
+                .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
+
+            let replyText = "Sorry! I could not successfully fetch data for the inputs you provided. Here are some usage resources you might find usefull instead:";
+
+            return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
         };
-
-        // Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
-
 
     } catch (e) {
         // Log error
