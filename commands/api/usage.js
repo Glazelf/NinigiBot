@@ -45,7 +45,7 @@ exports.run = async (client, message, args = []) => {
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
         if (wasSuccessful) {
-            console.log(JSONresponse);
+=           if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but that Pokémon only has ${JSONresponse.usage} usage so there's not enough data to form an embed!` });
 
             let moveStats = "";
             for await (const [key, value] of Object.entries(JSONresponse.moves)) {
