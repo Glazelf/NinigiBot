@@ -47,11 +47,33 @@ exports.run = async (client, message, args = []) => {
         if (wasSuccessful) {
             console.log(JSONresponse);
 
-            let moveStats;
-            let itemStats;
-            let abilityStats;
-            let spreadStats;
-            let teammateStats;
+            let moveStats = "";
+            for await (const [key, value] of Object.entries(JSONresponse.moves)) {
+                moveStats = `${moveStats}\n${key}: ${value}`;
+            };
+            let itemStats = "";
+            for await (const [key, value] of Object.entries(JSONresponse.items)) {
+                itemStats = `${itemStats}\n${key}: ${value}`;
+            };
+            let abilityStats = "";
+            for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
+                abilityStats = `${abilityStats}\n${key}: ${value}`;
+            };
+            let spreadStats = "";
+            for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
+                if (typeof value == "object") {
+                    spreadStats = `${spreadStats}\n${key}:`;
+                    for await (const [key2, value2] of Object.entries(value)) {
+                        spreadStats = `${spreadStats}\n${key2}: ${value2}`;
+                    };
+                } else {
+                    spreadStats = `${spreadStats}\n${key}: ${value}`;
+                };
+            };
+            let teammateStats = "";
+            for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
+                teammateStats = `${teammateStats}\n${key}: ${value}`;
+            };
 
             let usageEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
