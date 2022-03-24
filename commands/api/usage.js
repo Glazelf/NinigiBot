@@ -81,7 +81,7 @@ exports.run = async (client, message, args = []) => {
                 .setFooter({ text: message.member.user.tag })
                 .setTimestamp()
                 .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} (${month}/${year})` })
-                .setDescription(`#${JSONresponse.rank} ${JSONresponse.usage} (${JSONresponse.raw} uses)`)
+                .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
                 .addField("Moves:", moveStats)
                 .addField("Items:", itemStats)
                 .addField("Abilities:", abilityStats)
