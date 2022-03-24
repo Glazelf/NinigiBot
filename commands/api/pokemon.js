@@ -223,7 +223,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
         };
 
-        // Send fucntion for all except default
+        // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
         return;
 

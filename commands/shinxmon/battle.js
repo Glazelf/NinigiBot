@@ -26,6 +26,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!target) target = client.users.fetch(args[0]);
 
         if (!target || target.length < 1 || (message.mentions && (!message.mentions.members && !message.mentions.repliedUser))) return sendMessage({ client: client, interaction: interaction, content: `Please specify a user to battle.` });
+        if (target.bot) return sendMessage({ client: client, message: message, content: `You can not battle a bot.` });
 
         const trainers = [author, target];
         if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });

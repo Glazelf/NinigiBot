@@ -26,11 +26,8 @@
     "aegislash-sword": "aegislash-blade",
     "pumpkaboo": "pumpkaboo-average",
     "gourgeist": "gourgeist-average",
-    "zygarde-10%": "zygarde-10",
-    "zygarde-50": "zygarde",
-    "zygarde-50%": "zygarde",
+    "zygarde": "zygarde-50",
     "zygarde-100": "zygarde-complete",
-    "zygarde-100%": "zygarde-complete",
     "oricorio": "oricorio-baile",
     "oricorio-pa'u": "oricorio-pau",
     "rockruff-dusk": "rockruff-own-tempo",
@@ -58,8 +55,9 @@
     "indeedee": "indeedee-male",
     "indeedee-m": "indeedee-male",
     "indeedee-f": "indeedee-female",
+    "morpeko": "morpeko-full-belly",
     "urshifu": "urshifu-single-strike",
     "urshifu-gmax": "urshifu-single-strike-gmax",
-    "calyrex-ice": "calyrex-ice-rider",
-    "calyrex-shadow": "calyrex-shadow-rider"
+    "calyrex-ice-rider": "calyrex-ice",
+    "calyrex-shadow-rider": "calyrex-shadow"
 }

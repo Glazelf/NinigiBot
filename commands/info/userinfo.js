@@ -47,68 +47,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let roleTitle = `Roles:`;
         if (roleCount > 0) roleTitle = `Roles: (${roleCount})`;
 
-        // Clear up status wording
-        let userStatus;
-        let activityLog = '';
-        let customStatus = '';
-        let actBool = false;
-        if (member.presence) {
-            // Online status string correction
-            switch (member.presence.status) {
-                case "online":
-                    userStatus = "Online";
-                    break;
-                case "idle":
-                    userStatus = "Idle";
-                    break;
-                case "dnd":
-                    userStatus = "Busy";
-                    break;
-                case "invisible":
-                    userStatus = "Invisible";
-                    break;
-                case "offline":
-                    userStatus = "Offline";
-                    break;
-            };
-
-            // Activities to string
-            const activities = member.presence.activities;
-            for (const act in activities) {
-                if (activities[act].name === 'Custom Status') {
-                    let emoji = null;
-                    if (activities[act].emoji) emoji = await client.emojis.cache.get(activities[act].emoji.id);
-                    if (emoji) customStatus = emoji.toString() + ' ';
-                    // Sometimes regular null catch seems to work, sometimes it needs "null". I'm not sure what the fuck is happening. I hate Javascript.
-                    if (activities[act].state && activities[act].state !== "null") customStatus += activities[act].state;
-                } else {
-                    if (activities[act].type) {
-                        let actType = activities[act].type;
-                        let activityType = capitalizeString(actType);
-                        if (activityType.toLowerCase() == "competing") activityType = "Competing in";
-                        if (activityType.toLowerCase() == "listening") activityType = "Listening to";
-                        activityLog += activityType;
-                    };
-                    activityLog += activities[act].name;
-                    if (activities[act].details || activities[act].state) activityLog += ': ';
-                    if (activities[act].details) activityLog += activities[act].details;
-                    if (activities[act].details && activities[act].state) activityLog += ', ';
-                    if (activities[act].state) activityLog += activities[act].state;
-                    activityLog += '\n';
-                };
-
-                // Custom status handling
-                actBool = new Boolean(activities[0]);
-                if (actBool == true) {
-                    if (activities[0].name === 'Custom Status') {
-                        actBool = new Boolean(activities[1]);
-                    };
-                };
-            };
-        } else {
-            userStatus = "Offline";
-        };
-
         // Avatar and banner
         let serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
         let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -126,8 +64,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             if (user.bot) badgesArray.push("🤖");
             if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
             if (user.flags) {
+                let userFlagsAll = user.flags.serialize();
+                let flagsArray = Object.entries(userFlagsAll);
+                let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
+                let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
+
                 for (const [key, value] of Object.entries(badgeEmotes)) {
-                    if (user.flags.has(key)) badgesArray.push(value);
+                    if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                 };
             };
             badgesString = badgesArray.join(" ");
@@ -151,9 +94,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .addField("Account:", `${user} ${badgesString}`, true)
             .addField("Availability:", userStatus, true);
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
-        if (customStatus.length >= 1 && customStatus !== 'null' && member.presence) profileEmbed.addField("Custom Status:", customStatus, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
-        if (actBool == true && member.presence) profileEmbed.addField("Activities:", activityLog, false);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
             .addField("Join Ranking:", joinRankText, true)
