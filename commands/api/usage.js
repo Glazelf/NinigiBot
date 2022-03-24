@@ -45,7 +45,8 @@ exports.run = async (client, message, args = []) => {
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
         if (wasSuccessful) {
-            if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage in ${JSONresponse.tier} so there's not enough data to form an embed!` });
+            console.log(JSONresponse);
+            if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} so there's not enough data to form an embed!` });
 
             let moveStats = "";
             for await (const [key, value] of Object.entries(JSONresponse.moves)) {
@@ -80,7 +81,7 @@ exports.run = async (client, message, args = []) => {
                 .setFooter({ text: message.member.user.tag })
                 .setTimestamp()
                 .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} (${month}/${year})` })
-                .setDescription(`Usage: ${JSONresponse.usage}`)
+                .setDescription(`#${JSONresponse.rank} ${JSONresponse.usage} (${JSONresponse.raw} uses)`)
                 .addField("Moves:", moveStats)
                 .addField("Items:", itemStats)
                 .addField("Abilities:", abilityStats)
@@ -97,7 +98,7 @@ exports.run = async (client, message, args = []) => {
                 .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
                 .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
 
-            let replyText = "Sorry! I could not successfully fetch data for the inputs you provided. Here are some usage resources you might find usefull instead:";
+            let replyText = "Sorry! I could not successfully fetch *any* data for the inputs you provided. Here are some usage resources you might find usefull instead:";
 
             return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
         };
