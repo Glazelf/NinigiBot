@@ -80,7 +80,7 @@ exports.run = async (client, message, args = []) => {
                 .setColor(globalVars.embedColor)
                 .setFooter({ text: message.member.user.tag })
                 .setTimestamp()
-                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${month} / ${year})` })
+                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${month}/${year})` })
                 .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
                 .addField("Moves:", moveStats, true)
                 .addField("Items:", itemStats, true)
