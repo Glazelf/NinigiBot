@@ -29,8 +29,10 @@ exports.run = async (client, message, args = []) => {
                 return sendMessage({ client: client, message: message, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
             };
         } else {
-            if (isNaN(input)) return sendMessage({ client: client, message: message, content: `Please provide a valid number to convert to hex.` });
+            let failText = `Please provide a valid number to convert to hex.`;
+            if (isNaN(input)) return sendMessage({ client: client, message: message, content: failText });
             let argInt = parseInt(input);
+            if (!argInt) return sendMessage({ client: client, message: message, content: failText });
             let hexString = argInt.toString(16).toUpperCase();
             let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
             return sendMessage({ client: client, message: message, content: returnString });
