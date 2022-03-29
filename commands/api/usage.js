@@ -39,8 +39,8 @@ exports.run = async (client, message, args = []) => {
         let year = date.getFullYear();
 
         let format = "gen8vgc2022"
-        let rating = "1760";
-        let pokemon = args[0].toLowerCase();
+        let rating = "1500";
+        let pokemon = args[0].toLowerCase().replaceAll(" ", "-");
         let wasSuccessful = true;
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
