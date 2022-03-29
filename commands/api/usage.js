@@ -40,7 +40,7 @@ exports.run = async (client, message, args = []) => {
 
         let format = "gen8vgc2022"
         let rating = "1500";
-        let pokemon = args[0].toLowerCase().replaceAll(" ", "-");
+        let pokemon = args[0].toLowerCase().replace(" ", "-");
         let wasSuccessful = true;
 
         await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
