@@ -34,6 +34,7 @@ exports.run = async (client, message, args = []) => {
         // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
         const date = new Date();
         let month = date.getMonth();
+        if (date.getDate() < 3) month = month - 1; // Catch to give Smogon time to post stats :)
         if (month == 0) month = "12";
         if (month < 10) month = "0" + month;
         let year = date.getFullYear();
@@ -98,7 +99,8 @@ exports.run = async (client, message, args = []) => {
                 .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
                 .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
 
-            let replyText = "Sorry! I could not successfully fetch *any* data for the inputs you provided. Here are some usage resources you might find usefull instead:";
+            let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
+Here are some usage resources you might find usefull instead:`;
 
             return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
         };
