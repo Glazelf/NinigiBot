@@ -41,8 +41,6 @@ exports.run = async (client, message, args = []) => {
 
         let dmString = `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``;
 
-        let author = message.member.user;
-
         let bansFetch;
         try {
             bansFetch = await message.guild.bans.fetch();
@@ -52,6 +50,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let time = await getTime(client);
+        let reasonInfo = `-${message.member.user.tag} (${time})`;
 
         // If user is found
         if (member) {
@@ -76,7 +75,7 @@ exports.run = async (client, message, args = []) => {
                     banReturn += " (DM Failed)";
                 };
 
-                await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
+                await member.ban({ days: 0, reason: `${reason} ${reasonInfo}` });
                 return sendMessage({ client: client, message: message, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);
@@ -96,7 +95,7 @@ exports.run = async (client, message, args = []) => {
 
             // Ban
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag} (${time})` });
+                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} ${reasonInfo}` });
                 return sendMessage({ client: client, message: message, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);

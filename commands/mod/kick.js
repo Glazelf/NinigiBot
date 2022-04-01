@@ -18,8 +18,6 @@ exports.run = async (client, message, args = []) => {
         };
         if (!member || !user) return sendMessage({ client: client, message: message, content: `Please mention someone to kick.` });
 
-        let author = message.member.user;
-
         // Check permissions
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
@@ -34,6 +32,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let time = await getTime(client);
+        let reasonInfo = `-${message.member.user.tag} (${time})`;
 
         // Kick
         let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`.`;
@@ -47,7 +46,7 @@ exports.run = async (client, message, args = []) => {
                 kickReturn += " (DM Failed)";
             };
 
-            await member.kick([`${reason} -${author.tag} (${time})`]);
+            await member.kick([`${reason} ${reasonInfo}`]);
             return sendMessage({ client: client, message: message, content: kickReturn, ephemeral: false });
         } catch (e) {
             // console.log(e);
