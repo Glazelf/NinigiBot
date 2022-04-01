@@ -5,6 +5,7 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
+        const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
         if (!message.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
 
@@ -58,9 +59,12 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        let time = await getTime(client);
+        let reasonInfo = `-${message.member.user.tag} (${time})`;
+
         // Timeout logic
         try {
-            await member.timeout(muteTime, reason);
+            await member.timeout(muteTime, `${reason} ${reasonInfo}`);
             return sendMessage({ client: client, message: message, content: muteReturnString });
         } catch (e) {
             // console.log(e);
