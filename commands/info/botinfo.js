@@ -58,9 +58,10 @@ exports.run = async (client, message) => {
 
         let user = message.member.user;
 
-        // Uptime
+        // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
+        let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
-        let onlineSince = date - client.uptime;
+        let onlineSince = Math.floor((date - client.uptime) / 1000);
 
         // Calculate total user count
         // let userCount = await getUsers();
@@ -85,8 +86,8 @@ exports.run = async (client, message) => {
             .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
-            .addField("Created:", `<t:${Math.floor(client.user.createdAt.valueOf() / 1000)}:R>`, true)
-            .addField("Online Since:", `<t:${Math.floor(onlineSince / 1000)}:R>`, true)
+            .addField("Created:", `<t:${createdAt}:R>`, true)
+            .addField("Online Since:", `<t:${onlineSince}:R>`, true)
             .setFooter({ text: user.tag })
             .setTimestamp();
 
