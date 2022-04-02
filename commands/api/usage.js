@@ -49,7 +49,6 @@ exports.run = async (client, message, args = []) => {
         return useData();
 
         async function useData() {
-            console.log(triedLastMonth)
             if (wasSuccessful) {
                 // console.log(JSONresponse);
                 if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} so there's not enough data to form an embed!` });
