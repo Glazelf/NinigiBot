@@ -51,7 +51,7 @@ exports.run = async (client, message, args = []) => {
         async function useData() {
             if (wasSuccessful) {
                 // console.log(JSONresponse);
-                if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} so there's not enough data to form an embed!` });
+                if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
 
                 let moveStats = "";
                 for await (const [key, value] of Object.entries(JSONresponse.moves)) {
