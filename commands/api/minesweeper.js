@@ -10,7 +10,7 @@ exports.run = async (client, message, args = []) => {
         const minesweeper = new Minesweeper({
             rows: 5,
             columns: 5,
-            mines: 6,
+            mines: 6, // Make amount of bombs an slash command argument
             emote: 'bomb',
             returnType: 'matrix',
         });
