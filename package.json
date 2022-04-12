@@ -9,6 +9,7 @@
     "canvas": "^2.9.1",
     "cron": "^1.8.2",
     "discord.js": "^13.6.0",
+    "discord.js-minesweeper": "^1.1.0",
     "enmap": "^5.8.13",
     "forever": "^4.0.3",
     "forever-monitor": "^3.0.3",

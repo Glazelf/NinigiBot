@@ -111,6 +111,19 @@ module.exports = async (client, interaction) => {
                                 // console.log(e);
                                 return;
                             };
+                        } else if (interaction.customId.includes("minesweeper")) {
+                            if (interaction.user.id !== interaction.customId.split("-")[3]) return;
+                            let componentsCopy = interaction.message.components;
+                            await componentsCopy.forEach(async function (part, index) {
+                                await this[index].toJSON().components.forEach(function (part2, index2) {
+                                    if (this[index2].custom_id == interaction.customId) {
+                                        this[index2].emoji.name = interaction.customId.split("-")[2];
+                                        this[index2].disabled = true;
+                                    };
+                                }, this[index].toJSON().components);
+                            }, componentsCopy);
+                            await interaction.update({ components: componentsCopy });
+                            return;
                         } else {
                             // Other buttons
                             return;

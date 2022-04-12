@@ -23,7 +23,7 @@ module.exports = async ({ client, message, content = null, embeds = null, files 
         };
 
         // Don't add components to slash commands unless specifically told to do so
-        if (components && components.components.length != 0) {
+        if (components) {
             // Components, i.e. buttons
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
