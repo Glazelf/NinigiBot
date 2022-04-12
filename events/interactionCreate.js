@@ -118,7 +118,7 @@ module.exports = async (client, interaction) => {
                                 await this[index].toJSON().components.forEach(function (part2, index2) {
                                     if (this[index2].custom_id == interaction.customId) {
                                         this[index2].emoji.name = interaction.customId.split("-")[2];
-                                        this[index2].disabled = true;
+                                        this[index2].disabled = true; // Doesnt work??
                                     };
                                 }, this[index].toJSON().components);
                             }, componentsCopy);
