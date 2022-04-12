@@ -5,6 +5,7 @@ exports.run = async (client, message) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const axios = require("axios");
 
         const { Prefixes } = require('../../database/dbObjects');
         let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
@@ -72,6 +73,17 @@ exports.run = async (client, message) => {
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
 
+        // Get latest commit
+        let githubURLVars = "Glazelf/NinigiBot";
+        let response = null
+        try {
+            response = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
+        } catch (e) {
+            // console.log(e);
+            response = null;
+        };
+        let lastCommit = Math.floor(new Date(response.data.commit.commit.author.date).getTime() / 1000);
+
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
@@ -86,7 +98,9 @@ exports.run = async (client, message) => {
             .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:R>`, true)
+            .addField("Created:", `<t:${createdAt}:R>`, true);
+        if (response) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
+        botEmbed
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
             .setFooter({ text: user.tag })
             .setTimestamp();
@@ -94,7 +108,7 @@ exports.run = async (client, message) => {
         // Buttons
         let botButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
-            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
+            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
 
         return sendMessage({ client: client, message: message, embeds: botEmbed, components: botButtons, ephemeral: true, });
 
