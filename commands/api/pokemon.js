@@ -86,7 +86,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                             .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
 
                         pokemonEmbed
-                            .setAuthor({ name: itemName })
+                            .setAuthor({ name: itemAuthorName })
                             .setThumbnail(response.sprites.default)
                             .addField("Category:", category, true)
                             .addField("Description:", description, false)

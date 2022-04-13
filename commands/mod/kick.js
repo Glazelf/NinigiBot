@@ -7,9 +7,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        // Get user
+        // Get user, change to get from interaction args
         let user;
         let member;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
@@ -18,14 +18,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
         if (!member || !user) return sendMessage({ client: client, interaction: interaction, content: `Please mention someone to kick.` });
 
-        let author = interaction.user;
+        let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
 
         // Check permissions
         let userRole = message.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
-
-        let banFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
+        if (!member.kickable) return sendMessage({ client: client, interaction: interaction, content: kickFailString });
 
         let reason = "Not specified.";
         if (args[1]) {
@@ -34,27 +33,28 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         let time = await getTime(client);
+        let reasonInfo = `-${message.member.user.tag} (${time})`;
 
         // Kick
         let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`.`;
 
         try {
             try {
-                await user.send({ content: `You've been kicked from **${message.guild.name}** for the following reason: \`${reason}\`` });
+                await user.send({ content: `You've been kicked from **${interaction.guild.name}** for the following reason: \`${reason}\`` });
                 kickReturn += " (DM Succeeded)";
             } catch (e) {
                 // console.log(e);
                 kickReturn += " (DM Failed)";
             };
 
-            await member.kick([`${reason} -${author.tag} (${time})`]);
+            await member.kick([`${reason} ${reasonInfo}`]);
             return sendMessage({ client: client, interaction: interaction, content: kickReturn, ephemeral: false });
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {
                 return logger(e, client, interaction);
             } else {
-                return sendMessage({ client: client, interaction: interaction, content: banFailString });
+                return sendMessage({ client: client, interaction: interaction, content: kickFailString });
             };
         };
 
@@ -66,5 +66,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "kick",
-    description: "Kick a target user from the server."
+    description: "Kick a target user from the server.",
+    options: [{
+        name: "user",
+        type: "USER",
+        description: "User to kick.",
+        required: true
+    }, {
+        name: "reason",
+        type: "STRING",
+        description: "Reason for kick.",
+        required: false
+    }]
 };

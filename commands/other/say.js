@@ -4,6 +4,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const isAdmin = require('../../util/isAdmin');
+        let adminBool = await isAdmin(client, message.member);
 
         // Split off command
         if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide text to say.` });

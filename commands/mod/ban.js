@@ -39,26 +39,28 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             reason = reason.join(' ');
         };
 
-        let dmString = `You've been banned from **${message.guild.name}** for the following reason: \`${reason}\``;
+        let dmString = `You've been banned from **${interaction.guild.name}** for the following reason: \`${reason}\``;
 
         let author = interaction.user;
 
         let bansFetch;
         try {
-            bansFetch = await message.guild.bans.fetch();
+            bansFetch = await interaction.guild.bans.fetch();
         } catch (e) {
             // console.log(e);
             bansFetch = null;
         };
 
         let time = await getTime(client);
+        let reasonInfo = `-${interaction.user.tag} (${time})`;
 
         // If user is found
         if (member) {
             // Check permissions
-            let userRole = message.member.roles.highest;
+            let userRole = interaction.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && message.guild.ownerId !== message.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
+            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
+            if (!member.bannable) return sendMessage({ client: client, interaction: interaction, content: banFailString });
 
             // See if target isn't already banned
             if (bansFetch) {
@@ -67,6 +69,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Ban
             banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
+
             try {
                 try {
                     await user.send({ content: dmString });
@@ -76,7 +79,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     banReturn += " (DM Failed)";
                 };
 
-                await member.ban({ days: 0, reason: `${reason} -${author.tag} (${time})` });
+                await member.ban({ days: 0, reason: `${reason} ${reasonInfo}` });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);
@@ -96,7 +99,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Ban
             try {
-                await message.guild.members.ban(memberID, { days: 0, reason: `${reason} -${author.tag} (${time})` });
+                await interaction.guild.members.ban(memberID, { days: 0, reason: `${reason} ${reasonInfo}` });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: false });
             } catch (e) {
                 // console.log(e);
@@ -116,5 +119,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "ban",
-    description: "Bans target user."
+    description: "Bans target user.",
+    options: [{
+        name: "user",
+        type: "USER",
+        description: "User to ban.",
+        required: true
+    }, {
+        name: "reason",
+        type: "STRING",
+        description: "Reason for ban.",
+        required: false
+    }]
 };

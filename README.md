@@ -8,6 +8,7 @@ For questions or support either [create a discussion](https://github.com/Glazelf
 
 ## Credits
 [Pokeapi](https://pokeapi.co/): Pokémon data.  
+[Smogon API](https://www.smogon.com/forums/threads/usage-stats-api.3661849): Competitive Pokémon usage data.  
 [Serebii](https://serebii.net): Pokémon art and shiny sprites.  
 [PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
 [Pokesprite](https://github.com/msikma/pokesprite): Pokémon party icons.  

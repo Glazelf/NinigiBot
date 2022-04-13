@@ -5,13 +5,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
+        const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let muteTime = 60;
         let maxMuteTime = 2.419e+9; // Max time is 28 days
 
-        // Get user
+        // Get user, change to get from interaction args
         if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide a mentioned user as an argument.` });
 
         if (args[1]) {
@@ -36,7 +37,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
 
         // Check permissions
-        let userRole = message.member.roles.highest;
+        let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).` });
 
@@ -58,9 +59,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
         };
 
+        let time = await getTime(client);
+        let reasonInfo = `-${interaction.user.tag} (${time})`;
+
         // Timeout logic
         try {
-            await member.timeout(muteTime, reason);
+            await member.timeout(muteTime, `${reason} ${reasonInfo}`);
             return sendMessage({ client: client, interaction: interaction, content: muteReturnString });
         } catch (e) {
             // console.log(e);
@@ -87,5 +91,10 @@ module.exports.config = {
         name: "time",
         type: "INTEGER",
         description: "Amount of minutes to mute."
+    }, {
+        name: "reason",
+        type: "STRING",
+        description: "Reason for mute.",
+        required: false
     }]
 }; 

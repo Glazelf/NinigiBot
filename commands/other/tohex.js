@@ -12,6 +12,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let input = args[0];
 
         // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
+        // Get this from an argument instead if using slash commands
         if (message.content.toLowerCase().startsWith(`/todecimal`)) {
             try {
                 while (input.length < 6) input = "0" + input;
@@ -23,8 +24,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
             };
         } else {
-            if (isNaN(input)) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number to convert to hex.` });
+            let failText = `Please provide a valid number to convert to hex.`;
+            if (isNaN(input)) return sendMessage({ client: client, interaction: interaction, content: failText });
             let argInt = parseInt(input);
+            if (!argInt) return sendMessage({ client: client, interaction: interaction, content: failText });
             let hexString = argInt.toString(16).toUpperCase();
             let returnString = Discord.Formatters.codeBlock("js", `${hexString} (${user.tag})`)
             return sendMessage({ client: client, interaction: interaction, content: returnString });

@@ -5,6 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const axios = require("axios");
 
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
@@ -46,35 +47,10 @@ exports.run = async (client, interaction) => {
         });
         let uniqueOwners = countUnique(ownerPool);
 
-        // Calculate the uptime in days, hours, minutes, seconds
-        let totalSeconds = (client.uptime / 1000);
-        let days = Math.floor(totalSeconds / 86400);
-        let hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = Math.floor(totalSeconds % 60);
-
-        // Figure out if the numbers given is different than 1
-        let multiDays = "";
-        if (days !== 1) multiDays = "s";
-        let multiHours = "";
-        if (hours !== 1) multiHours = "s";
-        let multiMinutes = "";
-        if (minutes !== 1) multiMinutes = "s";
-        let multiSeconds = "";
-        if (seconds !== 1) multiSeconds = "s";
-
-        // Reset hours
-        if (hours >= 24) hours = hours - (days * 24);
-
-
-        // Bind variables together into a string
-        let uptime = `${hours} hour${multiHours}, ${minutes} minute${multiMinutes} and ${seconds} second${multiSeconds}`;
-
-        // Add day count if there are days
-        if (days != 0) {
-            uptime = `${days} day${multiDays}, ${uptime}`;
-        };
+        // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
+        let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
+        let date = Date.now();
+        let onlineSince = Math.floor((date - client.uptime) / 1000);
 
         // Calculate total user count
         // let userCount = await getUsers();
@@ -84,6 +60,17 @@ exports.run = async (client, interaction) => {
 
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
+
+        // Get latest commit
+        let githubURLVars = "Glazelf/NinigiBot";
+        let response = null
+        try {
+            response = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
+        } catch (e) {
+            // console.log(e);
+            response = null;
+        };
+        let lastCommit = Math.floor(new Date(response.data.commit.commit.author.date).getTime() / 1000);
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -98,15 +85,17 @@ exports.run = async (client, interaction) => {
             .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
-            .addField("Created:", `<t:${Math.floor(client.user.createdAt.valueOf() / 1000)}:R>`, true)
-            .addField("Uptime:", uptime, false)
+            .addField("Created:", `<t:${createdAt}:R>`, true);
+        if (response) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
+        botEmbed
+            .addField("Online Since:", `<t:${onlineSince}:R>`, true)
             .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
-            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: 'https://github.com/Glazelf/NinigiBot' }));
+            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
 
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });
 

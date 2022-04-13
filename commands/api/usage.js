@@ -34,72 +34,91 @@ exports.run = async (client, message, args = []) => {
         // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
         const date = new Date();
         let month = date.getMonth();
-        if (month == 0) month = "12";
-        if (month < 10) month = "0" + month;
+        if (month == 0) month = 12;
+        let stringMonth = month;
+        if (stringMonth < 10) stringMonth = "0" + stringMonth;
         let year = date.getFullYear();
 
         let format = "gen8vgc2022"
-        let rating = "1760";
-        let pokemon = args[0].toLowerCase();
+        let rating = "1500";
+        let pokemon = args.join("-").toLowerCase();
         let wasSuccessful = true;
+        let triedLastMonth = false;
 
-        await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${month}/${format}/${rating}/${pokemon}`);
-        if (wasSuccessful) {
-            if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage in ${JSONresponse.tier} so there's not enough data to form an embed!` });
+        await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`);
+        return useData();
 
-            let moveStats = "";
-            for await (const [key, value] of Object.entries(JSONresponse.moves)) {
-                moveStats = `${moveStats}\n${key}: ${value}`;
-            };
-            let itemStats = "";
-            for await (const [key, value] of Object.entries(JSONresponse.items)) {
-                itemStats = `${itemStats}\n${key}: ${value}`;
-            };
-            let abilityStats = "";
-            for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
-                abilityStats = `${abilityStats}\n${key}: ${value}`;
-            };
-            let spreadStats = "";
-            for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
-                if (typeof value == "object") {
-                    spreadStats = `${spreadStats}\n${key}:`;
-                    for await (const [key2, value2] of Object.entries(value)) {
-                        spreadStats = `${spreadStats}\n${key2}: ${value2}`;
-                    };
-                } else {
-                    spreadStats = `${spreadStats}\n${key}: ${value}`;
+        async function useData() {
+            if (wasSuccessful) {
+                // console.log(JSONresponse);
+                if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
+
+                let moveStats = "";
+                for await (const [key, value] of Object.entries(JSONresponse.moves)) {
+                    moveStats = `${moveStats}\n${key}: ${value}`;
                 };
+                let itemStats = "";
+                for await (const [key, value] of Object.entries(JSONresponse.items)) {
+                    itemStats = `${itemStats}\n${key}: ${value}`;
+                };
+                let abilityStats = "";
+                for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
+                    abilityStats = `${abilityStats}\n${key}: ${value}`;
+                };
+                let spreadStats = "";
+                for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
+                    if (typeof value == "object") {
+                        spreadStats = `${spreadStats}\n${key}:`;
+                        for await (const [key2, value2] of Object.entries(value)) {
+                            spreadStats = `${spreadStats}\n${key2}: ${value2}`;
+                        };
+                    } else {
+                        spreadStats = `${spreadStats}\n${key}: ${value}`;
+                    };
+                };
+                let teammateStats = "";
+                for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
+                    teammateStats = `${teammateStats}\n${key}: ${value}`;
+                };
+
+                let usageEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setFooter({ text: message.member.user.tag })
+                    .setTimestamp()
+                    .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
+                    .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
+                    .addField("Moves:", moveStats, true)
+                    .addField("Items:", itemStats, true)
+                    .addField("Abilities:", abilityStats, true)
+                    .addField("Spreads:", spreadStats, true)
+                    .addField("Teammates:", teammateStats, true);
+
+                return sendMessage({ client: client, message: message, embeds: usageEmbed });
+
+                // Try month-1 in case it's early in the month and last month's stats haven't been posted yet :)
+                // Downside to this approach is that it will try fetching on typos twice
+            } else if (triedLastMonth == false) {
+                month = month - 1;
+                if (month == 0) month = 12;
+                stringMonth = month;
+                if (stringMonth < 10) stringMonth = "0" + stringMonth;
+                triedLastMonth = true;
+                await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`);
+                return useData();
+
+            } else {
+                // make generic embed to guide people to usage statistics :)
+                // Buttons
+                let usageButtons = new Discord.MessageActionRow()
+                    .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
+
+                let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
+Here are some usage resources you might find usefull instead:`;
+
+                return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
             };
-            let teammateStats = "";
-            for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
-                teammateStats = `${teammateStats}\n${key}: ${value}`;
-            };
-
-            let usageEmbed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
-                .setFooter({ text: message.member.user.tag })
-                .setTimestamp()
-                .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} (${month}/${year})` })
-                .setDescription(`Usage: ${JSONresponse.usage}`)
-                .addField("Moves:", moveStats)
-                .addField("Items:", itemStats)
-                .addField("Abilities:", abilityStats)
-                .addField("Spreads:", spreadStats)
-                .addField("Teammates:", teammateStats);
-
-            return sendMessage({ client: client, message: message, embeds: usageEmbed });
-
-        } else {
-            // make generic embed to guide people to usage statistics :)
-            // Buttons
-            let usageButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
-                .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
-                .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
-
-            let replyText = "Sorry! I could not successfully fetch data for the inputs you provided. Here are some usage resources you might find usefull instead:";
-
-            return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
         };
 
     } catch (e) {
