@@ -57,12 +57,21 @@ exports.run = async (client, message) => {
         });
         let uniqueOwners = countUnique(ownerPool);
 
-        let user = message.member.user;
+        // Get latest commit
+        let githubURLVars = "Glazelf/NinigiBot";
+        let githubResponse = null
+        try {
+            githubResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
+        } catch (e) {
+            // console.log(e);
+            githubResponse = null;
+        };
 
         // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
         let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
         let onlineSince = Math.floor((date - client.uptime) / 1000);
+        let lastCommit = Math.floor(new Date(githubResponse.data.commit.commit.author.date).getTime() / 1000);
 
         // Calculate total user count
         // let userCount = await getUsers();
@@ -73,16 +82,7 @@ exports.run = async (client, message) => {
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
 
-        // Get latest commit
-        let githubURLVars = "Glazelf/NinigiBot";
-        let response = null
-        try {
-            response = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
-        } catch (e) {
-            // console.log(e);
-            response = null;
-        };
-        let lastCommit = Math.floor(new Date(response.data.commit.commit.author.date).getTime() / 1000);
+
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -99,10 +99,10 @@ exports.run = async (client, message) => {
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Average Users:", averageUsers.toString(), true)
             .addField("Created:", `<t:${createdAt}:R>`, true);
-        if (response) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
+        if (githubResponse) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
         botEmbed
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
-            .setFooter({ text: user.tag })
+            .setFooter({ text: message.member.user.tag })
             .setTimestamp();
 
         // Buttons
