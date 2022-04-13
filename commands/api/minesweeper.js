@@ -38,8 +38,9 @@ exports.run = async (client, message, args = []) => {
             buttonRowArray.push(buttonRow);
         });
 
-        // Remove second half of this string when switching to slash commands because itll be ephemeral anyways
-        return sendMessage({ client: client, message: message, content: `Here is your minesweeper grid, **${message.author.tag}**.\nNote that only **${message.author.tag}** can use it.`, components: buttonRowArray });
+        let returnString = `Here is your minesweeper grid, **${message.member.user.tag}**.`;
+        if (message.type != "APPLICATION_COMMAND") returnString = `${returnString}\nNote that only **${message.member.user.tag}** can use it.`;
+        return sendMessage({ client: client, message: message, content: returnString, components: buttonRowArray });
 
     } catch (e) {
         // Log error
