@@ -7,9 +7,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        // Get user
+        // Get user, change to get from interaction args
         let user;
         let member;
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
