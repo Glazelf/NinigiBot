@@ -24,11 +24,13 @@ module.exports = async ({ client, message, content = null, embeds = null, files 
 
         // Don't add components to slash commands unless specifically told to do so
         if (components) {
-            // Components, i.e. buttons
-            if (Array.isArray(components)) {
-                messageObject['components'] = components;
-            } else {
-                messageObject['components'] = [components];
+            if (components.components.length != 0) {
+                // Components, i.e. buttons
+                if (Array.isArray(components)) {
+                    messageObject['components'] = components;
+                } else {
+                    messageObject['components'] = [components];
+                };
             };
         };
         messageObject['ephemeral'] = ephemeral;
