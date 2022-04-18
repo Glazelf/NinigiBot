@@ -5,7 +5,6 @@ exports.run = async (client, message, args = []) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const Pokedex = await import('pokedex-promise-v2');
         const { Dex } = require('pokemon-showdown');
         const correctionName = require('../../objects/pokemon/correctionName.json');
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
@@ -20,16 +19,14 @@ exports.run = async (client, message, args = []) => {
         let subArgument;
         if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
 
-        let arrowUp = "<:arrow_up_red:909901820732784640>";
-        let arrowDown = "<:arrow_down_blue:909903420054437929>";
-
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setFooter({ text: message.member.user.tag })
             .setTimestamp();
 
         let pokemonButtons = new Discord.MessageActionRow();
-        let nameBulbapedia;
+        let nameBulbapedia = null;
+        let linkBulbapedia = null;
 
         switch (subCommand) {
             // Abilities
@@ -37,18 +34,13 @@ exports.run = async (client, message, args = []) => {
                 let ability = Dex.abilities.get(subArgument);
                 if (!ability) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
 
-                console.log(ability)
-
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
-
-                // Buttons
-                pokemonButtons
-                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${ability.effectType})` }));
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${ability.effectType})`;
 
                 pokemonEmbed
                     .setAuthor({ name: `${ability.name} (${ability.effectType})` })
-                    .addField("Introduced:", `Gen ${ability.gen}`, false)
-                    .addField("Description:", ability.desc, true);
+                    .setDescription(ability.desc)
+                    .addField("Introduced:", `Gen ${ability.gen}`, false);
                 break;
 
             // Items
@@ -58,62 +50,48 @@ exports.run = async (client, message, args = []) => {
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
 
-                console.log(item)
-
                 pokemonButtons
                     .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}(${item.effectType})` }));
 
                 pokemonEmbed
                     .setAuthor({ name: `${item.name} (${item.effectType})` })
+                    .setDescription(item.desc)
                     .addField("Introduced:", `Gen ${item.gen}`, true);
-                if (item.fling) pokemonEmbed.addField("Fling:", `${item.fling.basePower} BP`, true);
+                if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
                 pokemonEmbed
-                    .addField("Description:", item.desc, false)
                     .setImage(itemImage);
                 break;
 
             // Moves
             case "move":
-                await P.getMoveByName(subArgument)
-                    .then(async function (response) {
-                        let description;
-                        try {
-                            let effectEntry = response.effect_entries.find(element => element.language.name == "en");
-                            description = effectEntry.short_effect.replace("$effect_chance", response.effect_chance);
-                        } catch (e) {
-                            description = null;
-                        };
-                        let moveName = await capitalizeString(response.name);
-                        let nameBulbapedia = moveName.replaceAll(" ", "_");
-                        let type = await getTypeEmotes(response.type.name);
-                        let category = await capitalizeString(response.damage_class.name);
-                        let target = await capitalizeString(response.target.name);
-                        let ppString;
-                        if (response.pp) ppString = `${response.pp}|${response.pp * 1.2}|${response.pp * 1.4}|${response.pp * 1.6}`;
+                let move = Dex.moves.get(subArgument);
+                if (!move) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a move by that name.` });
 
-                        pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)` }));
+                nameBulbapedia = move.name.replaceAll(" ", "_");
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${move.effectType})`;
 
-                        pokemonEmbed
-                            .setAuthor({ name: moveName })
-                            .addField("Type:", type, true)
-                            .addField("Category:", category, true);
-                        if (response.power) pokemonEmbed.addField("Power:", response.power.toString(), true);
-                        if (response.accuracy) pokemonEmbed.addField("Accuracy:", `${response.accuracy}%`, true);
-                        if (response.pp) pokemonEmbed.addField("PP:", ppString, true)
-                        if (response.priority !== 0) pokemonEmbed.addField("Priority:", response.priority.toString(), true);
-                        pokemonEmbed
-                            .addField("Target:", target, true);
-                        if (description) pokemonEmbed.addField("Description:", description, false);
+                let type = await getTypeEmotes(move.type);
+                let category = move.category;
 
-                    }).catch(function (e) {
-                        // console.log(e);
-                        if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
-                        } else {
-                            return sendMessage({ client: client, message: message, content: `Could not find the specified move.` });
-                        };
-                    });
+                let ppString = `${move.pp}|${move.pp * 1.2}|${move.pp * 1.4}|${move.pp * 1.6}`;
+                let accuracy = `${move.accuracy}%`;
+                if (move.accuracy === true) accuracy = "Can't miss";
+
+                pokemonEmbed
+                    .setAuthor({ name: `${move.name} (${move.effectType})` })
+                    .setDescription(move.desc)
+                    .addField("Introduced:", `Gen ${move.gen}`, true)
+                    .addField("Type:", type, true)
+                    .addField("Category:", category, true);
+                if (move.basePower > 0) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
+                if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
+                pokemonEmbed
+                    .addField("Accuracy:", accuracy, true)
+                    .addField("PP:", ppString, true)
+                if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
+                if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
+                if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
+                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 break;
 
             // Default: Pokémon
@@ -153,6 +131,12 @@ exports.run = async (client, message, args = []) => {
                         };
                     });
                 break;
+        };
+
+        // Bulbapedia button
+        if (linkBulbapedia) {
+            pokemonButtons
+                .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: linkBulbapedia }));
         };
 
         // Send function for all except default
