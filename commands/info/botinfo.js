@@ -59,19 +59,24 @@ exports.run = async (client, message) => {
 
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
-        let githubResponse = null
+        let githubRepoResponse = null;
+        let githubMasterResponse = null;
         try {
-            githubResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
+            githubRepoResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}`);
+            githubMasterResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
         } catch (e) {
             // console.log(e);
-            githubResponse = null;
+            githubRepoResponse = null;
+            githubMasterResponse = null;
         };
 
         // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
         let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
         let onlineSince = Math.floor((date - client.uptime) / 1000);
-        let lastCommit = Math.floor(new Date(githubResponse.data.commit.commit.author.date).getTime() / 1000);
+        let lastCommit = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
+
+        console.log(githubRepoResponse.data.stargazers_count)
 
         // Calculate total user count
         // let userCount = await getUsers();
@@ -86,6 +91,7 @@ exports.run = async (client, message) => {
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
+            .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
@@ -93,11 +99,10 @@ exports.run = async (client, message) => {
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Average Users:", averageUsers.toString(), true)
             .addField("Created:", `<t:${createdAt}:R>`, true);
-        if (githubResponse) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
+        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
+        if (githubMasterResponse) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
         botEmbed
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
             .setFooter({ text: message.member.user.tag })
