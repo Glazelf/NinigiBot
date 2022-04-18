@@ -6,7 +6,7 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const Pokedex = await import('pokedex-promise-v2');
-        const P = new Pokedex.default();
+        const { Dex } = require('pokemon-showdown');
         const correctionName = require('../../objects/pokemon/correctionName.json');
         const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const getPokemon = require('../../util/pokemon/getPokemon');
@@ -29,77 +29,47 @@ exports.run = async (client, message, args = []) => {
             .setTimestamp();
 
         let pokemonButtons = new Discord.MessageActionRow();
+        let nameBulbapedia;
 
         switch (subCommand) {
             // Abilities
             case "ability":
-                await P.getAbilityByName(subArgument)
-                    .then(async function (response) {
-                        // Why are german entries still tagged as English?
-                        // let englishEntry = response.effect_entries.find(element => element.language.name = "en");
-                        // English entries always seem to be either the only or the last entry, so this should work. For now.
-                        let abilityDescription;
-                        let englishEntry = response.effect_entries.find(element => element.language.name == "en");
+                let ability = Dex.abilities.get(subArgument);
+                if (!ability) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
 
-                        if (englishEntry) {
-                            abilityDescription = englishEntry.short_effect;
-                        } else {
-                            englishEntry = response.flavor_text_entries.find(element => element.language.name == "en");
-                            abilityDescription = englishEntry.flavor_text;
-                        };
+                console.log(ability)
 
-                        let abilityName = await capitalizeString(response.name);
-                        let nameBulbapedia = abilityName.replaceAll(" ", "_");
+                nameBulbapedia = ability.name.replaceAll(" ", "_");
 
-                        // Buttons
-                        pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)` }));
+                // Buttons
+                pokemonButtons
+                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${ability.effectType})` }));
 
-                        pokemonEmbed
-                            .setAuthor({ name: abilityName })
-                            .addField("Description:", abilityDescription, false);
-
-                    }).catch(function (e) {
-                        console.log(e);
-                        if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
-                        } else {
-                            return sendMessage({ client: client, message: message, content: `Could not find the specified ability.` });
-                        };
-                    });
+                pokemonEmbed
+                    .setAuthor({ name: `${ability.name} (${ability.effectType})` })
+                    .addField("Introduced:", `Gen ${ability.gen}`, false)
+                    .addField("Description:", ability.desc, true);
                 break;
 
             // Items
             case "item":
-                await P.getItemByName(subArgument)
-                    .then(async function (response) {
-                        let itemName = response.name.replace("-", "").toLowerCase();
-                        let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemName}.png`;
-                        let itemAuthorName = await capitalizeString(response.name);
-                        let nameBulbapedia = itemAuthorName.replaceAll(" ", "_");
-                        let category = await capitalizeString(response.category.name);
+                let item = Dex.items.get(subArgument);
+                if (!item) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
+                nameBulbapedia = item.name.replaceAll(" ", "_");
 
-                        let effectEntry = response.effect_entries.find(element => element.language.name == "en");
-                        let description = effectEntry.short_effect;
+                console.log(item)
 
-                        pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
+                pokemonButtons
+                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}(${item.effectType})` }));
 
-                        pokemonEmbed
-                            .setAuthor({ name: itemAuthorName })
-                            .setThumbnail(response.sprites.default)
-                            .addField("Category:", category, true)
-                            .addField("Description:", description, false)
-                            .setImage(itemImage);
-
-                    }).catch(function (e) {
-                        // console.log(e);
-                        if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
-                        } else {
-                            return sendMessage({ client: client, message: message, content: `Could not find the specified item.` });
-                        };
-                    });
+                pokemonEmbed
+                    .setAuthor({ name: `${item.name} (${item.effectType})` })
+                    .addField("Introduced:", `Gen ${item.gen}`, true);
+                if (item.fling) pokemonEmbed.addField("Fling:", `${item.fling.basePower} BP`, true);
+                pokemonEmbed
+                    .addField("Description:", item.desc, false)
+                    .setImage(itemImage);
                 break;
 
             // Moves
@@ -142,45 +112,6 @@ exports.run = async (client, message, args = []) => {
                             return logger(e, client, message);
                         } else {
                             return sendMessage({ client: client, message: message, content: `Could not find the specified move.` });
-                        };
-                    });
-                break;
-
-            case "nature":
-                await P.getNatureByName(subArgument)
-                    .then(async function (response) {
-                        let author = await capitalizeString(response.name);
-                        let statUp;
-                        let statDown;
-                        let statString;
-                        let flavourUp;
-                        let flavourDown;
-                        let flavourString;
-
-                        if (response.increased_stat && response.increased_stat.name) {
-                            statUp = await capitalizeString(response.increased_stat.name);
-                            statDown = await capitalizeString(response.decreased_stat.name);
-                            statString = `${arrowUp} ${statUp}\n${arrowDown} ${statDown}`;
-
-                            flavourUp = await capitalizeString(response.likes_flavor.name);
-                            flavourDown = await capitalizeString(response.hates_flavor.name);
-                            flavourString = `${arrowUp} ${flavourUp}\n${arrowDown} ${flavourDown}`;
-                        } else {
-                            statString = "Neutral";
-                            flavourString = statString;
-                        };
-
-                        pokemonEmbed
-                            .setAuthor({ name: author })
-                            .addField("Stats:", statString)
-                            .addField("Flavours:", flavourString)
-
-                    }).catch(function (e) {
-                        // console.log(e);
-                        if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
-                        } else {
-                            return sendMessage({ client: client, message: message, content: `Could not find the specified nature.` });
                         };
                     });
                 break;
@@ -282,16 +213,6 @@ module.exports.config = {
             name: "move-name",
             type: 3,
             description: "Get move info by its English name.",
-            required: true
-        }]
-    }, {
-        name: "nature",
-        type: 1,
-        description: "Get info on a nature.",
-        options: [{
-            name: "nature-name",
-            type: 3,
-            description: "Get nature info by its English name.",
             required: true
         }]
     }, {
