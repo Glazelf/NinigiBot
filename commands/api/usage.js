@@ -111,8 +111,8 @@ exports.run = async (client, message, args = []) => {
                 // Buttons
                 let usageButtons = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/${format}-${rating}.txt` }))
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${month}/moveset/${format}-${rating}.txt` }));
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/${format}-${rating}.txt` }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
 
                 let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
 Here are some usage resources you might find usefull instead:`;
