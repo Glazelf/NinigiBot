@@ -16,7 +16,6 @@
     "giphy-random": "^2.0.8",
     "owoify-js": "^1.0.7",
     "path": "^0.12.7",
-    "pokedex-promise-v2": "^4.0.0",
     "pokemon-showdown": "^0.11.7",
     "pureimage": "^0.3.8",
     "sequelize": "^6.19.0",
