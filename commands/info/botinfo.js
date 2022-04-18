@@ -47,15 +47,8 @@ exports.run = async (client, message) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
-        let averageUsers = Math.round(totalMembers / totalGuilds);
         if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
 
-        // Get unique owner count
-        let ownerPool = [];
-        await client.guilds.cache.forEach(guild => {
-            ownerPool.push(guild.ownerId);
-        });
-        let uniqueOwners = countUnique(ownerPool);
 
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
@@ -75,11 +68,6 @@ exports.run = async (client, message) => {
         let date = Date.now();
         let onlineSince = Math.floor((date - client.uptime) / 1000);
         let lastCommit = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
-
-        console.log(githubRepoResponse.data.stargazers_count)
-
-        // Calculate total user count
-        // let userCount = await getUsers();
 
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -130,13 +118,9 @@ exports.run = async (client, message) => {
             //             if (!member.user.bot) userList.push(member.id);
             //         }));
             // });
-            // userCount = countUnique(userList);
+            // userCount = [...new Set(userList)];
 
             return userCount;
-        };
-
-        function countUnique(iterable) {
-            return new Set(iterable).size;
         };
 
     } catch (e) {
