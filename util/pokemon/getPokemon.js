@@ -1,31 +1,21 @@
-module.exports = async (client, message, response) => {
+module.exports = async (client, message, pokemon) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
-        const Pokedex = await import('pokedex-promise-v2');
-        const P = new Pokedex.default();
-        const correctionDisplay = require('../../objects/pokemon/correctionDisplay.json');
+        const { Dex } = require('pokemon-showdown');
         const correctionID = require('../../objects/pokemon/correctionID.json');
+
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
         const getTypeEmotes = require('./getTypeEmotes');
-        const capitalizeString = require('../capitalizeString');
 
-        if (!response) return;
-
-        // Correct name when searching by ID
-        pokemonName = response.name;
+        if (!pokemon) return;
 
         // Typing
-        let typeString = "";
-        let type1 = response.types[0].type.name;
-        if (response.types[1]) {
-            var type2 = response.types[1].type.name;
-            typeString = await getTypeEmotes(type1, type2);
-        } else {
-            typeString = await getTypeEmotes(type1);
-        };
+        let type1 = pokemon.types[0];
+        let type2 = pokemon.types[1];
+        let typeString = await getTypeEmotes(type1, type2);
 
         // Check type matchups
         let superEffectives = "";
@@ -36,7 +26,7 @@ module.exports = async (client, message, response) => {
             let typeName = key;
 
             // Dual type Pokemon
-            if (response.types[1]) {
+            if (pokemon.types[1]) {
                 if (type.se.includes(type1)) type.effect += 1;
                 if (type.se.includes(type2)) type.effect += 1;
                 if (type.res.includes(type1)) type.effect += -1;
@@ -99,176 +89,112 @@ module.exports = async (client, message, response) => {
             };
         };
 
-        pokemonID = leadingZeros(response.id.toString());
+        var pokemonID = leadingZeros(pokemon.num.toString());
 
         // Forms
-        const alolaString = "-alola";
-        const galarString = "-galar";
-        const megaString = "-mega";
-        const primalString = "-primal";
-        const gmaxString = "-gmax";
-        const eternamaxString = "-eternamax";
-        const alolaBool = pokemonName.endsWith(alolaString);
-        const galarBool = pokemonName.endsWith(galarString);
-        const megaBool = pokemonName.endsWith(megaString);
-        const primalBool = pokemonName.endsWith(primalString);
-        const gmaxBool = pokemonName.endsWith(gmaxString);
-        const eternamaxBool = pokemonName.endsWith(eternamaxString);
+        const alolaString = "-Alola";
+        const galarString = "-Galar";
+        const megaString = "-Mega";
+        const primalString = "-Primal";
+        const gmaxString = "-Gmax";
+        const eternamaxString = "-Eternamax";
+        const alolaBool = pokemon.name.endsWith(alolaString);
+        const galarBool = pokemon.name.endsWith(galarString);
+        const megaBool = pokemon.name.endsWith(megaString);
+        const primalBool = pokemon.name.endsWith(primalString);
+        const gmaxBool = pokemon.name.endsWith(gmaxString);
+        const eternamaxBool = pokemon.name.endsWith(eternamaxString);
         let formChar;
 
-        if (alolaBool || galarBool || megaBool || primalBool || gmaxBool) {
-            if (alolaBool) {
-                formChar = "-a";
-            };
-            if (galarBool) {
-                formChar = "-g";
-            };
-            if (megaBool || primalBool) {
-                formChar = "-m";
-            };
-            if (gmaxBool) {
-                formChar = "-gi";
-            };
-            let baseName = pokemonName.replace("-alola", "").replace("-galar", "").replace("-mega", "").replace("-primal", "").replace("-gmax", "");
-            await P.getPokemonByName(baseName)
-                .then(function (responseForm) {
-                    let formID = leadingZeros(responseForm.id.toString());
-                    pokemonID = `${formID}${formChar}`;
-                })
-                .catch(function (e) {
-                    // console.log(e);
-                    return sendMessage({ client: client, message: message, content: `Could not find the specified Pokémon.` });
-                });
+        if (alolaBool || galarBool || megaBool || primalBool || gmaxBool || eternamaxBool) {
+            if (alolaBool) formChar = "-a";
+            if (galarBool) formChar = "-g";
+            if (megaBool || primalBool) formChar = "-m";
+            if (gmaxBool) formChar = "-gi";
+            if (eternamaxBool) formChar = "-e";
+            pokemonID = `${pokemonID}${formChar}`;
         };
 
         // Metrics
-        let weight = `${response.weight / 10}kg`;
-        let height = `${response.height / 10}m`;
-        if (gmaxBool || eternamaxBool) weight = "???kg";
+        let metricsString = "";
+        if (pokemon.weightkg) metricsString = `${pokemon.weightkg}kg`;
+        if (pokemon.weightkg && pokemon.heightm) metricsString = `${metricsString}\n`;
+        if (pokemon.heightm) metricsString = `${metricsString}${pokemon.heightm}m`;
+        if (gmaxBool || eternamaxBool) metricsString = "";
 
-        // edgecase ID corrections, should be put in a JSON sometime. Delta is a nerd.
-        await correctValue(correctionID, pokemonID);
 
-        // ID and get Species Info, currently unused
-        // let numericID = pokemonID.replace(/\D/g, '');
-        // let speciesInfo = await (await fetch(`https://pokeapi.co/api/v2/pokemon-species/${numericID}/`)).json();
+        // edgecase ID corrections
+        await correctValue(correctionID, pokemon.name, pokemonID);
 
         // Official art
         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`; // Use Serebii images
-        // let banner = response.sprites.other.home.front_default; // Use Home renders
+        // let banner = pokemon.sprites.other.home.front_default; // Use Home renders
 
         // Shuffle icons, only works for pokemon in pokemon shuffle
         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
-        // let icon = `https://www.smogon.com/forums//media/minisprites/${pokemonName}.png`;
+        // let icon = `https://www.smogon.com/forums//media/minisprites/${pokemon.name}.png`;
         // Gen 8 party icons, filled with gen 7 icons where needed, very small
-        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${response.name}.png?raw=true`;
+        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${pokemon.name.toLowerCase()}.png?raw=true`;
 
         // High res SwSh sprites
         let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
 
-        let abilityString = ``;
-        if (response.abilities[0]) {
-            abilityString = `${response.abilities[0].ability.name}`;
-            if (response.abilities[1]) {
-                if (response.abilities[1].is_hidden == true) {
-                    abilityString += `\n${response.abilities[1].ability.name} (Hidden)`;
-                } else {
-                    abilityString += `\n${response.abilities[1].ability.name}`;
-                };
-            };
-            if (response.abilities[2]) {
-                if (response.abilities[2].is_hidden == true) {
-                    abilityString += `\n${response.abilities[2].ability.name} (Hidden)`;
-                } else {
-                    abilityString += `\n${response.abilities[2].ability.name}`;
-                };
-            };
-        };
+        let abilityString = pokemon.abilities['0'];
+        if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
+        if (pokemon.abilities.H) abilityString = `${abilityString}\n${pokemon.abilities.H} (Hidden)`;
 
         let statLevels = `(50) (100)`;
-        let baseHP = response.stats[0].base_stat;
-        let baseAtk = response.stats[1].base_stat;
-        let baseDef = response.stats[2].base_stat;
-        let baseSpA = response.stats[3].base_stat;
-        let baseSpD = response.stats[4].base_stat;
-        let baseSpe = response.stats[5].base_stat;
-        let BST = baseHP + baseAtk + baseDef + baseSpA + baseSpD + baseSpe;
 
-        let HPstats = calcHP(baseHP);
-        let Atkstats = calcStat(baseAtk);
-        let Defstats = calcStat(baseDef);
-        let SpAstats = calcStat(baseSpA);
-        let SpDstats = calcStat(baseSpD);
-        let Spestats = calcStat(baseSpe);
-
-        // Alter display Pokémon names
-        await correctValue(correctionDisplay, pokemonName);
-
-        pokemonName = await capitalizeString(pokemonName);
-        let abilityStringCapitalized = await capitalizeAbilities(abilityString);
-
-        let footer = message.member.user.tag;
+        let HPstats = calcHP(pokemon.baseStats.hp);
+        let Atkstats = calcStat(pokemon.baseStats.atk);
+        let Defstats = calcStat(pokemon.baseStats.def);
+        let SpAstats = calcStat(pokemon.baseStats.spa);
+        let SpDstats = calcStat(pokemon.baseStats.spd);
+        let Spestats = calcStat(pokemon.baseStats.spe);
 
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemonName}`, iconURL: iconParty })
+            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
             .setThumbnail(sprite)
-            .addField("Type:", typeString, true)
-            .addField("Metrics:", `Weight: ${weight}
-Height: ${height}`, true);
-        if (abilityString.length > 0) pkmEmbed.addField("Abilities:", abilityStringCapitalized, false);
+            .addField("Type:", typeString, true);
+        if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
+        pkmEmbed
+            .addField("Abilities:", abilityString, false);
         if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
         if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
         if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
         pkmEmbed
-            .addField(`Stats: ${statLevels}`, `HP: **${baseHP}** ${HPstats}
-Atk: **${baseAtk}** ${Atkstats}
-Def: **${baseDef}** ${Defstats}
-SpA: **${baseSpA}** ${SpAstats}
-SpD: **${baseSpD}** ${SpDstats}
-Spe: **${baseSpe}** ${Spestats}
-BST: ${BST}`, false)
+            .addField(`Stats: ${statLevels}`, `HP: **${pokemon.baseStats.hp}** ${HPstats}
+Atk: **${pokemon.baseStats.atk}** ${Atkstats}
+Def: **${pokemon.baseStats.def}** ${Defstats}
+SpA: **${pokemon.baseStats.spa}** ${SpAstats}
+SpD: **${pokemon.baseStats.spd}** ${SpDstats}
+Spe: **${pokemon.baseStats.spe}** ${Spestats}
+BST: ${pokemon.bst}`, false)
             .setImage(banner)
-            .setFooter({ text: footer, iconURL: icon })
+            .setFooter({ text: message.member.user.tag, iconURL: icon })
             .setTimestamp();
 
         let previousPokemon = null;
         let nextPokemon = null;
-        let previousPokemonName = null;
-        let nextPokemonName = null;
-        let firstPokemon = "Bulbasaur"; // First Pokémon in the Pokédex
-        let finalPokemon = "Calyrex"; // Final Pokémon in the Pokédex
         let maxPkmID = 898; // Calyrex
-        let searchIndex = pokemonID.replace(/[^0-9]/ig, "") - 2; // List is indexed from 0, -1 for previous Pokémon and -1 to go from ID to index. Regex is to make sure only numeric characters from the ID are kept in case of forms.
-        let searchAmount = 3;
 
-        if (searchIndex < 0) {
-            searchIndex = 0;
-            searchAmount = 2;
-        } else if (searchIndex > maxPkmID) searchIndex = response.species.url.replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", "") - 2;
+        let allPokemon = Dex.species.all();
 
-        await P.getPokemonsList({ limit: searchAmount, offset: searchIndex }).then(async function (response) {
-            previousPokemonName = response.results[0].name;
-            if (response.results[2]) nextPokemonName = response.results[2].name;
-            if (response.results[0].name == "bulbasaur") {
-                previousPokemon = finalPokemon;
-                nextPokemonName = response.results[1].name;
-            };
-            if (response.results[1].name == "calyrex") nextPokemon = firstPokemon;
-            if (!previousPokemon) previousPokemon = await capitalizeString(previousPokemonName);
-            if (!nextPokemon) nextPokemon = await capitalizeString(nextPokemonName);
-        }).catch(function (e) {
-            // console.log(e);
-            previousPokemon = null;
-            nextPokemon = null;
-        });
+        let previousPokemonID = pokemon.num - 1;
+        let nextPokemonID = pokemon.num + 1;
+        if (previousPokemonID < 1) previousPokemonID = maxPkmID;
+        if (nextPokemonID > maxPkmID) nextPokemonID = 1;
+
+        previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
+        nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
 
         // Buttons
         let pkmButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon }))
-            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon }));
+            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }))
+            .addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
 
         let messageObject = { embed: pkmEmbed, buttons: pkmButtons };
         return messageObject;
@@ -296,8 +222,8 @@ BST: ${BST}`, false)
             // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
 
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            if (pokemonName.endsWith("-gmax") || pokemonName.endsWith("-eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
-            if (pokemonName == "shedinja") StatText = `(1-1) (1-1)`;
+            if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
+            if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
 
@@ -327,17 +253,6 @@ BST: ${BST}`, false)
             return StatText;
         };
 
-        async function capitalizeAbilities(str) {
-            let abilitySplit = str.split('\n');
-            let newArray = [];
-            for (var i = 0; i < abilitySplit.length; i++) {
-                let abilityTemp = await capitalizeString(abilitySplit[i])
-                newArray.push(abilityTemp);
-            };
-            capitalizedAbilities = newArray.join('\n');
-            return capitalizedAbilities;
-        };
-
         function leadingZeros(str) {
             for (var i = str.length; i < 3; i++) {
                 str = "0" + str;
@@ -345,12 +260,13 @@ BST: ${BST}`, false)
             return str;
         };
 
-        async function correctValue(object, input) {
+        async function correctValue(object, pokemonName, input) {
             var uncorrectedNames = Object.keys(object);
             uncorrectedNames.forEach(function (key) {
+                pokemonName = pokemonName.toLowerCase();
                 if (pokemonName == key) {
-                    if (input == pokemonName) pokemonName = object[key];
                     if (input == pokemonID) pokemonID = object[key];
+
                 };
             });
         };

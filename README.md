@@ -7,7 +7,6 @@ For questions or support either [create a discussion](https://github.com/Glazelf
 [<img src="https://canary.discordapp.com/api/guilds/549214833858576395/widget.png?style=banner2">](https://discord.gg/2gkybyu)
 
 ## Credits
-[Pokeapi](https://pokeapi.co/): Pokémon data.  
 [Smogon API](https://www.smogon.com/forums/threads/usage-stats-api.3661849): Competitive Pokémon usage data.  
 [Serebii](https://serebii.net): Pokémon art and shiny sprites.  
 [PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
