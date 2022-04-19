@@ -66,7 +66,9 @@ exports.run = async (client, message) => {
         let onlineSince = Math.floor((date - client.uptime) / 1000);
         let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
-        let lastCommitString = `"${githubMasterResponse.data.commit.commit.message.split("\n")[0]}"\n<t:${lastCommitTimestamp}:R>`;
+        let lastCommitMessage = `"[${githubMasterResponse.data.commit.commit.message.split("\n")[0]}](https://github.com/Glazelf/NinigiBot/commit/${githubMasterResponse.data.commit.sha})"`;
+        let lastCommitAuthor = `-[${githubMasterResponse.data.commit.commit.author.name}](https://github.com/${githubMasterResponse.data.commit.commit.author.name})`;
+        let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
