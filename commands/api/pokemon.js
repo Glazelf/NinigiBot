@@ -46,10 +46,9 @@ exports.run = async (client, message, args = []) => {
                 if (!item || !item.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
-                nameBulbapedia = item.name.replaceAll(" ", "_");
 
-                pokemonButtons
-                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
+                nameBulbapedia = item.name.replaceAll(" ", "_");
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
                 pokemonEmbed
                     .setAuthor({ name: item.name })
