@@ -98,7 +98,6 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ embeds: [messageObject.embed], components: [messageObject.buttons] });
                             return;
 
-
                         } else if (interaction.customId.includes("minesweeper")) {
                             if (interaction.user.id !== interaction.customId.split("-")[3]) return;
                             let componentsCopy = interaction.message.components;

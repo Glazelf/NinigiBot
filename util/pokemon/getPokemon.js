@@ -122,7 +122,6 @@ module.exports = async (client, message, pokemon) => {
         if (pokemon.heightm) metricsString = `${metricsString}${pokemon.heightm}m`;
         if (gmaxBool || eternamaxBool) metricsString = "";
 
-
         // edgecase ID corrections
         await correctValue(correctionID, pokemon.name, pokemonID);
 
