@@ -70,27 +70,27 @@ module.exports = async (client, interaction) => {
                 switch (interaction.componentType) {
                     case "BUTTON":
                         // Pokémon command
-                        if (interaction.customId == 'pkmleft' || interaction.customId == 'pkmright') {
+                        if (interaction.customId.startsWith("pkm")) {
                             const { Dex } = require('pokemon-showdown');
 
-                            let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
-                            let newPkmID = pkmID;
-                            let maxPkmID = 898; // Calyrex
-                            let buttonIndex = null;
+                            let newPokemonName = null;
 
-                            if (interaction.customId == 'pkmleft') {
-                                newPkmID = parseInt(pkmID) - 1;
-                                buttonIndex = 0;
+                            switch (interaction.customId) {
+                                case "pkmleft":
+                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmleft').label;
+                                    break;
+
+                                case "pkmbase":
+                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmbase').label;
+                                    break;
+
+                                case "pkmright":
+                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmright').label;
+                                    break;
                             };
-                            if (interaction.customId == 'pkmright') {
-                                newPkmID = parseInt(pkmID) + 1;
-                                buttonIndex = 1;
-                            };
-                            if (newPkmID < 1) newPkmID = maxPkmID;
-                            if (newPkmID > maxPkmID) newPkmID = 1;
 
                             let messageObject = null;
-                            let pokemon = Dex.species.get(interaction.message.components[0].components[buttonIndex].label)
+                            let pokemon = Dex.species.get(newPokemonName);
                             messageObject = await getPokemon(client, interaction, pokemon);
 
                             if (!messageObject) return;
