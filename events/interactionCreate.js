@@ -73,7 +73,13 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId.startsWith("pkm")) {
                             const { Dex } = require('pokemon-showdown');
 
-                            let newPokemonName = interaction.message.components[0].components.find(component => component.customId == interaction.customId).label;
+                            let newPokemonName = null;
+                            for (let componentRow of interaction.message.components) {
+                                if (newPokemonName) break;
+                                newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
+                            };
+                            if (!newPokemonName) return;
+                            newPokemonName = newPokemonName.label;
 
                             let messageObject = null;
                             let pokemon = Dex.species.get(newPokemonName);

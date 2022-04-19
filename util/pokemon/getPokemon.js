@@ -141,7 +141,13 @@ module.exports = async (client, message, pokemon) => {
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
-        if (pokemon.abilities.H) abilityString = `${abilityString}\n${pokemon.abilities.H} (Hidden)`;
+        if (pokemon.abilities.H) {
+            if (pokemon.unreleasedHidden) {
+                abilityString = `${abilityString}\n${pokemon.abilities.H} (Unreleased Hidden)`;
+            } else {
+                abilityString = `${abilityString}\n${pokemon.abilities.H} (Hidden)`;
+            };
+        };
 
         let statLevels = `(50) (100)`;
 
@@ -194,12 +200,31 @@ BST: ${pokemon.bst}`, false)
         let pkmButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
 
-        console.log(pokemon.baseSpecies)
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
 
         pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
 
-        let messageObject = { embed: pkmEmbed, buttons: pkmButtons };
+        let formButtons = new Discord.MessageActionRow();
+        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) {
+            if (pokemon.otherFormes.length > 0) {
+                if (pokemon.otherFormes.length < 6) {
+                    for (let i = 0; i < pokemon.otherFormes.length; i++) {
+                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemon.otherFormes[i] }));
+                    };
+                    // Pokémon with way too many forms
+                } else {
+
+                };
+            };
+        };
+
+        console.log(pokemon)
+
+        let buttonArray = [];
+        if (formButtons.components.length > 0) buttonArray.push(formButtons);
+        buttonArray.push(pkmButtons);
+
+        let messageObject = { embed: pkmEmbed, buttons: buttonArray };
         return messageObject;
 
         function calcHP(base) {
