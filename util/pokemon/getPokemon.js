@@ -148,6 +148,7 @@ module.exports = async (client, message, pokemon) => {
                 abilityString = `${abilityString}\n${pokemon.abilities.H} (Hidden)`;
             };
         };
+        if (pokemon.abilities.S) abilityString = `${abilityString}\n${pokemon.abilities.S} (Special)`;
 
         let statLevels = `(50) (100)`;
 
@@ -211,14 +212,12 @@ BST: ${pokemon.bst}`, false)
                     for (let i = 0; i < pokemon.otherFormes.length; i++) {
                         formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemon.otherFormes[i] }));
                     };
-                    // Pokémon with way too many forms
                 } else {
-
+                    // Pokémon with way too many forms
+                    // Fuck you (for now)
                 };
             };
         };
-
-        console.log(pokemon)
 
         let buttonArray = [];
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
