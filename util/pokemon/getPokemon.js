@@ -125,6 +125,8 @@ module.exports = async (client, message, pokemon) => {
         // edgecase ID corrections
         await correctValue(correctionID, pokemon.name, pokemonID);
 
+        let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
+
         // Official art
         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`; // Use Serebii images
         // let banner = pokemon.sprites.other.home.front_default; // Use Home renders
@@ -133,10 +135,10 @@ module.exports = async (client, message, pokemon) => {
         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
 
         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
-        let iconParty = `https://www.smogon.com/forums//media/minisprites/${encodeURIComponent(pokemon.name.toLowerCase())}.png`;
+        let iconParty = `https://www.smogon.com/forums//media/minisprites/${urlName}.png`;
 
         // Shiny sprite
-        let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${encodeURIComponent(pokemon.name.toLowerCase())}.png`;
+        let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`;
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
