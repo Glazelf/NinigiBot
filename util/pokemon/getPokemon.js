@@ -123,6 +123,7 @@ module.exports = async (client, message, pokemon) => {
         if (gmaxBool || eternamaxBool) metricsString = "";
 
         // edgecase ID corrections
+        // TODO: add a bunch of meaningless forms to JSON, like Arceus, Vivillon, Unown etc.
         await correctValue(correctionID, pokemon.name, pokemonID);
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
