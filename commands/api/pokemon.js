@@ -98,8 +98,7 @@ exports.run = async (client, message, args = []) => {
 
             // Default: Pokémon
             default:
-                // Public variables
-                var pokemonName = args;
+                let pokemonName = args;
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
