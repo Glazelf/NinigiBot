@@ -8,6 +8,7 @@ exports.run = async (client, message, args = []) => {
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
+        const capitalizeString = require('../../util/capitalizeString');
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Pokémon to look up.` });
 
@@ -73,6 +74,9 @@ exports.run = async (client, message, args = []) => {
                 let accuracy = `${move.accuracy}%`;
                 if (move.accuracy === true) accuracy = "Can't miss";
 
+                let target = await capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
+                if (target == "Normal") target = "Any Adjacent";
+
                 pokemonEmbed
                     .setAuthor({ name: move.name })
                     .setDescription(move.desc)
@@ -80,6 +84,7 @@ exports.run = async (client, message, args = []) => {
                     .addField("Type:", type, true)
                     .addField("Category:", category, true);
                 if (move.basePower > 0) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
+                pokemonEmbed.addField("Target:", target, true);
                 if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
                 pokemonEmbed
                     .addField("Accuracy:", accuracy, true)
