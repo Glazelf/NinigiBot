@@ -117,9 +117,9 @@ module.exports = async (client, message, pokemon) => {
 
         // Metrics
         let metricsString = "";
-        if (pokemon.weightkg) metricsString = `${pokemon.weightkg}kg`;
+        if (pokemon.weightkg) metricsString = `Weight: ${pokemon.weightkg}kg`;
         if (pokemon.weightkg && pokemon.heightm) metricsString = `${metricsString}\n`;
-        if (pokemon.heightm) metricsString = `${metricsString}${pokemon.heightm}m`;
+        if (pokemon.heightm) metricsString = `${metricsString}Height: ${pokemon.heightm}m`;
         if (gmaxBool || eternamaxBool) metricsString = "";
 
         // edgecase ID corrections
