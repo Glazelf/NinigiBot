@@ -32,7 +32,7 @@ exports.run = async (client, message, args = []) => {
                 if (!ability) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
-                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${ability.effectType})`;
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
 
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
@@ -49,7 +49,7 @@ exports.run = async (client, message, args = []) => {
                 nameBulbapedia = item.name.replaceAll(" ", "_");
 
                 pokemonButtons
-                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}(${item.effectType})` }));
+                    .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}` }));
 
                 pokemonEmbed
                     .setAuthor({ name: item.name })
@@ -65,7 +65,7 @@ exports.run = async (client, message, args = []) => {
                 if (!move || !move.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
-                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${move.effectType})`;
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
                 let type = await getTypeEmotes(move.type);
                 let category = move.category;
