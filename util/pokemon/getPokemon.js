@@ -134,7 +134,7 @@ module.exports = async (client, message, pokemon) => {
         // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
         // let icon = `https://www.smogon.com/forums//media/minisprites/${pokemon.name}.png`;
         // Gen 8 party icons, filled with gen 7 icons where needed, very small
-        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${pokemon.name.toLowerCase()}.png?raw=true`;
+        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${encodeURIComponent(pokemon.name.toLowerCase())}.png?raw=true`;
 
         // High res SwSh sprites
         let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
