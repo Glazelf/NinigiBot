@@ -6,12 +6,8 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
-        const correctionName = require('../../objects/pokemon/correctionName.json');
-        const easterEggName = require('../../objects/pokemon/easterEggName.json');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
-        const capitalizeString = require('../../util/capitalizeString');
-        const randomNumber = require('../../util/randomNumber');
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Pokémon to look up.` });
 
@@ -38,7 +34,7 @@ exports.run = async (client, message, args = []) => {
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${ability.effectType})`;
 
                 pokemonEmbed
-                    .setAuthor({ name: `${ability.name} (${ability.effectType})` })
+                    .setAuthor({ name: ability.name })
                     .setDescription(ability.desc)
                     .addField("Introduced:", `Gen ${ability.gen}`, false);
                 break;
@@ -47,6 +43,7 @@ exports.run = async (client, message, args = []) => {
             case "item":
                 let item = Dex.items.get(subArgument);
                 if (!item) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
 
@@ -54,7 +51,7 @@ exports.run = async (client, message, args = []) => {
                     .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}(${item.effectType})` }));
 
                 pokemonEmbed
-                    .setAuthor({ name: `${item.name} (${item.effectType})` })
+                    .setAuthor({ name: item.name })
                     .setDescription(item.desc)
                     .addField("Introduced:", `Gen ${item.gen}`, true);
                 if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
@@ -78,7 +75,7 @@ exports.run = async (client, message, args = []) => {
                 if (move.accuracy === true) accuracy = "Can't miss";
 
                 pokemonEmbed
-                    .setAuthor({ name: `${move.name} (${move.effectType})` })
+                    .setAuthor({ name: move.name })
                     .setDescription(move.desc)
                     .addField("Introduced:", `Gen ${move.gen}`, true)
                     .addField("Type:", type, true)
@@ -98,39 +95,17 @@ exports.run = async (client, message, args = []) => {
             default:
                 // Public variables
                 var pokemonName = args;
-                var pokemonID;
-
-                let minPkmID = 1; // Bulbasaur
-                let maxPkmID = 898; // Calyrex
 
                 // Catch Slash Command structure
                 if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
 
                 // Edgecase name corrections
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
-                await correctValue(correctionName, pokemonName);
 
-                // Easter egg name aliases
-                await correctValue(easterEggName, pokemonName);
-
-                // Random Pokémon if argument is "random"
-                let randomID = await randomNumber(minPkmID, maxPkmID);
-                if (pokemonName.toLowerCase() == "random") pokemonName = randomID;
-
-                P.getPokemonByName(pokemonName)
-                    .then(async function (response) {
-                        let messageObject = await getPokemon(client, message, response);
-                        return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
-
-                    }).catch(function (e) {
-                        // console.log(e);
-                        if (e.toString().includes("Missing Permissions")) {
-                            return logger(e, client, message);
-                        } else {
-                            return sendMessage({ client: client, message: message, content: `Could not find the specified Pokémon.` });
-                        };
-                    });
-                break;
+                let pokemon = Dex.species.get(pokemonName);
+                if (!pokemon) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                let messageObject = await getPokemon(client, message, pokemon);
+                return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
         };
 
         // Bulbapedia button
@@ -142,21 +117,6 @@ exports.run = async (client, message, args = []) => {
         // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, message: message, embeds: pokemonEmbed, components: pokemonButtons });
         return;
-
-        // Correct common name discrepancies
-        async function correctValue(object, input) {
-            var uncorrectedNames = Object.keys(object);
-            uncorrectedNames.forEach(function (key) {
-                if (pokemonName == key) {
-                    if (input == pokemonName) pokemonName = object[key];
-                    if (input == pokemonID) pokemonID = object[key];
-                };
-            });
-        };
-
-        function getKeyByValue(object, value) {
-            return Object.keys(object).find(key => object[key] === value);
-        };
 
     } catch (e) {
         // Log error

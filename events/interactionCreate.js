@@ -71,46 +71,34 @@ module.exports = async (client, interaction) => {
                     case "BUTTON":
                         // Pokémon command
                         if (interaction.customId == 'pkmleft' || interaction.customId == 'pkmright') {
-                            try {
-                                const Pokedex = await import('pokedex-promise-v2');
-                                const P = new Pokedex.default();
+                            const { Dex } = require('pokemon-showdown');
 
-                                let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
-                                let newPkmID = pkmID;
-                                let maxPkmID = 898; // Calyrex
+                            let pkmID = interaction.message.embeds[0].author.name.substring(0, 3);
+                            let newPkmID = pkmID;
+                            let maxPkmID = 898; // Calyrex
+                            let buttonIndex = null;
 
-                                if (interaction.customId == 'pkmleft') {
-                                    newPkmID = parseInt(pkmID) - 1;
-                                } else {
-                                    newPkmID = parseInt(pkmID) + 1;
-                                };
-
-                                if (newPkmID < 1) {
-                                    newPkmID = maxPkmID;
-                                } else if (newPkmID > maxPkmID) {
-                                    newPkmID = 1;
-                                };
-
-                                let messageObject = null;
-
-                                try {
-                                    await P.getPokemonByName(newPkmID)
-                                        .then(async function (response) {
-                                            messageObject = await getPokemon(client, interaction, response, interaction);
-                                        });
-                                } catch (e) {
-                                    // console.log(e);
-                                    return;
-                                };
-                                if (!messageObject) return;
-
-                                await interaction.update({ embeds: [messageObject.embed], components: [messageObject.buttons] });
-                                return;
-
-                            } catch (e) {
-                                // console.log(e);
-                                return;
+                            if (interaction.customId == 'pkmleft') {
+                                newPkmID = parseInt(pkmID) - 1;
+                                buttonIndex = 0;
                             };
+                            if (interaction.customId == 'pkmright') {
+                                newPkmID = parseInt(pkmID) + 1;
+                                buttonIndex = 1;
+                            };
+                            if (newPkmID < 1) newPkmID = maxPkmID;
+                            if (newPkmID > maxPkmID) newPkmID = 1;
+
+                            let messageObject = null;
+                            let pokemon = Dex.species.get(interaction.message.components[0].components[buttonIndex].label)
+                            messageObject = await getPokemon(client, interaction, pokemon);
+
+                            if (!messageObject) return;
+
+                            await interaction.update({ embeds: [messageObject.embed], components: [messageObject.buttons] });
+                            return;
+
+
                         } else if (interaction.customId.includes("minesweeper")) {
                             if (interaction.user.id !== interaction.customId.split("-")[3]) return;
                             let componentsCopy = interaction.message.components;
