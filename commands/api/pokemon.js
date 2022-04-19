@@ -108,7 +108,7 @@ exports.run = async (client, message, args = []) => {
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, message, pokemon);
                 return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
         };
