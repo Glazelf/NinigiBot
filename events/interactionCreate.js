@@ -73,21 +73,7 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId.startsWith("pkm")) {
                             const { Dex } = require('pokemon-showdown');
 
-                            let newPokemonName = null;
-
-                            switch (interaction.customId) {
-                                case "pkmleft":
-                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmleft').label;
-                                    break;
-
-                                case "pkmbase":
-                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmbase').label;
-                                    break;
-
-                                case "pkmright":
-                                    newPokemonName = interaction.message.components[0].components.find(component => component.customId == 'pkmright').label;
-                                    break;
-                            };
+                            let newPokemonName = interaction.message.components[0].components.find(component => component.customId == interaction.customId).label;
 
                             let messageObject = null;
                             let pokemon = Dex.species.get(newPokemonName);
@@ -96,7 +82,7 @@ module.exports = async (client, interaction) => {
 
                             if (!messageObject) return;
 
-                            await interaction.update({ embeds: [messageObject.embed], components: [messageObject.buttons] });
+                            await interaction.update({ embeds: [messageObject.embed], components: messageObject.buttons });
                             return;
 
                         } else if (interaction.customId.includes("minesweeper")) {
