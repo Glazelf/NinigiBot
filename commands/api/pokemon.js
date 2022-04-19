@@ -44,8 +44,6 @@ exports.run = async (client, message, args = []) => {
                 let item = Dex.items.get(subArgument);
                 if (!item || !item.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
 
-                console.log(item)
-
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
 
