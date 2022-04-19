@@ -42,7 +42,9 @@ exports.run = async (client, message, args = []) => {
             // Items
             case "item":
                 let item = Dex.items.get(subArgument);
-                if (!item) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                if (!item || !item.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+
+                console.log(item)
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
@@ -62,7 +64,7 @@ exports.run = async (client, message, args = []) => {
             // Moves
             case "move":
                 let move = Dex.moves.get(subArgument);
-                if (!move) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a move by that name.` });
+                if (!move || !move.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(${move.effectType})`;
@@ -103,7 +105,7 @@ exports.run = async (client, message, args = []) => {
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
                 let messageObject = await getPokemon(client, message, pokemon);
                 return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
         };
