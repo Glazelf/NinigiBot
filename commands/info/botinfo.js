@@ -29,7 +29,6 @@ exports.run = async (client, message) => {
 
         let totalGuilds = 0;
         let totalMembers = 0;
-        let botVerifRequirement = 76;
 
         // Get shards (Currently not properly functional)
         if (client.shard) {
@@ -47,8 +46,6 @@ exports.run = async (client, message) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
-        if (totalGuilds < botVerifRequirement) totalGuilds = `${totalGuilds}/${botVerifRequirement}`;
-
 
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
@@ -67,7 +64,9 @@ exports.run = async (client, message) => {
         let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
         let onlineSince = Math.floor((date - client.uptime) / 1000);
-        let lastCommit = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
+        let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
+
+        let lastCommitString = `"${githubMasterResponse.data.commit.commit.message}"\n<t:${lastCommitTimestamp}:R>`;
 
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -88,11 +87,11 @@ exports.run = async (client, message) => {
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:R>`, true);
-        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
-        if (githubMasterResponse) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
-        botEmbed
+            .addField("Created:", `<t:${createdAt}:R>`, true)
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
+        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
+        if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
+        botEmbed
             .setFooter({ text: message.member.user.tag })
             .setTimestamp();
 
