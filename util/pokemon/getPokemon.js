@@ -131,13 +131,12 @@ module.exports = async (client, message, pokemon) => {
 
         // Shuffle icons, only works for pokemon in pokemon shuffle
         let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
-        // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
-        // let icon = `https://www.smogon.com/forums//media/minisprites/${pokemon.name}.png`;
-        // Gen 8 party icons, filled with gen 7 icons where needed, very small
-        let iconParty = `https://github.com/msikma/pokesprite/blob/master/icons/pokemon/regular/${encodeURIComponent(pokemon.name.toLowerCase())}.png?raw=true`;
 
-        // High res SwSh sprites
-        let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
+        let iconParty = `https://www.smogon.com/forums//media/minisprites/${encodeURIComponent(pokemon.name.toLowerCase())}.png`;
+
+        // Shiny sprite
+        let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${encodeURIComponent(pokemon.name.toLowerCase())}.png`;
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
