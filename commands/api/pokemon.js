@@ -52,11 +52,10 @@ exports.run = async (client, message, args = []) => {
 
                 pokemonEmbed
                     .setAuthor({ name: item.name })
+                    .setThumbnail(itemImage)
                     .setDescription(item.desc)
                     .addField("Introduced:", `Gen ${item.gen}`, true);
                 if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
-                pokemonEmbed
-                    .setImage(itemImage);
                 break;
 
             // Moves
