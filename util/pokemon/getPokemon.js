@@ -125,7 +125,7 @@ module.exports = async (client, message, pokemon) => {
         // edgecase ID corrections
         // TODO: add a bunch of meaningless forms like Unown and Vivillon
         await correctValue(correctionID, pokemon.name, pokemonID);
-        if (pokemon.name.startsWith("Arceus-" || pokemon.name.startsWith("Silvally-"))) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
+        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
 
