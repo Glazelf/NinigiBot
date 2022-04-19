@@ -90,8 +90,8 @@ exports.run = async (client, message, args = []) => {
                     .addField("Accuracy:", accuracy, true)
                     .addField("PP:", ppString, true)
                 if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
-                if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
-                if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
+                // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
+                // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
                 if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 break;
 
