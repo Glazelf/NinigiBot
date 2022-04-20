@@ -143,7 +143,8 @@ module.exports = async (client, message, pokemon) => {
         let iconParty = `https://www.smogon.com/forums//media/minisprites/${urlName}.png`;
 
         // Shiny sprite
-        let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`;
+        // let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`;
+        let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
