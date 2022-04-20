@@ -94,21 +94,24 @@ module.exports = async (client, message, pokemon) => {
         // Forms
         const alolaString = "-Alola";
         const galarString = "-Galar";
+        const hisuiString = "-Hisui";
         const megaString = "-Mega";
         const primalString = "-Primal";
         const gmaxString = "-Gmax";
         const eternamaxString = "-Eternamax";
         const alolaBool = pokemon.name.endsWith(alolaString);
         const galarBool = pokemon.name.endsWith(galarString);
+        const hisuiBool = pokemon.name.endsWith(hisuiString);
         const megaBool = pokemon.name.endsWith(megaString);
         const primalBool = pokemon.name.endsWith(primalString);
         const gmaxBool = pokemon.name.endsWith(gmaxString);
         const eternamaxBool = pokemon.name.endsWith(eternamaxString);
         let formChar;
 
-        if (alolaBool || galarBool || megaBool || primalBool || gmaxBool || eternamaxBool) {
+        if (alolaBool || galarBool || hisuiBool || megaBool || primalBool || gmaxBool || eternamaxBool) {
             if (alolaBool) formChar = "-a";
             if (galarBool) formChar = "-g";
+            if (hisuiBool) formChar = "-h";
             if (megaBool || primalBool) formChar = "-m";
             if (gmaxBool) formChar = "-gi";
             if (eternamaxBool) formChar = "-e";
