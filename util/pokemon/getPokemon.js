@@ -97,6 +97,7 @@ module.exports = async (client, message, pokemon) => {
         const hisuiString = "-Hisui";
         const megaString = "-Mega";
         const primalString = "-Primal";
+        const totemString = "-Totem";
         const gmaxString = "-Gmax";
         const eternamaxString = "-Eternamax";
         const alolaBool = pokemon.name.endsWith(alolaString);
@@ -104,6 +105,7 @@ module.exports = async (client, message, pokemon) => {
         const hisuiBool = pokemon.name.endsWith(hisuiString);
         const megaBool = pokemon.name.endsWith(megaString);
         const primalBool = pokemon.name.endsWith(primalString);
+        const totemBool = pokemon.name.endsWith(totemString);
         const gmaxBool = pokemon.name.endsWith(gmaxString);
         const eternamaxBool = pokemon.name.endsWith(eternamaxString);
         let formChar;
@@ -116,7 +118,7 @@ module.exports = async (client, message, pokemon) => {
             if (gmaxBool) formChar = "-gi";
             if (eternamaxBool) formChar = "-e";
             pokemonID = `${pokemonID}${formChar}`;
-        } else {
+        } else if (!totemBool) {
             // Catches all forms where the form extension on Serebii is just the first letter of the form name
             if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
         };
