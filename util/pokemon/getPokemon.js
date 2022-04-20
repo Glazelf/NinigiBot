@@ -116,7 +116,15 @@ module.exports = async (client, message, pokemon) => {
             if (gmaxBool) formChar = "-gi";
             if (eternamaxBool) formChar = "-e";
             pokemonID = `${pokemonID}${formChar}`;
+        } else {
+            // Catches all forms where the form extension on Serebii is just the first letter of the form name
+            if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
         };
+
+        // edgecase ID corrections
+        // TODO: add a bunch of meaningless forms like Unown and Vivillon
+        await correctValue(correctionID, pokemon.name, pokemonID);
+        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
 
         // Metrics
         let metricsString = "";
@@ -124,11 +132,6 @@ module.exports = async (client, message, pokemon) => {
         if (pokemon.weightkg && pokemon.heightm) metricsString = `${metricsString}\n`;
         if (pokemon.heightm) metricsString = `${metricsString}Height: ${pokemon.heightm}m`;
         if (gmaxBool || eternamaxBool) metricsString = "";
-
-        // edgecase ID corrections
-        // TODO: add a bunch of meaningless forms like Unown and Vivillon
-        await correctValue(correctionID, pokemon.name, pokemonID);
-        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
 
