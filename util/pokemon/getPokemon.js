@@ -6,7 +6,7 @@ module.exports = async (client, message, pokemon) => {
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
         const correctionID = require('../../objects/pokemon/correctionID.json');
-
+        const colorHexes = require('../../objects/colorHexes.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
         const getTypeEmotes = require('./getTypeEmotes');
 
@@ -165,9 +165,14 @@ module.exports = async (client, message, pokemon) => {
         let SpDstats = calcStat(pokemon.baseStats.spd);
         let Spestats = calcStat(pokemon.baseStats.spe);
 
+        let embedColor = globalVars.embedColor;
+        if (pokemon.color) {
+            if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
+        };
+
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
+            .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
             .setThumbnail(sprite)
             .addField("Type:", typeString, true);
