@@ -3,7 +3,7 @@ NinigiBot for Discord
 <a href="https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot&permissions=8">Invite link</a>
 
 ## Support
-If you think you have found a bug please [create an issue](https://github.com/Glazelf/NinigiBot/issues) describing the problem so we can look into fixing it.  
+If you think you have found a bug please [create an issue](https://github.com/Glazelf/NinigiBot/issues/new?assignees=Glazelf&labels=bug&template=bug_report.md) describing the problem so we can look into fixing it.  
 For questions or other support either [create a discussion](https://github.com/Glazelf/NinigiBot/discussions) or join my Discord.  
 [<img src="https://canary.discordapp.com/api/guilds/549214833858576395/widget.png?style=banner2">](https://discord.gg/2gkybyu)
 
