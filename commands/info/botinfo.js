@@ -67,7 +67,7 @@ exports.run = async (client, message) => {
         let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
         let lastCommitMessage = `"[${githubMasterResponse.data.commit.commit.message.split("\n")[0]}](https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha})"`;
-        let lastCommitAuthor = `-[${githubMasterResponse.data.commit.commit.author.name}](https://github.com/${githubMasterResponse.data.commit.commit.author.name})`;
+        let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
         // Avatar
