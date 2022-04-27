@@ -12,9 +12,9 @@ exports.run = async (client, message, args = []) => {
 
         if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Pokémon to look up.` });
 
-        let subCommand = args[0].toLowerCase();
+        let subCommand = args[0];
         let subArgument;
-        if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-").toLowerCase();
+        if (args[1]) subArgument = args.slice(1).join("-").replace(" ", "-");
 
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -103,7 +103,7 @@ exports.run = async (client, message, args = []) => {
                 if (message.type == 'APPLICATION_COMMAND') pokemonName = pokemonName.slice(1);
 
                 // Edgecase name corrections
-                pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "").toLowerCase();
+                pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "");
 
                 let pokemon = Dex.species.get(pokemonName);
                 if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a Pokémon by that name.` });
