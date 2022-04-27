@@ -1,271 +1,271 @@
 {
-    "normal": {
+    "Normal": {
         "se": [],
         "res": [
-            "rock",
-            "steel"
+            "Rock",
+            "Steel"
         ],
         "immune": [
-            "ghost"
+            "Ghost"
         ],
         "effect": 0
     },
-    "fighting": {
+    "Fighting": {
         "se": [
-            "normal",
-            "rock",
-            "steel",
-            "ice",
-            "dark"
+            "Normal",
+            "Rock",
+            "Steel",
+            "Ice",
+            "Dark"
         ],
         "res": [
-            "flying",
-            "poison",
-            "bug",
-            "psychic",
-            "fairy"
+            "Flying",
+            "Poison",
+            "Bug",
+            "Psychic",
+            "Fairy"
         ],
         "immune": [
-            "ghost"
+            "Ghost"
         ],
         "effect": 0
     },
-    "flying": {
+    "Flying": {
         "se": [
-            "fighting",
-            "bug",
-            "grass"
+            "Fighting",
+            "Bug",
+            "Grass"
         ],
         "res": [
-            "rock",
-            "steel",
-            "electric"
+            "Rock",
+            "Steel",
+            "Electric"
         ],
         "immune": [],
         "effect": 0
     },
-    "poison": {
+    "Poison": {
         "se": [
-            "grass",
-            "fairy"
+            "Grass",
+            "Fairy"
         ],
         "res": [
-            "poison",
-            "ground",
-            "rock",
-            "ghost"
+            "Poison",
+            "Ground",
+            "Rock",
+            "Ghost"
         ],
         "immune": [
-            "steel"
+            "Steel"
         ],
         "effect": 0
     },
-    "ground": {
+    "Ground": {
         "se": [
-            "poison",
-            "rock",
-            "steel",
-            "fire",
-            "electric"
+            "Poison",
+            "Rock",
+            "Steel",
+            "Fire",
+            "Electric"
         ],
         "res": [
-            "bug",
-            "grass"
+            "Bug",
+            "Grass"
         ],
         "immune": [
-            "flying"
+            "Flying"
         ],
         "effect": 0
     },
-    "rock": {
+    "Rock": {
         "se": [
-            "flying",
-            "bug",
-            "fire",
-            "ice"
+            "Flying",
+            "Bug",
+            "Fire",
+            "Ice"
         ],
         "res": [
-            "fighting",
-            "ground",
-            "steel"
+            "Fighting",
+            "Ground",
+            "Steel"
         ],
         "immune": [],
         "effect": 0
     },
-    "bug": {
+    "Bug": {
         "se": [
-            "grass",
-            "psychic",
-            "dark"
+            "Grass",
+            "Psychic",
+            "Dark"
         ],
         "res": [
-            "fighting",
-            "flying",
-            "poison",
-            "ghost",
-            "steel",
-            "fire",
-            "fairy"
+            "Fighting",
+            "Flying",
+            "Poison",
+            "Ghost",
+            "Steel",
+            "Fire",
+            "Fairy"
         ],
         "immune": [],
         "effect": 0
     },
-    "ghost": {
+    "Ghost": {
         "se": [
-            "ghost",
-            "psychic"
+            "Ghost",
+            "Psychic"
         ],
         "res": [
-            "dark"
+            "Dark"
         ],
         "immune": [
-            "normal"
+            "Normal"
         ],
         "effect": 0
     },
-    "steel": {
+    "Steel": {
         "se": [
-            "rock",
-            "ice",
-            "fairy"
+            "Rock",
+            "Ice",
+            "Fairy"
         ],
         "res": [
-            "steel",
-            "fire",
-            "water",
-            "electric"
+            "Steel",
+            "Fire",
+            "Water",
+            "Electric"
         ],
         "immune": [],
         "effect": 0
     },
-    "fire": {
+    "Fire": {
         "se": [
-            "bug",
-            "steel",
-            "grass",
-            "ice"
+            "Bug",
+            "Steel",
+            "Grass",
+            "Ice"
         ],
         "res": [
-            "rock",
-            "fire",
-            "water",
-            "dragon"
+            "Rock",
+            "Fire",
+            "Water",
+            "Dragon"
         ],
         "immune": [],
         "effect": 0
     },
-    "water": {
+    "Water": {
         "se": [
-            "ground",
-            "rock",
-            "fire"
+            "Ground",
+            "Rock",
+            "Fire"
         ],
         "res": [
-            "water",
-            "grass",
-            "dragon"
+            "Water",
+            "Grass",
+            "Dragon"
         ],
         "immune": [],
         "effect": 0
     },
-    "grass": {
+    "Grass": {
         "se": [
-            "ground",
-            "rock",
-            "water"
+            "Ground",
+            "Rock",
+            "Water"
         ],
         "res": [
-            "flying",
-            "poison",
-            "bug",
-            "steel",
-            "fire",
-            "grass",
-            "dragon"
+            "Flying",
+            "Poison",
+            "Bug",
+            "Steel",
+            "Fire",
+            "Grass",
+            "Dragon"
         ],
         "immune": [],
         "effect": 0
     },
-    "electric": {
+    "Electric": {
         "se": [
-            "flying",
-            "water"
+            "Flying",
+            "Water"
         ],
         "res": [
-            "grass",
-            "electric",
-            "dragon"
+            "Grass",
+            "Electric",
+            "Dragon"
         ],
         "immune": [
-            "ground"
+            "Ground"
         ],
         "effect": 0
     },
-    "psychic": {
+    "Psychic": {
         "se": [
-            "fighting",
-            "poison"
+            "Fighting",
+            "Poison"
         ],
         "res": [
-            "steel",
-            "psychic"
+            "Steel",
+            "Psychic"
         ],
         "immune": [
-            "dark"
+            "Dark"
         ],
         "effect": 0
     },
-    "ice": {
+    "Ice": {
         "se": [
-            "flying",
-            "ground",
-            "grass",
-            "dragon"
+            "Flying",
+            "Ground",
+            "Grass",
+            "Dragon"
         ],
         "res": [
-            "steel",
-            "fire",
-            "water",
-            "ice"
+            "Steel",
+            "Fire",
+            "Water",
+            "Ice"
         ],
         "immune": [],
         "effect": 0
     },
-    "dragon": {
+    "Dragon": {
         "se": [
-            "dragon"
+            "Dragon"
         ],
         "res": [
-            "steel"
+            "Steel"
         ],
         "immune": [
-            "fairy"
+            "Fairy"
         ],
         "effect": 0
     },
-    "dark": {
+    "Dark": {
         "se": [
-            "ghost",
-            "psychic"
+            "Ghost",
+            "Psychic"
         ],
         "res": [
-            "fighting",
-            "dark",
-            "fairy"
+            "Fighting",
+            "Dark",
+            "Fairy"
         ],
         "immune": [],
         "effect": 0
     },
-    "fairy": {
+    "Fairy": {
         "se": [
-            "fighting",
-            "dragon",
-            "dark"
+            "Fighting",
+            "Dragon",
+            "Dark"
         ],
         "res": [
-            "poison",
-            "steel",
-            "fire"
+            "Poison",
+            "Steel",
+            "Fire"
         ],
         "immune": [],
         "effect": 0

@@ -28,7 +28,9 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
             if (Array.isArray(components)) {
                 messageObject['components'] = components;
             } else {
-                messageObject['components'] = [components];
+                if (components.components.length != 0) {
+                    messageObject['components'] = [components];
+                };
             };
         };
         messageObject['ephemeral'] = ephemeral;

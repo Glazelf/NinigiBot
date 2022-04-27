@@ -38,33 +38,29 @@ exports.run = async (client, interaction) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
-        let averageUsers = Math.round(totalMembers / totalGuilds);
-
-        // Get unique owner count
-        let ownerPool = [];
-        await client.guilds.cache.forEach(guild => {
-            ownerPool.push(guild.ownerId);
-        });
-        let uniqueOwners = countUnique(ownerPool);
 
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
-        let githubResponse = null
+        let githubRepoResponse = null;
+        let githubMasterResponse = null;
         try {
-            githubResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
+            githubRepoResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}`);
+            githubMasterResponse = await axios.get(`https://api.github.com/repos/${githubURLVars}/branches/master`);
         } catch (e) {
             // console.log(e);
-            githubResponse = null;
+            githubRepoResponse = null;
+            githubMasterResponse = null;
         };
 
         // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
         let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
         let onlineSince = Math.floor((date - client.uptime) / 1000);
-        let lastCommit = Math.floor(new Date(githubResponse.data.commit.commit.author.date).getTime() / 1000);
+        let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
-        // Calculate total user count
-        // let userCount = await getUsers();
+        let lastCommitMessage = `"[${githubMasterResponse.data.commit.commit.message.split("\n")[0]}](https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha})"`;
+        let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
+        let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
         // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -76,19 +72,19 @@ exports.run = async (client, interaction) => {
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username, iconURL: avatar })
             .setThumbnail(avatar)
+            .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Unique Owners:", uniqueOwners.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Average Users:", averageUsers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:R>`, true);
-        if (githubResponse) botEmbed.addField("Latest Commit:", `<t:${lastCommit}:R>`, true);
-        botEmbed
+            .addField("Created:", `<t:${createdAt}:R>`, true)
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
+        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
+        if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
+        botEmbed
             .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
@@ -114,13 +110,9 @@ exports.run = async (client, interaction) => {
             //             if (!member.user.bot) userList.push(member.id);
             //         }));
             // });
-            // userCount = countUnique(userList);
+            // userCount = [...new Set(userList)];
 
             return userCount;
-        };
-
-        function countUnique(iterable) {
-            return new Set(iterable).size;
         };
 
     } catch (e) {
