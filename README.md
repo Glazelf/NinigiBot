@@ -10,6 +10,5 @@ For questions or other support either [create a discussion](https://github.com/G
 ## Credits
 [Smogon API](https://www.smogon.com/forums/threads/usage-stats-api.3661849): Competitive Pokémon usage data.  
 [Serebii](https://serebii.net): Pokémon art and shiny sprites.  
-[PkParaiso](https://www.pkparaiso.com/): Pokémon Shuffle icons.  
 [Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB): Monster Hunter data and icons.  
 [MHRise-Database](https://github.com/RoboMechE/MHRise-Database), [MHW-Database](https://github.com/RoboMechE/MHW-Database), [MHGU-Database](https://github.com/RoboMechE/MHGU-Database): Data PNGs for monsters.  

@@ -142,14 +142,14 @@ module.exports = async (client, message, pokemon) => {
         // let banner = pokemon.sprites.other.home.front_default; // Use Home renders
 
         // Shuffle icons, only works for pokemon in pokemon shuffle
-        let icon = `https://www.pkparaiso.com/imagenes/shuffle/sprites/${pokemonID}.png`;
+        let iconShuffle = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
 
-        // Lower res party sprites from smogon, but work for all pokemon (but different naming convention, fuck smogon)
-        let iconParty = `https://www.smogon.com/forums//media/minisprites/${urlName}.png`;
+        // Small party icons, only works for pokemon in SWSH
+        let iconParty = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
 
-        // Shiny sprite
-        // let sprite = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`;
-        let sprite = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        // Shiny sprite, only works for pokemon in SWSH
+        // let spriteShiny = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
+        let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
@@ -180,7 +180,7 @@ module.exports = async (client, message, pokemon) => {
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
-            .setThumbnail(sprite)
+            .setThumbnail(spriteShiny)
             .addField("Type:", typeString, true);
         if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
         pkmEmbed
@@ -197,7 +197,7 @@ SpD: **${pokemon.baseStats.spd}** ${SpDstats}
 Spe: **${pokemon.baseStats.spe}** ${Spestats}
 BST: ${pokemon.bst}`, false)
             .setImage(banner)
-            .setFooter({ text: message.member.user.tag, iconURL: icon })
+            .setFooter({ text: message.member.user.tag, iconURL: iconShuffle })
             .setTimestamp();
 
         let previousPokemon = null;
