@@ -29,14 +29,14 @@ module.exports = async (client, message) => {
     if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
 
     const genericLinks = [
-        ".*http(.)?:\/\/[^s]*.*..{1,}"
+        "http(.)?:\/\/[^s]*.*..{1,}"
     ];
     let genericLinkRegex = new RegExp(genericLinks.join("|"), "i");
 
     const scamLinks = [
-        ".*http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net).*", // Discord gift links
-        // ".*http(.)?:\/\/.*\.ru.*", // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done. Currently matches any URL containing "ru" after a period. Can't seem to replicate this on online regex testers though
-        ".*http(.)?:\/\/gidthub.com.*"
+        "http(.)?:\/\/(dicsord-nitro|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)", // Discord gift links
+        // "http(.)?:\/\/.*\.ru", // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done. Currently matches any URL containing "ru" after a period. Can't seem to replicate this on online regex testers though
+        "http(.)?:\/\/gidthub.com"
     ];
     let scamRegex = new RegExp(scamLinks.join("|"), "i");
 
