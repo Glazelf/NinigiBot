@@ -88,8 +88,6 @@ module.exports = async (client, interaction) => {
 
                             if (!messageObject) return;
 
-                            console.log(interaction)
-
                             await interaction.update({ embeds: [messageObject.embed], components: messageObject.buttons });
                             return;
 
