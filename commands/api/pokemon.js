@@ -28,7 +28,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             case "ability":
                 let abilitySearch = args.find(element => element.name == "ability-name").value;
                 let ability = Dex.abilities.get(abilitySearch);
-                if (!ability) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
+                if (!ability) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
@@ -44,7 +44,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             case "item":
                 let itemSearch = args.find(element => element.name == "item-name").value;
                 let item = Dex.items.get(itemSearch);
-                if (!item || !item.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an item by that name.` });
+                if (!item || !item.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
 
@@ -64,7 +64,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let moveSearch = args.find(element => element.name == "move-name").value;
 
                 let move = Dex.moves.get(moveSearch);
-                if (!move || !move.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a move by that name.` });
+                if (!move || !move.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
@@ -103,12 +103,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 var pokemonName = args.find(element => element.name == "pokemon-name").value;
 
                 // Edgecase name corrections
-                pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "");
+                pokemonName = pokemonName.replace(" ", "-").replace(":", "");
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, message, pokemon);
-                return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
+                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons });
         };
 
         // Bulbapedia button
