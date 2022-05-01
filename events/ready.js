@@ -19,15 +19,18 @@ module.exports = async (client) => {
             }
         ];
         let ownerCommandServerID = "759344085420605471";
+        let ownerCommandServer = client.guilds.cache.get(ownerCommandServerID);
 
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerID = null;
-                if (command.config.permission === "owner") commandServerID = ownerCommandServerID; // Owner exclusive commands. Commented out now because guild commands set faster
-                commandServerID = ownerCommandServerID; // DELETE THIS FOR RELEASE
-
-                if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
-                slashCommand = await client.application.commands.create(command.config, commandServerID);
+                // if (command.config.permission === "owner") {
+                commandServerID = ownerCommandServerID; // Owner exclusive commands. Commented out now because guild commands set faster
+                ownerCommandServer.commands.create(command.config, commandServerID);
+                // } else {
+                //     if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
+                //     slashCommand = await client.application.commands.create(command.config, commandServerID);
+                // };
             } catch (e) {
                 console.log(e);
             };
