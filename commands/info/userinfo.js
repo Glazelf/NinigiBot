@@ -51,7 +51,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
         let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (user.banner) banner = user.bannerURL({ format: "png", dynamic: true, size: 256 });
+        if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
 
         // Accent color
         let embedColor = globalVars.embedColor;

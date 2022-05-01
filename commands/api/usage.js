@@ -17,6 +17,7 @@ exports.run = async (client, message, args = []) => {
                 const response = await axios.get(url);
                 JSONresponse = response.data;
                 lastMonthRank = JSONresponse.rank;
+                wasSuccessful = true;
             } catch (error) {
                 wasSuccessful = false;
                 if (error.response.status = "404") {
@@ -44,8 +45,9 @@ exports.run = async (client, message, args = []) => {
         let pokemon = args.join("-").toLowerCase();
         let wasSuccessful = true;
         let triedLastMonth = false;
+        let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`;
 
-        await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`);
+        await getData(searchURL);
         return useData();
 
         async function useData() {
@@ -103,7 +105,9 @@ exports.run = async (client, message, args = []) => {
                 stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
                 triedLastMonth = true;
-                await getData(`https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`);
+                searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`;
+
+                await getData(searchURL);
                 return useData();
 
             } else {
