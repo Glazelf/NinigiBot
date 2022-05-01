@@ -150,12 +150,6 @@ Here are some usage resources you might find usefull instead:`;
     };
 };
 
-// Not yet functional
-// Format: i.e. gen8ou, default to most recent VGC.
-// Year: i.e. 2022, default to current year (unless its january)
-// Month: i.e. 03, default to last month
-// Rating: i.e. 1500, default to 1760
-// Pokémon: i.e. Pikachu, is required!
 module.exports.config = {
     name: "usage",
     aliases: [],
