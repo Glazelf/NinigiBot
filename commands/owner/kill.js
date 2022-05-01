@@ -23,12 +23,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
-                try {
-                    let adminBool = await isAdmin(client, guild.me);
-                    if (adminBool) guild.commands.set([]);
-                } catch (e) {
-                    console.log(e);
-                };
+                let adminBool = await isAdmin(client, guild.me);
+                if (adminBool) {
+                    try {
+                        guild.commands.set([]);
+                    } catch (e) {
+                        console.log(e);
+                    };
+                }
             });
         };
 
