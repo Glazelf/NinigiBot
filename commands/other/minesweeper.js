@@ -40,7 +40,7 @@ exports.run = async (client, message, args = []) => {
 
         let returnString = `Here is your minesweeper grid, **${message.member.user.tag}**.`;
         if (message.type != "APPLICATION_COMMAND") returnString = `${returnString}\nNote that only **${message.member.user.tag}** can use it.`;
-        return sendMessage({ client: client, message: message, content: returnString, components: buttonRowArray });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray });
 
     } catch (e) {
         // Log error

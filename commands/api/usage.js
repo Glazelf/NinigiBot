@@ -9,7 +9,7 @@ exports.run = async (client, message, args = []) => {
         const axios = require("axios");
         let JSONresponse;
 
-        if (!args[0]) return sendMessage({ client: client, message: message, content: "Please specify a Pokémon." });
+        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: "Please specify a Pokémon." });
 
         // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
         const getData = async url => {
@@ -53,7 +53,7 @@ exports.run = async (client, message, args = []) => {
         async function useData() {
             if (wasSuccessful) {
                 // console.log(JSONresponse);
-                if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, message: message, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
+                if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
 
                 let moveStats = "";
                 for await (const [key, value] of Object.entries(JSONresponse.moves)) {
@@ -95,7 +95,7 @@ exports.run = async (client, message, args = []) => {
                     .addField("Spreads:", spreadStats, true)
                     .addField("Teammates:", teammateStats, true);
 
-                return sendMessage({ client: client, message: message, embeds: usageEmbed });
+                return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed });
 
                 // Try month-1 in case it's early in the month and last month's stats haven't been posted yet :)
                 // Downside to this approach is that it will try fetching on typos twice
@@ -121,7 +121,7 @@ exports.run = async (client, message, args = []) => {
                 let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
 Here are some usage resources you might find usefull instead:`;
 
-                return sendMessage({ client: client, message: message, content: replyText, components: usageButtons });
+                return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
             };
         };
 
