@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
 
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let timestamp = await getTime(client);
 
