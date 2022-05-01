@@ -40,7 +40,7 @@ exports.run = async (client, message, args = []) => {
         if (stringMonth < 10) stringMonth = "0" + stringMonth;
         let year = date.getFullYear();
 
-        let format = "gen8vgc2022"
+        let format = "gen8vgc2022";
         let rating = "1500";
         let pokemon = args.join("-").toLowerCase();
         let wasSuccessful = true;
