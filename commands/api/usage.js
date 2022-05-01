@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,7 +9,8 @@ exports.run = async (client, message, args = []) => {
         const axios = require("axios");
         let JSONresponse;
 
-        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: "Please specify a Pokémon." });
+        let argEphemeral = args.find(element => element.name == "ephemeral");
+        if (argEphemeral) ephemeral = argEphemeral.value;
 
         // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
         const getData = async url => {
@@ -32,6 +33,14 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
+        let pokemon = args.find(element => element.name == "pokemon").value;
+
+        let format = "gen8vgc2022";
+        let formatArg = args.find(element => element.name == "format");
+        if (formatArg) format = formatArg.value;
+
+        let monthArg = args.find(element => element.name == "month");
+        let yearArg = args.find(element => element.name == "year");
         // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
         const date = new Date();
         let month = date.getMonth();
@@ -39,10 +48,20 @@ exports.run = async (client, message, args = []) => {
         let stringMonth = month;
         if (stringMonth < 10) stringMonth = "0" + stringMonth;
         let year = date.getFullYear();
+        if (monthArg) {
+            if (monthArg.value < 13 && monthArg.value > 0) month = monthArg.value;
+        };
+        if (yearArg) {
+            if (yearArg.value > 2013 && yearArg.value < (year + 1)) year = yearArg.value;
+        };
 
-        let format = "gen8vgc2022"
         let rating = "1500";
-        let pokemon = args.join("-").toLowerCase();
+        let ratingTresholds = [0, 1500, 1630, 1760];
+        let ratingArg = args.find(element => element.name == "rating");
+        if (ratingArg) {
+            if (ratingTresholds.includes(ratingArg.value)) rating = ratingArg.value;
+        };
+
         let wasSuccessful = true;
         let triedLastMonth = false;
         let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemon}`;
@@ -121,13 +140,13 @@ exports.run = async (client, message, args = []) => {
                 let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
 Here are some usage resources you might find usefull instead:`;
 
-                return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
+                return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons, ephemeral: ephemeral });
             };
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
@@ -144,24 +163,28 @@ module.exports.config = {
     type: 1,
     options: [{
         name: "pokemon",
-        type: 3,
+        type: "STRING",
         description: "Pokémon to get data on.",
         required: true
     }, {
         name: "format",
-        type: 3,
+        type: "STRING",
         description: "Format to get data from."
     }, {
         name: "month",
-        type: 3,
+        type: "INTEGER",
         description: "Month to get data from."
     }, {
         name: "year",
-        type: 3,
+        type: "INTEGER",
         description: "Year to get data from."
     }, {
         name: "rating",
-        type: 3,
+        type: "INTEGER",
         description: "Minimum rating to get data from."
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether this command is only visible to you."
     }]
 };
