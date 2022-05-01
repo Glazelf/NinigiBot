@@ -6,13 +6,14 @@ module.exports = async (exception, client, message = null) => {
         const getTime = require('./getTime');
         let timestamp = await getTime(client);
 
-        if (exception.includes("Missing Access")) {
+        let exceptionString = exception.toString();
+        if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
-        } else if (exception.includes("Internal Server Error")) {
+        } else if (exceptionString.includes("Internal Server Error")) {
             return; // Internal server errors, not my problem
-        } else if (exception.includes("Unknown Interaction")) {
+        } else if (exceptionString.includes("Unknown Interaction")) {
             return; // Users clicking old interactions (~15+ minutes)
-        } else if (!exception.includes("Missing Permissions")) {
+        } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`Error at ${timestamp}:`);
             console.log(exception);
