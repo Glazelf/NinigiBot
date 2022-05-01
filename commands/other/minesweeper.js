@@ -44,7 +44,7 @@ exports.run = async (client, message, args = []) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
