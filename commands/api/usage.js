@@ -104,7 +104,7 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
 
                 let usageEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setFooter({ text: message.member.user.tag })
+                    .setFooter({ text: interaction.user.tag })
                     .setTimestamp()
                     .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
                     .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
