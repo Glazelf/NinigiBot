@@ -11,7 +11,7 @@ module.exports = async (exception, client, message = null) => {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error")) {
             return; // Internal server errors, not my problem
-        } else if (exceptionString.includes("Unknown Interaction")) {
+        } else if (exceptionString.includes("Unknown interaction")) {
             return; // Users clicking old interactions (~15+ minutes)
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
