@@ -1,16 +1,33 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-
         const Minesweeper = require('discord.js-minesweeper');
+
+        let rows = 5;
+        let columns = 5;
+        let rowsArg = args.find(element => element.name == "rows");
+        let columnsArg = args.find(element => element.name == "columns");
+        if (rowsArg) {
+            if (rowsArg.value < 6 && rowsArg.value > 0) rows = rowsArg.value;
+        };
+        if (columnsArg) {
+            if (columnsArg.value < 6 && columnsArg.value > 0) columns = columnsArg.value;
+        };
+
+        let mines = Math.ceil((rows * columns) / 5); // ~20% mine ratio by default
+        let minesArg = args.find(element => element.name == "mines");
+        if (minesArg) {
+            if (minesArg.value >= 0 && minesArg.value <= (rows * columns)) minesArg = minesArg.value;
+        };
+
         const minesweeper = new Minesweeper({
-            rows: 5,
-            columns: 5,
-            mines: 6, // Make amount of bombs an slash command argument
+            rows: rows,
+            columns: columns,
+            mines: mines,
             emote: 'bomb',
             returnType: 'matrix',
         });
@@ -51,5 +68,18 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "minesweeper",
     aliases: [],
-    description: "Play minesweeper."
+    description: "Play minesweeper.",
+    options: [{
+        name: "mines",
+        type: "INTEGER",
+        description: "Amount of mines."
+    }, {
+        name: "rows",
+        type: "INTEGER",
+        description: "Amount of rows."
+    }, {
+        name: "columns",
+        type: "INTEGER",
+        description: "Amount of columns."
+    }]
 };
