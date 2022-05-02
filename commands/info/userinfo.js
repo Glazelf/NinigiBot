@@ -14,7 +14,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let member;
         try {
-            member = await message.guild.members.fetch(user.id);
+            member = await interaction.guild.members.fetch(user.id);
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user.` });
@@ -79,9 +79,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         // JoinRank
-        let joinRank = await getJoinRank(user.id, message.guild);
-        let joinPercentage = Math.ceil(joinRank / message.guild.memberCount * 100);
-        let joinRankText = `${joinRank}/${message.guild.memberCount} (${joinPercentage}%)`;
+        let joinRank = await getJoinRank(user.id, interaction.guild);
+        let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
+        let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
         // Buttons
         let profileButtons = new Discord.MessageActionRow()
