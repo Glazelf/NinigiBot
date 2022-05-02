@@ -5,19 +5,19 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
         if (!adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { ModEnabledServers } = require('../../database/dbObjects');
-        let serverID = await ModEnabledServers.findOne({ where: { server_id: message.guild.id } });
+        let serverID = await ModEnabledServers.findOne({ where: { server_id: interaction.guild.id } });
 
         // Database
         if (serverID) {
             await serverID.destroy();
-            return sendMessage({ client: client, interaction: interaction, content: `**${message.guild.name}** will no longer be automatically moderated.` });
+            return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will no longer be automatically moderated.` });
         } else {
-            await ModEnabledServers.upsert({ server_id: message.guild.id });
-            return sendMessage({ client: client, interaction: interaction, content: `**${message.guild.name}** will now be automatically moderated.` });
+            await ModEnabledServers.upsert({ server_id: interaction.guild.id });
+            return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will now be automatically moderated.` });
         };
 
     } catch (e) {

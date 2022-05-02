@@ -5,10 +5,10 @@ exports.run = async (client, interaction, args) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
 
         const { StarboardLimits } = require('../../database/dbObjects');
-        let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: message.guild.id } });
+        let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
         let oldStarLimit
         if (oldStarLimitDB) {
             oldStarLimit = oldStarLimitDB.star_limit;
@@ -17,12 +17,12 @@ exports.run = async (client, interaction, args) => {
         };
 
         // Database and input stuff
-        if (args[0] && (adminBool || message.member.permissions.has("MANAGE_CHANNELS"))) {
+        if (args[0] && (adminBool || interaction.member.permissions.has("MANAGE_CHANNELS"))) {
             let starLimit = args[0];
             if (isNaN(starLimit)) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid number.` });
 
             if (oldStarLimitDB) oldStarLimitDB.destroy();
-            await StarboardLimits.upsert({ server_id: message.guild.id, star_limit: starLimit });
+            await StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starLimit });
 
             return sendMessage({ client: client, interaction: interaction, content: `The star limit was changed to ${starLimit}.` });
 

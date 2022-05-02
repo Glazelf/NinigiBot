@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let user;

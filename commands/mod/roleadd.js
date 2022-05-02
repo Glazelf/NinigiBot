@@ -6,9 +6,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
-        let adminBoolBot = await isAdmin(client, message.guild.me);
-        let adminBoolUser = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        let adminBoolBot = await isAdmin(client, interaction.guild.me);
+        let adminBoolUser = await isAdmin(client, interaction.member);
+        if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get role and description
         let splitDescriptionCharacter = ";";

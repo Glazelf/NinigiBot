@@ -5,7 +5,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
 
         // Split off command
         if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide text to say.` });
@@ -19,15 +19,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         // Owner only function to send messages in different channels
-        if (message.member.id == client.config.ownerID) {
+        if (interaction.member.id == client.config.ownerID) {
             try {
                 // If channelID is specified correctly, throw message into specified channel
-                targetChannel = await message.client.channels.fetch(channelID);
+                targetChannel = await client.channels.fetch(channelID);
                 targetChannel.send({ content: remoteMessage });
                 return sendMessage({ client: client, interaction: interaction, content: `Message succesfully sent to specified channel.` });
             } catch (e) {
                 // If error: execute regular quoteless say
-                return message.channel.send({ content: textMessage });
+                return interaction.channel.send({ content: textMessage });
             };
         } else {
             // Return plain message

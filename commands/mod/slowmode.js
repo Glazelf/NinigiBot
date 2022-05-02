@@ -5,10 +5,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
 
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-        if (message.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
+        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let slowmodeMaxSeconds = 21600;
 
@@ -16,7 +16,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!args[0] || isNaN(args[0]) || args[0] < 0) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid number (seconds) to change the slowmode to.` });
         if (args[0] > slowmodeMaxSeconds) args[0] = slowmodeMaxSeconds;
 
-        await message.channel.setRateLimitPerUser(args[0]);
+        await interaction.channel.setRateLimitPerUser(args[0]);
         return sendMessage({ client: client, interaction: interaction, content: `Slowmode changed to ${args[0]} seconds.` });
 
     } catch (e) {
