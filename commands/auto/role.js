@@ -95,7 +95,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Give role to self through command
             const role = interaction.guild.roles.cache.find(role => role == requestRole);
 
-            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role help\` to see the available roles.`;
+            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
             if (!role || !roleIDs.includes(role.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
             if (role.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
             if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
