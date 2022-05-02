@@ -5,8 +5,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        let adminBool = await isAdmin(client, interaction.member);
+        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { DisabledChannels } = require('../../database/dbObjects');
 
@@ -17,13 +17,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (args[0]) {
             subCommand = args[0].toLowerCase();
         } else {
-            subCommand = message.channel.id;
+            subCommand = interaction.channel.id;
         };
 
         // If no input check stuff
-        if (!channel) channel = message.guild.channels.cache.find(channel => channel.name == subCommand);
-        if (!channel) channel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
-        if (!channel) channel = message.channel;
+        if (!channel) channel = interaction.guild.channels.cache.find(channel => channel.name == subCommand);
+        if (!channel) channel = interaction.guild.channels.cache.find(channel => subCommand.includes(channel.id));
+        if (!channel) channel = interaction.channel;
 
         let channelName = channel.name.toLowerCase();
         let channelID = await DisabledChannels.findOne({ where: { channel_id: channel.id } });
