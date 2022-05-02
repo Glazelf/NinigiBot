@@ -11,24 +11,25 @@ exports.run = async (client, interaction, args) => {
         const { LogChannels } = require('../../database/dbObjects');
         let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
 
-        // Get channel
-        let subCommand = args[0];
-        if (!subCommand) {
+        let newLogChannel;
+        let channelArg = args.find(element => element.name == "channel");
+        if (channelArg) newLogChannel = channelArg.value;
+
+        let disableBool = false;
+        let disableArg = args.find(element => element.name == "disable");
+        if (disableArg) disableBool = disableArg.value;
+        if (!channelArg && !disableBool) {
             if (oldChannel) {
                 return sendMessage({ client: client, interaction: interaction, content: `The current logging channel is <#${oldChannel.channel_id}>.` });
             };
-            return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel or \`disable\`.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel.` });
         };
-        subCommand = subCommand.toLowerCase();
 
-        // See if channel exists
-        let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
-        if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
-        if (!targetChannel && subCommand !== "disable") return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
+        let targetChannel;
+        if (newLogChannel) targetChannel = message.guild.channels.cache.find(channel => channel.id == newLogChannel.id);
 
-        // Database
         if (oldChannel) await oldChannel.destroy();
-        if (subCommand == "disable") return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${message.guild.name}**.` });
+        if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${message.guild.name}**.` });
 
         await LogChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
 
@@ -46,7 +47,10 @@ module.exports.config = {
     options: [{
         name: "channel",
         type: "CHANNEL",
-        description: "Specify channel.",
-        required: true
+        description: "Specify channel."
+    }, {
+        name: "disable",
+        type: "BOOLEAN",
+        description: "Disable logging."
     }]
 };
