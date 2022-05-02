@@ -7,8 +7,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         const Minesweeper = require('discord.js-minesweeper');
 
-        console.log("test")
-
         let rows = 5;
         let columns = 5;
         let rowsArg = args.find(element => element.name == "rows");
@@ -50,15 +48,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         matrix.forEach(arr => {
             let buttonRow = new Discord.MessageActionRow();
             arr.forEach(element => {
-                buttonRow.addComponents(new Discord.MessageButton({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}-${message.member.id}`, style: 'PRIMARY', emoji: spoilerEmote }));
+                buttonRow.addComponents(new Discord.MessageButton({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}-${interaction.member.id}`, style: 'PRIMARY', emoji: spoilerEmote }));
                 buttonIndex += 1;
             });
             rowIndex += 1;
             buttonRowArray.push(buttonRow);
         });
 
-        let returnString = `Here is your minesweeper grid, **${message.member.user.tag}**.`;
-        if (message.type != "APPLICATION_COMMAND") returnString = `${returnString}\nNote that only **${message.member.user.tag}** can use it.`;
+        let returnString = `Here is your minesweeper grid, **${interaction.member.user.tag}**.`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray });
 
     } catch (e) {
