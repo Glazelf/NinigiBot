@@ -63,7 +63,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         description: value[1].description,
                     });
                 };
-                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `There are no roles available to be selfassigned in **${message.guild.name}**.` });
+                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `There are no roles available to be selfassigned in **${interaction.guild.name}**.` });
 
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
@@ -98,7 +98,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role help\` to see the available roles.`;
             if (!role || !roleIDs.includes(role.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
             if (role.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
-            if (message.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
+            if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
 
             let returnString;
             if (member.roles.cache.has(role.id)) {
