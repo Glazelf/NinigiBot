@@ -9,31 +9,19 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, message.member);
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+
+
+        let user = args.find(element => element.name == "user").value;
+        let member = interaction.guild.members.fetch(user.id);
+        if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
+
         let muteTime = 60;
         let maxMuteTime = 2.419e+9; // Max time is 28 days
+        let timeArg = args.find(element => element.name == "time");
+        if (timeArg) muteTime = timeArg.value;
+        if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
+        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
 
-        // Get user, change to get from interaction args
-        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide a mentioned user as an argument.` });
-
-        if (args[1]) {
-            muteTime = args[1];
-            if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
-            if (muteTime > maxMuteTime) muteTime = maxMuteTime;
-        };
-
-        let member;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            member = message.mentions.members.first();
-        };
-        if (!member) {
-            let memberID = args[0];
-            try {
-                member = await message.guild.members.fetch(memberID);
-            } catch (e) {
-                // console.log(e);
-                member = null;
-            };
-        };
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
 
         // Check permissions
@@ -42,10 +30,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).` });
 
         let reason = "Not specified.";
-        if (args[2]) {
-            reason = args.slice(2, args.length + 1);
-            reason = reason.join(' ');
-        };
+        let reasonArg = args.find(element => element.name == "reason");
+        if (reasonArg) reason = reasonArg.value;
 
         let displayTime = muteTime; // Save time for return strings
         muteTime = muteTime * 1000 * 60; // Convert to minutes
@@ -94,7 +80,6 @@ module.exports.config = {
     }, {
         name: "reason",
         type: "STRING",
-        description: "Reason for mute.",
-        required: false
+        description: "Reason for mute."
     }]
 }; 

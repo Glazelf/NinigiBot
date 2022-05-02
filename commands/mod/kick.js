@@ -6,34 +6,28 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
-        let adminBool = await isAdmin(client, message.member);
+        let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get user, change to get from interaction args
-        let user;
-        let member;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            user = message.mentions.users.first();
-            member = message.mentions.members.first();
-        };
-        if (!member || !user) return sendMessage({ client: client, interaction: interaction, content: `Please mention someone to kick.` });
+        let user = args.find(element => element.name == "user").value;
+        let member = interaction.guild.members.fetch(user.id);
+        if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
 
         // Check permissions
-        let userRole = message.member.roles.highest;
+        let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
         if (!member.kickable) return sendMessage({ client: client, interaction: interaction, content: kickFailString });
 
         let reason = "Not specified.";
-        if (args[1]) {
-            reason = args.slice(1, args.length + 1);
-            reason = reason.join(' ');
-        };
+        let reasonArg = args.find(element => element.name == "reason");
+        if (reasonArg) reason = reasonArg.value;
 
         let time = await getTime(client);
-        let reasonInfo = `-${message.member.user.tag} (${time})`;
+        let reasonInfo = `-${interaction.user.tag} (${time})`;
 
         // Kick
         let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`.`;
@@ -75,7 +69,6 @@ module.exports.config = {
     }, {
         name: "reason",
         type: "STRING",
-        description: "Reason for kick.",
-        required: false
+        description: "Reason for kick."
     }]
 };
