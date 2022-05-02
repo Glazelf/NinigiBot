@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -45,18 +45,19 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
         const date = new Date();
         let month = date.getMonth();
         if (month == 0) month = 12;
-        let stringMonth = month;
-        if (stringMonth < 10) stringMonth = "0" + stringMonth;
-        let year = date.getFullYear();
         if (monthArg) {
             if (monthArg.value < 13 && monthArg.value > 0) month = monthArg.value;
         };
+        let stringMonth = month;
+        if (stringMonth < 10) stringMonth = "0" + stringMonth;
+        let year = date.getFullYear();
         if (yearArg) {
-            if (yearArg.value > 2013 && yearArg.value < (year + 1)) year = yearArg.value;
+            if (yearArg.value > 2013 && yearArg.value < (year + 1)) year = yearArg.value; // Smogon stats only exist from 2014 onwards
         };
 
         let rating = "1500";
         let ratingTresholds = [0, 1500, 1630, 1760];
+        if (format == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
         let ratingArg = args.find(element => element.name == "rating");
         if (ratingArg) {
             if (ratingTresholds.includes(ratingArg.value)) rating = ratingArg.value;
@@ -134,7 +135,7 @@ exports.run = async (client, message, args = interaction.options._hoistedOptions
                 // Buttons
                 let usageButtons = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/${format}-${rating}.txt` }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
                     .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
 
                 let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
@@ -154,7 +155,6 @@ module.exports.config = {
     name: "usage",
     aliases: [],
     description: "Shows Pokémon usage data.",
-    type: 1,
     options: [{
         name: "pokemon",
         type: "STRING",
