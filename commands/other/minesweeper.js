@@ -12,16 +12,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let rowsArg = args.find(element => element.name == "rows");
         let columnsArg = args.find(element => element.name == "columns");
         if (rowsArg) {
-            if (rowsArg.value < 6 && rowsArg.value > 0) rows = rowsArg.value;
+            if (rowsArg.value <= 5 && rowsArg.value >= 2) rows = rowsArg.value;
         };
         if (columnsArg) {
-            if (columnsArg.value < 6 && columnsArg.value > 0) columns = columnsArg.value;
+            if (columnsArg.value <= 5 && columnsArg.value >= 2) columns = columnsArg.value;
         };
 
         let mines = Math.ceil((rows * columns) / 5); // ~20% mine ratio by default
         let minesArg = args.find(element => element.name == "mines");
         if (minesArg) {
-            if (minesArg.value >= 0 && minesArg.value <= (rows * columns)) minesArg = minesArg.value;
+            if (minesArg.value >= Math.ceil((rows * columns) / 100 * 50 - 1)) {
+                mines = Math.ceil((rows * columns) / 100 * 50 - 1); // Cap at 50% mine ratio (otherwise board generation fails idk why)
+            } else if (minesArg.value >= 1) {
+                mines = minesArg.value;
+            };
         };
 
         const minesweeper = new Minesweeper({
