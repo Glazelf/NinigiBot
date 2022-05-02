@@ -8,7 +8,9 @@ exports.run = async (client, interaction) => {
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
 
-        return interaction.reply({ content: pauseString, allowedMentions: { repliedUser: false, roles: false } }).then(m => m.update({ content: `${pongString} ${m.createdTimestamp - message.createdTimestamp}ms. ${wsLatencyString}.` }));
+        let replyText = `Pong! Slash command latency is ${client.ws.ping}ms.`;
+        return sendMessage({ client: client, interaction: interaction, content: replyText });
+
 
     } catch (e) {
         // Log error
