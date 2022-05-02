@@ -7,10 +7,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
-        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide an input to owoify.` });
-
-        let input = args.join(" ");
+        let input = args.find(element => element.name == "input").value;
+        let severityArg = args.find(element => element.name == "severity");
         let severity = "owo";
+        if (severityArg) {
+            if (severityArg.value <= 1) severity = "owo";
+            if (severityArg.value == 2) severity = "uwu";
+            if (severityArg.value >= 3) severity = "uvu";
+        };
+
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 
@@ -30,5 +35,9 @@ module.exports.config = {
         type: "STRING",
         description: "Text to owoify",
         required: true
+    }, {
+        name: "severity",
+        type: "INTEGER",
+        description: "Severity of owoification. (1-3)",
     }]
 };
