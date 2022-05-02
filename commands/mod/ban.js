@@ -9,39 +9,24 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, message.member);
         if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        // Get user, change to get from interaction args
         let user;
-        let member;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            user = message.mentions.users.first();
-            member = message.mentions.members.first();
-        } else {
-            if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban.` });
-            try {
-                user = await client.users.fetch(args[0]);
-            } catch (e) {
-                // console.log(e);
-            };
-            try {
-                member = await message.guild.members.fetch(args[0]);
-            } catch (e) {
-                // console.log(e);
-            };
-
+        let member
+        let userArg = args.find(element => element.name == "user");
+        if (userArg) {
+            user = userArg.value;
+            member = interaction.guild.members.fetch(user.id);
         };
+        let userIDArg = args.find(element => element.name == "userID");
+        let author = interaction.user;
+
+        let reason = "Not specified.";
+        let reasonArg = args.find(element => element.name == "reason");
+        if (reasonArg) reason = reasonArg.value;
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
 
-        let reason = "Not specified.";
-        if (args[1]) {
-            reason = args.slice(1, args.length + 1);
-            reason = reason.join(' ');
-        };
-
         let dmString = `You've been banned from **${interaction.guild.name}** for the following reason: \`${reason}\``;
-
-        let author = interaction.user;
 
         let bansFetch;
         try {
@@ -88,7 +73,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // If user isn't found, try to ban by ID
         } else {
-            let memberID = args[0];
+            if (!userIDArg) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban.` });
+            let memberID = userIDArg.value;
 
             // See if target isn't already banned
             if (bansFetch) {
@@ -124,11 +110,13 @@ module.exports.config = {
         name: "user",
         type: "USER",
         description: "User to ban.",
-        required: true
     }, {
         name: "reason",
         type: "STRING",
-        description: "Reason for ban.",
-        required: false
-    }]
+        description: "Reason for ban."
+    }, {
+        name: "userID",
+        type: "STRING",
+        description: "Ban user by ID.",
+    },]
 };
