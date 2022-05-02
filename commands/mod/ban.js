@@ -115,7 +115,7 @@ module.exports.config = {
         type: "STRING",
         description: "Reason for ban."
     }, {
-        name: "userID",
+        name: "user-id",
         type: "STRING",
         description: "Ban user by ID.",
     },]
