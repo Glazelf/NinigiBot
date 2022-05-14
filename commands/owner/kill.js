@@ -28,9 +28,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     try {
                         guild.commands.set([]);
                     } catch (e) {
-                        console.log(e);
+                        // console.log(e);
                     };
-                }
+                };
             });
         };
 

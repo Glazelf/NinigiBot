@@ -9,7 +9,9 @@ module.exports = async (client, messageReaction) => {
         if (!messageReaction.count) return;
 
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
+        if (!targetMessage) return;
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+        if (!starboardChannel) return;
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         let starLimit = await StarboardLimits.findOne({ where: { server_id: messageReaction.message.guild.id } });
         if (starLimit) {
@@ -18,7 +20,6 @@ module.exports = async (client, messageReaction) => {
             starLimit = globalVars.starboardLimit;
         };
 
-        if (!starboardChannel) return;
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
