@@ -5,6 +5,7 @@ module.exports = async (client, message) => {
     try {
         const Discord = require("discord.js");
 
+        if (!message) return;
         if (!message.guild) return;
 
         const { LogChannels, StarboardMessages } = require('../database/dbObjects');

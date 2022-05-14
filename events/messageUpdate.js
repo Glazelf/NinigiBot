@@ -7,8 +7,8 @@ module.exports = async (client, message, newMessage) => {
         const autoMod = require('../util/autoMod');
         const isAdmin = require('../util/isAdmin');
 
-        if (!message.guild) return;
-        if (!message || !message.author) return;
+        if (!message) return;
+        if (!message.guild || !message.author) return;
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
