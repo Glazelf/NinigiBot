@@ -239,7 +239,7 @@ exports.run = async (client, message, args = []) => {
                     let monsterSize = "monster";
                     if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
 
-                    let monsterURLName = await capitalizeString(monsterData.name);
+                    let monsterURLName = monsterData.name;
                     if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
 
                     if (isOnlyInGU) {
