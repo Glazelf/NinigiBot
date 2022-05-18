@@ -218,10 +218,26 @@ BST: ${pokemon.bst}`, false)
         // Buttons
         let pkmButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons2 = new Discord.MessageActionRow();
 
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
 
         pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
+
+        if (pokemon.prevo) {
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
+        };
+
+        for (let i = 0; i < pokemon.evos.length; i++) {
+            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
+                if (pkmButtons.components.length < 5) {
+                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                } else {
+                    // This exists solely because of Eevee
+                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                };
+            };
+        };
 
         let formButtons = new Discord.MessageActionRow();
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) {
@@ -240,6 +256,7 @@ BST: ${pokemon.bst}`, false)
         let buttonArray = [];
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
         buttonArray.push(pkmButtons);
+        if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
 
         let messageObject = { embed: pkmEmbed, buttons: buttonArray };
         return messageObject;
