@@ -66,6 +66,10 @@ exports.run = async (client, message, args = []) => {
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
+                let description = move.desc;
+                if (move.flags.contact) description += " Makes contact with the target.";
+                if (move.flags.bypasssub) description += " Bypasses Substitute.";
+
                 let type = await getTypeEmotes(move.type);
                 let category = move.category;
 
@@ -85,7 +89,7 @@ exports.run = async (client, message, args = []) => {
 
                 pokemonEmbed
                     .setAuthor({ name: moveTitle })
-                    .setDescription(move.desc)
+                    .setDescription(description)
                     .addField("Introduced:", `Gen ${move.gen}`, true)
                     .addField("Type:", type, true)
                     .addField("Category:", category, true);
