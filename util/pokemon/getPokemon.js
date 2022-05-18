@@ -203,7 +203,9 @@ BST: ${pokemon.bst}`, false)
 
         let previousPokemon = null;
         let nextPokemon = null;
-        let maxPkmID = 905; // Enamorus
+
+        let allPokemonSorted = Dex.species.all().sort(compare);
+        let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
 
         let allPokemon = Dex.species.all();
 
@@ -331,6 +333,10 @@ BST: ${pokemon.bst}`, false)
 
                 };
             });
+        };
+
+        function compare(a, b) {
+            return a.num - b.num;
         };
 
     } catch (e) {
