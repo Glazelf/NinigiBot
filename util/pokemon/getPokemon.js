@@ -203,7 +203,7 @@ BST: ${pokemon.bst}`, false)
 
         let previousPokemon = null;
         let nextPokemon = null;
-        let maxPkmID = 898; // Calyrex
+        let maxPkmID = 905; // Enamorus
 
         let allPokemon = Dex.species.all();
 
