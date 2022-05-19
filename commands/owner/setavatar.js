@@ -22,7 +22,5 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "setavatar",
     aliases: [],
-    description: "Set Ninigi's avatar.",
-    permission: "owner",
-    defaultPermission: false
+    description: "Set Ninigi's avatar."
 };

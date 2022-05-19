@@ -109,8 +109,6 @@ module.exports.config = {
     name: "item",
     aliases: [],
     description: "Use an item on someone.",
-    permission: "owner",
-    defaultPermission: false,
     options: [{
         name: "user",
         type: 6,

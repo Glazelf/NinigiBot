@@ -54,7 +54,5 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "restart",
     aliases: [],
-    description: "Restart bot and reload all files.",
-    permission: "owner",
-    defaultPermission: false
+    description: "Restart bot and reload all files."
 };

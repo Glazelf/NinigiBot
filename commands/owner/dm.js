@@ -39,8 +39,6 @@ module.exports.config = {
     name: "dm",
     aliases: [],
     description: "DMs a user.",
-    permission: "owner",
-    defaultPermission: false,
     options: [{
         name: "user-id",
         type: 3,
