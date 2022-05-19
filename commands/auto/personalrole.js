@@ -21,11 +21,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let iconImg = null;
         let iconSize = 0;
         let deleteBool = false;
+        let fileIsImg = false;
 
         if (colorArg) roleColor = colorArg.value;
         if (iconArg) {
             iconImg = iconArg.attachment.url;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
+            if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
         };
         if (deleteArg) deleteBool = deleteArg.value;
 
@@ -82,12 +84,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
 
-            if (iconArg && iconsAllowed) {
+            if (iconArg && iconsAllowed && fileIsImg) {
                 let roleIconSizeLimit = 256;
                 if (iconSize > roleIconSizeLimit) {
                     editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
-                    await personalRole.setIcon(iconImg);
+                    try {
+                        await personalRole.setIcon(iconImg);
+                    } catch (e) {
+                        // console.log(e);
+                    };
                     editReturnString += `Image updated. `;
                 };
             } else if (iconArg && !iconsAllowed) {
@@ -130,7 +136,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             let createdRole = await interaction.guild.roles.cache.find(role => role.name == user.tag);
             try {
-                if (iconArg && iconsAllowed) createdRole.setIcon(iconImg);
+                if (iconArg && iconsAllowed && fileIsImg) createdRole.setIcon(iconImg);
             } catch (e) {
                 // console.log(e);
             };
