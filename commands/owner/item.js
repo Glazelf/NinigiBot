@@ -109,6 +109,7 @@ module.exports.config = {
     name: "item",
     aliases: [],
     description: "Use an item on someone.",
+    serverID: "759344085420605471",
     options: [{
         name: "user",
         type: 6,

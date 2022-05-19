@@ -31,5 +31,6 @@ exports.run = async (client, message, args = []) => {
 module.exports.config = {
     name: "clearinteractions",
     aliases: [],
-    description: "Clears all slash commands and other interactions."
+    description: "Clears all slash commands and other interactions.",
+    serverID: "759344085420605471"
 };

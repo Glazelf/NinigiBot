@@ -45,6 +45,7 @@ module.exports.config = {
     name: "moneyadd",
     aliases: ["addmoney"],
     description: "Add money to a user.",
+    serverID: "759344085420605471",
     options: [{
         name: "amount",
         type: 4,

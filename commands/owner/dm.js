@@ -39,6 +39,7 @@ module.exports.config = {
     name: "dm",
     aliases: [],
     description: "DMs a user.",
+    serverID: "759344085420605471",
     options: [{
         name: "user-id",
         type: 3,
