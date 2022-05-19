@@ -29,7 +29,7 @@ exports.run = async (client, message, args = []) => {
             // Abilities
             case "ability":
                 let ability = Dex.abilities.get(subArgument);
-                if (!ability) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
+                if (!ability || ability.name == "No Ability") return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
@@ -116,7 +116,7 @@ exports.run = async (client, message, args = []) => {
                 pokemonName = pokemonName.join("-").replace(" ", "-").replace(":", "");
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (!pokemon || !pokemon.exists || pokemon.name.includes("Pokestar")) return sendMessage({ client: client, message: message, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, message, pokemon);
                 return sendMessage({ client: client, message: message, embeds: messageObject.embed, components: messageObject.buttons });
         };
