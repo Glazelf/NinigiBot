@@ -13,10 +13,26 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
 
+        let colorArg = args.find(element => element.name == 'color-hex');
+        let iconArg = args.find(element => element.name == "icon");
+        let deleteArg = args.find(element => element.name == "delete");
+
+        let roleColor = null;
+        let iconImg = null;
+        let iconSize = 0;
+        let deleteBool = false;
+
+        if (colorArg) roleColor = colorArg.value;
+        if (iconArg) {
+            iconImg = iconArg.attachment.url;
+            iconSize = Math.ceil(iconArg.attachment.size / 1000);
+        };
+        if (deleteArg) deleteBool = deleteArg.value;
+
         // Check if icons are possible
         let iconsAllowed = false;
         let nitroLevel2Req = 7;
-        if (interaction.guild.premiumSubscriptionCount > nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
+        if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
 
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
@@ -30,11 +46,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
 
-        // Color catch
-        let colorArgument = args.find(element => element.name == 'color-hex');
-        let roleColor = null;
-        if (colorArgument) roleColor = colorArgument.value;
-
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
@@ -45,10 +56,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
-        if (args[0] == "delete") return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
-
-        let messageImage = null;
-        if (interaction.attachments.size > 0) messageImage = interaction.attachments.first().url;
+        if (deleteBool == true) return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         let user = interaction.user;
 
@@ -61,7 +69,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
 
-            if (!args[0]) roleColor = personalRole.color;
+            if (!colorArg) roleColor = personalRole.color;
 
             if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
 
@@ -74,16 +82,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
 
-            if (messageImage && iconsAllowed) {
-                try {
-                    await personalRole.setIcon(messageImage);
+            if (iconArg && iconsAllowed) {
+                let roleIconSizeLimit = 256;
+                if (iconSize > roleIconSizeLimit) {
+                    editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
+                } else {
+                    await personalRole.setIcon(iconImg);
                     editReturnString += `Image updated. `;
-                } catch (e) {
-                    // console.log(e);
-                    let roleIconSizeLimit = `256kb`;
-                    editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}. `;
                 };
-            } else if (messageImage && !iconsAllowed) {
+            } else if (iconArg && !iconsAllowed) {
                 editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
             };
 
@@ -102,7 +109,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
             if (oldEntry) await oldEntry.destroy();
 
-            if (!args[0]) roleColor = 0;
+            if (!colorArg) roleColor = 0;
 
             // Create role
             try {
@@ -123,7 +130,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             let createdRole = await interaction.guild.roles.cache.find(role => role.name == user.tag);
             try {
-                if (messageImage && iconsAllowed) createdRole.setIcon(messageImage);
+                if (iconArg && iconsAllowed) createdRole.setIcon(iconImg);
             } catch (e) {
                 // console.log(e);
             };
@@ -157,6 +164,14 @@ module.exports.config = {
     options: [{
         name: "color-hex",
         type: "STRING",
-        description: "Specify the color you want. Type `delete` to delete your role."
+        description: "Specify a color."
+    }, {
+        name: "icon",
+        type: "ATTACHMENT",
+        description: "Role icon to use. Requires sufficient boosts."
+    }, {
+        name: "delete",
+        type: "BOOLEAN",
+        description: "Delete your personal role."
     }]
 };
