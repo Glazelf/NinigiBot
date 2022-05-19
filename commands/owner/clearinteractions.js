@@ -31,6 +31,5 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "clearinteractions",
     description: "Clears all slash commands and other interactions.",
-    defaultPermission: false,
-    permission: "owner"
+    serverID: "759344085420605471"
 };

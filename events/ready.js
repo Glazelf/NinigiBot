@@ -24,13 +24,9 @@ module.exports = async (client) => {
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerID = null;
-                // if (command.config.permission === "owner") {
-                commandServerID = ownerCommandServerID; // Owner exclusive commands. Commented out now because guild commands set faster
-                ownerCommandServer.commands.create(command.config, commandServerID);
-                // } else {
-                //     if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
-                //     slashCommand = await client.application.commands.create(command.config, commandServerID);
-                // };
+                if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
+                commandServerID = "759344085420605471"; // Remove for PR release
+                slashCommand = await client.application.commands.create(command.config, commandServerID);
             } catch (e) {
                 console.log(e);
             };

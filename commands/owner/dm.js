@@ -38,8 +38,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "dm",
     description: "DMs a user.",
-    defaultPermission: false,
-    permission: "owner",
+    serverID: "759344085420605471",
     options: [{
         name: "user-id",
         type: "STRING",

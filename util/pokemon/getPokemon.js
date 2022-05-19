@@ -108,6 +108,7 @@ module.exports = async (client, interaction, pokemon) => {
         const totemBool = pokemon.name.endsWith(totemString);
         const gmaxBool = pokemon.name.endsWith(gmaxString);
         const eternamaxBool = pokemon.name.endsWith(eternamaxString);
+        const totemAlolaBool = totemBool && pokemon.name.split("-")[1] == "Alola";
         let formChar;
 
         if (alolaBool || galarBool || hisuiBool || megaBool || primalBool || gmaxBool || eternamaxBool) {
@@ -118,7 +119,7 @@ module.exports = async (client, interaction, pokemon) => {
             if (gmaxBool) formChar = "-gi";
             if (eternamaxBool) formChar = "-e";
             pokemonID = `${pokemonID}${formChar}`;
-        } else if (!totemBool) {
+        } else if (!totemBool || totemAlolaBool) {
             // Catches all forms where the form extension on Serebii is just the first letter of the form name
             if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
         };
@@ -202,7 +203,9 @@ BST: ${pokemon.bst}`, false)
 
         let previousPokemon = null;
         let nextPokemon = null;
-        let maxPkmID = 898; // Calyrex
+
+        let allPokemonSorted = Dex.species.all().sort(compare);
+        let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
 
         let allPokemon = Dex.species.all();
 
@@ -217,10 +220,26 @@ BST: ${pokemon.bst}`, false)
         // Buttons
         let pkmButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons2 = new Discord.MessageActionRow();
 
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
 
         pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
+
+        if (pokemon.prevo) {
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
+        };
+
+        for (let i = 0; i < pokemon.evos.length; i++) {
+            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
+                if (pkmButtons.components.length < 5) {
+                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                } else {
+                    // This exists solely because of Eevee
+                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                };
+            };
+        };
 
         let formButtons = new Discord.MessageActionRow();
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) {
@@ -239,6 +258,7 @@ BST: ${pokemon.bst}`, false)
         let buttonArray = [];
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
         buttonArray.push(pkmButtons);
+        if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
 
         let messageObject = { embed: pkmEmbed, buttons: buttonArray };
         return messageObject;
@@ -313,6 +333,10 @@ BST: ${pokemon.bst}`, false)
 
                 };
             });
+        };
+
+        function compare(a, b) {
+            return a.num - b.num;
         };
 
     } catch (e) {

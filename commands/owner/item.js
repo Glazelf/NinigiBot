@@ -108,8 +108,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "item",
     description: "Use an item on someone.",
-    defaultPermission: false,
-    permission: "owner",
+    serverID: "759344085420605471",
     options: [{
         name: "user",
         type: "USER",

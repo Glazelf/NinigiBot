@@ -1,6 +1,8 @@
 {
     "charizard-mega-x": "006-mx",
     "charizard-mega-y": "006-my",
+    "pikachu-starter": "025",
+    "eevee-starter": "133",
     "mewtwo-mega-x": "150-mx",
     "mewtwo-mega-y": "150-my",
     "ho-oh": "250",
@@ -22,5 +24,8 @@
     "necrozma-dawn-wings": "800-dw",
     "necrozma-dusk-mane": "800-dm",
     "necrozma-ultra": "800-m",
-    "urshifu-rapid-strike-gmax": "892-rgi"
+    "cramorant-gulping": "845-gu",
+    "cramorant-gorging": "845-go",
+    "urshifu-rapid-strike-gmax": "892-rgi",
+    "enamorus-therian": "905-s"
 }

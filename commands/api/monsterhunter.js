@@ -232,7 +232,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     let monsterSize = "monster";
                     if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
 
-                    let monsterURLName = await capitalizeString(monsterData.name);
+                    let monsterURLName = monsterData.name;
                     if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
 
                     if (isOnlyInGU) {
@@ -291,12 +291,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (monsterDescription) mhEmbed.setDescription(monsterDescription);
                 mhEmbed
                     .addField("Size:", monsterSize, true)
-                if (monsterDanger) mhEmbed.addField("Danger:", monsterDanger, true);
-                if (monsterElements.length > 0) mhEmbed.addField("Element(s):", monsterElements, true);
-                if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness(es):", monsterWeaknesses, true);
-                if (monsterAilments.length > 0) mhEmbed.addField("Ailment(s):", monsterAilments, true);
+                if (monsterDanger) mhEmbed.addField("Danger:", `${monsterDanger}⭐`, true);
+                if (monsterElements.length > 0) mhEmbed.addField("Element:", monsterElements, true);
+                if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness:", monsterWeaknesses, true);
+                if (monsterAilments.length > 0) mhEmbed.addField("Ailment:", monsterAilments, true);
                 mhEmbed
-                    .addField("Game(s):", gameAppearances, false)
+                    .addField("Games:", gameAppearances, false)
                     .setImage(monsterBanner);
                 break;
         };

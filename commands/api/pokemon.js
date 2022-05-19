@@ -69,9 +69,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
+                let description = move.desc;
+                if (move.flags.contact) description += " Makes contact with the target.";
+                if (move.flags.bypasssub) description += " Bypasses Substitute.";
+
                 let type = await getTypeEmotes(move.type);
                 let category = move.category;
                 let ppString = `${move.pp}|${move.pp * 1.2}|${move.pp * 1.4}|${move.pp * 1.6}`;
+                if (move.pp == 1 || move.isMax) ppString = null;
+
                 let accuracy = `${move.accuracy}%`;
                 if (move.accuracy === true) accuracy = "Can't miss";
 
@@ -79,22 +85,26 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let target = await capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
                 if (target == "Normal") target = "Any Adjacent";
 
+                let moveTitle = move.name;
+                if (move.isMax) moveTitle = `${move.name} (Max Move)`;
+                if (move.isZ) moveTitle = `${move.name} (Z-Move)`;
+
                 pokemonEmbed
-                    .setAuthor({ name: move.name })
-                    .setDescription(move.desc)
+                    .setAuthor({ name: moveTitle })
+                    .setDescription(description)
                     .addField("Introduced:", `Gen ${move.gen}`, true)
                     .addField("Type:", type, true)
                     .addField("Category:", category, true);
-                if (move.basePower > 0) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
+                if (move.basePower > 0 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
                 pokemonEmbed.addField("Target:", target, true);
                 if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
                 pokemonEmbed
-                    .addField("Accuracy:", accuracy, true)
-                    .addField("PP:", ppString, true)
+                    .addField("Accuracy:", accuracy, true);
+                if (ppString) pokemonEmbed.addField("PP:", ppString, true);
                 if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
                 // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
-                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
+                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 break;
 
             // Pokémon

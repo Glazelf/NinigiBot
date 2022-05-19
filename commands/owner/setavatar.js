@@ -24,6 +24,5 @@ module.exports.config = {
     name: "setavatar",
     aliases: [],
     description: "Set Ninigi's avatar.",
-    permission: "owner",
-    defaultPermission: false
+    serverID: "759344085420605471"
 };
