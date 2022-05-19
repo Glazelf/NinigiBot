@@ -16,7 +16,7 @@ exports.run = async (client, message, args = []) => {
         // Check if icons are possible
         let iconsAllowed = false;
         let nitroLevel2Req = 7;
-        if (message.guild.premiumSubscriptionCount > nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
+        if (message.guild.premiumSubscriptionCount >= nitroLevel2Req || message.guild.verified || message.guild.partnered) iconsAllowed = true;
 
         // Get Nitro Booster position
         let boosterRole = await message.guild.roles.premiumSubscriberRole;
