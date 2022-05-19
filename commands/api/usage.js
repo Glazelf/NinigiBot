@@ -159,11 +159,13 @@ module.exports.config = {
         name: "pokemon",
         type: "STRING",
         description: "Pokémon to get data on.",
+        autocomplete: true,
         required: true
     }, {
         name: "format",
         type: "STRING",
-        description: "Format to get data from."
+        description: "Format to get data from.",
+        autocomplete: true
     }, {
         name: "month",
         type: "INTEGER",
@@ -175,7 +177,8 @@ module.exports.config = {
     }, {
         name: "rating",
         type: "INTEGER",
-        description: "Minimum rating to get data from."
+        description: "Minimum rating to get data from.",
+        autocomplete: true
     }, {
         name: "ephemeral",
         type: "BOOLEAN",

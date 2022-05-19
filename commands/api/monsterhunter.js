@@ -320,6 +320,7 @@ module.exports.config = {
             name: "quest-name",
             type: "STRING",
             description: "Specify quest by name.",
+            autocomplete: true,
             required: true
         },
         {
@@ -336,6 +337,7 @@ module.exports.config = {
             name: "game-name",
             type: "STRING",
             description: "Specify game by name or abbreviation.",
+            autocomplete: true,
             required: true
         },
         {
@@ -351,6 +353,7 @@ module.exports.config = {
             name: "monster-name",
             type: "STRING",
             description: "Specify monster by its English name.",
+            autocomplete: true,
             required: true
         },
         {

@@ -6,6 +6,10 @@ module.exports = async (client, interaction) => {
         let isAdmin = require('../util/isAdmin');
         let sendMessage = require('../util/sendMessage');
         const getPokemon = require('../util/pokemon/getPokemon');
+        const { Dex } = require('pokemon-showdown');
+        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
+        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
+        const { EligibleRoles } = require('../database/dbObjects');
         if (!interaction) return;
         if (interaction.user.bot) return;
 
@@ -43,8 +47,6 @@ module.exports = async (client, interaction) => {
                     case "BUTTON":
                         // Pokémon command
                         if (interaction.customId.startsWith("pkm")) {
-                            const { Dex } = require('pokemon-showdown');
-
                             let newPokemonName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newPokemonName) break;
@@ -85,7 +87,6 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
-                                const { EligibleRoles } = require('../database/dbObjects');
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
                                 if (!role) return sendMessage({ client: client, interaction: interaction, content: `This role does not exist.` });
                                 let adminBool = await isAdmin(client, interaction.guild.me);
@@ -120,6 +121,103 @@ module.exports = async (client, interaction) => {
                         // Other component types
                         return;
                 };
+
+            case "APPLICATION_COMMAND_AUTOCOMPLETE":
+                let focusedOption = interaction.options.getFocused(true);
+                let choices = [];
+                let pokemonSpecies;
+                switch (interaction.commandName) {
+                    case "pokemon":
+                        switch (focusedOption.name) {
+                            case "pokemon-name":
+                                pokemonSpecies = Dex.species.all();
+                                await pokemonSpecies.forEach(species => {
+                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.name.includes("Pokestar")) choices.push(species.name);
+                                });
+                                break;
+                            case "ability-name":
+                                let abilities = Dex.abilities.all();
+                                await abilities.forEach(ability => {
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability") choices.push(ability.name);
+                                });
+                                break;
+                            case "move-name":
+                                let moves = Dex.moves.all();
+                                await moves.forEach(move => {
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists) choices.push(move.name);
+                                });
+                                break;
+                            case "item-name":
+                                let items = Dex.items.all();
+                                await items.forEach(item => {
+                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push(item.name);
+                                });
+                                break;
+                        };
+                        break;
+                    case "monsterhunter":
+                        switch (focusedOption.name) {
+                            case "monster-name":
+                                monstersJSON.monsters.forEach(monster => {
+                                    if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push(monster.name);
+                                });
+                                break;
+                            case "quest-name":
+                                questsJSON.quests.forEach(quest => {
+                                    if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push(quest.name);
+                                });
+                                break;
+                            case "game-name":
+                                choices = ["Monster Hunter 3 Ultimate",
+                                    "Monster Hunter 4 Ultimate",
+                                    "Monster Hunter Generations Ultimate",
+                                    "Monster Hunter World",
+                                    "Monster Hunter Rise",
+                                    "Monster Hunter Stories",
+                                    "Monster Hunter Stories 2"];
+                                break;
+                        };
+                        break;
+                    case "usage":
+                        switch (focusedOption.name) {
+                            case "pokemon":
+                                // Copied from pokemon command
+                                pokemonSpecies = Dex.species.all();
+                                await pokemonSpecies.forEach(species => {
+                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.name.includes("Pokestar")) choices.push(species.name);
+                                });
+                                break;
+                            case "format":
+                                let formats = Dex.formats.all();
+                                console.log(formats)
+                                await formats.forEach(format => {
+                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push(format.id);
+                                });
+                                break;
+                            case "rating":
+                                // Does autocomplete even work with integers??
+                                choices = [0, 1500, 1630, 1760];
+                                let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
+                                let formatInputValue = null;
+                                if (formatInput) {
+                                    formatInput.value;
+                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") choices = [0, 1500, 1695, 1825];
+                                };
+                                break;
+                        };
+                        break;
+                    // Low priority
+                    case "role":
+                        break;
+                    // VERY low priority
+                    case "inventory":
+                        break;
+                };
+                choices = [... new Set(choices)]; // Remove duplicates
+                if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
+                if (!choices[0]) return;
+                return interaction.respond(choices.map((choice) => ({ name: choice, value: choice })));
+                break;
 
             case "PING":
                 return;

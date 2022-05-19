@@ -28,7 +28,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             case "ability":
                 let abilitySearch = args.find(element => element.name == "ability-name").value;
                 let ability = Dex.abilities.get(abilitySearch);
-                if (!ability) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
+                if (!ability || ability.name == "No Ability") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
@@ -116,7 +116,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 pokemonName = pokemonName.replace(" ", "-").replace(":", "");
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (!pokemon || !pokemon.exists || pokemon.name.includes("Pokestar")) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, interaction, pokemon);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons });
         };
@@ -149,6 +149,7 @@ module.exports.config = {
             name: "ability-name",
             type: "STRING",
             description: "Get ability info by its English name.",
+            autocomplete: true,
             required: true
         },
         {
@@ -164,6 +165,7 @@ module.exports.config = {
             name: "item-name",
             type: "STRING",
             description: "Get item info by its English name.",
+            autocomplete: true,
             required: true
         },
         {
@@ -179,6 +181,7 @@ module.exports.config = {
             name: "move-name",
             type: "STRING",
             description: "Get move info by its English name.",
+            autocomplete: true,
             required: true
         },
         {
@@ -194,6 +197,7 @@ module.exports.config = {
             name: "pokemon-name",
             type: "STRING",
             description: "Get Pokémon info by its English name.",
+            autocomplete: true,
             required: true
         },
         {
