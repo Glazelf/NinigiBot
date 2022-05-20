@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const getTime = require('../../util/getTime');
 
 
-        let hex = args.find(element => element.name == "hex").value
+        let hex = args.find(element => element.name == "hex").value;
         while (hex.length < 6) hex = "0" + hex;
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
