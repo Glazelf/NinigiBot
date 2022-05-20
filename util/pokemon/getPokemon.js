@@ -267,7 +267,6 @@ BST: ${pokemon.bst}`, false)
             .setFooter({ text: message.member.user.tag, iconURL: iconShuffle })
             .setTimestamp();
 
-
         let messageObject = { embed: pkmEmbed, buttons: buttonArray };
         return messageObject;
 
