@@ -12,6 +12,8 @@ module.exports = async (client, message, pokemon) => {
 
         if (!pokemon) return;
 
+        let description = "";
+
         // Typing
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
@@ -177,37 +179,12 @@ module.exports = async (client, message, pokemon) => {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };
 
-        // Embed building
-        const pkmEmbed = new Discord.MessageEmbed()
-            .setColor(embedColor)
-            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
-            .setThumbnail(spriteShiny)
-            .addField("Type:", typeString, true);
-        if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
-        pkmEmbed
-            .addField("Abilities:", abilityString, false);
-        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
-        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
-        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
-        pkmEmbed
-            .addField(`Stats: ${statLevels}`, `HP: **${pokemon.baseStats.hp}** ${HPstats}
-Atk: **${pokemon.baseStats.atk}** ${Atkstats}
-Def: **${pokemon.baseStats.def}** ${Defstats}
-SpA: **${pokemon.baseStats.spa}** ${SpAstats}
-SpD: **${pokemon.baseStats.spd}** ${SpDstats}
-Spe: **${pokemon.baseStats.spe}** ${Spestats}
-BST: ${pokemon.bst}`, false)
-            .setImage(banner)
-            .setFooter({ text: message.member.user.tag, iconURL: iconShuffle })
-            .setTimestamp();
-
         let previousPokemon = null;
         let nextPokemon = null;
 
-        let allPokemonSorted = Dex.species.all().sort(compare);
-        let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
-
         let allPokemon = Dex.species.all();
+        let allPokemonSorted = allPokemon.sort(compare);
+        let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
 
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
@@ -227,10 +204,15 @@ BST: ${pokemon.bst}`, false)
         pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
 
         if (pokemon.prevo) {
+            let evoMethod = getEvoMethod(pokemon);
+            description = `\nEvolves from ${pokemon.prevo} ${evoMethod}.`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
 
         for (let i = 0; i < pokemon.evos.length; i++) {
+            let pokemonData = Dex.species.get(pokemon.evos[i]);
+            let evoMethod = getEvoMethod(pokemonData);
+            description += `\nEvolves into ${pokemon.evos[i]} ${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
@@ -259,6 +241,32 @@ BST: ${pokemon.bst}`, false)
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
+
+        // Embed building
+        const pkmEmbed = new Discord.MessageEmbed()
+            .setColor(embedColor)
+            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
+            .setThumbnail(spriteShiny)
+            .setDescription(description)
+            .addField("Type:", typeString, true);
+        if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
+        pkmEmbed
+            .addField("Abilities:", abilityString, false);
+        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
+        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
+        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
+        pkmEmbed
+            .addField(`Stats: ${statLevels}`, `HP: **${pokemon.baseStats.hp}** ${HPstats}
+Atk: **${pokemon.baseStats.atk}** ${Atkstats}
+Def: **${pokemon.baseStats.def}** ${Defstats}
+SpA: **${pokemon.baseStats.spa}** ${SpAstats}
+SpD: **${pokemon.baseStats.spd}** ${SpDstats}
+Spe: **${pokemon.baseStats.spe}** ${Spestats}
+BST: ${pokemon.bst}`, false)
+            .setImage(banner)
+            .setFooter({ text: message.member.user.tag, iconURL: iconShuffle })
+            .setTimestamp();
+
 
         let messageObject = { embed: pkmEmbed, buttons: buttonArray };
         return messageObject;
@@ -333,6 +341,36 @@ BST: ${pokemon.bst}`, false)
 
                 };
             });
+        };
+
+        function getEvoMethod(pokemon,) {
+            let evoMethod;
+            switch (pokemon.evoType) {
+                case "useItem":
+                    evoMethod = `using a ${pokemon.evoItem}`;
+                    break;
+                case "trade":
+                    evoMethod = `when traded`;
+                    if (pokemon.evoItem) evoMethod += ` holding a ${pokemon.evoItem}`;
+                    break;
+                case "levelHold":
+                    evoMethod = ` when leveling up while holding a ${pokemon.evoItem}`;
+                    break;
+                case "levelExtra":
+                    evoMethod = `when leveling up`;
+                    break;
+                case "levelFriendship":
+                    evoMethod = `when leveling up with high friendship`;
+                    break;
+                case "levelMove":
+                    evoMethod = `when leveling up while knowing ${pokemon.evoMove}`;
+                    break;
+                default:
+                    evoMethod = `at level ${pokemon.evoLevel}`;
+                    break;
+            };
+            if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
+            return evoMethod;
         };
 
         function compare(a, b) {
