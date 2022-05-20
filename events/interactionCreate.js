@@ -138,7 +138,7 @@ module.exports = async (client, interaction) => {
                             case "ability-name":
                                 let abilities = Dex.abilities.all();
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability") choices.push(ability.name);
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && !ability.isNonstandard) choices.push(ability.name);
                                 });
                                 break;
                             case "move-name":
