@@ -53,6 +53,11 @@ module.exports.config = {
     description: "Sends a message to a channel or user.",
     serverID: "759344085420605471",
     options: [{
+        name: "input",
+        type: "STRING",
+        description: "Text message to DM.",
+        required: true
+    }, {
         name: "user-id",
         type: "STRING",
         description: "Specify user by ID."
@@ -60,11 +65,6 @@ module.exports.config = {
         name: "channel-id",
         type: "STRING",
         description: "Specify channel by ID."
-    }, {
-        name: "input",
-        type: "STRING",
-        description: "Text message to DM.",
-        required: true
     }, {
         name: "attachment",
         type: "ATTACHMENT",
