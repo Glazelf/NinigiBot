@@ -19,7 +19,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             if (expectedId && expectedId[1] == targetId) {
                 target = message.mentions.members.first().user;
                 args.splice(0, 1);
-            } else return sendMessage({ client: client, interaction: interaction, content: `The syntax is \`/item <target> <item name>\`.` }); // God I dread having to rewrite these commands
+            };
         } else {
             target = interaction.user;
         };
@@ -112,10 +112,12 @@ module.exports.config = {
     options: [{
         name: "user",
         type: "USER",
-        description: "Specify user."
+        description: "Specify user.",
+        required: true
     }, {
         name: "item",
         type: "STRING",
         description: "Item to use.",
+        required: true
     }]
 };
