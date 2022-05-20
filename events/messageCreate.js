@@ -65,7 +65,6 @@ module.exports = async (client, message) => {
                 }, 60000);
             };
         };
-
         return;
 
     } catch (e) {

@@ -150,8 +150,7 @@ module.exports.config = {
             description: "Get ability info by its English name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
@@ -166,8 +165,7 @@ module.exports.config = {
             description: "Get item info by its English name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
@@ -182,8 +180,7 @@ module.exports.config = {
             description: "Get move info by its English name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
@@ -198,8 +195,7 @@ module.exports.config = {
             description: "Get Pokémon info by its English name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."

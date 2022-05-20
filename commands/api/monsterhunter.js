@@ -321,14 +321,12 @@ module.exports.config = {
             description: "Specify quest by name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },
-    {
+    }, {
         name: "quests",
         type: "SUB_COMMAND",
         description: "List all quests from a game.",
@@ -338,8 +336,7 @@ module.exports.config = {
             description: "Specify game by name or abbreviation.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
@@ -354,8 +351,7 @@ module.exports.config = {
             description: "Specify monster by its English name.",
             autocomplete: true,
             required: true
-        },
-        {
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."

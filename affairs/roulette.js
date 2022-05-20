@@ -22,5 +22,5 @@ module.exports = {
     },
     closeTime: function () {
         return this.bets.size === 0;
-    }
+    };
 };
