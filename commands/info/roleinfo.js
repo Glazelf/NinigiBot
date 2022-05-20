@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let DefaultEmbedColor = globalVars.embedColor;
 
         // Split off command
-        let role = args.find(element => element.name == "role").value;
+        let role = args.find(element => element.name == "role").role;
 
         let user = interaction.user;
 
@@ -20,8 +20,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
+        let defaultColor = "#000000";
         let embedColor = role.hexColor;
-        if (embedColor == "#000000") embedColor = globalVars.embedColor;
+        if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
         // Member count
         let memberCount = interaction.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
@@ -38,8 +39,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setColor(embedColor)
             .setAuthor({ name: `${role.name} (${role.id})`, iconURL: avatar })
             .setThumbnail(icon)
-            .addField("Role:", role.toString(), true)
-            .addField("Color:", role.hexColor, true)
+            .addField("Role:", role.toString(), true);
+        if (role.hexColor !== defaultColor) roleEmbed.addField("Color:", role.hexColor, true);
+        roleEmbed
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false);
