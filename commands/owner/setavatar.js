@@ -7,10 +7,21 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        if (interaction.attachments.size < 1) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
+        let avatarArg = args.find(element => element.name == "avatar");
 
-        const [firstAttachment] = interaction.attachments.values();
-        await client.user.setAvatar(firstAttachment.url);
+        let iconImg = avatarArg.attachment.url;
+        let iconSize = Math.ceil(iconArg.attachment.size / 1000);
+        let fileIsImg = false;
+        if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
+
+        if (!fileIsImg) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
+
+        try {
+            await client.user.setAvatar(iconImg);
+        } catch (e) {
+            // console.log(e);
+            return sendMessage({ client: client, interaction: interaction, content: `Failed to update my avatar.` });
+        };
 
         return sendMessage({ client: client, interaction: interaction, content: `Successfully updated my avatar.` });
 
@@ -24,5 +35,11 @@ module.exports.config = {
     name: "setavatar",
     aliases: [],
     description: "Set Ninigi's avatar.",
-    serverID: "759344085420605471"
+    serverID: "759344085420605471",
+    options: [{
+        name: "avatar",
+        type: "ATTACHMENT",
+        description: "Image to set avatar to.",
+        required: true
+    }]
 };
