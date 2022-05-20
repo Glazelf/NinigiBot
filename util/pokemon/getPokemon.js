@@ -1,4 +1,4 @@
-module.exports = async (client, interaction, pokemon) => {
+module.exports = async (client, interaction, pokemon, ephemeral) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -18,10 +18,13 @@ module.exports = async (client, interaction, pokemon) => {
         if (pokemon.gender == "M") pokemonGender = "♂️";
         if (pokemon.gender == "F") pokemonGender = "♀️";
 
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+
         // Typing
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
-        let typeString = await getTypeEmotes(type1, type2);
+        let typeString = await getTypeEmotes({ type1: type1, type2: type2, emotes: emotesAllowed });
 
         // Check type matchups
         let superEffectives = "";
@@ -39,9 +42,9 @@ module.exports = async (client, interaction, pokemon) => {
                 if (type.res.includes(type2)) type.effect += -1;
                 if (type.immune.includes(type1) || type.immune.includes(type2)) type.effect = -3;
                 if (type.effect == 2 || type.effect == -2) {
-                    typeName = await getTypeEmotes(typeName, null, true);
+                    typeName = await getTypeEmotes({ type1: typeName, bold: true, emotes: emotesAllowed });
                 } else {
-                    typeName = await getTypeEmotes(typeName);
+                    typeName = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                 };
                 if (type.effect == 1 || type.effect == 2) {
                     if (superEffectives.length == 0) {
@@ -70,25 +73,25 @@ module.exports = async (client, interaction, pokemon) => {
             } else {
                 if (type.se.includes(type1)) {
                     if (superEffectives.length == 0) {
-                        superEffectives = await getTypeEmotes(typeName);
+                        superEffectives = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                     } else {
-                        let typeEmote = await getTypeEmotes(typeName);
+                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                         superEffectives = `${superEffectives}, ${typeEmote}`;
                     };
                 };
                 if (type.res.includes(type1)) {
                     if (resistances.length == 0) {
-                        resistances = await getTypeEmotes(typeName);
+                        resistances = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                     } else {
-                        let typeEmote = await getTypeEmotes(typeName);
+                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                         resistances = `${resistances}, ${typeEmote}`;
                     };
                 };
                 if (type.immune.includes(type1)) {
                     if (immunities.length == 0) {
-                        immunities = await getTypeEmotes(typeName);
+                        immunities = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                     } else {
-                        let typeEmote = await getTypeEmotes(typeName);
+                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                         immunities = `${immunities}, ${typeEmote}`;
                     };
                 };

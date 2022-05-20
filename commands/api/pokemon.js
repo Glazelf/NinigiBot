@@ -13,6 +13,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let ephemeral = true;
         let ephemeralArg = args.find(element => element.name == "ephemeral");
         if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -71,7 +73,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
 
-                let type = await getTypeEmotes(move.type);
+                let type = await getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
                 let category = move.category;
                 let ppString = `${move.pp}|${move.pp * 1.2}|${move.pp * 1.4}|${move.pp * 1.6}`;
                 if (move.pp == 1 || move.isMax) ppString = null;
@@ -115,7 +117,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
                 let pokemon = Dex.species.get(pokemonName);
                 if (!pokemon || !pokemon.exists || pokemon.name.includes("Pokestar")) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
-                let messageObject = await getPokemon(client, interaction, pokemon);
+                let messageObject = await getPokemon(client, interaction, pokemon, ephemeral);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons });
         };
 
