@@ -16,6 +16,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let ephemeral = true;
         let ephemeralArg = args.find(element => element.name == "ephemeral");
         if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -255,7 +257,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let monsterAilments = "";
                 if (monsterData.elements) {
                     monsterData.elements.forEach(element => {
-                        let elementString = `${elementEmotes[element]}${element}`;
+                        let elementString = `${element}`;
+                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
                         if (monsterElements.length == 0) {
                             monsterElements = elementString;
                         } else {
@@ -265,7 +268,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 };
                 if (monsterData.weakness) {
                     monsterData.weakness.forEach(element => {
-                        let elementString = `${elementEmotes[element]}${element}`;
+                        let elementString = `${element}`;
+                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
                         if (monsterWeaknesses.length == 0) {
                             monsterWeaknesses = elementString;
                         } else {
