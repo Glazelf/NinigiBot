@@ -60,22 +60,25 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Profile badges
         let badgesArray = [];
         let badgesString = "";
-        try {
-            if (user.bot) badgesArray.push("🤖");
-            if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
-            if (user.flags) {
-                let userFlagsAll = user.flags.serialize();
-                let flagsArray = Object.entries(userFlagsAll);
-                let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
-                let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
+        if (guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
+            try {
+                if (user.bot) badgesArray.push("🤖");
+                if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
+                if (user.flags) {
+                    let userFlagsAll = user.flags.serialize();
+                    let flagsArray = Object.entries(userFlagsAll);
+                    let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
+                    let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
 
-                for (const [key, value] of Object.entries(badgeEmotes)) {
-                    if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
+                    for (const [key, value] of Object.entries(badgeEmotes)) {
+                        console.log(value)
+                        if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
+                    };
                 };
+                badgesString = badgesArray.join("");
+            } catch (e) {
+                // console.log(e);
             };
-            badgesString = badgesArray.join(" ");
-        } catch (e) {
-            // console.log(e);
         };
 
         // JoinRank
