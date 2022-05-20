@@ -85,7 +85,6 @@ exports.run = async (client, interaction) => {
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
         botEmbed
-            .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
         // Buttons

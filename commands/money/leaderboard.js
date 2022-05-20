@@ -15,7 +15,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: author.tag })
             .setTimestamp();
 
         if (args[0]) {

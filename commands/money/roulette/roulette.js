@@ -52,7 +52,6 @@ exports.run = async (client, interaction) => {
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36 using \`/bet\`.
 After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
-                .setFooter({ text: user.tag })
                 .setTimestamp();
             sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
         } else {

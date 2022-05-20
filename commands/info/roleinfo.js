@@ -16,7 +16,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         let roleEmbed = new Discord.MessageEmbed()
-            .setFooter({ text: user.tag })
             .setTimestamp();
 
         // Role visuals

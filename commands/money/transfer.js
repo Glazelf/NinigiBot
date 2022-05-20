@@ -36,7 +36,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         bank.currency.add(message.member.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to **${transferTarget.tag}**.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.username}.` });
 
     } catch (e) {
         // Log error

@@ -18,18 +18,18 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Display inventory per item category. Should make this into one scrollable embed someday.
             if (inventoryCat === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.tag}** has no food!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no food!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
             } else if (inventoryCat === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.tag}** has no equipment!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no equipment!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
             } else if (inventoryCat === 'key') {
                 items = await user.getKeys();
-                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.tag}** has no key items!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no key items!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
             } else {
-                let description = `**${interaction.user.tag}**'s inventory:`;
+                let description = `**${interaction.user.username}**'s inventory:`;
                 const length = description.length;
                 items = await user.getItems();
                 let itemsInventoryText = `${items.map(t => {
@@ -44,7 +44,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.tag}** has nothing!` });
+                if (description.length === length) if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has nothing!` });
                 return sendMessage({ client: client, interaction: interaction, content: description });
             };
         };

@@ -21,7 +21,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL({ format: "png", dynamic: true, size: 512 });
         if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `**${user.tag}** doesn't have an avatar.` });
+        if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `${user.tag} doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
@@ -32,7 +32,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
             .setImage(serverAvatar)
-            .setFooter({ text: user.tag })
             .setTimestamp();
 
         return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });

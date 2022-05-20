@@ -87,7 +87,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: avatar })
                 .setDescription(roleHelpMessage)
-                .setFooter({ text: user.tag })
                 .setTimestamp();
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp });
         } else {
@@ -103,10 +102,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             let returnString;
             if (member.roles.cache.has(role.id)) {
                 await member.roles.remove(role);
-                returnString = `You no longer have the **${role.name}** role, **${member.user.tag}**!`;
+                returnString = `You no longer have the **${role.name}** role!`;
             } else {
                 await member.roles.add(role);
-                returnString = `You now have the **${role.name}** role, **${member.user.tag}**!`;
+                returnString = `You now have the **${role.name}** role!`;
             };
             return sendMessage({ client: client, interaction: interaction, content: returnString });
         };

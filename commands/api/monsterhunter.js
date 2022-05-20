@@ -19,7 +19,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setFooter({ text: interaction.user.tag })
             .setTimestamp();
 
         switch (interaction.options.getSubcommand()) {

@@ -63,7 +63,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
             const expectedId = /<@!(\d+)/.exec(args[0]);
             let target = message.mentions.users.first();
-            if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `**${target.tag}** is a bot.` });
+            if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `${target.tag} is a bot.` });
             const targetId = target.id
 
             if (expectedId && expectedId[1] == targetId) {
