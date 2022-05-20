@@ -189,7 +189,6 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
-                                console.log(formats)
                                 await formats.forEach(format => {
                                     if (format.id.includes(focusedOption.value.toLowerCase())) choices.push(format.id);
                                 });
@@ -200,14 +199,11 @@ module.exports = async (client, interaction) => {
                                 let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
                                 let formatInputValue = null;
                                 if (formatInput) {
-                                    formatInput.value;
+                                    formatInputValue = formatInput.value;
                                     if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") choices = [0, 1500, 1695, 1825];
                                 };
                                 break;
                         };
-                        break;
-                    // Low priority
-                    case "role":
                         break;
                     // VERY low priority
                     case "inventory":
@@ -215,8 +211,8 @@ module.exports = async (client, interaction) => {
                 };
                 choices = [... new Set(choices)]; // Remove duplicates
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
-                if (!choices[0]) return;
-                return interaction.respond(choices.map((choice) => ({ name: choice, value: choice })));
+                if (choices.length < 1) return;
+                return interaction.respond(choices.map((choice) => ({ name: choice.toString(), value: choice })));
                 break;
 
             case "PING":
