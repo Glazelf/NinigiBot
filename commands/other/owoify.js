@@ -15,11 +15,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             if (severityArg.value == 2) severity = "uwu";
             if (severityArg.value >= 3) severity = "uvu";
         };
+        let ephemeral = true;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
@@ -39,5 +42,9 @@ module.exports.config = {
         name: "severity",
         type: "INTEGER",
         description: "Severity of owoification. (1-3)",
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether or not to send the owoified text as an ephemeral message.",
     }]
 };
