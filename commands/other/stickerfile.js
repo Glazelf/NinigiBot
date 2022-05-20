@@ -6,22 +6,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
+        let message = await interaction.channel.messages.fetch(interaction.targetId);
+
         let returnString = `Here's the link(s) to the assets you requested:`;
         let replyMessage = null;
         let stickerLink = null;
 
-        if (message.reference) {
-            if (message.reference) replyMessage = await message.channel.messages.fetch(message.reference.messageId);
-            input = replyMessage.content;
-            questionAskUser = replyMessage.author;
-        };
-
-        //// Would like to have emotes in this too, but currently impossible since bots can't seem to access the urls of emotes they can't personally use. Even though they can do this for stickers, lol.
-        // if (!args[0] && !message.stickers.first()) return sendMessage({client: client, interaction: interaction, content: `Please provide either a sticker or an emote to convert.` });
-        // if (args[0]) {
-        //     let emote = Discord.GuildEmojiManager.resolveId(args[0])
-        //     returnString += `\n-Emote link: ${emote}`;
-        // };
+        // Add support to get ALL stickers from a message
         if (message.stickers && message.stickers.first()) {
             stickerLink = message.stickers.first().url;
         } else if (replyMessage && replyMessage.stickers.first()) {
@@ -31,7 +22,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         returnString += `\n-Sticker link: <${stickerLink}>`
-
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
