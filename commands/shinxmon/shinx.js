@@ -401,17 +401,17 @@ module.exports.config = {
     }, {
         name: "data",
         type: "SUB_COMMAND",
-        description: "Shinx summary."
+        description: "Show Shinx summary."
     }, {
         name: "tap",
         type: "SUB_COMMAND",
         description: "Tap Shinx!"
     }, {
-        name: "nick",
+        name: "nickname",
         type: "SUB_COMMAND",
         description: "Change Shinx's nickname.",
         options: [{
-            name: "input",
+            name: "name",
             type: "STRING",
             description: "What should Shinx's name be?",
             required: true
@@ -423,16 +423,18 @@ module.exports.config = {
         options: [{
             name: "input",
             type: "STRING",
-            description: "Item to equip."
+            description: "Item to equip.",
+            required: true
         }]
     }, {
         name: "feed",
         type: "SUB_COMMAND",
         description: "Feed Shinx.",
         options: [{
-            name: "input",
+            name: "food",
             type: "STRING",
-            description: "Item to feed."
+            description: "Item to feed.",
+            required: true
         }]
     }, {
         name: "play",

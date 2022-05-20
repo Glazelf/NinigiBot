@@ -51,12 +51,8 @@ module.exports.config = {
         description: "Amount of money to add.",
         required: true
     }, {
-        name: "user-mention",
+        name: "user",
         type: "USER",
-        description: "Specify user by mention."
-    }, {
-        name: "user-id",
-        type: "STRING",
-        description: "Specify user by ID."
+        description: "User to add money to."
     }]
 };

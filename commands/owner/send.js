@@ -68,6 +68,6 @@ module.exports.config = {
     }, {
         name: "attachment",
         type: "ATTACHMENT",
-        description: "Message attachment"
+        description: "Message attachment."
     }]
 };

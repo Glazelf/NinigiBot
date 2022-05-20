@@ -41,6 +41,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 };
 
 module.exports.config = {
-    name: "stickerlink",
-    description: "Converts a sticker to a file."
+    name: "StickerFile",
+    type: "MESSAGE"
 };

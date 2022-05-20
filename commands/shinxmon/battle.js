@@ -200,6 +200,7 @@ module.exports.config = {
     options: [{
         name: "user",
         type: "USER",
-        description: "Specify user."
+        description: "Specify user.",
+        required: true
     }]
 };
