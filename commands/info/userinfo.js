@@ -60,7 +60,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Profile badges
         let badgesArray = [];
         let badgesString = "";
-        if (message.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
+        if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
             try {
                 if (user.bot) badgesArray.push("🤖");
                 if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
