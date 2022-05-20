@@ -29,7 +29,7 @@ exports.run = async (client, message, args = []) => {
             // Abilities
             case "ability":
                 let ability = Dex.abilities.get(subArgument);
-                if (!ability || ability.name == "No Ability") return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
+                if (!ability || ability.name == "No Ability" || ability.isNonstandard) return sendMessage({ client: client, message: message, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
