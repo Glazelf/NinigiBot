@@ -119,7 +119,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "role",
-    description: "Toggles an available role. Use without argument to see roles.",
+    description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
         type: "ROLE",
