@@ -89,7 +89,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor({ name: `${user.username} (${user.id})`, iconURL: avatar })
+            .setAuthor({ name: user.tag, iconURL: avatar })
             .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
@@ -103,7 +103,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
         if (banner) profileEmbed.setImage(banner);
         profileEmbed
-            .setFooter({ text: user.tag });
+            .setFooter({ text: user.id });
 
         return sendMessage({ client: client, interaction: interaction, embeds: profileEmbed, components: profileButtons });
 
