@@ -69,7 +69,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-        await sendMessage({ client: client, interaction: interaction, attachments: messageFile });
+        await sendMessage({ client: client, interaction: interaction, files: messageFile });
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -141,7 +141,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     for (let p = 0; p < 2; p++) await bank.currency.updateShinx(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                    return sendMessage({ client: client, interaction: interaction, content: text, attachments: messageFile });
+                    return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
                         text += addLine(`**${nicks[i]}** lost his shield by blocking a deathblow!`);
@@ -184,7 +184,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 };
             };
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            sendMessage({ client: client, interaction: interaction, content: text, attachments: messageFile });
+            sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
             await wait();
         };
 

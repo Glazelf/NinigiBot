@@ -132,7 +132,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, files: messageFile });
 
         } else if (args[0] == 'tap' || shinx.sleeping) {
             if (args[0] == 'tap') {
@@ -168,7 +168,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             let welcomeFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, attachments: welcomeFile });
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
 
         } else if (args[0] == 'nick' || args[0] == 'nickname') {
             args.shift();
@@ -193,7 +193,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             const text = `Nickname changed to **${nickname}**!`;
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'shiny') {
             const { Users } = require('../../database/dbObjects');
@@ -216,7 +216,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             const text = shinx.shine() ? `Now your Shinx shines, ${master}!` : `Your Shinx doesnt shine anymore, ${master}.`;
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'equip') {
             const { Users } = require('../../database/dbObjects');
@@ -243,7 +243,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             const text = `Equipment changed to ${equipmentName}!`;
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
 
         } else if (args[0] == 'feed') {
             const { Users } = require('../../database/dbObjects');
@@ -295,7 +295,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
 
         } else if (args[0] == 'play') {
             canvas = Canvas.createCanvas(578, 398);
@@ -351,7 +351,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             shinx.play(reaction[2]);
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
 
         } else if (args[0] == "release") {
             await shinx.destroy();
@@ -381,7 +381,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, attachments: messageFile });
+            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, files: messageFile });
         };
 
     } catch (e) {

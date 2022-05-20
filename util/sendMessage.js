@@ -1,4 +1,4 @@
-module.exports = async ({ client, interaction, content = null, embeds = null, attachments = null, ephemeral = true, components = null }) => {
+module.exports = async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
 
@@ -12,13 +12,13 @@ module.exports = async ({ client, interaction, content = null, embeds = null, at
                 messageObject['embeds'] = [embeds];
             };
         };
-        if (attachments) {
-            // Ephemeral messages couldn't have attachments, should be enabled now.
+        if (files) {
+            // Ephemeral messages couldn't have files, should be enabled now.
             // ephemeral = false;
-            if (Array.isArray(attachments)) {
-                messageObject['attachments'] = attachments;
+            if (Array.isArray(files)) {
+                messageObject['files'] = files;
             } else {
-                messageObject['attachments'] = [attachments];
+                messageObject['files'] = [files];
             };
         };
 
