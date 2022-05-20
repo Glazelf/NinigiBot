@@ -11,18 +11,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let switchFC;
         if (fcArgument) switchFC = fcArgument.value;
 
+        let invalidString = `Please specify a valid Nintendo Switch friend code.`;
+
         // Present code if no code is supplied as an argument
         if (!switchFC) {
-            if (switchCodeGet && switchCodeGet !== "None") return sendMessage({ client: client, interaction: interaction, content: `Your Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
-            return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid Nintendo Switch friend code.` });
+            if (switchCodeGet) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.username}**'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: invalidString });
         };
 
         // Check and sanitize input
-        let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
-        if (!switchcode) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid Nintendo Switch friend code.` });
+        switchFC = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
+        if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
+        switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
 
-        switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
-        bank.currency.switchCode(interaction.member.id, switchcode);
+        bank.currency.switchCode(interaction.member.id, switchFC);
         return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your Nintendo Switch friend code.` });
 
     } catch (e) {
