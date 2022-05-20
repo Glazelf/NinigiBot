@@ -34,7 +34,6 @@ const UserKeys = require('./models/userdata/UserKeys')(sequelize, Sequelize.Data
 //const UserRooms = require('./models/userdata/UserRooms')(sequelize, Sequelize.DataTypes);
 
 const EligibleRoles = require('./models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
-const DisabledChannels = require('./models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
 const PersonalRoles = require('./models/server/PersonalRoles')(sequelize, Sequelize.DataTypes);
 const PersonalRoleServers = require('./models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
@@ -312,4 +311,4 @@ Users.prototype.getRoom = function () {
     });
 };
 
-module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, DisabledChannels, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, VCTextChannels, ModEnabledServers, Shinx };
+module.exports = { shinxQuotes, Users, Equipments, Foods, KeyItems, CurrencyShop, UserItems, UserEquipments, UserFoods, UserKeys, EligibleRoles, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, VCTextChannels, ModEnabledServers, Shinx };
