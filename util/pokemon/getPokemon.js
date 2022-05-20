@@ -205,14 +205,14 @@ module.exports = async (client, message, pokemon) => {
 
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
-            description = `\nEvolves from ${pokemon.prevo} ${evoMethod}.`;
+            description = `\nEvolves from ${pokemon.prevo}${evoMethod}.`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
 
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
-            description += `\nEvolves into ${pokemon.evos[i]} ${evoMethod}.`;
+            description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
@@ -343,30 +343,33 @@ BST: ${pokemon.bst}`, false)
             });
         };
 
-        function getEvoMethod(pokemon,) {
+        function getEvoMethod(pokemon) {
             let evoMethod;
             switch (pokemon.evoType) {
                 case "useItem":
-                    evoMethod = `using a ${pokemon.evoItem}`;
+                    evoMethod = ` using a ${pokemon.evoItem}`;
                     break;
                 case "trade":
-                    evoMethod = `when traded`;
+                    evoMethod = ` when traded`;
                     if (pokemon.evoItem) evoMethod += ` holding a ${pokemon.evoItem}`;
                     break;
                 case "levelHold":
                     evoMethod = ` when leveling up while holding a ${pokemon.evoItem}`;
                     break;
                 case "levelExtra":
-                    evoMethod = `when leveling up`;
+                    evoMethod = ` when leveling up`;
                     break;
                 case "levelFriendship":
-                    evoMethod = `when leveling up with high friendship`;
+                    evoMethod = ` when leveling up with high friendship`;
                     break;
                 case "levelMove":
-                    evoMethod = `when leveling up while knowing ${pokemon.evoMove}`;
+                    evoMethod = ` when leveling up while knowing ${pokemon.evoMove}`;
+                    break;
+                case "other":
+                    evoMethod = `: ${pokemon.evoCondition}`;
                     break;
                 default:
-                    evoMethod = `at level ${pokemon.evoLevel}`;
+                    evoMethod = ` at level ${pokemon.evoLevel}`;
                     break;
             };
             if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
