@@ -14,8 +14,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         let ephemeral = true;
-        let argEphemeral = args.find(element => element.name == "ephemeral");
-        if (argEphemeral) ephemeral = argEphemeral.value;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

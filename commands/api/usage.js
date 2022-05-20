@@ -9,8 +9,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const axios = require("axios");
         let JSONresponse;
 
-        let argEphemeral = args.find(element => element.name == "ephemeral");
-        if (argEphemeral) ephemeral = argEphemeral.value;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
         const getData = async url => {
