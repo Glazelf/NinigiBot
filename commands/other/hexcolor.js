@@ -8,7 +8,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
 
-
         let hex = args.find(element => element.name == "hex").value;
         while (hex.length < 6) hex = "0" + hex;
         let formattingHash = "#";
@@ -27,9 +26,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        await sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream });
-
-        return;
+        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream });
 
         function hexToRgb(hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
