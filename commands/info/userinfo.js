@@ -91,7 +91,7 @@ exports.run = async (client, message, args = []) => {
                     if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                 };
             };
-            badgesString = badgesArray.join(" ");
+            badgesString = badgesArray.join("");
         } catch (e) {
             // console.log(e);
         };
@@ -109,7 +109,7 @@ exports.run = async (client, message, args = []) => {
             .setColor(embedColor)
             .setAuthor({ name: `${user.username} (${user.id})`, iconURL: avatar })
             .setThumbnail(serverAvatar)
-            .addField("Account:", `${user} ${badgesString}`, true)
+            .addField("Account:", `${user}${badgesString}`, true)
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
