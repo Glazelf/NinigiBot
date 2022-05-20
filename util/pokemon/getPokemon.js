@@ -228,11 +228,13 @@ module.exports = async (client, interaction, pokemon) => {
         };
 
         let formButtons = new Discord.MessageActionRow();
-        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) {
-            if (pokemon.otherFormes.length > 0) {
-                if (pokemon.otherFormes.length < 6) {
-                    for (let i = 0; i < pokemon.otherFormes.length; i++) {
-                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemon.otherFormes[i] }));
+        let pokemonForms = pokemon.otherFormes;
+        if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
+        if (pokemonForms && pokemonForms.length > 0) {
+            if (pokemonForms.length > 0) {
+                if (pokemonForms.length < 6) {
+                    for (let i = 0; i < pokemonForms.length; i++) {
+                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemonForms[i] }));
                     };
                 } else {
                     // Pokémon with way too many forms
