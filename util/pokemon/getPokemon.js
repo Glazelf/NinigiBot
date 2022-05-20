@@ -366,7 +366,7 @@ BST: ${pokemon.bst}`, false)
                     evoMethod = ` when leveling up while knowing ${pokemon.evoMove}`;
                     break;
                 case "other":
-                    evoMethod = `: ${pokemon.evoCondition}`;
+                    evoMethod = `:`;
                     break;
                 default:
                     evoMethod = ` at level ${pokemon.evoLevel}`;
