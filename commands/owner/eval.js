@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const input = args.join(" ");
+        const input = args.find(element => element.name == "input").value;
         try {
             var evaled = eval(input);
         } catch (e) {
@@ -49,6 +49,7 @@ module.exports.config = {
     options: [{
         name: "input",
         type: "STRING",
-        description: "JS to execute."
+        description: "JS to execute.",
+        required: true
     }]
 };
