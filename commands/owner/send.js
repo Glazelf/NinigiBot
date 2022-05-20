@@ -55,7 +55,7 @@ module.exports.config = {
     options: [{
         name: "input",
         type: "STRING",
-        description: "Text message to DM.",
+        description: "Message text.",
         required: true
     }, {
         name: "user-id",
