@@ -87,8 +87,7 @@ module.exports = async (client, member, newMember) => {
             if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`);
             updateEmbed
                 .setImage(image)
-                .setFooter({ text: user.tag })
-                .setTimestamp();
+                .setFooter({ text: user.tag });
 
             return log.send({ embeds: [updateEmbed] });
 

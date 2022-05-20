@@ -103,7 +103,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
         if (banner) profileEmbed.setImage(banner);
         profileEmbed
-            .setTimestamp();
+            .setFooter({ text: user.tag });
 
         return sendMessage({ client: client, interaction: interaction, embeds: profileEmbed, components: profileButtons });
 

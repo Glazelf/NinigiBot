@@ -38,9 +38,7 @@ module.exports = async (client, channel) => {
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
-                .addField(`Channel:`, channel.name)
-                .setFooter({ text: footer })
-                .setTimestamp();
+                .addField(`Channel:`, channel.name);
 
             if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);
 

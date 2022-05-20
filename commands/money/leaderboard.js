@@ -14,8 +14,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let avatar = author.displayAvatarURL(globalVars.displayAvatarSettings);
 
         const leaderboardEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setTimestamp();
+            .setColor(globalVars.embedColor);
 
         if (args[0]) {
             // Global leaderboard

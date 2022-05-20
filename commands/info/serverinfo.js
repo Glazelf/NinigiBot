@@ -149,8 +149,6 @@ exports.run = async (client, interaction) => {
         serverEmbed
             .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true);
         if (banner) serverEmbed.setImage(banner);
-        serverEmbed
-            .setTimestamp();
 
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed });
 
