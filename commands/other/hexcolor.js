@@ -8,9 +8,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
 
-        if (!args[0]) return sendMessage({ client: client, interaction: interaction, content: `Please provide a hex to convert.` });
 
-        let hex = args[0];
+        let hex = args.find(element => element.name == "hex").value
         while (hex.length < 6) hex = "0" + hex;
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
@@ -48,10 +47,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "hexcolor",
-    description: "Sends image from hex code.",
+    description: "Sends image from hexadecimal.",
     options: [{
         name: "hex",
         type: "STRING",
-        description: "Hex code to convert."
+        description: "Hexadecimal to convert.",
+        required: true
     }]
 };
