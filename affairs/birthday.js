@@ -54,8 +54,7 @@ module.exports = async (client) => {
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's is ${cuties.join(' and ')}'s birthday, everyone!`)
-                .setImage(randomGif)
-                .setTimestamp();
+                .setImage(randomGif);
             channel.send({ embeds: [gifEmbed] });
         }, timeZone = timezone, start = true);
 

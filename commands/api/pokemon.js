@@ -15,8 +15,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         let pokemonEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setTimestamp();
+            .setColor(globalVars.embedColor);
 
         let pokemonButtons = new Discord.MessageActionRow();
         let nameBulbapedia = null;

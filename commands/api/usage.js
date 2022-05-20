@@ -105,7 +105,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
                 let usageEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setTimestamp()
                     .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
                     .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
                     .addField("Moves:", moveStats, true)

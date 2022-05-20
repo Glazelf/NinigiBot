@@ -31,8 +31,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
-            .setImage(serverAvatar)
-            .setTimestamp();
+            .setImage(serverAvatar);
 
         return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });
 

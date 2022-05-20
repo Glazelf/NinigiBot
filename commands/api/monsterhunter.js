@@ -18,8 +18,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         let mhEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setTimestamp();
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             // Specific quest

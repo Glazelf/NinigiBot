@@ -84,8 +84,6 @@ exports.run = async (client, interaction) => {
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
-        botEmbed
-            .setTimestamp();
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()

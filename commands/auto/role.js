@@ -86,8 +86,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: avatar })
-                .setDescription(roleHelpMessage)
-                .setTimestamp();
+                .setDescription(roleHelpMessage);
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp });
         } else {
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
