@@ -54,5 +54,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "restart",
     description: "Restart bot and reload all files.",
-    serverID: "759344085420605471"
+    serverID: "759344085420605471",
+    options: [{
+        name: "reset-interactions",
+        type: "BOOLEAN",
+        description: "Reset all interactions?",
+        required: true
+    }]
 };
