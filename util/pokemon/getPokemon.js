@@ -228,7 +228,8 @@ module.exports = async (client, interaction, pokemon) => {
         };
 
         let formButtons = new Discord.MessageActionRow();
-        let pokemonForms = pokemon.otherFormes;
+        let pokemonForms = [];
+        if (pokemon.otherFormes[0]) pokemonForms = pokemon.otherFormes;
         if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
