@@ -14,6 +14,10 @@ module.exports = async (client, message, pokemon) => {
 
         let description = "";
 
+        let pokemonGender = "";
+        if (pokemon.gender == "M") pokemonGender = "♂️";
+        if (pokemon.gender == "F") pokemonGender = "♀️";
+
         // Typing
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
@@ -205,7 +209,7 @@ module.exports = async (client, message, pokemon) => {
 
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
-            description = `\nEvolves from ${pokemon.prevo}${evoMethod}.`;
+            description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
 
