@@ -194,7 +194,6 @@ module.exports = async (client, interaction) => {
                                 });
                                 break;
                             case "rating":
-                                // Does autocomplete even work with integers??
                                 choices = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
                                 let formatInputValue = null;
