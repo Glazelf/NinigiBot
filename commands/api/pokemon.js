@@ -117,7 +117,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let pokemon = Dex.species.get(pokemonName);
                 if (!pokemon || !pokemon.exists || pokemon.name.includes("Pokestar") || pokemon.tier == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, interaction, pokemon, ephemeral);
-                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons });
+                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons, ephemeral: ephemeral });
         };
 
         // Bulbapedia button
