@@ -134,25 +134,25 @@ module.exports = async (client, interaction) => {
                             case "pokemon-name":
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.isNonstandard) choices.push(species.name);
+                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value)) && species.exists && !species.isNonstandard) choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;
                             case "ability-name":
                                 let abilities = Dex.abilities.all();
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && !ability.isNonstandard) choices.push(ability.name);
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && !ability.isNonstandard) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move-name":
                                 let moves = Dex.moves.all();
                                 await moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists) choices.push(move.name);
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item-name":
                                 let items = Dex.items.all();
                                 await items.forEach(item => {
-                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push(item.name);
+                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
                         };
@@ -161,22 +161,25 @@ module.exports = async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "monster-name":
                                 monstersJSON.monsters.forEach(monster => {
-                                    if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push(monster.name);
+                                    if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
                                 });
                                 break;
                             case "quest-name":
                                 questsJSON.quests.forEach(quest => {
-                                    if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push(quest.name);
+                                    if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
                             case "game-name":
-                                choices = ["Monster Hunter 3 Ultimate",
+                                let MHGames = ["Monster Hunter 3 Ultimate",
                                     "Monster Hunter 4 Ultimate",
                                     "Monster Hunter Generations Ultimate",
                                     "Monster Hunter World",
                                     "Monster Hunter Rise",
                                     "Monster Hunter Stories",
                                     "Monster Hunter Stories 2"];
+                                await MHGames.forEach(game => {
+                                    choices.push({ name: game, value: game });
+                                });
                                 break;
                         };
                         break;
@@ -186,23 +189,26 @@ module.exports = async (client, interaction) => {
                                 // Copied from pokemon command
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.isNonstandard) choices.push(species.name);
+                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value)) && species.exists && !species.isNonstandard) choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
-                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push(format.id);
+                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;
                             case "rating":
-                                choices = [0, 1500, 1630, 1760];
+                                let ratings = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
                                 let formatInputValue = null;
                                 if (formatInput) {
                                     formatInputValue = formatInput.value;
-                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") choices = [0, 1500, 1695, 1825];
+                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
                                 };
+                                await ratings.forEach(rating => {
+                                    choices.push({ name: rating, value: rating });
+                                });
                                 break;
                         };
                         break;
@@ -210,12 +216,15 @@ module.exports = async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "bet-amount":
                                 let balance = await bank.currency.getBalance(interaction.member.id);
-                                choices.push(balance);
-                                choices.push(Math.floor(balance / 2));
-                                choices.push(Math.floor(balance / 4));
+                                let balanceHalf = Math.floor(balance / 2);
+                                let balanceQuarter = Math.floor(balance / 4);
+                                choices.push({ name: balance, value: balance });
+                                choices.push({ name: balanceHalf, value: balanceHalf });
+                                choices.push({ name: balanceQuarter, value: balanceQuarter });
                                 break;
                             case "side":
-                                choices = ["Heads", "Tails"];
+                                choices.push({ name: "Heads", value: "Heads" });
+                                choices.push({ name: "Tails", value: "Tails" });
                                 break;
                         };
                         break;
@@ -226,7 +235,7 @@ module.exports = async (client, interaction) => {
                 choices = [... new Set(choices)]; // Remove duplicates
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return;
-                return interaction.respond(choices.map((choice) => ({ name: choice.toString(), value: choice })));
+                return interaction.respond(choices.map((choice) => ({ name: choice.name.toString(), value: choice.value })));
                 break;
 
             case "PING":
