@@ -131,25 +131,28 @@ module.exports = async (client, interaction) => {
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
-                            case "pokemon-name":
+                            case "pokemon":
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value)) && species.exists && !species.isNonstandard) choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
+                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
+                                        && species.exists
+                                        && !species.name.includes("Pokestar")
+                                        && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;
-                            case "ability-name":
+                            case "ability":
                                 let abilities = Dex.abilities.all();
                                 await abilities.forEach(ability => {
                                     if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && !ability.isNonstandard) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
-                            case "move-name":
+                            case "move":
                                 let moves = Dex.moves.all();
                                 await moves.forEach(move => {
                                     if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
-                            case "item-name":
+                            case "item":
                                 let items = Dex.items.all();
                                 await items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
@@ -189,7 +192,10 @@ module.exports = async (client, interaction) => {
                                 // Copied from pokemon command
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value)) && species.exists && !species.isNonstandard) choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
+                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
+                                        && species.exists
+                                        && !species.name.includes("Pokestar")
+                                        && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;
                             case "format":
@@ -234,7 +240,7 @@ module.exports = async (client, interaction) => {
                 };
                 choices = [... new Set(choices)]; // Remove duplicates
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
-                if (choices.length < 1) return;
+                if (choices.length < 1) return interaction.respond([]);
                 return interaction.respond(choices.map((choice) => ({ name: choice.name.toString(), value: choice.value })));
                 break;
 

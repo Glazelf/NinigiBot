@@ -26,7 +26,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
-                let abilitySearch = args.find(element => element.name == "ability-name").value;
+                let abilitySearch = args.find(element => element.name == "ability").value;
                 let ability = Dex.abilities.get(abilitySearch);
                 if (!ability || ability.name == "No Ability" || ability.isNonstandard) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
@@ -41,7 +41,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Items
             case "item":
-                let itemSearch = args.find(element => element.name == "item-name").value;
+                let itemSearch = args.find(element => element.name == "item").value;
                 let item = Dex.items.get(itemSearch);
                 if (!item || !item.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name.` });
 
@@ -60,7 +60,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Moves
             case "move":
-                let moveSearch = args.find(element => element.name == "move-name").value;
+                let moveSearch = args.find(element => element.name == "move").value;
 
                 let move = Dex.moves.get(moveSearch);
                 if (!move || !move.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
@@ -109,7 +109,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Pokémon
             case "pokemon":
                 // Public variables
-                var pokemonName = args.find(element => element.name == "pokemon-name").value;
+                var pokemonName = args.find(element => element.name == "pokemon").value;
 
                 // Edgecase name corrections
                 pokemonName = pokemonName.replace(" ", "-").replace(":", "");
@@ -145,7 +145,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on an ability.",
         options: [{
-            name: "ability-name",
+            name: "ability",
             type: "STRING",
             description: "Ability to get info on.",
             autocomplete: true,
@@ -160,7 +160,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on an item.",
         options: [{
-            name: "item-name",
+            name: "item",
             type: "STRING",
             description: "Item to get info on.",
             autocomplete: true,
@@ -175,7 +175,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on a move.",
         options: [{
-            name: "move-name",
+            name: "move",
             type: "STRING",
             description: "Move to get info on.",
             autocomplete: true,
@@ -190,7 +190,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on a Pokémon.",
         options: [{
-            name: "pokemon-name",
+            name: "pokemon",
             type: "STRING",
             description: "Pokémon to get info on.",
             autocomplete: true,
