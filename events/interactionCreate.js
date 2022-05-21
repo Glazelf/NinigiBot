@@ -132,7 +132,7 @@ module.exports = async (client, interaction) => {
                             case "pokemon-name":
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.name.includes("Pokestar") && pokemon.tier !== "CAP") choices.push(species.name);
+                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.isNonstandard) choices.push(species.name);
                                 });
                                 break;
                             case "ability-name":
@@ -184,7 +184,7 @@ module.exports = async (client, interaction) => {
                                 // Copied from pokemon command
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.name.includes("Pokestar") && pokemon.tier !== "CAP") choices.push(species.name);
+                                    if (species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && species.exists && !species.isNonstandard) choices.push(species.name);
                                 });
                                 break;
                             case "format":
