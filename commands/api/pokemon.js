@@ -147,7 +147,7 @@ module.exports.config = {
         options: [{
             name: "ability-name",
             type: "STRING",
-            description: "Get ability info by its English name.",
+            description: "Ability to get info on.",
             autocomplete: true,
             required: true
         }, {
@@ -162,7 +162,7 @@ module.exports.config = {
         options: [{
             name: "item-name",
             type: "STRING",
-            description: "Get item info by its English name.",
+            description: "Item to get info on.",
             autocomplete: true,
             required: true
         }, {
@@ -177,7 +177,7 @@ module.exports.config = {
         options: [{
             name: "move-name",
             type: "STRING",
-            description: "Get move info by its English name.",
+            description: "Move to get info on.",
             autocomplete: true,
             required: true
         }, {
@@ -192,7 +192,7 @@ module.exports.config = {
         options: [{
             name: "pokemon-name",
             type: "STRING",
-            description: "Get Pokémon info by its English name.",
+            description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
         }, {
