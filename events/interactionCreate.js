@@ -96,19 +96,19 @@ module.exports = async (client, interaction) => {
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) return sendMessage({ client: client, interaction: interaction, content: `This role is not available anymore.` });
 
-                                if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
+                                if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${role} because it is being automatically managed by an integration.` });
                                 if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
 
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You no longer have the **${role.name}** role!` });
+                                        return sendMessage({ client: client, interaction: interaction, content: `You no longer have ${role}!` });
                                     } else {
                                         await interaction.member.roles.add(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You now have the **${role.name}** role!` });
+                                        return sendMessage({ client: client, interaction: interaction, content: `You now have ${role}!` });
                                     };
                                 } catch (e) {
-                                    return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle **${role.name}** for ${interaction.user}, probably because I lack permissions.`, ephemeral: false });
+                                    return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle ${role}, probably because I lack permissions.` });
                                 };
                             } catch (e) {
                                 console.log(e);

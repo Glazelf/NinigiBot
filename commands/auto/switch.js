@@ -15,7 +15,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Present code if no code is supplied as an argument
         if (!switchFC) {
-            if (switchCodeGet) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.user.username}**'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
+            if (switchCodeGet) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
             return sendMessage({ client: client, interaction: interaction, content: invalidString });
         };
 

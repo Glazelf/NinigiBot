@@ -40,6 +40,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Role help embed and logic
         let roleHelpMessage = "";
         let rolesArray = [];
+        let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.`;
 
         if (!requestRole) {
             // Select Menu
@@ -63,7 +64,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         description: value[1].description,
                     });
                 };
-                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `There are no roles available to be selfassigned in **${interaction.guild.name}**.` });
+                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
@@ -77,7 +78,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         > ${i + 1}. <@&${roleText[i]}>`;
             };
 
-            if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.` });
+            if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
@@ -91,16 +92,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         } else {
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
             if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
-            if (requestRole.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${requestRole.name}** role because it is being automatically managed by an integration.` });
-            if (interaction.guild.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${requestRole.name}** role because it is above my highest role.` });
+            if (requestRole.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
+            if (interaction.guild.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
 
             let returnString;
             if (member.roles.cache.has(requestRole.id)) {
                 await member.roles.remove(requestRole);
-                returnString = `You no longer have the **${requestRole.name}** role!`;
+                returnString = `You no longer have ${requestRole}!`;
             } else {
                 await member.roles.add(requestRole);
-                returnString = `You now have the **${requestRole.name}** role!`;
+                returnString = `You now have ${requestRole}!`;
             };
             return sendMessage({ client: client, interaction: interaction, content: returnString });
         };
