@@ -46,5 +46,9 @@ module.exports.config = {
         name: "channel",
         type: "CHANNEL",
         description: "Specify channel."
+    }, {
+        name: "disable",
+        type: "BOOLEAN",
+        description: "Disable vc text channel."
     }]
 };

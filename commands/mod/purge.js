@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -113,5 +113,9 @@ module.exports.config = {
         type: "INTEGER",
         description: "The amount of messages to delete.",
         required: true
+    }, {
+        name: "user",
+        type: "USER",
+        description: "The user to delete messages from."
     }]
 };

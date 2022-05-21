@@ -46,7 +46,10 @@ module.exports.config = {
     options: [{
         name: "channel",
         type: "CHANNEL",
-        description: "Specify channel.",
-        required: true
+        description: "Specify channel."
+    }, {
+        name: "disable",
+        type: "BOOLEAN",
+        description: "Disable starboard."
     }]
 };
