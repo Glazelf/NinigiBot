@@ -10,6 +10,8 @@ module.exports = async (client, interaction) => {
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
+        const { bank } = require('../database/bank');
+
         if (!interaction) return;
         if (interaction.user.bot) return;
 
@@ -206,6 +208,12 @@ module.exports = async (client, interaction) => {
                         break;
                     case "coinflip":
                         switch (focusedOption.name) {
+                            case "amount":
+                                let balance = await bank.currency.getBalance(interaction.member.id);
+                                choices.push(balance);
+                                choices.push(Math.floor(balance / 2));
+                                choices.push(Math.floor(balance / 4));
+                                break;
                             case "side":
                                 choices = ["Heads", "Tails"];
                                 break;
