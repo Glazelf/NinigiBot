@@ -205,6 +205,13 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                         break;
+                    case "coinflip":
+                        switch (focusedOption.name) {
+                            case "side":
+                                choices = ["Heads", "Tails"];
+                                break;
+                        };
+                        break;
                     // VERY low priority
                     case "inventory":
                         break;

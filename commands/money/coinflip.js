@@ -62,5 +62,10 @@ module.exports.config = {
         type: "INTEGER",
         description: "The amount of money you want to bet.",
         required: true
+    }, {
+        name: "side",
+        type: "STRING",
+        description: "The side you want to bet on.",
+        autocomplete: true
     }]
 };
