@@ -5,36 +5,29 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
-
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
         let balance = await bank.currency.getBalance(message.member.id);
-        let inputText = "";
-        if (args[0]) inputText = args[0].toString().toLowerCase();
+
+        let ephemeral = true;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
 
         // Heads / Tails + Amounts
+        let validSides = ["heads", "tails"];
+        let winSideArg = args.find(element => element.name == "side");
         let winSide = "heads";
+        if (winSideArg && validSides.includes(winSideArg.value)) winSide = winSideArg.value;
         let loseSide = "tails";
-        let amount = args[0];
-        if (inputText == "tails" || args[1] == "tails") {
-            winSide = "tails";
-            loseSide = "heads";
-        };
-        if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
+        if (winSide == "tails") loseSide = "heads";
 
-        // Shortcuts
-        if (amount == "quarter") amount = balance / 4;
-        if (amount == "half") amount = balance / 2;
-        if (amount == "all") amount = balance;
-        if (amount == "random") amount = randomNumber(1, balance);
-        if (!amount || isNaN(amount) || amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please input a valid number.` });
+        let amount = args.find(element => element.name == "bet-amount").value;
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
 
-        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please make sure the amount you entered is equal to or larger than 1.` });
-
+        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please input a valid number.` });
         if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
 
         let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}. You now have ${balance + amount}${currency}.`;
@@ -46,7 +39,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         bank.currency.add(message.member.id, amount);
-        sendMessage({ client: client, interaction: interaction, content: returnString });
+        sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
@@ -61,11 +54,16 @@ module.exports.config = {
         name: "bet-amount",
         type: "INTEGER",
         description: "The amount of money you want to bet.",
-        required: true
+        required: true,
+        autocomplete: true
     }, {
         name: "side",
         type: "STRING",
-        description: "The side you want to bet on.",
+        description: "Whether you want to bet on heads or tails.",
         autocomplete: true
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether this command is only visible to you.",
     }]
 };
