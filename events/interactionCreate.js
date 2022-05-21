@@ -208,7 +208,7 @@ module.exports = async (client, interaction) => {
                         break;
                     case "coinflip":
                         switch (focusedOption.name) {
-                            case "amount":
+                            case "bet-amount":
                                 let balance = await bank.currency.getBalance(interaction.member.id);
                                 choices.push(balance);
                                 choices.push(Math.floor(balance / 2));
