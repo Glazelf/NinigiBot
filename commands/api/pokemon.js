@@ -28,7 +28,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             case "ability":
                 let abilitySearch = args.find(element => element.name == "ability").value;
                 let ability = Dex.abilities.get(abilitySearch);
-                if (!ability || ability.name == "No Ability" || ability.isNonstandard) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
+                if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
@@ -61,9 +61,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Moves
             case "move":
                 let moveSearch = args.find(element => element.name == "move").value;
-
                 let move = Dex.moves.get(moveSearch);
-                if (!move || !move.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
+
+                if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;

@@ -143,13 +143,13 @@ module.exports = async (client, interaction) => {
                             case "ability":
                                 let abilities = Dex.abilities.all();
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && !ability.isNonstandard) choices.push({ name: ability.name, value: ability.name });
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && ability.isNonstandard !== "CAP") choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
                                 let moves = Dex.moves.all();
                                 await moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists) choices.push({ name: move.name, value: move.name });
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists && move.isNonstandard !== "CAP") choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
