@@ -136,7 +136,7 @@ module.exports = async (client, interaction) => {
                                 await pokemonSpecies.forEach(species => {
                                     if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
                                         && species.exists
-                                        && !species.name.includes("Pokestar")
+                                        && species.isNonstandard !== "Custom"
                                         && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;
@@ -194,7 +194,7 @@ module.exports = async (client, interaction) => {
                                 await pokemonSpecies.forEach(species => {
                                     if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
                                         && species.exists
-                                        && !species.name.includes("Pokestar")
+                                        && species.isNonstandard !== "Custom"
                                         && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
                                 });
                                 break;

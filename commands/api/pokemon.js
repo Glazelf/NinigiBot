@@ -115,7 +115,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 pokemonName = pokemonName.replace(" ", "-").replace(":", "");
 
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists || pokemon.name.includes("Pokestar") || pokemon.tier == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (!pokemon || !pokemon.exists || pokemon.isNonstandard == "Custom" || pokemon.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, interaction, pokemon, ephemeral);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embed, components: messageObject.buttons, ephemeral: ephemeral });
         };
