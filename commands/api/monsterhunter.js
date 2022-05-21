@@ -25,7 +25,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         switch (interaction.options.getSubcommand()) {
             // Specific quest
             case "quest":
-                let questName = args.find(element => element.name == "quest-name").value.toLowerCase();
+                let questName = args.find(element => element.name == "quest").value.toLowerCase();
                 let questData;
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
@@ -60,7 +60,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // All quests from a game
             case "quests":
-                let gameName = args.find(element => element.name == "game-name").value.toLowerCase();
+                let gameName = args.find(element => element.name == "game").value.toLowerCase();
 
                 // Generalize game names and abbreviations
                 // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
@@ -174,7 +174,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Monsters
             case "monster":
-                let monsterName = args.find(element => element.name == "monster-name").value.toLowerCase();
+                let monsterName = args.find(element => element.name == "monster").value.toLowerCase();
 
                 // Get monster
                 let monsterData;
@@ -319,7 +319,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on a specific quest.",
         options: [{
-            name: "quest-name",
+            name: "quest",
             type: "STRING",
             description: "Specify quest by name.",
             autocomplete: true,
@@ -334,7 +334,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "List all quests from a game.",
         options: [{
-            name: "game-name",
+            name: "game",
             type: "STRING",
             description: "Specify game by name or abbreviation.",
             autocomplete: true,
@@ -349,7 +349,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info on a monster.",
         options: [{
-            name: "monster-name",
+            name: "monster",
             type: "STRING",
             description: "Specify monster by its English name.",
             autocomplete: true,

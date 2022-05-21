@@ -162,17 +162,17 @@ module.exports = async (client, interaction) => {
                         break;
                     case "monsterhunter":
                         switch (focusedOption.name) {
-                            case "monster-name":
+                            case "monster":
                                 monstersJSON.monsters.forEach(monster => {
                                     if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
                                 });
                                 break;
-                            case "quest-name":
+                            case "quest":
                                 questsJSON.quests.forEach(quest => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
-                            case "game-name":
+                            case "game":
                                 let MHGames = ["Monster Hunter 3 Ultimate",
                                     "Monster Hunter 4 Ultimate",
                                     "Monster Hunter Generations Ultimate",
@@ -213,7 +213,7 @@ module.exports = async (client, interaction) => {
                                     if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
                                 };
                                 await ratings.forEach(rating => {
-                                    choices.push({ name: rating, value: rating });
+                                    choices.push({ name: rating.toString(), value: rating });
                                 });
                                 break;
                         };
@@ -224,9 +224,9 @@ module.exports = async (client, interaction) => {
                                 let balance = await bank.currency.getBalance(interaction.member.id);
                                 let balanceHalf = Math.floor(balance / 2);
                                 let balanceQuarter = Math.floor(balance / 4);
-                                choices.push({ name: balance, value: balance });
-                                choices.push({ name: balanceHalf, value: balanceHalf });
-                                choices.push({ name: balanceQuarter, value: balanceQuarter });
+                                choices.push({ name: balance.toString(), value: balance });
+                                choices.push({ name: balanceHalf.toString(), value: balanceHalf });
+                                choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
                                 break;
                             case "side":
                                 choices.push({ name: "Heads", value: "Heads" });
@@ -241,7 +241,7 @@ module.exports = async (client, interaction) => {
                 choices = [... new Set(choices)]; // Remove duplicates
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return interaction.respond([]);
-                return interaction.respond(choices.map((choice) => ({ name: choice.name.toString(), value: choice.value })));
+                return interaction.respond(choices);
                 break;
 
             case "PING":
