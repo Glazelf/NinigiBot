@@ -52,15 +52,16 @@ module.exports = async (client, message) => {
         if (message.type != 'APPLICATION_COMMAND') modBool = await autoMod(client, message);
         if (modBool) return;
 
-        let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
+        let messageMember = message.guild.members.fetch(message.author.id);
+        let memberRoles = messageMember.roles.cache.filter(element => element.name !== "@everyone");
 
         // Add currency
-        if (message.content && message.member) {
-            if (!talkedRecently.has(message.member.id) && memberRoles.size !== 0) {
-                bank.currency.add(message.member.id, 1);
-                talkedRecently.add(message.member.id);
+        if (message.content && messageMember) {
+            if (!talkedRecently.has(messageMember.id) && memberRoles.size !== 0) {
+                bank.currency.add(messageMember.id, 1);
+                talkedRecently.add(messageMember.id);
                 setTimeout(() => {
-                    if (message.member) talkedRecently.delete(message.member.id);
+                    if (messageMember) talkedRecently.delete(messageMember.id);
                 }, 60000);
             };
         };
