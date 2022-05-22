@@ -42,7 +42,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         // Update currency
         bank.currency.add(interaction.user.id, amount);
-        sendMessage({ client: client, interaction: interaction, content: returnString });
+        return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
         // Log error
