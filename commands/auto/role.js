@@ -13,6 +13,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let member = interaction.member;
         let user = interaction.user;
 
+        let ephemeral = true;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
+
         let roleArgument = args.find(element => element.name == 'role');
         let requestRole = null;
         if (roleArgument) requestRole = roleArgument.role;
@@ -69,7 +73,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
-                return sendMessage({ client: client, interaction: interaction, content: `Choose a role to assign to yourself: `, components: rolesSelects });
+                return sendMessage({ client: client, interaction: interaction, content: `Choose a role to assign to yourself: `, components: rolesSelects, ephemeral: ephemeral });
             };
 
             // Help menu
@@ -88,7 +92,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: avatar })
                 .setDescription(roleHelpMessage);
-            return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp });
+            return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
         } else {
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
             if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
@@ -119,5 +123,9 @@ module.exports.config = {
         name: "role",
         type: "ROLE",
         description: "Specify the role."
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether this command is only visible to you."
     }]
 };
