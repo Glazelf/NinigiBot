@@ -213,6 +213,7 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: balance.toString(), value: balance });
                                 choices.push({ name: balanceHalf.toString(), value: balanceHalf });
                                 choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
+                                console.log(choices)
                                 break;
                             case "side":
                                 choices.push({ name: "Heads", value: "Heads" });
@@ -248,7 +249,7 @@ module.exports = async (client, interaction) => {
                     case "inventory":
                         break;
                 };
-                choices = [... new Set(choices)]; // Remove duplicates
+                choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return interaction.respond([]);
                 return interaction.respond(choices);

@@ -27,7 +27,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         amount = Math.floor(amount);
         balance = Math.floor(balance);
 
-        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please input a valid number.` });
+        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Input has to be 1 or higher.` });
         if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
 
         let returnString = `Congratulations, you flipped **${winSide}** and won ${amount}${currency}. You now have ${balance + amount}${currency}.`;
