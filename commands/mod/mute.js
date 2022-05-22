@@ -34,7 +34,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let displayTime = muteTime; // Save time for return strings
         muteTime = muteTime * 1000 * 60; // Convert to minutes
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
-        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s).`;
+        let muteReturnString = `Muted **${member.user.tag}** (${member.id}) for ${displayTime} minute(s) for reason: \`${reason}\`.`;
 
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
