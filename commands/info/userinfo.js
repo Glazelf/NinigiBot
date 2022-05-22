@@ -89,7 +89,6 @@ exports.run = async (client, message, args = []) => {
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
 
                     for (const [key, value] of Object.entries(badgeEmotes)) {
-                        console.log(value)
                         if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                     };
                 };
