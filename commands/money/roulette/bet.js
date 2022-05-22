@@ -15,7 +15,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let betAmount = args.find(element => element.name == "bet-amount").value;
 
         if (endingSlot < startingSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
-        if (startingSlot < 0 || endingSlot < 0 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 0 and 36.` });
+        if (startingSlot < 1 || endingSlot < 1 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 1 and 36.` });
 
         const bets = new Set();
         for (let i = startingSlot; i <= endingSlot; i++) {
@@ -26,10 +26,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (bets.size * betAmount > dbBalance) {
             return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
-        console.log(bets)
         await bets.forEach(bet => {
             roulette.addBet(bet, interaction.user.id, 36 * betAmount);
-            console.log(roulette)
         });
 
         bank.currency.add(interaction.user.id, -betAmount * bets.size);

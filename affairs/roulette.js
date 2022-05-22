@@ -12,11 +12,10 @@ module.exports = {
         } else {
             this.bets.get(bet).push([id, reward]);
         };
-        console.log(this.bets)
     },
 
     spin: function (result) {
-        const winners = this.bets.get(`${result}`);
+        const winners = this.bets.get(result);
         this.bets.clear();
         this.players = [];
         return winners;
