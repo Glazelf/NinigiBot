@@ -5,38 +5,21 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const currentAmount = await bank.currency.getBalance(interaction.user.id);
-        let transferAmount = args[0];
-        let transferTarget;
-
-        // Get target
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            transferTarget = message.mentions.users.first();
-        };
-        if (!transferTarget) {
-            let userID = args[1];
-            try {
-                transferTarget = await client.users.fetch(userID);
-            } catch (e) {
-                // console.log(e);
-            };
-        };
-        if (!transferTarget) return;
+        const currentBalance = await bank.currency.getBalance(interaction.user.id);
+        let transferAmount = args.find(element => element.name == "amount").value;
+        let transferTarget = args.find(element => element.name == "user").user;
 
         let user = interaction.user;
-        let userBalance = `${Math.floor(currentAmount)}${globalVars.currency}`;
+        let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-        // Catch errors
         if (transferTarget == user) return sendMessage({ client: client, interaction: interaction, content: `You can't transfer money to yourself.` });
-        if (!transferAmount || isNaN(transferAmount)) return sendMessage({ client: client, interaction: interaction, content: `You need to specify a valid number to transfer.` });
-        if (transferAmount > currentAmount) return sendMessage({ client: client, interaction: interaction, content: `You don't have enough money to transfer that much, you only have ${userBalance}.` });
-        if (transferAmount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
+        if (transferAmount > currentBalance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${userBalance}.` });
+        if (transferAmount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
 
-        // Database
         bank.currency.add(interaction.user.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.username}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: false });
 
     } catch (e) {
         // Log error
