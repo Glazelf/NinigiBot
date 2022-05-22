@@ -41,7 +41,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: targetChannel.id });
 
-        return sendMessage({ client: client, interaction: interaction, content: `${targetChannel} is now **${interaction.guild.name}**'s starboard. ${starlimitt} stars are required for a message to appear there.` });
+        return sendMessage({ client: client, interaction: interaction, content: `${targetChannel} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
 
     } catch (e) {
         // Log error
