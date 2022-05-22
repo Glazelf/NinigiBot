@@ -67,31 +67,16 @@ module.exports.config = {
     name: "rps",
     description: "Bet money on a game of rock, paper, scissors.",
     options: [{
-        name: "rock",
-        type: "SUB_COMMAND",
-        description: "Bet on rock.",
-        options: [{
-            name: "bet-amount",
-            type: "INTEGER",
-            description: "The amount of money you want to bet.",
-        }]
+        name: "weapon",
+        type: "STRING",
+        description: "Use Rock, Paper or Scissors.",
+        required: true,
+        autocomplete: true
     }, {
-        name: "paper",
-        type: "SUB_COMMAND",
-        description: "Bet on paper.",
-        options: [{
-            name: "bet-amount",
-            type: "INTEGER",
-            description: "The amount of money you want to bet.",
-        }]
-    }, {
-        name: "scissors",
-        type: "SUB_COMMAND",
-        description: "Bet on scissors.",
-        options: [{
-            name: "bet-amount",
-            type: "INTEGER",
-            description: "The amount of money you want to bet.",
-        }]
+        name: "bet-amount",
+        type: "INTEGER",
+        description: "The amount of money you want to bet.",
+        required: true,
+        autocomplete: true
     }]
 };

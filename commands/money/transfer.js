@@ -52,5 +52,10 @@ module.exports.config = {
         type: "USER",
         description: "Specify user.",
         required: true
+    }, {
+        name: "amount",
+        type: "INTEGER",
+        description: "Specify amount.",
+        required: true
     }]
 };

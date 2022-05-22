@@ -237,6 +237,18 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     // VERY low priority
+                    case "rps":
+                        switch (focusedOption.name) {
+                            case "weapon":
+                                break;
+                            case "bet-amount":
+                                break;
+                        };
+                    case "shop":
+                        switch (focusedOption.name) {
+                            case "category":
+                                break;
+                        };
                     case "inventory":
                         break;
                 };

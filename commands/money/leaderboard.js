@@ -74,5 +74,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "leaderboard",
-    description: "Displays money leaderboard."
+    description: "Displays money leaderboard.",
+    options: [{
+        name: "global",
+        type: "BOOLEAN",
+        description: "Whether to showcase global leaderboard."
+    }]
 };
