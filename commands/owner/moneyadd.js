@@ -4,36 +4,22 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
 
-        const transferAmount = args[1]
-        let transferTarget;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            transferTarget = message.mentions.users.first();
-        };
+        let transferTarget = args.find(element => element.name == "user").user;
+        let transferAmount = args.find(element => element.name == "amount").value;
 
-        let dbBalance = await bank.currency.getBalance(message.member.id);
+        let dbBalance = await bank.currency.getBalance(transferTarget.id);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        if (!transferTarget) {
-            let userID = args[0];
-            try {
-                transferTarget = await client.users.fetch(userID);
-            } catch (e) {
-                // console.log(e);
-            };
-        };
-
-        if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `That's not a valid target.` });
-        if (!transferAmount || isNaN(transferAmount)) return sendMessage({ client: client, interaction: interaction, content: `That's not a valid number.` });
-
-        bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(message.member.id));
+        await bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(transferTarget.id));
+        dbBalance = await bank.currency.getBalance(transferTarget.id);
         userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully added ${transferAmount}${currency} to **${transferTarget.tag}**.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.`, ephemeral: false });
 
     } catch (e) {
         // Log error
@@ -53,6 +39,7 @@ module.exports.config = {
     }, {
         name: "user",
         type: "USER",
-        description: "User to add money to."
+        description: "User to add money to.",
+        required: true
     }]
 };
