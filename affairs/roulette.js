@@ -7,8 +7,12 @@ module.exports = {
         this.on = !this.on;
     },
     addBet: function (bet, id, reward) {
-        if (!this.bets.has(bet)) this.bets.set(bet, [[id, reward]]);
-        else this.bets.get(bet).push([id, reward]);
+        if (!this.bets.has(bet)) {
+            this.bets.set(bet, [[id, reward]]);
+        } else {
+            this.bets.get(bet).push([id, reward]);
+        };
+        console.log(this.bets)
     },
 
     spin: function (result) {

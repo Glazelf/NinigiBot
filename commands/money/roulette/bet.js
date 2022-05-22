@@ -23,14 +23,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         let dbBalance = await bank.currency.getBalance(interaction.user.id);
-        if (bets.size * money > dbBalance) {
+        if (bets.size * betAmount > dbBalance) {
             return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
-        bets.forEach(bet => {
-            roulette.addBet(bet, interaction.user.id, 36 * money);
+        console.log(bets)
+        await bets.forEach(bet => {
+            roulette.addBet(bet, interaction.user.id, 36 * betAmount);
+            console.log(roulette)
         });
 
-        bank.currency.add(interaction.user.id, -money * bets.size);
+        bank.currency.add(interaction.user.id, -betAmount * bets.size);
         roulette.players.push(interaction.user.id);
         return sendMessage({ client: client, interaction: interaction, content: `Successfully placed your bet.` });
 

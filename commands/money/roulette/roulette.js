@@ -41,21 +41,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
-                return sendMessage({ client: client, interaction: interaction, embeds: results, ephemeral: false });
+                return interaction.channel.send({ embeds: [results] });
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Roulette`, iconURL: avatar })
-                .setDescription('Welcome to the roulette! We hope to see you here!')
+                .setDescription("Welcome to the roulette! We hope you'll participate!")
                 .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36 using \`/bet\`.
-After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`)
+The roulette will spin and a slot will be chosen, people who bet on that slot will get 36x their slot investment.`)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setTimestamp();
             return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
         } else {
-            clearInterval(process);
-            return sendMessage({ client: client, interaction: interaction, content: `Roulette closed! Hope to see you all again!`, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: `A roulette is already ongoing!` });
         };
 
     } catch (e) {
