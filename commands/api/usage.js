@@ -45,6 +45,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const date = new Date();
         let month = date.getMonth();
         if (month == 0) month = 12;
+        let stringCurrentMonth = month;
+        if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
         if (monthArg) {
             if (monthArg.value < 13 && monthArg.value > 0) month = monthArg.value;
         };
@@ -117,7 +119,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
                 // Try month-1 in case it's early in the month and last month's stats haven't been posted yet :)
                 // Downside to this approach is that it will try fetching on typos twice
-            } else if (triedLastMonth == false) {
+            } else if (triedLastMonth == false && year == date.getYear() && month == stringCurrentMonth) {
                 month = month - 1;
                 if (month == 0) month = 12;
                 stringMonth = month;
