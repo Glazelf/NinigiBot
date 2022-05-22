@@ -11,23 +11,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { VCTextChannels } = require('../../database/dbObjects');
         let oldChannel = await VCTextChannels.findOne({ where: { server_id: interaction.guild.id } });
 
-        // Get channel
-        let subCommand = args[0];
-        if (!subCommand) {
-            if (oldChannel) {
-                return sendMessage({ client: client, interaction: interaction, content: `The current VC text channel is <#${oldChannel.channel_id}>.` });
-            };
-            return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel or \`disable\`.` });
-        };
-        subCommand = subCommand.toLowerCase();
-
-        let targetChannel = interaction.guild.channels.cache.find(channel => channel.name == subCommand);
-        if (!targetChannel) targetChannel = interaction.guild.channels.cache.find(channel => subCommand.includes(channel.id));
+        let disable = false;
+        let disableArg = args.find(element => element.name == "disable");
+        if (disableArg) disable = disableArg.value;
+        let targetChannel = args.find(element => element.name == "channel").channel;
         if (!targetChannel && subCommand !== "disable") return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
 
-        // Database
         if (oldChannel) await oldChannel.destroy();
-        if (subCommand == "disable") return sendMessage({ client: client, interaction: interaction, content: `Disabled VC text channel functionality in **${interaction.guild.name}**.` });
+        if (disable) return sendMessage({ client: client, interaction: interaction, content: `Disabled VC text channel functionality in **${interaction.guild.name}**.` });
 
         await VCTextChannels.upsert({ server_id: interaction.guild.id, channel_id: targetChannel.id });
 
