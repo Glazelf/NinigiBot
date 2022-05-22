@@ -9,8 +9,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let user = args.find(element => element.name == "user").value;
-        let member = interaction.guild.members.fetch(user.id);
+        let user = args.find(element => element.name == "user").user;
+        let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
 
         let muteTime = 60;

@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
 
-        let memberFetch = await message.guild.members.fetch();
+        let memberFetch = await interaction.guild.members.fetch();
 
         let author = interaction.user;
 
