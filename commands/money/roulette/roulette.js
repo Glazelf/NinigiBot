@@ -10,7 +10,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let process = null;
 
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-        let user = interaction.user;
 
         roulette.shift()
         if (roulette.on) {
@@ -18,7 +17,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return sendMessage({ client: client, interaction: interaction, content: `No one wants to play any more Roulette? Well, see you next time!`, ephemeral: false });
+                    return interaction.channel.send({ content: `No one wants to play any more Roulette? Well, see you next time!`, });
                 };
 
                 const result = Math.floor(Math.random() * 37);
@@ -42,7 +41,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     .addField("Winners:", resultAnnouncement, false)
                     .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
                     .setTimestamp();
-                sendMessage({ client: client, interaction: interaction, embeds: results, ephemeral: false });
+                return sendMessage({ client: client, interaction: interaction, embeds: results, ephemeral: false });
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
@@ -53,10 +52,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`)
                 .setImage('https://i.imgur.com/MPKiQM2.png')
                 .setTimestamp();
-            sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
         } else {
             clearInterval(process);
-            sendMessage({ client: client, interaction: interaction, content: `Roulette closed! Hope to see you all again!`, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: `Roulette closed! Hope to see you all again!`, ephemeral: false });
         };
 
     } catch (e) {

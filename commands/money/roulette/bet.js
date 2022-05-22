@@ -7,25 +7,20 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const roulette = require('../../../affairs/roulette')
         const { bank } = require('../../../database/bank');
 
-        if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette start\` to start one.` }); // Add /roulette start functionality
-        if (roulette.hadBet(interaction.user.id)) return message.react('✋');
+        if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
+        if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
-        args = args.join(' ');
+        let startingSlot = args.find(element => element.name == "starting-slot").value;
+        let endingSlot = args.find(element => element.name == "ending-slot").value;
+        let betAmount = args.find(element => element.name == "bet-amount").value;
 
-        if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
+        if (endingSlot < startingSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
+        if (startingSlot < 0 || endingSlot < 0 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 0 and 36.` });
 
-        const money = parseInt(args.slice(0, args.indexOf(',')).trim())
-        args = args.slice(args.indexOf(',') + 1).trim();
-        const betRequests = new Set(args.split(/\s+/));
         const bets = new Set();
-        betRequests.forEach(request => {
-            const slice = request.indexOf('-')
-            if (slice !== -1) {
-                const minimum = Math.min(request.substring(0, slice), request.substring(slice + 1));
-                const maximum = Math.max(request.substring(0, slice), request.substring(slice + 1));
-                for (let i = minimum; i <= maximum; i++) bets.add(`${i}`);
-            } else bets.add(request);
-        });
+        for (let i = startingSlot; i <= endingSlot; i++) {
+            bets.add(i);
+        };
 
         let dbBalance = await bank.currency.getBalance(interaction.user.id);
         if (bets.size * money > dbBalance) {
@@ -37,7 +32,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         bank.currency.add(interaction.user.id, -money * bets.size);
         roulette.players.push(interaction.user.id);
-        return message.react('✔️');
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully placed your bet.` });
 
     } catch (e) {
         // Log error
@@ -49,9 +44,14 @@ module.exports.config = {
     name: "bet",
     description: "Bet on ongoing roulette.",
     options: [{
-        name: "slot-amount",
+        name: "starting-slot",
         type: "INTEGER",
-        description: "The amount of slots you want to bet on.",
+        description: "The first slot you want to bet on.",
+        required: true
+    }, {
+        name: "ending-slot",
+        type: "INTEGER",
+        description: "The last slot you want to bet on.",
         required: true
     }, {
         name: "bet-amount",
