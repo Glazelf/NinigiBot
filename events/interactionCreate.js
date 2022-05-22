@@ -127,12 +127,11 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
-                let pokemonSpecies;
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
                             case "pokemon":
-                                pokemonSpecies = Dex.species.all();
+                                let pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
@@ -157,6 +156,24 @@ module.exports = async (client, interaction) => {
                                 let items = Dex.items.all();
                                 await items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
+                                });
+                                break;
+                            case "format":
+                                let formats = Dex.formats.all();
+                                await formats.forEach(format => {
+                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
+                                });
+                                break;
+                            case "rating":
+                                let ratings = [0, 1500, 1630, 1760];
+                                let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
+                                let formatInputValue = null;
+                                if (formatInput) {
+                                    formatInputValue = formatInput.value;
+                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
+                                };
+                                await ratings.forEach(rating => {
+                                    choices.push({ name: rating.toString(), value: rating });
                                 });
                                 break;
                         };
@@ -187,39 +204,6 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                         break;
-                    case "usage":
-                        switch (focusedOption.name) {
-                            case "pokemon":
-                                // Copied from pokemon command
-                                pokemonSpecies = Dex.species.all();
-                                await pokemonSpecies.forEach(species => {
-                                    let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                    if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
-                                        && species.exists
-                                        && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP") choices.push({ name: pokemonIdentifier, value: species.name });
-                                });
-                                break;
-                            case "format":
-                                let formats = Dex.formats.all();
-                                await formats.forEach(format => {
-                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
-                                });
-                                break;
-                            case "rating":
-                                let ratings = [0, 1500, 1630, 1760];
-                                let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
-                                let formatInputValue = null;
-                                if (formatInput) {
-                                    formatInputValue = formatInput.value;
-                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
-                                };
-                                await ratings.forEach(rating => {
-                                    choices.push({ name: rating.toString(), value: rating });
-                                });
-                                break;
-                        };
-                        break;
                     case "coinflip":
                         switch (focusedOption.name) {
                             case "bet-amount":
@@ -240,13 +224,25 @@ module.exports = async (client, interaction) => {
                     case "rps":
                         switch (focusedOption.name) {
                             case "weapon":
+                                choices.push({ name: "Rock", value: "Rock" });
+                                choices.push({ name: "Paper", value: "Paper" });
+                                choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                             case "bet-amount":
+                                // Copied from coinflip command
+                                let balance = await bank.currency.getBalance(interaction.member.id);
+                                let balanceHalf = Math.floor(balance / 2);
+                                let balanceQuarter = Math.floor(balance / 4);
+                                choices.push({ name: balance.toString(), value: balance });
+                                choices.push({ name: balanceHalf.toString(), value: balanceHalf });
+                                choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
                                 break;
                         };
                     case "shop":
                         switch (focusedOption.name) {
                             case "category":
+                                choices.push({ name: "Equipment", value: "Equipment" });
+                                choices.push({ name: "Food", value: "Food" });
                                 break;
                         };
                     case "inventory":
