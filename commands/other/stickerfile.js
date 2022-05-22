@@ -12,16 +12,19 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let replyMessage = null;
         let stickerLink = null;
 
-        // Add support to get ALL stickers from a message
-        if (message.stickers && message.stickers.first()) {
-            stickerLink = message.stickers.first().url;
-        } else if (replyMessage && replyMessage.stickers.first()) {
-            stickerLink = replyMessage.stickers.first().url;
+        let noStickerString = `This only works for messages with stickers attached.`;
+        if (!message.stickers || !message.stickers.first()) return sendMessage({ client: client, interaction: interaction, content: noStickerString });
+
+        if (message.stickers.size == 1) {
+            returnString += `\n${message.stickers.first().name} ${message.stickers.first().url}`;
+        } else if (message.stickers.size > 1) {
+            await message.stickers.forEach(sticker => {
+                returnString += `\n${sticker.name} ${sticker.url}`;
+            });
         } else {
-            return sendMessage({ client: client, interaction: interaction, content: `Please provide a sticker to convert or reply to a message containing a sticker.` });
+            return sendMessage({ client: client, interaction: interaction, content: noStickerString });
         };
 
-        returnString += `\n-Sticker link: <${stickerLink}>`
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
