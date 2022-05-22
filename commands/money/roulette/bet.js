@@ -42,7 +42,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "bet",
-    description: "Bet on ongoing roulette.",
+    description: "Bet on an ongoing roulette.",
     options: [{
         name: "starting-slot",
         type: "INTEGER",
