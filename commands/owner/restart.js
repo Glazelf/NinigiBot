@@ -9,15 +9,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);
-
-        let user = interaction.user;
 
         // Return message then destroy
         await sendMessage({ client: client, interaction: interaction, content: `Restarting.` });
-        console.log(`Restarting for ${user.tag}. (${timestamp})`);
+        console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
 
-        if (args[0] == 'hard') {
+        if (removeInteractions) {
             // Return message then destroy
             await sendMessage({ client: client, interaction: interaction, content: `Starting hard restart.\nRemoving all slash commands, context menus etc. might take a bit.` });
 

@@ -10,11 +10,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);
 
-        let user = interaction.user;
-
-        if (args[0] != 'soft') {
+        if (removeInteractions) {
             // Return interaction then destroy
             await sendMessage({ client: client, interaction: interaction, content: `Shutting down.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.` });
 
@@ -43,7 +42,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
         };
 
-        console.log(`Bot killed by ${user.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${interaction.user.tag}. (${timestamp})`);
 
         await client.destroy();
         return process.exit();
