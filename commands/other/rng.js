@@ -8,9 +8,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let lowNumber = args.find(element => element.name == "number-min").value;
         let highNumber = args.find(element => element.name == "number-max").value;
-
-        if (lowNumber.startsWith("-")) lowNumber = lowNumber.substring(1, lowNumber.length + 1) * -1;
-        if (highNumber.startsWith("-")) highNumber = highNumber.substring(1, highNumber.length + 1) * -1;
         if (lowNumber > highNumber) return sendMessage({ client: client, interaction: interaction, content: `Make sure the first number is lower than the second number.` });
 
         let randomValue = randomNumber(lowNumber, highNumber);
