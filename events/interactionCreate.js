@@ -134,10 +134,11 @@ module.exports = async (client, interaction) => {
                             case "pokemon":
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
+                                    let pokemonIdentifier = `${species.num}: ${species.name}`;
+                                    if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && species.exists
                                         && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
+                                        && species.isNonstandard !== "CAP") choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
                             case "ability":
@@ -192,10 +193,11 @@ module.exports = async (client, interaction) => {
                                 // Copied from pokemon command
                                 pokemonSpecies = Dex.species.all();
                                 await pokemonSpecies.forEach(species => {
-                                    if ((species.name.toLowerCase().includes(focusedOption.value.toLowerCase()) || species.num.toString().includes(focusedOption.value))
+                                    let pokemonIdentifier = `${species.num}: ${species.name}`;
+                                    if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && species.exists
                                         && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP") choices.push({ name: `${species.num}: ${species.name}`, value: species.name });
+                                        && species.isNonstandard !== "CAP") choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
                             case "format":
