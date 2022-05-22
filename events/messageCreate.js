@@ -11,6 +11,8 @@ module.exports = async (client, message) => {
 
         const autoMod = require('../util/autoMod');
 
+        if (message.author.bot) return;
+
         // Call image
         let messageImage = null;
         if (message.attachments.size > 0) {
@@ -19,8 +21,6 @@ module.exports = async (client, message) => {
 
         // Ignore commands in DMs
         if (message.channel.type == "DM" || !message.guild) {
-            if (message.author.bot) return;
-
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
