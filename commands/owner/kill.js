@@ -13,12 +13,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);
 
-        await sendMessage({ client: client, interaction: interaction, content: `Shutting down.` });
+        let shutdownString = "Shutting down.";
+        if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc.\n This might take a bit.";
+        await sendMessage({ client: client, interaction: interaction, content: shutdownString });
 
         if (removeInteractions) {
-            // Return interaction then destroy
-            await interaction.channel.send({ content: `Removing all slash commands, context menus etc.\n This might take a bit.` });
-
             // Delete all global commands
             await client.application.commands.set([]);
 
