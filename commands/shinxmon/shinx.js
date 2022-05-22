@@ -66,14 +66,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let subCommand = interaction.options.getSubcommand();
         if (shinx.sleeping) subCommand = "tap";
         switch (interaction.options.getSubcommand()) {
-            case "level":
-                if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-                let level;
-                if (args[1] && !isNaN(args[1])) level = args[1];
-                else return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid number.` });
-                return sendMessage({ client: client, interaction: interaction, content: `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}` });
-
-                break;
             case "gender":
                 return shinx.trans() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
                 break;
@@ -158,8 +150,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
                 break;
             case "nickname":
-                args.shift();
-                const nickname = args.join(' ');
+                const nickname = args.find(element => element.name == "name").value
 
                 // Remove non-alphabetical characters
                 nickname.replace(/[^a-z]/gi, '');
@@ -208,7 +199,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             case "equip":
                 const { Users } = require('../../database/dbObjects');
                 args.shift();
-                const equipmentName = args.join(' ');
+                const equipmentName = args.find(element => element.name == "item").value.toLowerCase();
 
                 const user = await Users.findOne({ where: { user_id: master.id } });
                 const equipments = await user.getEquipments();
@@ -234,12 +225,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
             case "feed":
                 const { Users } = require('../../database/dbObjects');
-                args.shift();
-                const foodName = args.join(' ');
+                const foodName = args.find(element => element.name == "food").value.toLowerCase();
 
                 const user = await Users.findOne({ where: { user_id: master.id } });
                 const foods = await user.getFoods();
-                if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food to give, ${master}.` });
+                if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food, ${master}.` });
                 const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
                 if (food.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that food, ${master}.` });
                 user.removeFood(food[0]);
@@ -283,7 +273,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
                 let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
-
                 break;
             case "play":
                 canvas = Canvas.createCanvas(578, 398);
@@ -367,6 +356,10 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, files: messageFile });
                 break;
             case "release":
+                let confirm = false
+                let confirmArg = args.find(element => element.name == "confirm");
+                if (confirmArg) confirm = confirmArg.value;
+                if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
                 await shinx.destroy();
 
                 return sendMessage({ client: client, interaction: interaction, content: `Successfully released Shinx and reset all it's values.` });
@@ -410,7 +403,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Equip an item to Shinx.",
         options: [{
-            name: "input",
+            name: "item",
             type: "STRING",
             description: "Item to equip.",
             required: true
@@ -440,7 +433,7 @@ module.exports.config = {
         options: [{
             name: "confirm",
             type: "BOOLEAN",
-            description: "Are you sure? You can never get this Shinx back.",
+            description: "Are you sure? You can never get this Shinx back."
         }]
     }]
 };
