@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const randomNumber = require('../../util/randomNumber');
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
-        let balance = await bank.currency.getBalance(message.member.id);
+        let balance = await bank.currency.getBalance(interaction.user.id);
 
         let ephemeral = true;
         let ephemeralArg = args.find(element => element.name == "ephemeral");
@@ -38,7 +38,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             amount = Math.abs(amount) * -1;
         };
 
-        bank.currency.add(message.member.id, amount);
+        bank.currency.add(interaction.user.id, amount);
         sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {

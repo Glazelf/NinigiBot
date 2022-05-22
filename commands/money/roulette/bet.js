@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../../database/bank');
 
         if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette start\` to start one.` }); // Add /roulette start functionality
-        if (roulette.hadBet(message.member.id)) return message.react('✋');
+        if (roulette.hadBet(interaction.user.id)) return message.react('✋');
 
         args = args.join(' ');
 
@@ -27,16 +27,16 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             } else bets.add(request);
         });
 
-        let dbBalance = await bank.currency.getBalance(message.member.id);
+        let dbBalance = await bank.currency.getBalance(interaction.user.id);
         if (bets.size * money > dbBalance) {
             return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
         bets.forEach(bet => {
-            roulette.addBet(bet, message.member.id, 36 * money);
+            roulette.addBet(bet, interaction.user.id, 36 * money);
         });
 
-        bank.currency.add(message.member.id, -money * bets.size);
-        roulette.players.push(message.member.id);
+        bank.currency.add(interaction.user.id, -money * bets.size);
+        roulette.players.push(interaction.user.id);
         return message.react('✔️');
 
     } catch (e) {

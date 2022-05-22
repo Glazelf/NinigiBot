@@ -5,7 +5,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const currentAmount = await bank.currency.getBalance(message.member.id);
+        const currentAmount = await bank.currency.getBalance(interaction.user.id);
         let transferAmount = args[0];
         let transferTarget;
 
@@ -33,7 +33,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (transferAmount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
 
         // Database
-        bank.currency.add(message.member.id, -transferAmount);
+        bank.currency.add(interaction.user.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
         return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget.username}.` });

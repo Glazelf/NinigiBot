@@ -31,7 +31,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     .setAuthor({ name: `Global Leaderboard:`, iconURL: avatar });
 
                 // Leaderboard with IDs
-            } else if (args[0].toLowerCase() == "id" && message.member.id == client.config.ownerID) {
+            } else if (args[0].toLowerCase() == "id" && interaction.user.id == client.config.ownerID) {
                 let leaderboardStringID = bank.currency.sort((a, b) => b.balance - a.balance)
                     .filter(user => client.users.cache.has(user.user_id))
                     .first(10)

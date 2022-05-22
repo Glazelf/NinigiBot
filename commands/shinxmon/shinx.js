@@ -60,7 +60,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let master;
 
         if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+            if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
             const expectedId = /<@!(\d+)/.exec(args[0]);
             let target = message.mentions.users.first();
             if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `${target.tag} is a bot.` });
@@ -81,7 +81,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const now = new Date();
 
         if (args[0] === 'level') {
-            if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+            if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
             let level;
             if (args[1] && !isNaN(args[1])) level = args[1];
             else return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid number.` });

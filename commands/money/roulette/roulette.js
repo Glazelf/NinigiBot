@@ -31,7 +31,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     for (let i = 0; i < winners.length; i++) {
                         const winner = winners[i];
                         resultAnnouncement += (i + 1) + ') ' + message.channel.guild.members.cache.find(member => member.user.id === winner[0]).user.username + ` wins ${winner[1]}${globalVars.currency}!\n`;
-                        bank.currency.add(message.member.id, winner[1]);
+                        bank.currency.add(interaction.user.id, winner[1]);
                     };
                 };
 

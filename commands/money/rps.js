@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
-        let balance = await bank.currency.getBalance(message.member.id);
+        let balance = await bank.currency.getBalance(interaction.user.id);
 
         if (!args[0] || !args[1]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide two arguments; Your chosen weapon and an amount to gamble.` });
 
@@ -54,7 +54,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         // Update currency
-        bank.currency.add(message.member.id, amount);
+        bank.currency.add(interaction.user.id, amount);
         sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
