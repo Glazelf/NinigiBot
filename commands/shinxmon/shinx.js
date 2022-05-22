@@ -56,332 +56,321 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
 
-        let shinx;
-        let master;
-
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-            const expectedId = /<@!(\d+)/.exec(args[0]);
-            let target = message.mentions.users.first();
-            if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `${target.tag} is a bot.` });
-            const targetId = target.id
-
-            if (expectedId && expectedId[1] == targetId) {
-                shinx = await bank.currency.getShinx(targetId);
-                master = message.mentions.members.first().user;
-                args.splice(0, 1);
-            } else return sendMessage({ client: client, interaction: interaction, content: `The syntax is \`/shinx <target> <usual command>\`.` }); // Shinx rewrite !? :(
-        } else {
-            master = interaction.user;
-            shinx = await bank.currency.getShinx(master.id);
-        };
+        let master = interaction.user
+        let shinx = await bank.currency.getShinx(master.id);
 
         shinx.see();
         let canvas, ctx, img;
         const now = new Date();
 
-        if (args[0] === 'level') {
-            if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-            let level;
-            if (args[1] && !isNaN(args[1])) level = args[1];
-            else return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid number.` });
-            return sendMessage({ client: client, interaction: interaction, content: `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}` });
+        let subCommand = interaction.options.getSubcommand();
+        if (shinx.sleeping) subCommand = "tap";
+        switch (interaction.options.getSubcommand()) {
+            case "level":
+                if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+                let level;
+                if (args[1] && !isNaN(args[1])) level = args[1];
+                else return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid number.` });
+                return sendMessage({ client: client, interaction: interaction, content: `Shinx leveled up to level ${shinx.levelUp(parseInt(level))}` });
 
-        } else if (args[0] === 'gender') {
-            return shinx.trans() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
+                break;
+            case "gender":
+                return shinx.trans() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
+                break;
+            case "data":
+                canvas = Canvas.createCanvas(791, 541);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/data.png');
 
-        } else if (args[0] == 'data') {
-            canvas = Canvas.createCanvas(791, 541);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/data.png');
+                ctx.drawImage(img, 0, 0);
+                if (shinx.shiny) {
+                    const cap = await Canvas.loadImage('./assets/shiny.png');
+                    ctx.drawImage(cap, 97, 202);
+                };
 
-            ctx.drawImage(img, 0, 0);
-            if (shinx.shiny) {
-                const cap = await Canvas.loadImage('./assets/shiny.png');
-                ctx.drawImage(cap, 97, 202);
-            };
+                img = await Canvas.loadImage('./assets/owner.png');
+                ctx.drawImage(img, 48 * !shinx.user_male, 0, 47 + 9 * !shinx.user_male, 70, 407, 427, 47 + 9 * !shinx.user_male, 70);
+                ctx.drawImage(img, 59 * !shinx.user_male, 71, 59 - 5 * !shinx.user_male, 49, 398, 156, 59 - 5 * !shinx.user_male, 49);
+                ctx.font = applyText(canvas, shinx.nick, 45, 266);
+                ctx.fillStyle = '#FFFFFF';
 
-            img = await Canvas.loadImage('./assets/owner.png');
-            ctx.drawImage(img, 48 * !shinx.user_male, 0, 47 + 9 * !shinx.user_male, 70, 407, 427, 47 + 9 * !shinx.user_male, 70);
-            ctx.drawImage(img, 59 * !shinx.user_male, 71, 59 - 5 * !shinx.user_male, 49, 398, 156, 59 - 5 * !shinx.user_male, 49);
-            ctx.font = applyText(canvas, shinx.nick, 45, 266);
-            ctx.fillStyle = '#FFFFFF';
+                ctx.fillText(shinx.nick, 88, 133);
+                ctx.font = applyText(canvas, master.username, 35, 228);
 
-            ctx.fillText(shinx.nick, 88, 133);
-            ctx.font = applyText(canvas, master.username, 35, 228);
+                if (shinx.user_male) {
+                    ctx.fillStyle = '#0073FF';
+                } else {
+                    ctx.fillStyle = 'red';
+                };
 
-            if (shinx.user_male) {
-                ctx.fillStyle = '#0073FF';
-            } else {
-                ctx.fillStyle = 'red';
-            };
+                ctx.fillText(master.username, 490, 190);
+                ctx.font = 'normal bolder 35px Arial';
+                ctx.fillStyle = '#000000';
+                ctx.fillText(shinx.level, 93, 180);
+                ctx.fillText(Math.floor(shinx.hunger * 100) + '%', 490, 251);
+                ctx.fillText(Math.floor(shinx.sleep * 100) + '%', 490, 310);
+                ctx.fillText(Math.floor(shinx.friendship * 100) + '%', 490, 364);
+                ctx.fillText(shinx.meetup, 490, 481);
+                ctx.fillText(shinx.equipment[0].toUpperCase() + shinx.equipment.slice(1), 15, 530);
 
-            ctx.fillText(master.username, 490, 190);
-            ctx.font = 'normal bolder 35px Arial';
-            ctx.fillStyle = '#000000';
-            ctx.fillText(shinx.level, 93, 180);
-            ctx.fillText(Math.floor(shinx.hunger * 100) + '%', 490, 251);
-            ctx.fillText(Math.floor(shinx.sleep * 100) + '%', 490, 310);
-            ctx.fillText(Math.floor(shinx.friendship * 100) + '%', 490, 364);
-            ctx.fillText(shinx.meetup, 490, 481);
-            ctx.fillText(shinx.equipment[0].toUpperCase() + shinx.equipment.slice(1), 15, 530);
+                if (shinx.sleeping) {
+                    img = await Canvas.loadImage('./assets/sleepicon.png');
+                    ctx.drawImage(img, 270, 155);
+                };
 
-            if (shinx.sleeping) {
-                img = await Canvas.loadImage('./assets/sleepicon.png');
-                ctx.drawImage(img, 270, 155);
-            };
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, files: messageFile });
+                break;
+            case "tap":
+                if (args[0] == 'tap') {
+                    shinx.rest();
+                };
 
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, files: messageFile });
+                canvas = Canvas.createCanvas(468, 386);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/room.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                let reaction;
+                if (shinx.sleeping) {
+                    reaction = tapping[0];
+                } else if (shinx.sleep < 0.5) {
+                    reaction = tapping[1];
+                } else {
+                    reaction = tapping[2];
+                };
 
-        } else if (args[0] == 'tap' || shinx.sleeping) {
-            if (args[0] == 'tap') {
-                shinx.rest();
-            };
+                ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
 
-            canvas = Canvas.createCanvas(468, 386);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/room.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
-            ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            let reaction;
-            if (shinx.sleeping) {
-                reaction = tapping[0];
-            } else if (shinx.sleep < 0.5) {
-                reaction = tapping[1];
-            } else {
-                reaction = tapping[2];
-            };
+                if (!isNaN(reaction[2])) {
+                    img = await Canvas.loadImage('./assets/reactions.png');
+                    ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
+                };
 
-            ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
+                if (now.getHours() > 20 || now.getHours() < 4) {
+                    img = await Canvas.loadImage('./assets/winNight.png');
+                    ctx.drawImage(img, 198, 52);
+                };
 
-            if (!isNaN(reaction[2])) {
+                let welcomeFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
+                break;
+            case "nickname":
+                args.shift();
+                const nickname = args.join(' ');
+
+                // Remove non-alphabetical characters
+                nickname.replace(/[^a-z]/gi, '');
+
+                if (nickname.length < 2 || nickname.length > 10) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid nickname between 2 and 10 characters.` });
+                shinx.changeNick(nickname);
+
+                canvas = Canvas.createCanvas(471, 355);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/nicks.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 324, 223, 57, 48);
                 img = await Canvas.loadImage('./assets/reactions.png');
-                ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
-            };
+                ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
+                const text = `Nickname changed to **${nickname}**!`;
 
-            if (now.getHours() > 20 || now.getHours() < 4) {
-                img = await Canvas.loadImage('./assets/winNight.png');
-                ctx.drawImage(img, 198, 52);
-            };
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
+                break;
+            case "shiny":
+                const { Users } = require('../../database/dbObjects');
+                const user = await Users.findOne({ where: { user_id: master.id } });
+                const keys = await user.getKeys();
+                if (!keys) return;
+                const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
+                if (shinyCharm.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You need a Shiny Charm to do this.` });
+                canvas = Canvas.createCanvas(255, 192);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/sky.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/sprite.png');
+                ctx.drawImage(img, 94 * !shinx.shiny, 0, 94, 72, 87, 61, 94, 72);
 
-            let welcomeFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
-
-        } else if (args[0] == 'nick' || args[0] == 'nickname') {
-            args.shift();
-            const nickname = args.join(' ');
-
-            // Remove non-alphabetical characters
-            nickname.replace(/[^a-z]/gi, '');
-
-            if (nickname.length < 2 || nickname.length > 10) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid nickname between 2 and 10 characters.` });
-            shinx.changeNick(nickname);
-
-            canvas = Canvas.createCanvas(471, 355);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/nicks.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
-            ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 324, 223, 57, 48);
-            img = await Canvas.loadImage('./assets/reactions.png');
-            ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
-            const text = `Nickname changed to **${nickname}**!`;
-
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
-
-        } else if (args[0] == 'shiny') {
-            const { Users } = require('../../database/dbObjects');
-            const user = await Users.findOne({ where: { user_id: master.id } });
-            const keys = await user.getKeys();
-            if (!keys) return;
-            const shinyCharm = keys.filter(i => i.key.name.toLowerCase() === 'shiny charm');
-            if (shinyCharm.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You need a Shiny Charm to do this.` });
-            canvas = Canvas.createCanvas(255, 192);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/sky.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/sprite.png');
-            ctx.drawImage(img, 94 * !shinx.shiny, 0, 94, 72, 87, 61, 94, 72);
-
-            if (!shinx.shiny) {
-                img = await Canvas.loadImage('./assets/sparkle.png');
-                ctx.drawImage(img, 49, 10);
-            };
-
-            const text = shinx.shine() ? `Now your Shinx shines, ${master}!` : `Your Shinx doesnt shine anymore, ${master}.`;
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
-
-        } else if (args[0] == 'equip') {
-            const { Users } = require('../../database/dbObjects');
-            args.shift();
-            const equipmentName = args.join(' ');
-
-            const user = await Users.findOne({ where: { user_id: master.id } });
-            const equipments = await user.getEquipments();
-            if (!equipments) return sendMessage({ client: client, interaction: interaction, content: `You don't have any equipment, ${master}.` });
-            const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
-            if (equipment.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that equipment, ${master}.` });
-            shinx.equip(equipment[0].equipment.name)
-
-            canvas = Canvas.createCanvas(428, 310);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/frontier.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
-            ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
-            img = await Canvas.loadImage('./assets/reactions.png');
-            ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
-            const text = `Equipment changed to ${equipmentName}!`;
-
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
-
-        } else if (args[0] == 'feed') {
-            const { Users } = require('../../database/dbObjects');
-            args.shift();
-            const foodName = args.join(' ');
-
-            const user = await Users.findOne({ where: { user_id: master.id } });
-            const foods = await user.getFoods();
-            if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food to give, ${master}.` });
-            const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
-            if (food.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that food, ${master}.` });
-            user.removeFood(food[0]);
-            shinx.feed(food[0].food.recovery);
-
-            canvas = Canvas.createCanvas(393, 299);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/dining.png');
-            ctx.drawImage(img, 0, 0);
-            img = await Canvas.loadImage('./assets/mc.png');
-            const guests = await bank.currency.getRandomShinx(2, shinx.user_id, message.guild);
-            const userFinder = message.guild.members.cache;
-            ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
-            ctx.font = 'normal bold 16px Arial';
-            ctx.fillStyle = '#ffffff';
-
-            for (let i = 0; i < guests.length; i++) {
-                const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
-                for (let k = nick.length - 1; 0 <= k; k--) {
-                    ctx.font = applyText(canvas, nick[k], 16, 51);
-                    ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
+                if (!shinx.shiny) {
+                    img = await Canvas.loadImage('./assets/sparkle.png');
+                    ctx.drawImage(img, 49, 10);
                 };
-            };
 
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
+                const text = shinx.shine() ? `Now your Shinx shines, ${master}!` : `Your Shinx doesnt shine anymore, ${master}.`;
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
+                break;
+            case "equip":
+                const { Users } = require('../../database/dbObjects');
+                args.shift();
+                const equipmentName = args.join(' ');
 
-            for (let i = 0; i < guests.length; i++) {
-                ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
-            };
+                const user = await Users.findOne({ where: { user_id: master.id } });
+                const equipments = await user.getEquipments();
+                if (!equipments) return sendMessage({ client: client, interaction: interaction, content: `You don't have any equipment, ${master}.` });
+                const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
+                if (equipment.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that equipment, ${master}.` });
+                shinx.equip(equipment[0].equipment.name)
 
-            const reaction = eating[Math.floor(Math.random() * eating.length)];
-            img = await Canvas.loadImage('./assets/reactions.png');
-            ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
+                canvas = Canvas.createCanvas(428, 310);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/frontier.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
+                img = await Canvas.loadImage('./assets/reactions.png');
+                ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
+                const text = `Equipment changed to ${equipmentName}!`;
 
-            if (now.getHours() > 20 || now.getHours() < 6) {
-                img = await Canvas.loadImage('./assets/dinNight.png');
-                ctx.drawImage(img, 199, 0);
-            };
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
+                break;
+            case "feed":
+                const { Users } = require('../../database/dbObjects');
+                args.shift();
+                const foodName = args.join(' ');
 
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
+                const user = await Users.findOne({ where: { user_id: master.id } });
+                const foods = await user.getFoods();
+                if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food to give, ${master}.` });
+                const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
+                if (food.length < 1) return sendMessage({ client: client, interaction: interaction, content: `You don't have that food, ${master}.` });
+                user.removeFood(food[0]);
+                shinx.feed(food[0].food.recovery);
 
-        } else if (args[0] == 'play') {
-            canvas = Canvas.createCanvas(578, 398);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/landscapes.png');
-            ctx.drawImage(img, 0, 0);
-            const now = new Date();
-            let time;
+                canvas = Canvas.createCanvas(393, 299);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/dining.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/mc.png');
+                const guests = await bank.currency.getRandomShinx(2, shinx.user_id, interaction.guild);
+                const userFinder = interaction.guild.members.cache;
+                ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
+                ctx.font = 'normal bold 16px Arial';
+                ctx.fillStyle = '#ffffff';
 
-            if (now.getHours() >= 20 || now.getHours() < 4) {
-                time = 2;
-            } else if (now.getHours() >= 4 && now.getHours() < 10) {
-                time = 0;
-            } else {
-                time = 1;
-            };
-
-            ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
-            const layout = visitors[Math.floor(Math.random() * visitors.length)];
-            const guests = await bank.currency.getRandomShinx(layout.length, shinx.user_id, message.guild);
-            const userFinder = message.guild.members.cache;
-            img = await Canvas.loadImage('./assets/mc.png');
-            ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
-            ctx.font = 'normal bolder 18px Arial';
-            ctx.fillStyle = 'purple';
-
-            for (let i = 0; i < guests.length; i++) {
-                const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
-                for (let k = nick.length - 1; 0 <= k; k--) {
-                    ctx.font = applyText(canvas, nick[k], 18, 51);
-                    ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
+                for (let i = 0; i < guests.length; i++) {
+                    const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
+                    for (let k = nick.length - 1; 0 <= k; k--) {
+                        ctx.font = applyText(canvas, nick[k], 16, 51);
+                        ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
+                    };
                 };
-            };
 
-            img = await Canvas.loadImage('./assets/fieldShinx.png');
-            ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
 
-            for (let i = 0; i < guests.length; i++) {
-                ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
-            };
+                for (let i = 0; i < guests.length; i++) {
+                    ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
+                };
 
-            let reaction;
+                const reaction = eating[Math.floor(Math.random() * eating.length)];
+                img = await Canvas.loadImage('./assets/reactions.png');
+                ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
 
-            if (shinx.sleep < 0.2 || shinx.hunger < 0.2) {
-                reaction = playing[0];
-            } else {
-                reaction = playing[Math.floor(Math.random() * (playing.length - 1)) + 1];
-            };
+                if (now.getHours() > 20 || now.getHours() < 6) {
+                    img = await Canvas.loadImage('./assets/dinNight.png');
+                    ctx.drawImage(img, 199, 0);
+                };
 
-            img = await Canvas.loadImage('./assets/reactions.png');
-            ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
-            shinx.play(reaction[2]);
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
 
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
+                break;
+            case "play":
+                canvas = Canvas.createCanvas(578, 398);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/landscapes.png');
+                ctx.drawImage(img, 0, 0);
+                const now = new Date();
+                let time;
 
-        } else if (args[0] == "release") {
-            await shinx.destroy();
+                if (now.getHours() >= 20 || now.getHours() < 4) {
+                    time = 2;
+                } else if (now.getHours() >= 4 && now.getHours() < 10) {
+                    time = 0;
+                } else {
+                    time = 1;
+                };
 
-            return sendMessage({ client: client, interaction: interaction, content: `Successfully released Shinx and reset all it's values.` });
+                ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
+                const layout = visitors[Math.floor(Math.random() * visitors.length)];
+                const guests = await bank.currency.getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+                const userFinder = interaction.guild.members.cache;
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
+                ctx.font = 'normal bolder 18px Arial';
+                ctx.fillStyle = 'purple';
 
-        } else {
-            canvas = Canvas.createCanvas(256, 160);
-            ctx = canvas.getContext('2d');
-            img = await Canvas.loadImage('./assets/park.png');
-            ctx.drawImage(img, 0, 0);
-            let time;
+                for (let i = 0; i < guests.length; i++) {
+                    const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
+                    for (let k = nick.length - 1; 0 <= k; k--) {
+                        ctx.font = applyText(canvas, nick[k], 18, 51);
+                        ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
+                    };
+                };
 
-            if (now.getHours() >= 20 || now.getHours() < 4) {
-                time = 2;
-            } else if (now.getHours() >= 4 && now.getHours() < 10) {
-                time = 0;
-            } else {
-                time = 1;
-            };
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
 
-            ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
-            img = await Canvas.loadImage('./assets/trainer.png');
-            ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
-            img = await Canvas.loadImage('./assets/portraits.png');
-            let conversation = await bank.currency.getRandomReaction();
-            ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
+                for (let i = 0; i < guests.length; i++) {
+                    ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
+                };
 
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, files: messageFile });
+                let reaction;
+
+                if (shinx.sleep < 0.2 || shinx.hunger < 0.2) {
+                    reaction = playing[0];
+                } else {
+                    reaction = playing[Math.floor(Math.random() * (playing.length - 1)) + 1];
+                };
+
+                img = await Canvas.loadImage('./assets/reactions.png');
+                ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
+                shinx.play(reaction[2]);
+
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
+                break;
+            case "park":
+                canvas = Canvas.createCanvas(256, 160);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/park.png');
+                ctx.drawImage(img, 0, 0);
+                let time;
+
+                if (now.getHours() >= 20 || now.getHours() < 4) {
+                    time = 2;
+                } else if (now.getHours() >= 4 && now.getHours() < 10) {
+                    time = 0;
+                } else {
+                    time = 1;
+                };
+
+                ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
+                img = await Canvas.loadImage('./assets/trainer.png');
+                ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
+                img = await Canvas.loadImage('./assets/portraits.png');
+                let conversation = await bank.currency.getRandomReaction();
+                ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
+
+                let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${conversation.quote}`, files: messageFile });
+                break;
+            case "release":
+                await shinx.destroy();
+
+                return sendMessage({ client: client, interaction: interaction, content: `Successfully released Shinx and reset all it's values.` });
+                break;
         };
 
     } catch (e) {
@@ -440,5 +429,18 @@ module.exports.config = {
         name: "play",
         type: "SUB_COMMAND",
         description: "Play with Shinx."
+    }, {
+        name: "park",
+        type: "SUB_COMMAND",
+        description: "Go to the park."
+    }, {
+        name: "release",
+        type: "SUB_COMMAND",
+        description: "Release Shinx.",
+        options: [{
+            name: "confirm",
+            type: "BOOLEAN",
+            description: "Are you sure? You can never get this Shinx back.",
+        }]
     }]
 };
