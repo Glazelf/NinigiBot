@@ -12,37 +12,34 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         const input = args.find(element => element.name == "category").value.toLowerCase();
         const condition = { where: { cost: { [ne]: 0 } } };
+        let items = null;
         switch (input) {
             // case "items":
-            //     const items = await CurrencyShop.findAll(condition);
+            //     items = await CurrencyShop.findAll(condition);
             //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
-            //     return sendMessage({ client: client, interaction: interaction, content: returnString });
             //     break;
             case "equipment":
-                const items = await Equipments.findAll(condition);
+                items = await Equipments.findAll(condition);
                 let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
-                return sendMessage({ client: client, interaction: interaction, content: returnString });
                 break;
             case "food":
-                const items = await Foods.findAll(condition);
+                items = await Foods.findAll(condition);
                 let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
-                return sendMessage({ client: client, interaction: interaction, content: returnString });
                 break;
             //// Coming soon, maybe
             // case "key":
-            //     const items = await KeyItems.findAll(condition);
+            //     items = await KeyItems.findAll(condition);
             //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
-            //     return sendMessage({ client: client, interaction: interaction, content: returnString });
             //     break;
             // case "rooms":
-            //     const items = await Room.findAll(condition);
+            //     items = await Room.findAll(condition);
             //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
-            //     return sendMessage({ client: client, interaction: interaction, content: returnString });
             //     break;
             default:
                 return sendMessage({ client: client, interaction: interaction, content: `That category doesn't exist.` });
                 break;
         };
+        return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
         // Log error
