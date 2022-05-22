@@ -40,8 +40,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${newChannelType} Channel Updated ⚒️`, iconURL: icon })
                 .addField(`Channel:`, `${newChannel} (${newChannel.id})`)
-                .setFooter({ text: footer })
-                .setTimestamp();
+                .setFooter({ text: footer });
 
             if (executor) updateEmbed.addField('Updated by:', `${executor} (${executor.id})`);
 

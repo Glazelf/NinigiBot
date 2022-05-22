@@ -47,10 +47,6 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
                     return;
                 };
             } else {
-                let errorReturnText = `An error has occurred. 
-The error has already been logged but please also report this as an issue on Github: 
-<https://github.com/Glazelf/NinigiBot/issues>`;
-                if (message && message.type == 'DEFAULT') message.reply(errorReturnText);
                 return devChannel.send({ content: baseMessage });
             };
         };

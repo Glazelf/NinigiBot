@@ -1,53 +1,53 @@
-exports.run = async (client, message, args) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
-        let adminBool = await isAdmin(client, message.member);
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        let adminBool = await isAdmin(client, interaction.member);
+        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { LogChannels } = require('../../database/dbObjects');
-        let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
-        // Get channel
-        let subCommand = args[0];
-        if (!subCommand) {
+        let newLogChannel;
+        let channelArg = args.find(element => element.name == "channel");
+        if (channelArg) newLogChannel = channelArg.channel;
+
+        let disableBool = false;
+        let disableArg = args.find(element => element.name == "disable");
+        if (disableArg) disableBool = disableArg.value;
+        if (!channelArg && !disableBool) {
             if (oldChannel) {
-                return sendMessage({ client: client, message: message, content: `The current logging channel is <#${oldChannel.channel_id}>.` });
+                return sendMessage({ client: client, interaction: interaction, content: `The current logging channel is <#${oldChannel.channel_id}>.` });
             };
-            return sendMessage({ client: client, message: message, content: `Please provide a valid channel or \`disable\`.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel.` });
         };
-        subCommand = subCommand.toLowerCase();
 
-        // See if channel exists
-        let targetChannel = message.guild.channels.cache.find(channel => channel.name == subCommand);
-        if (!targetChannel) targetChannel = message.guild.channels.cache.find(channel => subCommand.includes(channel.id));
-        if (!targetChannel && subCommand !== "disable") return sendMessage({ client: client, message: message, content: `That channel does not exist in this server.` });
-
-        // Database
         if (oldChannel) await oldChannel.destroy();
-        if (subCommand == "disable") return sendMessage({ client: client, message: message, content: `Disabled logging functionality in **${message.guild.name}**.` });
+        if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
 
-        await LogChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
+        await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
 
-        return sendMessage({ client: client, message: message, content: `Logging has been added to ${targetChannel}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "log",
-    aliases: [],
     description: "Choose a channel to log to.",
     options: [{
         name: "channel",
-        type: 7,
-        description: "Specify channel.",
-        required: true
+        type: "CHANNEL",
+        description: "Specify channel."
+    }, {
+        name: "disable",
+        type: "BOOLEAN",
+        description: "Disable logging."
     }]
 };

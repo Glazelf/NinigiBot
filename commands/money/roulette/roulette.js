@@ -1,36 +1,28 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../../util/logger');
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
         const sendMessage = require('../../../util/sendMessage');
+        const Discord = require("discord.js");
         const roulette = require('../../../affairs/roulette');
         const { bank } = require('../../../database/bank');
-        const Discord = require("discord.js");
+        const randomNumber = require('../../../util/randomNumber');
+
         let process = null;
-
-        const { Prefixes } = require('../../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
-
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+        roulette.shift();
+        await interaction.guild.members.fetch();
 
-        let user = message.member.user;
-
-        roulette.shift()
         if (roulette.on) {
             process = setInterval(() => {
                 if (roulette.closeTime()) {
                     roulette.on = false;
                     clearInterval(process);
-                    return sendMessage({ client: client, message: message, content: `No one wants to play any more Roulette? Well, see you next time!`, ephemeral: false });
+                    return interaction.channel.send({ content: `No one wants to play any roulette? Well, see you next time!`, });
                 };
 
-                const result = Math.floor(Math.random() * 37);
+                const result = randomNumber(1, 36);
                 let resultAnnouncement = '';
                 let winners = roulette.spin(result);
 
@@ -39,8 +31,8 @@ exports.run = async (client, message) => {
                     winners.sort((a, b) => b[1] - a[1]);
                     for (let i = 0; i < winners.length; i++) {
                         const winner = winners[i];
-                        resultAnnouncement += (i + 1) + ') ' + message.channel.guild.members.cache.find(member => member.user.id === winner[0]).user.username + ` wins ${winner[1]}${globalVars.currency}!\n`;
-                        bank.currency.add(message.member.id, winner[1]);
+                        resultAnnouncement += (i + 1) + ') ' + interaction.guild.members.cache.find(member => member.id === winner[0]).user.username + ` wins ${winner[1]}${globalVars.currency}!\n`;
+                        bank.currency.add(interaction.user.id, winner[1]);
                     };
                 };
 
@@ -49,35 +41,33 @@ exports.run = async (client, message) => {
                     .setAuthor({ name: `Roulette`, iconURL: avatar })
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... ** ${result} ** !`)
                     .addField("Winners:", resultAnnouncement, false)
-                    .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif')
-                    .setTimestamp();
-                sendMessage({ client: client, message: message, embeds: results, ephemeral: false });
+                    .setImage('https://betoclock.com/wp-content/uploads/2014/11/runroul1.gif');
+
+                roulette.on = false;
+                clearInterval(process);
+                return interaction.channel.send({ embeds: [results] });
             }, 20000);
 
             const welcome = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Roulette`, iconURL: avatar })
-                .setDescription('Welcome to the roulette! We hope to see you here!')
-                .addField("Rules:", `You bet money on the roulette numbers, from 0 to 36.\nThe syntax is \`${prefix}bet <money>, <numbers or intervals>\`
-For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6.
-After some time, the roulette spins and we get the winner(s), who gets 36x the bet money they invested on the winning slot.`)
-                .setImage('https://i.imgur.com/MPKiQM2.png')
-                .setFooter({ text: user.tag })
-                .setTimestamp();
-            sendMessage({ client: client, message: message, embeds: welcome, ephemeral: false });
+                .setDescription("Welcome to the roulette! We hope you'll participate!")
+                .addField("Rules:", `You bet money on the roulette numbers, from 1 to 36 using \`/bet\`.
+The roulette will spin and a slot will be chosen, people who bet on that slot will get 36x their slot investment.`)
+                .setImage('https://i.imgur.com/MPKiQM2.png');
+
+            return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
         } else {
-            clearInterval(process);
-            sendMessage({ client: client, message: message, content: `Roulette closed! Hope to see you all again!`, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: `A roulette is already ongoing!` });
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "roulette",
-    aliases: [],
     description: "Initiate a roulette."
 };

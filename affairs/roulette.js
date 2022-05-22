@@ -7,12 +7,15 @@ module.exports = {
         this.on = !this.on;
     },
     addBet: function (bet, id, reward) {
-        if (!this.bets.has(bet)) this.bets.set(bet, [[id, reward]]);
-        else this.bets.get(bet).push([id, reward]);
+        if (!this.bets.has(bet)) {
+            this.bets.set(bet, [[id, reward]]);
+        } else {
+            this.bets.get(bet).push([id, reward]);
+        };
     },
 
     spin: function (result) {
-        const winners = this.bets.get(`${result}`);
+        const winners = this.bets.get(result);
         this.bets.clear();
         this.players = [];
         return winners;

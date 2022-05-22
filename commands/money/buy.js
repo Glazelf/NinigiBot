@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,20 +9,19 @@ exports.run = async (client, message, args = []) => {
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
-        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide the name of the item you want to buy.` });
-        const commandArgs = args.join(' ').match(/(\w+(?:\s+\w+)*)/);
+        let input = args.find(element => element.name == "item").value;
 
         for (let i = 0; i < shops.length; i++) {
-            const item = await shops[i].findOne({ where: { name: { [Op.like]: commandArgs[1] } } });
+            const item = await shops[i].findOne({ where: { name: { [Op.like]: input } } });
             if (item) {
-                if (item.cost === 0) return sendMessage({ client: client, message: message, content: `That item doesn't exist.` });
-                let dbBalance = await bank.currency.getBalance(message.member.id);
+                if (item.cost === 0) return sendMessage({ client: client, interaction: interaction, content: `That item doesn't exist.` });
+                let dbBalance = await bank.currency.getBalance(interaction.user.id);
                 if (item.cost > dbBalance) {
-                    return sendMessage({ client: client, message: message, content: `You don't have enough currency.\nThe ${item.name} costs ${item.cost}${globalVars.currency} but you only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
+                    return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency.\nThe ${item.name} costs ${item.cost}${globalVars.currency} but you only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
                 };
-                const user = await Users.findOne({ where: { user_id: message.member.id } });
+                const user = await Users.findOne({ where: { user_id: interaction.user.id } });
 
-                bank.currency.add(message.member.id, -item.cost);
+                bank.currency.add(interaction.user.id, -item.cost);
                 switch (i) {
                     case 0:
                         await user.addEquipment(item);
@@ -40,24 +39,23 @@ exports.run = async (client, message, args = []) => {
                     //     await user.changeRoom(item);
                 }
 
-                return sendMessage({ client: client, message: message, content: `You've bought a ${item.name}.` });
+                return sendMessage({ client: client, interaction: interaction, content: `You bought a ${item.name} for ${item.cost}. You still have ${Math.floor(dbBalance - item.cost)}${globalVars.currency} left.` });
             };
         };
-        return sendMessage({ client: client, message: message, content: `That item doesn't exist.` });
+        return sendMessage({ client: client, interaction: interaction, content: `That item doesn't exist.` });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "buy",
-    aliases: [],
     description: "Buy an item from the shop.",
     options: [{
-        name: "item-name",
-        type: 3,
+        name: "item",
+        type: "STRING",
         description: "The name of the item you want to buy.",
         required: true
     }]

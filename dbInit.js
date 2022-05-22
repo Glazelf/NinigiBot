@@ -20,7 +20,6 @@ const UserKeys = require('./database/models/userdata/UserKeys')(sequelize, Seque
 //const UserRooms = require('./database/models/UserRooms')(sequelize, Sequelize.DataTypes);
 
 const EligibleRoles = require('./database/models/server/EligibleRoles')(sequelize, Sequelize.DataTypes);
-const DisabledChannels = require('./database/models/server/DisabledChannels')(sequelize, Sequelize.DataTypes);
 const PersonalRoles = require('./database/models/server/PersonalRoles')(sequelize, Sequelize.DataTypes);
 const PersonalRoleServers = require('./database/models/global/PersonalRoleServers')(sequelize, Sequelize.DataTypes);
 const ModEnabledServers = require('./database/models/global/ModEnabledServers')(sequelize, Sequelize.DataTypes);
@@ -29,7 +28,6 @@ const StarboardChannels = require('./database/models/global/StarboardChannels')(
 const StarboardMessages = require('./database/models/global/StarboardMessages')(sequelize, Sequelize.DataTypes);
 const StarboardLimits = require('./database/models/server/StarboardLimits')(sequelize, Sequelize.DataTypes);
 const VCTextChannels = require('./database/models/global/VCTextChannels')(sequelize, Sequelize.DataTypes);
-const Prefixes = require('./database/models/global/Prefixes')(sequelize, Sequelize.DataTypes);
 
 const CurrencyShop = require('./database/models/data/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const Equipments = require('./database/models/data/Equipments')(sequelize, Sequelize.DataTypes);
@@ -43,7 +41,6 @@ const syncDatabase = async () => {
         await Users.sync({ alter: true });
 
         await EligibleRoles.sync({ alter: true });
-        await DisabledChannels.sync({ alter: true });
         await VCTextChannels.sync({ alter: true });
         await PersonalRoles.sync({ alter: true });
         await PersonalRoleServers.sync({ alter: true });
@@ -52,7 +49,6 @@ const syncDatabase = async () => {
         await StarboardChannels.sync({ alter: true });
         await StarboardMessages.sync({ alter: true });
         await StarboardLimits.sync({ alter: true });
-        await Prefixes.sync({ alter: true });
 
         await UserItems.sync({ alter: true });
         await UserFoods.sync({ alter: true });

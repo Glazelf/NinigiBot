@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,32 +10,14 @@ exports.run = async (client, message, args = []) => {
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
-        let user;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            user = await message.mentions.users.first();
-            // force fetch
-            if (user) user = await client.users.fetch(user.id, { force: true });
-        };
-
-        if (!user && args[0]) {
-            try {
-                let userID = args[0];
-                user = await client.users.fetch(userID, { force: true });
-            } catch (e) {
-                // console.log();
-            };
-        };
-
-        if (!user) {
-            user = await client.users.fetch(message.member.id, { force: true });
-        };
+        let user = args[0].user;
 
         let member;
         try {
-            member = await message.guild.members.fetch(user.id);
+            member = await interaction.guild.members.fetch(user.id);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
+            return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user.` });
         };
 
         // Balance check
@@ -78,7 +60,7 @@ exports.run = async (client, message, args = []) => {
         // Profile badges
         let badgesArray = [];
         let badgesString = "";
-        if (message.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
+        if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
             try {
                 if (user.bot) badgesArray.push("🤖");
                 if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
@@ -99,9 +81,9 @@ exports.run = async (client, message, args = []) => {
         };
 
         // JoinRank
-        let joinRank = await getJoinRank(user.id, message.guild);
-        let joinPercentage = Math.ceil(joinRank / message.guild.memberCount * 100);
-        let joinRankText = `${joinRank}/${message.guild.memberCount} (${joinPercentage}%)`;
+        let joinRank = await getJoinRank(user.id, interaction.guild);
+        let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
+        let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
         // Buttons
         let profileButtons = new Discord.MessageActionRow()
@@ -109,7 +91,7 @@ exports.run = async (client, message, args = []) => {
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor({ name: `${user.username} (${user.id})`, iconURL: avatar })
+            .setAuthor({ name: user.tag, iconURL: avatar })
             .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
         if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
@@ -123,10 +105,9 @@ exports.run = async (client, message, args = []) => {
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
         if (banner) profileEmbed.setImage(banner);
         profileEmbed
-            .setFooter({ text: user.tag })
-            .setTimestamp();
+            .setFooter({ text: user.id });
 
-        return sendMessage({ client: client, message: message, embeds: profileEmbed, components: profileButtons });
+        return sendMessage({ client: client, interaction: interaction, embeds: profileEmbed, components: profileButtons });
 
         async function getJoinRank(userID, guild) {
             let user = await guild.members.fetch(userID);
@@ -150,12 +131,11 @@ exports.run = async (client, message, args = []) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "Userinfo",
-    type: 2,
-    aliases: ["user", "profile"]
+    type: "USER"
 };

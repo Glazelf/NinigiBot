@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,15 +8,13 @@ exports.run = async (client, message, args = []) => {
         const PImage = require('pureimage');
         const getTime = require('../../util/getTime');
 
-        if (!args[0]) return sendMessage({ client: client, message: message, content: `Please provide a hex to convert.` });
-
-        let hex = args[0];
+        let hex = args.find(element => element.name == "hex").value;
         while (hex.length < 6) hex = "0" + hex;
         let formattingHash = "#";
         let rgb = hexToRgb(hex);
         if (hex.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return sendMessage({ client: client, message: message, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
+        if (!rgb) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
 
         let imgWidth = 225;
         let imgHeight = 100;
@@ -28,9 +26,7 @@ exports.run = async (client, message, args = []) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        await sendMessage({ client: client, message: message, content: `Here's the color for ${formattingHash}${hex}:`, files: stream });
-
-        return;
+        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream });
 
         function hexToRgb(hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -42,17 +38,17 @@ exports.run = async (client, message, args = []) => {
         };
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "hexcolor",
-    aliases: ["hexcolour", "colorhex", "colourhex"],
-    description: "Sends image from hex code.",
+    description: "Sends image from hexadecimal.",
     options: [{
         name: "hex",
-        type: 3,
-        description: "Hex code to convert."
+        type: "STRING",
+        description: "Hexadecimal to convert.",
+        required: true
     }]
 };

@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,27 +7,26 @@ exports.run = async (client, message, args = []) => {
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
 
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);
 
-        let user = message.member.user;
+        // Return messages then destroy
+        let restartString = "Restarting.";
+        if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
+        await sendMessage({ client: client, interaction: interaction, content: restartString });
+        console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
 
-        // Return message then destroy
-        await sendMessage({ client: client, message: message, content: `Restarting for **${user.tag}**.` });
-        console.log(`Restarting for ${user.tag}. (${timestamp})`);
-
-        if (args[0] == 'hard') {
-            // Return message then destroy
-            await sendMessage({ client: client, message: message, content: `Starting hard restart for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit.` });
+        if (removeInteractions) {
 
             // Delete all global commands
             await client.application.commands.set([]);
 
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
+                let adminBool = await isAdmin(client, guild.me);
                 try {
-                    let adminBool = await isAdmin(client, guild.me);
                     if (adminBool) guild.commands.set([]);
                 } catch (e) {
                     console.log(e);
@@ -40,20 +39,25 @@ exports.run = async (client, message, args = []) => {
         return process.exit();
 
         // Restarts a shard
-        // await sendMessage({client: client, message: message, content: `Restarting...`);
+        // await sendMessage({client: client, interaction: interaction, content: `Restarting...`);
         // await client.destroy();
         // await client.login(client.config.token);
-        // return sendMessage({client: client, message: message, content: `Successfully restarted!`);
+        // return sendMessage({client: client, interaction: interaction, content: `Successfully restarted!`);
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "restart",
-    aliases: [],
     description: "Restart bot and reload all files.",
-    serverID: "759344085420605471"
+    serverID: ["759344085420605471"],
+    options: [{
+        name: "reset-interactions",
+        type: "BOOLEAN",
+        description: "Reset all interactions?",
+        required: true
+    }]
 };

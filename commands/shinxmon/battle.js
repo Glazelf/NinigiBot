@@ -8,7 +8,7 @@ const addLine = (line) => {
 
 const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -19,34 +19,32 @@ exports.run = async (client, message, args = []) => {
         const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
 
-        let author = message.member.user;
-        let target;
+        let author = interaction.user;
+        let target = args.find(element => element.name == "user").user;
 
-        if (message.type != 'APPLICATION_COMMAND') target = message.mentions.users.first();
-        if (!target) return sendMessage({ client: client, message: message, content: `Please tag the user you would like to battle.` });
-        if (target.bot) return sendMessage({ client: client, message: message, content: `You can not battle a bot.` });
+        if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
 
         const trainers = [author, target];
-        if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, message: message, content: `You cannot battle yourself!` });
-        if (globalVars.battling.yes) return sendMessage({ client: client, message: message, content: `Theres already a battle going on.` });
+        if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
+        if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, interaction: interaction, content: `You cannot battle yourself!` });
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
         let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
-            if (!shinx) return sendMessage({ client: client, message: message, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`shinx\` to create one.` });
+            if (!shinx) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`/shinx\` to create one.` });
             shinx.see();
-            if (shinx.sleeping) return sendMessage({ client: client, message: message, content: `At least one of the participating Shinxes is asleep.` });
+            if (shinx.sleeping) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participating Shinx is asleep.` });
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
 
-        if (trainers[1].bot) return sendMessage({ client: client, message: message, content: `**${trainers[1].tag}** is a bot and can't battle.` });
-        await sendMessage({ client: client, message: message, content: `Do you accept the challenge, **${trainers[1]}**? (y\\n)` });
+        await interaction.channel.send({ content: `Do you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept` });
         const filter = m => m.author.id == trainers[1].id;
-        const accepts = await message.channel.awaitMessages({ filter, max: 1, time: 10000 });
-        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage({ client: client, message: message, content: `Battle has been cancelled.` });
-        if (globalVars.battling.yes) return sendMessage({ client: client, message: message, content: `Theres already a battle going on.` });
+        const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });
+        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.` });
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
         globalVars.battling.yes = true;
         let text = '';
         const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
@@ -66,7 +64,7 @@ exports.run = async (client, message, args = []) => {
         };
 
         let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-        await sendMessage({ client: client, message: message, files: messageFile });
+        await interaction.channel.send({ files: [messageFile] });
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -102,7 +100,7 @@ exports.run = async (client, message, args = []) => {
             };
         };
 
-        if (text.length > 0) sendMessage({ client: client, message: message, content: text });
+        if (text.length > 0) interaction.channel.send({ content: text });
         while (true) {
             text = '';
             for (let i = 0; i < 2; i++) {
@@ -138,7 +136,7 @@ exports.run = async (client, message, args = []) => {
                     for (let p = 0; p < 2; p++) await bank.currency.updateShinx(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                    return sendMessage({ client: client, message: message, content: text, files: messageFile });
+                    return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
                         text += addLine(`**${nicks[i]}** lost his shield by blocking a deathblow!`);
@@ -181,23 +179,23 @@ exports.run = async (client, message, args = []) => {
                 };
             };
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            sendMessage({ client: client, message: message, content: text, files: messageFile });
+            interaction.channel.send({ content: text, files: [messageFile] });
             await wait();
         };
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "battle",
-    aliases: ["challenge"],
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",
-        type: 6,
-        description: "Specify user."
+        type: "USER",
+        description: "Specify user.",
+        required: true
     }]
 };

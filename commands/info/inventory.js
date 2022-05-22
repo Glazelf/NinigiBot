@@ -1,45 +1,35 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        //items, food, equipment
-        let target;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) target = message.mentions.users.first();
-        if (!target) target = message.member.user;
 
-        let member;
-        try {
-            member = await message.guild.members.fetch(target.id);
-        } catch (e) {
-            // console.log(e);
-            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
-        };
+        let inventoryCat = args.find(element => element.name == "category").value.toLowerCase();
 
-        if (args[0] === 'items' || args[0] === 'food' || args[0] === 'equipment' || args[0] === 'keys' || !args[0]) {
-            const user = await Users.findOne({ where: { user_id: target.id } });
+        if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {
+            const user = await Users.findOne({ where: { user_id: interaction.user.id } });
 
             let items;
 
-            // Display inventory per item category
-            if (args[0] === 'food') {
+            // Display inventory per item category. Should make this into one scrollable embed someday.
+            if (inventoryCat === 'food') {
                 items = await user.getFoods();
-                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no food!` });
-                return sendMessage({ client: client, message: message, content: `${target.tag}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
-            } else if (args[0] === 'equipment') {
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no food!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
+            } else if (inventoryCat === 'equipment') {
                 items = await user.getEquipments();
-                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no equipment!` });
-                return sendMessage({ client: client, message: message, content: `${target.tag}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
-            } else if (args[0] === 'keys') {
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no equipment!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
+            } else if (inventoryCat === 'key') {
                 items = await user.getKeys();
-                if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has no key items!` });
-                return sendMessage({ client: client, message: message, content: `${target.tag}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
+                if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no key items!` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
             } else {
-                let description = `**${target.tag}**'s inventory:`;
+                let description = `**${interaction.user.username}**'s inventory:`;
                 const length = description.length;
                 items = await user.getItems();
                 let itemsInventoryText = `${items.map(t => {
@@ -54,20 +44,25 @@ exports.run = async (client, message, args = []) => {
                 if (items.length) description += `\n**Equipment**\n${items.map(t => `${t.equipment.name}`)}`;
                 items = await user.getKeys();
                 if (items.length) description += `\n**Key items**\n${items.map(t => `${t.key.name}`)}`;
-                if (description.length === length) if (!items.length) return sendMessage({ client: client, message: message, content: `**${target.tag}** has nothing!` });
-                return sendMessage({ client: client, message: message, content: description });
+                if (description.length === length) if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has nothing!` });
+                return sendMessage({ client: client, interaction: interaction, content: description });
             };
         };
-        return sendMessage({ client: client, message: message, content: `Please specify a category: items, food or equipment.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Please specify a category: \`food\`, \`equipment\` or \`key\`.` });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "inventory",
-    aliases: ["inv", "items"],
-    description: "Sends a list of items in your inventory."
+    description: "Sends a list of items in your inventory.",
+    options: [{
+        name: "category",
+        type: "STRING",
+        description: "Specify the inventory category. Food, equipment or key.",
+        required: true
+    }]
 };

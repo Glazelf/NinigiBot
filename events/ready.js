@@ -18,13 +18,14 @@ module.exports = async (client) => {
                 permission: true
             }
         ];
+        let ownerCommandServerID = "759344085420605471";
+        let ownerCommandServer = client.guilds.cache.get(ownerCommandServerID);
 
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerID = null;
-                if (command.config.serverID) commandServerID = [client.config.botServerID]; // swap to command.config.serverID for slash command PR release
+                if (command.config.serverID) commandServerID = command.config.serverID;
                 slashCommand = await client.application.commands.create(command.config, commandServerID);
-
             } catch (e) {
                 console.log(e);
             };
@@ -68,7 +69,6 @@ module.exports.NinigiID = "592760951103684618";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";
-module.exports.prefix = "?";
 module.exports.eventChannelID = "752626723345924157"; // General2
 //module.exports.eventChannelID = "665274079397281835"; // Old stan channel
 //module.exports.eventChannelID = "593014621095329812";  // Testing

@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,29 +6,14 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require('discord.js');
 
-        // Get user
-        let user;
-        if (message.mentions && (message.mentions.members.size > 0 || message.mentions.repliedUser)) {
-            user = message.mentions.users.first();
-        };
-
-        if (!user && args[0]) {
-            let userID = args[0];
-            try {
-                user = await client.users.fetch(userID);
-            } catch (e) {
-                // console.log(e);
-            };
-        };
-
-        if (!user) user = message.member.user;
+        let user = args[0].user;
 
         let member;
         try {
-            member = await message.guild.members.fetch(user.id);
+            member = await interaction.guild.members.fetch(user.id);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, message: message, content: `No member information could be found for this user.` });
+            return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user. They probably aren't in this server anymore.` });
         };
 
         // Get avatar
@@ -36,7 +21,7 @@ exports.run = async (client, message, args = []) => {
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL({ format: "png", dynamic: true, size: 512 });
         if (member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (!avatar && !serverAvatar) return sendMessage({ client: client, message: message, content: `**${user.tag}** doesn't have an avatar.` });
+        if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `${user.tag} doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
@@ -46,20 +31,17 @@ exports.run = async (client, message, args = []) => {
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
-            .setImage(serverAvatar)
-            .setFooter({ text: user.tag })
-            .setTimestamp();
+            .setImage(serverAvatar);
 
-        return sendMessage({ client: client, message: message, embeds: avatarEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "Avatar",
-    type: 2,
-    aliases: ["avi", "pfp"]
+    type: "USER"
 };

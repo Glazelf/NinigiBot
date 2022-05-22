@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,14 +6,14 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const input = args.join(" ");
+        const input = args.find(element => element.name == "input").value;
         try {
             var evaled = eval(input);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, message: message, content: `An error occurred and has been logged.` });
+            return sendMessage({ client: client, interaction: interaction, content: `An error occurred and has been logged.` });
         };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
@@ -22,12 +22,12 @@ exports.run = async (client, message, args = []) => {
 
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
         for (const [key, value] of Object.entries(client.config)) {
-            if (evaled.includes(value)) return sendMessage({ client: client, message: message, content: `For security reasons this content can't be returned.` });
+            if (evaled.includes(value)) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
 
         let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
 
-        return sendMessage({ client: client, message: message, content: returnString });
+        return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {
             if (typeof (text) === "string")
@@ -38,18 +38,18 @@ exports.run = async (client, message, args = []) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "eval",
-    aliases: ["js"],
     description: "Execute JS.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: 3,
-        description: "JS to execute."
+        type: "STRING",
+        description: "JS to execute.",
+        required: true
     }]
 };

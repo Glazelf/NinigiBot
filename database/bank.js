@@ -19,7 +19,7 @@ module.exports = {
                         const newUser = await Users.create({ user_id: id, swcode: code });
                         money.set(id, newUser);
                         return newUser;
-                    },
+                    }
                 });
 
                 Reflect.defineProperty(money, 'payBattle', {
@@ -29,7 +29,7 @@ module.exports = {
                         this.add(from, -paidMoney);
                         this.add(to, paidMoney);
                         return paidMoney;
-                    },
+                    }
                 });
 
                 Reflect.defineProperty(money, 'getShinx', {

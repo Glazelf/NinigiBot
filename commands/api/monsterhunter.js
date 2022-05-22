@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -13,27 +13,24 @@ exports.run = async (client, message, args = []) => {
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
-        if (!args[0]) return sendMessage({ client: client, message: message, content: `You need to provide either a subcommand or a Monster to look up.` });
-
-        let subCommand = args[0].toLowerCase();
-        let subArgument;
-        if (args[1]) subArgument = args.slice(1).join(" ").toLowerCase();
+        let ephemeral = true;
+        let ephemeralArg = args.find(element => element.name == "ephemeral");
+        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         let mhEmbed = new Discord.MessageEmbed()
-            .setColor(globalVars.embedColor)
-            .setFooter({ text: message.member.user.tag })
-            .setTimestamp();
+            .setColor(globalVars.embedColor);
 
-        switch (subCommand) {
+        switch (interaction.options.getSubcommand()) {
             // Specific quest
             case "quest":
-                if (!args[1]) return sendMessage({ client: client, message: message, content: `You need to provide a quest name to show details of.` });
-
+                let questName = args.find(element => element.name == "quest").value.toLowerCase();
                 let questData;
                 questsJSON.quests.forEach(quest => {
-                    if (quest.name.toLowerCase() == subArgument) questData = quest;
+                    if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage({ client: client, message: message, content: "Could not find the specified quest." });
+                if (!questData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified quest." });
 
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
@@ -63,9 +60,7 @@ exports.run = async (client, message, args = []) => {
 
             // All quests from a game
             case "quests":
-                if (!args[1]) return sendMessage({ client: client, message: message, content: `You need to provide a game to list quests from.` });
-
-                let gameInput = subArgument;
+                let gameName = args.find(element => element.name == "game").value.toLowerCase();
 
                 // Generalize game names and abbreviations
                 // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
@@ -126,17 +121,17 @@ exports.run = async (client, message, args = []) => {
                     "mhst2",
                     "stories 2"
                 ];
-                if (MH3Titles.includes(gameInput)) gameInput = "Monster Hunter 3 Ultimate"
-                if (MH4Titles.includes(gameInput)) gameInput = "Monster Hunter 4 Ultimate";
-                if (MHGUTitles.includes(gameInput)) gameInput = "Monster Hunter Generations Ultimate";
-                if (MH5Titles.includes(gameInput)) gameInput = "Monster Hunter World";
-                if (MH5PTitles.includes(gameInput)) gameInput = "Monster Hunter Rise";
-                if (MHSTTitles.includes(gameInput)) gameInput = "Monster Hunter Stories";
-                if (MHST2Titles.includes(gameInput)) gameInput = "Monster Hunter Stories 2";
+                if (MH3Titles.includes(gameName)) gameName = "Monster Hunter 3 Ultimate"
+                if (MH4Titles.includes(gameName)) gameName = "Monster Hunter 4 Ultimate";
+                if (MHGUTitles.includes(gameName)) gameName = "Monster Hunter Generations Ultimate";
+                if (MH5Titles.includes(gameName)) gameName = "Monster Hunter World";
+                if (MH5PTitles.includes(gameName)) gameName = "Monster Hunter Rise";
+                if (MHSTTitles.includes(gameName)) gameName = "Monster Hunter Stories";
+                if (MHST2Titles.includes(gameName)) gameName = "Monster Hunter Stories 2";
 
                 // Add quests matching game title to an array
                 let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
-                if (questsTotal.length == 0) return sendMessage({ client: client, message: message, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
+                if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
 
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
@@ -177,11 +172,9 @@ exports.run = async (client, message, args = []) => {
                 };
                 break;
 
-            // Default: Monsters
-            default:
-                let monsterName = args;
-                if (message.type == 'APPLICATION_COMMAND') monsterName = monsterName.slice(1);
-                monsterName = monsterName.join(" ").toLowerCase();
+            // Monsters
+            case "monster":
+                let monsterName = args.find(element => element.name == "monster").value.toLowerCase();
 
                 // Get monster
                 let monsterData;
@@ -195,7 +188,7 @@ exports.run = async (client, message, args = []) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage({ client: client, message: message, content: "Could not find the specified monster." });
+                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
 
                 // Game names
                 let MHRise = "Monster Hunter Rise";
@@ -264,7 +257,8 @@ exports.run = async (client, message, args = []) => {
                 let monsterAilments = "";
                 if (monsterData.elements) {
                     monsterData.elements.forEach(element => {
-                        let elementString = `${elementEmotes[element]}${element}`;
+                        let elementString = `${element}`;
+                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
                         if (monsterElements.length == 0) {
                             monsterElements = elementString;
                         } else {
@@ -274,7 +268,8 @@ exports.run = async (client, message, args = []) => {
                 };
                 if (monsterData.weakness) {
                     monsterData.weakness.forEach(element => {
-                        let elementString = `${elementEmotes[element]}${element}`;
+                        let elementString = `${element}`;
+                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
                         if (monsterWeaknesses.length == 0) {
                             monsterWeaknesses = elementString;
                         } else {
@@ -308,48 +303,61 @@ exports.run = async (client, message, args = []) => {
                 break;
         };
 
-        return sendMessage({ client: client, message: message, embeds: mhEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "monsterhunter",
-    aliases: ["monster", "mh"],
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on a specific quest.",
         options: [{
-            name: "ability-name",
-            type: 3,
+            name: "quest",
+            type: "STRING",
             description: "Specify quest by name.",
+            autocomplete: true,
             required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
-    },
-    {
+    }, {
         name: "quests",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "List all quests from a game.",
         options: [{
-            name: "game-name",
-            type: 3,
+            name: "game",
+            type: "STRING",
             description: "Specify game by name or abbreviation.",
+            autocomplete: true,
             required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "monster",
-        type: 1,
+        type: "SUB_COMMAND",
         description: "Get info on a monster.",
         options: [{
-            name: "monster-name",
-            type: 3,
+            name: "monster",
+            type: "STRING",
             description: "Specify monster by its English name.",
+            autocomplete: true,
             required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     }]
 };

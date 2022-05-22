@@ -1,6 +1,6 @@
-module.exports = async ({ client, message, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
+module.exports = async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
-        if (!message) return;
+        if (!interaction) return; // Note: interaction can be a message instead
 
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
         let messageObject = {};
@@ -37,10 +37,10 @@ module.exports = async ({ client, message, content = null, embeds = null, files 
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
         try {
-            return message.reply(messageObject);
+            return interaction.reply(messageObject);
         } catch (e) {
             // console.log(e);
-            return message.channel.send(messageObject);
+            return interaction.channel.send(messageObject);
         };
 
     } catch (e) {

@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,33 +8,20 @@ exports.run = async (client, message, args = []) => {
 
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
-        let balance = await bank.currency.getBalance(message.member.id);
+        let balance = await bank.currency.getBalance(interaction.user.id);
 
-        if (!args[0] || !args[1]) return sendMessage({ client: client, message: message, content: `You need to provide two arguments; Your chosen weapon and an amount to gamble.` });
-
-        let amount;
-        if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
-        if (amount == "quarter") amount = balance / 4;
-        if (amount == "half") amount = balance / 2;
-        if (amount == "all") amount = balance;
-        if (amount == "random") amount = randomNumber(1, balance);
-        let playerChoice = args[0].toLowerCase();
+        let amount = args.find(element => element.name == "bet-amount").value;
+        let playerChoice = args.find(element => element.name == "weapon").value.toLowerCase();
 
         // Get input
         let rps = ["rock", "paper", "scissors"];
-        if (!rps.includes(playerChoice)) return sendMessage({ client: client, message: message, content: `You need to choose between \`rock\`, \`paper\` and \`scissors\`.` });
-
-        if (!amount || isNaN(amount)) return sendMessage({ client: client, message: message, content: `You need to specify a valid number to gamble.` });
+        if (!rps.includes(playerChoice)) return sendMessage({ client: client, interaction: interaction, content: `You need to choose between \`Rock\`, \`Paper\` and \`Scissors\`.` });
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
-
-        if (amount <= 0) return sendMessage({ client: client, message: message, content: `Please enter an amount that's equal to or larger than 1.` });
-
-        if (amount > balance) {
-            return sendMessage({ client: client, message: message, content: `You only have ${Math.floor(balance)}${currency}.` });
-        };
+        if (amount < 1) return sendMessage({ client: client, interaction: interaction, content: `Input has to be 1 or higher.` });
+        if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
 
         // Randomize bot and compare choices
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
@@ -43,7 +30,7 @@ exports.run = async (client, message, args = []) => {
 
         switch (result) {
             case 0: // Tie
-                return sendMessage({ client: client, message: message, content: `It's a tie. We both picked **${playerChoice}**.` });
+                return sendMessage({ client: client, interaction: interaction, content: `It's a tie. We both picked **${playerChoice}**.` });
                 break;
             case 1: // Player wins, no change necessary
                 break;
@@ -54,45 +41,29 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Update currency
-        bank.currency.add(message.member.id, amount);
-        sendMessage({ client: client, message: message, content: returnString });
+        bank.currency.add(interaction.user.id, amount);
+        return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "rps",
-    aliases: [],
     description: "Bet money on a game of rock, paper, scissors.",
     options: [{
-        name: "rock",
-        type: 1,
-        description: "Bet on rock.",
-        options: [{
-            name: "bet-amount",
-            type: 4,
-            description: "The amount of money you want to bet.",
-        }]
+        name: "weapon",
+        type: "STRING",
+        description: "Use Rock, Paper or Scissors.",
+        required: true,
+        autocomplete: true
     }, {
-        name: "paper",
-        type: 1,
-        description: "Bet on paper.",
-        options: [{
-            name: "bet-amount",
-            type: 4,
-            description: "The amount of money you want to bet.",
-        }]
-    }, {
-        name: "scissors",
-        type: 1,
-        description: "Bet on scissors.",
-        options: [{
-            name: "bet-amount",
-            type: 4,
-            description: "The amount of money you want to bet.",
-        }]
+        name: "bet-amount",
+        type: "INTEGER",
+        description: "The amount of money you want to bet.",
+        required: true,
+        autocomplete: true
     }]
 };

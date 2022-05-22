@@ -1,71 +1,61 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../../util/logger');
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
         const sendMessage = require('../../../util/sendMessage');
         const roulette = require('../../../affairs/roulette')
-        const { Prefixes } = require('../../../database/dbObjects');
         const { bank } = require('../../../database/bank');
 
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
+        if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
+        if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
-        if (!roulette.on) return sendMessage({ client: client, message: message, content: `There is currently no roulette going on. Use ${prefix}roulette to start one.` });
-        if (roulette.hadBet(message.member.id)) return message.react('✋');
+        let startingSlot = args.find(element => element.name == "starting-slot").value;
+        let endingSlot = args.find(element => element.name == "ending-slot").value;
+        let betAmount = args.find(element => element.name == "bet-amount").value;
 
-        args = args.join(' ');
+        if (endingSlot < startingSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
+        if (startingSlot < 1 || endingSlot < 1 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 1 and 36.` });
 
-        if (args.includes('help')) return sendMessage({ client: client, message: message, content: `The syntax is \`${prefix}bet <money>, <numbers or intervals with whitespaces>\`\n For example, \`${prefix}bet 50, 1 2 4-6\` bets 50 coins on 1, 2, 4, 5 and 6` });
-        if (!/^\s*(\d+),\s*(([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?)(?:[ ](([1-9]|[12][0-9]|3[0-6])(-([1-9]|[12][0-9]|3[0-6]))?))*$/.test(args)) return message.react('❌');
-
-        const money = parseInt(args.slice(0, args.indexOf(',')).trim())
-        args = args.slice(args.indexOf(',') + 1).trim();
-        const betRequests = new Set(args.split(/\s+/));
         const bets = new Set();
-        betRequests.forEach(request => {
-            const slice = request.indexOf('-')
-            if (slice !== -1) {
-                const minimum = Math.min(request.substring(0, slice), request.substring(slice + 1));
-                const maximum = Math.max(request.substring(0, slice), request.substring(slice + 1));
-                for (let i = minimum; i <= maximum; i++) bets.add(`${i}`);
-            } else bets.add(request);
-        });
-
-        let dbBalance = await bank.currency.getBalance(message.member.id);
-        if (bets.size * money > dbBalance) {
-            return sendMessage({ client: client, message: message, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
+        for (let i = startingSlot; i <= endingSlot; i++) {
+            bets.add(i);
         };
-        bets.forEach(bet => {
-            roulette.addBet(bet, message.member.id, 36 * money);
+
+        let dbBalance = await bank.currency.getBalance(interaction.user.id);
+        if (bets.size * betAmount > dbBalance) {
+            return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
+        };
+        await bets.forEach(bet => {
+            roulette.addBet(bet, interaction.user.id, 36 * betAmount);
         });
 
-        bank.currency.add(message.member.id, -money * bets.size);
-        roulette.players.push(message.member.id);
-        return message.react('✔️');
+        bank.currency.add(interaction.user.id, -betAmount * bets.size);
+        roulette.players.push(interaction.user.id);
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully placed your bet.` });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "bet",
-    aliases: [],
-    description: "Bet on ongoing roulette.",
+    description: "Bet on an ongoing roulette.",
     options: [{
-        name: "slot-amount",
-        type: 4,
-        description: "The amount of slots you want to bet on.",
+        name: "starting-slot",
+        type: "INTEGER",
+        description: "The first slot you want to bet on.",
+        required: true
+    }, {
+        name: "ending-slot",
+        type: "INTEGER",
+        description: "The last slot you want to bet on.",
         required: true
     }, {
         name: "bet-amount",
-        type: 4,
+        type: "INTEGER",
         description: "The amount of money you want to bet on each slot.",
         required: true
     }]

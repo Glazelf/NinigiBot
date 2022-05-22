@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,7 +9,7 @@ exports.run = async (client, message) => {
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
 
-        let guild = message.guild;
+        let guild = interaction.guild;
         await guild.members.fetch();
         await guild.channels.fetch();
 
@@ -21,7 +21,7 @@ exports.run = async (client, message) => {
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
 
-        let user = message.member.user;
+        let user = interaction.user;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 
@@ -91,7 +91,7 @@ exports.run = async (client, message) => {
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        boosterString = boosterString + nitroEmote;
+        if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) boosterString = boosterString + nitroEmote;
 
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
@@ -149,20 +149,16 @@ exports.run = async (client, message) => {
         serverEmbed
             .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true);
         if (banner) serverEmbed.setImage(banner);
-        serverEmbed
-            .setFooter({ text: user.tag })
-            .setTimestamp();
 
-        return sendMessage({ client: client, message: message, embeds: serverEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "serverinfo",
-    aliases: ["server", "guild", "guildinfo"],
     description: "Sends info about the server.",
 };

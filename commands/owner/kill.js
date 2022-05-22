@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,16 +8,16 @@ exports.run = async (client, message, args = []) => {
         const forever = require('forever');
         const getTime = require('../../util/getTime');
 
-        if (message.member.id !== client.config.ownerID) return sendMessage({ client: client, message: message, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);
 
-        let user = message.member.user;
+        let shutdownString = "Shutting down.";
+        if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
+        await sendMessage({ client: client, interaction: interaction, content: shutdownString });
 
-        if (args[0] != 'soft') {
-            // Return message then destroy
-            await sendMessage({ client: client, message: message, content: `Starting shutdown for **${user.tag}**.\nRemoving all slash commands, context menus etc. might take a bit. They might take up to an hour to vanish on Discord's end.` });
-
+        if (removeInteractions) {
             // Delete all global commands
             await client.application.commands.set([]);
 
@@ -35,28 +35,33 @@ exports.run = async (client, message, args = []) => {
         };
 
         // Ignore forever if fails, mostly for test-bots not running it.
-        try {
-            forever.stopAll();
-        } catch (e) {
-            // console.log(e);
+        if (forever) {
+            try {
+                forever.stopAll();
+            } catch (e) {
+                console.log(e);
+            };
         };
 
-        // Return confirm
-        await sendMessage({ client: client, message: message, content: `Shutdown completed.` });
-        console.log(`Bot killed by ${user.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${interaction.user.tag}. (${timestamp})`);
 
         await client.destroy();
         return process.exit();
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "kill",
-    aliases: ["destroy"],
     description: "Shuts down bot.",
-    serverID: "759344085420605471"
+    serverID: ["759344085420605471"],
+    options: [{
+        name: "remove-interactions",
+        type: "BOOLEAN",
+        description: "Remove all interactions?",
+        required: true
+    }]
 };

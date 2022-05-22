@@ -1,4 +1,4 @@
-exports.run = async (client, message, args = []) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,35 +6,39 @@ exports.run = async (client, message, args = []) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let switchCodeGet = await bank.currency.getSwitchCode(message.member.id);
+        let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
+        let fcArgument = args.find(element => element.name == 'switch-fc');
+        let switchFC;
+        if (fcArgument) switchFC = fcArgument.value;
+
+        let invalidString = `Please specify a valid Nintendo Switch friend code.`;
 
         // Present code if no code is supplied as an argument
-        if (args.length < 1) {
-            if (switchCodeGet && switchCodeGet !== "None") return sendMessage({ client: client, message: message, content: `Your Nintendo Switch friend code is ${switchCodeGet}.` });
-            return sendMessage({ client: client, message: message, content: `Please specify a valid Nintendo Switch friend code.` });
+        if (!switchFC) {
+            if (switchCodeGet) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: invalidString });
         };
 
         // Check and sanitize input
-        let switchcode = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(args);
-        if (!switchcode) return sendMessage({ client: client, message: message, content: `Please specify a valid Nintendo Switch friend code.` });
+        switchFC = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
+        if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
+        switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
 
-        switchcode = `SW-${switchcode[1]}-${switchcode[2]}-${switchcode[3]}`;
-        bank.currency.switchCode(message.member.id, switchcode);
-        return sendMessage({ client: client, message: message, content: `Successfully updated your Nintendo Switch friend code.` });
+        bank.currency.switchCode(interaction.user.id, switchFC);
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your Nintendo Switch friend code.` });
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "switch",
-    aliases: ["fc", "friendcode"],
     description: "Updates your Switch friend code.",
     options: [{
         name: "switch-fc",
-        type: 3,
-        description: "SW-1234-1234-1234"
+        type: "STRING",
+        description: "Switch friend code, example: SW-1234-1234-1234"
     }]
 };

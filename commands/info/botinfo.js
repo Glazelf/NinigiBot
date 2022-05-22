@@ -1,4 +1,4 @@
-exports.run = async (client, message) => {
+exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,14 +6,6 @@ exports.run = async (client, message) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const axios = require("axios");
-
-        const { Prefixes } = require('../../database/dbObjects');
-        let prefix = await Prefixes.findOne({ where: { server_id: message.guild.id } });
-        if (prefix) {
-            prefix = prefix.prefix;
-        } else {
-            prefix = globalVars.prefix;
-        };
 
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
@@ -23,7 +15,7 @@ exports.run = async (client, message) => {
 
         const ShardUtil = new Discord.ShardClientUtil(client, "process");
         // let userCount = await client.users.fetch();
-        // let memberFetch = await message.guild.members.fetch();
+        // let memberFetch = await interaction.guild.members.fetch();
         // console.log(userCount);
         // console.log(Object.keys(userCount));
 
@@ -84,7 +76,6 @@ exports.run = async (client, message) => {
             .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true)
             .addField("Memory Usage:", memoryUsage, true)
-            .addField("Prefix:", prefix, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
@@ -93,16 +84,13 @@ exports.run = async (client, message) => {
             .addField("Online Since:", `<t:${onlineSince}:R>`, true)
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
-        botEmbed
-            .setFooter({ text: message.member.user.tag })
-            .setTimestamp();
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
 
-        return sendMessage({ client: client, message: message, embeds: botEmbed, components: botButtons, ephemeral: true, });
+        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });
 
         async function getUsers() {
             // Fast but inaccurate method
@@ -126,12 +114,11 @@ exports.run = async (client, message) => {
 
     } catch (e) {
         // Log error
-        logger(e, client, message);
+        logger(e, client, interaction);
     };
 };
 
 module.exports.config = {
     name: "botinfo",
-    aliases: ["bot", "info"],
     description: `Displays info on this bot.`
 };
