@@ -9,14 +9,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let user;
-        let member
+        let user = null;
+        let member = null;
         let userArg = args.find(element => element.name == "user");
         if (userArg) {
-            user = userArg.value;
-            member = interaction.guild.members.fetch(user.id);
+            user = userArg.user;
+            member = await interaction.guild.members.fetch(user.id);
         };
-        let userIDArg = args.find(element => element.name == "userID");
+        let userIDArg = args.find(element => element.name == "user-id");
         let author = interaction.user;
 
         let reason = "Not specified.";

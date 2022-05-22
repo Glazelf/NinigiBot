@@ -10,8 +10,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get user, change to get from interaction args
-        let user = args.find(element => element.name == "user").value;
-        let member = interaction.guild.members.fetch(user.id);
+        let user = args.find(element => element.name == "user").user;
+        let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
