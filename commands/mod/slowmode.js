@@ -10,14 +10,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
+        let time = args.find(element => element.name == "time").value;
         let slowmodeMaxSeconds = 21600;
 
-        // Toggle slowmode
-        if (!args[0] || isNaN(args[0]) || args[0] < 0) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid number (seconds) to change the slowmode to.` });
-        if (args[0] > slowmodeMaxSeconds) args[0] = slowmodeMaxSeconds;
+        if (time < 0) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid amount of seconds.` });
+        if (time > slowmodeMaxSeconds) time = slowmodeMaxSeconds;
 
-        await interaction.channel.setRateLimitPerUser(args[0]);
-        return sendMessage({ client: client, interaction: interaction, content: `Slowmode changed to ${args[0]} seconds.` });
+        await interaction.channel.setRateLimitPerUser(time);
+        return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.` });
 
     } catch (e) {
         // Log error
@@ -29,9 +29,9 @@ module.exports.config = {
     name: "slowmode",
     description: "Set slowmode in the current channel.",
     options: [{
-        name: "seconds",
+        name: "time",
         type: "INTEGER",
-        description: "The amount of slowmode in seconds.",
+        description: "Time in seconds. 0 to disable.",
         required: true
     }]
 };
