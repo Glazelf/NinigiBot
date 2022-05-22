@@ -23,7 +23,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
 module.exports.config = {
     name: "birthday",
-    description: "Updates your birthday",
+    description: "Update your birthday.",
     options: [{
         name: "date",
         type: "STRING",
