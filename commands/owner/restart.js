@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
+        let removeInteractions = args.find(element => element.name == "reset-interactions").value;
         let timestamp = await getTime(client);
 
         // Return messages then destroy
