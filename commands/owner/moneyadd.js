@@ -16,8 +16,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
         await bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(transferTarget.id));
-        dbBalance = await bank.currency.getBalance(transferTarget.id);
-        userBalance = `${Math.floor(dbBalance)}${currency}`;
+        userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
         return sendMessage({ client: client, interaction: interaction, content: `Successfully added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.`, ephemeral: false });
 
