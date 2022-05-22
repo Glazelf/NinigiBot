@@ -14,7 +14,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let timestamp = await getTime(client);
 
         let shutdownString = "Shutting down.";
-        if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc.\n This might take a bit.";
+        if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: shutdownString });
 
         if (removeInteractions) {
