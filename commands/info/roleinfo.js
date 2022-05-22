@@ -7,12 +7,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
-        // Split off command
         let role = args.find(element => element.name == "role").role;
-
         let user = interaction.user;
-
-        // Author avatar
         let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Role visuals
@@ -21,7 +17,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let embedColor = role.hexColor;
         if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
-        // Member count
         let memberCount = interaction.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
 
         // Properties
