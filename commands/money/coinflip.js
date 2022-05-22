@@ -17,7 +17,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let validSides = ["heads", "tails"];
         let winSideArg = args.find(element => element.name == "side");
         let winSide = "heads";
-        if (winSideArg && validSides.includes(winSideArg.value)) winSide = winSideArg.value;
+        if (winSideArg && validSides.includes(winSideArg.value.toLowerCase())) winSide = winSideArg.value.toLowerCase();
         let loseSide = "tails";
         if (winSide == "tails") loseSide = "heads";
 
