@@ -18,7 +18,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (removeInteractions) {
             // Return message then destroy
-            await sendMessage({ client: client, interaction: interaction, content: `Starting hard restart.\nRemoving all slash commands, context menus etc. might take a bit.` });
+            await interaction.channel.send({ content: `Removing all slash commands, context menus etc.\n This might take a bit.` });
 
             // Delete all global commands
             await client.application.commands.set([]);
