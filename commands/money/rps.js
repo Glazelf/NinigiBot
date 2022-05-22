@@ -10,31 +10,18 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(interaction.user.id);
 
-        if (!args[0] || !args[1]) return sendMessage({ client: client, interaction: interaction, content: `You need to provide two arguments; Your chosen weapon and an amount to gamble.` });
-
-        let amount;
-        if (!isNaN(args[1]) || ["quarter", "half", "all", "random"].includes(args[1])) amount = args[1];
-        if (amount == "quarter") amount = balance / 4;
-        if (amount == "half") amount = balance / 2;
-        if (amount == "all") amount = balance;
-        if (amount == "random") amount = randomNumber(1, balance);
-        let playerChoice = args[0].toLowerCase();
+        let amount = args.find(element => element.name == "bet-amount").value;
+        let playerChoice = args.find(element => element.name == "weapon").value.toLowerCase();
 
         // Get input
         let rps = ["rock", "paper", "scissors"];
-        if (!rps.includes(playerChoice)) return sendMessage({ client: client, interaction: interaction, content: `You need to choose between \`rock\`, \`paper\` and \`scissors\`.` });
-
-        if (!amount || isNaN(amount)) return sendMessage({ client: client, interaction: interaction, content: `You need to specify a valid number to gamble.` });
+        if (!rps.includes(playerChoice)) return sendMessage({ client: client, interaction: interaction, content: `You need to choose between \`Rock\`, \`Paper\` and \`Scissors\`.` });
 
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
-
-        if (amount <= 0) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount that's equal to or larger than 1.` });
-
-        if (amount > balance) {
-            return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
-        };
+        if (amount < 1) return sendMessage({ client: client, interaction: interaction, content: `Input has to be 1 or higher.` });
+        if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
 
         // Randomize bot and compare choices
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
