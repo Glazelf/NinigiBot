@@ -5,7 +5,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         // Either wait for slash command attachments or some other way of getting an image
         const sendMessage = require('../../util/sendMessage');
-        if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let avatarArg = args.find(element => element.name == "avatar");
 

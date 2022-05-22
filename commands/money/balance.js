@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let dbBalance = await bank.currency.getBalance(interaction.member.id);
+        let dbBalance = await bank.currency.getBalance(interaction.user.id);
         return sendMessage({ client: client, interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.` });
 
     } catch (e) {

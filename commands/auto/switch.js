@@ -6,7 +6,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let switchCodeGet = await bank.currency.getSwitchCode(interaction.member.id);
+        let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
         let fcArgument = args.find(element => element.name == 'switch-fc');
         let switchFC;
         if (fcArgument) switchFC = fcArgument.value;
@@ -24,7 +24,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
         switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
 
-        bank.currency.switchCode(interaction.member.id, switchFC);
+        bank.currency.switchCode(interaction.user.id, switchFC);
         return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your Nintendo Switch friend code.` });
 
     } catch (e) {

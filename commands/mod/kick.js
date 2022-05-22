@@ -19,7 +19,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
         if (!member.kickable) return sendMessage({ client: client, interaction: interaction, content: kickFailString });
 
         let reason = "Not specified.";

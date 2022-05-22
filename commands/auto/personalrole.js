@@ -11,7 +11,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
+        let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
         let colorArg = args.find(element => element.name == 'color-hex');
         let iconArg = args.find(element => element.name == "icon");
@@ -112,7 +112,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         async function createRole() {
             // Clean up possible old entry
-            let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.member.id } });
+            let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
             if (oldEntry) await oldEntry.destroy();
 
             if (!colorArg) roleColor = 0;
@@ -142,7 +142,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
 
             interaction.member.roles.add(createdRole.id);
-            await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.member.id, role_id: createdRole.id });
+            await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
 
             return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you successfully.` });
         };

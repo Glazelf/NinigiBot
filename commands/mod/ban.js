@@ -44,7 +44,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // Check permissions
             let userRole = interaction.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.member.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
+            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
             if (!member.bannable) return sendMessage({ client: client, interaction: interaction, content: banFailString });
 
             // See if target isn't already banned

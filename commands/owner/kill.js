@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const forever = require('forever');
         const getTime = require('../../util/getTime');
 
-        if (interaction.member.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = args.find(element => element.name == "remove-interactions").value;
         let timestamp = await getTime(client);

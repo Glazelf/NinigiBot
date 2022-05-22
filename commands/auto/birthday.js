@@ -12,7 +12,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(date);
         if (!birthday) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
 
-        bank.currency.birthday(interaction.member.id, birthday[1] + birthday[2]);
+        bank.currency.birthday(interaction.user.id, birthday[1] + birthday[2]);
         return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your birthday.` });
 
     } catch (e) {
