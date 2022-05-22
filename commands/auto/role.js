@@ -48,7 +48,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (!requestRole) {
             // Select Menu
-            if (!args[0] && roleText.length <= selectOptionLimit) {
+            if (roleText.length <= selectOptionLimit) {
                 await db.forEach(async (eligibleRole) => {
                     let currentRole = await interaction.guild.roles.fetch(eligibleRole.role_id);
                     if (!currentRole) return;
