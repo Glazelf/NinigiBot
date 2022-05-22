@@ -6,14 +6,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = await isAdmin(client, interaction.member);
-        if (!message.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const { LogChannels } = require('../../database/dbObjects');
-        let oldChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
         let newLogChannel;
         let channelArg = args.find(element => element.name == "channel");
-        if (channelArg) newLogChannel = channelArg.value;
+        if (channelArg) newLogChannel = channelArg.channel;
 
         let disableBool = false;
         let disableArg = args.find(element => element.name == "disable");
@@ -25,15 +25,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel.` });
         };
 
-        let targetChannel;
-        if (newLogChannel) targetChannel = message.guild.channels.cache.find(channel => channel.id == newLogChannel.id);
-
         if (oldChannel) await oldChannel.destroy();
-        if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${message.guild.name}**.` });
+        if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
 
-        await LogChannels.upsert({ server_id: message.guild.id, channel_id: targetChannel.id });
+        await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
 
-        return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${targetChannel}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
 
     } catch (e) {
         // Log error
