@@ -27,9 +27,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 let messagesAll = await interaction.channel.messages.fetch({ limit: maxNumberOfMessages });
                 let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
                 let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
-
-                console.log(messages)
-
                 try {
                     await interaction.channel.bulkDelete(messages);
                     return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages from ${user.tag} within the last ${maxNumberOfMessages} messages.` });
