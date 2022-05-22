@@ -71,7 +71,6 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
 
                     for (const [key, value] of Object.entries(badgeEmotes)) {
-                        console.log(value)
                         if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                     };
                 };
