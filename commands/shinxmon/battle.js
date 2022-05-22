@@ -20,12 +20,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
 
         let author = interaction.user;
-        let target;
+        let target = args.find(element => element.name == "user").user;
 
-        if (message.type != 'APPLICATION_COMMAND') target = message.mentions.users.first();
-        if (!target) target = client.users.fetch(args[0]);
-
-        if (!target || target.length < 1 || (message.mentions && (!message.mentions.members && !message.mentions.repliedUser))) return sendMessage({ client: client, interaction: interaction, content: `Please specify a user to battle.` });
         if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
 
         const trainers = [author, target];
@@ -36,18 +32,17 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         for (let i = 0; i < 2; i++) {
             const shinx = await bank.currency.getShinx(trainers[i].id);
-            if (!shinx) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`shinx\` to create one.` });
+            if (!shinx) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participants doesn't have a Shinx yet. Simply use \`/shinx\` to create one.` });
             shinx.see();
-            if (shinx.sleeping) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participating Shinxes is asleep.` });
+            if (shinx.sleeping) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participating Shinx is asleep.` });
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
 
-        if (trainers[1].bot) return sendMessage({ client: client, interaction: interaction, content: `**${trainers[1].tag}** is a bot and can't battle.` });
-        await sendMessage({ client: client, interaction: interaction, content: `Do you accept the challenge, **${trainers[1]}**? (y\\n)` });
+        await interaction.channel.send({ content: `Do you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept` });
         const filter = m => m.author.id == trainers[1].id;
-        const accepts = await message.channel.awaitMessages({ filter, max: 1, time: 10000 });
+        const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });
         if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.` });
         if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
         globalVars.battling.yes = true;
@@ -69,7 +64,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         };
 
         let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-        await sendMessage({ client: client, interaction: interaction, files: messageFile });
+        await interaction.channel.send({ files: [messageFile] });
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -105,7 +100,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             };
         };
 
-        if (text.length > 0) sendMessage({ client: client, interaction: interaction, content: text });
+        if (text.length > 0) interaction.channel.send({ content: text });
         while (true) {
             text = '';
             for (let i = 0; i < 2; i++) {
@@ -184,7 +179,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 };
             };
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
+            interaction.channel.send({ content: text, files: [messageFile] });
             await wait();
         };
 
