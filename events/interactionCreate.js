@@ -127,6 +127,7 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
+                console.log(1)
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
@@ -160,6 +161,7 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
+                                console.log(2)
                                 await formats.forEach(format => {
                                     if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
                                 });
@@ -249,9 +251,11 @@ module.exports = async (client, interaction) => {
                     case "inventory":
                         break;
                 };
+                console.log(4)
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return interaction.respond([]);
+                console.log(choices)
                 return interaction.respond(choices);
                 break;
 
