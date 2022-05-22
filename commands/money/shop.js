@@ -13,27 +13,28 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const input = args.find(element => element.name == "category").value.toLowerCase();
         const condition = { where: { cost: { [ne]: 0 } } };
         let items = null;
+        let returnString = null;
         switch (input) {
             // case "items":
             //     items = await CurrencyShop.findAll(condition);
-            //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            //     returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
             //     break;
             case "equipment":
                 items = await Equipments.findAll(condition);
-                let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+                returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
                 break;
             case "food":
                 items = await Foods.findAll(condition);
-                let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+                returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
                 break;
             //// Coming soon, maybe
             // case "key":
             //     items = await KeyItems.findAll(condition);
-            //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            //     returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
             //     break;
             // case "rooms":
             //     items = await Room.findAll(condition);
-            //     let returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
+            //     returnString = Discord.Formatters.codeBlock(true, items.map(i => i.toString()).join('\n'));
             //     break;
             default:
                 return sendMessage({ client: client, interaction: interaction, content: `That category doesn't exist.` });
