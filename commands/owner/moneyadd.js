@@ -29,7 +29,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "moneyadd",
     description: "Add money to a user.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "amount",
         type: "INTEGER",

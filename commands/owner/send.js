@@ -51,7 +51,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "send",
     description: "Sends a message to a channel or user.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "input",
         type: "STRING",

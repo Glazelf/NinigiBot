@@ -35,7 +35,7 @@ module.exports.config = {
     name: "setavatar",
     aliases: [],
     description: "Set Ninigi's avatar.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "avatar",
         type: "ATTACHMENT",

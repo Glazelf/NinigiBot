@@ -57,7 +57,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "kill",
     description: "Shuts down bot.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "remove-interactions",
         type: "BOOLEAN",

@@ -22,7 +22,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 module.exports.config = {
     name: "removeinteraction",
     description: "Remove an interaction.",
-    serverID: "759344085420605471",
+    serverID: ["759344085420605471"],
     options: [{
         name: "interaction-name",
         type: "BOOLEAN",
