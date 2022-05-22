@@ -53,11 +53,12 @@ module.exports = async (client, message) => {
         if (modBool) return;
 
         let messageMember = message.guild.members.fetch(message.author.id);
-        let memberRoles = messageMember.roles.cache.filter(element => element.name !== "@everyone");
+        let memberRoles = 0;
+        if (messageMember.roles) messageMember.roles.cache.filter(element => element.name !== "@everyone").size;
 
         // Add currency
         if (message.content && messageMember) {
-            if (!talkedRecently.has(messageMember.id) && memberRoles.size !== 0) {
+            if (!talkedRecently.has(messageMember.id) && memberRoles > 0) {
                 bank.currency.add(messageMember.id, 1);
                 talkedRecently.add(messageMember.id);
                 setTimeout(() => {
