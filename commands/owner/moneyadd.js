@@ -20,7 +20,7 @@ exports.run = async (client, interaction) => {
         let dbBalance = await bank.currency.getBalance(transferTarget.id);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await bank.currency.add(transferTarget.id, +transferAmount).then(dbBalance = await bank.currency.getBalance(transferTarget.id));
+        await bank.currency.add(transferTarget.id, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
         return sendMessage({ client: client, interaction: interaction, content: `Successfully added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.` });
