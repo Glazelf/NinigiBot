@@ -134,9 +134,9 @@ module.exports = async (client, interaction) => {
                         let balance = await bank.currency.getBalance(interaction.user.id);
                         let balanceHalf = Math.floor(balance / 2);
                         let balanceQuarter = Math.floor(balance / 4);
-                        choices.push({ name: `All your money (${balance})`, value: balance });
-                        choices.push({ name: `Half your money (${balanceHalf})`, value: balanceHalf });
-                        choices.push({ name: `A quarter (${balanceQuarter})`, value: balanceQuarter });
+                        choices.push({ name: `All your money: ${balance}${globalVars.currency}`, value: balance });
+                        choices.push({ name: `Half your money: ${balanceHalf}${globalVars.currency}`, value: balanceHalf });
+                        choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
                         break;
                 };
                 switch (interaction.commandName) {
