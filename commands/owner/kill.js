@@ -10,9 +10,11 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let removeInteractions = args.find(element => element.name == "remove-interactions").value;
-        let timestamp = await getTime(client);
+        let removeInteractions = false;
+        let interactionsArg = args.find(element => element.name == "remove-interactions");
+        if (interactionsArg) removeInteractions = interactionsArg.value;
 
+        let timestamp = await getTime(client);
         let shutdownString = "Shutting down.";
         if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: shutdownString });
@@ -61,7 +63,6 @@ module.exports.config = {
     options: [{
         name: "remove-interactions",
         type: "BOOLEAN",
-        description: "Remove all interactions?",
-        required: true
+        description: "Remove all interactions?"
     }]
 };

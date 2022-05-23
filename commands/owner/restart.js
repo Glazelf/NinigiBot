@@ -9,10 +9,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let removeInteractions = args.find(element => element.name == "reset-interactions").value;
-        let timestamp = await getTime(client);
+        let removeInteractions = false;
+        let interactionsArg = args.find(element => element.name == "reset-interactions");
+        if (interactionsArg) removeInteractions = interactionsArg.value;
 
         // Return messages then destroy
+        let timestamp = await getTime(client);
         let restartString = "Restarting.";
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
@@ -57,7 +59,6 @@ module.exports.config = {
     options: [{
         name: "reset-interactions",
         type: "BOOLEAN",
-        description: "Reset all interactions?",
-        required: true
+        description: "Reset all interactions?"
     }]
 };
