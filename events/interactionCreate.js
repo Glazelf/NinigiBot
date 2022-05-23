@@ -6,6 +6,7 @@ module.exports = async (client, interaction) => {
         let isAdmin = require('../util/isAdmin');
         let sendMessage = require('../util/sendMessage');
         const getPokemon = require('../util/pokemon/getPokemon');
+        const randomNumber = require('../util/randomNumber');
         const { Dex } = require('pokemon-showdown');
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
@@ -132,11 +133,18 @@ module.exports = async (client, interaction) => {
                     // Used in: coinflip, bet
                     case "bet-amount":
                         let balance = await bank.currency.getBalance(interaction.user.id);
-                        let balanceHalf = Math.floor(balance / 2);
-                        let balanceQuarter = Math.floor(balance / 4);
-                        choices.push({ name: `All your money: ${balance}${globalVars.currency}`, value: balance });
-                        choices.push({ name: `Half your money: ${balanceHalf}${globalVars.currency}`, value: balanceHalf });
-                        choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
+                        if (balance > 0) {
+                            balance = Math.floor(balance);
+                            let balanceHalf = Math.floor(balance / 2);
+                            let balanceQuarter = Math.floor(balance / 4);
+                            let balanceRandom = randomNumber(1, balance);
+                            choices.push({ name: `All your money: ${balance}${globalVars.currency}`, value: balance });
+                            if (balance >= 2) choices.push({ name: `Half your money: ${balanceHalf}${globalVars.currency}`, value: balanceHalf });
+                            if (balance >= 4) choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
+                            if (balance >= 5) choices.push({ name: `Random amount: ${balanceRandom}${globalVars.currency}`, value: balanceRandom });
+                        } else {
+                            choices.push({ name: "Talk to earn some money!", value: 0 });
+                        };
                         break;
                 };
                 switch (interaction.commandName) {
