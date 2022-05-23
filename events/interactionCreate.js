@@ -127,6 +127,18 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
+                // Common arguments 
+                switch (focusedOption.name) {
+                    // Used in: coinflip, bet
+                    case "bet-amount":
+                        let balance = await bank.currency.getBalance(interaction.user.id);
+                        let balanceHalf = Math.floor(balance / 2);
+                        let balanceQuarter = Math.floor(balance / 4);
+                        choices.push({ name: `All your money (${balance})`, value: balance });
+                        choices.push({ name: `Half your money (${balanceHalf})`, value: balanceHalf });
+                        choices.push({ name: `A quarter (${balanceQuarter})`, value: balanceQuarter });
+                        break;
+                };
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
@@ -206,14 +218,6 @@ module.exports = async (client, interaction) => {
                         break;
                     case "coinflip":
                         switch (focusedOption.name) {
-                            case "bet-amount":
-                                let balance = await bank.currency.getBalance(interaction.user.id);
-                                let balanceHalf = Math.floor(balance / 2);
-                                let balanceQuarter = Math.floor(balance / 4);
-                                choices.push({ name: balance.toString(), value: balance });
-                                choices.push({ name: balanceHalf.toString(), value: balanceHalf });
-                                choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
-                                break;
                             case "side":
                                 choices.push({ name: "Heads", value: "Heads" });
                                 choices.push({ name: "Tails", value: "Tails" });
@@ -227,15 +231,6 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: "Rock", value: "Rock" });
                                 choices.push({ name: "Paper", value: "Paper" });
                                 choices.push({ name: "Scissors", value: "Scissors" });
-                                break;
-                            case "bet-amount":
-                                // Copied from coinflip command
-                                let balance = await bank.currency.getBalance(interaction.user.id);
-                                let balanceHalf = Math.floor(balance / 2);
-                                let balanceQuarter = Math.floor(balance / 4);
-                                choices.push({ name: balance.toString(), value: balance });
-                                choices.push({ name: balanceHalf.toString(), value: balanceHalf });
-                                choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
                                 break;
                         };
                     case "shop":
