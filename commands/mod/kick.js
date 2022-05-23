@@ -9,7 +9,6 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        // Get user, change to get from interaction args
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
