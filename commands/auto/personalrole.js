@@ -85,6 +85,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             });
 
             if (iconArg && iconsAllowed && fileIsImg) {
+                interaction.deferReply();
                 let roleIconSizeLimit = 256;
                 if (iconSize > roleIconSizeLimit) {
                     editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;

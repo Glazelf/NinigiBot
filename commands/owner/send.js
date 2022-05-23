@@ -5,6 +5,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
     try {
         const sendMessage = require('../../util/sendMessage');
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        interaction.deferReply();
 
         // Split off command
         let textMessage = args.find(element => element.name == "input").value;
