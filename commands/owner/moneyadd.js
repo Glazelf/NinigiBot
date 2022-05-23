@@ -14,7 +14,7 @@ exports.run = async (client, interaction) => {
         let transferTargetID = interaction.options.getString("user-id");
         let transferAmount = interaction.options.getInteger("amount");
 
-        let transferTarget = client.users.fetch(transferTargetID);
+        let transferTarget = await client.users.fetch(transferTargetID);
         if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
 
         let dbBalance = await bank.currency.getBalance(transferTarget.id);
