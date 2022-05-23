@@ -224,9 +224,9 @@ module.exports = async (client, interaction) => {
                     case "rps":
                         switch (focusedOption.name) {
                             case "weapon":
-                                await choices.push({ name: "Rock", value: "Rock" });
-                                await choices.push({ name: "Paper", value: "Paper" });
-                                await choices.push({ name: "Scissors", value: "Scissors" });
+                                choices.push({ name: "Rock", value: "Rock" });
+                                choices.push({ name: "Paper", value: "Paper" });
+                                choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                             case "bet-amount":
                                 // Copied from coinflip command
