@@ -74,14 +74,14 @@ exports.run = async (client, interaction) => {
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)
-            .addField("Discord.JS:", DiscordJSVersion, true)
-            .addField("Memory Usage:", memoryUsage, true)
+            .addField("Discord.JS:", DiscordJSVersion, true);
+        if (interaction.user.id == client.config.ownerID) botEmbed.addField("Memory Usage:", memoryUsage, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Created:", `<t:${createdAt}:R>`, true)
-            .addField("Online Since:", `<t:${onlineSince}:R>`, true)
+            .addField("Online Since:", `<t:${onlineSince}:R>`, true);
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
