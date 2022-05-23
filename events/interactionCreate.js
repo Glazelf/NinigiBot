@@ -161,7 +161,7 @@ module.exports = async (client, interaction) => {
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
-                                    if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
+                                    if (format.id.includes(focusedOption.value.toLowerCase()) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;
                             case "rating":
