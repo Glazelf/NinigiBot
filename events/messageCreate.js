@@ -5,11 +5,10 @@ module.exports = async (client, message) => {
     // Import globals
     let globalVars = require('./ready');
     try {
-        const Discord = require("discord.js");
-        const { bank } = require('../database/bank');
         const sendMessage = require('../util/sendMessage');
-
+        const Discord = require("discord.js");
         const autoMod = require('../util/autoMod');
+        const { bank } = require('../database/bank');
 
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
@@ -47,23 +46,21 @@ module.exports = async (client, message) => {
 
         if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
-
         // Automod
         let modBool = false;
         if (message.type != 'APPLICATION_COMMAND') modBool = await autoMod(client, message);
         if (modBool) return;
 
-        let messageMember = message.guild.members.fetch(message.author.id);
         let memberRoles = 0;
-        if (messageMember.roles) messageMember.roles.cache.filter(element => element.name !== "@everyone").size;
+        if (message.member.roles) memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone").size;
 
         // Add currency
-        if (message.content && messageMember) {
-            if (!talkedRecently.has(messageMember.id) && memberRoles > 0) {
-                bank.currency.add(messageMember.id, 1);
-                talkedRecently.add(messageMember.id);
+        if (message.content && message.member) {
+            if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
+                bank.currency.add(message.member.id, 1);
+                talkedRecently.add(message.member.id);
                 setTimeout(() => {
-                    if (messageMember) talkedRecently.delete(messageMember.id);
+                    if (message.member) talkedRecently.delete(message.member.id);
                 }, 60000);
             };
         };
