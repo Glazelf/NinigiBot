@@ -13,8 +13,6 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
             };
         };
         if (files) {
-            // Ephemeral messages couldn't have files, should be enabled now.
-            // ephemeral = false;
             if (Array.isArray(files)) {
                 messageObject['files'] = files;
             } else {
@@ -34,6 +32,7 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
             };
         };
         messageObject['ephemeral'] = ephemeral;
+        console.log({ ephemeral })
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
         try {

@@ -180,7 +180,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 async function useData() {
                     if (wasSuccessful) {
                         // console.log(JSONresponse);
-                        if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `Sorry, but ${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
+                        if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
 
                         let moveStats = "";
                         for await (const [key, value] of Object.entries(JSONresponse.moves)) {
@@ -220,7 +220,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                             .addField("Spreads:", spreadStats, true)
                             .addField("Teammates:", teammateStats, true);
 
-                        return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed });
+                        return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
 
                     } else if (triedLastMonth == false && year == date.getYear() && month == stringCurrentMonth) {
                         // Try month-1 in case it's early in the month and last month's stats haven't been posted yet :)
@@ -246,7 +246,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                         let replyText = `Sorry! Could not successfully fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.
         Here are some usage resources you might find usefull instead:`;
 
-                        return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons, ephemeral: ephemeral });
+                        return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
                     };
                 };
                 break;
