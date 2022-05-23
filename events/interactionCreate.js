@@ -147,6 +147,7 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                 };
+                // Unique argument tree
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
