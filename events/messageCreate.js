@@ -11,7 +11,8 @@ module.exports = async (client, message) => {
 
         const autoMod = require('../util/autoMod');
 
-        if (message.author.bot) return;
+        if (!message || !message.author) return;
+        if (message.author.bot || message.author.system) return;
 
         // Call image
         let messageImage = null;
