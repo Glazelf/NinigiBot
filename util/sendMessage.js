@@ -32,7 +32,6 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
             };
         };
         messageObject['ephemeral'] = ephemeral;
-        console.log({ ephemeral })
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
         try {
