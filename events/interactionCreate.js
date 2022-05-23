@@ -181,12 +181,12 @@ module.exports = async (client, interaction) => {
                     case "monsterhunter":
                         switch (focusedOption.name) {
                             case "monster":
-                                monstersJSON.monsters.forEach(monster => {
+                                await monstersJSON.monsters.forEach(monster => {
                                     if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
                                 });
                                 break;
                             case "quest":
-                                questsJSON.quests.forEach(quest => {
+                                await questsJSON.quests.forEach(quest => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
@@ -224,9 +224,9 @@ module.exports = async (client, interaction) => {
                     case "rps":
                         switch (focusedOption.name) {
                             case "weapon":
-                                choices.push({ name: "Rock", value: "Rock" });
-                                choices.push({ name: "Paper", value: "Paper" });
-                                choices.push({ name: "Scissors", value: "Scissors" });
+                                await choices.push({ name: "Rock", value: "Rock" });
+                                await choices.push({ name: "Paper", value: "Paper" });
+                                await choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                             case "bet-amount":
                                 // Copied from coinflip command
