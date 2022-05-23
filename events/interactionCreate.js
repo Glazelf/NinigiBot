@@ -127,7 +127,7 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
-                console.log(1)
+                interaction.deferReply();
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
