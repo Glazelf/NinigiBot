@@ -6,8 +6,8 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
-        let adminBoolBot = await isAdmin(client, interaction.guild.me);
-        let adminBoolUser = await isAdmin(client, interaction.member);
+        let adminBoolBot = isAdmin(client, interaction.guild.me);
+        let adminBoolUser = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let role = interaction.options.getRole("role");

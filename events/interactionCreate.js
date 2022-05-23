@@ -92,7 +92,7 @@ module.exports = async (client, interaction) => {
                                 // Toggle selected role
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
                                 if (!role) return sendMessage({ client: client, interaction: interaction, content: `This role does not exist.` });
-                                let adminBool = await isAdmin(client, interaction.guild.me);
+                                let adminBool = isAdmin(client, interaction.guild.me);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) return sendMessage({ client: client, interaction: interaction, content: `This role is not available anymore.` });

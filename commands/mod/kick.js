@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
-        let adminBool = await isAdmin(client, interaction.member);
+        let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get user, change to get from interaction args

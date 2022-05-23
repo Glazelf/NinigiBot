@@ -5,7 +5,7 @@ module.exports = async (client, oldMember, newMember) => {
     try {
         const { VCTextChannels } = require('../database/dbObjects');
         const isAdmin = require('../util/isAdmin');
-        let adminBool = await isAdmin(client, newMember);
+        let adminBool = isAdmin(client, newMember);
         if (adminBool == true) return;
 
         let oldID = null;

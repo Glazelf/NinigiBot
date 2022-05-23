@@ -23,7 +23,7 @@ module.exports = async (client, message, newMessage) => {
         let botMember = await message.guild.members.fetch(client.user.id);
 
         // Check message content
-        let adminBool = await isAdmin(client, botMember);
+        let adminBool = isAdmin(client, botMember);
 
         if ((log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) || adminBool) {
             let messageImage = null;

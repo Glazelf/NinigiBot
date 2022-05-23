@@ -20,7 +20,7 @@ exports.run = async (client, interaction) => {
         let roleArgument = interaction.options.getRole('role');
         let requestRole = null;
         if (roleArgument) requestRole = roleArgument;
-        let adminBoolBot = await isAdmin(client, interaction.guild.me);
+        let adminBoolBot = isAdmin(client, interaction.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
