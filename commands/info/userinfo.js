@@ -16,7 +16,8 @@ exports.run = async (client, interaction) => {
 
         // Balance check
         let dbBalance = await bank.currency.getBalance(user.id);
-        let userBalance = `${Math.floor(dbBalance)}${globalVars.currency}`;
+        dbBalance = Math.floor(dbBalance);
+        let userBalance = `${dbBalance}${globalVars.currency}`;
         let switchCode = await bank.currency.getSwitchCode(user.id);
 
         let birthday = await bank.currency.getBirthday(user.id);
@@ -90,7 +91,7 @@ exports.run = async (client, interaction) => {
             .setAuthor({ name: user.tag, iconURL: avatar })
             .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
-        if (!user.bot) profileEmbed.addField("Balance:", userBalance, true);
+        if (!user.bot && !(roleCount > 0 && dbBalance !== 0)) profileEmbed.addField("Balance:", userBalance, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
