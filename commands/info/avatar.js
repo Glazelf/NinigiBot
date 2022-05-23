@@ -6,8 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require('discord.js');
 
-        let user = args[0].user;
-
+        let user = interaction.options.getUser("user");
         let member;
         try {
             member = await interaction.guild.members.fetch(user.id);
