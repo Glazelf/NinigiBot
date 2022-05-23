@@ -6,7 +6,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let date = args.find(element => element.name == "date").value;
+        let day = args.find(element => element.name == "day").value;
+        let month = args.find(element => element.name == "month").value;
+        let date = `${day}-${month}`;
 
         // Check and sanitize birthday
         let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(date);
@@ -25,9 +27,14 @@ module.exports.config = {
     name: "birthday",
     description: "Update your birthday.",
     options: [{
-        name: "date",
-        type: "STRING",
-        description: "Birthday in \"dd-mm\" format.",
+        name: "day",
+        type: "INTEGER",
+        description: "Birth day of the month.",
+        required: true
+    }, {
+        name: "month",
+        type: "INTEGER",
+        description: "Birth month of the year.",
         required: true
     }]
 };
