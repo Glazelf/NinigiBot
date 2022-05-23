@@ -12,14 +12,7 @@ exports.run = async (client, interaction) => {
 
         let user = interaction.options.getUser("user");
         user = await client.users.fetch(user.id, { force: true });
-
-        let member;
-        try {
-            member = await interaction.guild.members.fetch(user.id);
-        } catch (e) {
-            // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user.` });
-        };
+        let member = await interaction.guild.members.fetch(user.id);
 
         // Balance check
         let dbBalance = await bank.currency.getBalance(user.id);
