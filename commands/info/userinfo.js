@@ -10,7 +10,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
-        let user = args[0].user;
+        let user = args.find(element => element.name == "user").user;
+        user = await client.users.fetch(user.id, { force: true });
 
         let member;
         try {
