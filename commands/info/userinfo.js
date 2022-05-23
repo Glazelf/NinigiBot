@@ -63,6 +63,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
             try {
                 if (user.bot) badgesArray.push("🤖");
+                let guildOwner = await interaction.guild.fetchOwner();
+                if (guildOwner.id === user.id) badgesArray.push("👑");
                 if (member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
                 if (user.flags) {
                     let userFlagsAll = user.flags.serialize();
