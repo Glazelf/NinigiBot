@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { Op } = require('sequelize');
         const shops = [Equipments, Foods, KeyItems, CurrencyShop];
 
-        let input = args.find(element => element.name == "item").value;
+        let input = interaction.options.getString("item").toLowerCase();
 
         for (let i = 0; i < shops.length; i++) {
             const item = await shops[i].findOne({ where: { name: { [Op.like]: input } } });

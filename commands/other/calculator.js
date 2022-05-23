@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,7 +9,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let maxMessageLength = 2000;
         let noInputString = `You need to provide a valid input.`;
 
-        let input = args.find(element => element.name == "input").value;
+        let input = interaction.options.getString("input");
 
         // Sanitize input
         let sanitizeValues = [

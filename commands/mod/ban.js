@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -11,17 +11,17 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let user = null;
         let member = null;
-        let userArg = args.find(element => element.name == "user");
+        let userArg = interaction.options.getUser("user");
         if (userArg) {
-            user = userArg.user;
+            user = userArg;
             member = await interaction.guild.members.fetch(user.id);
         };
-        let userIDArg = args.find(element => element.name == "user-id");
-        let author = interaction.user;
+        let userIDArg = interaction.options.getString("user-id");
+        let author = interaction;
 
         let reason = "Not specified.";
-        let reasonArg = args.find(element => element.name == "reason");
-        if (reasonArg) reason = reasonArg.value;
+        let reasonArg = interaction.options.getString("reason");
+        if (reasonArg) reason = reasonArg;
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
@@ -74,7 +74,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
             // If user isn't found, try to ban by ID
         } else {
             if (!userIDArg) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban.` });
-            let memberID = userIDArg.value;
+            let memberID = userIDArg;
 
             // See if target isn't already banned
             if (bansFetch) {

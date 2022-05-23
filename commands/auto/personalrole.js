@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -13,9 +13,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
-        let colorArg = args.find(element => element.name == 'color-hex');
-        let iconArg = args.find(element => element.name == "icon");
-        let deleteArg = args.find(element => element.name == "delete");
+        let colorArg = interaction.options.getString('color-hex');
+        let iconArg = interaction.options.getAttachment("icon");
+        let deleteArg = interaction.options.getBoolean("delete");
 
         let roleColor = null;
         let iconImg = null;
@@ -23,13 +23,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let deleteBool = false;
         let fileIsImg = false;
 
-        if (colorArg) roleColor = colorArg.value;
+        if (colorArg) roleColor = colorArg;
         if (iconArg) {
             iconImg = iconArg.attachment.url;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
             if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
         };
-        if (deleteArg) deleteBool = deleteArg.value;
+        if (deleteArg === true) deleteBool = deleteArg;
 
         // Check if icons are possible
         let iconsAllowed = false;

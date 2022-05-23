@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const input = args.find(element => element.name == "input").value;
+        const input = interaction.options.getString("input");
         try {
             var evaled = eval(input);
         } catch (e) {

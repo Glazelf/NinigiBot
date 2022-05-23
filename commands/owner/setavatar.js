@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,12 +7,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let avatarArg = args.find(element => element.name == "avatar");
+        let avatarArg = interaction.options.getAttachment("avatar");
 
-        let iconImg = avatarArg.attachment.url;
-        let iconSize = Math.ceil(iconArg.attachment.size / 1000);
+        let iconImg = avatarArg.url;
+        let iconSize = Math.ceil(iconArg.size / 1000);
         let fileIsImg = false;
-        if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
+        if (iconArg.contentType.includes('image')) fileIsImg = true;
 
         if (!fileIsImg) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
 

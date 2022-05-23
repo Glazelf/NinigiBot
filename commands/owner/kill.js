@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -11,8 +11,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = false;
-        let interactionsArg = args.find(element => element.name == "remove-interactions");
-        if (interactionsArg) removeInteractions = interactionsArg.value;
+        let interactionsArg = interaction.options.getBoolean("remove-interactions");
+        if (interactionsArg === true) removeInteractions = interactionsArg;
 
         let timestamp = await getTime(client);
         let shutdownString = "Shutting down.";

@@ -8,7 +8,7 @@ const addLine = (line) => {
 
 const wait = () => new Promise(resolve => setTimeout(resolve, 5000));
 
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -20,7 +20,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
 
         let author = interaction.user;
-        let target = args.find(element => element.name == "user").user;
+        let target = interaction.options.getUser("user");
 
         if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
 

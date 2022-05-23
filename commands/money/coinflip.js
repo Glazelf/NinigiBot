@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,18 +10,18 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let balance = await bank.currency.getBalance(interaction.user.id);
 
         let ephemeral = true;
-        let ephemeralArg = args.find(element => element.name == "ephemeral");
-        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
 
         // Heads / Tails + Amounts
         let validSides = ["heads", "tails"];
-        let winSideArg = args.find(element => element.name == "side");
+        let winSideArg = interaction.options.getString("side");
         let winSide = "heads";
-        if (winSideArg && validSides.includes(winSideArg.value.toLowerCase())) winSide = winSideArg.value.toLowerCase();
+        if (winSideArg && validSides.includes(winSideArg.toLowerCase())) winSide = winSideArg.toLowerCase();
         let loseSide = "tails";
         if (winSide == "tails") loseSide = "heads";
 
-        let amount = args.find(element => element.name == "bet-amount").value;
+        let amount = interaction.options.getInteger("bet-amount");
 
         // Enforce flooring
         amount = Math.floor(amount);

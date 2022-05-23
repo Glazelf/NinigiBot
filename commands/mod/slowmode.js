@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,7 +10,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
-        let time = args.find(element => element.name == "time").value;
+        let time = interaction.options.getInteger("time");
         let slowmodeMaxSeconds = 21600;
 
         if (time < 0) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid amount of seconds.` });

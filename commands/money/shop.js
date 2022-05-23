@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { ne } = Sequelize.Op;
 
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,7 +10,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
 
-        const input = args.find(element => element.name == "category").value.toLowerCase();
+        const input = interaction.options.getString("category").toLowerCase();
         const condition = { where: { cost: { [ne]: 0 } } };
         let items = null;
         let returnString = null;

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,8 +10,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(interaction.user.id);
 
-        let amount = args.find(element => element.name == "bet-amount").value;
-        let playerChoice = args.find(element => element.name == "weapon").value.toLowerCase();
+        let amount = interaction.options.getInteger("bet-amount");
+        let playerChoice = interaction.options.getString("weapon").toLowerCase();
 
         // Get input
         let rps = ["rock", "paper", "scissors"];

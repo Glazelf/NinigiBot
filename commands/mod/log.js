@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -12,12 +12,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
         let newLogChannel;
-        let channelArg = args.find(element => element.name == "channel");
-        if (channelArg) newLogChannel = channelArg.channel;
+        let channelArg = interaction.options.getChannel("channel");
+        if (channelArg) newLogChannel = channelArg;
 
         let disableBool = false;
-        let disableArg = args.find(element => element.name == "disable");
-        if (disableArg) disableBool = disableArg.value;
+        let disableArg = interaction.options.getBoolean("disable");
+        if (disableArg === true) disableBool = disableArg;
         if (!channelArg && !disableBool) {
             if (oldChannel) {
                 return sendMessage({ client: client, interaction: interaction, content: `The current logging channel is <#${oldChannel.channel_id}>.` });

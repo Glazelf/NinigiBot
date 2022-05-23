@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,8 +6,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
 
-        let lowNumber = args.find(element => element.name == "number-min").value;
-        let highNumber = args.find(element => element.name == "number-max").value;
+        let lowNumber = interaction.options.getInteger("number-min");
+        let highNumber = interaction.options.getInteger("number-max");
         if (lowNumber > highNumber) return sendMessage({ client: client, interaction: interaction, content: `Make sure the first number is lower than the second number.` });
 
         let randomValue = randomNumber(lowNumber, highNumber);

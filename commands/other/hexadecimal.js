@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,12 +6,13 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        let input = args.find(element => element.name == "input").value;
+        let input = null;
 
         // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
         // Get this from an argument instead if using slash commands
         switch (interaction.options.getSubcommand()) {
             case "tohex":
+                input = interaction.options.getInteger("input");
                 let failText = `Please provide a valid number to convert to hex.`;
                 let hexString = input.toString(16).toUpperCase();
                 while (hexString.length < 6) hexString = "0" + hexString;
@@ -20,6 +21,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
             case "todecimal":
                 try {
+                    interaction.options.getString("input");
                     while (input.length < 6) input = "0" + input;
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);

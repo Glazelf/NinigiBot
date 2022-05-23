@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../../util/logger');
     // Import globals
     let globalVars = require('../../../events/ready');
@@ -10,9 +10,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
         if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
-        let startingSlot = args.find(element => element.name == "starting-slot").value;
-        let endingSlot = args.find(element => element.name == "ending-slot").value;
-        let betAmount = args.find(element => element.name == "bet-amount").value;
+        let startingSlot = interaction.options.getInteger("starting-slot");
+        let endingSlot = interaction.options.getInteger("ending-slot");
+        let betAmount = interaction.options.getInteger("bet-amount");
 
         if (endingSlot < startingSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
         if (startingSlot < 1 || endingSlot < 1 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 1 and 36.` });

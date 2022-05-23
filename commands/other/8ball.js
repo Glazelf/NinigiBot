@@ -1,11 +1,11 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
 
-        let input = args.find(element => element.name == "input").value;
+        let input = interaction.options.getString("input");
 
         const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -12,17 +12,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const axios = require("axios");
 
         let ephemeral = true;
-        let ephemeralArg = args.find(element => element.name == "ephemeral");
-        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
-        let pokemonName = null;
-        let pokemonNameArg = args.find(element => element.name == "pokemon");
-        if (pokemonNameArg) pokemonName = pokemonNameArg.value;
+        let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.MessageActionRow();
         let nameBulbapedia = null;
         let linkBulbapedia = null;
@@ -31,7 +29,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
-                let abilitySearch = args.find(element => element.name == "ability").value;
+                let abilitySearch = interaction.options.getString("ability");
                 let ability = Dex.abilities.get(abilitySearch);
                 if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
@@ -46,7 +44,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Items
             case "item":
-                let itemSearch = args.find(element => element.name == "item").value;
+                let itemSearch = interaction.options.getString("item");
                 let item = Dex.items.get(itemSearch);
                 if (!item || !item.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name.` });
 
@@ -65,7 +63,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Moves
             case "move":
-                let moveSearch = args.find(element => element.name == "move").value;
+                let moveSearch = interaction.options.getString("move");
                 let move = Dex.moves.get(moveSearch);
 
                 if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
@@ -141,34 +139,29 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                     };
                 };
                 let format = "gen8vgc2022";
-                let formatArg = args.find(element => element.name == "format");
-                if (formatArg) format = formatArg.value;
+                let formatArg = interaction.options.getString("format");
+                if (formatArg) format = formatArg;
 
-                let monthArg = args.find(element => element.name == "month");
-                let yearArg = args.find(element => element.name == "year");
+                let monthArg = interaction.options.getInteger("month");
+                let yearArg = interaction.options.getInteger("year");
                 // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
                 const date = new Date();
                 let month = date.getMonth();
                 if (month == 0) month = 12;
                 let stringCurrentMonth = month;
                 if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
-                if (monthArg) {
-                    if (monthArg.value < 13 && monthArg.value > 0) month = monthArg.value;
-                };
+                if (monthArg < 13 && monthArg > 0) month = monthArg;
+
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
                 let year = date.getFullYear();
-                if (yearArg) {
-                    if (yearArg.value > 2013 && yearArg.value < (year + 1)) year = yearArg.value; // Smogon stats only exist from 2014 onwards
-                };
+                if (yearArg > 2013 && yearArg < (year + 1)) year = yearArg; // Smogon stats only exist from 2014 onwards
 
                 let rating = "1500";
                 let ratingTresholds = [0, 1500, 1630, 1760];
                 if (format == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
-                let ratingArg = args.find(element => element.name == "rating");
-                if (ratingArg) {
-                    if (ratingTresholds.includes(ratingArg.value)) rating = ratingArg.value;
-                };
+                let ratingArg = interaction.options.getInteger("rating");
+                if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
 
                 let wasSuccessful = true;
                 let triedLastMonth = false;

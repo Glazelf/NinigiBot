@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let interactionName = args.find(element => element.name == "interaction-name").value;
+        let interactionName = interaction.options.getString("interaction-name");
         let interaction = client.application.commands.find(element => element.name == interactionName);
         if (!interaction) return sendMessage({ client: client, interaction: interaction, content: `Interaction \`${interactionName}\` not found.`, });
         await client.application.commands.delete(interaction.id);

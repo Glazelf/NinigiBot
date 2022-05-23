@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,7 +10,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Get user, change to get from interaction args
-        let user = args.find(element => element.name == "user").user;
+        let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
 
@@ -23,8 +23,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (!member.kickable) return sendMessage({ client: client, interaction: interaction, content: kickFailString });
 
         let reason = "Not specified.";
-        let reasonArg = args.find(element => element.name == "reason");
-        if (reasonArg) reason = reasonArg.value;
+        let reasonArg = interaction.options.getString("reason");
+        if (reasonArg) reason = reasonArg;
 
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.tag} (${time})`;

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,8 +10,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let memberFetch = await interaction.guild.members.fetch();
         let avatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
         let global = false;
-        let globalArg = args.find(element => element.name == "global");
-        if (globalArg) global = globalArg.value;
+        let globalArg = interaction.options.getBoolean("global");
+        if (globalArg === true) global = globalArg;
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);

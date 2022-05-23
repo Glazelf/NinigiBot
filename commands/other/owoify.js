@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,17 +7,17 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
-        let input = args.find(element => element.name == "input").value;
-        let severityArg = args.find(element => element.name == "severity");
+        let input = interaction.options.getString("input");
+        let severityArg = interaction.options.getInteger("severity");
         let severity = "owo";
         if (severityArg) {
-            if (severityArg.value <= 1) severity = "owo";
-            if (severityArg.value == 2) severity = "uwu";
-            if (severityArg.value >= 3) severity = "uvu";
+            if (severityArg <= 1) severity = "owo";
+            if (severityArg == 2) severity = "uwu";
+            if (severityArg >= 3) severity = "uvu";
         };
         let ephemeral = true;
-        let ephemeralArg = args.find(element => element.name == "ephemeral");
-        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
 
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);

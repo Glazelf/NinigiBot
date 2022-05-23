@@ -1,14 +1,14 @@
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
 
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
 
-        let inventoryCat = args.find(element => element.name == "category").value.toLowerCase();
+        let inventoryCat = interaction.options.getString("category").toLowerCase();
 
         if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {
             const user = await Users.findOne({ where: { user_id: interaction.user.id } });

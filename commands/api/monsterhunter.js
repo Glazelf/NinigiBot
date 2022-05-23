@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -14,8 +14,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         let ephemeral = true;
-        let ephemeralArg = args.find(element => element.name == "ephemeral");
-        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
@@ -25,7 +25,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         switch (interaction.options.getSubcommand()) {
             // Specific quest
             case "quest":
-                let questName = args.find(element => element.name == "quest").value.toLowerCase();
+                let questName = interaction.options.getString("quest").toLowerCase();
                 let questData;
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
@@ -60,7 +60,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // All quests from a game
             case "quests":
-                let gameName = args.find(element => element.name == "game").value.toLowerCase();
+                let gameName = interaction.options.getString("game").toLowerCase();
 
                 // Generalize game names and abbreviations
                 // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
@@ -174,7 +174,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
 
             // Monsters
             case "monster":
-                let monsterName = args.find(element => element.name == "monster").value.toLowerCase();
+                let monsterName = interaction.options.getString("monster").toLowerCase();
 
                 // Get monster
                 let monsterData;

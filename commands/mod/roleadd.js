@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -10,12 +10,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBoolUser = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let role = args.find(element => element.name == "role").role;
+        let role = interaction.options.getRole("role");
         let description = null;
-        let descriptionArg = args.find(element => element.name == "description");
+        let descriptionArg = interaction.options.getString("description");
         let selectDescriptionCharacterLimit = 50;
         if (descriptionArg) {
-            description = descriptionArg.value;
+            description = descriptionArg;
             if (description.length > selectDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
         };
 

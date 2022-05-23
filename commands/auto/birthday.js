@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,8 +6,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let day = args.find(element => element.name == "day").value;
-        let month = args.find(element => element.name == "month").value;
+        let day = interaction.options.getString("day");
+        let month = interaction.options.getString("month");
         let date = `${day}-${month}`;
 
         // Check and sanitize birthday

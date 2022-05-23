@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,8 +9,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency;
 
-        let transferTargetID = args.find(element => element.name == "user-id").value;
-        let transferAmount = args.find(element => element.name == "amount").value;
+        let transferTargetID = interaction.options.getString("user-id");
+        let transferAmount = interaction.options.getInteger("amount");
 
         let transferTarget = client.users.fetch(transferTargetID);
         if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });

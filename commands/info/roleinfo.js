@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,7 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
-        let role = args.find(element => element.name == "role").role;
+        let role = interaction.options.getRole("role");
         let user = interaction.user;
         let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -12,9 +12,9 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let oldChannel = await VCTextChannels.findOne({ where: { server_id: interaction.guild.id } });
 
         let disable = false;
-        let disableArg = args.find(element => element.name == "disable");
-        if (disableArg) disable = disableArg.value;
-        let targetChannel = args.find(element => element.name == "channel").channel;
+        let disableArg = interaction.options.getBoolean("disable");
+        if (disableArg === true) disable = disableArg;
+        let targetChannel = interaction.options.getChannel("channel");
         if (!targetChannel && subCommand !== "disable") return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
 
         if (oldChannel) await oldChannel.destroy();

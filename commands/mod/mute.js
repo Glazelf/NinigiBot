@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -9,14 +9,14 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let user = args.find(element => element.name == "user").user;
+        let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
 
         let muteTime = 60;
         let maxMuteTime = 2.419e+9; // Max time is 28 days
-        let timeArg = args.find(element => element.name == "time");
-        if (timeArg) muteTime = timeArg.value;
+        let timeArg = interaction.options.getInteger("time");
+        if (timeArg) muteTime = timeArg;
         if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
 
@@ -28,8 +28,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).` });
 
         let reason = "Not specified.";
-        let reasonArg = args.find(element => element.name == "reason");
-        if (reasonArg) reason = reasonArg.value;
+        let reasonArg = interaction.options.getString("reason");
+        if (reasonArg) reason = reasonArg;
 
         let displayTime = muteTime; // Save time for return strings
         muteTime = muteTime * 1000 * 60; // Convert to minutes

@@ -47,7 +47,7 @@ const visitors = [
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
 
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -155,7 +155,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: welcomeFile });
                 break;
             case "nickname":
-                const nickname = args.find(element => element.name == "name").value
+                const nickname = interaction.options.getString("name");
 
                 nickname.replace(/[^a-z]/gi, ''); // Remove non-alphabetical characters
                 if (nickname.length < 2 || nickname.length > 10) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid nickname between 2 and 10 characters.` });
@@ -198,7 +198,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 break;
             case "equip":
-                const equipmentName = args.find(element => element.name == "item").value.toLowerCase();
+                const equipmentName = interaction.options.getString("item").toLowerCase();
                 const equipments = await user.getEquipments();
                 if (!equipments) return sendMessage({ client: client, interaction: interaction, content: `You don't have any equipment, ${master}.` });
                 const equipment = equipments.filter(i => i.equipment.name.toLowerCase() === equipmentName.toLowerCase());
@@ -221,7 +221,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 break;
             case "feed":
-                const foodName = args.find(element => element.name == "food").value.toLowerCase();
+                const foodName = interaction.options.getString("food").toLowerCase();
                 const foods = await user.getFoods();
                 if (!foods) return sendMessage({ client: client, interaction: interaction, content: `You don't have any food, ${master}.` });
                 const food = foods.filter(i => i.food.name.toLowerCase() === foodName.toLowerCase());
@@ -345,8 +345,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
                 break;
             case "release":
                 let confirm = false
-                let confirmArg = args.find(element => element.name == "confirm");
-                if (confirmArg) confirm = confirmArg.value;
+                let confirmArg = interaction.options.getBoolean("confirm");
+                if (confirmArg === true) confirm = confirmArg;
                 if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
                 await shinx.destroy();
 

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -6,8 +6,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const currentBalance = await bank.currency.getBalance(interaction.user.id);
-        let transferAmount = args.find(element => element.name == "amount").value;
-        let transferTarget = args.find(element => element.name == "user").user;
+        let transferAmount = interaction.options.getInteger("amount");
+        let transferTarget = interaction.options.getUser("user");
 
         let user = interaction.user;
         let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;

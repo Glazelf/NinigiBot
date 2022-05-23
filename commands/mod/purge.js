@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -8,7 +8,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let adminBool = await isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let amount = args.find(element => element.name == "amount").value;
+        let amount = interaction.options.getInteger("amount");
         let maxNumberOfMessages = 100;
         if (amount > maxNumberOfMessages) amount = maxNumberOfMessages;
         if (amount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
@@ -16,8 +16,8 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         // Get users
         let user = null;
         let author = interaction.user;
-        let userArg = args.find(element => element.name == "user");
-        if (userArg) user = userArg.user;
+        let userArg = interaction.options.getUser("user");
+        if (userArg) user = userArg;
 
         let oldMessagesString = `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days.`;
 

@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,9 +7,7 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         const { bank } = require('../../database/bank');
 
         let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
-        let fcArgument = args.find(element => element.name == 'switch-fc');
-        let switchFC;
-        if (fcArgument) switchFC = fcArgument.value;
+        let switchFC = interaction.options.getString('switch-fc');
 
         let invalidString = `Please specify a valid Nintendo Switch friend code.`;
 

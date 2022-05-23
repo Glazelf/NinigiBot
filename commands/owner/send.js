@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -7,15 +7,15 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Split off command
-        let textMessage = args.find(element => element.name == "input").value;
-        let userIDArg = args.find(element => element.name == "user-id");
-        let channelIDArg = args.find(element => element.name == "channel-id");
-        let attachmentArg = args.find(element => element.name == "attachment");
+        let textMessage = interaction.options.getString("input");
+        let userIDArg = interaction.options.getString("user-id");
+        let channelIDArg = interaction.options.getString("channel-id");
+        let attachmentArg = interaction.options.getAttachment("attachment");
         let userID = null;
         let channelID = null;
 
         let attachment = null;
-        if (attachmentArg) attachment = attachmentArg.attachment.url;
+        if (attachmentArg) attachment = attachmentArg.url;
 
         let target;
         if (userIDArg || channelIDArg) {

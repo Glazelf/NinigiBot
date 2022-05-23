@@ -1,4 +1,4 @@
-exports.run = async (client, interaction, args = interaction.options._hoistedOptions) => {
+exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
@@ -14,12 +14,12 @@ exports.run = async (client, interaction, args = interaction.options._hoistedOpt
         let user = interaction.user;
 
         let ephemeral = true;
-        let ephemeralArg = args.find(element => element.name == "ephemeral");
-        if (ephemeralArg) ephemeral = ephemeralArg.value;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
 
-        let roleArgument = args.find(element => element.name == 'role');
+        let roleArgument = interaction.options.getRole('role');
         let requestRole = null;
-        if (roleArgument) requestRole = roleArgument.role;
+        if (roleArgument) requestRole = roleArgument;
         let adminBoolBot = await isAdmin(client, interaction.guild.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
