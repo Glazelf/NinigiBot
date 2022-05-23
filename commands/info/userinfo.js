@@ -91,7 +91,7 @@ exports.run = async (client, interaction) => {
             .setAuthor({ name: user.tag, iconURL: avatar })
             .setThumbnail(serverAvatar)
             .addField("Account:", `${user} ${badgesString}`, true)
-        if (!user.bot && !(roleCount > 0 && dbBalance !== 0)) profileEmbed.addField("Balance:", userBalance, true);
+        if (!user.bot && (roleCount > 0 && dbBalance !== 0)) profileEmbed.addField("Balance:", userBalance, true);
         if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
         if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
         profileEmbed
