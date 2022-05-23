@@ -127,7 +127,6 @@ module.exports = async (client, interaction) => {
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
-                interaction.deferReply();
                 switch (interaction.commandName) {
                     case "pokemon":
                         switch (focusedOption.name) {
@@ -161,7 +160,6 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
-                                console.log(2)
                                 await formats.forEach(format => {
                                     if (format.id.includes(focusedOption.value.toLowerCase())) choices.push({ name: format.id, value: format.id });
                                 });
@@ -215,7 +213,6 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: balance.toString(), value: balance });
                                 choices.push({ name: balanceHalf.toString(), value: balanceHalf });
                                 choices.push({ name: balanceQuarter.toString(), value: balanceQuarter });
-                                console.log(choices)
                                 break;
                             case "side":
                                 choices.push({ name: "Heads", value: "Heads" });
