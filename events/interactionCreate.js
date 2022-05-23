@@ -190,8 +190,8 @@ module.exports = async (client, interaction) => {
                                 let formatInput = interaction.options.getString("format");
                                 let formatInputValue = null;
                                 if (formatInput) {
-                                    formatInputValue = formatInput.value;
-                                    if (formatInputValue.toLowerCase() == "ou" || formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
+                                    formatInputValue = formatInput;
+                                    if (formatInputValue.toLowerCase() == "gen8ou") ratings = [0, 1500, 1695, 1825];
                                 };
                                 await ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
