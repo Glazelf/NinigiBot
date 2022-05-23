@@ -26,6 +26,7 @@ exports.run = async (client, interaction) => {
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
         if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).` });
+        if (!member.moderatable) return sendMessage({ client: client, interaction: interaction, content: `I don't have permissions to mute this user.` });
 
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
