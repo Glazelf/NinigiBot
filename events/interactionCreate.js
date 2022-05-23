@@ -248,11 +248,9 @@ module.exports = async (client, interaction) => {
                     case "inventory":
                         break;
                 };
-                console.log(4)
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return interaction.respond([]);
-                console.log(choices)
                 return interaction.respond(choices).catch(e => {
                     // console.log(e);
                 });
