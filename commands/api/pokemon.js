@@ -141,6 +141,8 @@ exports.run = async (client, interaction) => {
                 let format = "gen8vgc2022";
                 let formatArg = interaction.options.getString("format");
                 if (formatArg) format = formatArg;
+                // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
+                if (format == "gen7vgc2019") format = "gen7vgc2019ultraseries";
 
                 let monthArg = interaction.options.getInteger("month");
                 let yearArg = interaction.options.getInteger("year");
@@ -338,11 +340,12 @@ module.exports.config = {
             name: "format",
             type: "STRING",
             description: "Format to get data from.",
-            autocomplete: true
+            autocomplete: true,
+            required: true
         }, {
             name: "month",
             type: "INTEGER",
-            description: "Month to get data from."
+            description: "Month (number) to get data from."
         }, {
             name: "year",
             type: "INTEGER",
