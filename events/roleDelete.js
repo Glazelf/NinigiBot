@@ -35,7 +35,8 @@ module.exports = async (client, role) => {
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Deleted ❌`, iconURL: icon })
-                .addField(`Role:`, `${role.name} (${role.id})`);
+                .addField(`Role:`, `${role.name} (${role.id})`)
+                .setTimestamp();
 
             if (executor) {
                 deleteEmbed

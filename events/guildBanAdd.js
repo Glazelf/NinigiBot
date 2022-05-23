@@ -48,7 +48,8 @@ module.exports = async (client, guildBan) => {
                 .addField(`User:`, `${target} (${target.id})`, false)
                 .addField(`Reason:`, reason, false)
                 .addField(`Executor:`, `${executor.tag} (${executor.id})`, false)
-                .setFooter({ text: target.tag });
+                .setFooter({ text: target.tag })
+                .setTimestamp();
 
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 

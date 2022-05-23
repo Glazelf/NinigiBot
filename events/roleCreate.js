@@ -37,7 +37,8 @@ module.exports = async (client, role) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
                 .addField(`Role:`, `${role} (${role.id})`)
-                .addField(`Role name:`, role.name);
+                .addField(`Role name:`, role.name)
+                .setTimestamp();
 
             if (executor) {
                 createEmbed

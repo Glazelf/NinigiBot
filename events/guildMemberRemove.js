@@ -28,7 +28,8 @@ module.exports = async (client, member) => {
 
             let leaveEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`);
+                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setTimestamp();
 
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
