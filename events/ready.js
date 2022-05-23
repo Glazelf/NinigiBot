@@ -9,18 +9,6 @@ module.exports = async (client) => {
         const getTime = require('../util/getTime');
 
         // Set interactions
-        if (!client.application?.owner) await client.application?.fetch();
-
-        let ownerPerm = [
-            {
-                id: client.config.ownerID,
-                type: 'USER',
-                permission: true
-            }
-        ];
-        let ownerCommandServerID = "759344085420605471";
-        let ownerCommandServer = client.guilds.cache.get(ownerCommandServerID);
-
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerID = null;

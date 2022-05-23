@@ -5,8 +5,10 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const isOwner = require('../../util/isOwner');
+        let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         const input = interaction.options.getString("input");
         try {

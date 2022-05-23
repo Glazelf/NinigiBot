@@ -4,8 +4,10 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const isOwner = require('../../util/isOwner');
         const Discord = require("discord.js");
         const axios = require("axios");
+        let ownerBool = await isOwner(client, interaction.user);
 
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
@@ -75,7 +77,7 @@ exports.run = async (client, interaction) => {
             .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true);
-        if (interaction.user.id == client.config.ownerID) botEmbed.addField("Memory Usage:", memoryUsage, true);
+        if (ownerBool) botEmbed.addField("Memory Usage:", memoryUsage, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)

@@ -3,9 +3,10 @@ exports.run = async (client, interaction) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
-        // Either wait for slash command attachments or some other way of getting an image
         const sendMessage = require('../../util/sendMessage');
-        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        const isOwner = require('../../util/isOwner');
+        let ownerBool = await isOwner(client, interaction.user);
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let avatarArg = interaction.options.getAttachment("avatar");
 

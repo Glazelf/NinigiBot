@@ -4,11 +4,13 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
         const forever = require('forever');
+        const isAdmin = require('../../util/isAdmin');
+        const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
+        let ownerBool = await isOwner(client, interaction.user);
 
-        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");

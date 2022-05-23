@@ -5,9 +5,11 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
+        const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
-
-        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        let adminBool = isAdmin(client, interaction.user);
+        let ownerBool = await isOwner(client, interaction.user);
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");

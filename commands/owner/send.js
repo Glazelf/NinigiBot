@@ -4,7 +4,9 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        if (interaction.user.id !== client.config.ownerID) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        const isOwner = require('../../util/isOwner');
+        let ownerBool = await isOwner(client, interaction.user);
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         // Split off command
         let textMessage = interaction.options.getString("input");
