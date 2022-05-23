@@ -153,12 +153,14 @@ module.exports = async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "pokemon":
                                 let pokemonSpecies = Dex.species.all();
+                                let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && species.exists
                                         && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP") choices.push({ name: pokemonIdentifier, value: species.name });
+                                        && species.isNonstandard !== "CAP"
+                                        && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
                             case "ability":
