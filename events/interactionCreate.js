@@ -187,7 +187,7 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "rating":
                                 let ratings = [0, 1500, 1630, 1760];
-                                let formatInput = interaction.options._hoistedOptions.find(element => element.name == "format");
+                                let formatInput = interaction.options.getString("format");
                                 let formatInputValue = null;
                                 if (formatInput) {
                                     formatInputValue = formatInput.value;
