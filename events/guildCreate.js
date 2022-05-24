@@ -16,8 +16,8 @@ module.exports = async (client, guild) => {
             .setAuthor({ name: `Guild Joined ⭐`, iconURL: icon })
             .setThumbnail(icon)
             .setDescription(`${guild.name}`)
-            .addField(`Owner:`, `${guildOwner.tag} (${guildOwner.id})`, true)
-            .addField(`Users:`, guild.memberCount.toString(), true)
+            .addField(`Owner:`, `${guildOwner.user.tag} (${guildOwner.id})`, false)
+            .addField(`Users:`, guild.memberCount.toString(), false)
             .setFooter({ text: guild.id })
             .setTimestamp();
 

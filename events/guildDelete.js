@@ -5,7 +5,7 @@ module.exports = async (client, guild) => {
     try {
         const Discord = require("discord.js");
 
-        let log = client.channels.fetch(client.config.devChannelID);
+        let log = await client.channels.fetch(client.config.devChannelID);
         if (!log) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
@@ -16,9 +16,9 @@ module.exports = async (client, guild) => {
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
             .setThumbnail(icon)
             .setDescription(`${guild.name}`);
-        if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.tag} (${guildOwner.id})`, true);
+        if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.user.tag} (${guildOwner.id})`, false);
         guildEmbed
-            .addField(`Users:`, guild.memberCount.toString(), true)
+            .addField(`Users:`, guild.memberCount.toString(), false)
             .setFooter({ text: guild.id })
             .setTimestamp();
 
