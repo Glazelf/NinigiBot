@@ -18,4 +18,3 @@ module.exports = async (client, id) => {
         console.log(e);
     };
 };
-

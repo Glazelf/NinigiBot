@@ -60,5 +60,5 @@ module.exports = async (client, channel) => {
     } catch (e) {
         // Log error
         logger(e, client);
-    }
-}
+    };
+};
