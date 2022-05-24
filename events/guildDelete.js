@@ -14,7 +14,7 @@ module.exports = async (client, guild) => {
         const guildEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
-            .setThumbnail(icon);
+            .setThumbnail(icon)
             .setDescription(`${guild.name}`);
         if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.tag} (${guildOwner.id})`, true);
         guildEmbed
