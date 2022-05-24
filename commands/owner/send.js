@@ -33,11 +33,9 @@ exports.run = async (client, interaction) => {
         if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
 
         try {
-            if (attachment) {
-                await target.send({ content: textMessage, files: [attachment] });
-            } else {
-                await target.send({ content: textMessage });
-            };
+            let messageObject = { content: textMessage };
+            if (attachment) messageObject["files"] = [attachment];
+            await target.send(messageObject);
             return sendMessage({ client: client, interaction: interaction, content: `Message succesfully sent to ${targetFormat}.` });
         } catch (e) {
             // console.log(e);
