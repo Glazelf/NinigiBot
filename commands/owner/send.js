@@ -13,31 +13,31 @@ exports.run = async (client, interaction) => {
         let userIDArg = interaction.options.getString("user-id");
         let channelIDArg = interaction.options.getString("channel-id");
         let attachmentArg = interaction.options.getAttachment("attachment");
-        let userID = null;
-        let channelID = null;
-
         let attachment = null;
         if (attachmentArg) attachment = attachmentArg.url;
 
         let target;
         if (userIDArg || channelIDArg) {
             try {
-                if (channelID) target = await client.channels.fetch(channelID)
-                if (userIDArg) target = await client.users.fetch(userID);
-
+                if (channelIDArg) target = await client.channels.fetch(channelIDArg);
+                if (userIDArg) target = await client.users.fetch(userIDArg);
             } catch (e) {
                 // console.log(e);
             };
         } else {
             return sendMessage({ client: client, interaction: interaction, content: `Please provide a user ID or channel ID.` });
         };
+
+        if (!target) return sendMessage({ client: client, interaction: interaction, content: `I could not find a user or channel with that ID.` });
         let targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
         if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
 
-        if (!target) return sendMessage({ client: client, interaction: interaction, content: `I could not find a user or channel with that ID.` });
-
         try {
-            await target.send({ content: textMessage, files: [attachment] });
+            if (attachment) {
+                await target.send({ content: textMessage, files: [attachment] });
+            } else {
+                await target.send({ content: textMessage });
+            };
             return sendMessage({ client: client, interaction: interaction, content: `Message succesfully sent to ${targetFormat}.` });
         } catch (e) {
             // console.log(e);
