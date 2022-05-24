@@ -10,15 +10,15 @@ exports.run = async (client, interaction) => {
         if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
         if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
-        let startingSlot = interaction.options.getInteger("starting-slot");
-        let endingSlot = interaction.options.getInteger("ending-slot");
+        let firstSlot = interaction.options.getInteger("first-slot");
+        let lastSlot = interaction.options.getInteger("last-slot");
         let betAmount = interaction.options.getInteger("bet-amount");
 
-        if (endingSlot < startingSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
-        if (startingSlot < 1 || endingSlot < 1 || startingSlot > 36 || endingSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 1 and 36.` });
+        if (lastSlot < firstSlot) return sendMessage({ client: client, interaction: interaction, content: `Your first number has to be lower than your second number.` });
+        if (firstSlot < 1 || lastSlot < 1 || firstSlot > 36 || lastSlot > 36) return sendMessage({ client: client, interaction: interaction, content: `Both of your numbers have to be between 1 and 36.` });
 
         const bets = new Set();
-        for (let i = startingSlot; i <= endingSlot; i++) {
+        for (let i = firstSlot; i <= lastSlot; i++) {
             bets.add(i);
         };
 
@@ -44,12 +44,12 @@ module.exports.config = {
     name: "bet",
     description: "Bet on an ongoing roulette.",
     options: [{
-        name: "starting-slot",
+        name: "first-slot",
         type: "INTEGER",
         description: "The first slot you want to bet on.",
         required: true
     }, {
-        name: "ending-slot",
+        name: "last-slot",
         type: "INTEGER",
         description: "The last slot you want to bet on.",
         required: true
