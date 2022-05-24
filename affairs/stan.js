@@ -19,7 +19,8 @@ module.exports = async (client) => {
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
 
-            let candidates = guild.roles.cache.find(role => role.name.toLowerCase() === globalVars.stanRole).members.map(m => m.user);
+            let stanRoleID = "743144948328562729";
+            let candidates = guild.roles.cache.find(role => role.id == stanRoleID).members.map(m => m.user);
             if (candidates.length < 1) return;
 
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));

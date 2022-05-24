@@ -20,7 +20,8 @@ module.exports = async (client) => {
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
 
-            const birthdayRole = guild.roles.cache.find(role => role.id === globalVars.birthdayRole);
+            let birthdayRoleID = "744719808058228796";
+            const birthdayRole = guild.roles.cache.find(role => role.id === birthdayRoleID);
             if (!birthdayRole) return;
 
             let yesterdayCuties = birthdayRole.members;

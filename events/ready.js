@@ -52,8 +52,6 @@ function initPresence() {
     return presence;
 };
 
-module.exports.birthdayRole = "744719808058228796";
-module.exports.botChannelID = "747878956434325626";
 module.exports.NinigiID = "592760951103684618";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
@@ -61,7 +59,6 @@ module.exports.lackPerms = "You do not have the required permissions to do this.
 module.exports.eventChannelID = "752626723345924157"; // General2
 //module.exports.eventChannelID = "665274079397281835"; // Old stan channel
 //module.exports.eventChannelID = "593014621095329812";  // Testing
-module.exports.stanRole = "stan";
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.presence = initPresence();
