@@ -119,6 +119,9 @@ exports.run = async (client, interaction) => {
             // };
         });
 
+        let serverButtons = new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${interaction.guild.id}/@home` }));
+
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name} (${guild.id})`, iconURL: icon })
@@ -150,7 +153,7 @@ exports.run = async (client, interaction) => {
             .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true);
         if (banner) serverEmbed.setImage(banner);
 
-        return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons });
 
     } catch (e) {
         // Log error
