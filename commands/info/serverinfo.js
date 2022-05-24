@@ -124,7 +124,7 @@ exports.run = async (client, interaction) => {
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `${guild.name} (${guild.id})`, iconURL: icon })
+            .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
@@ -150,7 +150,8 @@ exports.run = async (client, interaction) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true);
+            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true)
+            .setFooter({ text: guild.id });
         if (banner) serverEmbed.setImage(banner);
 
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons });
