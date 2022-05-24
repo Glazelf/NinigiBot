@@ -5,7 +5,7 @@ module.exports = async (client, guild) => {
     try {
         const Discord = require("discord.js");
 
-        let log = client.channels.fetch(client.config.devChannelID);
+        let log = await client.channels.fetch(client.config.devChannelID);
         if (!log) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
