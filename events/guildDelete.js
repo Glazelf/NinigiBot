@@ -24,11 +24,8 @@ module.exports = async (client, guild) => {
 
         return log.send({ embeds: [guildEmbed] });
 
-    } else {
-        return;
+    } catch (e) {
+        // Log error
+        logger(e, client);
     };
-
-} catch (e) {
-    // Log error
-    logger(e, client);
 };
