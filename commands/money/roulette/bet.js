@@ -10,6 +10,9 @@ exports.run = async (client, interaction) => {
         if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
         if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let firstSlot = interaction.options.getInteger("first-slot");
         let lastSlot = interaction.options.getInteger("last-slot");
         let betAmount = interaction.options.getInteger("bet-amount");

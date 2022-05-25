@@ -35,6 +35,7 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
         messageObject['allowedMentions'] = { repliedUser: false, roles: false };
 
         try {
+            if (interaction.deferred) return interaction.editReply(messageObject);
             return interaction.reply(messageObject);
         } catch (e) {
             // console.log(e);

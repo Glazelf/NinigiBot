@@ -9,6 +9,8 @@ exports.run = async (client, interaction) => {
         const { bank } = require('../../../database/bank');
         const randomNumber = require('../../../util/randomNumber');
 
+        let ephemeral = false;
+
         let process = null;
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
         roulette.shift();
@@ -56,7 +58,7 @@ exports.run = async (client, interaction) => {
 The roulette will spin and a slot will be chosen, people who bet on that slot will get 36x their slot investment.`)
                 .setImage('https://i.imgur.com/MPKiQM2.png');
 
-            return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: ephemeral });
         } else {
             return sendMessage({ client: client, interaction: interaction, content: `A roulette is already ongoing!` });
         };

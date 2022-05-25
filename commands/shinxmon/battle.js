@@ -40,6 +40,9 @@ exports.run = async (client, interaction) => {
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };
 
+        let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         await interaction.channel.send({ content: `Do you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept` });
         const filter = m => m.author.id == trainers[1].id;
         const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });

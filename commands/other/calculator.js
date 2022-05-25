@@ -6,6 +6,9 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let maxMessageLength = 2000;
         let noInputString = `You need to provide a valid input.`;
 

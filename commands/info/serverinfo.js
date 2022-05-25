@@ -9,6 +9,9 @@ exports.run = async (client, interaction) => {
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let guild = interaction.guild;
         await guild.members.fetch();
         await guild.channels.fetch();

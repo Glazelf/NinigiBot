@@ -6,6 +6,9 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let day = interaction.options.getString("day");
         let month = interaction.options.getString("month");
         let date = `${day}-${month}`;

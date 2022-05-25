@@ -5,6 +5,10 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
+
+        let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         const currentBalance = await bank.currency.getBalance(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");
         let transferTarget = interaction.options.getUser("user");
@@ -19,7 +23,7 @@ exports.run = async (client, interaction) => {
         bank.currency.add(interaction.user.id, -transferAmount);
         bank.currency.add(transferTarget.id, transferAmount);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: false });
+        return sendMessage({ client: client, interaction: interaction, content: `Successfully transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

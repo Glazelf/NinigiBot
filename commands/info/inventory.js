@@ -8,6 +8,9 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let inventoryCat = interaction.options.getString("category").toLowerCase();
 
         if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {

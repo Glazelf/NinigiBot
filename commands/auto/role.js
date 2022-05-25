@@ -8,14 +8,14 @@ exports.run = async (client, interaction) => {
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles } = require('../../database/dbObjects');
 
-        await interaction.guild.roles.fetch();
-
-        let member = interaction.member;
-        let user = interaction.user;
-
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
+        await interaction.guild.roles.fetch();
+        let member = interaction.member;
+        let user = interaction.user;
 
         let roleArgument = interaction.options.getRole('role');
         let requestRole = null;

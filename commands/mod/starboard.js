@@ -10,6 +10,9 @@ exports.run = async (client, interaction) => {
         const { StarboardLimits } = require('../../database/dbObjects');
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let oldChannel = await StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
         let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
         let starlimit = null;

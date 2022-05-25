@@ -9,6 +9,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let user = null;
         let member = null;
         let userArg = interaction.options.getUser("user");
@@ -65,7 +68,7 @@ exports.run = async (client, interaction) => {
                 };
 
                 await member.ban({ days: 0, reason: `${reason} ${reasonInfo}` });
-                return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: false });
+                return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: banFailString });
@@ -86,7 +89,7 @@ exports.run = async (client, interaction) => {
             // Ban
             try {
                 await interaction.guild.members.ban(memberID, { days: 0, reason: `${reason} ${reasonInfo}` });
-                return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: false });
+                return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {

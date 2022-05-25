@@ -7,6 +7,11 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
+        let ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let input = interaction.options.getString("input");
         let severityArg = interaction.options.getInteger("severity");
         let severity = "owo";
@@ -15,9 +20,6 @@ exports.run = async (client, interaction) => {
             if (severityArg == 2) severity = "uwu";
             if (severityArg >= 3) severity = "uvu";
         };
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
 
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);

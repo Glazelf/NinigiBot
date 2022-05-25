@@ -12,6 +12,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
 
         // Heads / Tails + Amounts
         let validSides = ["heads", "tails"];

@@ -9,6 +9,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
@@ -41,7 +44,7 @@ exports.run = async (client, interaction) => {
             };
 
             await member.kick([`${reason} ${reasonInfo}`]);
-            return sendMessage({ client: client, interaction: interaction, content: kickReturn, ephemeral: false });
+            return sendMessage({ client: client, interaction: interaction, content: kickReturn, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) {

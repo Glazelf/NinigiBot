@@ -57,6 +57,9 @@ exports.run = async (client, interaction) => {
         const { Users } = require('../../database/dbObjects');
         const Discord = require("discord.js");
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let master = interaction.user
         let shinx = await bank.currency.getShinx(master.id);
         const user = await Users.findOne({ where: { user_id: master.id } });

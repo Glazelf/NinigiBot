@@ -6,6 +6,8 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
+        let ephemeral = false;
+
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let input = message.content;
         let questionAskUser = message.author;
@@ -27,7 +29,7 @@ exports.run = async (client, interaction) => {
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleButton, ephemeral: false });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleButton, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

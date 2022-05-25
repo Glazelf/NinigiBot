@@ -9,6 +9,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
@@ -50,7 +53,7 @@ exports.run = async (client, interaction) => {
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
-            return sendMessage({ client: client, interaction: interaction, content: muteReturnString });
+            return sendMessage({ client: client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
             if (e.toString().includes("Missing Permissions")) return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle timeout on **${user.tag}**. I probably lack permissions.` });

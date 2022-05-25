@@ -7,6 +7,9 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let role = interaction.options.getRole("role");
         let user = interaction.user;
         let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);

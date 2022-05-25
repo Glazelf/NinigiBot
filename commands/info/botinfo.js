@@ -9,6 +9,9 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;

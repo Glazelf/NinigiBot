@@ -13,6 +13,9 @@ exports.run = async (client, interaction) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let colorArg = interaction.options.getString('color-hex');
         let iconArg = interaction.options.getAttachment("icon");
         let deleteArg = interaction.options.getBoolean("delete");

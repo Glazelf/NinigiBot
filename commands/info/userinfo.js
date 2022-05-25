@@ -10,6 +10,9 @@ exports.run = async (client, interaction) => {
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let user = interaction.options.getUser("user");
         user = await client.users.fetch(user.id, { force: true });
         let member = await interaction.guild.members.fetch(user.id);

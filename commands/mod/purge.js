@@ -8,6 +8,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let amount = interaction.options.getInteger("amount");
         let maxNumberOfMessages = 100;
         if (amount > maxNumberOfMessages) amount = maxNumberOfMessages;
