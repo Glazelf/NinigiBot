@@ -6,9 +6,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
 
-        let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         const currentBalance = await bank.currency.getBalance(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");
         let transferTarget = interaction.options.getUser("user");

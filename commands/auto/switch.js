@@ -9,9 +9,6 @@ exports.run = async (client, interaction) => {
         let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
         let switchFC = interaction.options.getString('switch-fc');
 
-        let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         let invalidString = `Please specify a valid Nintendo Switch friend code.`;
 
         // Present code if no code is supplied as an argument
