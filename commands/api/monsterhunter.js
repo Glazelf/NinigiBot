@@ -235,6 +235,7 @@ exports.run = async (client, interaction) => {
 
                     let monsterURLName = monsterData.name;
                     if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
+                    if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
 
                     if (isOnlyInGU) {
                         gameDBName = "MHGU";
