@@ -10,6 +10,8 @@ exports.run = async (client, interaction) => {
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        await interaction.deferReply({ ephemeral: true });
+
         const input = interaction.options.getString("input");
         try {
             var evaled = eval(input);

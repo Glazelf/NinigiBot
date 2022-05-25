@@ -8,8 +8,9 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let avatarArg = interaction.options.getAttachment("avatar");
+        await interaction.deferReply({ ephemeral: true });
 
+        let avatarArg = interaction.options.getAttachment("avatar");
         let iconImg = avatarArg.url;
         let iconSize = Math.ceil(iconArg.size / 1000);
         let fileIsImg = false;
