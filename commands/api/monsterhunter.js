@@ -305,8 +305,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
                     .setThumbnail(monsterRender);
                 if (monsterDescription) mhEmbed.setDescription(monsterDescription);
-                mhEmbed
-                    .addField("Size:", monsterSize, true)
+                if (!monsterData.isLarge) mhEmbed.addField("Size:", monsterSize, true);
                 if (monsterDanger) mhEmbed.addField("Danger:", `${monsterDanger}⭐`, true);
                 if (monsterElements.length > 0) mhEmbed.addField("Element:", monsterElements, true);
                 if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness:", monsterWeaknesses, true);
