@@ -21,10 +21,14 @@ exports.run = async (client, interaction) => {
         };
         let userIDArg = interaction.options.getString("user-id");
         let author = interaction;
-
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
+        let deleteMessageDays = 0;
+        let deleteMessageDaysArg = interaction.options.getInteger("delete-messages-days");
+        if (deleteMessageDaysArg) deleteMessageDays = deleteMessageDaysArg;
+        if (deleteMessageDays < 0) deleteMessageDays = 0;
+        if (deleteMessageDays > 7) deleteMessageDays = 7;
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
@@ -67,15 +71,15 @@ exports.run = async (client, interaction) => {
                     banReturn += " (DM Failed)";
                 };
 
-                await member.ban({ days: 0, reason: `${reason} ${reasonInfo}` });
+                // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too
+                await member.ban({ reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: banFailString });
             };
-
-            // If user isn't found, try to ban by ID
         } else {
+            // If user isn't found, try to ban by ID
             if (!userIDArg) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban.` });
             let memberID = userIDArg;
 
@@ -85,10 +89,8 @@ exports.run = async (client, interaction) => {
             };
 
             banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
-
-            // Ban
             try {
-                await interaction.guild.members.ban(memberID, { days: 0, reason: `${reason} ${reasonInfo}` });
+                await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
@@ -117,6 +119,10 @@ module.exports.config = {
         name: "reason",
         type: "STRING",
         description: "Reason for ban."
+    }, {
+        name: "delete-messages-days",
+        type: "INTEGER",
+        description: "Amount of days to delete messages for. (0-7)"
     }, {
         name: "user-id",
         type: "STRING",
