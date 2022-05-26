@@ -5,6 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const crypto = require('crypto');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
 
@@ -196,6 +197,9 @@ exports.run = async (client, interaction) => {
                 let MHW = "Monster Hunter World";
                 let MHGU = "Monster Hunter Generations Ultimate";
 
+                let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+                let gameDBName;
+
                 // Get icon, description and game appearances
                 let monsterIcon;
                 let monsterBanner = null;
@@ -211,13 +215,13 @@ exports.run = async (client, interaction) => {
                     gameAppearances += game.game + "\n";
                     // Works because games are in chronological order
                     if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
-                        monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${game.image}?raw=true`;
+                        monsterIcon = `${iconsRepo}${game.image}?raw=true`;
                         monsterDescription = game.info;
                         monsterDanger = game.danger;
                     };
                 });
                 // If it isn't in the most recent mainline game; instead use the most recent game it's been in
-                if (!monsterIcon) monsterIcon = `https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/${mostRecentGameEntry.image}?raw=true`;
+                if (!monsterIcon) monsterIcon = `${iconsRepo}${mostRecentGameEntry.image}?raw=true`;
                 if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
                 if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
 
@@ -227,7 +231,7 @@ exports.run = async (client, interaction) => {
                 if (isInImageDBGame) {
                     let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
                     let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
-                    let gameDBName = "MHRise";
+                    gameDBName = "MHRise";
                     let gameDBBranchName = "main";
 
                     let monsterSize = "monster";
@@ -249,6 +253,14 @@ exports.run = async (client, interaction) => {
                     if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
                     monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
                 };
+
+                let monsterGameIndicator = gameDBName;
+                if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
+                let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
+                let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
+                let md5first = md5.substring(0, 1);
+                let md5duo = md5.substring(0, 2);
+                let monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
 
                 // Format size
                 let monsterSize = "Small";
@@ -290,8 +302,8 @@ exports.run = async (client, interaction) => {
                 };
 
                 mhEmbed
-                    .setAuthor({ name: `${monsterData.name} (${monsterData.type})` })
-                    .setThumbnail(monsterIcon);
+                    .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
+                    .setThumbnail(monsterRender);
                 if (monsterDescription) mhEmbed.setDescription(monsterDescription);
                 mhEmbed
                     .addField("Size:", monsterSize, true)
