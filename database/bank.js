@@ -113,6 +113,8 @@ module.exports = {
                             user.balance = Math.floor(user.balance);
                             return user.save();
                         };
+                        const oldUser = await Users.findOne({ where: { user_id: id } });
+                        if (oldUser) await oldUser.destroy();
                         const newUser = await Users.create({ user_id: id, balance: amount });
                         money.set(id, newUser);
                         return newUser;
