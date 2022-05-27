@@ -1,6 +1,6 @@
 # NinigiBot
 NinigiBot for Discord  
-<a href="https://discordapp.com/oauth2/authorize?client_id=592760951103684618&scope=bot%20applications.commands&permissions=8">Invite link</a>
+<a href="https://discordapp.com/oauth2/authorize?client_id=592760951103684618&permissions=8&scope=bot%20applications.commands">Invite link</a>
 
 ## Support
 If you think you have found a bug please [create an issue](https://github.com/Glazelf/NinigiBot/issues/new?assignees=Glazelf&labels=bug&template=bug_report.md) describing the problem so we can look into fixing it.  
