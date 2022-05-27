@@ -47,27 +47,6 @@ module.exports = async (client, message) => {
     ];
     let adRegex = new RegExp(adLinks.join("|"), "i");
 
-    const globalSlurs = [
-        "(n){1,32}(i|l){1,32}((g{2,32}|q){1,32}|[gq]{2,32}|(b){2,32})((er){1,32}|[ra]{1,32})", // Variations of the n-word
-        "neger", // Thanks Ewok
-        "niglet", // Thanks Ewok but idt I can easily fit this one into the regex above
-        "faggot",
-        "tranny",
-        "(retard)(?!ation)" // Retard but not retardation
-    ];
-    let slurRegex = new RegExp(globalSlurs.join("|"), "i");
-
-    // Language exceptions currently unused
-    const exceptionsFrench = [
-        "retard"
-    ];
-    let exceptionsFrenchRegex = new RegExp(exceptionsFrench.join("|"), "i");
-
-    const exceptionsSpanish = [
-        "negro"
-    ];
-    let exceptionsSpanishRegex = new RegExp(exceptionsSpanish.join("|"), "i");
-
     const testArray = [
         "triceratops"
     ];
@@ -81,21 +60,12 @@ module.exports = async (client, message) => {
         await ban();
         return true;
     };
-
-    // Slurs
-    if (slurRegex.test(message.content) || slurRegex.test(messageNormalized)) {
-        reason = "Using slurs.";
-        await msgDelete();
-        return true;
-    };
-
     // Ad links
     if (adRegex.test(message.content) && memberRoles.size == 0) {
         reason = "Advertisement.";
         await msgDelete();
         return true;
     };
-
     // Test
     // if (testRegex.test(messageNormalized)) {
     //     test();
