@@ -57,9 +57,9 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed
                     .setAuthor({ name: item.name })
                     .setThumbnail(itemImage)
-                    .setDescription(item.desc)
-                    .addField("Introduced:", `Gen ${item.gen}`, true);
+                    .setDescription(item.desc);
                 if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
+                pokemonEmbed.addField("Introduced:", `Gen ${item.gen}`, true);
                 break;
 
             // Moves
@@ -94,20 +94,20 @@ exports.run = async (client, interaction) => {
 
                 pokemonEmbed
                     .setAuthor({ name: moveTitle })
-                    .setDescription(description)
-                    .addField("Introduced:", `Gen ${move.gen}`, true)
-                    .addField("Type:", type, true)
-                    .addField("Category:", category, true);
+                    .setDescription(description);
                 if (move.basePower > 0 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
-                pokemonEmbed.addField("Target:", target, true);
-                if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
                 pokemonEmbed
-                    .addField("Accuracy:", accuracy, true);
+                    .addField("Accuracy:", accuracy, true)
+                    .addField("Type:", type, true)
+                    .addField("Category:", category, true)
+                    .addField("Target:", target, true);
+                if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
                 if (ppString) pokemonEmbed.addField("PP:", ppString, true);
                 if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
                 // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
                 if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
+                pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
 
             // Pokémon
