@@ -260,6 +260,49 @@ module.exports = async (client, interaction) => {
                 });
                 break;
 
+            case "MODAL_SUBMIT":
+                let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                switch (interaction.customId) {
+                    case "bugReportModal":
+                        const bugReportTitle = interaction.fields.getTextInputValue('bugReportTitle');
+                        const bugReportDescribe = interaction.fields.getTextInputValue('bugReportDescribe');
+                        const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
+                        const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
+                        const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
+                        let DMChannel = await client.channels.fetch(client.config.devChannelID);
+
+                        const bugReportEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor({ name: `Bug Report` })
+                            .setThumbnail(userAvatar)
+                            .setTitle(bugReportTitle)
+                            .setDescription(bugReportDescribe)
+                            .addField("Reproduce:", bugReportReproduce, false)
+                            .addField("Expected Behaviour:", bugReportBehaviour, false)
+                            .addField("Device Context:", bugReportContext, false)
+                            .setFooter({ text: interaction.user.tag });
+
+                        await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                        return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
+                        break;
+                    case "modMailModal":
+                        const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
+                        const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
+
+                        const modMailEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor({ name: `Mod Mail 💌` })
+                            .setThumbnail(userAvatar)
+                            .setTitle(modMailTitle)
+                            .setDescription(modMailDescribe)
+                            .setFooter({ text: interaction.user.tag });
+
+                        await interaction.guild.publicUpdatesChannel.send({ content: interaction.user.id, embeds: [modMailEmbed] });
+                        return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        break;
+                };
+                return;
+
             case "PING":
                 return;
 
