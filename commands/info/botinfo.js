@@ -75,7 +75,7 @@ exports.run = async (client, interaction) => {
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: client.user.username, iconURL: avatar })
+            .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)

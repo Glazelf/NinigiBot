@@ -31,7 +31,7 @@ module.exports = async (client, message) => {
 
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `DM Message`, iconURL: avatar })
+                .setAuthor({ name: `DM Message` })
                 .setThumbnail(avatar)
                 .addField(`Author:`, message.author.tag, false)
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
