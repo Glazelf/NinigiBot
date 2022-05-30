@@ -259,7 +259,6 @@ module.exports = async (client, interaction) => {
                     // console.log(e);
                 });
                 break;
-
             case "MODAL_SUBMIT":
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
@@ -302,10 +301,8 @@ module.exports = async (client, interaction) => {
                         break;
                 };
                 return;
-
             case "PING":
                 return;
-
             default:
                 return;
         };
