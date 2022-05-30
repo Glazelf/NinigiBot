@@ -33,11 +33,10 @@ module.exports = async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `DM Message`, iconURL: avatar })
                 .setThumbnail(avatar)
-                .addField(`Author:`, `${message.author} (${message.author.id})`, false)
+                .addField(`Author:`, message.author.tag, false)
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)
-                .setFooter({ text: message.author.tag })
                 .setTimestamp();
 
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
