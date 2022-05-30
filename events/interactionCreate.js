@@ -3,8 +3,9 @@ module.exports = async (client, interaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
-        let isAdmin = require('../util/isAdmin');
+        const Discord = require("discord.js");
         let sendMessage = require('../util/sendMessage');
+        let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
         const randomNumber = require('../util/randomNumber');
         const { Dex } = require('pokemon-showdown');
@@ -15,7 +16,6 @@ module.exports = async (client, interaction) => {
 
         if (!interaction) return;
         if (interaction.user.bot) return;
-
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
