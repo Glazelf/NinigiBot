@@ -58,8 +58,7 @@ exports.run = async (client, interaction) => {
         const actionRow5 = new Discord.MessageActionRow().addComponents(contextInput);
 
         modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
-        await interaction.showModal(modal);
-        return;
+        return interaction.showModal(modal);
 
     } catch (e) {
         // Log error

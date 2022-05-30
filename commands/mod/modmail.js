@@ -34,8 +34,7 @@ exports.run = async (client, interaction) => {
         const actionRow2 = new Discord.MessageActionRow().addComponents(descriptionInput);
 
         modal.addComponents(actionRow1, actionRow2);
-        await interaction.showModal(modal);
-        return;
+        return interaction.showModal(modal);
 
     } catch (e) {
         // Log error
