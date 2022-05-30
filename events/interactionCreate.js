@@ -3,8 +3,9 @@ module.exports = async (client, interaction) => {
     // Import globals
     let globalVars = require('./ready');
     try {
-        let isAdmin = require('../util/isAdmin');
+        const Discord = require("discord.js");
         let sendMessage = require('../util/sendMessage');
+        let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
         const randomNumber = require('../util/randomNumber');
         const { Dex } = require('pokemon-showdown');
@@ -15,7 +16,6 @@ module.exports = async (client, interaction) => {
 
         if (!interaction) return;
         if (interaction.user.bot) return;
-
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
@@ -259,6 +259,34 @@ module.exports = async (client, interaction) => {
                     // console.log(e);
                 });
                 break;
+
+            case "MODAL_SUBMIT":
+                switch (interaction.customId) {
+                    case "bugReportModal":
+                        const bugReportTitle = interaction.fields.getTextInputValue('bugReportTitle');
+                        const bugReportDescribe = interaction.fields.getTextInputValue('bugReportDescribe');
+                        const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
+                        const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
+                        const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
+                        let DMChannel = await client.channels.fetch(client.config.devChannelID);
+                        let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
+
+                        const bugReportEmbed = new Discord.MessageEmbed()
+                            .setColor(globalVars.embedColor)
+                            .setAuthor({ name: `Bug Report` })
+                            .setThumbnail(userAvatar)
+                            .setDescription(bugReportTitle)
+                            .addField("Description:", bugReportDescribe, false)
+                            .addField("Reproduce:", bugReportReproduce, false)
+                            .addField("Expected Behaviour:", bugReportBehaviour, false)
+                            .addField("Device Context:", bugReportContext, false)
+                            .setFooter({ text: interaction.user.tag });
+
+                        await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
+                        return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
+                        break;
+                };
+                return;
 
             case "PING":
                 return;
