@@ -125,5 +125,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "botinfo",
-    description: `Displays info on this bot.`
+    description: `Displays info about this bot.`
 };
