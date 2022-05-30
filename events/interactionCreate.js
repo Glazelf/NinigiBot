@@ -288,6 +288,9 @@ module.exports = async (client, interaction) => {
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
 
+                        let profileButtons = new Discord.MessageActionRow()
+                            .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${interaction.user.id}` }));
+
                         const modMailEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Mod Mail 💌` })
@@ -296,7 +299,7 @@ module.exports = async (client, interaction) => {
                             .setDescription(modMailDescribe)
                             .setFooter({ text: interaction.user.tag });
 
-                        await interaction.guild.publicUpdatesChannel.send({ content: interaction.user.id, embeds: [modMailEmbed] });
+                        await interaction.guild.publicUpdatesChannel.send({ content: interaction.user.id, embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                         break;
                 };
