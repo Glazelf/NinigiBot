@@ -9,8 +9,6 @@ exports.run = async (client, interaction) => {
 
         if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ client: client, interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
 
-        console.log(interaction.guild.publicUpdatesChannel)
-
         const modal = new Discord.Modal()
             .setCustomId('modMailModal')
             .setTitle('Mod Mail 📧');
