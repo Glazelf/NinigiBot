@@ -5,9 +5,12 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const isAdmin = require('../../util/isAdmin');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
         let ShardUtil;
+
+        let adminBool = isAdmin(client, interaction.member);
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -94,7 +97,7 @@ exports.run = async (client, interaction) => {
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) boosterString = boosterString + nitroEmote;
+        if (guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) boosterString = boosterString + nitroEmote;
 
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
@@ -104,7 +107,7 @@ exports.run = async (client, interaction) => {
         let guildOwner = await guild.fetchOwner();
 
         // Rules
-        let rules
+        let rules = null;
         if (guild.rulesChannel) rules = guild.rulesChannel;
 
         // Text channels
@@ -123,7 +126,10 @@ exports.run = async (client, interaction) => {
         });
 
         let serverButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${interaction.guild.id}/@home` }));
+            .addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+
+        let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
+        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -140,7 +146,7 @@ exports.run = async (client, interaction) => {
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
             .addField("Members:", guild.memberCount.toString(), true)
-            // .addField("Human Members:", humanMemberCount.toString(), true)
+            // .addField("Human Members:", humanMemberCount.toString(), true) // Redundant info
             .addField("Bots:", `${botMembers.size} 🤖`, true)
             .addField("Channels:", channelCount.toString(), true);
         // Change "Active Threads" to "Threads" when archived threads get added
