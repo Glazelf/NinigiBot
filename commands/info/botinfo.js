@@ -85,8 +85,8 @@ exports.run = async (client, interaction) => {
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:R>`, true)
-            .addField("Online Since:", `<t:${onlineSince}:R>`, true);
+            .addField("Created:", `<t:${createdAt}:R>`, true);
+        if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
