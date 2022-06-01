@@ -15,7 +15,6 @@ module.exports = async (client, member, newMember) => {
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let user = await client.users.fetch(member.id);
-
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -24,14 +23,19 @@ module.exports = async (client, member, newMember) => {
             let topText = null;
             let changeText = null;
             let image = null;
-            if (member.nickname !== newMember.nickname) updateCase = "nickname";
-            if (!member.premiumSince && newMember.premiumSince) updateCase = "nitroStart";
-            if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
-            if (oldAvatar !== avatar) updateCase = "guildAvatar";
+            if (member.nickname !== newMember.nickname) {
+                updateCase = "nickname";
+            } else if (!member.premiumSince && newMember.premiumSince) {
+                updateCase = "nitroStart";
+            } else if (member.premiumSince && !newMember.premiumSince) {
+                updateCase = "nitroEnd";
+            } else if (oldAvatar !== avatar) {
+                updateCase = "guildAvatar";
+            };
             if (!updateCase) return;
 
-            let fetchedLogs
-            let executor;
+            let fetchedLogs;
+            let executor = null;
             try {
                 fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
