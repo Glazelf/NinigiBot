@@ -17,7 +17,7 @@ exports.run = async (client, interaction) => {
         let userArg = interaction.options.getUser("user");
         if (userArg) {
             user = userArg;
-            member = await interaction.guild.members.fetch(user.id);
+            member = interaction.options.getMember("user");
         };
         let userIDArg = interaction.options.getString("user-id");
         let author = interaction;
