@@ -10,9 +10,9 @@ exports.run = async (client, interaction) => {
 
         await interaction.deferReply({ ephemeral: true });
         let interactionName = interaction.options.getString("interaction-name");
-        let interaction = client.application.commands.find(element => element.name == interactionName);
-        if (!interaction) return sendMessage({ client: client, interaction: interaction, content: `Interaction \`${interactionName}\` not found.`, });
-        await client.application.commands.delete(interaction.id);
+        let interactionDelete = client.application.commands.find(element => element.name == interactionName);
+        if (!interactionDelete) return sendMessage({ client: client, interaction: interaction, content: `Interaction \`${interactionName}\` not found.`, });
+        await client.application.commands.delete(interactionDelete.id);
         return sendMessage({ client: client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 
     } catch (e) {
