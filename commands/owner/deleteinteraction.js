@@ -26,7 +26,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "interaction-name",
-        type: "BOOLEAN",
+        type: "STRING",
         description: "Interaction to remove.",
         required: true
     }]
