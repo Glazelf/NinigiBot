@@ -8,6 +8,7 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        await interaction.deferReply({ ephemeral: true });
         let interactionName = interaction.options.getString("interaction-name");
         let interaction = client.application.commands.find(element => element.name == interactionName);
         if (!interaction) return sendMessage({ client: client, interaction: interaction, content: `Interaction \`${interactionName}\` not found.`, });
