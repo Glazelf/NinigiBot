@@ -10,11 +10,10 @@ module.exports = async (client, member, newMember) => {
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-
         let botMember = await member.guild.members.fetch(client.user.id);
-        newMember = await newMember.fetch({ force: true });
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
