@@ -23,14 +23,17 @@ module.exports = async (client, member, newMember) => {
             let topText = null;
             let changeText = null;
             let image = null;
-            if (member.nickname !== newMember.nickname) {
-                updateCase = "nickname";
-            } else if (!member.premiumSince && newMember.premiumSince) {
+            if (!member.premiumSince && newMember.premiumSince) {
                 updateCase = "nitroStart";
             } else if (member.premiumSince && !newMember.premiumSince) {
                 updateCase = "nitroEnd";
             } else if (oldAvatar !== avatar) {
                 updateCase = "guildAvatar";
+            } else if (member.roles.cache.isze !== newMember.roles.cache.size) {
+                // add logic for changing roles
+                return;
+            } else if (member.nickname !== newMember.nickname) {
+                updateCase = "nickname";
             };
             if (!updateCase) return;
 
