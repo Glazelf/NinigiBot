@@ -15,9 +15,14 @@ exports.run = async (client, interaction) => {
 
         let commands = await client.application.commands.fetch();
         let command = commands.find(c => c.name === interactionName);
-        if (!command) return sendMessage({ client: client, interaction: interaction, content: `Command ${interactionName} not found.` });
+        if (!command) return sendMessage({ client: client, interaction: interaction, content: `Command \`${interactionName}\` not found.` });
 
-        await client.application.commands.delete(command.id, guildID);
+        try {
+            await client.application.commands.delete(command.id, guildID);
+        } catch (e) {
+            // console.log();
+            return sendMessage({ client: client, interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
+        };
         return sendMessage({ client: client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 
     } catch (e) {
