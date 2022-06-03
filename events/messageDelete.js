@@ -6,7 +6,6 @@ module.exports = async (client, message) => {
         const Discord = require("discord.js");
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
-        if (message.content === newMessage.content) return;
 
         const { LogChannels, StarboardMessages } = require('../database/dbObjects');
 
