@@ -9,10 +9,15 @@ exports.run = async (client, interaction) => {
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         await interaction.deferReply({ ephemeral: true });
+
         let interactionName = interaction.options.getString("interaction-name");
-        let interactionDelete = client.application.commands.find(element => element.name == interactionName);
-        if (!interactionDelete) return sendMessage({ client: client, interaction: interaction, content: `Interaction \`${interactionName}\` not found.`, });
-        await client.application.commands.delete(interactionDelete.id);
+        let guildID = interaction.options.getString("guild-id");
+
+        let commands = await client.application.commands.fetch();
+        let command = commands.find(c => c.name === interactionName);
+        if (!command) return sendMessage({ client: client, interaction: interaction, content: `Command ${interactionName} not found.` });
+
+        await client.application.commands.delete(command.id, guildID);
         return sendMessage({ client: client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 
     } catch (e) {
@@ -30,5 +35,9 @@ module.exports.config = {
         type: "STRING",
         description: "Interaction to remove.",
         required: true
+    }, {
+        name: "guild-id",
+        type: "STRING",
+        description: "ID of guild."
     }]
 };
