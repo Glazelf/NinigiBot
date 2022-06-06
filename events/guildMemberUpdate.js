@@ -12,12 +12,6 @@ module.exports = async (client, member, newMember) => {
         if (!log) return;
         let botMember = await member.guild.members.fetch(client.user.id);
 
-        let miaServer = "729804381133864961";
-        if (member.guild.id == miaServer) {
-            console.log(member)
-            console.log(newMember)
-        };
-
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
