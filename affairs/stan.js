@@ -6,8 +6,8 @@ module.exports = async (client) => {
         const Discord = require("discord.js");
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
-        const timezone = 'cest';
-        const time = '00 00 20 * * *'; //Sec Min Hour, 8pm
+        const timezone = 'utc';
+        const time = '00 00 18 * * *'; // Sec Min Hour, 8pm CEST
         // const time = '* * * * *'; //Sec Min Hour testing
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = client.config.botServerID;

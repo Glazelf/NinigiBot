@@ -5,8 +5,8 @@ module.exports = async (client) => {
     try {
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
-        const timezone = 'cest';
-        const time = '05 00 00 * * *'; //Sec Min Hour 
+        const timezone = 'utc';
+        const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
         const guildID = client.config.botServerID;
         const channelID = globalVars.eventChannelID;
         const Discord = require("discord.js");
