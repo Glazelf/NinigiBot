@@ -277,7 +277,7 @@ BST: ${pokemon.bst}`, false)
             .setFooter({ text: interaction.user.tag, iconURL: iconShuffle })
             .setTimestamp();
 
-        let messageObject = { embed: pkmEmbed, buttons: buttonArray };
+        let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 
         function calcHP(base) {
