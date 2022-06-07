@@ -29,7 +29,7 @@ module.exports = async (client, member, newMember) => {
                 updateCase = "nitroEnd";
             } else if (oldAvatar !== avatar) {
                 updateCase = "guildAvatar";
-            } else if (member.roles.cache.isze !== newMember.roles.cache.size) {
+            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
                 // add logic for changing roles
                 return;
             } else if (member.nickname !== newMember.nickname) {
