@@ -43,20 +43,15 @@ exports.run = async (client, interaction) => {
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.` });
         let personalRolePosition = boosterRole.position + 1;
-
         if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
-
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
-
         if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
 
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
-
             if (colorHexes[roleColor]) roleColor = colorHexes[roleColor];
-
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
@@ -73,9 +68,7 @@ exports.run = async (client, interaction) => {
             let editReturnString = `Updated your role successfully; `;
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
-
             if (!colorArg) roleColor = personalRole.color;
-
             if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
 
             personalRole.edit({
@@ -102,7 +95,6 @@ exports.run = async (client, interaction) => {
             } else if (iconArg && !iconsAllowed) {
                 editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
             };
-
             // Re-add role if it got removed
             if (!interaction.member.roles.cache.find(r => r.name == user.tag)) interaction.member.roles.add(personalRole.id);
 

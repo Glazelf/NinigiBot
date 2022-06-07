@@ -7,13 +7,7 @@ exports.run = async (client, interaction) => {
         const Discord = require('discord.js');
 
         let user = interaction.options.getUser("user");
-        let member;
-        try {
-            member = await interaction.guild.members.fetch(user.id);
-        } catch (e) {
-            // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `No member information could be found for this user. They probably aren't in this server anymore.` });
-        };
+        let member = interaction.options.getMember("user");
 
         // Get avatar
         let avatar = null;

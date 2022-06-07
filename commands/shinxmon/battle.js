@@ -36,6 +36,7 @@ exports.run = async (client, interaction) => {
             shinx.see();
             if (shinx.sleeping) return sendMessage({ client: client, interaction: interaction, content: `At least one of the participating Shinx is asleep.` });
             const user = await Users.findOne({ where: { user_id: trainers[i].id } });
+            if (!user) user = await Users.create({ user_id: trainers[i].id });
             const equipments = await user.getEquipments();
             shinxes.push(new ShinxBattle(trainers[i], shinx, equipments));
         };

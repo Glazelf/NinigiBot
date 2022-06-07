@@ -13,7 +13,7 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let user = interaction.options.getUser("user");
-        let member = await interaction.guild.members.fetch(user.id);
+        let member = interaction.options.getMember("user");
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;

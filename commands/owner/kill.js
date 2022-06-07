@@ -9,8 +9,9 @@ exports.run = async (client, interaction) => {
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         let ownerBool = await isOwner(client, interaction.user);
-
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+
+        await interaction.deferReply({ ephemeral: true });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");

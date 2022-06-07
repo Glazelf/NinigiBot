@@ -15,6 +15,7 @@ exports.run = async (client, interaction) => {
 
         if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {
             const user = await Users.findOne({ where: { user_id: interaction.user.id } });
+            if (!user) user = await Users.create({ user_id: interaction.user.id });
 
             let items;
 
@@ -22,15 +23,15 @@ exports.run = async (client, interaction) => {
             if (inventoryCat === 'food') {
                 items = await user.getFoods();
                 if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no food!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s food:\n ${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s food:\n${items.map(t => `${t.amount} ${t.food.name}`).join(', ')}` });
             } else if (inventoryCat === 'equipment') {
                 items = await user.getEquipments();
                 if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no equipment!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s equipment:\n ${items.map(t => `${t.equipment.name}`).join(', ')}` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s equipment:\n${items.map(t => `${t.equipment.name}`).join(', ')}` });
             } else if (inventoryCat === 'key') {
                 items = await user.getKeys();
                 if (!items.length) return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username} has no key items!` });
-                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s key items:\n ${items.map(t => `${t.key.name}`).join(', ')}` });
+                return sendMessage({ client: client, interaction: interaction, content: `${interaction.user.username}'s key items:\n${items.map(t => `${t.key.name}`).join(', ')}` });
             } else {
                 let description = `**${interaction.user.username}**'s inventory:`;
                 const length = description.length;

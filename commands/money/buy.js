@@ -20,6 +20,7 @@ exports.run = async (client, interaction) => {
                     return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency.\nThe ${item.name} costs ${item.cost}${globalVars.currency} but you only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
                 };
                 const user = await Users.findOne({ where: { user_id: interaction.user.id } });
+                if (!user) user = await Users.create({ user_id: interaction.user.id });
 
                 bank.currency.add(interaction.user.id, -item.cost);
                 switch (i) {

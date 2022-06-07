@@ -10,12 +10,11 @@ module.exports = async (client, member, newMember) => {
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+            newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
-
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -24,14 +23,22 @@ module.exports = async (client, member, newMember) => {
             let topText = null;
             let changeText = null;
             let image = null;
-            if (member.nickname !== newMember.nickname) updateCase = "nickname";
-            if (!member.premiumSince && newMember.premiumSince) updateCase = "nitroStart";
-            if (member.premiumSince && !newMember.premiumSince) updateCase = "nitroEnd";
-            if (oldAvatar !== avatar) updateCase = "guildAvatar";
+            if (!member.premiumSince && newMember.premiumSince) {
+                updateCase = "nitroStart";
+            } else if (member.premiumSince && !newMember.premiumSince) {
+                updateCase = "nitroEnd";
+            } else if (oldAvatar !== avatar) {
+                updateCase = "guildAvatar";
+            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
+                // add logic for changing roles
+                return;
+            } else if (member.nickname !== newMember.nickname) {
+                updateCase = "nickname";
+            };
             if (!updateCase) return;
 
-            let fetchedLogs
-            let executor;
+            let fetchedLogs;
+            let executor = null;
             try {
                 fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,

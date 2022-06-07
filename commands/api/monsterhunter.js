@@ -8,8 +8,7 @@ exports.run = async (client, interaction) => {
         const crypto = require('crypto');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
-
-        // Load JSON
+        const getMonster = require('../../util/mh/getMonster');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
@@ -19,8 +18,8 @@ exports.run = async (client, interaction) => {
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
@@ -40,7 +39,7 @@ exports.run = async (client, interaction) => {
 
                 // Set up quest targets
                 let targets = "";
-                if (questData.targets.length > 1) {
+                if (questData.targets && questData.targets.length > 1) {
                     questData.targets.forEach(target => {
                         if (targets.length == 0) {
                             targets = target;
@@ -192,132 +191,11 @@ exports.run = async (client, interaction) => {
                 };
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
 
-                // Game names
-                let MHRise = "Monster Hunter Rise";
-                let MHW = "Monster Hunter World";
-                let MHGU = "Monster Hunter Generations Ultimate";
-
-                let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-                let gameDBName;
-
-                // Get icon, description and game appearances
-                let monsterIcon;
-                let monsterBanner = null;
-                let monsterDescription;
-                let monsterDanger;
-                let gameAppearances = "";
-                let mostRecentMainlineGame = MHRise;
-                let fallbackGame1 = MHW;
-                let fallbackGame2 = MHGU;
-                let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
-                monsterData.games.forEach(game => {
-                    // Add to game appearances list
-                    gameAppearances += game.game + "\n";
-                    // Works because games are in chronological order
-                    if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
-                        monsterIcon = `${iconsRepo}${game.image}?raw=true`;
-                        monsterDescription = game.info;
-                        monsterDanger = game.danger;
-                    };
-                });
-                // If it isn't in the most recent mainline game; instead use the most recent game it's been in
-                if (!monsterIcon) monsterIcon = `${iconsRepo}${mostRecentGameEntry.image}?raw=true`;
-                if (!monsterDescription) monsterDescription = mostRecentGameEntry.info;
-                if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
-
-                // Get MHRise-Database image
-                let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
-
-                if (isInImageDBGame) {
-                    let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
-                    let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
-                    gameDBName = "MHRise";
-                    let gameDBBranchName = "main";
-
-                    let monsterSize = "monster";
-                    if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
-
-                    let monsterURLName = monsterData.name;
-                    if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
-                    if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
-
-                    if (isOnlyInGU) {
-                        gameDBName = "MHGU";
-                        gameDBBranchName = "master";
-                    };
-                    if (newestGameIsWorld) {
-                        gameDBName = "MHW";
-                        gameDBBranchName = "gh-pages";
-                        monsterURLName = `${monsterURLName}_HZV`;
-                    };
-                    if (gameAppearances.includes(MHRise)) monsterURLName = `${monsterURLName}_HZV`;
-                    monsterBanner = `https://github.com/RoboMechE/${gameDBName}-Database/blob/${gameDBBranchName}/${monsterSize}/${encodeURIComponent(monsterURLName)}.png?raw=true`;
-                };
-
-                let monsterGameIndicator = gameDBName;
-                if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
-                let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
-                let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-                let md5first = md5.substring(0, 1);
-                let md5duo = md5.substring(0, 2);
-                let monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
-
-                // Format size
-                let monsterSize = "Small";
-                if (monsterData.isLarge) monsterSize = "Large";
-                // Get elements, ailments and weaknesses
-                let monsterElements = "";
-                let monsterWeaknesses = "";
-                let monsterAilments = "";
-                if (monsterData.elements) {
-                    monsterData.elements.forEach(element => {
-                        let elementString = `${element}`;
-                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
-                        if (monsterElements.length == 0) {
-                            monsterElements = elementString;
-                        } else {
-                            monsterElements += `, ${elementString}`;
-                        };
-                    });
-                };
-                if (monsterData.weakness) {
-                    monsterData.weakness.forEach(element => {
-                        let elementString = `${element}`;
-                        if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
-                        if (monsterWeaknesses.length == 0) {
-                            monsterWeaknesses = elementString;
-                        } else {
-                            monsterWeaknesses += `, ${elementString}`;
-                        };
-                    });
-                };
-                if (monsterData.ailments) {
-                    monsterData.ailments.forEach(ailment => {
-                        if (monsterAilments.length == 0) {
-                            monsterAilments = ailment;
-                        } else {
-                            monsterAilments += `, ${ailment}`;
-                        };
-                    });
-                };
-
-                mhEmbed
-                    .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
-                    .setThumbnail(monsterRender);
-                if (monsterDescription) mhEmbed.setDescription(monsterDescription);
-                mhEmbed
-                    .addField("Size:", monsterSize, true)
-                if (monsterDanger) mhEmbed.addField("Danger:", `${monsterDanger}⭐`, true);
-                if (monsterElements.length > 0) mhEmbed.addField("Element:", monsterElements, true);
-                if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness:", monsterWeaknesses, true);
-                if (monsterAilments.length > 0) mhEmbed.addField("Ailment:", monsterAilments, true);
-                mhEmbed
-                    .addField("Games:", gameAppearances, false)
-                    .setImage(monsterBanner);
+                let messageObject = await getMonster(client, interaction, monsterData, ephemeral);
+                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
                 break;
         };
-
-        return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
         // Log error

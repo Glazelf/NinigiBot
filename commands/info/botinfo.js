@@ -75,7 +75,7 @@ exports.run = async (client, interaction) => {
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: client.user.username, iconURL: avatar })
+            .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addField("Author:", owner, false)
@@ -85,14 +85,14 @@ exports.run = async (client, interaction) => {
         botEmbed
             .addField("Servers:", totalGuilds.toString(), true)
             .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:R>`, true)
-            .addField("Online Since:", `<t:${onlineSince}:R>`, true);
+            .addField("Created:", `<t:${createdAt}:R>`, true);
+        if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
         // Buttons
         let botButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8` }))
+            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
 
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });
@@ -125,5 +125,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "botinfo",
-    description: `Displays info on this bot.`
+    description: `Displays info about this bot.`
 };

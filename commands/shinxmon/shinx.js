@@ -63,6 +63,7 @@ exports.run = async (client, interaction) => {
         let master = interaction.user
         let shinx = await bank.currency.getShinx(master.id);
         const user = await Users.findOne({ where: { user_id: master.id } });
+        if (!user) user = await Users.create({ user_id: master.id });
         let userFinder = await interaction.guild.members.fetch();
 
         shinx.see();

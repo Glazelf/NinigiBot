@@ -52,7 +52,7 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "roleinfo",
-    description: "Sends info about a role.",
+    description: "Displays info about a role.",
     options: [{
         name: "role",
         type: "ROLE",

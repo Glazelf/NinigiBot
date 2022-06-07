@@ -15,7 +15,7 @@ exports.run = async (client, interaction) => {
 
         let user = interaction.options.getUser("user");
         user = await client.users.fetch(user.id, { force: true });
-        let member = await interaction.guild.members.fetch(user.id);
+        let member = interaction.options.getMember("user");
 
         // Balance check
         let dbBalance = await bank.currency.getBalance(user.id);
