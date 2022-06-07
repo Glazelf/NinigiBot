@@ -7,23 +7,21 @@ module.exports = async (client, interaction) => {
         let sendMessage = require('../util/sendMessage');
         let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
+        const getMonster = require('../util/mh/getMonster');
         const randomNumber = require('../util/randomNumber');
         const { Dex } = require('pokemon-showdown');
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
         const { bank } = require('../database/bank');
-
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
             case "APPLICATION_COMMAND":
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
-
                 // Grab the command data from the client.commands Enmap
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
-
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
                     if (command.config.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
@@ -31,7 +29,6 @@ module.exports = async (client, interaction) => {
                 if (!cmd) {
                     if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
                 };
-
                 // Run the command
                 if (cmd) {
                     try {
@@ -44,10 +41,10 @@ module.exports = async (client, interaction) => {
                 } else {
                     return;
                 };
-
             case "MESSAGE_COMPONENT":
                 switch (interaction.componentType) {
                     case "BUTTON":
+                        let messageObject = null;
                         // Pokémon command
                         if (interaction.customId.startsWith("pkm")) {
                             let newPokemonName = null;
@@ -57,17 +54,28 @@ module.exports = async (client, interaction) => {
                             };
                             if (!newPokemonName) return;
                             newPokemonName = newPokemonName.label;
-
-                            let messageObject = null;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
                             messageObject = await getPokemon(client, interaction, pokemon);
-
                             if (!messageObject) return;
-
-                            await interaction.update({ embeds: [messageObject.embed], components: messageObject.buttons });
+                            await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;
-
+                        } else if (interaction.customId.startsWith("mhSub")) {
+                            let newMonsterName = null;
+                            for (let componentRow of interaction.message.components) {
+                                if (newMonsterName) break;
+                                newMonsterName = componentRow.components.find(component => component.customId == interaction.customId);
+                            };
+                            if (!newMonsterName) return;
+                            newMonsterName = newMonsterName.label;
+                            let monsterData = null;
+                            monstersJSON.monsters.forEach(monster => {
+                                if (monster.name == newMonsterName) monsterData = monster;
+                            });
+                            if (!monsterData) return;
+                            messageObject = await getMonster(client, interaction, monsterData);
+                            if (!messageObject) return;
+                            await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             if (interaction.user.id !== interaction.customId.split("-")[3]) return;
                             let componentsCopy = interaction.message.components;
@@ -85,7 +93,6 @@ module.exports = async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-
                     case "SELECT_MENU":
                         if (interaction.customId == 'role-select') {
                             try {
@@ -124,7 +131,6 @@ module.exports = async (client, interaction) => {
                         // Other component types
                         return;
                 };
-
             case "APPLICATION_COMMAND_AUTOCOMPLETE":
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
