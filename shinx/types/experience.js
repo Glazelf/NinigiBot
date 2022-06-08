@@ -1,4 +1,4 @@
-class Experience {
+export default class Experience {
     #exp = 0;
 
     getValue(){

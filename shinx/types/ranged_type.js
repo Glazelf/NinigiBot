@@ -1,4 +1,4 @@
-class RangedType {
+export default class RangedType {
     #min_range = 0;
     #max_range = 0;
     #value = 0;
