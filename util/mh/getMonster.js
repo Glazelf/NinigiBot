@@ -5,6 +5,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const Discord = require("discord.js");
         const crypto = require('crypto');
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
+        const imageExists = require('../../util/imageExists');
 
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
@@ -40,19 +41,16 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
         // Get MHRise-Database image
         let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
+        let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
+        let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
         if (isInImageDBGame) {
-            let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
-            let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
             gameDBName = "MHRise";
             let gameDBBranchName = "main";
-
             let monsterSize = "monster";
             if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
-
             let monsterURLName = monsterData.name;
             if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
             if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
-
             if (isOnlyInGU) {
                 gameDBName = "MHGU";
                 gameDBBranchName = "master";
@@ -72,6 +70,26 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         let md5first = md5.substring(0, 1);
         let md5duo = md5.substring(0, 2);
         let monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+        let renderExists = imageExists(monsterRender);
+        if (!renderExists && (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U")) {
+            if (monsterGameIndicator == "MHGU") {
+                monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
+                md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
+                md5first = md5.substring(0, 1);
+                md5duo = md5.substring(0, 2);
+                monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+                renderExists = imageExists(monsterRender);
+                console.log(renderExists)
+            };
+            if (!renderExists) {
+                monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
+                md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
+                md5first = md5.substring(0, 1);
+                md5duo = md5.substring(0, 2);
+                monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+            };
+        };
+        console.log(monsterRender)
         // Format size
         let monsterSize = "Small";
         if (monsterData.isLarge) monsterSize = "Large";
