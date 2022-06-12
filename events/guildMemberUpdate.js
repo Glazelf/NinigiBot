@@ -34,15 +34,16 @@ module.exports = async (client, member, newMember) => {
                 updateCase = "guildAvatar";
             } else if (member.roles.cache.size !== newMember.roles.cache.size) {
                 // Roles updated
-                return;
+                updateCase = null; // TODO
             } else if (member.pending !== newMember.pending) {
-                // Pending? 
-                return;
+                // Pending?
+                updateCase = null; // TODO
             } else if (member.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
                 // Timeout, check if there's a difference in the timestamps for other actions, might have to add a minimum gap
-                return;
+                updateCase = null; // TODO
             } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
                 // I assume this does nothing but I want to be sure because of the weird nickname updates firing
+                updateCase = null;
             } else if (member.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
