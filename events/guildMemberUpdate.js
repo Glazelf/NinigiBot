@@ -24,15 +24,27 @@ module.exports = async (client, member, newMember) => {
             let changeText = null;
             let image = null;
             if (!member.premiumSince && newMember.premiumSince) {
+                // Nitro boost start
                 updateCase = "nitroStart";
             } else if (member.premiumSince && !newMember.premiumSince) {
+                // Nitro boost end
                 updateCase = "nitroEnd";
             } else if (oldAvatar !== avatar) {
+                // Update server avatar
                 updateCase = "guildAvatar";
             } else if (member.roles.cache.size !== newMember.roles.cache.size) {
-                // add logic for changing roles
+                // Roles updated
                 return;
+            } else if (member.pending !== newMember.pending) {
+                // Pending? 
+                return;
+            } else if (member.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
+                // Timeout, check if there's a difference in the timestamps for other actions, might have to add a minimum gap
+                return;
+            } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
+                // I assume this does nothing but I want to be sure because of the weird nickname updates firing
             } else if (member.nickname !== newMember.nickname) {
+                // Nickname change
                 updateCase = "nickname";
             };
             if (!updateCase) return;
