@@ -90,7 +90,6 @@ exports.run = async (client, interaction) => {
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
-        // Buttons
         let botButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));

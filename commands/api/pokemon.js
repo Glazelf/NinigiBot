@@ -233,7 +233,6 @@ exports.run = async (client, interaction) => {
 
                     } else {
                         // make generic embed to guide people to usage statistics :)
-                        // Buttons
                         let usageButtons = new Discord.MessageActionRow()
                             .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
                             .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))

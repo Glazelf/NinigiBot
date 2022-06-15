@@ -37,7 +37,6 @@ module.exports = async (client, guildBan) => {
             let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            // Buttons
             let banButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
 

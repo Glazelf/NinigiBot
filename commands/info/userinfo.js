@@ -80,12 +80,10 @@ exports.run = async (client, interaction) => {
             };
         };
 
-        // JoinRank
         let joinRank = await getJoinRank(user.id, interaction.guild);
         let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
         let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
-        // Buttons
         let profileButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
 
