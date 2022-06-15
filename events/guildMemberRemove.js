@@ -37,7 +37,7 @@ module.exports = async (client, member) => {
                 let kickLog = fetchedLogs.entries.first();
                 if (kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 // Return if ban exists
-                const banLogs = await guildBan.guild.fetchAuditLogs({
+                const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_BAN_ADD',
                 });
