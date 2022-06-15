@@ -19,7 +19,8 @@ module.exports = async (client, channel) => {
                 limit: 1,
                 type: 'CHANNEL_DELETE',
             });
-            const deleteLog = fetchedLogs.entries.first();
+            let deleteLog = fetchedLogs.entries.first();
+            if (deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;
             let executor;
             if (deleteLog) {
                 const { executor: createExecutor, target } = deleteLog;
