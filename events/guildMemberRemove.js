@@ -13,14 +13,11 @@ module.exports = async (client, member) => {
 
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-
         if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
-
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let memberLeaveObject = {};
-
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
@@ -33,13 +30,19 @@ module.exports = async (client, member) => {
 
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_KICK',
                 });
-                const kickLog = fetchedLogs.entries.first();
-
+                let kickLog = fetchedLogs.entries.first();
+                if (kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
+                // Return if ban exists
+                const banLogs = await guildBan.guild.fetchAuditLogs({
+                    limit: 1,
+                    type: 'MEMBER_BAN_ADD',
+                });
+                let banLog = banLogs.entries.first();
+                if (banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
                 if (kickLog) {
                     if (kickLog.createdAt > member.joinedAt) {
                         var { executor, target, reason } = kickLog;
@@ -50,7 +53,6 @@ module.exports = async (client, member) => {
                     };
                 };
 
-                // Buttons
                 let leaveButtons = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 
