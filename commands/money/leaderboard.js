@@ -11,13 +11,14 @@ exports.run = async (client, interaction) => {
         let global = false;
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
-        let icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+        let icon = null;
 
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
         if (global) {
             // Global leaderboard
+            icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let leaderboardStringGlobal = bank.currency.sort((a, b) => b.balance - a.balance)
                 .filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
@@ -31,7 +32,6 @@ exports.run = async (client, interaction) => {
         } else {
             // Server leaderboard
             icon = guild.iconURL(globalVars.displayAvatarSettings);
-
             let leaderboardString = bank.currency.sort((a, b) => b.balance - a.balance)
                 .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
