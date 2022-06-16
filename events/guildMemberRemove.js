@@ -35,15 +35,17 @@ module.exports = async (client, member) => {
                     type: 'MEMBER_KICK',
                 });
                 let kickLog = fetchedLogs.entries.first();
-                if (kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
+
                 // Return if ban exists
                 const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_BAN_ADD',
                 });
+                if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 let banLog = banLogs.entries.first();
-                if (banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
+                if (banLog && banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
                 if (kickLog) {
+
                     if (kickLog.createdAt > member.joinedAt) {
                         var { executor, target, reason } = kickLog;
                         if (target.id !== member.id) return;

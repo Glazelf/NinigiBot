@@ -67,7 +67,6 @@ exports.run = async (client, interaction) => {
         let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
-        // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Owner

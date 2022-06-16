@@ -20,7 +20,7 @@ module.exports = async (client, guildBan) => {
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let banLog = fetchedLogs.entries.first();
-            if (banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
+            if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
             let executor = null;
             let target = null;

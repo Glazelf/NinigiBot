@@ -59,7 +59,7 @@ module.exports = async (client, member, newMember) => {
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
-                if (executor.id == member.id || memberUpdateLog.createdTimestamp < (Date.now() - 5000)) executor = null;
+                if (executor.id == member.id || (memberUpdateLog && memberUpdateLog.createdTimestamp < (Date.now() - 5000))) executor = null;
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) executor = null;

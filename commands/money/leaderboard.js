@@ -31,7 +31,7 @@ exports.run = async (client, interaction) => {
                 .setAuthor({ name: `Global Leaderboard:`, iconURL: icon });
         } else {
             // Server leaderboard
-            icon = guild.iconURL(globalVars.displayAvatarSettings);
+            icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             let leaderboardString = bank.currency.sort((a, b) => b.balance - a.balance)
                 .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
