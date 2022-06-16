@@ -44,15 +44,12 @@ module.exports = async (client, member) => {
                 if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 let banLog = banLogs.entries.first();
                 if (banLog && banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
-                if (kickLog) {
-
-                    if (kickLog.createdAt > member.joinedAt) {
-                        var { executor, target, reason } = kickLog;
-                        if (target.id !== member.id) return;
-                        kicked = true;
-                        if (reason) reasonText = reason;
-                        embedAuthor = `Member Kicked 💔`;
-                    };
+                if (kickLog && kickLog.createdAt > member.joinedAt) {
+                    var { executor, target, reason } = kickLog;
+                    if (target.id !== member.id) return;
+                    kicked = true;
+                    if (reason) reasonText = reason;
+                    embedAuthor = `Member Kicked 💔`;
                 };
 
                 let leaveButtons = new Discord.MessageActionRow()

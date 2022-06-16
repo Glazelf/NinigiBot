@@ -22,14 +22,9 @@ module.exports = async (client, guildBan) => {
             let banLog = fetchedLogs.entries.first();
             if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
-            let executor = null;
-            let target = null;
-            let reason = null;
-            if (banLog) {
-                executor = banLog.executor;
-                target = banLog.target;
-                reason = banLog.reason;
-            };
+            let executor = banLog.executor;
+            let target = banLog.target;
+            let reason = banLog.reason;
             if (!executor || !target) return;
             if (reason == null) reason = "Not specified.";
             if (target.id !== guildBan.user.id) return;
