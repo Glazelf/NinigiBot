@@ -12,7 +12,6 @@ exports.run = async (client, interaction) => {
 
         let role = interaction.options.getRole("role");
         let user = interaction.user;
-        let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -33,7 +32,7 @@ exports.run = async (client, interaction) => {
         // Embed
         let roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor({ name: `${role.name}`, iconURL: avatar })
+            .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
             .addField("Role:", role.toString(), true);
         if (role.hexColor !== defaultColor) roleEmbed.addField("Color:", role.hexColor, true);
