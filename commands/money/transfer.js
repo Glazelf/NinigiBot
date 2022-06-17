@@ -9,11 +9,9 @@ exports.run = async (client, interaction) => {
         const currentBalance = await bank.currency.getBalance(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");
         let transferTarget = interaction.options.getUser("user");
-
-        let user = interaction.user;
         let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-        if (transferTarget == user) return sendMessage({ client: client, interaction: interaction, content: `You can't transfer money to yourself.` });
+        if (transferTarget == interaction.user) return sendMessage({ client: client, interaction: interaction, content: `You can't transfer money to yourself.` });
         if (transferAmount > currentBalance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${userBalance}.` });
         if (transferAmount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
 

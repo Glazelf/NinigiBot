@@ -11,6 +11,7 @@ exports.run = async (client, interaction) => {
         let ShardUtil;
 
         let adminBool = isAdmin(client, interaction.member);
+        console.log(interaction.guild.features)
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -26,8 +27,6 @@ exports.run = async (client, interaction) => {
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
-
-        let user = interaction.user;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 
