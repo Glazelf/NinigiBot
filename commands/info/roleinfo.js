@@ -11,7 +11,6 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let role = interaction.options.getRole("role");
-        let user = interaction.user;
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);

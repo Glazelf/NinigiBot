@@ -14,8 +14,6 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         await interaction.guild.roles.fetch();
-        let member = interaction.member;
-        let user = interaction.user;
 
         let roleArgument = interaction.options.getRole('role');
         let requestRole = null;
@@ -31,7 +29,7 @@ exports.run = async (client, interaction) => {
         await db.forEach(eligibleRole => {
             roleIDs.push(eligibleRole.role_id);
         });
-        await member.guild.roles.cache.each(async (role) => {
+        await interaction.guild.roles.cache.each(async (role) => {
             if (roleIDs.includes(role.id)) {
                 roleText.push(role);
             };
@@ -99,11 +97,11 @@ exports.run = async (client, interaction) => {
             if (interaction.guild.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
 
             let returnString;
-            if (member.roles.cache.has(requestRole.id)) {
-                await member.roles.remove(requestRole);
+            if (interaction.member.roles.cache.has(requestRole.id)) {
+                await interaction.member.roles.remove(requestRole);
                 returnString = `You no longer have ${requestRole}!`;
             } else {
-                await member.roles.add(requestRole);
+                await interaction.member.roles.add(requestRole);
                 returnString = `You now have ${requestRole}!`;
             };
             return sendMessage({ client: client, interaction: interaction, content: returnString });
