@@ -11,7 +11,6 @@ exports.run = async (client, interaction) => {
         let ShardUtil;
 
         let adminBool = isAdmin(client, interaction.member);
-        console.log(interaction.guild.features)
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -124,8 +123,9 @@ exports.run = async (client, interaction) => {
             // };
         });
 
-        let serverButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+        let serverButtons = new Discord.MessageActionRow();
+        // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Beta)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
 
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
