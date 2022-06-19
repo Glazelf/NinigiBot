@@ -32,7 +32,7 @@ exports.run = async (client, interaction) => {
         let reasonInfo = `-${interaction.user.tag} (${time})`;
 
         // Kick
-        let kickReturn = `Successfully kicked **${user.tag}** for reason: \`${reason}\`.`;
+        let kickReturn = `Kicked **${user.tag}** for reason: \`${reason}\`.`;
 
         try {
             try {

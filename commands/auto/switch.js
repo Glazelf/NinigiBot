@@ -23,7 +23,7 @@ exports.run = async (client, interaction) => {
         switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
 
         bank.currency.switchCode(interaction.user.id, switchFC);
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your Nintendo Switch friend code.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code.` });
 
     } catch (e) {
         // Log error

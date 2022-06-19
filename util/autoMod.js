@@ -99,7 +99,7 @@ module.exports = async (client, message) => {
             return false;
         };
 
-        await message.channel.send({ content: `Successfully auto-kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+        await message.channel.send({ content: `Automatically kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
 
         return true;
     };
@@ -124,7 +124,7 @@ module.exports = async (client, message) => {
             return false;
         };
 
-        await message.channel.send({ content: `Successfully auto-banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+        await message.channel.send({ content: `Automatically banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
 
         return true;
     };

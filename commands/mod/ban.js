@@ -60,7 +60,7 @@ exports.run = async (client, interaction) => {
             };
 
             // Ban
-            banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
 
             try {
                 try {
@@ -88,7 +88,7 @@ exports.run = async (client, interaction) => {
                 if (bansFetch.has(memberID)) return sendMessage({ client: client, interaction: interaction, content: `<@${memberID}> (${memberID}) is already banned.` });
             };
 
-            banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
             try {
                 await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });

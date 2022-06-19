@@ -48,7 +48,7 @@ exports.run = async (client, interaction) => {
         // await sendMessage({client: client, interaction: interaction, content: `Restarting...`);
         // await client.destroy();
         // await client.login(client.config.token);
-        // return sendMessage({client: client, interaction: interaction, content: `Successfully restarted!`);
+        // return sendMessage({client: client, interaction: interaction, content: `Restarted!`);
 
     } catch (e) {
         // Log error

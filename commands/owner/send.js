@@ -38,7 +38,7 @@ exports.run = async (client, interaction) => {
             let messageObject = { content: textMessage };
             if (attachment) messageObject["files"] = [attachment];
             await target.send(messageObject);
-            return sendMessage({ client: client, interaction: interaction, content: `Message succesfully sent to ${targetFormat}.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Message sent to ${targetFormat}.` });
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `Failed to message ${targetFormat}` });

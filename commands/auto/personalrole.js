@@ -56,14 +56,14 @@ exports.run = async (client, interaction) => {
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
-        if (deleteBool == true) return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
+        if (deleteBool == true) return deleteRole(`Deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
         if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
-            let editReturnString = `Updated your role successfully; `;
+            let editReturnString = `Updated your role; `;
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
             if (!colorArg) roleColor = personalRole.color;
@@ -137,7 +137,7 @@ exports.run = async (client, interaction) => {
             interaction.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
 
-            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you successfully.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
         };
 
         async function deleteRole(successString, failString) {
