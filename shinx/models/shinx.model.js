@@ -1,7 +1,8 @@
-const MIN_RANGE = 0;
-const MAX_RANGE = 10;
-
 module.exports = (sequelize, DataTypes) => {
+    const MIN_RANGE = 0;
+    const MAX_RANGE = 10;
+
+
     const Shinx = sequelize.define('Shinx', {
         user_id: DataTypes.STRING,
         nickname: {
@@ -86,16 +87,3 @@ module.exports = (sequelize, DataTypes) => {
 
     return Shinx;
 };
-
-
-
-
-const Shinx = db.define('Shinx', {
-    name: sequelize.STRING,
-    age: sequelize.INTEGER
-  });
-  
-  User.Instance.prototype.test = function() {
-    return `Name: ${this.name}, Age: ${this.age}`
-  }
-  
