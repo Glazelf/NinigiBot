@@ -194,7 +194,7 @@ exports.run = async (client, interaction) => {
 };
 
 module.exports.config = {
-    name: "battle",
+    name: "battle_old",
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",

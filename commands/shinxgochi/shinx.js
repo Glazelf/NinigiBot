@@ -53,8 +53,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { bank } = require('../../database/bank');
-        const { Users } = require('../../database/dbObjects');
+        const { Shinx_db } = require('../../nwu/database/dbObjects');
         const Discord = require("discord.js");
 
         let ephemeral = true;
