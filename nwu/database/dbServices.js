@@ -36,7 +36,7 @@ module.exports = {
 
                 Reflect.defineProperty(services, 'addExperience', {
                     value: async function addExperience(id) {
-                        let shinx = this.getShinx(id);
+                        let shinx = await this.getShinx(id);
                         await shinx.addExperience(1000);
                     },
                 });

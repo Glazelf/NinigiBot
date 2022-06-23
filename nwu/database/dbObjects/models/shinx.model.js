@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     //  Experience
     Shinx.prototype.addExperience = function(experience){
         this.experience += experience;
+        this.save();
     }
     Shinx.prototype.getExperience = function(){
         return this.experience;
@@ -46,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.feed = function(amount){
         if(this.fullness<MAX_RANGE){
             this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
+            this.save();
             return true;
           } else {
             return false;
@@ -54,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.unfeed = function(amount){
         if(this.fullness>MIN_RANGE){
             this.fullness = Math.max(MIN_RANGE, this.fullness-amount);
+            this.save();
             return true;
           } else {
             return false;
@@ -67,6 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.addHappiness = function(amount){
         if(this.happiness<MAX_RANGE){
             this.happiness = Math.min(MAX_RANGE, this.happiness+amount);
+            this.save();
             return true;
           } else {
             return false;
@@ -75,6 +79,7 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.removeHappiness = function(amount){
         if(this.happiness>MIN_RANGE){
             this.happiness = Math.max(MIN_RANGE, this.happiness-amount);
+            this.save();
             return true;
           } else {
             return false;
