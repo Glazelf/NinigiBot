@@ -5,12 +5,12 @@ module.exports = (sequelize, DataTypes) => {
         money: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            'default': 0,
+            defaultValue: 0,
         },
         food: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            'default': 0,
+            defaultValue: 0,
         }
     }, {
         timestamps: false,

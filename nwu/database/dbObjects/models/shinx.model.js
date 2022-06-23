@@ -8,22 +8,22 @@ module.exports = (sequelize, DataTypes) => {
         nickname: {
             type: DataTypes.STRING,
             allowNull: false,
-            'default': 'Shinx',
+            defaultValue: 'Shinx',
         },
         fullness: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            'default': 0,
+            defaultValue: 0,
         },
         happiness: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            'default': 0,
+            defaultValue: 0,
         },
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            'default': 0,
+            defaultValue: 0,
         },
     }, {
         timestamps: false,
@@ -32,18 +32,18 @@ module.exports = (sequelize, DataTypes) => {
 
     // Instance Methods
     //  Experience
-    Shinx.Instance.prototype.addExperience = function(experience){
+    Shinx.prototype.addExperience = function(experience){
         this.experience += experience;
     }
-    Shinx.Instance.prototype.getExperience = function(){
+    Shinx.prototype.getExperience = function(){
         return this.experience;
     }
     
-    Shinx.Instance.prototype.getLevel = function(){
+    Shinx.prototype.getLevel = function(){
         return Math.floor(Math.cbrt(1.25*this.experience))
     }
     // Fullness
-    Shinx.Instance.prototype.feed = function(amount){
+    Shinx.prototype.feed = function(amount){
         if(this.fullness<MAX_RANGE){
             this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
             return true;
@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
             return false;
         }
     }
-    Shinx.Instance.prototype.unfeed = function(amount){
+    Shinx.prototype.unfeed = function(amount){
         if(this.fullness>MIN_RANGE){
             this.fullness = Math.max(MIN_RANGE, this.fullness-amount);
             return true;
@@ -60,11 +60,11 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
 
-    Shinx.Instance.prototype.getFullness = function(){
+    Shinx.prototype.getFullness = function(){
         this.fullness
     }
     // Happiness
-    Shinx.Instance.prototype.addHappiness = function(amount){
+    Shinx.prototype.addHappiness = function(amount){
         if(this.happiness<MAX_RANGE){
             this.happiness = Math.min(MAX_RANGE, this.happiness+amount);
             return true;
@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
             return false;
         }
     }
-    Shinx.Instance.prototype.removeHappiness = function(amount){
+    Shinx.prototype.removeHappiness = function(amount){
         if(this.happiness>MIN_RANGE){
             this.happiness = Math.max(MIN_RANGE, this.happiness-amount);
             return true;
@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
 
-    Shinx.Instance.prototype.getHappiness = function(){
+    Shinx.prototype.getHappiness = function(){
         this.happiness
     }
 
