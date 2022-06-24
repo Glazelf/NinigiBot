@@ -15,20 +15,27 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "data":
                 let shinx = await nwu_db.services.getShinx(master.id);
-                let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                //let avatar = new Discord.THU();
+                const file = new Discord.MessageAttachment('../../assets/shinx.png');
+
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
                 let embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: client.user.username })
-                .setThumbnail(avatar)
-                .addField("Nickname:", shinx.nickname.toString(), false)
-                .addField("Fullness:", shinx.fullness.toString(), true)
-                .addField("Happiness:", shinx.happiness.toString(), true)       
-                .addField("Experience:", shinx.experience.toString(), true)       
+                .setImage('attachment://shinx.png')
+                .addFields(
+                    { name: "Nickname:", value: shinx.nickname.toString()},
+                    { name: "Level:", value: shinx.getLevel().toString(), inline: true},
+                    { name: "Experience:", value: shinx.experience.toString(), inline: true},
+                    { name: '\u200B', value: '\u200B', inline: true },
+                    { name: "Fullness:", value: shinx.fullness.toString(), inline: true},
+                    { name: "Happiness:", value: shinx.happiness.toString(), inline: true},
+                )
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
-                    embeds: embed,  
+                    embeds: [embed],  
                     ephemeral: ephemeral });
             case "addexp":
                 await nwu_db.services.addExperience(master.id);
