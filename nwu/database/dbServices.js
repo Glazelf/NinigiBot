@@ -34,10 +34,30 @@ module.exports = {
                     },
                 });
 
+                Reflect.defineProperty(services, 'getUser', {
+                    value: async function getUser(id) {
+                        let user = await Users.findOne({
+                            where: { user_id: id },
+                        });
+
+                        if (!user) {
+                            user = await Users.create({ user_id: id });
+                        };
+                        return user;
+                    },
+                });
+
                 Reflect.defineProperty(services, 'addExperience', {
-                    value: async function addExperience(id) {
+                    value: async function addExperience(id, experience) {
                         let shinx = this.getShinx(id);
-                        await shinx.addExperience(1000);
+                        await shinx.addExperience(experience);
+                    },
+                });
+
+                Reflect.defineProperty(services, 'addMoney', {
+                    value: async function addMoney(id, money) {
+                        let user = this.getUser(id);
+                        await user.addMoney(money);
                     },
                 });
 
