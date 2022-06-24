@@ -45,22 +45,13 @@ module.exports = (sequelize, DataTypes) => {
     }
     // Fullness
     Shinx.prototype.feed = function(amount){
-        if(this.fullness<MAX_RANGE){
-            this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
-            this.save();
-            return true;
-          } else {
-            return false;
-        }
+        this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
+        this.save();
+
     }
-    Shinx.prototype.unfeed = function(amount){
-        if(this.fullness>MIN_RANGE){
-            this.fullness = Math.max(MIN_RANGE, this.fullness-amount);
-            this.save();
-            return true;
-          } else {
-            return false;
-        }
+
+    Shinx.prototype.getHunger = function(){
+        return MAX_RANGE - this.fullness
     }
 
     Shinx.prototype.getFullness = function(){

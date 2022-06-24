@@ -49,15 +49,47 @@ module.exports = {
 
                 Reflect.defineProperty(services, 'addExperience', {
                     value: async function addExperience(id, experience) {
-                        let shinx = this.getShinx(id);
+                        let shinx = await this.getShinx(id);
                         await shinx.addExperience(experience);
+                    },
+                });
+
+                Reflect.defineProperty(services, 'feedShinx', {
+                    value: async function feedShinx(id) {
+                        let shinx = await this.getShinx(id);
+                        let shinx_hunger = shinx.getHunger()
+                        if(shinx_hunger == 0){
+                            return 'NoHungry'
+                        }
+                        let user = await this.getUser(id);
+
+                        let feed_amount = Math.min(shinx_hunger, user.getFood())
+                        if (feed_amount==0) {
+                            return 'NoFood'
+                        }
+                        await user.addFood(-feed_amount);
+                        await shinx.feed(feed_amount);
+                        return 'Ok'
                     },
                 });
 
                 Reflect.defineProperty(services, 'addMoney', {
                     value: async function addMoney(id, money) {
-                        let user = this.getUser(id);
+                        let user = await this.getUser(id);
                         await user.addMoney(money);
+                    },
+                });
+
+                Reflect.defineProperty(services, 'buyFood', {
+                    value: async function buyFood(id, amount) {
+                        let user = await this.getUser(id);
+                        let res = await user.hasMoney(amount);
+                        if (res) {
+                            await user.addMoney(id, -amount);
+                            await user.addFood(id, amount);
+                            return true
+                        }
+                        return false
                     },
                 });
 

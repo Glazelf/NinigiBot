@@ -20,13 +20,21 @@ module.exports = (sequelize, DataTypes) => {
     // Instance Methods
     //  Experience
     User.prototype.addMoney = function(money){
-        this.money += money;
+        this.money = Math.max(this.money + money, 0);
+        this.save();
     }
     User.prototype.getMoney = function(){
         return this.money;
     }
+    User.prototype.hasMoney = function(money){
+        return this.money>=money;
+    }
+    User.prototype.hasFood = function(food){
+        return this.food>=food;
+    }
     User.prototype.addFood = function(food){
-        this.food += food;
+        this.food = Math.max(this.food + food, 0);
+        this.save();
     }
     User.prototype.getFood = function(){
         return this.food;
