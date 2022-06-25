@@ -4,7 +4,7 @@ const CLEAN_TRESHOLD = 1000;
 
 
 const Discord = require('discord.js');
-const { Users, Shinx } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { Users, Shinx, HasTrophy, Trophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
     nwu_db: {
@@ -90,6 +90,46 @@ module.exports = {
                             return true
                         }
                         return false
+                    },
+                });
+
+                Reflect.defineProperty(services, 'addTrophy', {
+                    value: async function addTrophy(user_id, trophy_id) {
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        let trophy = await Trophy.findOne({
+                            where: { trophy_id },
+                        });
+
+                        if (!(await user.hasTrophy(trophy))) {
+                            await user.addTrophy(trophy);
+                        };
+                    },
+                });
+
+                Reflect.defineProperty(services, 'hasTrophy', {
+                    value: async function hasTrophy(user_id, trophy_id) {
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        let trophy = await Trophy.findOne({
+                            where: { trophy_id },
+                        });
+                        return (await user.hasTrophy(trophy))
+                    },
+                });
+
+                Reflect.defineProperty(services, 'deleteTrophy', {
+                    value: async function deleteTrophy(user_id, trophy_id) {
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        let trophy = await Trophy.findOne({
+                            where: { trophy_id },
+                        });
+
+                        await user.removeTrophy(trophy);
                     },
                 });
 
