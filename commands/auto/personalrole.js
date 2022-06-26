@@ -159,7 +159,7 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "personalrole",
-    description: "Updates your personal role color.",
+    description: "Update your personal role.",
     options: [{
         name: "color-hex",
         type: "STRING",
