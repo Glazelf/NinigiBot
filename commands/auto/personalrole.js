@@ -30,6 +30,7 @@ exports.run = async (client, interaction) => {
         if (iconArg) {
             iconImg = iconArg.attachment.url;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
+            console.log(iconArg)
             if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
         };
         if (deleteArg === true) deleteBool = deleteArg;
