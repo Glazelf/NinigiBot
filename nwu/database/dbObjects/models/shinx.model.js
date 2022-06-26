@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
 
-
     const Shinx = sequelize.define('Shinx', {
         user_id: DataTypes.STRING,
         nickname: {
@@ -39,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.getExperience = function(){
         return this.experience;
     }
-    
     Shinx.prototype.getLevel = function(){
         return Math.floor(Math.cbrt(1.25*this.experience))
     }
@@ -47,11 +45,10 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.feed = function(amount){
         this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
         this.save();
-
     }
 
     Shinx.prototype.getHunger = function(){
-        return MAX_RANGE - this.fullness
+        return MAX_RANGE - this.fullness;
     }
 
     Shinx.prototype.getFullness = function(){

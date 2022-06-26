@@ -46,25 +46,6 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
-                    ephemeral: ephemeral });   
-            case "user":
-                let user = await nwu_db.services.getUser(master.id);
-                //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //let avatar = new Discord.THU();
-                avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
-                embed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
-                .setAuthor({ name: client.user.username })
-                .setThumbnail(avatar)
-                .addFields(
-                    { name: "Money:", value: user.money.toString(), inline: true},
-                    { name: "Food:", value: user.food.toString(), inline: true},
-                        )   
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    embeds: [embed],  
                     ephemeral: ephemeral });
             case "addmoney":
                 let moneyArg = interaction.options.getInteger("money");
@@ -98,13 +79,12 @@ exports.run = async (client, interaction) => {
                         returnString = `Feeded Shinx successfully!`
                         break;
                 }
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    content: returnString,
                     ephemeral: ephemeral });  
         };
-
     } catch (e) {
         // Log error
         logger(e, client, interaction);
@@ -130,10 +110,6 @@ module.exports.config = {
             required: true,
             autocomplete: true
         }]
-    },{
-        name: "user",
-        type: "SUB_COMMAND",
-        description: "See your trainer stats!",
     },{
         name: "addmoney",
         type: "SUB_COMMAND",

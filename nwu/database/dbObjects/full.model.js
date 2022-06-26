@@ -6,5 +6,5 @@ module.exports = (sequelize, DataTypes) => {
 //https://sequelize.org/docs/v7/core-concepts/assocs/#foobelongstomanybar--through-baz-
 	Users.belongsToMany(Trophy);
 	Trophy.belongsToMany(Users);
-	return {Shinx, Users, HasTrophy, Trophy};
+	return {Shinx, Users, Trophy};
 }
