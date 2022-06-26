@@ -35,7 +35,7 @@ module.exports = async (client) => {
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
                 .setImage(randomGif);
-            channel.send({ content: candidateRandom.toString(), embeds: [gifEmbed] });
+            channel.send({ content: candidateRandom.toString(), embeds: [gifEmbed], allowedMentions: { parse: ['users'], users: [candidateRandom.id] } });
         }, timeZone = timezone, start = true);
 
     } catch (e) {
