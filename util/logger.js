@@ -24,7 +24,7 @@ module.exports = async (exception, client, message = null) => {
             if (message.member) user = message.author;
         };
 
-        let exceptionCode = Discord.Formatters.codeBlock(exception);
+        let exceptionCode = Discord.Formatters.codeBlock(exception.stack);
         let messageContentCode = "";
         if (message && message.content && message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
 
