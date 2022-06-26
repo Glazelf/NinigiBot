@@ -32,7 +32,9 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
             };
         };
         messageObject['ephemeral'] = ephemeral;
-        messageObject['allowedMentions'] = { repliedUser: false, roles: false };
+        messageObject['allowedMentions'] = { parse: ['users', 'roles'], repliedUser: true };
+        // let targetUser = interaction.options.getUser("user");
+        // if (targetUser) messageObject['allowedMentions'] = { users: [targetUser.id] };
 
         try {
             if (interaction.deferred) return interaction.editReply(messageObject);
