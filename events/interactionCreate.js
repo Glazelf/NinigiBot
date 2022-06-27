@@ -14,6 +14,8 @@ module.exports = async (client, interaction) => {
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
         const { bank } = require('../database/bank');
+        const { nwu_db } = require('../nwu/database/dbServices');
+
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
@@ -257,12 +259,26 @@ module.exports = async (client, interaction) => {
                         };
                     case "inventory":
                         break;
+                    case "trainer":
+                        switch (focusedOption.name) {
+                            case "item":
+                                const buyable_items = await nwu_db.services.getBuyableShopTrophies(interaction.user.id);
+                                buyable_items.forEach(trophy=>{
+                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
+                                })
+                                // if (choices.length == 0){
+                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                // }
+        
+                                break;
+                        };
+                        break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 if (choices.length < 1) return interaction.respond([]);
                 return interaction.respond(choices).catch(e => {
-                    // console.log(e);
+                    //console.log(e);
                 });
                 break;
             case "MODAL_SUBMIT":
