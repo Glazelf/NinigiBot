@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const Trophy = sequelize.define('Trophy', {
+    const Trophy = sequelize.define('ShinxTrophy', {
 		trophy_id: {
 			type: DataTypes.STRING,
 			primaryKey: true,
