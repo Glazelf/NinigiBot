@@ -13,7 +13,7 @@ module.exports = async (client) => {
             try {
                 let commandServerID = null;
                 if (command.config.serverID) commandServerID = command.config.serverID;
-                if (client.user.id == "623085596688121867") commandServerID = "759344085420605471"; // set to test server for test build
+                if (client.user.id != "623085596688121867") commandServerID = "759344085420605471"; // set to test server for test build
                 slashCommand = await client.application.commands.create(command.config, commandServerID);
             } catch (e) {
                 console.log(e);
