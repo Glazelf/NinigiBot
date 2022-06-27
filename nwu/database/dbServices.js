@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const {sequelize} =  require('./dbConnection/dbConnection');
 const CLEAN_TRESHOLD = 1000;
 
 
 const Discord = require('discord.js');
-const { Users, Shinx, HasTrophy, Trophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { Users, Shinx, ShinxTrophy, ShopTrophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
     nwu_db: {
@@ -93,43 +94,112 @@ module.exports = {
                     },
                 });
 
-                Reflect.defineProperty(services, 'addTrophy', {
-                    value: async function addTrophy(user_id, trophy_id) {
+                Reflect.defineProperty(services, 'addShinxTrophy', {
+                    value: async function addShinxTrophy(user_id, trophy_id) {
                         let user = await Users.findOne({
                             where: { user_id },
                         });
-                        let trophy = await Trophy.findOne({
+                        let trophy = await ShinxTrophy.findOne({
                             where: { trophy_id },
                         });
 
-                        if (!(await user.hasTrophy(trophy))) {
-                            await user.addTrophy(trophy);
+                        if (!(await user.hasShinxTrophy(trophy))) {
+                            await user.addShinxTrophy(trophy);
                         };
                     },
                 });
 
-                Reflect.defineProperty(services, 'hasTrophy', {
-                    value: async function hasTrophy(user_id, trophy_id) {
+                Reflect.defineProperty(services, 'hasShinxTrophy', {
+                    value: async function hasShinxTrophy(user_id, trophy_id) {
                         let user = await Users.findOne({
                             where: { user_id },
                         });
-                        let trophy = await Trophy.findOne({
+                        let trophy = await ShinxTrophy.findOne({
                             where: { trophy_id },
                         });
-                        return (await user.hasTrophy(trophy))
+                        return (await user.hasShinxTrophy(trophy))
                     },
                 });
 
-                Reflect.defineProperty(services, 'deleteTrophy', {
-                    value: async function deleteTrophy(user_id, trophy_id) {
+                Reflect.defineProperty(services, 'deleteShinxTrophy', {
+                    value: async function deleteShinxTrophy(user_id, trophy_id) {
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        let trophy = await ShinxTrophy.findOne({
+                            where: { trophy_id },
+                        });
+
+                        await user.ShinxTrophy(trophy);
+                    },
+                });
+
+                Reflect.defineProperty(services, 'updateShinxTrophies', {
+                    value: async function updateShinxTrophies(user_id) {
                         let user = await Users.findOne({
                             where: { user_id },
                         });
                         let trophy = await Trophy.findOne({
-                            where: { trophy_id },
+                            where: { trophy_id: 'Bronze Trophy' },
                         });
 
-                        await user.removeTrophy(trophy);
+                        await user.removeShinxTrophy(trophy);
+                    },
+                });
+
+                Reflect.defineProperty(services, 'getShopTrophies', {
+                    value: async function getShopTrophies() {
+                        const trophies = await ShopTrophy.findAll();
+                        return trophies;
+                    },
+                });
+
+                Reflect.defineProperty(services, 'getBuyableShopTrophies', {
+                    value: async function getBuyableShopTrophies(user_id) {
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        const user_trophies = await user.getShopTrophies()
+                        const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
+                        const trophies = await ShopTrophy.findAll({
+                            attributes: [
+                                'trophy_id'
+                            ],
+                            where: {
+                                trophy_id:{
+                                    [Op.notIn]: user_trophies_list
+                                },
+                                price:{
+                                    [Op.lte]: user.money
+                                }
+                            }
+                        });
+                        return trophies;
+                    },
+                });
+
+                Reflect.defineProperty(services, 'buyShopTrophy', {
+                    value: async function buyShopTrophy(user_id, trophy_id) {
+                        let trophy = await ShopTrophy.findOne({
+                            where: { trophy_id },
+                        });
+                        if (!trophy){
+                            return 'NoTrophy'
+                        }
+                        let user = await Users.findOne({
+                            where: { user_id },
+                        });
+                        if (await user.hasShopTrophy(trophy)){
+                            return 'HasTrophy'
+                        }
+                        if (user.money < trophy.price){
+                            return 'NoMoney'
+                        }
+                        
+                        await user.addShopTrophy(trophy);
+                        await user.addMoney(-trophy.price);
+                        return 'Ok'
+
                     },
                 });
 
