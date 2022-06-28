@@ -74,7 +74,13 @@ module.exports = {
         if(shinx_hunger == 0){
             return 'NoHungry'
         }
-        let user = await this.getUser(id);
+        let user = await Users.findOne({
+            where: { user_id: id },
+        });
+
+        if (!user) {
+            user = await Users.create({ user_id: id });
+        };
 
         let feed_amount = Math.min(shinx_hunger, user.getFood())
         if (feed_amount==0) {
@@ -82,6 +88,7 @@ module.exports = {
         }
         await user.addFood(-feed_amount);
         await shinx.feed(feed_amount);
+        await this.addExperience(user_id, feed_amount);
         return 'Ok'
     }
 };

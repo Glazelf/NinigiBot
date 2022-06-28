@@ -1,6 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
+    const shinx_util = require('../../../utils/shinx.util')
 
     const Shinx = sequelize.define('Shinx', {
         user_id: DataTypes.STRING,
@@ -46,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.getExperience = function(){
         return this.experience;
     }
+
+    Shinx.prototype.getNextExperience = function(){
+        const next_level = Math.ceil(shinx_util.levelToExp(this.getLevel()+1))
+        return next_level - this.experience;
+    }
     Shinx.prototype.getLevel = function(){
         return Math.floor(Math.cbrt(1.25*this.experience))
     }
@@ -60,7 +66,13 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Shinx.prototype.getFullness = function(){
-        this.fullness
+        return this.fullness
+    }
+    Shinx.prototype.getFullnessPercent = function(){
+        return Math.round(this.fullness*100/MAX_RANGE).toString()+'%'
+    }
+    Shinx.prototype.getHappinessPercent = function(){
+        return Math.round(this.happiness*100/MAX_RANGE).toString()+'%'
     }
     // Happiness
     Shinx.prototype.addHappiness = function(amount){
@@ -83,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Shinx.prototype.getHappiness = function(){
-        this.happiness
+        return this.happiness
     }
 
     return Shinx;

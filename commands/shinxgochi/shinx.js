@@ -23,22 +23,24 @@ exports.run = async (client, interaction) => {
                 //const file = new Discord.MessageAttachment('../../assets/shinx.png');
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
+                const file = new Discord.MessageAttachment('../../assets/shinx.png');
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: client.user.username })
-                .setThumbnail(avatar)
+                .setThumbnail('attachment://shinx.png')
                 .addFields(
                     { name: "Nickname:", value: shinx.nickname.toString()},
                     { name: "Level:", value: shinx.getLevel().toString(), inline: true},
-                    { name: "Experience:", value: shinx.experience.toString(), inline: true},
+                    { name: "Next Level:", value: `${shinx.getNextExperience()} pts.`, inline: true},
                     { name: '\u200B', value: '\u200B', inline: true },
-                    { name: "Fullness:", value: shinx.fullness.toString(), inline: true},
-                    { name: "Happiness:", value: shinx.happiness.toString(), inline: true},
+                    { name: "Fullness:", value: shinx.getFullnessPercent(), inline: true},
+                    { name: "Happiness:", value: shinx.getHappinessPercent(), inline: true},
                 )
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
                     embeds: [embed],  
+                    files: [file],
                     ephemeral: ephemeral });
             case "addexp":
                 let expArg = interaction.options.getInteger("exp");
