@@ -5,11 +5,13 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { nwu_db } = require('../../nwu/database/dbServices');
         const Discord = require("discord.js");
 
+        const api_user = require('../../nwu/database/dbServices/user');
+        const api_shop = require('../../nwu/database/dbServices/shop');
+
         let ephemeral = false;
-        let shinx, embed,foodArg,res,avatar;
+        let embed,avatar;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let master = interaction.user
@@ -17,8 +19,7 @@ exports.run = async (client, interaction) => {
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "card":
-                
-                user = await nwu_db.services.getUser(master.id);
+                user = await api_user.getUser(master.id);
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -52,7 +53,7 @@ exports.run = async (client, interaction) => {
                 
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                trophies = await nwu_db.services.getShopTrophies();
+                trophies = await api_shop.getShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += `:${trophy.icon}: **${trophy.trophy_id}** ${trophy.price}💰\n`;
@@ -72,7 +73,7 @@ exports.run = async (client, interaction) => {
                 //let avatar = new Discord.THU();
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
                 let trophy_name = interaction.options.getString("item");
-                let res =  await nwu_db.services.buyShopTrophy(master.id, trophy_name.toLowerCase());
+                let res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
                 let returnString = ''
                 switch(res){
                     case 'NoTrophy':

@@ -5,8 +5,10 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { nwu_db } = require('../../nwu/database/dbServices');
         const Discord = require("discord.js");
+        const api_shinx = require('../../nwu/database/dbServices/shinx');
+        const api_user = require('../../nwu/database/dbServices/user');
+        
 
         let ephemeral = true;
         let shinx, embed,foodArg,res,avatar;
@@ -15,7 +17,7 @@ exports.run = async (client, interaction) => {
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
-                shinx = await nwu_db.services.getShinx(master.id);
+                shinx = await api_shinx.getShinx(master.id);
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 //const file = new Discord.MessageAttachment('../../assets/shinx.png');
@@ -40,7 +42,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral });
             case "addexp":
                 let expArg = interaction.options.getInteger("exp");
-                await nwu_db.services.addExperience(master.id, expArg);
+                await api_shinx.addExperience(master.id, expArg);
                 returnString = `Added experience to your Shinx!`;
                 return sendMessage({ 
                     client: client, 
@@ -49,7 +51,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral });
             case "addmoney":
                 let moneyArg = interaction.options.getInteger("money");
-                await nwu_db.services.addMoney(master.id, moneyArg);
+                await api_user.addMoney(master.id, moneyArg);
                 returnString = `Added money to your account!`;
                 return sendMessage({ 
                     client: client, 
@@ -58,7 +60,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral }); 
             case "buyfood":
                 foodArg = interaction.options.getInteger("food");
-                res = await nwu_db.services.buyFood(master.id, foodArg);
+                res = await api_user.buyFood(master.id, foodArg);
                 returnString = res ? `Added food to your account!`:`Not enough money!`;
                 return sendMessage({ 
                     client: client, 
@@ -67,7 +69,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral });  
             case "feed":
                 foodArg = interaction.options.getInteger("food");
-                res = await nwu_db.services.feedShinx(master.id);
+                res = await api_shinx.feedShinx(master.id);
                 switch(res){
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
