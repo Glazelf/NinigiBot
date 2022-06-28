@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
+
     }, {
         timestamps: false,
     });
@@ -34,6 +35,13 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.addExperience = function(experience){
         this.experience += experience;
         this.save();
+    }
+    Shinx.prototype.addExperienceAndLevelUp = function(experience){
+        const pre = this.getLevel();
+        this.addExperience(experience);
+        const post = this.getLevel();
+        return {pre, post}
+
     }
     Shinx.prototype.getExperience = function(){
         return this.experience;

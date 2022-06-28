@@ -7,8 +7,9 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        const api_user = require('../../nwu/database/dbServices/user');
-        const api_shop = require('../../nwu/database/dbServices/shop');
+        const api_shinx = require('../../nwu/database/dbServices/shinx.api');
+        const api_user = require('../../nwu/database/dbServices/user.api');
+        const api_shop = require('../../nwu/database/dbServices/shop.api');
 
         let ephemeral = false;
         let embed,avatar;
@@ -36,6 +37,10 @@ exports.run = async (client, interaction) => {
                 trophies.forEach(trophy=>{
                     trophy_string += ':'+trophy.icon+': ';
                 })
+                trophies = await user.getShinxTrophies();
+                trophies.forEach(trophy=>{
+                    trophy_string += ':'+trophy.icon+': ';
+                })
                 if (trophy_string.length > 0) {
                     embed.addFields(
                         { name: "Trophies:", value: trophy_string},
@@ -58,6 +63,7 @@ exports.run = async (client, interaction) => {
                 trophies.forEach(trophy=>{
                     trophy_string += `:${trophy.icon}: **${trophy.trophy_id}** ${trophy.price}💰\n`;
                 })
+                trophies = await api_shop.getShopTrophies();
                 if (trophy_string.length > 0) {
                     embed.addFields(
                         { name: "Trophies:", value: trophy_string},

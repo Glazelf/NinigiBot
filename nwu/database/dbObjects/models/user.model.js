@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
-        }
+        },
+        // new_achievement: {
+        //     type: DataTypes.BOOLEAN,
+        //     allowNull: false,
+        //     defaultValue: false,
+        // }
     }, {
         timestamps: false,
     });
@@ -42,6 +47,20 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.getFood = function(){
         return this.food;
     }
+
+    // User.prototype.setAchievementFlag = () =>{
+    //     if(!this.new_achievement){
+    //         this.new_achievement = true;
+    //         this.save()
+    //     }
+    // }
+
+    // User.prototype.removeAchievementFlag = () =>{
+    //     if(this.new_achievement){
+    //         this.new_achievement = false;
+    //         this.save()
+    //     }
+    // }
 
     return User;
 };

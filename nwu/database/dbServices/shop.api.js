@@ -5,11 +5,11 @@ const {sequelize} =  require('../dbConnection/dbConnection');
 const { Users, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
-    getShopTrophies : async  () => {
+    async  getShopTrophies() {
         const trophies = await ShopTrophy.findAll();
         return trophies;
     },
-    getBuyableShopTrophies : async (user_id) => {
+    async getBuyableShopTrophies(user_id) {
         let user = await Users.findOne({
             where: { user_id },
         });
@@ -30,7 +30,7 @@ module.exports = {
         });
         return trophies;
     },
-    buyShopTrophy : async (user_id, trophy_id) => {
+    async buyShopTrophy(user_id, trophy_id) {
         let trophy = await ShopTrophy.findOne({
             where: { trophy_id },
         });
