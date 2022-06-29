@@ -86,6 +86,11 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
                 monsterRender = getRenderURL(monsterRenderName);
             };
         };
+        // If using MHST2 render, set as banner instead since there's no HZV images
+        if (monsterRender.includes("MHST2")) {
+            monsterBanner = monsterRender;
+            monsterRender = null;
+        };
 
         // Format size
         let monsterSize = "Small";
