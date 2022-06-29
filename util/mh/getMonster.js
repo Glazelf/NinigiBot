@@ -66,28 +66,27 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         let monsterGameIndicator = gameDBName;
         if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
         let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
-        let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-        let md5first = md5.substring(0, 1);
-        let md5duo = md5.substring(0, 2);
-        let monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+        let monsterRender = getRenderURL(monsterRenderName);
         let renderExists = imageExists(monsterRender);
-        if (!renderExists && (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U")) {
-            if (monsterGameIndicator == "MHGU") {
-                monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
-                md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-                md5first = md5.substring(0, 1);
-                md5duo = md5.substring(0, 2);
-                monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
-                renderExists = imageExists(monsterRender);
-            };
-            if (!renderExists) {
-                monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
-                md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-                md5first = md5.substring(0, 1);
-                md5duo = md5.substring(0, 2);
-                monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+        if (!renderExists) {
+            if (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U") {
+                // Check for 4U only renders
+                if (monsterGameIndicator == "MHGU") {
+                    monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
+                    monsterRender = getRenderURL(monsterRenderName);
+                    renderExists = imageExists(monsterRender);
+                };
+                if (!renderExists) {
+                    monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
+                    monsterRender = getRenderURL(monsterRenderName);
+                };
+            } else {
+                // Check if there's a render 2 (seems to be for spinoff exclusive monsters, namely Oltura)
+                monsterRenderName = monsterRenderName.replace("Render_001", "Render_002");
+                monsterRender = getRenderURL(monsterRenderName);
             };
         };
+
         // Format size
         let monsterSize = "Small";
         if (monsterData.isLarge) monsterSize = "Large";
@@ -157,6 +156,14 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
 
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
+
+        function getRenderURL(monsterRenderName) {
+            let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
+            let md5first = md5.substring(0, 1);
+            let md5duo = md5.substring(0, 2);
+            let url = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+            return url;
+        };
 
     } catch (e) {
         // Log error
