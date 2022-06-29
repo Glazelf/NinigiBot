@@ -79,7 +79,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
                 md5duo = md5.substring(0, 2);
                 monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
                 renderExists = imageExists(monsterRender);
-                console.log(renderExists)
             };
             if (!renderExists) {
                 monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
@@ -89,7 +88,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
                 monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
             };
         };
-        console.log(monsterRender)
         // Format size
         let monsterSize = "Small";
         if (monsterData.isLarge) monsterSize = "Large";
