@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
+        shiny: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
 
     }, {
         timestamps: false,
@@ -46,6 +51,11 @@ module.exports = (sequelize, DataTypes) => {
     }
     Shinx.prototype.getExperience = function(){
         return this.experience;
+    }
+    Shinx.prototype.switchShininessAndGet = function(){
+        this.shiny = !this.shiny;
+        this.save();
+        return this.shiny
     }
 
     Shinx.prototype.getNextExperience = function(){

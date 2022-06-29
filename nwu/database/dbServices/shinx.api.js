@@ -24,6 +24,10 @@ module.exports = {
         };
         return shinx;
     },
+    async switchShininessAndGet(id) {
+        let shinx = await this.getShinx(id);
+        return shinx.switchShininessAndGet();
+    },
     async addExperience(id, experience)  {
         let shinx = await this.getShinx(id);
         const res = await shinx.addExperienceAndLevelUp(experience);
@@ -54,6 +58,17 @@ module.exports = {
             await user.addShinxTrophy(trophy);
         };
     },
+    async hasShinxTrophy(user_id, trophy_id) {
+        let user = await Users.findOne({
+            where: { user_id },
+        });
+        let trophy = await ShinxTrophy.findOne({
+            where: { trophy_id: trophy_id.toLowerCase() },
+        });
+        
+        return (await user.hasShinxTrophy(trophy))
+    },
+
     async addShinxTrophyUnchecked(user_id, trophy_id) {
         let user = await Users.findOne({
             where: { user_id },

@@ -1,4 +1,5 @@
 
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -6,7 +7,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const api_shinx = require('../../nwu/database/dbServices/shinx.api');
+        const shinxApi = require('../../nwu/database/dbServices/shinx.api');
         const api_user = require('../../nwu/database/dbServices/user.api');
         
 
@@ -17,7 +18,7 @@ exports.run = async (client, interaction) => {
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
-                shinx = await api_shinx.getShinx(master.id);
+                shinx = await shinxApi.getShinx(master.id);
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 //const file = new Discord.MessageAttachment('../../assets/shinx.png');
@@ -44,7 +45,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral });
             case "addexp":
                 let expArg = interaction.options.getInteger("exp");
-                await api_shinx.addExperience(master.id, expArg);
+                await shinxApi.addExperience(master.id, expArg);
                 returnString = `Added experience to your Shinx!`;
                 return sendMessage({ 
                     client: client, 
@@ -68,10 +69,23 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
-                    ephemeral: ephemeral });  
+                    ephemeral: ephemeral }); 
+                    
+            case "shiny":
+                const res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
+                if(res){
+                    returnString = (await shinxApi.switchShininessAndGet(master.id))? `Your shinx is shiny now` : `Your shinx is no longer shiny`
+                } else {
+                    returnString = 'You need that your shinx arrives to level 50 for that.'    
+                }
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: returnString, 
+                    ephemeral: ephemeral }); 
             case "feed":
                 foodArg = interaction.options.getInteger("food");
-                res = await api_shinx.feedShinx(master.id);
+                res = await shinxApi.feedShinx(master.id);
                 switch(res){
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
@@ -140,5 +154,9 @@ module.exports.config = {
         name: "feed",
         type: "SUB_COMMAND",
         description: "Feed Shinx!"
+    },{
+        name: "shiny",
+        type: "SUB_COMMAND",
+        description: "Change shinx's color!"
     }],
 };
