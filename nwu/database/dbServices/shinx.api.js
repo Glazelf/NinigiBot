@@ -7,9 +7,10 @@ const BRONZE_TROPHY_EXP = shinx_util.levelToExp(5);
 const SILVER_TROPHY_EXP = shinx_util.levelToExp(15);
 const GOLD_TROPHY_EXP = shinx_util.levelToExp(30);
 const SHINY_CHARM_EXP = shinx_util.levelToExp(50);
+//const userApi = require('./user.api')
 
 function hasPassedLevel(from, to, middle) {
-    return (from < to) && (middle <= to)
+    return (from < middle) && (middle <= to)
 }
 
 
@@ -33,23 +34,28 @@ module.exports = {
         const res = await shinx.addExperienceAndLevelUp(experience);
         if(res.pre != res.post) {
             if(hasPassedLevel(res.pre, res.post, 5)){
-                await this.addShinxTrophyUnchecked(id, 'Bronze ShinxTrophy')
+                await this.addShinxTrophyUnchecked(id, 'bronze shinxtrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 15)){
-                await this.addShinxTrophyUnchecked(id, 'Silver ShinxTrophy')
+                await this.addShinxTrophyUnchecked(id, 'silver shinxtrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 30)){
-                await this.addShinxTrophyUnchecked(id, 'Gold ShinxTrophy')
+                await this.addShinxTrophyUnchecked(id, 'gold shinxtrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 50)){
-                await this.addShinxTrophyUnchecked(id, 'Shiny Charm')
+                await this.addShinxTrophyUnchecked(id, 'shiny charm')
             }
         }
     },
     async addShinxTrophy(user_id, trophy_id) {
+        
         let user = await Users.findOne({
             where: { user_id },
         });
+
+        if (!user) {
+            user = await Users.create({ user_id});
+        };
         let trophy = await ShinxTrophy.findOne({
             where: { trophy_id: trophy_id.toLowerCase() },
         });
@@ -62,6 +68,10 @@ module.exports = {
         let user = await Users.findOne({
             where: { user_id },
         });
+
+        if (!user) {
+            user = await Users.create({ user_id});
+        };
         let trophy = await ShinxTrophy.findOne({
             where: { trophy_id: trophy_id.toLowerCase() },
         });
@@ -73,8 +83,12 @@ module.exports = {
         let user = await Users.findOne({
             where: { user_id },
         });
+
+        if (!user) {
+            user = await Users.create({ user_id});
+        };
         let trophy = await ShinxTrophy.findOne({
-            where: { trophy_id: trophy_id.toLowerCase() },
+            where: { trophy_id },
         });
         await user.addShinxTrophy(trophy);
 
@@ -89,13 +103,7 @@ module.exports = {
         if(shinx_hunger == 0){
             return 'NoHungry'
         }
-        let user = await Users.findOne({
-            where: { user_id: id },
-        });
-
-        if (!user) {
-            user = await Users.create({ user_id: id });
-        };
+        let user = await  userApi.getUser(user_id);
 
         let feed_amount = Math.min(shinx_hunger, user.getFood())
         if (feed_amount==0) {

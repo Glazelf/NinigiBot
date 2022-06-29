@@ -24,11 +24,10 @@ exports.run = async (client, interaction) => {
                 //const file = new Discord.MessageAttachment('../../assets/shinx.png');
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
-                const file = new Discord.MessageAttachment('../../assets/shinx.png');
+                
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: client.user.username })
-                .setThumbnail('attachment://shinx.png')
+                .setTitle(`${master.username}'s Shinx`)
                 .addFields(
                     { name: "Nickname:", value: shinx.nickname.toString()},
                     { name: "Level:", value: shinx.getLevel().toString(), inline: true},
@@ -37,6 +36,14 @@ exports.run = async (client, interaction) => {
                     { name: "Fullness:", value: shinx.getFullnessPercent(), inline: true},
                     { name: "Happiness:", value: shinx.getHappinessPercent(), inline: true},
                 )
+                let file;
+                if(shinx.shiny){
+                    file = new Discord.MessageAttachment('./assets/shiny_shinx.png', 'shiny_shinx.png');
+                    embed.setThumbnail('attachment://shiny_shinx.png')
+                } else {
+                    file = new Discord.MessageAttachment('./assets/shinx.png', 'shinx.png');
+                    embed.setThumbnail('attachment://shinx.png')
+                }
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 

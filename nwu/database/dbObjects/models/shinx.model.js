@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     const shinx_util = require('../../../utils/shinx.util')
 
     const Shinx = sequelize.define('Shinx', {
-        user_id: DataTypes.STRING,
+        user_id: {
+            type : DataTypes.STRING,
+            primaryKey: true
+        },
         nickname: {
             type: DataTypes.STRING,
             allowNull: false,
