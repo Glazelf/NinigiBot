@@ -13,7 +13,6 @@ module.exports = async (client, message) => {
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
 
-        // Call image
         let messageImage = null;
         if (message.attachments.size > 0) {
             messageImage = message.attachments.first().url;
@@ -25,7 +24,6 @@ module.exports = async (client, message) => {
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            // Buttons
             let profileButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${message.author.id}` }));
 

@@ -67,7 +67,6 @@ exports.run = async (client, interaction) => {
         let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
-        // Avatar
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Owner
@@ -90,9 +89,10 @@ exports.run = async (client, interaction) => {
         if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
-        // Buttons
         let botButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
+            // Uncomment this when app directory goes live
+            // .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
 
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });

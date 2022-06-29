@@ -25,7 +25,7 @@ exports.run = async (client, interaction) => {
             return sendMessage({ client: client, interaction: interaction, content: `Failed to update my avatar.` });
         };
 
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully updated my avatar.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Updated my avatar.` });
 
     } catch (e) {
         // Log error

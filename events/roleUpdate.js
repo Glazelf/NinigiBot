@@ -18,7 +18,8 @@ module.exports = async (client, oldRole, newRole) => {
                 limit: 1,
                 type: 'ROLE_UPDATE',
             });
-            const updateLog = fetchedLogs.entries.first();
+            let updateLog = fetchedLogs.entries.first();
+            if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
             let executor;
             if (updateLog) {
                 const { executor: updateExecutor, target } = updateLog;

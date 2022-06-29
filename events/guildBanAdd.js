@@ -19,24 +19,19 @@ module.exports = async (client, guildBan) => {
         let botMember = await guildBan.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const banLog = fetchedLogs.entries.first();
+            let banLog = fetchedLogs.entries.first();
+            if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
-            let executor;
-            let target;
-            let reason;
-            if (banLog) {
-                executor = banLog.executor;
-                target = banLog.target;
-                reason = banLog.reason;
-            };
+            let executor = banLog.executor;
+            let target = banLog.target;
+            let reason = banLog.reason;
             if (!executor || !target) return;
             if (reason == null) reason = "Not specified.";
-
             if (target.id !== guildBan.user.id) return;
+
             let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            // Buttons
             let banButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
 

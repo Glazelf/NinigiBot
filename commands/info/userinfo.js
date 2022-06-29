@@ -22,10 +22,8 @@ exports.run = async (client, interaction) => {
         dbBalance = Math.floor(dbBalance);
         let userBalance = `${dbBalance}${globalVars.currency}`;
         let switchCode = await bank.currency.getSwitchCode(user.id);
-
         let birthday = await bank.currency.getBirthday(user.id);
         let birthdayParsed = parseDate(birthday);
-
         // Roles
         let memberRoles = member.roles.cache.filter(element => element.name !== "@everyone");
         let rolesSorted = "None";
@@ -44,17 +42,14 @@ exports.run = async (client, interaction) => {
         let roleCount = memberRoles.size;
         let roleTitle = `Roles:`;
         if (roleCount > 0) roleTitle = `Roles: (${roleCount})`;
-
         // Avatar and banner
         let serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
         let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
         let banner = null;
         if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
-
         // Accent color
         let embedColor = globalVars.embedColor;
         if (user.accentColor) embedColor = user.accentColor;
-
         // Profile badges
         let badgesArray = [];
         let badgesString = "";
@@ -79,13 +74,10 @@ exports.run = async (client, interaction) => {
                 // console.log(e);
             };
         };
-
-        // JoinRank
         let joinRank = await getJoinRank(user.id, interaction.guild);
         let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
         let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
-        // Buttons
         let profileButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
 

@@ -35,7 +35,7 @@ exports.run = async (client, interaction) => {
 
         bank.currency.add(interaction.user.id, -betAmount * bets.size);
         roulette.players.push(interaction.user.id);
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully placed your bet.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Placed your bet.` });
 
     } catch (e) {
         // Log error

@@ -17,7 +17,6 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            // Buttons
             let joinButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 

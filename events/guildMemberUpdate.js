@@ -24,15 +24,28 @@ module.exports = async (client, member, newMember) => {
             let changeText = null;
             let image = null;
             if (!member.premiumSince && newMember.premiumSince) {
+                // Nitro boost start
                 updateCase = "nitroStart";
             } else if (member.premiumSince && !newMember.premiumSince) {
+                // Nitro boost end
                 updateCase = "nitroEnd";
             } else if (oldAvatar !== avatar) {
+                // Update server avatar
                 updateCase = "guildAvatar";
             } else if (member.roles.cache.size !== newMember.roles.cache.size) {
-                // add logic for changing roles
-                return;
+                // Roles updated
+                updateCase = null; // TODO
+            } else if (member.pending !== newMember.pending) {
+                // Pending?
+                updateCase = null; // TODO
+            } else if (member.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
+                // Timeout, check if there's a difference in the timestamps for other actions, might have to add a minimum gap
+                updateCase = null; // TODO
+            } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
+                // I assume this does nothing but I want to be sure because of the weird nickname updates firing
+                updateCase = null;
             } else if (member.nickname !== newMember.nickname) {
+                // Nickname change
                 updateCase = "nickname";
             };
             if (!updateCase) return;
@@ -46,7 +59,7 @@ module.exports = async (client, member, newMember) => {
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
-                if (executor.id == member.id || memberUpdateLog.createdTimestamp < (Date.now() - 5000)) executor = null;
+                if (executor.id == member.id || (memberUpdateLog && memberUpdateLog.createdTimestamp < (Date.now() - 5000))) executor = null;
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) executor = null;

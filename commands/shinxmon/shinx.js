@@ -354,7 +354,7 @@ exports.run = async (client, interaction) => {
                 if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
                 await shinx.destroy();
 
-                return sendMessage({ client: client, interaction: interaction, content: `Successfully released Shinx and reset all it's values.` });
+                return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
                 break;
         };
 

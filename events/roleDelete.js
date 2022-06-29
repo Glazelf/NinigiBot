@@ -18,7 +18,8 @@ module.exports = async (client, role) => {
                 limit: 1,
                 type: 'ROLE_DELETE',
             });
-            const deleteLog = fetchedLogs.entries.first();
+            let deleteLog = fetchedLogs.entries.first();
+            if (deleteLog && deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;
             let executor;
             if (deleteLog) {
                 const { executor: deleteExecutor, target } = deleteLog;
