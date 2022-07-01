@@ -9,8 +9,8 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let day = interaction.options.getString("day");
-        let month = interaction.options.getString("month");
+        let day = interaction.options.getInteger("day");
+        let month = interaction.options.getInteger("month");
         let date = `${day}-${month}`;
 
         // Check and sanitize birthday
