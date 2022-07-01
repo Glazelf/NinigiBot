@@ -86,8 +86,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
                 monsterRender = getRenderURL(monsterRenderName);
             };
         };
-        // If using MHST2 render, set as banner instead since there's no HZV images
-        if (monsterRender.includes("MHST2") || monsterRender.includes("MH3") || monsterRender.includes("MH4")) {
+        if (!monsterBanner) {
             monsterBanner = monsterRender;
             monsterRender = null;
         };
