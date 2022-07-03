@@ -7,6 +7,9 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let memberFetch = await interaction.guild.members.fetch();
         let global = false;
         let globalArg = interaction.options.getBoolean("global");
