@@ -19,7 +19,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         if (pokemon.gender == "F") pokemonGender = "♀️";
 
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         // Typing
         let type1 = pokemon.types[0];

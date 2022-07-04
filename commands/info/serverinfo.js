@@ -95,7 +95,7 @@ exports.run = async (client, interaction) => {
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) boosterString = boosterString + nitroEmote;
+        if (guild.me.permissions.has("USE_EXTERNAL_EMOJIS")) boosterString = boosterString + nitroEmote;
 
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
