@@ -8,7 +8,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const imageExists = require('../../util/imageExists');
 
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         // Game names
         let MHRise = "Monster Hunter Rise";
         let MHW = "Monster Hunter World";

@@ -17,7 +17,7 @@ exports.run = async (client, interaction) => {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
         let mhEmbed = new Discord.MessageEmbed()
