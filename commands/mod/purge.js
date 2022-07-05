@@ -11,6 +11,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
+        let returnString = "";
         let amount = interaction.options.getInteger("amount");
         let maxNumberOfMessages = 100;
         if (amount > maxNumberOfMessages) amount = maxNumberOfMessages;
@@ -23,6 +24,7 @@ exports.run = async (client, interaction) => {
         if (userArg) user = userArg;
 
         let deleteFailString = `An error occurred while bulk deleting.`;
+        let missingMessagesString = `\nSome messages were not deleted, probably because they were older than 2 weeks.`;
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
@@ -30,17 +32,13 @@ exports.run = async (client, interaction) => {
                 let messagesAll = await interaction.channel.messages.fetch({ limit: maxNumberOfMessages });
                 let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
                 let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
-                try {
-                    await interaction.channel.bulkDelete(messages, [true]);
-                    return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages from ${user.tag} within the last ${maxNumberOfMessages} messages. Messages older than 2 weeks may not have been deleted.` });
-                } catch (e) {
-                    if (e.toString().includes("Missing Permissions")) {
-                        return logger(e, client, interaction);
-                    } else {
-                        // console.log(e);
-                        return sendMessage({ client: client, interaction: interaction, content: deleteFailString });
-                    };
-                };
+                await interaction.channel.bulkDelete(messages, [true])
+                    .then(messagesDeleted => {
+                        returnString = `Deleted ${messagesDeleted.size} messages from ${user.tag} within the last ${maxNumberOfMessages} messages.`;
+                        if (messagesDeleted.size < amount) returnString += missingMessagesString;
+                        sendMessage({ client: client, interaction: interaction, content: returnString });
+                    });
+                return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
@@ -52,8 +50,15 @@ exports.run = async (client, interaction) => {
         } else {
             try {
                 let messages = await interaction.channel.messages.fetch({ limit: amount });
-                await interaction.channel.bulkDelete(messages, [true]);
-                return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages. Messages older than 2 weeks may not have been deleted.` });
+                await interaction.channel.bulkDelete(messages, [true])
+                    .then(messagesDeleted => {
+                        returnString = `Deleted ${messagesDeleted.size} messages.`;
+                        console.log(messagesDeleted.size)
+                        console.log(amount)
+                        if (messagesDeleted.size < amount) returnString += missingMessagesString;
+                        sendMessage({ client: client, interaction: interaction, content: returnString });
+                    });
+                return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
