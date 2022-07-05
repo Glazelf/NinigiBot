@@ -22,7 +22,7 @@ exports.run = async (client, interaction) => {
         let userArg = interaction.options.getUser("user");
         if (userArg) user = userArg;
 
-        let oldMessagesString = `An error occurred while bulk deleting. You are likely trying to bulk delete messages older than 14 days.`;
+        let deleteFailString = `An error occurred while bulk deleting.`;
 
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
@@ -31,14 +31,14 @@ exports.run = async (client, interaction) => {
                 let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
                 let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
                 try {
-                    await interaction.channel.bulkDelete(messages);
-                    return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages from ${user.tag} within the last ${maxNumberOfMessages} messages.` });
+                    await interaction.channel.bulkDelete(messages, [true]);
+                    return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages from ${user.tag} within the last ${maxNumberOfMessages} messages. Messages older than 2 weeks may not have been deleted.` });
                 } catch (e) {
                     if (e.toString().includes("Missing Permissions")) {
                         return logger(e, client, interaction);
                     } else {
                         // console.log(e);
-                        return sendMessage({ client: client, interaction: interaction, content: oldMessagesString });
+                        return sendMessage({ client: client, interaction: interaction, content: deleteFailString });
                     };
                 };
             } catch (e) {
@@ -46,14 +46,14 @@ exports.run = async (client, interaction) => {
                     return logger(e, client, interaction);
                 } else {
                     // console.log(e);
-                    return sendMessage({ client: client, interaction: interaction, content: `An error occurred while bulk deleting.` });
+                    return sendMessage({ client: client, interaction: interaction, content: deleteFailString });
                 };
             };
         } else {
             try {
                 let messages = await interaction.channel.messages.fetch({ limit: amount });
-                await interaction.channel.bulkDelete(messages);
-                return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages` });
+                await interaction.channel.bulkDelete(messages, [true]);
+                return sendMessage({ client: client, interaction: interaction, content: `Deleted ${amount} messages. Messages older than 2 weeks may not have been deleted.` });
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
@@ -62,7 +62,7 @@ exports.run = async (client, interaction) => {
                         return logger(e, client, interaction);
                     } else {
                         // console.log(e);
-                        return interaction.channel.send({ content: oldMessagesString });
+                        return interaction.channel.send({ content: deleteFailString });
                     };
                 };
             };
