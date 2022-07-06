@@ -86,7 +86,7 @@ exports.run = async (client, interaction) => {
                     editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
-                        await personalRole.setIcon(iconImg, ["Personal role image update."]);
+                        await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.tag}.`]);
                         editReturnString += `\nImage updated.`;
                     } catch (e) {
                         // console.log(e);
