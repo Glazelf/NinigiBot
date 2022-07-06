@@ -63,11 +63,11 @@ exports.run = async (client, interaction) => {
         if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
-            let editReturnString = `Updated your role; `;
+            let editReturnString = `Updated your role.`;
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
             if (!colorArg) roleColor = personalRole.color;
-            if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
+            if (roleColor != personalRole.color) editReturnString += `\nColor set to \`#${roleColor}\`.`;
 
             personalRole.edit({
                 name: interaction.user.tag,
@@ -81,14 +81,16 @@ exports.run = async (client, interaction) => {
             if (iconArg && iconsAllowed && fileIsImg) {
                 let roleIconSizeLimit = 256;
                 if (iconSize > roleIconSizeLimit) {
-                    editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
+                    editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
                         await personalRole.setIcon(iconImg);
+                        editReturnString += `\nImage updated.`;
                     } catch (e) {
                         // console.log(e);
+                        return sendMessage({ client: client, interaction: interaction, content: `An error occurred\n${e.stack}` });
+                        editReturnString += `\nFailed to update image.`;
                     };
-                    editReturnString += `Image updated. `;
                 };
             } else if (iconArg && !iconsAllowed) {
                 editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
