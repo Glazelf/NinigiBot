@@ -28,8 +28,9 @@ exports.run = async (client, interaction) => {
 
         if (colorArg) roleColor = colorArg;
         if (iconArg) {
-            console.log(iconArg)
+            // Object seems to be structured differently between ephemeral and public messages, or I may be stupid
             iconImg = iconArg.attachment.url;
+            if (!iconImg) iconImg = iconArg.attachment;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
             if (iconArg.contentType.includes('image')) fileIsImg = true;
         };
@@ -85,12 +86,10 @@ exports.run = async (client, interaction) => {
                     editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
-                        console.log(iconImg)
                         await personalRole.setIcon(iconImg, ["Personal role image update."]);
                         editReturnString += `\nImage updated.`;
                     } catch (e) {
                         // console.log(e);
-                        return sendMessage({ client: client, interaction: interaction, content: `An error occurred\n${e.stack}` });
                         editReturnString += `\nFailed to update image.`;
                     };
                 };
@@ -123,7 +122,7 @@ exports.run = async (client, interaction) => {
                     reason: `Personal role for ${interaction.user.tag}.`,
                 });
             } catch (e) {
-                // console.log(error);
+                // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
@@ -137,10 +136,8 @@ exports.run = async (client, interaction) => {
             } catch (e) {
                 // console.log(e);
             };
-
             interaction.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
-
             return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
         };
 
