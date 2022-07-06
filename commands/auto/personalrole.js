@@ -28,6 +28,7 @@ exports.run = async (client, interaction) => {
 
         if (colorArg) roleColor = colorArg;
         if (iconArg) {
+            console.log(iconArg)
             iconImg = iconArg.attachment.url;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
             if (iconArg.contentType.includes('image')) fileIsImg = true;
@@ -84,7 +85,8 @@ exports.run = async (client, interaction) => {
                     editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
-                        await personalRole.setIcon(iconImg);
+                        console.log(iconImg)
+                        await personalRole.setIcon(iconImg, ["Personal role image update."]);
                         editReturnString += `\nImage updated.`;
                     } catch (e) {
                         // console.log(e);
