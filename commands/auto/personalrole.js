@@ -69,7 +69,7 @@ exports.run = async (client, interaction) => {
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
             if (!colorArg) roleColor = personalRole.color;
-            if (roleColor != personalRole.color) editReturnString += `\nColor set to \`#${roleColor}\`.`;
+            if (roleColor != personalRole.color) editReturnString += `\n-Color set to \`#${roleColor}\`.`;
 
             personalRole.edit({
                 name: interaction.user.tag,
@@ -87,14 +87,14 @@ exports.run = async (client, interaction) => {
                 } else {
                     try {
                         await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.tag}.`]);
-                        editReturnString += `\nImage updated.`;
+                        editReturnString += `\n-Image updated.`;
                     } catch (e) {
                         // console.log(e);
-                        editReturnString += `\nFailed to update image.`;
+                        editReturnString += `\n-Failed to update image.`;
                     };
                 };
             } else if (iconArg && !iconsAllowed) {
-                editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
+                editReturnString += `-**${interaction.guild.name}** does not have role icons unlocked.`;
             };
             // Re-add role if it got removed
             if (!interaction.member.roles.cache.find(r => r.name == interaction.user.tag)) interaction.member.roles.add(personalRole.id);
