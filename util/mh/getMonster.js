@@ -144,7 +144,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterData.subSpecies) {
             monstersJSON.monsters.forEach(monster => {
                 if (!monster.subSpecies) return;
-                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSub0`, style: 'SECONDARY', label: monster.name }));
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSubOrigin`, style: 'SECONDARY', label: monster.name }));
             });
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
