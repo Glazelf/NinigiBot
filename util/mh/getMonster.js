@@ -4,6 +4,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
     try {
         const Discord = require("discord.js");
         const crypto = require('crypto');
+        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
         const imageExists = require('../../util/imageExists');
 
@@ -139,6 +140,12 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
             } else {
                 // How many subspecies do you need??
             };
+        };
+        if (!monsterData.subSpecies) {
+            monstersJSON.monsters.forEach(monster => {
+                if (!monster.subSpecies) return;
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSub0`, style: 'SECONDARY', label: monster.name }));
+            });
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
