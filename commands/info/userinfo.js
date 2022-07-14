@@ -92,7 +92,7 @@ exports.run = async (client, interaction) => {
         profileEmbed
             .addField("Join Ranking:", joinRankText, true)
             .addField(roleTitle, rolesSorted, false)
-            .addField("Created:", `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:R>`, true)
+            .addField("Created:", `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, true)
             .addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
         if (member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
         if (banner) profileEmbed.setImage(banner);

@@ -26,7 +26,7 @@ module.exports = async (client, member) => {
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .addField(`User: `, `${member} (${member.id})`, false)
-                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:R>`, true)
+                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
                 .setFooter({ text: member.user.tag })
                 .setTimestamp();
 
