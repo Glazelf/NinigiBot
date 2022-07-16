@@ -19,7 +19,7 @@
     "path": "^0.12.7",
     "pokemon-showdown": "^0.11.7",
     "pureimage": "^0.3.14",
-    "sequelize": "^6.21.2",
+    "sequelize": "^6.21.3",
     "sqlite3": "^5.0.9",
     "xmlhttprequest": "^1.8.0"
   },
