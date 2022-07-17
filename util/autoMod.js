@@ -117,7 +117,7 @@ module.exports = async (client, message) => {
         };
 
         try {
-            await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
+            await message.member.ban({ deleteMessageDays: 1, reason: `${reason} -${client.user.tag} (${time})` });
         } catch (e) {
             // console.log(e);
             await message.channel.send({ content: `Failed to auto-ban **${message.author.tag}** (${message.author.id}). This is probably a permission issue.` });

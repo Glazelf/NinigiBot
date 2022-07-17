@@ -65,8 +65,7 @@ exports.run = async (client, interaction) => {
                 };
                 if (deleteMessageDays > 0) banReturn += deletedMessagesString;
 
-                // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too
-                await member.ban({ reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
+                await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
@@ -82,7 +81,7 @@ exports.run = async (client, interaction) => {
             banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
-                await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
+                await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
