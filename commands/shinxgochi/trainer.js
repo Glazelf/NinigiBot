@@ -12,7 +12,7 @@ exports.run = async (client, interaction) => {
         const api_shop = require('../../nwu/database/dbServices/shop.api');
 
         let ephemeral = false;
-        let embed,avatar;
+        let embed,avatar, trophy_name,res, returnString;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let master = interaction.user
@@ -78,9 +78,9 @@ exports.run = async (client, interaction) => {
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
-                let trophy_name = interaction.options.getString("item");
-                let res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
-                let returnString = ''
+                trophy_name = interaction.options.getString("item2");
+                res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
+                returnString = ''
                 switch(res){
                     case 'NoTrophy':
                         returnString = `**${trophy_name}** isn't available.`;
@@ -112,29 +112,35 @@ exports.run = async (client, interaction) => {
                 show embed with icon, name, description and how to get
                 */
 
-                let trophy_name = interaction.options.getString("item");
-                let res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
-                let returnString = ''
-                switch(res){
-                    case 'NoTrophy':
-                        returnString = `**${trophy_name}** isn't available.`;
-                        break;
-                    case 'HasTrophy':
-                        returnString = `You already have **${trophy_name}**`
-                        break;
-                    case 'NoMoney':
-                        returnString = `You don't have enough money for **${trophy_name}**`
-                        break;
-                    case 'Ok':
-                        returnString = `Bought **${trophy_name}**!`
-                        break;
+                trophy_name = interaction.options.getString("item");
+                res =  await api_shop.getShopTrophyWithName(trophy_name);
+                let isShop = true;
+                if (!res) { res =  await api_shinx.getShinxTrophyWithName(trophy_name); isShop = false;} 
+                if (!res) { 
+                    returnString = `**${trophy_name}** doesn't exist.`;
+                    break;
+                } else {
+                    embed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setTitle(`${res.trophy_id}`)
+                    .addFields(
+                        { name: "Icon:", value: `:${res.icon}:`},
+                        { name: "Description:", value: `${res.description}`},
+                    )
+                    let location = `Sometimes found in the Shop.`;
+                    if (!isShop){
+                        location = res.origin; 
+                        
+                    } 
+                    embed.addFields(
+                        { name: "Location", value: location},
+                    )
+                    return sendMessage({ 
+                        client: client, 
+                        interaction: interaction, 
+                        embeds: [embed],  
+                        ephemeral: ephemeral });
                 }
-
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral });
         };
 
     } catch (e) {
@@ -160,7 +166,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Buy trophies!",
         options: [{
-            name: "item",
+            name: "item2",
             type: "STRING",
             description: "Item to buy",
             autocomplete: true,

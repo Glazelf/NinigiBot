@@ -262,7 +262,7 @@ module.exports = async (client, interaction) => {
                         break;
                     case "trainer":
                         switch (focusedOption.name) {
-                            case "item":
+                            case "item2":
                                 const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
                                 buyable_items.forEach(trophy=>{
                                     choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
@@ -272,16 +272,21 @@ module.exports = async (client, interaction) => {
                                 // }
         
                                 break;
-                            case "info":
+                            case "item":
                                 let trophies = await api_shop.getShopTrophies();
+                                let temp = ''
                                 trophies.forEach(trophy=>{
-                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
-                                    choices.push({ name: trophy.icon, value: trophy.icon });
+                                    temp = trophy.trophy_id;
+                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    temp = trophy.icon;
+                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
                                 })
                                 trophies = await api_shinx.getShinxTrophies();
                                 trophies.forEach(trophy=>{
-                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
-                                    choices.push({ name: trophy.icon, value: trophy.icon });
+                                    temp = trophy.trophy_id;
+                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    temp = trophy.icon;
+                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
