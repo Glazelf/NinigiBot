@@ -58,12 +58,11 @@ exports.run = async (client, interaction) => {
                 
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                trophies = await api_shop.getShopTrophies();
+                trophies = await api_shop.getTodayShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += `:${trophy.icon}: **${trophy.trophy_id}** ${trophy.price}💰\n`;
                 })
-                trophies = await api_shop.getShopTrophies();
                 if (trophy_string.length > 0) {
                     embed.addFields(
                         { name: "Trophies:", value: trophy_string},
@@ -78,7 +77,7 @@ exports.run = async (client, interaction) => {
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
-                trophy_name = interaction.options.getString("item2");
+                trophy_name = interaction.options.getString("shop trophy");
                 res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
                 returnString = ''
                 switch(res){
@@ -112,7 +111,7 @@ exports.run = async (client, interaction) => {
                 show embed with icon, name, description and how to get
                 */
 
-                trophy_name = interaction.options.getString("item");
+                trophy_name = interaction.options.getString("trophy");
                 res =  await api_shop.getShopTrophyWithName(trophy_name);
                 let isShop = true;
                 if (!res) { res =  await api_shinx.getShinxTrophyWithName(trophy_name); isShop = false;} 
@@ -166,7 +165,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Buy trophies!",
         options: [{
-            name: "item2",
+            name: "shop trophy",
             type: "STRING",
             description: "Item to buy",
             autocomplete: true,
@@ -177,7 +176,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get info about a trophy",
         options: [{
-            name: "item",
+            name: "trophy",
             type: "STRING",
             description: "Trophy or it's icon",
             autocomplete: true,
