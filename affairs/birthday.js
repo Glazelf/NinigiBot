@@ -23,14 +23,10 @@ module.exports = async (client) => {
             let birthdayRoleID = "744719808058228796";
             const birthdayRole = guild.roles.cache.find(role => role.id === birthdayRoleID);
             if (!birthdayRole) return;
-
             let yesterdayCuties = birthdayRole.members;
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
-
             const cuties = [];
-
             await guild.members.fetch();
-
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
@@ -43,14 +39,10 @@ module.exports = async (client) => {
                     };
                 };
             };
-
             if (cuties.length < 1) return;
-
             let channel = guild.channels.cache.find(channel => channel.id === channelID);
-
             // Random gif
             const randomGif = await getRandomGif(gifTags);
-
             // Create embed
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
