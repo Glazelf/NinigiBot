@@ -114,10 +114,10 @@ exports.run = async (client, interaction) => {
         let archivedThreadCount = 0;
 
         await guild.channels.cache.forEach(async channel => {
-            if (channel.isText() || channel.isVoice()) channelCount += 1;
-            if (channel.isThread()) threadCount += 1;
+            if (channel.type == Discord.ChannelType.GuildText || channel.type == Discord.ChannelType.GuildVoice || channel.type == Discord.ChannelType.GuildNews) channelCount += 1;
+            if (channel.type == Discord.ChannelType.GuildPrivateThread || channel.type == Discord.ChannelType.GuildPublicThread) threadCount += 1;
             // Get archived threads?
-            // if (channel.threads && channel.isText() && botMember.permissions.has("ADMINISTRATOR")) {
+            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has("ADMINISTRATOR")) {
             //     let archivedThreads = await channel.threads.fetchArchived();
             //     threadCount += archivedThreads.threads.entries().length;
             // };

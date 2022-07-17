@@ -12,7 +12,7 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-        if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
+        if (interaction.channel.type != Discord.ChannelType.GuildText) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
         let slowmodeMaxSeconds = 21600;

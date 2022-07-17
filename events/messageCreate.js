@@ -19,7 +19,7 @@ module.exports = async (client, message) => {
         };
 
         // Ignore commands in DMs
-        if (message.channel.type == "DM" || !message.guild) {
+        if (message.channel.type == Discord.ChannelType.DM || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
