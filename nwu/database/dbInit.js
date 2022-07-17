@@ -10,7 +10,9 @@ const syncDatabase = async () => {
         await ShinxTrophy.sync({ alter: true });
         await ShopTrophy.sync({ alter: true });
         const trophies = [
-            // SHINX
+            // ===================
+            //       SHINX
+            // ===================
             ShinxTrophy.upsert({ 
                 trophy_id: 'Bronze ShinxTrophy'.toLowerCase(), 
                 icon: 'third_place', 
@@ -36,7 +38,9 @@ const syncDatabase = async () => {
                 origin: 'Raise your Shinx to level 50'
             }),
             
-            // SHOP 
+            // ===================
+            //       SHOP
+            // ===================
             ShopTrophy.upsert({ 
                 trophy_id: 'Cheeseborgar'.toLowerCase(), 
                 icon: 'hamburger', 
@@ -49,6 +53,37 @@ const syncDatabase = async () => {
                 description: 'Bigass BALL',
                 price: 500
             }),
+            ShopTrophy.upsert({ 
+                trophy_id: 'Wandering Spirit'.toLowerCase(), 
+                icon: 'ghost', 
+                description: 'This little ghost has been running all the time. He just wants a friend',
+                price: 250
+            }),
+            ShopTrophy.upsert({ 
+                trophy_id: 'Gaming Insect'.toLowerCase(), 
+                icon: 'space_invader', 
+                description: 'Bug that lives inside every console that is not Xbox since boxes scare it',
+                price: 150
+            }),
+            ShopTrophy.upsert({ 
+                trophy_id: 'Funny Clown'.toLowerCase(), 
+                icon: 'clown', 
+                description: 'Savage obvious guy, gobbling yogurts. It is said that its name is hidden inside this text.',
+                price: 150
+            }),
+            ShopTrophy.upsert({ 
+                trophy_id: 'Mankind Shard'.toLowerCase(), 
+                icon: 'brain', 
+                description: 'Old artifact found by some scientists not much ago. It is said to be used by politicians in the past.',
+                price: 250
+            }),
+            ShopTrophy.upsert({ 
+                trophy_id: 'Golden Relic'.toLowerCase(), 
+                icon: 'crown', 
+                description: 'Unknown artifact which is said to have been dropped by a king',
+                price: 250
+            }),
+
             
             // ShinxTrophy.upsert({ 
             //     trophy_id: 'Borger', 
