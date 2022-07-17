@@ -37,16 +37,16 @@ module.exports.config = {
     description: "OwOifies text.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Text to owoify",
         required: true
     }, {
         name: "severity",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Severity of owoification. (1-3)",
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether or not to send the owoified text as an ephemeral message.",
     }]
 };

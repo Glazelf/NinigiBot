@@ -24,12 +24,12 @@ module.exports.config = {
     description: "Generate a random number.",
     options: [{
         name: "number-min",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Minimal number.",
         required: true
     }, {
         name: "number-max",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Maximum number.",
         required: true
     }]

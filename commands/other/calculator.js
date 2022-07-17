@@ -65,7 +65,7 @@ module.exports.config = {
     description: "Calculate.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Input to calculate.",
         required: true
     }]

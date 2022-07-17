@@ -47,11 +47,11 @@ module.exports.config = {
     description: "Choose a channel to log to.",
     options: [{
         name: "channel",
-        type: "CHANNEL",
+        type: Discord.ApplicationCommandOptionType.Channel,
         description: "Specify channel."
     }, {
         name: "disable",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Disable logging."
     }]
 };

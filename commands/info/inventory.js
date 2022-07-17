@@ -62,7 +62,7 @@ module.exports.config = {
     description: "Sends a list of items in your inventory.",
     options: [{
         name: "category",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify the inventory category. Food, equipment or key.",
         required: true
     }]

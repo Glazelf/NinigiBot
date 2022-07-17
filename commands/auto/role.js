@@ -118,11 +118,11 @@ module.exports.config = {
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify the role."
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether this command is only visible to you."
     }]
 };

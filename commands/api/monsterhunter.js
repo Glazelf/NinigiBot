@@ -208,47 +208,47 @@ module.exports.config = {
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a specific quest.",
         options: [{
             name: "quest",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify quest by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "quests",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "List all quests from a game.",
         options: [{
             name: "game",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify game by name or abbreviation.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "monster",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a monster.",
         options: [{
             name: "monster",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify monster by its English name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }]

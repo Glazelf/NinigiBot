@@ -31,5 +31,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "StickerFile",
-    type: "MESSAGE"
+    type: Discord.ApplicationCommandOptionType.Message
 };

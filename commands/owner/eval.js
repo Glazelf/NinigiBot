@@ -52,7 +52,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "JS to execute.",
         required: true
     }]

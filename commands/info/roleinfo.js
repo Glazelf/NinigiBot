@@ -51,7 +51,7 @@ module.exports.config = {
     description: "Displays info about a role.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify role.",
         required: true
     }]

@@ -38,12 +38,12 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of money to add.",
         required: true
     }, {
         name: "user-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "User to add money to.",
         required: true
     }]

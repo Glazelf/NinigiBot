@@ -52,7 +52,7 @@ module.exports.config = {
     description: "Displays items in the shop.",
     options: [{
         name: "category",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Which shop you'd like to see.",
         required: true
     }]

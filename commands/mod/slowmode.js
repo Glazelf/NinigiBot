@@ -34,7 +34,7 @@ module.exports.config = {
     description: "Set slowmode in the current channel.",
     options: [{
         name: "time",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Time in seconds. 0 to disable.",
         required: true
     }]

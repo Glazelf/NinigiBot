@@ -32,12 +32,12 @@ module.exports.config = {
     description: "Give money to another user.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }, {
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify amount.",
         required: true
     }]

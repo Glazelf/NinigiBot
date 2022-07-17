@@ -48,7 +48,7 @@ module.exports.config = {
     description: "Sends image from hexadecimal.",
     options: [{
         name: "hex",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Hexadecimal to convert.",
         required: true
     }]

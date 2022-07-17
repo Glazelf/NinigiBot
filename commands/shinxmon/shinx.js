@@ -370,61 +370,61 @@ module.exports.config = {
     description: "Interact with your Shinx.",
     options: [{
         name: "gender",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Toggle your trainer's gender."
     }, {
         name: "data",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Show Shinx summary."
     }, {
         name: "tap",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Tap Shinx!"
     }, {
         name: "nickname",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Change Shinx's nickname.",
         options: [{
             name: "name",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "What should Shinx's name be?",
             required: true
         }]
     }, {
         name: "equip",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Equip an item to Shinx.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to equip.",
             required: true
         }]
     }, {
         name: "feed",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Feed Shinx.",
         options: [{
             name: "food",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to feed.",
             required: true
         }]
     }, {
         name: "play",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Play with Shinx."
     }, {
         name: "park",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Go to the park."
     }, {
         name: "release",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Release Shinx.",
         options: [{
             name: "confirm",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Are you sure? You can never get this Shinx back."
         }]
     }]

@@ -199,7 +199,7 @@ module.exports.config = {
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandType.User,
         description: "Specify user.",
         required: true
     }]

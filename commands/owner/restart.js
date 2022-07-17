@@ -63,7 +63,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "reset-interactions",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Reset all interactions?"
     }]
 };

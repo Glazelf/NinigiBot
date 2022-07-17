@@ -85,12 +85,12 @@ module.exports.config = {
     description: "Bulk delete messages.",
     options: [{
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of messages to delete.",
         required: true
     }, {
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "The user to delete messages from."
     }]
 };

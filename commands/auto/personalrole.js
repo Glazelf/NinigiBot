@@ -164,15 +164,15 @@ module.exports.config = {
     description: "Update your personal role.",
     options: [{
         name: "color-hex",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify a color."
     }, {
         name: "icon",
-        type: "ATTACHMENT",
+        type: Discord.ApplicationCommandOptionType.Attachment,
         description: "Role icon to use. Requires sufficient boosts."
     }, {
         name: "delete",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Delete your personal role."
     }]
 };

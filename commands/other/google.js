@@ -38,5 +38,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "Google",
-    type: "MESSAGE"
+    type: Discord.ApplicationCommandOptionType.Message
 };

@@ -57,7 +57,7 @@ module.exports.config = {
     description: "Buy an item from the shop.",
     options: [{
         name: "item",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "The name of the item you want to buy.",
         required: true
     }]

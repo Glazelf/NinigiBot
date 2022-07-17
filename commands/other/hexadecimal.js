@@ -43,21 +43,21 @@ module.exports.config = {
     description: "Convert a number to hexadecimal.",
     options: [{
         name: "tohex",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Convert from decimal to hex.",
         options: [{
             name: "input",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Decimal number to convert.",
             required: true
         }]
     }, {
         name: "todecimal",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Convert from hex to decimal.",
         options: [{
             name: "input",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Hexadecimal to convert.",
             required: true
         }]

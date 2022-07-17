@@ -57,20 +57,20 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Message text.",
         required: true
     }, {
         name: "user-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify user by ID."
     }, {
         name: "channel-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify channel by ID."
     }, {
         name: "attachment",
-        type: "ATTACHMENT",
+        type: Discord.ApplicationCommandOptionType.Attachment,
         description: "Message attachment."
     }]
 };

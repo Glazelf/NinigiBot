@@ -95,15 +95,15 @@ module.exports.config = {
     description: "Play minesweeper.",
     options: [{
         name: "mines",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of mines."
     }, {
         name: "rows",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of rows."
     }, {
         name: "columns",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of columns."
     }]
 };

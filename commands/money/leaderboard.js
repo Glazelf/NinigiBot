@@ -59,7 +59,7 @@ module.exports.config = {
     description: "Displays money leaderboard.",
     options: [{
         name: "global",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether to showcase global leaderboard."
     }]
 };

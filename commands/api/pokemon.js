@@ -265,99 +265,99 @@ exports.run = async (client, interaction) => {
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
-    type: "SUB_COMMAND",
+    type: Discord.ApplicationCommandOptionType.SubCommand,
     options: [{
         name: "ability",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on an ability.",
         options: [{
             name: "ability",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Ability to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "move",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "pokemon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "usage",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
         description: "Shows Smogon usage data.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get data on.",
             autocomplete: true,
             required: true
         }, {
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get data from.",
             autocomplete: true,
             required: true
         }, {
             name: "month",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Month (number) to get data from."
         }, {
             name: "year",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Year to get data from."
         }, {
             name: "rating",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Minimum rating to get data from.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }]
