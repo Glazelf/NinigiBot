@@ -135,7 +135,9 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
             if (monsterData.subSpecies.length < 6) {
                 for (let i = 0; i < monsterData.subSpecies.length; i++) {
-                    subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSub${i}`, style: 'SECONDARY', label: monsterData.subSpecies[i] }));
+                    subSpeciesButtons.addComponents(new Discord.MessageButton({
+                        customId: `mhSub${i}`, style: Discord.ButtonStyle.Secondary, label: monsterData.subSpecies[i]
+                    }));
                 };
             } else {
                 // How many subspecies do you need??
@@ -144,7 +146,9 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterData.subSpecies) {
             monstersJSON.monsters.forEach(monster => {
                 if (!monster.subSpecies) return;
-                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSubOrigin`, style: 'SECONDARY', label: monster.name }));
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({
+                    customId: `mhSubOrigin`, style: Discord.ButtonStyle.Secondary, label: monster.name
+                }));
             });
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);

@@ -53,7 +53,7 @@ module.exports = async (client, member) => {
                 };
 
                 let leaveButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
 
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })

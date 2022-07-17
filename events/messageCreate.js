@@ -25,7 +25,7 @@ module.exports = async (client, message) => {
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let profileButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${message.author.id}` }));
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
 
             const dmEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

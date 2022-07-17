@@ -298,7 +298,7 @@ module.exports = async (client, interaction) => {
                         const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
 
                         let profileButtons = new Discord.MessageActionRow()
-                            .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${interaction.user.id}` }));
+                            .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
 
                         const modMailEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)

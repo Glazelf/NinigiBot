@@ -33,7 +33,7 @@ module.exports = async (client, guildBan) => {
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let banButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
+                .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
 
             const banEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

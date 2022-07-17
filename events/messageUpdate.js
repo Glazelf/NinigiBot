@@ -56,7 +56,7 @@ module.exports = async (client, message, newMessage) => {
             };
 
             let updateButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
+                .addComponents(new Discord.MessageButton({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

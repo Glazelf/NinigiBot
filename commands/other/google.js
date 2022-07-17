@@ -24,7 +24,7 @@ exports.run = async (client, interaction) => {
 
         // Button
         let googleButton = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
+            .addComponents(new Discord.MessageButton({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 

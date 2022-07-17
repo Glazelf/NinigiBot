@@ -202,17 +202,17 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
 
         let pkmButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();
 
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
+        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
 
-        pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
+        pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
 
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`;
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
 
         for (let i = 0; i < pokemon.evos.length; i++) {
@@ -221,10 +221,10 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 };
             };
         };
@@ -237,7 +237,9 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
             if (pokemonForms.length > 0) {
                 if (pokemonForms.length < 6) {
                     for (let i = 0; i < pokemonForms.length; i++) {
-                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemonForms[i] }));
+                        formButtons.addComponents(new Discord.MessageButton({
+                            customId: `pkmForm${i}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i]
+                        }));
                     };
                 } else {
                     // Pokémon with way too many forms
