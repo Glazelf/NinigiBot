@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');

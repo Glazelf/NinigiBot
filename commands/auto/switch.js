@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -8,7 +9,6 @@ exports.run = async (client, interaction) => {
 
         let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
         let switchFC = interaction.options.getString('switch-fc');
-
         let invalidString = `Please specify a valid Nintendo Switch friend code.`;
 
         // Present code if no code is supplied as an argument

@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
         const parseDate = require('../../util/parseDate')

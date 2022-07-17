@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 const { Users } = require('../../database/dbObjects');
 const ShinxBattle = require('../../shinx/shinxBattle');
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
@@ -17,7 +19,6 @@ exports.run = async (client, interaction) => {
         const Canvas = require('canvas');
         const hp = require('../../util/getHP');
         const { bank } = require('../../database/bank');
-        const Discord = require("discord.js");
 
         let author = interaction.user;
         let target = interaction.options.getUser("user");

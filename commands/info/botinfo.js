@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -5,7 +6,6 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
-        const Discord = require("discord.js");
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 

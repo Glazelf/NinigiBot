@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isAdmin = require('../../util/isAdmin');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");

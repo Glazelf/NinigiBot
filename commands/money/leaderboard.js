@@ -1,24 +1,21 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let memberFetch = await interaction.guild.members.fetch();
         let global = false;
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
         let icon = null;
-
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
-
         if (global) {
             // Global leaderboard
             icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);

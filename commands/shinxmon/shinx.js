@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const Canvas = require('canvas');
 
 const tapping = [
@@ -55,7 +56,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
-        const Discord = require("discord.js");
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });

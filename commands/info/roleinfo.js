@@ -1,17 +1,15 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         let DefaultEmbedColor = globalVars.embedColor;
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let role = interaction.options.getRole("role");
-
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
         let defaultColor = "#000000";
@@ -20,7 +18,6 @@ exports.run = async (client, interaction) => {
 
         let guildMembers = await interaction.guild.members.fetch();
         let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
-
         // Properties
         let roleProperties = "";
         if (role.hoist) roleProperties = `${roleProperties}Sorted seperately\n`;

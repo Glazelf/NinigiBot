@@ -1,13 +1,12 @@
+const Discord = require("discord.js");
 const Sequelize = require('sequelize');
 const { ne } = Sequelize.Op;
-
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { Equipments, Foods, KeyItems, Room, CurrencyShop } = require('../../database/dbObjects');
 
         const input = interaction.options.getString("category").toLowerCase();

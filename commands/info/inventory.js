@@ -1,6 +1,6 @@
+const Discord = require("discord.js");
 const Sequelize = require('sequelize');
 const { Users } = require('../../database/dbObjects');
-
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -10,15 +10,12 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let inventoryCat = interaction.options.getString("category").toLowerCase();
 
         if (inventoryCat === 'items' || inventoryCat === 'food' || inventoryCat === 'equipment' || inventoryCat === 'keys' || !inventoryCat) {
             const user = await Users.findOne({ where: { user_id: interaction.user.id } });
             if (!user) user = await Users.create({ user_id: interaction.user.id });
-
             let items;
-
             // Display inventory per item category. Should make this into one scrollable embed someday.
             if (inventoryCat === 'food') {
                 items = await user.getFoods();

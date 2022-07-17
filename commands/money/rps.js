@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -9,25 +10,20 @@ exports.run = async (client, interaction) => {
         const { bank } = require('../../database/bank');
         let currency = globalVars.currency
         let balance = await bank.currency.getBalance(interaction.user.id);
-
         let amount = interaction.options.getInteger("bet-amount");
         let playerChoice = interaction.options.getString("weapon").toLowerCase();
-
         // Get input
         let rps = ["rock", "paper", "scissors"];
         if (!rps.includes(playerChoice)) return sendMessage({ client: client, interaction: interaction, content: `You need to choose between \`Rock\`, \`Paper\` and \`Scissors\`.` });
-
         // Enforce flooring
         amount = Math.floor(amount);
         balance = Math.floor(balance);
         if (amount < 1) return sendMessage({ client: client, interaction: interaction, content: `Input has to be 1 or higher.` });
         if (amount > balance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${Math.floor(balance)}${currency}.` });
-
         // Randomize bot and compare choices
         let botChoice = rps[Math.floor(Math.random() * rps.length)];
         let result = (rps.length + rps.indexOf(playerChoice) - rps.indexOf(botChoice)) % rps.length;
         let returnString = `Congratulations. You picked **${playerChoice}** while I picked **${botChoice}**. \nYou win ${amount}${currency}. You now have ${balance + amount}${currency}.`;
-
         switch (result) {
             case 0: // Tie
                 return sendMessage({ client: client, interaction: interaction, content: `It's a tie. We both picked **${playerChoice}**.` });

@@ -1,10 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
