@@ -10,6 +10,7 @@ const syncDatabase = async () => {
         await ShinxTrophy.sync({ alter: true });
         await ShopTrophy.sync({ alter: true });
         const trophies = [
+            // SHINX
             ShinxTrophy.upsert({ 
                 trophy_id: 'Bronze ShinxTrophy'.toLowerCase(), 
                 icon: 'third_place', 
@@ -30,6 +31,8 @@ const syncDatabase = async () => {
                 icon: 'sparkles', 
                 description: 'Raise your Shinx to level 50'
             }),
+            
+            // SHOP 
             ShopTrophy.upsert({ 
                 trophy_id: 'Cheeseborgar'.toLowerCase(), 
                 icon: 'hamburger', 
