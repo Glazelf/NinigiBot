@@ -5,14 +5,39 @@ const {sequelize} =  require('../dbConnection/dbConnection');
 const { Users, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
+    async getUser(id) {
+        let user = await Users.findOne({
+            where: { user_id: id },
+        });
+
+        if (!user) {
+            user = await Users.create({ user_id: id });
+        };
+        return user;
+    },
+
     async  getShopTrophies() {
         const trophies = await ShopTrophy.findAll();
         return trophies;
     },
+    
+    async  getShopTrophyWithName(name) {
+        let name_t = name.toLowerCase();
+        const trophy = await ShopTrophy.findOne(
+            {
+                where: {
+                    [Op.or]: [
+                      { trophy_id: name_t },
+                      { icon: name_t }
+                    ]
+                  }
+              }
+        );
+        return trophy;
+    },
+
     async getBuyableShopTrophies(user_id) {
-        let user = await Users.findOne({
-            where: { user_id },
-        });
+        let user = await this.getUser(user_id)
         const user_trophies = await user.getShopTrophies()
         const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
         const trophies = await ShopTrophy.findAll({

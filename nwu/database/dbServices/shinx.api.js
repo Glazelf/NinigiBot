@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {sequelize} =  require('../dbConnection/dbConnection');
-
+const { Op } = require('sequelize');
 const { Shinx,ShinxTrophy, Users} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 const shinx_util = require('../../utils/shinx.util');
 const BRONZE_TROPHY_EXP = shinx_util.levelToExp(5);
@@ -97,6 +97,22 @@ module.exports = {
         const trophies = await ShinxTrophy.findAll();
         return trophies;
     },
+    async  getShinxTrophyWithName(name) {
+        let name_t = name.toLowerCase();
+        const trophy = await ShinxTrophy.findOne(
+            {
+                where: {
+                    [Op.or]: [
+                      { trophy_id: name_t },
+                      { icon: name_t }
+                    ]
+                  }
+              }
+        );
+        return trophy;
+    },
+
+
     async feedShinx(id) {
         let shinx = await this.getShinx(id);
         let shinx_hunger = shinx.getHunger()

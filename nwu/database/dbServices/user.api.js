@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {sequelize} =  require('../dbConnection/dbConnection');
-
+const { Op } = require('sequelize');
 const { Users} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
