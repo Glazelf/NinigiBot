@@ -14,22 +14,26 @@ const syncDatabase = async () => {
             ShinxTrophy.upsert({ 
                 trophy_id: 'Bronze ShinxTrophy'.toLowerCase(), 
                 icon: 'third_place', 
-                description: 'Raise your Shinx to level 5'
+                description: 'Badge given to novice Shinx trainers',
+                origin: 'Raise your Shinx to level 5'
             }),
             ShinxTrophy.upsert({ 
                 trophy_id: 'Silver ShinxTrophy'.toLowerCase(), 
                 icon: 'second_place', 
-                description: 'Raise your Shinx to level 15'
+                description: 'Badge given to amateur Shinx trainers',
+                origin: 'Raise your Shinx to level 15'
             }),
             ShinxTrophy.upsert({ 
                 trophy_id: 'Gold ShinxTrophy'.toLowerCase(), 
                 icon: 'first_place', 
-                description: 'Raise your Shinx to level 30'
+                description: 'Badge given to expert Shinx trainers',
+                origin: 'Raise your Shinx to level 30'
             }),
             ShinxTrophy.upsert({ 
                 trophy_id: 'Shiny Charm'.toLowerCase(), 
                 icon: 'sparkles', 
-                description: 'Raise your Shinx to level 50'
+                description: 'Charm given only to the best Shinx trainers',
+                origin: 'Raise your Shinx to level 50'
             }),
             
             // SHOP 
