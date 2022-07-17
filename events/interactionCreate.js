@@ -79,17 +79,73 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (interaction.user.id !== interaction.customId.split("-")[3]) return;
+                            let emoteName = interaction.customId.split("-")[2];
+                            let userID = interaction.customId.split("-")[3];
+                            let rows = interaction.customId.split("-")[4];
+                            let columns = interaction.customId.split("-")[5];
+                            let mines = interaction.customId.split("-")[6];
+                            if (interaction.user.id !== userID) return;
+                            const Minesweeper = require('discord.js-minesweeper');
                             let componentsCopy = interaction.message.components;
-                            await componentsCopy.forEach(async function (part, index) {
-                                await this[index].toJSON().components.forEach(function (part2, index2) {
-                                    if (this[index2].custom_id == interaction.customId) {
-                                        this[index2].emoji.name = interaction.customId.split("-")[2];
-                                        this[index2].disabled = true; // Doesnt work??
-                                    };
-                                }, this[index].toJSON().components);
-                            }, componentsCopy);
+
+                            let minesweeperInfo = await getMinesweeperInfo(componentsCopy);
+                            componentsCopy = minesweeperInfo.components;
+                            console.log(minesweeperInfo.rerun);
+                            while (minesweeperInfo.rerun == true) rerun();
                             await interaction.update({ components: componentsCopy });
+
+                            async function rerun() {
+                                console.log("Rerunning...");
+                                let buttons = await generateMinesweeper(rows, columns, mines);
+                                let minesweeperInfo = await getMinesweeperInfo(buttons);
+                                console.log(minesweeperInfo)
+                                if (minesweeperInfo.rerun == true) rerun();
+                            };
+                            async function getMinesweeperInfo(components) {
+                                let unopenedCount = 0;
+                                let rerun = false;
+                                await components.forEach(async function (part, index) {
+                                    await this[index].toJSON().components.forEach(function (part2, index2) {
+                                        if (this[index2].emoji.name == "⬛") unopenedCount += 1;
+                                        if (this[index2].custom_id == interaction.customId) {
+                                            this[index2].emoji.name = emoteName;
+                                            this[index2].disabled = true; // Doesnt work??
+                                        };
+                                    }, this[index].toJSON().components);
+                                }, components);
+                                if (unopenedCount == rows * columns && emoteName == "💣") rerun = true;
+                                let minesweeperInfo = { components: components, rerun: rerun };
+                                return minesweeperInfo;
+                            };
+                            async function generateMinesweeper(rows, columns, mines) {
+                                // Code copied from minesweeper.js
+                                const minesweeper = new Minesweeper({
+                                    rows: rows,
+                                    columns: columns,
+                                    mines: mines,
+                                    emote: 'bomb',
+                                    returnType: 'matrix',
+                                });
+                                let matrix = minesweeper.start();
+                                matrix.forEach(arr => {
+                                    for (var i = 0; i < arr.length; i++) {
+                                        arr[i] = arr[i].replace("|| :bomb: ||", "💣").replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
+                                    };
+                                });
+                                let buttonRowArray = [];
+                                let buttonIndex = 0;
+                                let rowIndex = 0;
+                                matrix.forEach(arr => {
+                                    let buttonRow = new Discord.MessageActionRow();
+                                    arr.forEach(element => {
+                                        buttonRow.addComponents(new Discord.MessageButton({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}-${interaction.user.id}-${rows}-${columns}-${mines}`, style: 'PRIMARY', emoji: spoilerEmote }));
+                                        buttonIndex += 1;
+                                    });
+                                    rowIndex += 1;
+                                    buttonRowArray.push(buttonRow);
+                                });
+                                return buttonRowArray;
+                            };
                             return;
                         } else {
                             // Other buttons
