@@ -101,6 +101,40 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral });
+            case "info":
+                //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                //let avatar = new Discord.THU();
+                //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
+
+                /*
+                check if in shop, check if in shinx, else return "unknown trophy"
+                get the trophy (where OR name, icon)
+                show embed with icon, name, description and how to get
+                */
+
+                let trophy_name = interaction.options.getString("item");
+                let res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
+                let returnString = ''
+                switch(res){
+                    case 'NoTrophy':
+                        returnString = `**${trophy_name}** isn't available.`;
+                        break;
+                    case 'HasTrophy':
+                        returnString = `You already have **${trophy_name}**`
+                        break;
+                    case 'NoMoney':
+                        returnString = `You don't have enough money for **${trophy_name}**`
+                        break;
+                    case 'Ok':
+                        returnString = `Bought **${trophy_name}**!`
+                        break;
+                }
+
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: returnString, 
+                    ephemeral: ephemeral });
         };
 
     } catch (e) {
@@ -129,6 +163,17 @@ module.exports.config = {
             name: "item",
             type: "STRING",
             description: "Item to buy",
+            autocomplete: true,
+            required: true
+        }]
+    },{
+        name: "info",
+        type: "SUB_COMMAND",
+        description: "Get info about a trophy",
+        options: [{
+            name: "item",
+            type: "STRING",
+            description: "Trophy or it's icon",
             autocomplete: true,
             required: true
         }]

@@ -15,6 +15,7 @@ module.exports = async (client, interaction) => {
         const { EligibleRoles } = require('../database/dbObjects');
         const { bank } = require('../database/bank');
         const api_shop = require('../nwu/database/dbServices/shop.api');
+        const api_shinx = require('../nwu/database/dbServices/shinx.api');
 
         if (!interaction) return;
         if (interaction.user.bot) return;
@@ -265,6 +266,22 @@ module.exports = async (client, interaction) => {
                                 const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
                                 buyable_items.forEach(trophy=>{
                                     choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
+                                })
+                                // if (choices.length == 0){
+                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                // }
+        
+                                break;
+                            case "info":
+                                let trophies = await api_shop.getShopTrophies();
+                                trophies.forEach(trophy=>{
+                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
+                                    choices.push({ name: trophy.icon, value: trophy.icon });
+                                })
+                                trophies = await api_shinx.getShinxTrophies();
+                                trophies.forEach(trophy=>{
+                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
+                                    choices.push({ name: trophy.icon, value: trophy.icon });
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
