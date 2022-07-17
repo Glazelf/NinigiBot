@@ -4,15 +4,13 @@ let botjsFunction = async function botjsFunction() {
     const fs = require("fs");
     const path = require("path");
 
-    const intents = new Discord.Intents();
-    // all except guild presence
-    // privileged: guild_messages, guild_members
-    intents.add(Discord.GatewayIntentsBits.Guilds, Discord.GatewayIntentsBits.GuildMembers, Discord.GatewayIntentsBits.GuildBans, Discord.GatewayIntentsBits.GuildEmojisAndStickers, Discord.GatewayIntentsBits.GuildIntegrations, Discord.GatewayIntentsBits.GuildVoiceStates, Discord.GatewayIntentsBits.GuildMessages, Discord.GatewayIntentsBits.GuildMessageReactions, Discord.GatewayIntentsBits.GuildDirectMessages);
     // All intents
     // intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INTEGRATIONS', 'GUILD_WEBHOOKS', 'GUILD_INVITES', 'GUILD_VOICE_STATES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'GUILD_MESSAGE_TYPING', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_TYPING');
 
     const client = new Discord.Client({
-        intents: intents,
+        // all except guild presence
+        // privileged: guild_messages, guild_members
+        intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.GuildBans, Discord.GatewayIntentBits.GuildEmojisAndStickers, Discord.GatewayIntentBits.GuildIntegrations, Discord.GatewayIntentBits.GuildVoiceStates, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMessageReactions, Discord.GatewayIntentBits.GuildDirectMessages],
         partials: [Discord.Partials.Channel, Discord.Partials.GuildMember, Discord.Partials.Message, Discord.Partials.Reaction, Discord.Partials.User],
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
     });
