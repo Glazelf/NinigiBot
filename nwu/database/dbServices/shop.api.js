@@ -4,6 +4,8 @@ const {sequelize} =  require('../dbConnection/dbConnection');
 
 const { Users, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
+const DAILY_TROPHIES = 5;
+
 module.exports = {
     async getUser(id) {
         let user = await Users.findOne({
@@ -19,6 +21,44 @@ module.exports = {
     async  getShopTrophies() {
         const trophies = await ShopTrophy.findAll();
         return trophies;
+    },
+
+    async  getTodayShopTrophies() {
+        const d = new Date();
+        
+        const trophies = await ShopTrophy.findAll();
+        let index = (d.getDate() + d.getFullYear() ) % trophies.length;
+        const today_trophies = []
+        const today_indexes = []
+        for (let i = 0; i < DAILY_TROPHIES; i++){
+            while (today_indexes.includes(index)){
+                index = ((index+1)%trophies.length);
+            }
+            today_trophies.push(trophies[index])
+            today_indexes.push(index)
+            index = (index+DAILY_TROPHIES)%trophies.length
+        }
+        return today_trophies;
+    },
+
+    async  getTodayShopTrophiesToBuy(money) {
+        const d = new Date();
+        
+        const trophies = await ShopTrophy.findAll({attributes: [
+            'trophy_id', 'price'
+        ]});
+        let index = (d.getDate() + d.getFullYear()) % trophies.length;
+        const today_trophies = []
+        const today_indexes = []
+        for (let i = 0; i < DAILY_TROPHIES; i++){
+            while (index in today_indexes){index = (index+1)%trophies.length}
+            today_trophies.push(trophies[index])
+            today_indexes.push(index)
+            index = (index+DAILY_TROPHIES)%trophies.length
+        }
+        today_trophies = today_trophies.filter(trophy => trophy.cost <= money)
+        trophies_ids = today_trophies.map(trophy=> trophy.trophy_id)
+        return trophies_ids;
     },
     
     async  getShopTrophyWithName(name) {
@@ -36,35 +76,22 @@ module.exports = {
         return trophy;
     },
 
-    async getBuyableShopTrophies(user_id) {
+    async getBuyableShopTrophies(user_id) {        
         let user = await this.getUser(user_id)
         const user_trophies = await user.getShopTrophies()
         const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
-        const trophies = await ShopTrophy.findAll({
-            attributes: [
-                'trophy_id'
-            ],
-            where: {
-                trophy_id:{
-                    [Op.notIn]: user_trophies_list
-                },
-                price:{
-                    [Op.lte]: user.money
-                }
-            }
-        });
-        return trophies;
+
+        let today_trophies = await this.getTodayShopTrophiesToBuy();
+        today_trophies = today_trophies.filter(trophy => !(trophy.trophy_id in user_trophies_list))
+        return today_trophies
     },
     async buyShopTrophy(user_id, trophy_id) {
-        let trophy = await ShopTrophy.findOne({
-            where: { trophy_id },
-        });
+        const trophies = await this.getTodayShopTrophies();
+        let trophy = trophies.find(elem => elem.trophy_id == trophy_id);
         if (!trophy){
             return 'NoTrophy'
         }
-        let user = await Users.findOne({
-            where: { user_id },
-        });
+        let user = await getUser(user_id);
         if (await user.hasShopTrophy(trophy)){
             return 'HasTrophy'
         }
