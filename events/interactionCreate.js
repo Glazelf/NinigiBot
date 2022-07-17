@@ -45,8 +45,8 @@ module.exports = async (client, interaction) => {
                 switch (interaction.componentType) {
                     case "BUTTON":
                         let messageObject = null;
-                        // Pokémon command
                         if (interaction.customId.startsWith("pkm")) {
+                            // Pokémon command
                             let newPokemonName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newPokemonName) break;
@@ -61,6 +61,7 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;
                         } else if (interaction.customId.startsWith("mhSub")) {
+                            // Monster Hunter forms
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
                                 if (newMonsterName) break;
@@ -77,6 +78,7 @@ module.exports = async (client, interaction) => {
                             if (!messageObject) return;
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
+                            // Minesweeper
                             if (interaction.user.id !== interaction.customId.split("-")[3]) return;
                             let componentsCopy = interaction.message.components;
                             await componentsCopy.forEach(async function (part, index) {
@@ -106,7 +108,6 @@ module.exports = async (client, interaction) => {
 
                                 if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${role} because it is being automatically managed by an integration.` });
                                 if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
-
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
@@ -269,6 +270,7 @@ module.exports = async (client, interaction) => {
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
+                        // Bug report
                         const bugReportTitle = interaction.fields.getTextInputValue('bugReportTitle');
                         const bugReportDescribe = interaction.fields.getTextInputValue('bugReportDescribe');
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
@@ -291,6 +293,7 @@ module.exports = async (client, interaction) => {
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
                         break;
                     case "modMailModal":
+                        // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
 
