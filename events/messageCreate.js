@@ -46,7 +46,7 @@ module.exports = async (client, message) => {
 
         // Automod
         let modBool = false;
-        if (message.type != 'APPLICATION_COMMAND') modBool = await autoMod(client, message);
+        if (message.type != Discord.InteractionType.ApplicationCommand) modBool = await autoMod(client, message);
         if (modBool) return;
 
         let memberRoles = 0;
