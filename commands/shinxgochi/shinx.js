@@ -8,9 +8,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const shinxApi = require('../../nwu/database/dbServices/shinx.api');
-        const api_user = require('../../nwu/database/dbServices/user.api');
         
-
         let ephemeral = true;
         let shinx, embed,foodArg,res,avatar;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -19,11 +17,7 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "data":
                 shinx = await shinxApi.getShinx(master.id);
-                //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //let avatar = new Discord.THU();
-                //const file = new Discord.MessageAttachment('../../assets/shinx.png');
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
                 
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
@@ -81,25 +75,7 @@ exports.run = async (client, interaction) => {
                     interaction: interaction,
                     content: returnString,
                     ephemeral: ephemeral }); 
-            case "addmoney":
-                let moneyArg = interaction.options.getInteger("money");
-                await api_user.addMoney(master.id, moneyArg);
-                returnString = `Added money to your account!`;
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral }); 
-            case "buyfood":
-                foodArg = interaction.options.getInteger("food");
-                res = await api_user.buyFood(master.id, foodArg);
-                returnString = res ? `Added food to your account!`:`Not enough money!`;
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral }); 
-                    
+
             case "shiny":
                 res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
                 if(res){
@@ -166,26 +142,6 @@ module.exports.config = {
             name: "exp",
             type: "INTEGER",
             description: "The amount of exp you want to add.",
-            required: true,
-        }]
-    },{
-        name: "addmoney",
-        type: "SUB_COMMAND",
-        description: "Add money!",
-        options: [{
-            name: "money",
-            type: "INTEGER",
-            description: "The amount of money you want to add.",
-            required: true,
-        }]
-    },{
-        name: "buyfood",
-        type: "SUB_COMMAND",
-        description: "Buy food!",
-        options: [{
-            name: "food",
-            type: "INTEGER",
-            description: "The amount of food you want to buy.",
             required: true,
         }]
     },{
