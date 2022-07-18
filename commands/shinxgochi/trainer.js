@@ -61,14 +61,14 @@ exports.run = async (client, interaction) => {
                 trophies = await api_shop.getFullBuyableShopTrophies(master.id);
                 trophies.forEach(trophy=>{
                     let trophy_header = { name: '\u200B', value: `:${trophy.icon}: **${trophy.trophy_id}**`, inline: true}
-                    let trophy_price = { name: '\u200B', value: '```diff\n'+`${trophy.price}`+'\n```', inline: true};
+                    let trophy_price = { name: '\u200B', value: '```diff\n'+`[${trophy.price}]`+'\n```', inline: true};
                     
                     switch(trophy.temp_bought){
                         case 'Bought':
-                            trophy_price.value = '```diff\n+Bought\n```'
+                            trophy_price.value = '```yaml\n+Bought\n```'
                             break;
                         case 'CantBuy':
-                            trophy_price.value = '```diff\n-'+`${trophy.price}`+'\n```'
+                            trophy_price.value = '```css\n['+`${trophy.price}`+']\n```'
                             break;
                         case 'CanBuy':
                             break;
