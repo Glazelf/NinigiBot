@@ -78,8 +78,8 @@ exports.run = async (client, interaction) => {
         let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
         let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
-        let profileButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
+        let profileButtons = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
 
         const profileEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)

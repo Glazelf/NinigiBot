@@ -68,8 +68,8 @@ exports.run = async (client, interaction) => {
                 };
                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
-                let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
+                let rolesSelects = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.SelectMenuBuilder({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
                 return sendMessage({ client: client, interaction: interaction, content: `Choose a role to assign to yourself: `, components: rolesSelects, ephemeral: ephemeral });
             };

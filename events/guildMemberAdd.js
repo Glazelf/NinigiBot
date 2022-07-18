@@ -17,8 +17,8 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            let joinButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
+            let joinButtons = new Discord.ActionRowBuilder()
+                .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
 
             const joinEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

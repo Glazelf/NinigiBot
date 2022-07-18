@@ -131,11 +131,11 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
             });
         };
         let buttonArray = [];
-        let subSpeciesButtons = new Discord.MessageActionRow();
+        let subSpeciesButtons = new Discord.ActionRowBuilder();
         if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
             if (monsterData.subSpecies.length < 6) {
                 for (let i = 0; i < monsterData.subSpecies.length; i++) {
-                    subSpeciesButtons.addComponents(new Discord.MessageButton({
+                    subSpeciesButtons.addComponents(new Discord.ButtonBuilder({
                         customId: `mhSub${i}`, style: Discord.ButtonStyle.Secondary, label: monsterData.subSpecies[i]
                     }));
                 };
@@ -146,7 +146,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterData.subSpecies) {
             monstersJSON.monsters.forEach(monster => {
                 if (!monster.subSpecies) return;
-                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.ButtonBuilder({
                     customId: `mhSubOrigin`, style: Discord.ButtonStyle.Secondary, label: monster.name
                 }));
             });

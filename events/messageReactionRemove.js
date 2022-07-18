@@ -42,8 +42,8 @@ module.exports = async (client, messageReaction) => {
             };
         };
 
-        let starButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+        let starButtons = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
 
         const starEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

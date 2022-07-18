@@ -123,12 +123,12 @@ exports.run = async (client, interaction) => {
             // };
         });
 
-        let serverButtons = new Discord.MessageActionRow();
+        let serverButtons = new Discord.ActionRowBuilder();
         // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental Discord feature)', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${guild.id}/@home` }));
+        serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Home (Experimental Discord feature)', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${guild.id}/@home` }));
 
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)

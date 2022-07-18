@@ -22,7 +22,7 @@ exports.run = async (client, interaction) => {
             .setColor(globalVars.embedColor);
 
         let pokemonName = interaction.options.getString("pokemon");
-        let pokemonButtons = new Discord.MessageActionRow();
+        let pokemonButtons = new Discord.ActionRowBuilder();
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         let JSONresponse;
@@ -233,10 +233,10 @@ exports.run = async (client, interaction) => {
 
                     } else {
                         // make generic embed to guide people to usage statistics :)
-                        let usageButtons = new Discord.MessageActionRow()
-                            .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: Discord.ButtonStyle.Link, url: "https://pikalytics.com" }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
+                        let usageButtons = new Discord.ActionRowBuilder()
+                            .addComponents(new Discord.ButtonBuilder({ label: 'Pikalytics', style: Discord.ButtonStyle.Link, url: "https://pikalytics.com" }))
+                            .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
+                            .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
 
                         let replyText = `Sorry! Could not fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.\nHere are some usage resources you might find usefull instead:`;
 
@@ -249,7 +249,7 @@ exports.run = async (client, interaction) => {
         // Bulbapedia button
         if (linkBulbapedia) {
             pokemonButtons
-                .addComponents(new Discord.MessageButton({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
+                .addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
         };
 
         // Send function for all except default
