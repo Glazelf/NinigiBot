@@ -58,16 +58,29 @@ exports.run = async (client, interaction) => {
                 
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                trophies = await api_shop.getTodayShopTrophies();
-                trophy_string = '';
+                trophies = await api_shop.getFullBuyableShopTrophies(master.id);
                 trophies.forEach(trophy=>{
-                    trophy_string += `:${trophy.icon}: **${trophy.trophy_id}** ${trophy.price}💰\n`;
-                })
-                if (trophy_string.length > 0) {
+                    let trophy_header = { name: '\u200B', value: `:${trophy.icon}: **${trophy.trophy_id}**`, inline: true}
+                    let trophy_price = { name: '\u200B', value: '```diff\n'+`${trophy.price}`+'\n```', inline: true};
+                    
+                    switch(trophy.temp_bought){
+                        case 'Bought':
+                            trophy_price.value = '```diff\n+Bought\n```'
+                            break;
+                        case 'CantBuy':
+                            trophy_price.value = '```diff\n-'+`${trophy.price}`+'\n```'
+                            break;
+                        case 'CanBuy':
+                            break;
+                    }
+                    
                     embed.addFields(
-                        { name: "Trophies:", value: trophy_string},
+                        trophy_header,
+                        trophy_price,
+                        { name: '\u200B', value: '\u200B', inline: true },
                     )
-                }
+
+                })
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
