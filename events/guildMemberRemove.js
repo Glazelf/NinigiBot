@@ -23,7 +23,7 @@ module.exports = async (client, member) => {
             let kicked = false;
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
 
-            let leaveEmbed = new Discord.MessageEmbed()
+            let leaveEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();

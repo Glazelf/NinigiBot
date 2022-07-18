@@ -130,7 +130,7 @@ exports.run = async (client, interaction) => {
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);

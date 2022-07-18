@@ -26,7 +26,7 @@ exports.run = async (client, interaction) => {
         if (roleProperties.length == 0) roleProperties = "None";
 
         // Embed
-        let roleEmbed = new Discord.MessageEmbed()
+        let roleEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)

@@ -85,7 +85,7 @@ exports.run = async (client, interaction) => {
 
             let icon = guild.iconURL(globalVars.displayAvatarSettings);
 
-            const rolesHelp = new Discord.MessageEmbed()
+            const rolesHelp = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: icon })
                 .setDescription(roleHelpMessage);

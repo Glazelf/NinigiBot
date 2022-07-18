@@ -81,7 +81,7 @@ exports.run = async (client, interaction) => {
         let profileButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
 
-        const profileEmbed = new Discord.MessageEmbed()
+        const profileEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: user.tag, iconURL: avatar })
             .setThumbnail(serverAvatar)

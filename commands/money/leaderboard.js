@@ -14,7 +14,7 @@ exports.run = async (client, interaction) => {
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
         let icon = null;
-        const leaderboardEmbed = new Discord.MessageEmbed()
+        const leaderboardEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         if (global) {
             // Global leaderboard

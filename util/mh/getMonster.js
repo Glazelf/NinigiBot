@@ -153,7 +153,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender);

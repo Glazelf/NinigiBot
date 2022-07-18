@@ -35,7 +35,7 @@ module.exports = async (client, guildBan) => {
             let banButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
 
-            const banEmbed = new Discord.MessageEmbed()
+            const banEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
                 .setThumbnail(avatarTarget)

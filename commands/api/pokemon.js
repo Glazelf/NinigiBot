@@ -18,7 +18,7 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let pokemonEmbed = new Discord.MessageEmbed()
+        let pokemonEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         let pokemonName = interaction.options.getString("pokemon");
@@ -206,7 +206,7 @@ exports.run = async (client, interaction) => {
                             teammateStats = `${teammateStats}\n${key}: ${value}`;
                         };
 
-                        let usageEmbed = new Discord.MessageEmbed()
+                        let usageEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
                             .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)

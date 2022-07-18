@@ -51,7 +51,7 @@ module.exports = async (client, messageReaction) => {
         let starButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
 
-        const starEmbed = new Discord.MessageEmbed()
+        const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)

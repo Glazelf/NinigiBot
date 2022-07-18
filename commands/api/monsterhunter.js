@@ -20,7 +20,7 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {

@@ -36,7 +36,7 @@ module.exports = async (client, channel) => {
 
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const deleteEmbed = new Discord.MessageEmbed()
+            const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
                 .addField(`Channel:`, `${channel.name} (${channel.id})`)

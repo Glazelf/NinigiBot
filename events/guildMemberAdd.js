@@ -20,7 +20,7 @@ module.exports = async (client, member) => {
             let joinButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
 
-            const joinEmbed = new Discord.MessageEmbed()
+            const joinEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Joined ❤️`, iconURL: icon })
                 .setThumbnail(avatar)

@@ -278,7 +278,7 @@ module.exports = async (client, interaction) => {
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
-                        const bugReportEmbed = new Discord.MessageEmbed()
+                        const bugReportEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Bug Report` })
                             .setThumbnail(userAvatar)
@@ -300,7 +300,7 @@ module.exports = async (client, interaction) => {
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
 
-                        const modMailEmbed = new Discord.MessageEmbed()
+                        const modMailEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Mod Mail 💌` })
                             .setThumbnail(userAvatar)
