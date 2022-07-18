@@ -7,7 +7,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
 
         let ephemeral = false;
-        let message = await interaction.channel.messages.fetch(interaction.targetId);
+        let message = await interaction.channel.messages.fetch({ message: interaction.targetId });
         let input = message.content;
         let questionAskUser = message.author;
 

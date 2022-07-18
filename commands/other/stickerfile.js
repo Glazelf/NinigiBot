@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 
-        let message = await interaction.channel.messages.fetch(interaction.targetId);
+        let message = await interaction.channel.messages.fetch({ message: interaction.targetId });
         let returnString = `Here's the link(s) to the assets you requested:`;
         let replyMessage = null;
         let stickerLink = null;

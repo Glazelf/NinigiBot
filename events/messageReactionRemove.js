@@ -8,7 +8,7 @@ module.exports = async (client, messageReaction) => {
 
         if (messageReaction.count == null || messageReaction.count == undefined) return;
 
-        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
+        let targetMessage = await messageReaction.message.channel.messages.fetch({ message: messageReaction.message.id });
         if (!targetMessage) return;
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         if (!starboardChannel) return;
@@ -36,7 +36,7 @@ module.exports = async (client, messageReaction) => {
 
         if (isReply) {
             try {
-                replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
+                replyMessage = await targetMessage.channel.messages.fetch({ message: targetMessage.reference.messageId });
             } catch (e) {
                 isReply = false;
             };
@@ -59,7 +59,7 @@ module.exports = async (client, messageReaction) => {
         if (messageReaction.count == 0 && messageDB) {
             // Delete
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            await starChannel.messages.fetch(messageDB.starboard_message_id).then(m => {
+            await starChannel.messages.fetch({ message: messageDB.starboard_message_id }).then(m => {
                 m.delete()
             });
             await messageDB.destroy();
@@ -67,7 +67,7 @@ module.exports = async (client, messageReaction) => {
         } else if (messageDB) {
             // Update
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
-            let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
+            let starMessage = await starChannel.messages.fetch({ message: messageDB.starboard_message_id });
             if (!starMessage) return;
 
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });

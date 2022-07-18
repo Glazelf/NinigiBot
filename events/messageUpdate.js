@@ -42,7 +42,7 @@ module.exports = async (client, message, newMessage) => {
 
             if (isReply) {
                 try {
-                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
+                    replyMessage = await message.channel.messages.fetch({ message: message.reference.messageId });
                 } catch (e) {
                     isReply = false;
                 };

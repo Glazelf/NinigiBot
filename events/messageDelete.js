@@ -13,7 +13,7 @@ module.exports = async (client, message) => {
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             if (starboardChannel) {
-                let starboardMessage = await starboardChannel.messages.fetch(messageDB.starboard_message_id);
+                let starboardMessage = await starboardChannel.messages.fetch({ message: messageDB.starboard_message_id });
                 if (starboardMessage) starboardMessage.delete();
             };
         };
@@ -57,7 +57,7 @@ module.exports = async (client, message) => {
 
             if (isReply) {
                 try {
-                    replyMessage = await message.channel.messages.fetch(message.reference.messageId);
+                    replyMessage = await message.channel.messages.fetch({ message: message.reference.messageId });
                 } catch (e) {
                     isReply = false;
                 };
