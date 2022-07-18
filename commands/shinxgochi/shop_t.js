@@ -160,7 +160,7 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }]
-    },,{
+    },{
         name: "addMoney",
         type: "SUB_COMMAND",
         description: "Add money!",
