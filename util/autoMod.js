@@ -72,7 +72,7 @@ module.exports = async (client, message) => {
     // };
 
     async function msgDelete() {
-        if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return;
+        if (!message.guild.members.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
         return message.channel.send({ content: `Deleted a message by **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\`` });
         // return true;

@@ -7,7 +7,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const { EligibleRoles } = require('../../database/dbObjects');
         const isAdmin = require('../../util/isAdmin');
-        let adminBoolBot = isAdmin(client, interaction.guild.me);
+        let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
@@ -24,7 +24,7 @@ exports.run = async (client, interaction) => {
         };
 
         if (role.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
-        if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
+        if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
         if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
 
         let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });

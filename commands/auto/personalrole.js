@@ -49,7 +49,7 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
-        if (interaction.guild.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
+        if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
 
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters

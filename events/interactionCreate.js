@@ -101,13 +101,13 @@ module.exports = async (client, interaction) => {
                                 // Toggle selected role
                                 const role = await interaction.guild.roles.fetch(interaction.values[0]);
                                 if (!role) return sendMessage({ client: client, interaction: interaction, content: `This role does not exist.` });
-                                let adminBool = isAdmin(client, interaction.guild.me);
+                                let adminBool = isAdmin(client, interaction.guild.members.me);
 
                                 let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                 if (!checkRoleEligibility) return sendMessage({ client: client, interaction: interaction, content: `This role is not available anymore.` });
 
                                 if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${role} because it is being automatically managed by an integration.` });
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
+                                if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
                                 try {
                                     if (interaction.member.roles.cache.has(role.id)) {
                                         await interaction.member.roles.remove(role);
