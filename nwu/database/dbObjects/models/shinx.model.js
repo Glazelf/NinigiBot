@@ -74,6 +74,12 @@ module.exports = (sequelize, DataTypes) => {
         this.save();
     }
 
+    // Nickname
+    Shinx.prototype.changeNick = function(nick){
+        this.nickname = nick;
+        this.save();
+    }
+
     Shinx.prototype.getHunger = function(){
         return MAX_RANGE - this.fullness;
     }

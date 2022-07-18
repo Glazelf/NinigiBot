@@ -59,6 +59,28 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral });
+            case "changenick":
+                let new_nick = interaction.options.getString("nickname");
+                res = await shinxApi.nameShinx(master.id, new_nick);
+                switch(res){
+                    case 'TooShort':
+                        returnString = `Could not rename because provided nick was empty`;
+                        break;
+                    case 'TooLong':
+                        returnString = `Could not rename because provided nick length was greater than 12`
+                        break;
+                    case 'InvalidChars':
+                        returnString = `Could not rename because provided nick was not alphanumeric`
+                        break;
+                    case 'Ok':
+                        returnString = `Shinx renamed successfully!`
+                        break;
+                }
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    content: returnString,
+                    ephemeral: ephemeral }); 
             case "addmoney":
                 let moneyArg = interaction.options.getInteger("money");
                 await api_user.addMoney(master.id, moneyArg);
@@ -79,7 +101,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral }); 
                     
             case "shiny":
-                const res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
+                res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
                 if(res){
                     returnString = (await shinxApi.switchShininessAndGet(master.id))? `Your shinx is shiny now` : `Your shinx is no longer shiny`
                 } else {
@@ -116,6 +138,8 @@ exports.run = async (client, interaction) => {
     };
 };
 
+
+
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
     name: "shinx",
@@ -125,6 +149,16 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "See your shinx!",
     },{
+        name: "changenick",
+        type: "SUB_COMMAND",
+        description: "Change your Shinx nick!",
+        options: [{
+            name: "nickname",
+            type: "STRING",
+            description: "Alphanumeric string (between 1 and 12 characters)",
+            required: true
+        }]
+    },{
         name: "addexp",
         type: "SUB_COMMAND",
         description: "Add experience!",
@@ -133,7 +167,6 @@ module.exports.config = {
             type: "INTEGER",
             description: "The amount of exp you want to add.",
             required: true,
-            autocomplete: true
         }]
     },{
         name: "addmoney",
@@ -144,7 +177,6 @@ module.exports.config = {
             type: "INTEGER",
             description: "The amount of money you want to add.",
             required: true,
-            autocomplete: true
         }]
     },{
         name: "buyfood",
@@ -155,7 +187,6 @@ module.exports.config = {
             type: "INTEGER",
             description: "The amount of food you want to buy.",
             required: true,
-            autocomplete: true
         }]
     },{
         name: "feed",

@@ -129,5 +129,19 @@ module.exports = {
         await shinx.feed(feed_amount);
         await this.addExperience(user_id, feed_amount);
         return 'Ok'
+    },
+
+    async nameShinx(id, nick) {
+        let pnick = nick.trim();
+        if (pnick.length < 1) {
+            return 'TooShort'
+        } else if ( pnick.length > 12) {
+            return 'TooLong'
+        } else if (!pnick.match(/^[a-z0-9]+$/i)){
+            return 'InvalidChars'
+        }
+        let shinx = await this.getShinx(id);
+        shinx.changeNick(pnick);
+        return 'Ok'
     }
 };
