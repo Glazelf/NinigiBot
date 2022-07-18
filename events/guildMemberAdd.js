@@ -17,7 +17,6 @@ module.exports = async (client, member) => {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            // Buttons
             let joinButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 
@@ -27,7 +26,7 @@ module.exports = async (client, member) => {
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .addField(`User: `, `${member} (${member.id})`, false)
-                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:R>`, true)
+                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
                 .setFooter({ text: member.user.tag })
                 .setTimestamp();
 

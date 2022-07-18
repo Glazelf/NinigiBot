@@ -19,7 +19,8 @@ module.exports = async (client, oldChannel, newChannel) => {
                 limit: 1,
                 type: 'CHANNEL_UPDATE',
             });
-            const updateLog = fetchedLogs.entries.first();
+            let updateLog = fetchedLogs.entries.first();
+            if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
             let executor;
             if (updateLog) {
                 const { executor: createExecutor, target } = updateLog;

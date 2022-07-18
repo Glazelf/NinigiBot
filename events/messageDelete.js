@@ -25,9 +25,11 @@ module.exports = async (client, message) => {
                 type: 'MESSAGE_DELETE',
             });
             let deleteLog = fetchedLogs.entries.first();
-            if (deleteLog) executor = deleteLog.executor;
-            // Date.now() - 5000 is to make sure log is <5 seconds ago
-            if (deleteLog.extra.channel != message.channel || deleteLog.target.id != message.member.id || deleteLog.createdTimestamp < (Date.now() - 5000)) executor = null;
+            if (deleteLog) {
+                executor = deleteLog.executor;
+                // Date.now() - 5000 is to make sure log is <5 seconds ago
+                if (deleteLog.extra.channel != message.channel || deleteLog.target.id != message.member.id || deleteLog.createdTimestamp < (Date.now() - 5000)) executor = null;
+            };
         } catch (e) {
             // console.log(e);
             executor = null;

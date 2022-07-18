@@ -201,7 +201,6 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
 
-        // Buttons
         let pkmButtons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();

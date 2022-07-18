@@ -18,7 +18,8 @@ module.exports = async (client, role) => {
                 limit: 1,
                 type: 'ROLE_CREATE',
             });
-            const createLog = fetchedLogs.entries.first();
+            let createLog = fetchedLogs.entries.first();
+            if (createLog && createLog.createdTimestamp < (Date.now() - 5000)) createLog = null;
             let executor;
             if (createLog) {
                 const { executor: createExecutor, target } = createLog;

@@ -11,8 +11,6 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let role = interaction.options.getRole("role");
-        let user = interaction.user;
-        let avatar = interaction.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
@@ -20,7 +18,8 @@ exports.run = async (client, interaction) => {
         let embedColor = role.hexColor;
         if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
-        let memberCount = interaction.guild.members.cache.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
+        let guildMembers = await interaction.guild.members.fetch();
+        let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
 
         // Properties
         let roleProperties = "";
@@ -32,7 +31,7 @@ exports.run = async (client, interaction) => {
         // Embed
         let roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor({ name: `${role.name}`, iconURL: avatar })
+            .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
             .addField("Role:", role.toString(), true);
         if (role.hexColor !== defaultColor) roleEmbed.addField("Color:", role.hexColor, true);

@@ -13,14 +13,11 @@ module.exports = async (client, member) => {
 
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-
         if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
-
         let botMember = await member.guild.members.fetch(client.user.id);
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let memberLeaveObject = {};
-
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
@@ -33,24 +30,28 @@ module.exports = async (client, member) => {
 
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: 'MEMBER_KICK',
                 });
-                const kickLog = fetchedLogs.entries.first();
+                let kickLog = fetchedLogs.entries.first();
 
-                if (kickLog) {
-                    if (kickLog.createdAt > member.joinedAt) {
-                        var { executor, target, reason } = kickLog;
-                        if (target.id !== member.id) return;
-                        kicked = true;
-                        if (reason) reasonText = reason;
-                        embedAuthor = `Member Kicked 💔`;
-                    };
+                // Return if ban exists
+                const banLogs = await member.guild.fetchAuditLogs({
+                    limit: 1,
+                    type: 'MEMBER_BAN_ADD',
+                });
+                if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
+                let banLog = banLogs.entries.first();
+                if (banLog && banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
+                if (kickLog && kickLog.createdAt > member.joinedAt) {
+                    var { executor, target, reason } = kickLog;
+                    if (target.id !== member.id) return;
+                    kicked = true;
+                    if (reason) reasonText = reason;
+                    embedAuthor = `Member Kicked 💔`;
                 };
 
-                // Buttons
                 let leaveButtons = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
 
@@ -60,7 +61,7 @@ module.exports = async (client, member) => {
                     .addField(`User: `, `${member} (${member.id})`, false);
                 if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
                 leaveEmbed
-                    .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:R>`, true)
+                    .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
                     .setFooter({ text: member.user.tag });
                 if (kicked == true) {
                     leaveEmbed.addField(`Reason:`, reasonText, false);

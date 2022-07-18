@@ -4,7 +4,9 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
     try {
         const Discord = require("discord.js");
         const crypto = require('crypto');
+        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
+        const imageExists = require('../../util/imageExists');
 
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
@@ -40,19 +42,16 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterDanger) monsterDanger = mostRecentGameEntry.danger;
         // Get MHRise-Database image
         let isInImageDBGame = gameAppearances.includes(MHRise) || gameAppearances.includes(MHW) || gameAppearances.includes(MHGU);
+        let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
+        let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
         if (isInImageDBGame) {
-            let isOnlyInGU = !gameAppearances.includes(MHRise) && !gameAppearances.includes(MHW) && gameAppearances.includes(MHGU);
-            let newestGameIsWorld = !gameAppearances.includes(MHRise) && gameAppearances.includes(MHW);
             gameDBName = "MHRise";
             let gameDBBranchName = "main";
-
             let monsterSize = "monster";
             if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
-
             let monsterURLName = monsterData.name;
             if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
             if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
-
             if (isOnlyInGU) {
                 gameDBName = "MHGU";
                 gameDBBranchName = "master";
@@ -68,10 +67,31 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         let monsterGameIndicator = gameDBName;
         if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
         let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
-        let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-        let md5first = md5.substring(0, 1);
-        let md5duo = md5.substring(0, 2);
-        let monsterRender = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+        let monsterRender = getRenderURL(monsterRenderName);
+        let renderExists = imageExists(monsterRender);
+        if (!renderExists) {
+            if (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U") {
+                // Check for 4U only renders
+                if (monsterGameIndicator == "MHGU") {
+                    monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
+                    monsterRender = getRenderURL(monsterRenderName);
+                    renderExists = imageExists(monsterRender);
+                };
+                if (!renderExists) {
+                    monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
+                    monsterRender = getRenderURL(monsterRenderName);
+                };
+            } else {
+                // Check if there's a render 2 (seems to be for spinoff exclusive monsters, namely Oltura)
+                monsterRenderName = monsterRenderName.replace("Render_001", "Render_002");
+                monsterRender = getRenderURL(monsterRenderName);
+            };
+        };
+        if (!monsterBanner) {
+            monsterBanner = monsterRender;
+            monsterRender = null;
+        };
+
         // Format size
         let monsterSize = "Small";
         if (monsterData.isLarge) monsterSize = "Large";
@@ -121,6 +141,12 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
                 // How many subspecies do you need??
             };
         };
+        if (!monsterData.subSpecies) {
+            monstersJSON.monsters.forEach(monster => {
+                if (!monster.subSpecies) return;
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSubOrigin`, style: 'SECONDARY', label: monster.name }));
+            });
+        };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
         let mhEmbed = new Discord.MessageEmbed()
@@ -135,10 +161,20 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (monsterAilments.length > 0) mhEmbed.addField("Ailment:", monsterAilments, true);
         mhEmbed
             .addField("Games:", gameAppearances, false)
-            .setImage(monsterBanner);
+            .setImage(monsterBanner)
+            .setFooter({ text: interaction.user.tag })
+            .setTimestamp();
 
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
+
+        function getRenderURL(monsterRenderName) {
+            let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
+            let md5first = md5.substring(0, 1);
+            let md5duo = md5.substring(0, 2);
+            let url = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
+            return url;
+        };
 
     } catch (e) {
         // Log error

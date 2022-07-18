@@ -9,8 +9,8 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let day = interaction.options.getString("day");
-        let month = interaction.options.getString("month");
+        let day = interaction.options.getInteger("day");
+        let month = interaction.options.getInteger("month");
         let date = `${day}-${month}`;
 
         // Check and sanitize birthday
@@ -18,7 +18,7 @@ exports.run = async (client, interaction) => {
         if (!birthday) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
 
         bank.currency.birthday(interaction.user.id, birthday[1] + birthday[2]);
-        return sendMessage({ client: client, interaction: interaction, content: `Successfully updated your birthday.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${date}\` (dd-mm).` });
 
     } catch (e) {
         // Log error

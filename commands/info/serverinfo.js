@@ -27,8 +27,6 @@ exports.run = async (client, interaction) => {
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
         let guildsByShard = client.guilds.cache;
 
-        let user = interaction.user;
-
         let nitroEmote = "<:nitro_boost:753268592081895605>";
 
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
@@ -125,8 +123,9 @@ exports.run = async (client, interaction) => {
             // };
         });
 
-        let serverButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+        let serverButtons = new Discord.MessageActionRow();
+        // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental Discord feature)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
 
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
@@ -159,7 +158,7 @@ exports.run = async (client, interaction) => {
         if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
-            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:R>`, true)
+            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, true)
             .setFooter({ text: guild.id });
         if (banner) serverEmbed.setImage(banner);
 

@@ -12,23 +12,17 @@ exports.run = async (client, interaction) => {
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let user = null;
-        let member = null;
-        let userArg = interaction.options.getUser("user");
-        if (userArg) {
-            user = userArg;
-            member = interaction.options.getMember("user");
-        };
+        let user = interaction.options.getUser("user");
+        let member = interaction.options.getMember("user");
         let userIDArg = interaction.options.getString("user-id");
-        let author = interaction;
-        let reason = "Not specified.";
-        let reasonArg = interaction.options.getString("reason");
-        if (reasonArg) reason = reasonArg;
+        let reason = interaction.options.getString("reason");
+        if (!reason) reason = `Not specified.`;
         let deleteMessageDays = 0;
         let deleteMessageDaysArg = interaction.options.getInteger("delete-messages-days");
         if (deleteMessageDaysArg) deleteMessageDays = deleteMessageDaysArg;
         if (deleteMessageDays < 0) deleteMessageDays = 0;
         if (deleteMessageDays > 7) deleteMessageDays = 7;
+        let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} days.`;
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
@@ -59,17 +53,16 @@ exports.run = async (client, interaction) => {
                 if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `**${member.user.tag}** (${member.id}) is already banned.` });
             };
 
-            // Ban
-            banReturn = `Successfully banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
-
+            banReturn = `Banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
             try {
                 try {
                     await user.send({ content: dmString });
-                    banReturn += " (DM Succeeded)";
+                    banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`;
                 } catch (e) {
                     // console.log(e);
-                    banReturn += " (DM Failed)";
+                    banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`;
                 };
+                if (deleteMessageDays > 0) banReturn += deletedMessagesString;
 
                 // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too
                 await member.ban({ reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
@@ -78,17 +71,15 @@ exports.run = async (client, interaction) => {
                 // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: banFailString });
             };
-        } else {
-            // If user isn't found, try to ban by ID
-            if (!userIDArg) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban.` });
+        } else if (userIDArg) {
+            // Try to ban by ID ("hackban") instead
             let memberID = userIDArg;
-
             // See if target isn't already banned
             if (bansFetch) {
                 if (bansFetch.has(memberID)) return sendMessage({ client: client, interaction: interaction, content: `<@${memberID}> (${memberID}) is already banned.` });
             };
-
-            banReturn = `Successfully banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
+            if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
@@ -100,6 +91,8 @@ exports.run = async (client, interaction) => {
                     return sendMessage({ client: client, interaction: interaction, content: banFailString });
                 };
             };
+        } else {
+            return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban either through the \`user\` or the \`user-id\` argument.` });
         };
 
     } catch (e) {

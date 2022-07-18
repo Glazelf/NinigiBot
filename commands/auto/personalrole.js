@@ -28,9 +28,11 @@ exports.run = async (client, interaction) => {
 
         if (colorArg) roleColor = colorArg;
         if (iconArg) {
+            // Object seems to be structured differently between ephemeral and public messages, or I may be stupid
             iconImg = iconArg.attachment.url;
+            if (!iconImg) iconImg = iconArg.attachment;
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
-            if (iconArg.attachment.contentType.includes('image')) fileIsImg = true;
+            if (iconArg.contentType.includes('image')) fileIsImg = true;
         };
         if (deleteArg === true) deleteBool = deleteArg;
 
@@ -56,23 +58,21 @@ exports.run = async (client, interaction) => {
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
 
-        if (deleteBool == true) return deleteRole(`Successfully deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
-
-        let user = interaction.user;
+        if (deleteBool == true) return deleteRole(`Deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
 
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
         if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
-            let editReturnString = `Updated your role successfully; `;
+            let editReturnString = `Updated your role.`;
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
             if (!colorArg) roleColor = personalRole.color;
-            if (roleColor != personalRole.color) editReturnString += `Color set to \`#${roleColor}\`. `;
+            if (roleColor != personalRole.color) editReturnString += `\n-Color set to \`#${roleColor}\`.`;
 
             personalRole.edit({
-                name: user.tag,
+                name: interaction.user.tag,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
@@ -83,20 +83,21 @@ exports.run = async (client, interaction) => {
             if (iconArg && iconsAllowed && fileIsImg) {
                 let roleIconSizeLimit = 256;
                 if (iconSize > roleIconSizeLimit) {
-                    editReturnString += `Failed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
+                    editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
-                        await personalRole.setIcon(iconImg);
+                        await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.tag}.`]);
+                        editReturnString += `\n-Image updated.`;
                     } catch (e) {
                         // console.log(e);
+                        editReturnString += `\n-Failed to update image.`;
                     };
-                    editReturnString += `Image updated. `;
                 };
             } else if (iconArg && !iconsAllowed) {
-                editReturnString += `Failed to update the image, **${interaction.guild.name}** does not have role icons unlocked. `;
+                editReturnString += `-**${interaction.guild.name}** does not have role icons unlocked.`;
             };
             // Re-add role if it got removed
-            if (!interaction.member.roles.cache.find(r => r.name == user.tag)) interaction.member.roles.add(personalRole.id);
+            if (!interaction.member.roles.cache.find(r => r.name == interaction.user.tag)) interaction.member.roles.add(personalRole.id);
 
             return sendMessage({ client: client, interaction: interaction, content: editReturnString });
 
@@ -115,13 +116,13 @@ exports.run = async (client, interaction) => {
             // Create role
             try {
                 await interaction.guild.roles.create({
-                    name: user.tag,
+                    name: interaction.user.tag,
                     color: roleColor,
                     position: personalRolePosition,
-                    reason: `Personal role for ${user.tag}.`,
+                    reason: `Personal role for ${interaction.user.tag}.`,
                 });
             } catch (e) {
-                // console.log(error);
+                // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
@@ -129,17 +130,15 @@ exports.run = async (client, interaction) => {
                 };
             };
 
-            let createdRole = await interaction.guild.roles.cache.find(role => role.name == user.tag);
+            let createdRole = await interaction.guild.roles.cache.find(role => role.name == interaction.user.tag);
             try {
                 if (iconArg && iconsAllowed && fileIsImg) createdRole.setIcon(iconImg);
             } catch (e) {
                 // console.log(e);
             };
-
             interaction.member.roles.add(createdRole.id);
             await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
-
-            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you successfully.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
         };
 
         async function deleteRole(successString, failString) {
@@ -161,7 +160,7 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "personalrole",
-    description: "Updates your personal role color.",
+    description: "Update your personal role.",
     options: [{
         name: "color-hex",
         type: "STRING",
