@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { userdata } =  require('../dbConnection/dbConnection');
 
-const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 
 module.exports = async () => {
     try {

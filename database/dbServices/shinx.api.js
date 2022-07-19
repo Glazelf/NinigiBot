@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const {sequelize} =  require('../dbConnection/dbConnection');
+const { userdata} =  require('../dbConnection/dbConnection');
 const { Op } = require('sequelize');
-const { Shinx,ShinxTrophy, User, Trainer} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { Shinx,ShinxTrophy, User, Trainer} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 const shinx_util = require('../../util/nwu/shinx.util');
 const BRONZE_TROPHY_EXP = shinx_util.levelToExp(5);
 const SILVER_TROPHY_EXP = shinx_util.levelToExp(15);

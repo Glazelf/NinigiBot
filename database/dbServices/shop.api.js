@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
-const {sequelize} =  require('../dbConnection/dbConnection');
+const {userdata} =  require('../dbConnection/dbConnection');
 
-const { User, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { User, ShopTrophy } = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 
 const DAILY_TROPHIES = 5;
 
