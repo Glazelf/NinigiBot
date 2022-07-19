@@ -368,11 +368,7 @@ exports.run = async (client, interaction) => {
 module.exports.config = {
     name: "shinx_old",
     description: "Interact with your Shinx.",
-    options: [{
-        name: "gender",
-        type: "SUB_COMMAND",
-        description: "Toggle your trainer's gender."
-    }, {
+    options: [ {
         name: "data",
         type: "SUB_COMMAND",
         description: "Show Shinx summary."

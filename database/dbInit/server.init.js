@@ -48,7 +48,7 @@ module.exports = async () => {
             //shinxQuotes.upsert({ quote: "", reaction: }),
         ]
         await Promise.all(quotes);
-        console.log('Attachments DB initialized');
+        console.log(`Initialized Database: Attachments ✔`);
         attatchments.close();
     } catch (e) {
         console.log(e)

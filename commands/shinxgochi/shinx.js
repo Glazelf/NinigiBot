@@ -106,7 +106,10 @@ exports.run = async (client, interaction) => {
                     client: client,
                     interaction: interaction,
                     content: returnString,
-                    ephemeral: ephemeral });  
+                    ephemeral: ephemeral });
+            // OLD
+            case "dataImage":
+
         };
     } catch (e) {
         // Log error
@@ -152,5 +155,9 @@ module.exports.config = {
         name: "shiny",
         type: "SUB_COMMAND",
         description: "Change shinx's color!"
-    }],
+    },{
+        name: "dataImage",
+        type: "SUB_COMMAND",
+        description: "Get your Shinx data animated!",
+    },],
 };

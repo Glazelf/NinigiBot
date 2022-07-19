@@ -14,7 +14,7 @@ exports.run = async (client, interaction) => {
 
         let master = interaction.user
 
-        let user, trophies;
+        let user, trainer, trophies;
         switch (interaction.options.getSubcommand()) {
             case "card":
                 user = await api_trainer.getUser(master.id);
@@ -49,7 +49,10 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            
+            case "swapGender":
+                trainer = await api_trainer.getTrainer(master.id)
+                return trainer.swapAndGetGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
+                break;
 
         };
 
@@ -67,5 +70,9 @@ module.exports.config = {
         name: "card",
         type: "SUB_COMMAND",
         description: "Check your trainer card!",
-    },]
+    },{
+        name: "swapGender",
+        type: "SUB_COMMAND",
+        description: "Swap your trainer's gender."
+    }]
 };

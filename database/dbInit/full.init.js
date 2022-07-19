@@ -85,7 +85,7 @@ module.exports = async () => {
             }),   
         ]
         await Promise.all(trophies);
-        console.log('User DB initialized');
+        console.log(`Initialized Database: User ✔`);
         userdata.close();
     } catch (e) {
         console.log(e)
