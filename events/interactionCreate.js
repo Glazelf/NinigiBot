@@ -14,8 +14,8 @@ module.exports = async (client, interaction) => {
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
         const { bank } = require('../database/bank');
-        const api_shop = require('../nwu/database/dbServices/shop.api');
-        const api_shinx = require('../nwu/database/dbServices/shinx.api');
+        const api_shop = require('../database/dbServices/shop.api');
+        const api_shinx = require('../database/dbServices/shinx.api');
 
         if (!interaction) return;
         if (interaction.user.bot) return;
