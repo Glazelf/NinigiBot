@@ -9,6 +9,7 @@ module.exports = {
         get currency() {
             if (!this._currency) {
                 const money = new Discord.Collection();
+                // users.api.setSwitchCode
                 Reflect.defineProperty(money, 'switchCode', {
                     value: async function switchCode(id, code) {
                         const user = money.get(id);
@@ -21,7 +22,7 @@ module.exports = {
                         return newUser;
                     }
                 });
-
+                // DEPRECIATED
                 Reflect.defineProperty(money, 'payBattle', {
                     value: function payBattle(from, to) {
                         const paidMoney = Math.min(Math.floor(this.getBalance(from) * 0.1), Math.floor(this.getBalance(to) * 0.1));
@@ -69,6 +70,7 @@ module.exports = {
                     }
                 });
 
+                // DEPRECIATED
                 Reflect.defineProperty(money, 'updateShinx', {
                     value: async function updateShinx(shinxBattle, wins) {
                         let shinx = await Shinx.findOne({
@@ -77,7 +79,7 @@ module.exports = {
                         await shinx.updateData(shinxBattle, wins);
                     },
                 });
-
+                // users.api.getSwitchCode
                 Reflect.defineProperty(money, 'getSwitchCode', {
                     value: function getSwitchCode(id) {
                         const user = money.get(id);
@@ -85,6 +87,7 @@ module.exports = {
                     },
                 });
 
+                // users.api.setBirthday
                 Reflect.defineProperty(money, 'birthday', {
                     value: async function birthday(id, birthday) {
                         const user = money.get(id);
@@ -98,6 +101,7 @@ module.exports = {
                     },
                 });
 
+                // users.api.getBirthday
                 Reflect.defineProperty(money, 'getBirthday', {
                     value: function getBirthday(id) {
                         const user = money.get(id);
@@ -105,6 +109,7 @@ module.exports = {
                     },
                 });
 
+                // users.api.addMoney
                 Reflect.defineProperty(money, 'add', {
                     value: async function add(id, amount) {
                         const user = money.get(id);
@@ -120,7 +125,7 @@ module.exports = {
                         return newUser;
                     },
                 });
-
+                // users.api.getMoney
                 Reflect.defineProperty(money, 'getBalance', {
                     value: function getBalance(id) {
                         const user = money.get(id);
