@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 const {sequelize} =  require('./dbConnection/dbConnection');
 
-const { Users, Shinx, ShinxTrophy, ShopTrophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { User, Shinx, ShinxTrophy, ShopTrophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 const syncDatabase = async () => {
     try {
-        await Users.sync({ alter: true });
+        await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
         await ShinxTrophy.sync({ alter: true });
         await ShopTrophy.sync({ alter: true });

@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const api_user = require('../../database/dbServices/trainer.api');
+        const api_trainer = require('../../database/dbServices/trainer.api');
 
         let ephemeral = false;
         let embed,avatar;
@@ -17,7 +17,8 @@ exports.run = async (client, interaction) => {
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "card":
-                user = await api_user.getUser(master.id);
+                user = await api_trainer.getUser(master.id);
+                trainer = await api_trainer.getTrainer(master.id)
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -27,7 +28,7 @@ exports.run = async (client, interaction) => {
                 .setThumbnail(avatar)
                 .addFields(
                     { name: "Money:", value: user.money.toString(), inline: true},
-                    { name: "Food:", value: user.food.toString(), inline: true},
+                    { name: "Food:", value: trainer.food.toString(), inline: true},
                 )  
                 trophies = await user.getShopTrophies();
                 trophy_string = '';

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const {sequelize} =  require('../dbConnection/dbConnection');
 const { Op } = require('sequelize');
-const { Users: User} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { User} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
     async getUser(id) {
