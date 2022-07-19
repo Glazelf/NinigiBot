@@ -6,9 +6,9 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        const api_shinx = require('../../nwu/database/dbServices/shinx.api');
-        const api_user = require('../../nwu/database/dbServices/user.api');
-        const api_shop = require('../../nwu/database/dbServices/shop.api');
+        const api_shinx = require('../../database/dbServices/shinx.api');
+        const api_user = require('../../database/dbServices/trainer.api');
+        const api_shop = require('../../database/dbServices/shop.api');
 
         let ephemeral = false;
         let embed,trophy_name,res, returnString;
@@ -132,7 +132,7 @@ exports.run = async (client, interaction) => {
 
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
-    name: "shop_t",
+    name: "shop",
     description: "Interact with the built in shop!",
     options: [{
         name: "seeTrophies",
