@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const api_user = require('../../nwu/database/dbServices/user.api');
+        const api_user = require('../../database/dbServices/trainer.api');
 
         let ephemeral = false;
         let embed,avatar;

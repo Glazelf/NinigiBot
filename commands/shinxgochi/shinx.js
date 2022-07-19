@@ -7,7 +7,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const shinxApi = require('../../nwu/database/dbServices/shinx.api');
+        const shinxApi = require('../../database/dbServices/shinx.api');
         
         let ephemeral = true;
         let shinx, embed,foodArg,res,avatar;
