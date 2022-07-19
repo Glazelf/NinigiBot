@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
 
-	const Shinx = require('./models/shinx.model')(sequelize, DataTypes);
-	const User = require('./models/user.model')(sequelize, DataTypes);
-	const Trainer = require('./models/trainer.model')(sequelize, DataTypes);
+	const Shinx = require('./models/userdata/shinx.model')(sequelize, DataTypes);
+	const User = require('./models/userdata/user.model')(sequelize, DataTypes);
+	const Trainer = require('./models/userdata/trainer.model')(sequelize, DataTypes);
 	
-	const ShinxTrophy = require('./models/shinxTrophy.model')(sequelize, DataTypes);
-	const ShopTrophy = require('./models/shopTrophy.model')(sequelize, DataTypes);
+	const ShinxTrophy = require('./models/items/shinxTrophy.model')(sequelize, DataTypes);
+	const ShopTrophy = require('./models/items/shopTrophy.model')(sequelize, DataTypes);
 //https://sequelize.org/docs/v7/core-concepts/assocs/#foobelongstomanybar--through-baz-
 	User.belongsToMany(ShinxTrophy, { through: 'ShinxTrophyUser' });
 	ShinxTrophy.belongsToMany(User, { through: 'ShinxTrophyUser' });
