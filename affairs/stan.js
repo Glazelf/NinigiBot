@@ -10,7 +10,7 @@ module.exports = async (client) => {
         const time = '00 00 18 * * *'; // Sec Min Hour, 8pm CEST
         // const time = '* * * * *'; //Sec Min Hour testing
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
-        const guildID = client.config.botServerID;
+        const guildID = globalVars.ShinxServerID;
 
         if (client.user.id != globalVars.NinigiID) return;
 

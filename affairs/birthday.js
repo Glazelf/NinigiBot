@@ -7,7 +7,7 @@ module.exports = async (client) => {
         const cron = require("cron");
         const timezone = 'utc';
         const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
-        const guildID = client.config.botServerID;
+        const guildID = globalVars.ShinxServerID;
         const channelID = globalVars.eventChannelID;
         const Discord = require("discord.js");
         const { bank } = require('../database/bank');
