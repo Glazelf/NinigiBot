@@ -16,3 +16,4 @@ module.exports = (sequelize, DataTypes) => {
 	sequelize.sync();
 	return {Shinx, User, Trainer, ShinxTrophy, ShopTrophy};
 }
+

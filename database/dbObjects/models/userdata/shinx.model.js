@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
-    const shinx_util = require('../../../util/nwu/shinx.util')
+    const shinx_util = require('../../../../util/nwu/shinx.util')
 
     const Shinx = sequelize.define('Shinx', {
         user_id: {

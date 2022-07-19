@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const {sequelize} =  require('./dbConnection/dbConnection');
+const { userdata } =  require('../dbConnection/dbConnection');
 
-const { User, Shinx, ShinxTrophy, ShopTrophy } = require('./dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
-const syncDatabase = async () => {
+module.exports = async () => {
     try {
         await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
@@ -82,21 +82,12 @@ const syncDatabase = async () => {
                 icon: 'crown', 
                 description: 'Unknown artifact which is said to have been dropped by a king',
                 price: 250
-            }),
-
-            
-            // ShinxTrophy.upsert({ 
-            //     trophy_id: 'Borger', 
-            //     icon: 'sparkles', 
-            //     description: 'Raise your Shinx to level 50'
-            // }),    
+            }),   
         ]
         await Promise.all(trophies);
-        console.log('NWU DB initialized!');
-        sequelize.close();
+        console.log('User DB initialized');
+        userdata.close();
     } catch (e) {
         console.log(e)
     };
 };
-
-syncDatabase();
