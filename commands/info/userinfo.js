@@ -5,8 +5,8 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const { bank } = require('../../database/bank');
-        const { Users } = require('../../database/dbObjects');
+        const api_user = require('../../database/dbServices/user.api');
+        
         const parseDate = require('../../util/parseDate')
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
@@ -18,11 +18,11 @@ exports.run = async (client, interaction) => {
         let member = interaction.options.getMember("user");
 
         // Balance check
-        let dbBalance = await bank.currency.getBalance(user.id);
+        let dbBalance = await api_user.getMoney(user.id);
         dbBalance = Math.floor(dbBalance);
         let userBalance = `${dbBalance}${globalVars.currency}`;
-        let switchCode = await bank.currency.getSwitchCode(user.id);
-        let birthday = await bank.currency.getBirthday(user.id);
+        let switchCode = await api_user.getSwitchCode(user.id);
+        let birthday = await api_user.getBirthday(user.id);
         let birthdayParsed = parseDate(birthday);
         // Roles
         let memberRoles = null;

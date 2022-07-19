@@ -4,9 +4,9 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
 
-        const currentBalance = await bank.currency.getBalance(interaction.user.id);
+        const currentBalance = await api_user.getMoney(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");
         let transferTarget = interaction.options.getUser("user");
         let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
@@ -15,8 +15,8 @@ exports.run = async (client, interaction) => {
         if (transferAmount > currentBalance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${userBalance}.` });
         if (transferAmount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
 
-        bank.currency.add(interaction.user.id, -transferAmount);
-        bank.currency.add(transferTarget.id, transferAmount);
+        api_user.addMoney(interaction.user.id, -transferAmount);
+        api_user.addMoney(transferTarget.id, transferAmount);
 
         return sendMessage({ client: client, interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
 

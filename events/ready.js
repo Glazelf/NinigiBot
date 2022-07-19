@@ -1,11 +1,12 @@
 module.exports = async (client) => {
     try {
-        const { bank } = require('../database/bank');
-        const { Users } = require('../database/dbObjects');
+        
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
-        const storedBalances = await Users.findAll();
-        storedBalances.forEach(b => bank.currency.set(b.user_id, b));
+        // const { bank } = require('../database/bank');
+        // const { Users } = require('../database/dbObjects');
+        // const storedBalances = await Users.findAll();
+        // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
         const getTime = require('../util/getTime');
 
         // Set interactions

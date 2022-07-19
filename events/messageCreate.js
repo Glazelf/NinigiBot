@@ -8,7 +8,7 @@ module.exports = async (client, message) => {
         const sendMessage = require('../util/sendMessage');
         const Discord = require("discord.js");
         const autoMod = require('../util/autoMod');
-        const { bank } = require('../database/bank');
+        const api_user = require('../database/dbServices/user.api');
 
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
@@ -55,7 +55,8 @@ module.exports = async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-                bank.currency.add(message.member.id, 1);
+                
+                api_user.addMoney(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {
                     if (message.member) talkedRecently.delete(message.member.id);

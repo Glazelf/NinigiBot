@@ -5,7 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../../util/sendMessage');
         const roulette = require('../../../affairs/roulette')
-        const { bank } = require('../../../database/bank');
+        const api_user = require('../../../database/dbServices/user.api');
 
         if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
         if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
@@ -25,7 +25,7 @@ exports.run = async (client, interaction) => {
             bets.add(i);
         };
 
-        let dbBalance = await bank.currency.getBalance(interaction.user.id);
+        let dbBalance = await api_user.getMoney(interaction.user.id);
         if (bets.size * betAmount > dbBalance) {
             return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
@@ -33,7 +33,7 @@ exports.run = async (client, interaction) => {
             roulette.addBet(bet, interaction.user.id, 36 * betAmount);
         });
 
-        bank.currency.add(interaction.user.id, -betAmount * bets.size);
+        api_user.addMoney(interaction.user.id, -betAmount * bets.size);
         roulette.players.push(interaction.user.id);
         return sendMessage({ client: client, interaction: interaction, content: `Placed your bet.` });
 

@@ -4,7 +4,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -16,8 +16,7 @@ exports.run = async (client, interaction) => {
         // Check and sanitize birthday
         let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(date);
         if (!birthday) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
-
-        bank.currency.birthday(interaction.user.id, birthday[1] + birthday[2]);
+        api_user.setBirthday(interaction.user.id, birthday[1] + birthday[2]);
         return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${date}\` (dd-mm).` });
 
     } catch (e) {

@@ -13,9 +13,10 @@ module.exports = async (client, interaction) => {
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
-        const { bank } = require('../database/bank');
+        
         const api_shop = require('../database/dbServices/shop.api');
         const api_shinx = require('../database/dbServices/shinx.api');
+        const api_user = require('../../database/dbServices/user.api');
 
         if (!interaction) return;
         if (interaction.user.bot) return;
@@ -142,7 +143,7 @@ module.exports = async (client, interaction) => {
                 switch (focusedOption.name) {
                     // Used in: coinflip, bet
                     case "bet-amount":
-                        let balance = await bank.currency.getBalance(interaction.user.id);
+                        let balance = await api_user.getMoney(interaction.user.id);
                         if (balance > 0) {
                             balance = Math.floor(balance);
                             let balanceHalf = Math.floor(balance / 2);
