@@ -21,10 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
     });
-    // Class Methods
-
-    // Instance Methods
-    //  Experience
+    //  Money
     User.prototype.addMoney = function(money){
         this.money = Math.max(this.money + money, 0);
         this.save();
@@ -35,10 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.hasMoney = function(money){
         return this.money>=money;
     }
+    //  Birthday
     User.prototype.setBirthday = function(birthday){
         this.birthday = birthday;
         this.save();
     }
+    //  Switch Code
     User.prototype.setSwitchCode = function(swcode){
         this.swcode = swcode;
         this.save();

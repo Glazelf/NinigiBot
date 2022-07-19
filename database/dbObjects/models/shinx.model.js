@@ -37,9 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
     });
-    // Class Methods
 
-    // Instance Methods
     //  Experience
     Shinx.prototype.addExperience = function(experience){
         this.experience += experience;
@@ -55,28 +53,24 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.getExperience = function(){
         return this.experience;
     }
-    Shinx.prototype.switchShininessAndGet = function(){
-        this.shiny = !this.shiny;
-        this.save();
-        return this.shiny
-    }
 
     Shinx.prototype.getNextExperience = function(){
         const next_level = Math.ceil(shinx_util.levelToExp(this.getLevel()+1))
         return next_level - this.experience;
     }
+    // Level
     Shinx.prototype.getLevel = function(){
         return Math.floor(Math.cbrt(1.25*this.experience))
+    }
+    // Shiny 
+    Shinx.prototype.switchShininessAndGet = function(){
+        this.shiny = !this.shiny;
+        this.save();
+        return this.shiny
     }
     // Fullness
     Shinx.prototype.feed = function(amount){
         this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
-        this.save();
-    }
-
-    // Nickname
-    Shinx.prototype.changeNick = function(nick){
-        this.nickname = nick;
         this.save();
     }
 
@@ -90,9 +84,12 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.getFullnessPercent = function(){
         return Math.round(this.fullness*100/MAX_RANGE).toString()+'%'
     }
-    Shinx.prototype.getHappinessPercent = function(){
-        return Math.round(this.happiness*100/MAX_RANGE).toString()+'%'
+    // Nickname
+    Shinx.prototype.changeNick = function(nick){
+        this.nickname = nick;
+        this.save();
     }
+
     // Happiness
     Shinx.prototype.addHappiness = function(amount){
         if(this.happiness<MAX_RANGE){
@@ -112,10 +109,11 @@ module.exports = (sequelize, DataTypes) => {
             return false;
         }
     }
-
     Shinx.prototype.getHappiness = function(){
         return this.happiness
     }
-
+    Shinx.prototype.getHappinessPercent = function(){
+        return Math.round(this.happiness*100/MAX_RANGE).toString()+'%'
+    }
     return Shinx;
 };

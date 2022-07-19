@@ -16,7 +16,7 @@ module.exports = async (client, interaction) => {
         
         const api_shop = require('../database/dbServices/shop.api');
         const api_shinx = require('../database/dbServices/shinx.api');
-        const api_user = require('../../database/dbServices/user.api');
+        const api_user = require('../database/dbServices/user.api');
 
         if (!interaction) return;
         if (interaction.user.bot) return;

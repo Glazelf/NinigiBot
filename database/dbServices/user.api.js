@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize');
 const {sequelize} =  require('../dbConnection/dbConnection');
 const { Op } = require('sequelize');
-const { Users} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
+const { Users: User} = require('../dbObjects/full.model')(sequelize, Sequelize.DataTypes);
 
 module.exports = {
     async getUser(id) {
-        let user = await Users.findOne({
+        let user = await User.findOne({
             where: { user_id: id },
         });
 
         if (!user) {
-            user = await Users.create({ user_id: id });
+            user = await User.create({ user_id: id });
         };
         return user;
     },

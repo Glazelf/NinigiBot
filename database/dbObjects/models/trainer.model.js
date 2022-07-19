@@ -18,9 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
     });
-    // Class Methods
 
-    // Instance Methods
+    // Food
     Trainer.prototype.hasFood = function(food){
         return this.food>=food;
     }
@@ -31,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     Trainer.prototype.getFood = function(){
         return this.food;
     }
+    // Gender
     Trainer.prototype.swapAndGetGender = function(){
         this.is_male = !this.is_male;
         this.save();
