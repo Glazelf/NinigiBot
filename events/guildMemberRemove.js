@@ -59,7 +59,7 @@ module.exports = async (client, member) => {
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
                     .addField(`User: `, `${member} (${member.id})`, false);
-                if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
+                if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, true);
                 leaveEmbed
                     .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
                     .setFooter({ text: member.user.tag });
