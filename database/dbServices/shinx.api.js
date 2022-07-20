@@ -23,6 +23,7 @@ module.exports = {
         if (!shinx) {
             shinx = await Shinx.create({ user_id: id });
         };
+        
         return shinx;
     },    
     async getUser(id) {

@@ -1,7 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
-    const shinx_util = require('../../../../util/nwu/shinx.util')
+    const shinx_util = require('../../../../util/nwu/shinx.util');
+    const parseMeetDate = require('../../../../util/parseMeetDate');
+
+    const parseMeetDateNow = () =>{
+        const now = new Date()
+        return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear())
+    }
+
+    const getDay = () =>{
+        return Math.floor(Date.now() / 86400000)
+    }
 
     const Shinx = sequelize.define('Shinx', {
         user_id: {
@@ -18,11 +28,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
-        happiness: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -33,10 +38,41 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: false,
         },
+        lastmeet: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: Math.floor(Date.now() / (1000 * 60 * 60)),
+        },
+        meetup: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: parseMeetDateNow()
+        },
 
     }, {
         timestamps: false,
     });
+
+    //  Reset
+    Shinx.prototype.reset = function(){
+        this.nickname = 'Shinx';
+        this.fullness = 0;
+        this.experience = 0;
+        this.shiny = false;
+        this.meetup = parseMeetDateNow();
+        this.save();
+    }
+
+    //  checkup
+    Shinx.prototype.checkup = function(){
+        const diff = this.lastmeet - getDay();
+        if(diff>1){
+            
+        }
+
+        this.experience += experience;
+        this.save();
+    }
 
     //  Experience
     Shinx.prototype.addExperience = function(experience){
@@ -70,7 +106,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     // Fullness
     Shinx.prototype.feed = function(amount){
-        this.fullness = Math.min(MAX_RANGE, this.fullness+amount);
+        this.fullness = Math.min(MAX_RANGE, Math.max(0, this.fullness) + amount);
         this.save();
     }
 
@@ -91,7 +127,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // Happiness
-    Shinx.prototype.addHappiness = function(amount){
+    Shinx.prototype.feed = function(amount){
         if(this.happiness<MAX_RANGE){
             this.happiness = Math.min(MAX_RANGE, this.happiness+amount);
             this.save();
@@ -100,7 +136,7 @@ module.exports = (sequelize, DataTypes) => {
             return false;
         }
     }
-    Shinx.prototype.removeHappiness = function(amount){
+    Shinx.prototype.unfeed = function(amount){
         if(this.happiness>MIN_RANGE){
             this.happiness = Math.max(MIN_RANGE, this.happiness-amount);
             this.save();
@@ -108,12 +144,6 @@ module.exports = (sequelize, DataTypes) => {
           } else {
             return false;
         }
-    }
-    Shinx.prototype.getHappiness = function(){
-        return this.happiness
-    }
-    Shinx.prototype.getHappinessPercent = function(){
-        return Math.round(this.happiness*100/MAX_RANGE).toString()+'%'
     }
     return Shinx;
 };

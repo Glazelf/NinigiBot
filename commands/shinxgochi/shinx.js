@@ -28,7 +28,6 @@ exports.run = async (client, interaction) => {
                     { name: "Next Level:", value: `${shinx.getNextExperience()} pts.`, inline: true},
                     { name: '\u200B', value: '\u200B', inline: true },
                     { name: "Fullness:", value: shinx.getFullnessPercent(), inline: true},
-                    { name: "Happiness:", value: shinx.getHappinessPercent(), inline: true},
                 )
                 let file;
                 if(shinx.shiny){
