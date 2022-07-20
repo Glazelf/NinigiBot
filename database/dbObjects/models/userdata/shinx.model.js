@@ -1,6 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
+    const KILL_VALUE = 20;
     const shinx_util = require('../../../../util/nwu/shinx.util');
     const parseMeetDate = require('../../../../util/parseMeetDate');
 
@@ -67,11 +68,15 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.checkup = function(){
         const diff = this.lastmeet - getDay();
         if(diff>1){
-            
+            this.fullness -= Math.floor(diff/3);
+            if(this.fullness*-1 < KILL_VALUE){
+                this.reset();
+                return false;
+            } else {
+                this.save();
+                return true;
+            }
         }
-
-        this.experience += experience;
-        this.save();
     }
 
     //  Experience
@@ -110,6 +115,11 @@ module.exports = (sequelize, DataTypes) => {
         this.save();
     }
 
+    Shinx.prototype.unfeed = function(amount){
+        this.fullness -= amount;
+        this.save();
+    }
+
     Shinx.prototype.getHunger = function(){
         return MAX_RANGE - this.fullness;
     }
@@ -126,24 +136,5 @@ module.exports = (sequelize, DataTypes) => {
         this.save();
     }
 
-    // Happiness
-    Shinx.prototype.feed = function(amount){
-        if(this.happiness<MAX_RANGE){
-            this.happiness = Math.min(MAX_RANGE, this.happiness+amount);
-            this.save();
-            return true;
-          } else {
-            return false;
-        }
-    }
-    Shinx.prototype.unfeed = function(amount){
-        if(this.happiness>MIN_RANGE){
-            this.happiness = Math.max(MIN_RANGE, this.happiness-amount);
-            this.save();
-            return true;
-          } else {
-            return false;
-        }
-    }
     return Shinx;
 };
