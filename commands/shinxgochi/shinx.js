@@ -94,6 +94,7 @@ exports.run = async (client, interaction) => {
             case "changenick":
                 let new_nick = interaction.options.getString("nickname");
                 res = await shinxApi.nameShinx(master.id, new_nick);
+                messageFile = null;
                 switch(res){
                     case 'TooShort':
                         returnString = `Could not rename because provided nickname was empty`;
@@ -106,25 +107,55 @@ exports.run = async (client, interaction) => {
                         break;
                     case 'Ok':
                         returnString = `Shinx renamed successfully!`
+                        canvas = Canvas.createCanvas(471, 355);
+                        ctx = canvas.getContext('2d');
+                        img = await Canvas.loadImage('./assets/nicks.png');
+                        ctx.drawImage(img, 0, 0);
+                        img = await Canvas.loadImage('./assets/mc.png');
+                        const is_trainer_male = await trainerApi.isMale(master.id);
+                        ctx.drawImage(img, 51 * !is_trainer_male, 72 * 0, 51, 72, 270, 200, 51, 72);
+                        img = await Canvas.loadImage('./assets/fieldShinx.png');
+                        ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 324, 223, 57, 48);
+                        img = await Canvas.loadImage('./assets/reactions.png');
+                        ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
+                        returnString = `Nickname changed to **${nickname}**!`;
+                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                         break;
                 }
-                return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: returnString,
-                    ephemeral: ephemeral }); 
+
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: returnString, 
+                    files: messageFile,
+                    ephemeral: ephemeral });
+
 
             case "shiny":
                 res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
                 if(res){
-                    returnString = (await shinxApi.switchShininessAndGet(master.id))? `Your shinx is shiny now` : `Your shinx is no longer shiny`
+                    const is_shiny = await shinxApi.switchShininessAndGet(master.id)
+                    returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
+                    canvas = Canvas.createCanvas(255, 192);
+                    ctx = canvas.getContext('2d');
+                    img = await Canvas.loadImage('./assets/sky.png');
+                    ctx.drawImage(img, 0, 0);
+                    img = await Canvas.loadImage('./assets/sprite.png');
+                    ctx.drawImage(img, 94 * is_shiny, 0, 94, 72, 87, 61, 94, 72);
+                    if (is_shiny) {
+                        img = await Canvas.loadImage('./assets/sparkle.png');
+                        ctx.drawImage(img, 49, 10);
+                    };
+                    messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 } else {
-                    returnString = 'You need that your shinx arrives to level 50 for that.'    
+                    returnString = 'You need that your shinx arrives to level 50 for that.' 
+                    messageFile = null;   
                 }
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
+                    files:messageFile,
                     ephemeral: ephemeral }); 
             case "feed":
                 foodArg = interaction.options.getInteger("food");
