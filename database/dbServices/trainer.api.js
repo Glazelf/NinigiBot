@@ -36,6 +36,11 @@ module.exports = {
         }
         return false
     },
+    async isMale (id) {
+        let trainer = await this.getTrainer(id);
+        return trainer.is_male
+    },
+
 
 
 };
