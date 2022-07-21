@@ -11,7 +11,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        const { LogChannels } = require('../../database/dbObjects');
+        const { LogChannels } = require('../../database/dbObjects/server.model');
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
         let newLogChannel;

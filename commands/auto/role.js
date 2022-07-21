@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const isAdmin = require("../../util/isAdmin");
-        const { EligibleRoles } = require('../../database/dbObjects');
+        const { EligibleRoles } = require('../../database/dbObjects/server.model');
 
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

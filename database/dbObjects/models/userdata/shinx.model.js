@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 1,
         },
         shiny: {
             type: DataTypes.BOOLEAN,
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         lastmeet: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: Math.floor(Date.now() / (1000 * 60 * 60)),
+            defaultValue: Math.floor(Date.now() / 86400000),
         },
         meetup: {
             type: DataTypes.STRING,

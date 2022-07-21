@@ -1,6 +1,7 @@
-const { Users } = require('../../database/dbObjects');
-const ShinxBattle = require('../../shinx/shinxBattle');
-const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
+
+// const { Users } = require('../../database/dbObjects/server.model');
+// const ShinxBattle = require('../../shinx/shinxBattle');
+// const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
 
 const addLine = (line) => {
     return (line + '\n');

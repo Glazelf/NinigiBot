@@ -4,7 +4,7 @@ module.exports = async (client, member, newMember) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbObjects/server.model');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
@@ -65,7 +65,7 @@ module.exports = async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            const { PersonalRoles, PersonalRoleServers } = require('../database/dbObjects');
+            const { PersonalRoles, PersonalRoleServers } = require('../database/dbObjects/server.model');
             let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();

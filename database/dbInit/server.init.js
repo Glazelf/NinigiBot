@@ -3,8 +3,12 @@ const { attatchments } =  require('../dbConnection/dbConnection');
 
 const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/server.model')(attatchments, Sequelize.DataTypes);
 
-module.exports = async () => {
+module.exports = async (reset_db) => {
     try {
+        if(reset_db) {
+            await attatchments.drop()
+            console.log(`Deleted Database: Attachments ✔`);
+        }
         await EligibleRoles.sync({ alter: true });
         await PersonalRoles.sync({ alter: true });
         await PersonalRoleServers.sync({ alter: true });

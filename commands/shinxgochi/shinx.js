@@ -20,10 +20,10 @@ exports.run = async (client, interaction) => {
             case "data":
                 shinx = await shinxApi.getShinx(master.id);
                 const is_trainer_male = await trainerApi.isMale(master.id);
-
+                const applyText = require('../../util/applyCanvasText')
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-                canvas = Canvas.createCanvas(791, 541);
+                canvas = Canvas.createCanvas(791, 441);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/data.png');
 
@@ -34,8 +34,8 @@ exports.run = async (client, interaction) => {
                 };
 
                 img = await Canvas.loadImage('./assets/owner.png');
-                ctx.drawImage(img, 48 * !is_trainer_male, 0, 47 + 9 * !is_trainer_male, 70, 407, 427, 47 + 9 * !is_trainer_male, 70);
-                ctx.drawImage(img, 59 * !is_trainer_male, 71, 59 - 5 * !is_trainer_male, 49, 398, 156, 59 - 5 * !is_trainer_male, 49);
+                ctx.drawImage(img, 48 * !is_trainer_male, 0, 47 + 9 * !is_trainer_male, 70, 407, 300,        47 + 9 * !is_trainer_male, 70);
+                ctx.drawImage(img, 59 * !is_trainer_male, 71, 59 - 5 * !is_trainer_male, 49, 398, 156,        59 - 5 * !is_trainer_male, 49);
                 ctx.font = applyText(canvas, shinx.nickname, 45, 266);
                 ctx.fillStyle = '#FFFFFF';
 
@@ -53,7 +53,7 @@ exports.run = async (client, interaction) => {
                 ctx.fillStyle = '#000000';
                 ctx.fillText(shinx.getLevel(), 93, 180);
                 ctx.fillText(shinx.getFullnessPercent(), 490, 251);
-                ctx.fillText(shinx.meetup, 490, 481);
+                ctx.fillText(shinx.meetup, 490, 364);
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile });

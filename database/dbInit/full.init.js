@@ -3,8 +3,12 @@ const { userdata } =  require('../dbConnection/dbConnection');
 
 const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 
-module.exports = async () => {
+module.exports = async (reset_db) => {
     try {
+        if(reset_db) {
+            await userdata.drop()
+            console.log(`Deleted Database: User ✔`);
+        }
         await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
         await ShinxTrophy.sync({ alter: true });

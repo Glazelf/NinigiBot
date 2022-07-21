@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Users, Shinx, shinxQuotes } = require('./dbObjects');
+const { Users, Shinx, shinxQuotes } = require('./dbObjects/server.model');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 

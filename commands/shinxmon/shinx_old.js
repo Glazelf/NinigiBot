@@ -54,7 +54,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { bank } = require('../../database/bank');
-        const { Users } = require('../../database/dbObjects');
+        const { Users } = require('../../database/dbObjects/server.model');
         const Discord = require("discord.js");
 
         let ephemeral = true;
