@@ -106,8 +106,6 @@ exports.run = async (client, interaction) => {
                     interaction: interaction,
                     content: returnString,
                     ephemeral: ephemeral });
-            // OLD
-            case "dataImage":
 
         };
     } catch (e) {

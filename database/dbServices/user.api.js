@@ -23,6 +23,17 @@ module.exports = {
         let user = await this.getUser(id);
         return user.money;
     },
+    async getUsersRankedByMoney(){
+        let users_money = await User.findAll({
+            attributes: [
+                'user_id', 'money'
+            ],
+            order: [
+              ["money", "DESC"],
+            ],
+          })
+        return users_money;
+    },
     // Birthday
     async getBirthday(id){
         let user = await this.getUser(id);
