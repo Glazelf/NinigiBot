@@ -25,19 +25,14 @@ exports.run = async (client, interaction) => {
         console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
 
         if (removeInteractions) {
-
             // Delete all global commands
             await client.application.commands.set([]);
-
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
-                let adminBool = isAdmin(client, guild.me);
-                try {
-                    if (adminBool) guild.commands.set([]);
-                } catch (e) {
-                    console.log(e);
-                };
-            });
+                guild.commands.set([]).catch(err => {
+                    return;
+                });
+            };
         };
 
         // Destroy, will reboot thanks to forever package
