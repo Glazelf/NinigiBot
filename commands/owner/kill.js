@@ -27,7 +27,7 @@ exports.run = async (client, interaction) => {
             await client.application.commands.set([]);
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
-                guild.commands.set([]).catch(err => {
+                guild.commands.set([]).catch(e => {
                     return;
                 });
             });
