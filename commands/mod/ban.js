@@ -54,15 +54,11 @@ exports.run = async (client, interaction) => {
             };
 
             banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
+            await user.send({ content: dmString })
+                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`)
+                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`);
+            if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
-                try {
-                    await user.send({ content: dmString });
-                    banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`;
-                } catch (e) {
-                    // console.log(e);
-                    banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`;
-                };
-                if (deleteMessageDays > 0) banReturn += deletedMessagesString;
 
                 // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too
                 await member.ban({ reason: `${reason} ${reasonInfo}`, days: deleteMessageDays });
