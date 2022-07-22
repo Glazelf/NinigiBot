@@ -32,7 +32,7 @@ exports.run = async (client, interaction) => {
                 guild.commands.set([]).catch(err => {
                     return;
                 });
-            };
+            });
         };
 
         // Destroy, will reboot thanks to forever package
