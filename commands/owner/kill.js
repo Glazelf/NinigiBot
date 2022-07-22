@@ -30,7 +30,7 @@ exports.run = async (client, interaction) => {
                 guild.commands.set([]).catch(err => {
                     return;
                 });
-            };
+            });
         };
 
         // Ignore forever if fails, mostly for test-bots not running it.
