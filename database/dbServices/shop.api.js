@@ -58,7 +58,7 @@ module.exports = {
             today_indexes.push(index)
             index = (index+DAILY_TROPHIES)%trophies.length
         }
-        today_trophies = today_trophies.filter(trophy => trophy.cost <= money)
+        today_trophies = today_trophies.filter(trophy => trophy.price <= money)
         trophies_ids = today_trophies.map(trophy=> trophy.trophy_id)
         return trophies_ids;
     },
@@ -84,7 +84,7 @@ module.exports = {
         const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
 
         let today_trophies = await this.getTodayShopTrophiesToBuy(user.money);
-        today_trophies = today_trophies.filter(trophy => !(trophy.trophy_id in user_trophies_list))
+        today_trophies = today_trophies.filter(trophy => !(trophy in user_trophies_list))
         return today_trophies
     },
 
@@ -111,7 +111,7 @@ module.exports = {
         if (!trophy){
             return 'NoTrophy'
         }
-        let user = await getUser(user_id);
+        let user = await this.getUser(user_id);
         if (await user.hasShopTrophy(trophy)){
             return 'HasTrophy'
         }

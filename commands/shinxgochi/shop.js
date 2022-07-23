@@ -1,3 +1,5 @@
+const Canvas = require('canvas');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -10,9 +12,10 @@ exports.run = async (client, interaction) => {
         const api_user = require('../../database/dbServices/user.api');
         const api_shop = require('../../database/dbServices/shop.api');
         
-
+        let messageFile = null;
         let ephemeral = false;
         let embed,trophy_name,res, returnString;
+        let canvas, ctx, img, shinx;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let master = interaction.user
@@ -66,6 +69,19 @@ exports.run = async (client, interaction) => {
                         break;
                     case 'Ok':
                         returnString = `Bought **${trophy_name}**!`
+                        shinx = await api_shinx.getShinx(master.id)
+                        canvas = Canvas.createCanvas(428, 310);
+                        ctx = canvas.getContext('2d');
+                        img = await Canvas.loadImage('./assets/frontier.png');
+                        ctx.drawImage(img, 0, 0);
+                        img = await Canvas.loadImage('./assets/mc.png');
+                        ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 162, 123, 51, 72);
+                        img = await Canvas.loadImage('./assets/fieldShinx.png');
+                        ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 217, 147, 57, 48);
+                        img = await Canvas.loadImage('./assets/reactions.png');
+                        ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
+
+                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                         break;
                 }
 
@@ -73,6 +89,7 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
+                    files: messageFile,
                     ephemeral: ephemeral });
             case "buyfood":
                 foodArg = interaction.options.getInteger("food");

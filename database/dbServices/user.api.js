@@ -62,9 +62,6 @@ module.exports = {
         }
         return false
     },
-    async isMale (id) {
-        let user = await this.getUser(id);
-        return user.is_male
-    },
+
 
 };

@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: parseMeetDateNow()
         },
+        user_male: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
 
     }, {
         timestamps: false,
@@ -134,6 +139,12 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.changeNick = function(nick){
         this.nickname = nick;
         this.save();
+    }
+    // Gender
+    Shinx.prototype.swapAndGetTrainerGender = function(){
+        this.user_male = !this.user_male;
+        this.save();
+        return this.user_male;
     }
 
     return Shinx;

@@ -259,8 +259,9 @@ module.exports = async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "shoptrophy":
                                 const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
+                                
                                 buyable_items.forEach(trophy=>{
-                                    choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });
+                                    choices.push({ name: trophy, value: trophy });
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});

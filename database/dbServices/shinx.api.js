@@ -17,13 +17,13 @@ module.exports = {
         let shinx = await Shinx.findOne({
             where: { user_id: id },
         });
-
         if (!shinx) {
             shinx = await Shinx.create({ user_id: id });
         } 
         await shinx.checkup()
         return shinx;
-    },    
+    },
+        
     async getUser(id) {
         let user = await User.findOne({
             where: { user_id: id },
@@ -147,5 +147,9 @@ module.exports = {
         let shinx = await this.getShinx(id);
         shinx.changeNick(pnick);
         return 'Ok'
-    }
+    },
+    async isTrainerMale (id) {
+        let shinx = await this.getShinx(id);
+        return shinx.user_male
+    },
 };

@@ -1,4 +1,5 @@
 
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -7,6 +8,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const userApi = require('../../database/dbServices/user.api');
+        const shinxApi = require('../../database/dbServices/shinx.api');
 
         let ephemeral = false;
         let embed,avatar;
@@ -49,8 +51,8 @@ exports.run = async (client, interaction) => {
                     embeds: [embed],  
                     ephemeral: ephemeral });
             case "swapgender":
-                user = await userApi.getUser(master.id)
-                return user.swapAndGetGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
+                const shinx = await shinxApi.getShinx(master.id)
+                return shinx.swapAndGetTrainerGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
                 break;
 
         };

@@ -23,11 +23,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
-        is_male: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false,
-        },
     }, {
         timestamps: false,
     });
@@ -63,11 +58,6 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.getFood = function(){
         return this.food;
     }
-    // Gender
-    User.prototype.swapAndGetGender = function(){
-        this.is_male = !this.is_male;
-        this.save();
-        return this.is_male;
-    }
+    
     return User;
 };

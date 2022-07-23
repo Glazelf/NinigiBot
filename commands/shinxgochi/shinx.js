@@ -15,12 +15,12 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
         let canvas, ctx, img;
         let userFinder = await interaction.guild.members.fetch();
-        
+        let messageFile = null;
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
                 shinx = await shinxApi.getShinx(master.id);
-                const is_user_male = await userApi.isMale(master.id);
+                const is_user_male = shinx.user_male;
                 const applyText = require('../../util/shinx/applyCanvasText')
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -113,7 +113,7 @@ exports.run = async (client, interaction) => {
                         img = await Canvas.loadImage('./assets/nicks.png');
                         ctx.drawImage(img, 0, 0);
                         img = await Canvas.loadImage('./assets/mc.png');
-                        const is_user_male = await userApi.isMale(master.id);
+                        const is_user_male = await shinxApi.isTrainerMale(master.id);
                         ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
                         img = await Canvas.loadImage('./assets/fieldShinx.png');
                         ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
@@ -160,7 +160,7 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral }); 
             case "feed":
                 foodArg = interaction.options.getInteger("food");
-                res = await shinxApi.feedShinx(master.id);
+                res = await shinxApi.feedShinx(master.id);  
                 switch(res){
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
@@ -169,54 +169,83 @@ exports.run = async (client, interaction) => {
                         returnString = `You don't have enough food!`
                         break;
                     case 'Ok':
-                        returnString = `Feeded Shinx successfully!`
+                        reaction = require('../../util/shinx/getRandomEatingReaction')();
+                        shinx = await shinxApi.getShinx(master.id);
+                        const now = new Date();
+                        returnString = `**${shinx.nickname}** ${reaction[0]}`
                         canvas = Canvas.createCanvas(393, 299);
+                        ctx = canvas.getContext('2d');
+                        img = await Canvas.loadImage('./assets/dining.png');
+                        ctx.drawImage(img, 0, 0);
+                        img = await Canvas.loadImage('./assets/mc.png');
+                        guests = await shinxApi.getRandomShinx(2, shinx.user_id, interaction.guild);
+                        ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
+                        ctx.font = 'normal bold 16px Arial';
+                        ctx.fillStyle = '#ffffff';
+                        
+                        for (let i = 0; i < guests.length; i++) {
+                            const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                            ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
+                            for (let k = nick.length - 1; 0 <= k; k--) {
+                                ctx.font = applyText(canvas, nick[k], 16, 51);
+                                ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
+                            };
+                        };
 
-                ctx = canvas.getContext('2d');
-                img = await Canvas.loadImage('./assets/dining.png');
-                ctx.drawImage(img, 0, 0);
-                img = await Canvas.loadImage('./assets/mc.png');
-                guests = await shinxApi.getRandomShinx(2, shinx.user_id, interaction.guild);
-                const is_user_male = await userApi.isMale(master.id);
-                ctx.drawImage(img, 51 * !is_user_male, 0, 51, 72, 120, 126, 51, 72);
-                ctx.font = 'normal bold 16px Arial';
-                ctx.fillStyle = '#ffffff';
-                
-                for (let i = 0; i < guests.length; i++) {
-                    const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
-                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * 2, 51, 72, 298, 35 + 90 * i, 51, 72);
-                    for (let k = nick.length - 1; 0 <= k; k--) {
-                        ctx.font = applyText(canvas, nick[k], 16, 51);
-                        ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
-                    };
-                };
+                        img = await Canvas.loadImage('./assets/fieldShinx.png');
+                        ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
 
-                img = await Canvas.loadImage('./assets/fieldShinx.png');
-                ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
+                        for (let i = 0; i < guests.length; i++) {
+                            ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
+                        };
 
-                for (let i = 0; i < guests.length; i++) {
-                    ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
-                };
+                        
+                        img = await Canvas.loadImage('./assets/reactions.png');
+                        ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
 
-                reaction = require('../../util/shinx/getRandomEatingReaction')();
-                img = await Canvas.loadImage('./assets/reactions.png');
-                ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
-
-                if (now.getHours() > 20 || now.getHours() < 6) {
-                    img = await Canvas.loadImage('./assets/dinNight.png');
-                    ctx.drawImage(img, 199, 0);
-                };
-
-                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nick}** ${reaction[0]}`, files: messageFile });
+                        if (now.getHours() > 20 || now.getHours() < 6) {
+                            img = await Canvas.loadImage('./assets/dinNight.png');
+                            ctx.drawImage(img, 199, 0);
+                        };
+                        
+                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                         break;
-                }
+                };
                 return sendMessage({
                     client: client,
                     interaction: interaction,
-                    content: returnString,
+                    content: returnString, 
+                    files: messageFile,
                     ephemeral: ephemeral });
+            case "tap":
+                shinx = await shinxApi.getShinx(master.id);
+                canvas = Canvas.createCanvas(468, 386);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/room.png');
+                ctx.drawImage(img, 0, 0);
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                reaction = require('../../util/shinx/getRandomSleepingReaction')();
+                
+                ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
 
+                if (!isNaN(reaction[2])) {
+                    img = await Canvas.loadImage('./assets/reactions.png');
+                    ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
+                };
+
+                if (now.getHours() > 20 || now.getHours() < 4) {
+                    img = await Canvas.loadImage('./assets/winNight.png');
+                    ctx.drawImage(img, 198, 52);
+                };
+
+                messageFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+                return sendMessage({ 
+                    client: client,
+                    interaction: interaction, 
+                    content: `**${shinx.nick}** ${reaction[0]}`, 
+                    files: messageFile });
         };
     } catch (e) {
         // Log error
@@ -234,6 +263,10 @@ module.exports.config = {
         name: "data",
         type: "SUB_COMMAND",
         description: "See your shinx!",
+    },{
+        name: "tap",
+        type: "SUB_COMMAND",
+        description: "Tap your shinx!",
     },{
         name: "changenick",
         type: "SUB_COMMAND",
