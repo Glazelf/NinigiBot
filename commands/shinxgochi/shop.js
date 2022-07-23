@@ -7,8 +7,9 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
 
         const api_shinx = require('../../database/dbServices/shinx.api');
-        const api_user = require('../../database/dbServices/trainer.api');
+        const api_user = require('../../database/dbServices/user.api');
         const api_shop = require('../../database/dbServices/shop.api');
+        
 
         let ephemeral = false;
         let embed,trophy_name,res, returnString;
@@ -18,7 +19,7 @@ exports.run = async (client, interaction) => {
 
         let  trophies;
         switch (interaction.options.getSubcommand()) {
-            case "seeTrophies":
+            case "seetrophies":
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 trophies = await api_shop.getFullBuyableShopTrophies(master.id);
@@ -49,8 +50,8 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            case "buyTrophy":
-                trophy_name = interaction.options.getString("shop trophy");
+            case "buytrophy":
+                trophy_name = interaction.options.getString("shoptrophy");
                 res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
                 returnString = ''
                 switch(res){
@@ -73,16 +74,17 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral });
-            case "buyFood":
+            case "buyfood":
                 foodArg = interaction.options.getInteger("food");
-                res = await api_user.buyFood(master.id, foodArg);
+                const userApi = require('../../database/dbServices/user.api');
+                res = await userApi.buyFood(master.id, foodArg);
                 returnString = res ? `Added food to your account!`:`Not enough money!`;
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral }); 
-            case "addMoney":
+            case "addmoney":
                 let moneyArg = interaction.options.getInteger("money");
                 await api_user.addMoney(master.id, moneyArg);
                 returnString = `Added money to your account!`;
@@ -91,7 +93,7 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral }); 
-            case "askTrophy":
+            case "asktrophy":
 
                 trophy_name = interaction.options.getString("trophy");
                 res =  await api_shop.getShopTrophyWithName(trophy_name);
@@ -135,22 +137,22 @@ module.exports.config = {
     name: "shop",
     description: "Interact with the built in shop!",
     options: [{
-        name: "seeTrophies",
+        name: "seetrophies",
         type: "SUB_COMMAND",
         description: "Check available trophies",
     },{
-        name: "buyTrophy",
+        name: "buytrophy",
         type: "SUB_COMMAND",
         description: "Buy trophies!",
         options: [{
-            name: "shop trophy",
+            name: "shoptrophy",
             type: "STRING",
             description: "Item to buy",
             autocomplete: true,
             required: true
         }]
     },{
-        name: "askTrophy",
+        name: "asktrophy",
         type: "SUB_COMMAND",
         description: "Get info about a trophy",
         options: [{
@@ -161,7 +163,7 @@ module.exports.config = {
             required: true
         }]
     },{
-        name: "addMoney",
+        name: "addmoney",
         type: "SUB_COMMAND",
         description: "Add money!",
         options: [{
@@ -171,7 +173,7 @@ module.exports.config = {
             required: true,
         }]
     },{
-        name: "buyFood",
+        name: "buyfood",
         type: "SUB_COMMAND",
         description: "Buy food!",
         options: [{

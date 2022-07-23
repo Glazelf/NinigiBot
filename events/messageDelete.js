@@ -7,7 +7,7 @@ module.exports = async (client, message) => {
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
 
-        const { LogChannels, StarboardMessages } = require('../database/dbObjects/server.model');
+        const { LogChannels, StarboardMessages } = require('../database/dbServices/attatchments.api');
 
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {

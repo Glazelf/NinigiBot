@@ -12,7 +12,7 @@ module.exports = async (client, interaction) => {
         const { Dex } = require('pokemon-showdown');
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbObjects/server.model');
+        const { EligibleRoles } = require('../database/dbServices/attatchments.api');
         
         const api_shop = require('../database/dbServices/shop.api');
         const api_shinx = require('../database/dbServices/shinx.api');
@@ -253,18 +253,11 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                         };
-                    case "shop":
-                        switch (focusedOption.name) {
-                            case "category":
-                                choices.push({ name: "Equipment", value: "Equipment" });
-                                choices.push({ name: "Food", value: "Food" });
-                                break;
-                        };
                     case "inventory":
                         break;
-                    case "shop_t":
+                    case "shop":
                         switch (focusedOption.name) {
-                            case "shop trophy":
+                            case "shoptrophy":
                                 const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
                                 buyable_items.forEach(trophy=>{
                                     choices.push({ name: trophy.trophy_id, value: trophy.trophy_id });

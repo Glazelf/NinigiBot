@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Users, Shinx, shinxQuotes } = require('./dbObjects/server.model');
+const { Users, Shinx, shinxQuotes } = require('./dbServices/attatchments.api');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -35,7 +35,7 @@ module.exports = {
 
                 Reflect.defineProperty(money, 'getShinx', {
                     value: async function getShinx(id) {
-                        const parseMeetDate = require('../util/parseMeetDate');
+                        const parseMeetDate = require('../util/shinx/parseMeetDate');
                         let user = money.get(id);
 
                         if (!user) {

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
     const KILL_VALUE = 20;
     const shinx_util = require('../../../../util/nwu/shinx.util');
-    const parseMeetDate = require('../../../../util/parseMeetDate');
+    const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
 
     const parseMeetDateNow = () =>{
         const now = new Date()

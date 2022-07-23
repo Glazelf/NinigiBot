@@ -1,5 +1,5 @@
 
-// const { Users } = require('../../database/dbObjects/server.model');
+// const { Users } = require('../../database/dbServices/attatchments.api');
 // const ShinxBattle = require('../../shinx/shinxBattle');
 // const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
 

@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const api_trainer = require('../../database/dbServices/trainer.api');
+        const userApi = require('../../database/dbServices/user.api');
 
         let ephemeral = false;
         let embed,avatar;
@@ -14,11 +14,10 @@ exports.run = async (client, interaction) => {
 
         let master = interaction.user
 
-        let user, trainer, trophies;
+        let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "card":
-                user = await api_trainer.getUser(master.id);
-                trainer = await api_trainer.getTrainer(master.id)
+                user = await userApi.getUser(master.id);
                 //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 //let avatar = new Discord.THU();
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -28,7 +27,7 @@ exports.run = async (client, interaction) => {
                 .setThumbnail(avatar)
                 .addFields(
                     { name: "Money:", value: user.money.toString(), inline: true},
-                    { name: "Food:", value: trainer.food.toString(), inline: true},
+                    { name: "Food:", value: user.food.toString(), inline: true},
                 )  
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
@@ -49,9 +48,9 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            case "swapGender":
-                trainer = await api_trainer.getTrainer(master.id)
-                return trainer.swapAndGetGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
+            case "swapgender":
+                user = await userApi.getUser(master.id)
+                return user.swapAndGetGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
                 break;
 
         };
@@ -71,7 +70,7 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Check your trainer card!",
     },{
-        name: "swapGender",
+        name: "swapgender",
         type: "SUB_COMMAND",
         description: "Swap your trainer's gender."
     }]

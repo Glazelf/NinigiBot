@@ -6,8 +6,8 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
-        const { StarboardChannels } = require('../../database/dbObjects/server.model');
-        const { StarboardLimits } = require('../../database/dbObjects/server.model');
+        const { StarboardChannels } = require('../../database/dbServices/attatchments.api');
+        const { StarboardLimits } = require('../../database/dbServices/attatchments.api');
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;

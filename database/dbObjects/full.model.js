@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
 
 	const Shinx = require('./models/userdata/shinx.model')(sequelize, DataTypes);
 	const User = require('./models/userdata/user.model')(sequelize, DataTypes);
-	const Trainer = require('./models/userdata/trainer.model')(sequelize, DataTypes);
 	
 	const ShinxTrophy = require('./models/items/shinxTrophy.model')(sequelize, DataTypes);
 	const ShopTrophy = require('./models/items/shopTrophy.model')(sequelize, DataTypes);
@@ -12,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 	User.belongsToMany(ShopTrophy, { through: 'ShopTrophyUser' });
 	ShopTrophy.belongsToMany(User, { through: 'ShopTrophyUser' });
 	User.hasOne(Shinx);
-	User.hasOne(Trainer);
 	sequelize.sync();
-	return {Shinx, User, Trainer, ShinxTrophy, ShopTrophy};
+	return {Shinx, User, ShinxTrophy, ShopTrophy};
 }
 

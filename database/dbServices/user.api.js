@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const {userdata} =  require('../dbConnection/dbConnection');
-const { Op } = require('sequelize');
 const { User} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 
 module.exports = {
@@ -51,6 +50,21 @@ module.exports = {
     async setSwitchCode(id, swcode){
         let user = await this.getUser(id);
         user.setSwitchCode(swcode);
+    },
+    async buyFood (id, amount) {
+        let user = await this.getUser(id);
+        
+        let res = await user.hasMoney(amount);
+        if (res) {
+            await user.addMoney(id, -amount);
+            await user.addFood(id, amount);
+            return true
+        }
+        return false
+    },
+    async isMale (id) {
+        let user = await this.getUser(id);
+        return user.is_male
     },
 
 };

@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize');
-const { userdata} =  require('../dbConnection/dbConnection');
+const { userdata, attatchments} =  require('../dbConnection/dbConnection');
 const { Op } = require('sequelize');
-const { Shinx,ShinxTrophy, User, Trainer} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
+const { Shinx,ShinxTrophy, User} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
+const { shinxQuotes } = require('../dbObjects/server.model')(attatchments, Sequelize.DataTypes);
 const shinx_util = require('../../util/nwu/shinx.util');
-const BRONZE_TROPHY_EXP = shinx_util.levelToExp(5);
-const SILVER_TROPHY_EXP = shinx_util.levelToExp(15);
-const GOLD_TROPHY_EXP = shinx_util.levelToExp(30);
-const SHINY_CHARM_EXP = shinx_util.levelToExp(50);
+
 //const userApi = require('./user.api')
 
 function hasPassedLevel(from, to, middle) {
@@ -36,15 +34,18 @@ module.exports = {
         };
         return user;
     },
-    async getTrainer(id) {
-        let trainer = await Trainer.findOne({
-            where: { user_id: id },
-        });
-
-        if (!trainer) {
-            trainer = await Trainer.create({ user_id: id });
-        };
-        return trainer;
+    async getRandomShinx(amount, exclude, guild) {
+        const results = await Shinx.findAll({ where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
+        return results.map(res => res.dataValues);
+    },
+    async getShinxShininess(id) {
+        let shinx = await this.getShinx(id)
+        return shinx.shiny;
+    },    
+    async getRandomReaction() {
+        const result = await shinxQuotes.findOne({ order: Sequelize.fn('RANDOM') });
+        // console.log(result);
+        return result;
     },
     async switchShininessAndGet(id) {
         let shinx = await this.getShinx(id);
@@ -122,15 +123,15 @@ module.exports = {
         if(shinx_hunger == 0){
             return 'NoHungry'
         }
-        let trainer = await this.getTrainer(user_id);
+        let user = await this.getUser(id);
 
-        let feed_amount = Math.min(shinx_hunger, trainer.getFood())
+        let feed_amount = Math.min(shinx_hunger, user.getFood())
         if (feed_amount==0) {
             return 'NoFood'
         }
-        await trainer.addFood(-feed_amount);
+        await user.addFood(-feed_amount);
         await shinx.feed(feed_amount);
-        await this.addExperience(user_id, feed_amount);
+        await this.addExperience(id, feed_amount);
         return 'Ok'
     },
 

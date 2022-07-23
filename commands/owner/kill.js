@@ -29,11 +29,14 @@ exports.run = async (client, interaction) => {
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
                 let adminBool = isAdmin(client, guild.me);
+                // DELETE
+                //console.log(guild)
+                guild.commands.set([]);
                 if (adminBool) {
                     try {
                         guild.commands.set([]);
                     } catch (e) {
-                        // console.log(e);
+                        console.log(e);
                     };
                 };
             });
