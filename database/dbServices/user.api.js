@@ -17,6 +17,11 @@ module.exports = {
         const users = await User.findAll();
         return users;
     },
+    async deleteUser(id){
+        await User.destroy({
+            where: { user_id: id },
+          });
+    },
     // Money
     async addMoney(id, money){
         let user = await this.getUser(id);

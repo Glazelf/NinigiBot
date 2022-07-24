@@ -12,43 +12,19 @@ exports.run = async (client, interaction) => {
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         await interaction.deferReply({ ephemeral: true });
-
+        console.log('Deleting users...');
         const users = await user_api.getAllUsers();
-        users.forEach(user => {
-            
+        const pre_length = users.length;
+        let counter = 0;
+        await users.forEach(async user => {
+            let member = await interaction.guild.members.fetch(user.user_id);
+            if (!member || (!user.swcode && !user.birthday && (user.money < 100))) {
+                counter +=1;
+                await user_api.deleteUser(user.user_id);
+            }
         })
-        // Return messages then destroy
-        let timestamp = await getTime(client);
-        let restartString = "Restarting.";
-        if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
-        await sendMessage({ client: client, interaction: interaction, content: restartString });
-        console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
-
-        if (removeInteractions) {
-
-            // Delete all global commands
-            await client.application.commands.set([]);
-
-            // Delete all guild commands
-            await client.guilds.cache.forEach(async (guild) => {
-                let adminBool = isAdmin(client, guild.me);
-                try {
-                    if (adminBool) guild.commands.set([]);
-                } catch (e) {
-                    console.log(e);
-                };
-            });
-        };
-
-        // Destroy, will reboot thanks to forever package
-        await client.destroy();
-        return process.exit();
-
-        // Restarts a shard
-        // await sendMessage({client: client, interaction: interaction, content: `Restarting...`);
-        // await client.destroy();
-        // await client.login(client.config.token);
-        // return sendMessage({client: client, interaction: interaction, content: `Restarted!`);
+        console.log(`Done ✔\nDeleted ${counter} out of ${pre_length} entries.`);
+        return sendMessage({ client: client, interaction: interaction, content: 'Done' });
 
     } catch (e) {
         // Log error

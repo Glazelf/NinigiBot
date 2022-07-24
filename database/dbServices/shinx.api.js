@@ -12,6 +12,7 @@ module.exports = {
             where: { user_id: id },
         });
         if (!shinx) {
+            await this.getUser(id);
             shinx = await Shinx.create({ user_id: id });
         } 
         await shinx.checkup()
