@@ -15,12 +15,10 @@ const battleMoves =
         [100, ['Tackle', 0.2, 0.1]]
     ];
 
+const getLevelFromExp = require('../util/shinx/getLevelFromExp');
+
 const getMove = (number) => {
     for (let i = 0; i < battleMoves.length; i++) if (number * 100 <= battleMoves[i][0]) return battleMoves[i][1];
-};
-
-const levelExp = (lvl) => {
-    return (6 / 5) * (lvl) ** 3 - 15 * (lvl) ** 2 + 100 * lvl - 140;
 };
 
 const gainedExp = (lvl) => {
@@ -28,73 +26,42 @@ const gainedExp = (lvl) => {
 };
 
 module.exports = class ShinxBattle {
-    constructor(owner, shinxData, equipments) {
+    constructor(owner, shinxData) {
         this.owner = owner;
-        this.nick = shinxData.nick;
+        this.nick = shinxData.nickname;
         this.shiny = shinxData.shiny;
         this.percent = 0;
-        this.level = shinxData.level;
-        this.exp = shinxData.exp;
-        this.hunger = shinxData.hunger;
-        this.sleep = shinxData.sleep;
-        this.friendship = shinxData.friendship;
+        this.exp = shinxData.experience
+        this.level = shinxData.getLevel();
+        this.fullness = shinxData.fullness / 10;
         this.geass = 0;
-        if (equipments.length > 0) {
-            const equipment = (equipments.filter(i => i.equipment.name.toLowerCase() === shinxData.equipment.toLowerCase()))[0].equipment;
-            if (equipment.food) this.hunger += equipment.food;
-            if (equipment.sleep) this.sleep += equipment.sleep;
-            if (equipment.friendship) this.friendship += equipment.friendship;
-            if (equipment.geass) this.geass = 3;
-            if (equipment.ultrageass) this.ultrageass = equipment.ultrageass;
-            if (equipment.regen) this.regen = equipment.regen;
-            if (equipment.guard) this.guard = equipment.guard;
-            if (equipment.safeguard) this.safeguard = equipment.safeguard;
-        };
     };
 
 
     gainExperience(enemyLevel, loses) {
-        const experience = gainedExp(enemyLevel) * (1 + this.friendship) * ((1 / 2) ** (loses));
+        const experience = gainedExp(enemyLevel) * ((1 / 2) ** (loses));
         this.exp += experience;
-        let increasedLevels = 0;
-        if (this.exp >= levelExp(this.level + 1)) {
-            while (this.exp >= levelExp(this.level + 1)) {
-                this.level += 1
-                increasedLevels += 1
-            }
-            return [Math.floor(experience), increasedLevels];
-        };
-        return [Math.floor(experience), increasedLevels];
+        const new_level = getLevelFromExp(this.exp);
+        return [Math.floor(experience), new_level - this.level];
     };
 
     takeDamage(move) {
-        const evade = Math.random(0, 1);
-
-        this.percent = Math.max(0, this.percent + (move[1] - this.sleep / 10));
+        this.percent = Math.max(0, this.percent + (move[1] - this.fullness / 10));
         const knockout = this.percent * move[2];
         const random = Math.random(0, 1);
-        if (random <= knockout) {
-            if (this.safeguard) return false;
-            if (this.guard) {
-                this.guard = false;
-                return -1;
-            };
-            return true;
-        };
-        return false;
+        return random <= knockout;
     };
 
     attack() {
         if (this.knocked) return false;
         const rawMove = getMove(Math.min(Math.max(0, Math.random(0, 1) + 0.5 - (this.level / 100)), 1));
         const move = [rawMove[0]];
-        move.push(rawMove[1] * (2 - this.hunger));
-        move.push(rawMove[2] * (1 + this.friendship) * (1 + (this.geass > 0) / 2));
+        move.push(rawMove[1] * (2 - this.fullness));
+        move.push(rawMove[2] * (1 + this.fullness) * (1 + (this.geass > 0) / 2));
         return move;
     };
 
     reduceGeass() {
-        if (this.supergeass) return false;
         if (this.geass > 0) {
             this.geass--;
             return this.geass === 0;
@@ -102,17 +69,10 @@ module.exports = class ShinxBattle {
         return false;
     };
 
-    applyRegen() {
-        if (this.regen) {
-            this.percent = Math.max(0, this.percent - this.regen);
-        };
-        return this.regen;
-    };
-
     geassMode() {
-        if (!this.supergeass && this.geass < 1) {
-            const sai = Math.random(0, 1);
-            if (sai < 0.2 * (this.friendship + 0.2)) {
+        if (this.geass < 1) {
+            const geass_activated_chance = Math.random(0, 1);
+            if (geass_activated_chance < 0.2 ) {
                 this.geass = 3;
                 return true;
             };

@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const KILL_VALUE = 20;
     const shinx_util = require('../../../../util/nwu/shinx.util');
     const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
+    const getLevelFromExp = require('../../../../util/shinx/getLevelFromExp');
 
     const parseMeetDateNow = () =>{
         const now = new Date()
@@ -106,7 +107,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     // Level
     Shinx.prototype.getLevel = function(){
-        return Math.floor(Math.cbrt(1.25*this.experience))
+        return getLevelFromExp(this.experience);
     }
     // Shiny 
     Shinx.prototype.switchShininessAndGet = function(){
@@ -145,6 +146,11 @@ module.exports = (sequelize, DataTypes) => {
         this.user_male = !this.user_male;
         this.save();
         return this.user_male;
+    }
+    // Battle
+    Shinx.prototype.saveBattle = function(shinxBattle){
+        this.experience = shinxBattle.exp * (1 + wins*0.2);
+        this.save();
     }
 
     return Shinx;

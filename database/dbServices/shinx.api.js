@@ -152,4 +152,8 @@ module.exports = {
         let shinx = await this.getShinx(id);
         return shinx.user_male
     },
+    async saveBattle(shinxBattleData, wins) {
+        let shinx = await this.getShinx(shinxBattleData.owner.id);
+        await shinx.saveBattle(shinxBattleData, wins);
+    },
 };
