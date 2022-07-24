@@ -148,7 +148,7 @@ module.exports = (sequelize, DataTypes) => {
         return this.user_male;
     }
     // Battle
-    Shinx.prototype.saveBattle = function(shinxBattle){
+    Shinx.prototype.saveBattle = function(shinxBattle, wins){
         this.experience = shinxBattle.exp * (1 + wins*0.2);
         this.save();
     }
