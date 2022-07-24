@@ -16,6 +16,8 @@ exports.run = async (client, interaction) => {
         let canvas, ctx, img;
         let userFinder = await interaction.guild.members.fetch();
         let messageFile = null;
+        let time;
+        const now = new Date();
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
@@ -171,7 +173,6 @@ exports.run = async (client, interaction) => {
                     case 'Ok':
                         reaction = require('../../util/shinx/getRandomEatingReaction')();
                         shinx = await shinxApi.getShinx(master.id);
-                        const now = new Date();
                         returnString = `**${shinx.nickname}** ${reaction[0]}`
                         canvas = Canvas.createCanvas(393, 299);
                         ctx = canvas.getContext('2d');
@@ -234,7 +235,7 @@ exports.run = async (client, interaction) => {
                     img = await Canvas.loadImage('./assets/reactions.png');
                     ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
                 };
-
+                
                 if (now.getHours() > 20 || now.getHours() < 4) {
                     img = await Canvas.loadImage('./assets/winNight.png');
                     ctx.drawImage(img, 198, 52);
@@ -244,8 +245,87 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ 
                     client: client,
                     interaction: interaction, 
+                    content: `**${shinx.nickname}** ${reaction[0]}`, 
+                    files: messageFile });
+            case "play":
+                shinx = await shinxApi.getShinx(master.id);
+                canvas = Canvas.createCanvas(578, 398);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/landscapes.png');
+                ctx.drawImage(img, 0, 0);
+                if (now.getHours() >= 20 || now.getHours() < 4) {
+                    time = 2;
+                } else if (now.getHours() >= 4 && now.getHours() < 10) {
+                    time = 0;
+                } else {
+                    time = 1;
+                };
+                ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
+                const layout = require('../../util/shinx/getRandomVisitorPosition')();
+                guests = await shinxApi.getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+                img = await Canvas.loadImage('./assets/mc.png');
+                ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
+                ctx.font = 'normal bolder 18px Arial';
+                ctx.fillStyle = 'purple';
+
+                for (let i = 0; i < guests.length; i++) {
+                    const nick = userFinder.get(guests[i].user_id).user.username.split(' ');
+                    ctx.drawImage(img, 51 * !guests[i].user_male, 72 * layout[i][0][0], 51, 72, layout[i][0][1], layout[i][0][2], 51, 72);
+                    for (let k = nick.length - 1; 0 <= k; k--) {
+                        ctx.font = applyText(canvas, nick[k], 18, 51);
+                        ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
+                    };
+                };
+
+                img = await Canvas.loadImage('./assets/fieldShinx.png');
+                ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
+
+                for (let i = 0; i < guests.length; i++) {
+                    ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
+                };
+                const playing_reaction = require('../../util/shinx/getPlayingReaction')
+                if (shinx.fullness < 0.2) {
+                    reaction = playing_reaction(0);
+                } else {
+                    reaction = playing_reaction();
+                };
+
+                img = await Canvas.loadImage('./assets/reactions.png');
+                ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
+                shinx.addExperience(100 * reaction[2]);
+                shinx.unfeed(1);
+                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
                     content: `**${shinx.nick}** ${reaction[0]}`, 
                     files: messageFile });
+                break;
+            case "park":
+                shinx = await shinxApi.getShinx(master.id);
+                canvas = Canvas.createCanvas(256, 160);
+                ctx = canvas.getContext('2d');
+                img = await Canvas.loadImage('./assets/park.png');
+                ctx.drawImage(img, 0, 0);
+                if (now.getHours() >= 20 || now.getHours() < 4) {
+                    time = 2;
+                } else if (now.getHours() >= 4 && now.getHours() < 10) {
+                    time = 0;
+                } else {
+                    time = 1;
+                };
+
+                ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
+                img = await Canvas.loadImage('./assets/trainer.png');
+                ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
+                img = await Canvas.loadImage('./assets/portraits.png');
+                let conversation = await shinxApi.getRandomReaction();
+                ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
+
+                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                shinx.addExperience(50);
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile });
+                break;
         };
     } catch (e) {
         // Log error
@@ -267,6 +347,18 @@ module.exports.config = {
         name: "tap",
         type: "SUB_COMMAND",
         description: "Tap your shinx!",
+    },{
+        name: "play",
+        type: "SUB_COMMAND",
+        description: "Play with your shinx!",
+    },{
+        name: "park",
+        type: "SUB_COMMAND",
+        description: "Visit the National Park with shinx!",
+    },{
+        name: "battle",
+        type: "SUB_COMMAND",
+        description: "Battle your shinx!",
     },{
         name: "changenick",
         type: "SUB_COMMAND",
