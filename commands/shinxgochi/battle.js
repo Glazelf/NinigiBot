@@ -3,6 +3,8 @@
 // const ShinxBattle = require('../../shinx/shinxBattle');
 // const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
 
+const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
+const ShinxBattle = require('../../shinx/shinxBattle'); 
 const shinxApi = require('../../database/dbServices/shinx.api');
 const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
@@ -15,7 +17,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Canvas = require('canvas');
         const hp = require('../../util/battle/getHP');
-        const { bank } = require('../../database/bank');
         const Discord = require("discord.js");
 
         let author = interaction.user;
@@ -83,7 +84,7 @@ exports.run = async (client, interaction) => {
 
         const nicks = [];
         const prevColors = [0, 0];
-        for (let i = 0; i < 2; i++) shinxes[i].nickname.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nickname);
+        for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nick);
         const geasson = await Canvas.loadImage('./assets/geasson.png');
         const geassoff = await Canvas.loadImage('./assets/geassoff.png');
 
@@ -129,6 +130,7 @@ exports.run = async (client, interaction) => {
                     for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                    interaction.channel.send({ content: text, files: [messageFile] });
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
