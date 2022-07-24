@@ -298,7 +298,7 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
-                    content: `**${shinx.nick}** ${reaction[0]}`, 
+                    content: `**${shinx.nickname}** ${reaction[0]}`, 
                     files: messageFile });
                 break;
             case "park":
