@@ -4,13 +4,7 @@ const { Op } = require('sequelize');
 const { Shinx,ShinxTrophy, User} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
 const { shinxQuotes } = require('../dbObjects/server.model')(attatchments, Sequelize.DataTypes);
 const shinx_util = require('../../util/nwu/shinx.util');
-
-//const userApi = require('./user.api')
-
-function hasPassedLevel(from, to, middle) {
-    return (from < middle) && (middle <= to)
-}
-
+const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
 
 module.exports = {
     async getShinx(id) {

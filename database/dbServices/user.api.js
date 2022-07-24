@@ -13,6 +13,10 @@ module.exports = {
         };
         return user;
     },
+    async getAllUsers() {
+        const users = await User.findAll();
+        return users;
+    },
     // Money
     async addMoney(id, money){
         let user = await this.getUser(id);
