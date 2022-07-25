@@ -1,7 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
-    const KILL_VALUE = 20;
     const shinx_util = require('../../../../util/nwu/shinx.util');
     const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
     const getLevelFromExp = require('../../../../util/shinx/getLevelFromExp');
@@ -59,29 +58,13 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
     });
-
-    //  Reset
-    Shinx.prototype.reset = function(){
-        this.nickname = 'Shinx';
-        this.fullness = 0;
-        this.experience = 0;
-        this.shiny = false;
-        this.meetup = parseMeetDateNow();
-        this.save();
-    }
-
+    
     //  checkup
     Shinx.prototype.checkup = function(){
         const diff = this.lastmeet - getDay();
         if(diff>1){
             this.fullness -= Math.floor(diff/3);
-            if(this.fullness*-1 < KILL_VALUE){
-                this.reset();
-                return false;
-            } else {
-                this.save();
-                return true;
-            }
+            this.save();
         }
     }
 

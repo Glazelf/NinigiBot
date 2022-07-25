@@ -77,31 +77,15 @@ exports.run = async (client, interaction) => {
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile });
+            case "release":
+                let confirm = false
+                let confirmArg = interaction.options.getBoolean("confirm");
+                if (confirmArg === true) confirm = confirmArg;
+                if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+                shinx = await shinxApi.getShinx(master.id);
+                await shinx.destroy();
 
-                // embed = new Discord.MessageEmbed()
-                // .setColor(globalVars.embedColor)
-                // .setTitle(`${master.username}'s Shinx`)
-                // .addFields(
-                //     { name: "Nickname:", value: shinx.nickname.toString()},
-                //     { name: "Level:", value: shinx.getLevel().toString(), inline: true},
-                //     { name: "Next Level:", value: `${shinx.getNextExperience()} pts.`, inline: true},
-                //     { name: '\u200B', value: '\u200B', inline: true },
-                //     { name: "Fullness:", value: shinx.getFullnessPercent(), inline: true},
-                // )
-                // let file;
-                // if(shinx.shiny){
-                //     file = new Discord.MessageAttachment('./assets/shiny_shinx.png', 'shiny_shinx.png');
-                //     embed.setThumbnail('attachment://shiny_shinx.png')
-                // } else {
-                //     file = new Discord.MessageAttachment('./assets/shinx.png', 'shinx.png');
-                //     embed.setThumbnail('attachment://shinx.png')
-                // }
-                // return sendMessage({ 
-                //     client: client, 
-                //     interaction: interaction, 
-                //     embeds: [embed],  
-                //     files: [file],
-                //     ephemeral: ephemeral });
+                return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
             case "addexp":
                 let expArg = interaction.options.getInteger("exp");
                 await shinxApi.addExperience(master.id, expArg);
@@ -362,6 +346,15 @@ module.exports.config = {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "release",
+        type: "SUB_COMMAND",
+        description: "Release Shinx.",
+        options: [{
+            name: "confirm",
+            type: "BOOLEAN",
+            description: "Are you sure? You can never get this Shinx back."
         }]
     },{
         name: "tap",
