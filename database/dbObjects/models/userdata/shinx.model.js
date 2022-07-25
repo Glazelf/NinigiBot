@@ -102,8 +102,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Shinx.prototype.getNextExperience = function(){
+        const prev_level = Math.ceil(shinx_util.levelToExp(this.getLevel()))
         const next_level = Math.ceil(shinx_util.levelToExp(this.getLevel()+1))
-        return next_level - this.experience;
+        return {
+            exp_pts : next_level - this.experience, 
+            curr_percent : (this.experience - prev_level)/(next_level-prev_level)
+        };
     }
     // Level
     Shinx.prototype.getLevel = function(){
@@ -136,6 +140,10 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.getFullnessPercent = function(){
         return Math.round(this.fullness*100/MAX_RANGE).toString()+'%'
     }
+    Shinx.prototype.getFullnessProportion = function(){
+        return this.fullness/MAX_RANGE
+    }
+
     // Nickname
     Shinx.prototype.changeNick = function(nick){
         this.nickname = nick;

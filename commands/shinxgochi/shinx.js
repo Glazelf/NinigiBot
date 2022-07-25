@@ -11,8 +11,13 @@ exports.run = async (client, interaction) => {
         const userApi = require('../../database/dbServices/user.api');
         
         let ephemeral = true;
-        let shinx, embed,foodArg,res,avatar;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
+        let shinx, embed,foodArg,res,avatar;
+
         let canvas, ctx, img;
         let userFinder = await interaction.guild.members.fetch();
         let messageFile = null;
@@ -37,8 +42,7 @@ exports.run = async (client, interaction) => {
                 };
 
                 img = await Canvas.loadImage('./assets/owner.png');
-                ctx.drawImage(img, 48 * !is_user_male, 0, 47 + 9 * !is_user_male, 70, 407, 300,        47 + 9 * !is_user_male, 70);
-                ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 398, 156,        59 - 5 * !is_user_male, 49);
+                ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125,        59 - 5 * !is_user_male, 49);
                 ctx.font = applyText(canvas, shinx.nickname, 45, 266);
                 ctx.fillStyle = '#FFFFFF';
 
@@ -51,12 +55,25 @@ exports.run = async (client, interaction) => {
                     ctx.fillStyle = 'red';
                 };
 
-                ctx.fillText(master.username, 490, 190);
+                ctx.fillText(master.username, 490, 153);
                 ctx.font = 'normal bolder 35px Arial';
                 ctx.fillStyle = '#000000';
                 ctx.fillText(shinx.getLevel(), 93, 180);
-                ctx.fillText(shinx.getFullnessPercent(), 490, 251);
-                ctx.fillText(shinx.meetup, 490, 364);
+                ctx.fillText(shinx.getFullnessPercent(), 621, 288);
+                const exp_struct = shinx.getNextExperience();
+                ctx.fillText(exp_struct.exp_pts, 621, 393);
+                ctx.fillText(shinx.meetup, 490, 218);
+                const fullness_prop = shinx.getFullnessProportion();
+                if(fullness_prop>0){
+                    ctx.fillStyle = require('../../util/shinx/getBelly')(shinx.getFullnessProportion());
+                    ctx.fillRect(467, 308, 245*fullness_prop, 14);
+                }
+                
+                if(exp_struct.curr_percent>0){
+                    ctx.fillStyle = '#00d4a8'
+                    ctx.fillRect(467, 413, 245*exp_struct.curr_percent, 14);
+                }
+                
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile });
@@ -333,8 +350,6 @@ exports.run = async (client, interaction) => {
     };
 };
 
-
-
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
     name: "shinx",
@@ -343,6 +358,11 @@ module.exports.config = {
         name: "data",
         type: "SUB_COMMAND",
         description: "See your shinx!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "tap",
         type: "SUB_COMMAND",
