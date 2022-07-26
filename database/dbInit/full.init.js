@@ -8,7 +8,7 @@ module.exports = async (reset_db) => {
     try {
         if(reset_db) {
             await userdata.drop()
-            console.log(`Deleted Database: User ✔`);
+            console.log(`Deleted Database: User Data ✔`);
         }
         await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
