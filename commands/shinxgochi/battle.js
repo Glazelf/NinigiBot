@@ -22,7 +22,7 @@ exports.run = async (client, interaction) => {
         let author = interaction.user;
         let target = interaction.options.getUser("user");
 
-        if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
+        //if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
 
         const trainers = [author, target];
         if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
@@ -60,20 +60,22 @@ exports.run = async (client, interaction) => {
         const sent_message = await sendMessage({ 
             client: client, 
             interaction: interaction, 
-            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`,
-            components: answer_buttons, 
+            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}`,
+            components: answer_buttons,
             files: [messageFile] });
+
 
         const filter = (interaction) => (interaction.customId === 'yes_battle' || interaction.customId === 'no_battle') && interaction.user.id === trainers[1].id;
         let trainer_answer;
         try {
-            trainer_answer = await sent_message.awaitMessageComponent({ filter, time: 10_000 });
+            trainer_answer = await sent_message.awaitMessageComponent({ filter, time: 25_000 });
         } catch {
             trainer_answer = null;
         }
-        
-        if(!trainer_answer || trainer_answer.customId === 'no_battle'){
-            return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.`,components:[] });
+        if(!trainer_answer){
+            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, the challenge timed out.`,components:[] });
+        } else if (trainer_answer.customId === 'no_battle'){
+            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, user rejected the battle.`,components:[] });
         }
         if (globalVars.battling.yes) {
             return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`,components:[] });
