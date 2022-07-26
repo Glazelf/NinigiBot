@@ -14,7 +14,7 @@ module.exports = async (client) => {
             try {
                 let commandServerID = null;
                 if (command.config.serverID) commandServerID = command.config.serverID;
-                if (client.user.id != "592760951103684618") commandServerID = "759344085420605471"; // set to test server for test build
+                if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
                 slashCommand = await client.application.commands.create(command.config, commandServerID);
             } catch (e) {
                 console.log(e);
@@ -54,6 +54,7 @@ function initPresence() {
 };
 
 module.exports.NinigiID = "592760951103684618";
+module.exports.ShinxServerID = "549214833858576395";
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";
