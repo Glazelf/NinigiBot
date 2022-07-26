@@ -14,21 +14,22 @@ exports.run = async (client, interaction) => {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
+        if (ephemeralArg === false) ephemeral = false;
+        //await interaction.deferReply({ ephemeral: ephemeral });
         let shinx, embed,foodArg,res,avatar;
 
         let canvas, ctx, img;
         let userFinder = await interaction.guild.members.fetch();
         let messageFile = null;
         let time;
+        const applyText = require('../../util/shinx/applyCanvasText')
         const now = new Date();
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
-                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 const is_user_male = shinx.user_male;
-                const applyText = require('../../util/shinx/applyCanvasText')
+                
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 canvas = Canvas.createCanvas(791, 441);
@@ -73,10 +74,9 @@ exports.run = async (client, interaction) => {
                     ctx.fillStyle = '#00d4a8'
                     ctx.fillRect(467, 413, 245*exp_struct.curr_percent, 14);
                 }
-                
-
+            
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                return sendMessage({ client: client, interaction: interaction, files: messageFile });
+                return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "release":
                 let confirm = false
                 let confirmArg = interaction.options.getBoolean("confirm");
@@ -94,7 +94,7 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
-                    ephemeral: ephemeral });
+                    ephemeral: ephemeral});
             case "changenick":
                 let new_nick = interaction.options.getString("nickname");
                 res = await shinxApi.nameShinx(master.id, new_nick);
@@ -110,7 +110,7 @@ exports.run = async (client, interaction) => {
                         returnString = `Could not rename because provided nickname was not alphanumeric`
                         break;
                     case 'Ok':
-                        if (ephemeralArg === false) ephemeral = false;
+                        if (ephemeralArg === false) ephemeral = true;
                         is_shiny = await shinxApi.getShinxShininess(master.id);
                         canvas = Canvas.createCanvas(471, 355);
                         ctx = canvas.getContext('2d');
@@ -133,13 +133,12 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     files: messageFile,
-                    ephemeral: ephemeral });
+                    ephemeral: ephemeral || (res!='Ok') });
 
 
             case "shiny":
                 res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
                 if(res){
-                    if (ephemeralArg === false) ephemeral = false;
                     const is_shiny = await shinxApi.switchShininessAndGet(master.id)
                     returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
                     canvas = Canvas.createCanvas(255, 192);
@@ -162,7 +161,7 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     files:messageFile,
-                    ephemeral: ephemeral }); 
+                    ephemeral: ephemeral || (res!=true) }); 
             case "feed":
                 foodArg = interaction.options.getInteger("food");
                 res = await shinxApi.feedShinx(master.id);  
@@ -174,7 +173,6 @@ exports.run = async (client, interaction) => {
                         returnString = `You don't have enough food!`
                         break;
                     case 'Ok':
-                        if (ephemeralArg === false) ephemeral = false;
                         reaction = require('../../util/shinx/getRandomEatingReaction')();
                         shinx = await shinxApi.getShinx(master.id);
                         returnString = `**${shinx.nickname}** ${reaction[0]}`
@@ -221,9 +219,8 @@ exports.run = async (client, interaction) => {
                     interaction: interaction,
                     content: returnString, 
                     files: messageFile,
-                    ephemeral: ephemeral });
+                    ephemeral: ephemeral || (res!='Ok') });
             case "tap":
-                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(468, 386);
                 ctx = canvas.getContext('2d');
@@ -251,9 +248,10 @@ exports.run = async (client, interaction) => {
                     client: client,
                     interaction: interaction, 
                     content: `**${shinx.nickname}** ${reaction[0]}`, 
-                    files: messageFile });
+                    files: messageFile,
+                    ephemeral: ephemeral
+                });
             case "play":
-                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
                 ctx = canvas.getContext('2d');
@@ -305,10 +303,11 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     content: `**${shinx.nickname}** ${reaction[0]}`, 
-                    files: messageFile });
+                    files: messageFile,
+                    ephemeral : ephemeral
+                });
                 break;
             case "park":
-                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(256, 160);
                 ctx = canvas.getContext('2d');
@@ -331,7 +330,12 @@ exports.run = async (client, interaction) => {
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 shinx.addExperience(50);
-                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile });
+                return sendMessage({ client: client, 
+                    interaction: interaction, 
+                    content: `**${shinx.nickname}** ${conversation.quote}`, 
+                    files: messageFile,
+                    ephemeral: ephemeral
+                 });
                 break;
         };
     } catch (e) {

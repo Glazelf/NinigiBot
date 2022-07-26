@@ -139,7 +139,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     // Battle
     Shinx.prototype.saveBattle = function(shinxBattle, wins){
-        this.experience = shinxBattle.exp * (1 + wins*0.2);
+        this.experience = Math.floor(shinxBattle.exp * (1 + wins*0.2));
         this.save();
     }
 

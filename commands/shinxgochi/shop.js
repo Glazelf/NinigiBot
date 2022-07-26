@@ -20,7 +20,6 @@ exports.run = async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         let master = interaction.user
 
@@ -73,7 +72,6 @@ exports.run = async (client, interaction) => {
                         returnString = `You don't have enough money for **${trophy_name}**`
                         break;
                     case 'Ok':
-                        if (ephemeralArg === false) ephemeral = false;
                         returnString = `Bought **${trophy_name}**!`
                         shinx = await api_shinx.getShinx(master.id)
                         canvas = Canvas.createCanvas(428, 310);
@@ -96,18 +94,17 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     files: messageFile,
-                    ephemeral: ephemeral });
+                    ephemeral: ephemeral || (res!='Ok') });
             case "buyfood":
                 foodArg = interaction.options.getInteger("food");
                 const userApi = require('../../database/dbServices/user.api');
                 res = await userApi.buyFood(master.id, foodArg);
                 returnString = res ? `Added food to your account!`:`Not enough money!`;
-                if(res && ephemeralArg == false) {ephemeral = false};
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
                     content: returnString, 
-                    ephemeral: ephemeral }); 
+                    ephemeral: ephemeral || res != true }); 
             case "addmoney":
                 let moneyArg = interaction.options.getInteger("money");
                 await api_user.addMoney(master.id, moneyArg);
@@ -124,10 +121,10 @@ exports.run = async (client, interaction) => {
                 let isShop = true;
                 if (!res) { res =  await api_shinx.getShinxTrophyWithName(trophy_name); isShop = false;} 
                 if (!res) { 
+                    embed = null;
                     returnString = `**${trophy_name}** doesn't exist.`;
                     break;
                 } else {
-                    if (ephemeralArg === false) ephemeral = false;
                     embed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setTitle(`${res.trophy_id}`)
@@ -143,12 +140,13 @@ exports.run = async (client, interaction) => {
                     embed.addFields(
                         { name: "Location", value: location},
                     )
-                    return sendMessage({ 
-                        client: client, 
-                        interaction: interaction, 
-                        embeds: [embed],  
-                        ephemeral: ephemeral });
+
                 }
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    embeds: [embed],  
+                    ephemeral: ephemeral || (res!=true) });
         };
 
     } catch (e) {
