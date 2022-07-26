@@ -4,8 +4,8 @@ module.exports = async (client, message) => {
     const isAdmin = require('./isAdmin');
     let adminBool = isAdmin(client, message.member);
     const Sequelize = require('sequelize');
-    const { attatchments} =  require('../database/dbConnection/dbConnection');
-    const { ModEnabledServers } = require('../database/dbObjects/server.model')(attatchments, Sequelize.DataTypes);
+    const { serverdata} =  require('../database/dbConnection/dbConnection');
+    const { ModEnabledServers } = require('../database/dbObjects/server.model')(serverdata, Sequelize.DataTypes);
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
 

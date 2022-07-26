@@ -4,7 +4,7 @@ module.exports = async (client, channel) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/attatchments.api');
+        const { LogChannels } = require('../database/dbServices/server.api');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;

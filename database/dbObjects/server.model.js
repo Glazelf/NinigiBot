@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-	const shinxQuotes = require('./models/attachments/shinxQuote.model')(sequelize, DataTypes);
+	const shinxQuotes = require('./models/server/shinxQuote.model')(sequelize, DataTypes);
 
 	const EligibleRoles = require('./models/server/eligibleRoles.model')(sequelize, DataTypes);
 	const PersonalRoles = require('./models/server/personalRoles.model')(sequelize, DataTypes);

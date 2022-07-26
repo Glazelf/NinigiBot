@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
-const { attatchments } =  require('../dbConnection/dbConnection');
+const { serverdata } =  require('../dbConnection/dbConnection');
 
-const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/server.model')(attatchments, Sequelize.DataTypes);
+const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/server.model')(serverdata, Sequelize.DataTypes);
 
 module.exports = async (reset_db) => {
     try {
         if(reset_db) {
-            await attatchments.drop()
-            console.log(`Deleted Database: Attachments ✔`);
+            await serverdata.drop()
+            console.log(`Deleted Database: Server Data ✔`);
         }
         await EligibleRoles.sync({ alter: true });
         await PersonalRoles.sync({ alter: true });
@@ -52,8 +52,8 @@ module.exports = async (reset_db) => {
             //shinxQuotes.upsert({ quote: "", reaction: }),
         ]
         await Promise.all(quotes);
-        console.log(`Initialized Database: Attachments ✔`);
-        attatchments.close();
+        console.log(`Initialized Database: Server ✔`);
+        serverdata.close();
     } catch (e) {
         console.log(e)
     };

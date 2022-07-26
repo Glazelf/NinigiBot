@@ -4,7 +4,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { EligibleRoles } = require('../../database/dbServices/attatchments.api');
+        const { EligibleRoles } = require('../../database/dbServices/server.api');
         const isAdmin = require('../../util/isAdmin');
         let adminBoolBot = isAdmin(client, interaction.guild.me);
         let adminBoolUser = isAdmin(client, interaction.member);

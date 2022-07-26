@@ -12,7 +12,7 @@ module.exports = async (client, interaction) => {
         const { Dex } = require('pokemon-showdown');
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbServices/attatchments.api');
+        const { EligibleRoles } = require('../database/dbServices/server.api');
         
         const api_shop = require('../database/dbServices/shop.api');
         const api_shinx = require('../database/dbServices/shinx.api');

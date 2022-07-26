@@ -8,11 +8,11 @@ const userdata = new Sequelize('userdata', config.dbUsername, config.dbPassword,
     storage: 'database/dbConnection/userdata.sqlite',
 });
 
-const attatchments = new Sequelize('attatchments', config.dbUsername, config.dbPassword, {
+const serverdata = new Sequelize('serverdata', config.dbUsername, config.dbPassword, {
     host: 'localhost',
     dialect: 'sqlite',
     logging: false,
-    storage: 'database/dbConnection/attachments.sqlite',
+    storage: 'database/dbConnection/serverdata.sqlite',
 });
 
-module.exports = {userdata, attatchments};
+module.exports = {userdata, serverdata};

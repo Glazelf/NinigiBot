@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
     });
-    
+        
     //  checkup
     Shinx.prototype.checkup = function(){
         const diff = this.lastmeet - getDay();
