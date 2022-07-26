@@ -54,26 +54,34 @@ exports.run = async (client, interaction) => {
         };
 
         let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-        const filter = (interaction) => interaction.customId === 'button' && interaction.user.id === trainers[1].id;
-        const trainer_answer = await message.awaitMessageComponent({ filter, time: 10_000 });
-        await sendMessage({ 
+        const answer_buttons = new Discord.MessageActionRow()
+        .addComponents(new Discord.MessageButton({ customId: 'yes_battle', style: 'SUCCESS', label: 'Accept'  }))
+        .addComponents(new Discord.MessageButton({ customId: 'no_battle', style: 'DANGER', label: 'Reject'  }))
+        const sent_message = await sendMessage({ 
             client: client, 
             interaction: interaction, 
-            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept`, 
+            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`,
+            components: answer_buttons, 
             files: [messageFile] });
+
+        const filter = (interaction) => (interaction.customId === 'yes_battle' || interaction.customId === 'no_battle') && interaction.user.id === trainers[1].id;
+        let trainer_answer;
+        try {
+            trainer_answer = await sent_message.awaitMessageComponent({ filter, time: 10_000 });
+        } catch {
+            trainer_answer = null;
+        }
         
-        
-        const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });
-        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) {
-            return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.` });
+        if(!trainer_answer || trainer_answer.customId === 'no_battle'){
+            return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.`,components:[] });
         }
         if (globalVars.battling.yes) {
-            return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`,components:[] });
         }
         globalVars.battling.yes = true;
         let text = '';
 
-        await sendMessage({ client: client, interaction: interaction, content: 'Let the battle begin!', files: [messageFile] });
+        await sendMessage({ client: client, interaction: interaction,components:[], content: 'Let the battle begin!', files: [messageFile] });
         await wait();
         //await interaction.channel.send({ files: [messageFile] });
 
