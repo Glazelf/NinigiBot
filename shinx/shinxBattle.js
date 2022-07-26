@@ -39,10 +39,11 @@ module.exports = class ShinxBattle {
 
 
     gainExperience(enemyLevel, loses) {
-        const experience = gainedExp(enemyLevel) * ((1 / 2) ** (loses));
+        const experience = Math.ceil(gainedExp(enemyLevel) * ((1 / 2) ** (loses)));
         this.exp += experience;
-        const new_level = getLevelFromExp(this.exp);
-        return [Math.floor(experience), new_level - this.level];
+        const old_level = this.level;
+        this.level = getLevelFromExp(this.exp);
+        return [experience, this.level - old_level];
     };
 
     takeDamage(move) {

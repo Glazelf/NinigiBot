@@ -63,14 +63,13 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.checkup = function(){
         const diff = this.lastmeet - getDay();
         if(diff>1){
-            this.fullness -= Math.floor(diff/3);
-            this.save();
+            this.unfeed(Math.floor(diff/3));
         }
     }
 
     //  Experience
     Shinx.prototype.addExperience = function(experience){
-        this.experience += experience;
+        this.experience += Math.ceil(experience);
         this.save();
     }
     Shinx.prototype.addExperienceAndLevelUp = function(experience){
@@ -109,7 +108,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Shinx.prototype.unfeed = function(amount){
-        this.fullness -= amount;
+        this.fullness = Math.ceil(0, this.fullness -amount);
         this.save();
     }
 
@@ -117,7 +116,7 @@ module.exports = (sequelize, DataTypes) => {
         return MAX_RANGE - this.fullness;
     }
 
-    Shinx.prototype.getFullness = function(){
+    Shinx.prototype.getFullness = () => {
         return this.fullness
     }
     Shinx.prototype.getFullnessPercent = function(){

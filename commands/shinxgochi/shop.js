@@ -13,9 +13,13 @@ exports.run = async (client, interaction) => {
         const api_shop = require('../../database/dbServices/shop.api');
         
         let messageFile = null;
-        let ephemeral = false;
+        let ephemeral = true;
         let embed,trophy_name,res, returnString;
         let canvas, ctx, img, shinx;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        let emotesAllowed = true;
+        if (ephemeralArg === false) ephemeral = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let master = interaction.user
@@ -23,6 +27,7 @@ exports.run = async (client, interaction) => {
         let  trophies;
         switch (interaction.options.getSubcommand()) {
             case "seetrophies":
+                if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 trophies = await api_shop.getFullBuyableShopTrophies(master.id);
@@ -68,6 +73,7 @@ exports.run = async (client, interaction) => {
                         returnString = `You don't have enough money for **${trophy_name}**`
                         break;
                     case 'Ok':
+                        if (ephemeralArg === false) ephemeral = false;
                         returnString = `Bought **${trophy_name}**!`
                         shinx = await api_shinx.getShinx(master.id)
                         canvas = Canvas.createCanvas(428, 310);
@@ -96,6 +102,7 @@ exports.run = async (client, interaction) => {
                 const userApi = require('../../database/dbServices/user.api');
                 res = await userApi.buyFood(master.id, foodArg);
                 returnString = res ? `Added food to your account!`:`Not enough money!`;
+                if(res && ephemeralArg == false) {ephemeral = false};
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
@@ -120,6 +127,7 @@ exports.run = async (client, interaction) => {
                     returnString = `**${trophy_name}** doesn't exist.`;
                     break;
                 } else {
+                    if (ephemeralArg === false) ephemeral = false;
                     embed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setTitle(`${res.trophy_id}`)
@@ -157,6 +165,11 @@ module.exports.config = {
         name: "seetrophies",
         type: "SUB_COMMAND",
         description: "Check available trophies",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "buytrophy",
         type: "SUB_COMMAND",
@@ -167,6 +180,10 @@ module.exports.config = {
             description: "Item to buy",
             autocomplete: true,
             required: true
+        },{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     },{
         name: "asktrophy",
@@ -178,6 +195,10 @@ module.exports.config = {
             description: "Trophy or it's icon",
             autocomplete: true,
             required: true
+        },{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     },{
         name: "addmoney",
@@ -198,6 +219,10 @@ module.exports.config = {
             type: "INTEGER",
             description: "The amount of food you want to buy.",
             required: true,
+        },{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     },]
 };

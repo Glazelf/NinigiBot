@@ -12,7 +12,6 @@ exports.run = async (client, interaction) => {
         
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -26,6 +25,7 @@ exports.run = async (client, interaction) => {
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
             case "data":
+                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 const is_user_male = shinx.user_male;
                 const applyText = require('../../util/shinx/applyCanvasText')
@@ -110,6 +110,7 @@ exports.run = async (client, interaction) => {
                         returnString = `Could not rename because provided nickname was not alphanumeric`
                         break;
                     case 'Ok':
+                        if (ephemeralArg === false) ephemeral = false;
                         is_shiny = await shinxApi.getShinxShininess(master.id);
                         canvas = Canvas.createCanvas(471, 355);
                         ctx = canvas.getContext('2d');
@@ -138,6 +139,7 @@ exports.run = async (client, interaction) => {
             case "shiny":
                 res = await shinxApi.hasShinxTrophy(master.id, 'shiny charm');
                 if(res){
+                    if (ephemeralArg === false) ephemeral = false;
                     const is_shiny = await shinxApi.switchShininessAndGet(master.id)
                     returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
                     canvas = Canvas.createCanvas(255, 192);
@@ -172,6 +174,7 @@ exports.run = async (client, interaction) => {
                         returnString = `You don't have enough food!`
                         break;
                     case 'Ok':
+                        if (ephemeralArg === false) ephemeral = false;
                         reaction = require('../../util/shinx/getRandomEatingReaction')();
                         shinx = await shinxApi.getShinx(master.id);
                         returnString = `**${shinx.nickname}** ${reaction[0]}`
@@ -220,6 +223,7 @@ exports.run = async (client, interaction) => {
                     files: messageFile,
                     ephemeral: ephemeral });
             case "tap":
+                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(468, 386);
                 ctx = canvas.getContext('2d');
@@ -249,6 +253,7 @@ exports.run = async (client, interaction) => {
                     content: `**${shinx.nickname}** ${reaction[0]}`, 
                     files: messageFile });
             case "play":
+                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
                 ctx = canvas.getContext('2d');
@@ -303,6 +308,7 @@ exports.run = async (client, interaction) => {
                     files: messageFile });
                 break;
             case "park":
+                if (ephemeralArg === false) ephemeral = false;
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(256, 160);
                 ctx = canvas.getContext('2d');
@@ -360,18 +366,29 @@ module.exports.config = {
         name: "tap",
         type: "SUB_COMMAND",
         description: "Tap your shinx!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "play",
         type: "SUB_COMMAND",
         description: "Play with your shinx!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "park",
         type: "SUB_COMMAND",
         description: "Visit the National Park with shinx!",
-    },{
-        name: "battle",
-        type: "SUB_COMMAND",
-        description: "Battle your shinx!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "changenick",
         type: "SUB_COMMAND",
@@ -381,6 +398,10 @@ module.exports.config = {
             type: "STRING",
             description: "Alphanumeric string (between 1 and 12 characters)",
             required: true
+        },{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
         }]
     },{
         name: "addexp",
@@ -395,10 +416,20 @@ module.exports.config = {
     },{
         name: "feed",
         type: "SUB_COMMAND",
-        description: "Feed Shinx!"
+        description: "Feed Shinx!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "shiny",
         type: "SUB_COMMAND",
-        description: "Change shinx's color!"
+        description: "Change shinx's color!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     }],
 };

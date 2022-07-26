@@ -11,19 +11,20 @@ exports.run = async (client, interaction) => {
         const shinxApi = require('../../database/dbServices/shinx.api');
 
         let ephemeral = false;
-        let embed,avatar;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        let emotesAllowed = true;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
+        let embed,avatar;
 
         let master = interaction.user
 
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "card":
+                if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
-                //let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //let avatar = new Discord.THU();
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                //console.log(`shinx ${shinx.nickname} ${shinx.fullness} ${shinx.happiness} ${shinx.experience}`)
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setThumbnail(avatar)
@@ -51,9 +52,12 @@ exports.run = async (client, interaction) => {
                     embeds: [embed],  
                     ephemeral: ephemeral });
             case "swapgender":
+                if (ephemeralArg === false) ephemeral = false;
                 const shinx = await shinxApi.getShinx(master.id)
-                return shinx.swapAndGetTrainerGender() ? sendMessage({ client: client, interaction: interaction, content: `Your character is now male, ${master}!` }) : sendMessage({ client: client, interaction: interaction, content: `Your character is now female, ${master}!` });
-                break;
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!`})
 
         };
 
@@ -71,9 +75,19 @@ module.exports.config = {
         name: "card",
         type: "SUB_COMMAND",
         description: "Check your trainer card!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     },{
         name: "swapgender",
         type: "SUB_COMMAND",
-        description: "Swap your trainer's gender."
+        description: "Swap your trainer's gender.",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
     }]
 };

@@ -38,15 +38,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        await interaction.channel.send({ content: `Do you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept` });
-        const filter = m => m.author.id == trainers[1].id;
-        const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });
-        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.` });
-        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
-        globalVars.battling.yes = true;
-        let text = '';
         const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
-
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');
         let background = await Canvas.loadImage('./assets/vs.png');
@@ -62,7 +54,28 @@ exports.run = async (client, interaction) => {
         };
 
         let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-        await interaction.channel.send({ files: [messageFile] });
+        const filter = (interaction) => interaction.customId === 'button' && interaction.user.id === trainers[1].id;
+        const trainer_answer = await message.awaitMessageComponent({ filter, time: 10_000 });
+        await sendMessage({ 
+            client: client, 
+            interaction: interaction, 
+            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}? Type \`Yes\` to accept`, 
+            files: [messageFile] });
+        
+        
+        const accepts = await interaction.channel.awaitMessages({ filter, max: 1, time: 10000 });
+        if (!accepts.first() || !'yes'.includes(accepts.first().content.toLowerCase())) {
+            return sendMessage({ client: client, interaction: interaction, content: `Battle has been cancelled.` });
+        }
+        if (globalVars.battling.yes) {
+            return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
+        }
+        globalVars.battling.yes = true;
+        let text = '';
+
+        await sendMessage({ client: client, interaction: interaction, content: 'Let the battle begin!', files: [messageFile] });
+        await wait();
+        //await interaction.channel.send({ files: [messageFile] });
 
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
@@ -130,7 +143,6 @@ exports.run = async (client, interaction) => {
                     for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                    interaction.channel.send({ content: text, files: [messageFile] });
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
@@ -169,7 +181,7 @@ exports.run = async (client, interaction) => {
                 };
             };
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-            interaction.channel.send({ content: text, files: [messageFile] });
+            await sendMessage({ client: client, interaction: interaction, content: text, files: [messageFile] });
             await wait();
         };
 
