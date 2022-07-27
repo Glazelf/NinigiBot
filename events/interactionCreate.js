@@ -13,7 +13,7 @@ module.exports = async (client, interaction) => {
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
-        
+
         const api_shop = require('../database/dbServices/shop.api');
         const api_shinx = require('../database/dbServices/shinx.api');
         const api_user = require('../database/dbServices/user.api');
@@ -259,35 +259,35 @@ module.exports = async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "shoptrophy":
                                 const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
-                                
-                                buyable_items.forEach(trophy=>{
+
+                                buyable_items.forEach(trophy => {
                                     choices.push({ name: trophy, value: trophy });
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 // }
-        
+
                                 break;
                             case "trophy":
                                 let trophies = await api_shop.getShopTrophies();
                                 let temp = ''
-                                trophies.forEach(trophy=>{
+                                trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
-                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                     temp = trophy.icon;
-                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
                                 trophies = await api_shinx.getShinxTrophies();
-                                trophies.forEach(trophy=>{
+                                trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
-                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                     temp = trophy.icon;
-                                    if(temp.toLowerCase().includes(focusedOption.value)){choices.push({ name: temp, value: temp});}
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 // }
-        
+
                                 break;
                         };
                         break;
