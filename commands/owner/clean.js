@@ -16,20 +16,20 @@ exports.run = async (client, interaction) => {
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         await interaction.deferReply({ ephemeral: true });
-        console.log('Deleting users...');
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
         const users = await user_api.getAllUsers();
+        if(users.length==0) {return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' });}
         let server_users = await interaction.guild.members.fetch();
         server_users = server_users.map(user=> user.id);
         const pre_length = users.length;
         const deleted_users = []
         users.forEach(user => {
-            if (!server_users.includes(user.id) || (!user.swcode && !user.birthday && (user.money < 100))) {
-                deleted_users.push(user.id);
+            if (!server_users.includes(user.user_id) || ((!user.swcode) && (!user.birthday) && (user.money < 100))) {
+                deleted_users.push(user.user_id);
             }
         })
+        if(deleted_users.length==0){return sendMessage({ client: client, interaction: interaction, content: 'Database is already clean!' });}
         await user_api.bulkDeleteUsers(deleted_users);
-        console.log(`Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.`);
         return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 
     } catch (e) {
