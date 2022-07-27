@@ -122,16 +122,20 @@ exports.run = async (client, interaction) => {
                 let lowered = Dex.stats.names[nature.minus];
                 let arrowUp = "<:arrow_up_red:909901820732784640>";
                 let arrowDown = "<:arrow_down_blue:909903420054437929>";
-                if (emotesAllowed) {
-                    boosted = `${arrowUp}${boosted}`;
-                    lowered = `${arrowDown}${lowered}`;
-                } else {
-                    boosted = `Boosted: ${boosted}`;
-                    lowered = `Lowered: ${lowered}`;
+                let resultString = "Neutral nature, no stat changes.";
+                if (boosted && lowered) {
+                    if (emotesAllowed) {
+                        boosted = `${arrowUp}${boosted}`;
+                        lowered = `${arrowDown}${lowered}`;
+                    } else {
+                        boosted = `Boosted: ${boosted}`;
+                        lowered = `Lowered: ${lowered}`;
+                    };
+                    resultString = `${boosted}\n${lowered}`;
                 };
                 pokemonEmbed
                     .setAuthor({ name: nature.name })
-                    .setDescription(`${boosted}\n${lowered}`);
+                    .setDescription(resultString);
                 break;
 
             // Pokémon
