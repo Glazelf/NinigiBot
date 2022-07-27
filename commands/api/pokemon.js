@@ -138,6 +138,50 @@ exports.run = async (client, interaction) => {
                     .setDescription(resultString);
                 break;
 
+            // Format
+            case "format":
+                let formatSearch = interaction.options.getString("format");
+                let format = Dex.formats.get(formatSearch);
+                if (!format || !format.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+
+                if (format.threads) {
+                    format.threads.forEach(thread => {
+                        pokemonButtons
+                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: 'LINK', url: thread.split("\"")[1] }));
+                    });
+                };
+                // Leading newlines get ignored if format.desc is empty
+                let formatDescription = (format.desc + "\n").replace("Pok&eacute;mon", "Pokémon");
+                if (format.searchShow) {
+                    formatDescription += "\nThis format has an ongoing ladder.";
+                } else if (format.rated) {
+                    formatDescription += "\nThis format has a ladder but can not currently be played on it.";
+                } else {
+                    formatDescription += "\nThis format does not have a ladder.";
+                };
+                if (format.challengeShow) {
+                    formatDescription += "\nYou can challenge users in this format.";
+                } else {
+                    formatDescription += "\nYou can not challenge users in this format.";
+                };
+                if (format.tournamentShow) {
+                    formatDescription += "\nThis format can be used for tournaments.";
+                } else {
+                    formatDescription += "\nThis format can not be used for tournaments.";
+                };
+                let ruleset = null;
+                if (format.ruleset && format.ruleset.length > 0) ruleset = format.ruleset.join(", ");
+                let banlist = null;
+                if (format.banlist && format.banlist.length > 0) banlist = format.banlist.join(", ");
+
+                pokemonEmbed
+                    .setAuthor({ name: `${format.name} (${format.section})` })
+                    .setDescription(formatDescription)
+                if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
+                if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
+                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
+                break;
+
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
@@ -167,11 +211,11 @@ exports.run = async (client, interaction) => {
                         };
                     };
                 };
-                let format = "gen8vgc2022";
+                let formatInput = "gen8vgc2022";
                 let formatArg = interaction.options.getString("format");
-                if (formatArg) format = formatArg;
+                if (formatArg) formatInput = formatArg;
                 // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
-                if (format == "gen7vgc2019") format = "gen7vgc2019ultraseries";
+                if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
 
                 let monthArg = interaction.options.getInteger("month");
                 let yearArg = interaction.options.getInteger("year");
@@ -190,13 +234,13 @@ exports.run = async (client, interaction) => {
 
                 let rating = "1500";
                 let ratingTresholds = [0, 1500, 1630, 1760];
-                if (format == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
+                if (formatInput == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
                 let ratingArg = interaction.options.getInteger("rating");
                 if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
 
                 let wasSuccessful = true;
                 let triedLastMonth = false;
-                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                 await getData(searchURL);
                 return useData();
@@ -254,7 +298,7 @@ exports.run = async (client, interaction) => {
                         stringMonth = month;
                         if (stringMonth < 10) stringMonth = "0" + stringMonth;
                         triedLastMonth = true;
-                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                         await getData(searchURL);
                         return useData();
@@ -264,7 +308,7 @@ exports.run = async (client, interaction) => {
                         let usageButtons = new Discord.MessageActionRow()
                             .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
                             .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
+                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt` }));
 
                         let replyText = `Sorry! Could not fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.\nHere are some usage resources you might find usefull instead:`;
 
@@ -347,6 +391,21 @@ module.exports.config = {
             name: "nature",
             type: "STRING",
             description: "Nature to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "format",
+        type: "SUB_COMMAND",
+        description: "Get info on a format.",
+        options: [{
+            name: "format",
+            type: "STRING",
+            description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {
