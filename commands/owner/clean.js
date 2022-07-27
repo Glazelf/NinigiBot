@@ -19,17 +19,18 @@ exports.run = async (client, interaction) => {
         console.log('Deleting users...');
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
         const users = await user_api.getAllUsers();
+        let server_users = await interaction.guild.members.fetch();
+        server_users = server_users.map(user=> user.id);
         const pre_length = users.length;
-        let counter = 0;
-        await users.forEach(async user => {
-            let member = await interaction.guild.members.fetch(user.user_id);
-            if (!member || (!user.swcode && !user.birthday && (user.money < 100))) {
-                counter +=1;
-                await user_api.deleteUser(user.user_id);
+        const deleted_users = []
+        users.forEach(user => {
+            if (!server_users.includes(user.id) || (!user.swcode && !user.birthday && (user.money < 100))) {
+                deleted_users.push(user.id);
             }
         })
-        console.log(`Done ✔\nDeleted ${counter} out of ${pre_length} entries.`);
-        return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${counter} out of ${pre_length} entries.` });
+        await user_api.bulkDeleteUsers(deleted_users);
+        console.log(`Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.`);
+        return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 
     } catch (e) {
         // Log error

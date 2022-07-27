@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const {userdata} =  require('../dbConnection/dbConnection');
 const { User} = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
-
+const { Op } = require('sequelize');
 module.exports = {
     async getUser(id) {
         let user = await User.findOne({
@@ -18,9 +18,15 @@ module.exports = {
         return users;
     },
     async deleteUser(id){
+        const user = await User.findOne({
+            where: { user_id: id }
+         });
+         await user.destroy();
+    },
+    async bulkDeleteUsers(id_arr){
         await User.destroy({
-            where: { user_id: id },
-          });
+            where: { user_id: {[Op.in]:id_arr}}
+         });
     },
     // Money
     async addMoney(id, money){
