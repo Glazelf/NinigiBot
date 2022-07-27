@@ -155,7 +155,7 @@ exports.run = async (client, interaction) => {
                 if (format.searchShow) {
                     formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
                 } else if (format.rated) {
-                    formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on it.`;
+                    formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on said ladder.`;
                 } else {
                     formatDescription += "\nThis format does not have a ladder.";
                 };
