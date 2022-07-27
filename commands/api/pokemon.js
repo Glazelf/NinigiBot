@@ -112,6 +112,28 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
 
+            // Natures
+            case "nature":
+                let natureSearch = interaction.options.getString("nature");
+                let nature = Dex.natures.get(natureSearch);
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature by that name.` });
+
+                let boosted = Dex.stats.names[nature.plus];
+                let lowered = Dex.stats.names[nature.minus];
+                let arrowUp = "<:arrow_up_red:909901820732784640>";
+                let arrowDown = "<:arrow_down_blue:909903420054437929>";
+                if (emotesAllowed) {
+                    boosted = `${arrowUp}${boosted}`;
+                    lowered = `${arrowDown}${lowered}`;
+                } else {
+                    boosted = `Boosted: ${boosted}`;
+                    lowered = `Lowered: ${lowered}`;
+                };
+                pokemonEmbed
+                    .setAuthor({ name: nature.name })
+                    .setDescription(`${boosted}\n${lowered}`);
+                break;
+
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
@@ -306,6 +328,21 @@ module.exports.config = {
             name: "move",
             type: "STRING",
             description: "Move to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "nature",
+        type: "SUB_COMMAND",
+        description: "Get info on a nature.",
+        options: [{
+            name: "nature",
+            type: "STRING",
+            description: "Nature to get info on.",
             autocomplete: true,
             required: true
         }, {
