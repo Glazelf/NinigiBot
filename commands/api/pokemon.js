@@ -134,6 +134,16 @@ exports.run = async (client, interaction) => {
                     .setDescription(`${boosted}\n${lowered}`);
                 break;
 
+            // Format
+            case "format":
+                let formatSearch = interaction.options.getString("format");
+                let formatDex = Dex.formats.get(formatSearch);
+                if (!formatDex || !formatDex.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+
+                pokemonEmbed
+                    .setAuthor({ name: formatDex.name })
+
+                break;
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
@@ -343,6 +353,21 @@ module.exports.config = {
             name: "nature",
             type: "STRING",
             description: "Nature to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "format",
+        type: "SUB_COMMAND",
+        description: "Get info on a format.",
+        options: [{
+            name: "format",
+            type: "STRING",
+            description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {
