@@ -153,9 +153,9 @@ exports.run = async (client, interaction) => {
                 // Leading newlines get ignored if format.desc is empty
                 let formatDescription = (format.desc + "\n").replace("Pok&eacute;mon", "Pokémon");
                 if (format.searchShow) {
-                    formatDescription += "\nThis format has an ongoing ladder.";
+                    formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
                 } else if (format.rated) {
-                    formatDescription += "\nThis format has a ladder but can not currently be played on it.";
+                    formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on it.`;
                 } else {
                     formatDescription += "\nThis format does not have a ladder.";
                 };
