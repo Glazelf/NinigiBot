@@ -105,6 +105,8 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral || res != true }); 
+            case "trophylist":
+
             case "asktrophy":
 
                 trophy_name = interaction.options.getString("trophy");
@@ -199,6 +201,15 @@ module.exports.config = {
             description: "The amount of food you want to buy.",
             required: true,
         },{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
+    },{
+        name: "trophylist",
+        type: "SUB_COMMAND",
+        description: "See a list of all  trophies!",
+        options: [{
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
