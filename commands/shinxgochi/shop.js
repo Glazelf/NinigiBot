@@ -105,15 +105,6 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral || res != true }); 
-            case "addmoney":
-                let moneyArg = interaction.options.getInteger("money");
-                await api_user.addMoney(master.id, moneyArg);
-                returnString = `Added money to your account!`;
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral }); 
             case "asktrophy":
 
                 trophy_name = interaction.options.getString("trophy");
@@ -197,16 +188,6 @@ module.exports.config = {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
-        }]
-    },{
-        name: "addmoney",
-        type: "SUB_COMMAND",
-        description: "Add money!",
-        options: [{
-            name: "money",
-            type: "INTEGER",
-            description: "The amount of money you want to add.",
-            required: true,
         }]
     },{
         name: "buyfood",
