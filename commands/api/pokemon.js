@@ -35,7 +35,8 @@ exports.run = async (client, interaction) => {
                 if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
-                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(ability)`;
+                // Ability is capitalized on Bulbapedia URLs
+                linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
@@ -70,6 +71,7 @@ exports.run = async (client, interaction) => {
                 if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
+                // Move is NOT capitalized on Bulbapedia URLs
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
                 let description = move.desc;
@@ -110,6 +112,76 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
 
+            // Natures
+            case "nature":
+                let natureSearch = interaction.options.getString("nature");
+                let nature = Dex.natures.get(natureSearch);
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature by that name.` });
+
+                let boosted = Dex.stats.names[nature.plus];
+                let lowered = Dex.stats.names[nature.minus];
+                let arrowUp = "<:arrow_up_red:909901820732784640>";
+                let arrowDown = "<:arrow_down_blue:909903420054437929>";
+                let resultString = "Neutral nature, no stat changes.";
+                if (boosted && lowered) {
+                    if (emotesAllowed) {
+                        boosted = `${arrowUp}${boosted}`;
+                        lowered = `${arrowDown}${lowered}`;
+                    } else {
+                        boosted = `Boosted: ${boosted}`;
+                        lowered = `Lowered: ${lowered}`;
+                    };
+                    resultString = `${boosted}\n${lowered}`;
+                };
+                pokemonEmbed
+                    .setAuthor({ name: nature.name })
+                    .setDescription(resultString);
+                break;
+
+            // Format
+            case "format":
+                let formatSearch = interaction.options.getString("format");
+                let format = Dex.formats.get(formatSearch);
+                if (!format || !format.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+
+                if (format.threads) {
+                    format.threads.forEach(thread => {
+                        pokemonButtons
+                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: 'LINK', url: thread.split("\"")[1] }));
+                    });
+                };
+                // Leading newlines get ignored if format.desc is empty
+                let formatDescription = (format.desc + "\n").replace("Pok&eacute;mon", "Pokémon");
+                if (format.searchShow) {
+                    formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
+                } else if (format.rated) {
+                    formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on said ladder.`;
+                } else {
+                    formatDescription += "\nThis format does not have a ladder.";
+                };
+                if (format.challengeShow) {
+                    formatDescription += "\nYou can challenge users in this format.";
+                } else {
+                    formatDescription += "\nYou can not challenge users in this format.";
+                };
+                if (format.tournamentShow) {
+                    formatDescription += "\nThis format can be used for tournaments.";
+                } else {
+                    formatDescription += "\nThis format can not be used for tournaments.";
+                };
+                let ruleset = null;
+                if (format.ruleset && format.ruleset.length > 0) ruleset = format.ruleset.join(", ");
+                let banlist = null;
+                if (format.banlist && format.banlist.length > 0) banlist = format.banlist.join(", ");
+
+                pokemonEmbed
+                    .setAuthor({ name: `${format.name} (${format.section})` })
+                    .setDescription(formatDescription)
+                if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
+                if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
+                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
+                break;
+
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
@@ -139,11 +211,11 @@ exports.run = async (client, interaction) => {
                         };
                     };
                 };
-                let format = "gen8vgc2022";
+                let formatInput = "gen8vgc2022";
                 let formatArg = interaction.options.getString("format");
-                if (formatArg) format = formatArg;
+                if (formatArg) formatInput = formatArg;
                 // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
-                if (format == "gen7vgc2019") format = "gen7vgc2019ultraseries";
+                if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
 
                 let monthArg = interaction.options.getInteger("month");
                 let yearArg = interaction.options.getInteger("year");
@@ -162,13 +234,13 @@ exports.run = async (client, interaction) => {
 
                 let rating = "1500";
                 let ratingTresholds = [0, 1500, 1630, 1760];
-                if (format == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
+                if (formatInput == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
                 let ratingArg = interaction.options.getInteger("rating");
                 if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
 
                 let wasSuccessful = true;
                 let triedLastMonth = false;
-                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                 await getData(searchURL);
                 return useData();
@@ -226,7 +298,7 @@ exports.run = async (client, interaction) => {
                         stringMonth = month;
                         if (stringMonth < 10) stringMonth = "0" + stringMonth;
                         triedLastMonth = true;
-                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                         await getData(searchURL);
                         return useData();
@@ -237,7 +309,6 @@ exports.run = async (client, interaction) => {
                             .addComponents(new Discord.ButtonBuilder({ label: 'Pikalytics', style: Discord.ButtonStyle.Link, url: "https://pikalytics.com" }))
                             .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
                             .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
-
                         let replyText = `Sorry! Could not fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.\nHere are some usage resources you might find usefull instead:`;
 
                         return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
@@ -304,6 +375,36 @@ module.exports.config = {
             name: "move",
             type: Discord.ApplicationCommandOptionType.String,
             description: "Move to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: Discord.ApplicationCommandOptionType.Boolean,
+            description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "nature",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
+        description: "Get info on a nature.",
+        options: [{
+            name: "nature",
+            type: Discord.ApplicationCommandOptionType.String,
+            description: "Nature to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: Discord.ApplicationCommandOptionType.Boolean,
+            description: "Whether this command is only visible to you."
+        }]
+    }, {
+        name: "format",
+        type: Discord.ApplicationCommandOptionType.SubCommand,
+        description: "Get info on a format.",
+        options: [{
+            name: "format",
+            type: Discord.ApplicationCommandOptionType.String,
+            description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {

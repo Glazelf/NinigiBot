@@ -26,7 +26,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let type2 = pokemon.types[1];
         let typeString = await getTypeEmotes({ type1: type1, type2: type2, emotes: emotesAllowed });
 
-        // Check type matchups
+        // Check type matchups, maybe use Dex.types sometime 
         let superEffectives = "";
         let resistances = "";
         let immunities = "";

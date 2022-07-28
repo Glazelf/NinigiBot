@@ -54,16 +54,12 @@ exports.run = async (client, interaction) => {
                 if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `**${member.user.tag}** (${member.id}) is already banned.` });
             };
 
-            banReturn = `Banned **${member.user.tag}** (${member.id}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
+            await user.send({ content: dmString })
+                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`)
+                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`);
+            if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
-                try {
-                    await user.send({ content: dmString });
-                    banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`;
-                } catch (e) {
-                    // console.log(e);
-                    banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`;
-                };
-                if (deleteMessageDays > 0) banReturn += deletedMessagesString;
 
                 await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
@@ -78,7 +74,7 @@ exports.run = async (client, interaction) => {
             if (bansFetch) {
                 if (bansFetch.has(memberID)) return sendMessage({ client: client, interaction: interaction, content: `<@${memberID}> (${memberID}) is already banned.` });
             };
-            banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.\nNo DM was sent since this ban was by ID.`;
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });

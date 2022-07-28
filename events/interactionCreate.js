@@ -188,6 +188,11 @@ module.exports = async (client, interaction) => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
+                            case "nature":
+                                let natures = Dex.natures.all();
+                                await natures.forEach(nature => {
+                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && nature.exists) choices.push({ name: nature.name, value: nature.name });
+                                });
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
