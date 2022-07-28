@@ -77,17 +77,19 @@ exports.run = async (client, interaction) => {
             .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
-            .addField("Author:", owner, false)
-            .addField("Discord.JS:", DiscordJSVersion, true);
-        if (ownerBool) botEmbed.addField("Memory Usage:", memoryUsage, true);
-        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
+            .addFields([
+                { name: "Author:", value: owner, inline: false }
+            { name: "Discord.JS:", value: DiscordJSVersion, inline: true }]);
+        if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
+        if (client.shard) botEmbed.addFields([{ name: "Shards:", value: ShardUtil.count.toString(), inline: true }]);
         botEmbed
-            .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:f>`, true);
-        if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
-        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
-        if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
+            .addFields([
+                { name: "Servers:", value: totalGuilds.toString(), inline: true }
+            { name: "Total Users:", value: totalMembers.toString(), inline: true }
+            { name: "Created:", value: `<t:${createdAt}:f>`, inline: true }]);
+        if (ownerBool) botEmbed.addFields([{ name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }]);
+        if (githubRepoResponse) botEmbed.addFields([{ name: "Github Stars:", value: `${githubRepoResponse.data.stargazers_count}⭐`, inline: true }]);
+        if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
         let botButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Invite', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))

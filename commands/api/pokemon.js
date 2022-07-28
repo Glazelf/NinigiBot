@@ -41,7 +41,7 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
                     .setDescription(ability.desc)
-                    .addField("Introduced:", `Gen ${ability.gen}`, false);
+                    .addFields([{ name: "Introduced:", value: `Gen ${ability.gen}`, inline: false }]);
                 break;
 
             // Items
@@ -59,8 +59,8 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: item.name })
                     .setThumbnail(itemImage)
                     .setDescription(item.desc);
-                if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
-                pokemonEmbed.addField("Introduced:", `Gen ${item.gen}`, true);
+                if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
+                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${item.gen}`, inline: true }]);
                 break;
 
             // Moves
@@ -97,19 +97,19 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed
                     .setAuthor({ name: moveTitle })
                     .setDescription(description);
-                if (move.basePower > 0 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
-                pokemonEmbed
-                    .addField("Accuracy:", accuracy, true)
-                    .addField("Type:", type, true)
-                    .addField("Category:", category, true)
-                    .addField("Target:", target, true);
-                if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
-                if (ppString) pokemonEmbed.addField("PP:", ppString, true);
-                if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
+                if (move.basePower > 0 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
+                pokemonEmbed.addFields([
+                    { name: "Accuracy:", value: accuracy, inline: true }
+                    { name: "Type:", value: type, inline: true }
+                    { name: "Category:", value: category, inline: true }
+                    { name: "Target:", value: target, inline: true }]);
+                if (move.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: move.critRatio.toString(), inline: true }]);
+                if (ppString) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
+                if (move.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: move.priority.toString(), inline: true }]);
                 // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
-                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
-                pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
+                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
+                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${move.gen}`, inline: true }]);
                 break;
 
             // Natures
@@ -177,9 +177,9 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed
                     .setAuthor({ name: `${format.name} (${format.section})` })
                     .setDescription(formatDescription)
-                if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
-                if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
-                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
+                if (ruleset) pokemonEmbed.addFields([{ name: "Ruleset:", value: ruleset, inline: false }]);
+                if (banlist) pokemonEmbed.addFields([{ name: "Banlist:", value: banlist, inline: false }]);
+                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addFields([{ name: "Restricted type:", value: format.restricted.join(", "), inline: false }]);
                 break;
 
             // Pokémon
@@ -282,11 +282,12 @@ exports.run = async (client, interaction) => {
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
                             .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
-                            .addField("Moves:", moveStats, true)
-                            .addField("Items:", itemStats, true)
-                            .addField("Abilities:", abilityStats, true)
-                            .addField("Spreads:", spreadStats, true)
-                            .addField("Teammates:", teammateStats, true);
+                            .addFields([
+                                { name: "Moves:", value: moveStats, inline: true }
+                            { name: "Items:", value: itemStats, inline: true }
+                            { name: "Abilities:", value: abilityStats, inline: true }
+                            { name: "Spreads:", value: spreadStats, inline: true }
+                            { name: "Teammates:", value: teammateStats, inline: true }]);
 
                         return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
 
