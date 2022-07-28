@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Op } = require('sequelize');
+const { Op, fn, where, col } = require('sequelize');
 const {userdata} =  require('../dbConnection/dbConnection');
 
 const { User, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
@@ -69,7 +69,7 @@ module.exports = {
             {
                 where: {
                     [Op.or]: [
-                      { trophy_id: name_t },
+                        where(fn('lower', col('trophy_id')), name_t),
                       { icon: name_t }
                     ]
                   }
@@ -106,8 +106,9 @@ module.exports = {
     },
 
     async buyShopTrophy(user_id, trophy_id) {
+        const trophy_id_t = trophy_id.toLowerCase()
         const trophies = await this.getTodayShopTrophies();
-        let trophy = trophies.find(elem => elem.trophy_id == trophy_id);
+        let trophy = trophies.find(elem => elem.trophy_id.toLowerCase() == trophy_id_t);
         if (!trophy){
             return 'NoTrophy'
         }
