@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const { userdata } =  require('../dbConnection/dbConnection');
-const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/full.model')(userdata, Sequelize.DataTypes);
-
+const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 
 module.exports = async (reset_db) => {
     
@@ -91,7 +90,7 @@ module.exports = async (reset_db) => {
         ]
         await Promise.all(trophies);
         console.log(`Initialized Database: User ✔`);
-        userdata.close();
+        await userdata.close();
     } catch (e) {
         console.log(e)
     };

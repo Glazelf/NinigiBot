@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { serverdata } =  require('../dbConnection/dbConnection');
 
-const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/server.model')(serverdata, Sequelize.DataTypes);
+const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 
 module.exports = async (reset_db) => {
     try {
@@ -53,7 +53,7 @@ module.exports = async (reset_db) => {
         ]
         await Promise.all(quotes);
         console.log(`Initialized Database: Server ✔`);
-        serverdata.close();
+        await serverdata.close();
     } catch (e) {
         console.log(e)
     };
