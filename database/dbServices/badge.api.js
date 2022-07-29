@@ -6,6 +6,7 @@ const { User, ShopBadge, EventBadge } = require('../dbObjects/userdata.model')(u
 
 const DAILY_BADGES = 5;
 
+
 module.exports = {
     async getUser(id, attributes=null) {
         let user = await User.findByPk({
@@ -18,10 +19,19 @@ module.exports = {
         };
         return user;
     },
-    async getBadgeSlice(amount){
+    async getBadgeSlice(offset, badges_per_page){
+        
         let EventBadges = await EventBadge.findall({attributes: ['badge_id', 'icon']});
         let shopbadges = await ShopBadge.findall({attributes: ['badge_id', 'icon']});
-        EventBadges.concat(shopbadges);
+        let badges = EventBadges.concat(shopbadges);
+        let up_range = Math.min(offset + badges_per_page, badges.length);
+        let answer = 'LR';
+        if(up_range==badges.length){
+            answer == 'L';
+        } else if (offset==0){
+            answer == 'R';
+        }
+        return {slice : badges.slice(offset, offset+badges_per_page), buttons: answer}
     },
     async  getShopBadges() {
         const badges = await ShopBadge.findAll();

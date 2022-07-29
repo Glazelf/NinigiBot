@@ -105,6 +105,12 @@ exports.run = async (client, interaction) => {
                     content: returnString, 
                     ephemeral: ephemeral || res != true }); 
             case "badgelist":
+                let badge_slice = await require('../../util/badges/getBadgeEmbedSlice')(0);
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    embed:badge_slice.embed,
+                    components: badge_slice.components});
 
             case "askbadge":
 

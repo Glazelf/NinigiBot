@@ -95,6 +95,10 @@ module.exports = async (client, interaction) => {
                             }, componentsCopy);
                             await interaction.update({ components: componentsCopy });
                             return;
+                        }else if (interaction.customId.startsWith("bgd")) {
+                            const offset = parseInt(interaction.customId.substring(3));
+                            let badge_slice = await require('../util/badges/getBadgeEmbedSlice')(offset);
+                            await interaction.update({ embeds: [badge_slice.embed], components: badge_slice.components });
                         } else {
                             // Other buttons
                             return;
