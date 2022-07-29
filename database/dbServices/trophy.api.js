@@ -19,6 +19,10 @@ module.exports = {
         };
         return user;
     },
+    async addMoney(id, money){
+        let user = await this.getUser(id, ['user_id','money']);
+        await user.addMoney(money);
+    },
     async getTrophieslice(offset, trophies_per_page){
         
         let EventTrophies = await EventTrophy.findAll({attributes: ['trophy_id', 'icon']});
@@ -55,7 +59,26 @@ module.exports = {
         }
         return today_trophies;
     },
-
+    async  createShopTrophy(name, emote, description, price) {
+        await ShopTrophy.create({trophy_id:name, icon: emote, description:description, price:price});
+    },
+    async  deleteShopTrophy(trophy_id) {
+        const trophy_id_t = trophy_id.toLowerCase()
+        const trophy = await ShopTrophy.findOne({attributes:['price'], where: where(fn('lower', col('trophy_id')), trophy_id_t)})
+        if(!trophy){
+            return false
+        }
+        let affected_users = await userdata.models.ShopTrophyUser.findAll({ attributes: ['UserUserId'],
+            where: where(fn('lower', col('shopTrophyTrophyId')), trophy_id_t)
+         });
+        await ShopTrophy.destroy({
+            where: where(fn('lower', col('trophy_id')), trophy_id_t)
+        })
+        affected_users.forEach(async user_id=>{
+            await this.addMoney(user_id, trophy.price);
+        })
+        return true
+    },
     async  getTodayShopTrophiesToBuy(money) {
         const d = new Date();
         
@@ -92,6 +115,28 @@ module.exports = {
         );
         return trophy;
     },
+    async  checkTrophyExistance(name, only_shop=false) {
+        let name_t = name.toLowerCase();
+        let trophy = await ShopTrophy.findOne(
+            {
+                where: where(fn('lower', col('trophy_id')), name_t),
+                    
+                  }
+              
+        );
+        if(trophy){return true}
+        if(!only_shop){
+            trophy = await EventTrophy.findOne(
+                {
+                    where: where(fn('lower', col('trophy_id')), name_t),
+                        
+                      }
+            );
+            if(trophy){return true}
+        }
+        return false;
+    },
+    
 
     async getBuyableShopTrophies(user_id) {        
         let user = await this.getUser(user_id)
@@ -180,7 +225,7 @@ module.exports = {
             {
                 where: {
                     [Op.or]: [
-                      { trophy_id: name_t },
+                        where(fn('lower', col('trophy_id')), name_t),
                       { icon: name_t }
                     ]
                   }

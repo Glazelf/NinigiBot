@@ -53,16 +53,16 @@ module.exports = {
         const res = await shinx.addExperienceAndLevelUp(experience);
         if(res.pre != res.post) {
             if(hasPassedLevel(res.pre, res.post, 5)){
-                await this.addEventTrophyUnchecked(id, 'Bronze Trophy')
+                await this.addEventTrophy(id, 'Bronze Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 15)){
-                await this.addEventTrophyUnchecked(id, 'Silver Trophy')
+                await this.addEventTrophy(id, 'Silver Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 30)){
-                await this.addEventTrophyUnchecked(id, 'Gold Trophy')
+                await this.addEventTrophy(id, 'Gold Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 50)){
-                await this.addEventTrophyUnchecked(id, 'Shiny Charm')
+                await this.addEventTrophy(id, 'Shiny Charm')
             }
         }
     },
@@ -87,15 +87,6 @@ module.exports = {
             await user.addEventTrophy(trophy);
         };
     },
-    async addEventTrophyUnchecked(user_id, trophy_id) {
-        let user = await this.getUser(user_id, ['user_id']);
-        let trophy_id_t = trophy_id.toLowerCase();
-        const trophy = await EventTrophy.findOne(
-            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
-        );
-        await user.addEventTrophy(trophy);
-
-    },
     async feedShinx(id) {
         let shinx = await this.getShinx(id, ['belly']);
         let shinx_hunger = shinx.getHunger()
@@ -115,17 +106,12 @@ module.exports = {
     },
 
     async nameShinx(id, nick) {
-        let pnick = nick.trim();
-        if (pnick.length < 1) {
-            return 'TooShort'
-        } else if ( pnick.length > 12) {
-            return 'TooLong'
-        } else if (!pnick.match(/^[a-z0-9]+$/i)){
-            return 'InvalidChars'
+        const check = require('../../util/string/checkFormat')(nick, 12);
+        if(check=='Ok'){
+            let shinx = await this.getShinx(id, ['user_id','nickname']);
+            shinx.changeNick(nick.trim());
         }
-        let shinx = await this.getShinx(id, ['user_id','nickname']);
-        shinx.changeNick(pnick);
-        return 'Ok'
+        return check
     },
     async isTrainerMale (id) {
         let shinx = await this.getShinx(id, 'user_male');

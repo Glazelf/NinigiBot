@@ -256,7 +256,16 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                         };
-                    case "inventory":
+                    case "manager":
+                        switch(focusedOption.name){
+                            case "name":
+                                let trophies = await api_trophy.getShopTrophies();
+                                let temp = ''
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                })
+                        }
                         break;
                     case "shop":
                         switch (focusedOption.name) {
