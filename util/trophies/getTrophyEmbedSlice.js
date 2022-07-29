@@ -8,7 +8,7 @@ module.exports = async (offset) => {
     const embed = new Discord.MessageEmbed().setColor(globalVars.embedColor)
     
     trophy_list.slice.forEach(trophy=>{
-        embed.addFields({ name: '\u200B', value: `:${trophy.dataValues.icon}: ${trophy.dataValues.trophy_id}`})
+        embed.addFields({ name: '\u200B', value: `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`})
     })
     const navigation_buttons = new Discord.MessageActionRow()
     if(trophy_list.buttons.includes('L')){

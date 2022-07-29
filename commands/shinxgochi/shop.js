@@ -127,7 +127,7 @@ exports.run = async (client, interaction) => {
                     .setColor(globalVars.embedColor)
                     .setTitle(`${res.trophy_id}`)
                     .addFields(
-                        { name: "Icon:", value: `:${res.icon}:`},
+                        { name: "Icon:", value: `${res.icon}`},
                         { name: "Description:", value: `${res.description}`},
                     )
                     let location = `Sometimes found in the Shop.`;
