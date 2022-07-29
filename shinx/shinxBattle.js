@@ -33,7 +33,7 @@ module.exports = class ShinxBattle {
         this.percent = 0;
         this.exp = shinxData.experience
         this.level = shinxData.getLevel();
-        this.fullness = shinxData.fullness / 10;
+        this.belly = shinxData.belly / 10;
         this.geass = 0;
     };
 
@@ -47,7 +47,7 @@ module.exports = class ShinxBattle {
     };
 
     takeDamage(move) {
-        this.percent = Math.max(0, this.percent + (move[1] - this.fullness / 10));
+        this.percent = Math.max(0, this.percent + (move[1] - this.belly / 10));
         const knockout = this.percent * move[2];
         const random = Math.random(0, 1);
         return random <= knockout;
@@ -57,8 +57,8 @@ module.exports = class ShinxBattle {
         if (this.knocked) return false;
         const rawMove = getMove(Math.min(Math.max(0, Math.random(0, 1) + 0.5 - (this.level / 100)), 1));
         const move = [rawMove[0]];
-        move.push(rawMove[1] * (2 - this.fullness));
-        move.push(rawMove[2] * (1 + this.fullness) * (1 + (this.geass > 0) / 2));
+        move.push(rawMove[1] * (2 - this.belly));
+        move.push(rawMove[2] * (1 + this.belly) * (1 + (this.geass > 0) / 2));
         return move;
     };
 

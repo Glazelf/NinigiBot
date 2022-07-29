@@ -60,14 +60,14 @@ exports.run = async (client, interaction) => {
                 ctx.font = 'normal bolder 35px Arial';
                 ctx.fillStyle = '#000000';
                 ctx.fillText(shinx.getLevel(), 93, 180);
-                ctx.fillText(shinx.getFullnessPercent(), 621, 288);
+                ctx.fillText(shinx.getBellyPercent(), 621, 288);
                 const exp_struct = shinx.getNextExperience();
                 ctx.fillText(exp_struct.exp_pts, 621, 393);
                 ctx.fillText(shinx.meetup, 490, 218);
-                const fullness_prop = shinx.getFullnessProportion();
-                if(fullness_prop>0){
-                    ctx.fillStyle = require('../../util/shinx/getBelly')(shinx.getFullnessProportion());
-                    ctx.fillRect(467, 308, 245*fullness_prop, 14);
+                const belly_prop = shinx.getBellyProportion();
+                if(belly_prop>0){
+                    ctx.fillStyle = require('../../util/shinx/getBelly')(shinx.getBellyProportion());
+                    ctx.fillRect(467, 308, 245*belly_prop, 14);
                 }
                 
                 if(exp_struct.curr_percent>0){
@@ -137,7 +137,7 @@ exports.run = async (client, interaction) => {
 
 
             case "shiny":
-                res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
+                res = await shinxApi.hasEventBadge(master.id, 'shiny charm');
                 if(res){
                     const is_shiny = await shinxApi.switchShininessAndGet(master.id)
                     returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
@@ -288,7 +288,7 @@ exports.run = async (client, interaction) => {
                     ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
                 };
                 const playing_reaction = require('../../util/shinx/getPlayingReaction')
-                if (shinx.fullness < 0.2) {
+                if (shinx.belly < 0.2) {
                     reaction = playing_reaction(0);
                 } else {
                     reaction = playing_reaction();

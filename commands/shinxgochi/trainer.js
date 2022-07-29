@@ -19,7 +19,7 @@ exports.run = async (client, interaction) => {
 
         let master = interaction.user
 
-        let user, trophies;
+        let user, badges;
         switch (interaction.options.getSubcommand()) {
             case "card":
                 if (ephemeralArg === false) ephemeral = false;
@@ -32,18 +32,18 @@ exports.run = async (client, interaction) => {
                     { name: "Money:", value: user.money.toString(), inline: true},
                     { name: "Food:", value: user.food.toString(), inline: true},
                 )  
-                trophies = await user.getShopTrophies();
-                trophy_string = '';
-                trophies.forEach(trophy=>{
-                    trophy_string += ':'+trophy.icon+': ';
+                badges = await user.getShopBadges();
+                badge_string = '';
+                badges.forEach(badge=>{
+                    badge_string += ':'+badge.icon+': ';
                 })
-                trophies = await user.getEventTrophies();
-                trophies.forEach(trophy=>{
-                    trophy_string += ':'+trophy.icon+': ';
+                badges = await user.getEventBadges();
+                badges.forEach(badge=>{
+                    badge_string += ':'+badge.icon+': ';
                 })
-                if (trophy_string.length > 0) {
+                if (badge_string.length > 0) {
                     embed.addFields(
-                        { name: "Trophies:", value: trophy_string},
+                        { name: "Badges:", value: badge_string},
                     )
                 }
                 return sendMessage({ 

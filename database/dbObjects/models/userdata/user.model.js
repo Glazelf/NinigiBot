@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     //  Money
     User.prototype.addMoney = function(money){
         this.money = Math.max(this.money + money, 0);
-        this.save();
+        this.save({fields:['money']});
     }
     User.prototype.getMoney = function(){
         return this.money;
@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
     //  Birthday
     User.prototype.setBirthday = function(birthday){
         this.birthday = birthday;
-        this.save();
+        this.save({fields:['birthday']});
     }
     //  Switch Code
     User.prototype.setSwitchCode = function(swcode){
         this.swcode = swcode;
-        this.save();
+        this.save({fields:['swcode']});
     }
     // Food
     User.prototype.hasFood = function(food){
@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     User.prototype.addFood = function(food){
         this.food = Math.max(this.food + food, 0);
-        this.save();
+        this.save({fields:['food']});
     }
     User.prototype.getFood = function(){
         return this.food;

@@ -14,8 +14,8 @@ module.exports = async (client, interaction) => {
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
 
-        const api_shop = require('../database/dbServices/shop.api');
-        const api_shinx = require('../database/dbServices/shinx.api');
+        const api_badge = require('../database/dbServices/badge.api');
+        const api_badge = require('../database/dbServices/badge.api');
         const api_user = require('../database/dbServices/user.api');
 
         if (!interaction) return;
@@ -257,27 +257,27 @@ module.exports = async (client, interaction) => {
                         break;
                     case "shop":
                         switch (focusedOption.name) {
-                            case "shoptrophy":
-                                const buyable_items = await api_shop.getBuyableShopTrophies(interaction.user.id);
+                            case "shopbadge":
+                                const buyable_items = await api_badge.getBuyableShopBadges(interaction.user.id);
 
-                                buyable_items.forEach(trophy => {
-                                    choices.push({ name: trophy, value: trophy });
+                                buyable_items.forEach(badge => {
+                                    choices.push({ name: badge, value: badge });
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 // }
 
                                 break;
-                            case "trophy":
-                                let trophies = await api_shop.getShopTrophies();
+                            case "badge":
+                                let badges = await api_badge.getShopBadges();
                                 let temp = ''
-                                trophies.forEach(trophy => {
-                                    temp = trophy.trophy_id;
+                                badges.forEach(badge => {
+                                    temp = badge.badge_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
-                                trophies = await api_shinx.getEventTrophies();
-                                trophies.forEach(trophy => {
-                                    temp = trophy.trophy_id;
+                                badges = await api_badge.getEventBadges();
+                                badges.forEach(badge => {
+                                    temp = badge.badge_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
                                 // if (choices.length == 0){

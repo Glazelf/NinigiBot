@@ -3,17 +3,17 @@ module.exports = (sequelize, DataTypes) => {
 	const Shinx = require('./models/userdata/shinx.model')(sequelize, DataTypes);
 	const User = require('./models/userdata/user.model')(sequelize, DataTypes);
 	
-	const EventTrophy = require('./models/items/eventTrophy.model')(sequelize, DataTypes);
-	const ShopTrophy = require('./models/items/shopTrophy.model')(sequelize, DataTypes);
+	const EventBadge = require('./models/items/eventBadge.model')(sequelize, DataTypes);
+	const ShopBadge = require('./models/items/shopBadge.model')(sequelize, DataTypes);
 //https://sequelize.org/docs/v7/core-concepts/assocs/#foobelongstomanybar--through-baz-
-	User.belongsToMany(EventTrophy, { through: 'EventTrophyUser', timestamps: false});
-	EventTrophy.belongsToMany(User, { through: 'EventTrophyUser', timestamps: false});
+	User.belongsToMany(EventBadge, { through: 'EventBadgeUser', timestamps: false});
+	EventBadge.belongsToMany(User, { through: 'EventBadgeUser', timestamps: false});
 
-	User.belongsToMany(ShopTrophy, { through: 'ShopTrophyUser', timestamps: false});
-	ShopTrophy.belongsToMany(User, { through: 'ShopTrophyUser', timestamps: false});
+	User.belongsToMany(ShopBadge, { through: 'ShopBadgeUser', timestamps: false});
+	ShopBadge.belongsToMany(User, { through: 'ShopBadgeUser', timestamps: false});
 
 	User.hasOne(Shinx);
 	sequelize.sync();
-	return {Shinx, User, EventTrophy, ShopTrophy};
+	return {Shinx, User, EventBadge, ShopBadge};
 }
 

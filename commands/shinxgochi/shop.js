@@ -10,11 +10,10 @@ exports.run = async (client, interaction) => {
 
         const api_shinx = require('../../database/dbServices/shinx.api');
         const api_user = require('../../database/dbServices/user.api');
-        const api_shop = require('../../database/dbServices/shop.api');
-        
+        const api_badge = require('../../database/dbServices/badge.api');        
         let messageFile = null;
         let ephemeral = true;
-        let embed,trophy_name,res, returnString;
+        let embed,badge_name,res, returnString;
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
@@ -23,31 +22,31 @@ exports.run = async (client, interaction) => {
 
         let master = interaction.user
 
-        let  trophies;
+        let  badges;
         switch (interaction.options.getSubcommand()) {
-            case "seetrophies":
+            case "seebadges":
                 if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                trophies = await api_shop.getFullBuyableShopTrophies(master.id);
-                trophies.forEach(trophy=>{
-                    let trophy_header = { name: '\u200B', value: `:${trophy.icon}: **${trophy.trophy_id}**`, inline: true}
-                    let trophy_price = { name: '\u200B', value: '```diff\n'+`[${trophy.price}]`+'\n```', inline: true};
+                badges = await api_badge.getFullBuyableShopBadges(master.id);
+                badges.forEach(badge=>{
+                    let badge_header = { name: '\u200B', value: `:${badge.icon}: **${badge.badge_id}**`, inline: true}
+                    let badge_price = { name: '\u200B', value: '```diff\n'+`[${badge.price}]`+'\n```', inline: true};
                     
-                    switch(trophy.temp_bought){
+                    switch(badge.temp_bought){
                         case 'Bought':
-                            trophy_price.value = '```yaml\n+Bought\n```'
+                            badge_price.value = '```yaml\n+Bought\n```'
                             break;
                         case 'CantBuy':
-                            trophy_price.value = '```css\n['+`${trophy.price}`+']\n```'
+                            badge_price.value = '```css\n['+`${badge.price}`+']\n```'
                             break;
                         case 'CanBuy':
                             break;
                     }
                     
                     embed.addFields(
-                        trophy_header,
-                        trophy_price,
+                        badge_header,
+                        badge_price,
                         { name: '\u200B', value: '\u200B', inline: true },
                     )
 
@@ -57,22 +56,22 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            case "buytrophy":
-                trophy_name = interaction.options.getString("shoptrophy");
-                res =  await api_shop.buyShopTrophy(master.id, trophy_name.toLowerCase());
+            case "buybadge":
+                badge_name = interaction.options.getString("shopbadge");
+                res =  await api_badge.buyShopBadge(master.id, badge_name.toLowerCase());
                 returnString = ''
                 switch(res){
-                    case 'NoTrophy':
-                        returnString = `**${trophy_name}** isn't available.`;
+                    case 'NoBadge':
+                        returnString = `**${badge_name}** isn't available.`;
                         break;
-                    case 'HasTrophy':
-                        returnString = `You already have **${trophy_name}**`
+                    case 'HasBadge':
+                        returnString = `You already have **${badge_name}**`
                         break;
                     case 'NoMoney':
-                        returnString = `You don't have enough money for **${trophy_name}**`
+                        returnString = `You don't have enough money for **${badge_name}**`
                         break;
                     case 'Ok':
-                        returnString = `Bought **${trophy_name}**!`
+                        returnString = `Bought **${badge_name}**!`
                         shinx = await api_shinx.getShinx(master.id)
                         canvas = Canvas.createCanvas(428, 310);
                         ctx = canvas.getContext('2d');
@@ -105,22 +104,22 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     content: returnString, 
                     ephemeral: ephemeral || res != true }); 
-            case "trophylist":
+            case "badgelist":
 
-            case "asktrophy":
+            case "askbadge":
 
-                trophy_name = interaction.options.getString("trophy");
-                res =  await api_shop.getShopTrophyWithName(trophy_name);
+                badge_name = interaction.options.getString("badge");
+                res =  await api_badge.getShopBadgeWithName(badge_name);
                 let isShop = true;
-                if (!res) { res =  await api_shinx.getEventTrophyWithName(trophy_name); isShop = false;} 
+                if (!res) { res =  await api_badge.getEventBadgeWithName(badge_name); isShop = false;} 
                 if (!res) { 
                     embed = null;
-                    returnString = `**${trophy_name}** doesn't exist.`;
+                    returnString = `**${badge_name}** doesn't exist.`;
                     break;
                 } else {
                     embed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
-                    .setTitle(`${res.trophy_id}`)
+                    .setTitle(`${res.badge_id}`)
                     .addFields(
                         { name: "Icon:", value: `:${res.icon}:`},
                         { name: "Description:", value: `${res.description}`},
@@ -153,20 +152,20 @@ module.exports.config = {
     name: "shop",
     description: "Interact with the built in shop!",
     options: [{
-        name: "seetrophies",
+        name: "seebadges",
         type: "SUB_COMMAND",
-        description: "Check available trophies",
+        description: "Check available badges",
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "buytrophy",
+        name: "buybadge",
         type: "SUB_COMMAND",
-        description: "Buy trophies!",
+        description: "Buy badges!",
         options: [{
-            name: "shoptrophy",
+            name: "shopbadge",
             type: "STRING",
             description: "Item to buy",
             autocomplete: true,
@@ -177,13 +176,13 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "asktrophy",
+        name: "askbadge",
         type: "SUB_COMMAND",
-        description: "Get info about a trophy",
+        description: "Get info about a badge",
         options: [{
-            name: "trophy",
+            name: "badge",
             type: "STRING",
-            description: "Trophy or it's icon",
+            description: "Badge or it's icon",
             autocomplete: true,
             required: true
         },{
@@ -206,9 +205,9 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "trophylist",
+        name: "badgelist",
         type: "SUB_COMMAND",
-        description: "See a list of all  trophies!",
+        description: "See a list of all  badges!",
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",

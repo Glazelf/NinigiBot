@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const Trophy = sequelize.define('EventTrophy', {
-		trophy_id: {
+    const Badge = sequelize.define('EventBadge', {
+		badge_id: {
 			type: DataTypes.STRING,
 			primaryKey: true,
 		},
@@ -24,5 +24,5 @@ module.exports = (sequelize, DataTypes) => {
 
     // Instance Methods
     
-    return Trophy;
+    return Badge;
 };

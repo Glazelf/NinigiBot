@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 'Shinx',
         },
-        fullness: {
+        belly: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     //  Experience
     Shinx.prototype.addExperience = function(experience){
         this.experience += Math.ceil(experience);
-        this.save();
+        this.save({fields:['experience']});
     }
     Shinx.prototype.addExperienceAndLevelUp = function(experience){
         const pre = this.getLevel();
@@ -98,49 +98,49 @@ module.exports = (sequelize, DataTypes) => {
     // Shiny 
     Shinx.prototype.switchShininessAndGet = function(){
         this.shiny = !this.shiny;
-        this.save();
+        this.save({fields:['shiny']});
         return this.shiny
     }
-    // Fullness
+    // Belly
     Shinx.prototype.feed = function(amount){
-        this.fullness = Math.min(MAX_RANGE, Math.max(0, this.fullness) + amount);
-        this.save();
+        this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + amount);
+        this.save({fields:['belly']});
     }
 
     Shinx.prototype.unfeed = function(amount){
-        this.fullness = Math.ceil(0, this.fullness -amount);
-        this.save();
+        this.belly = Math.ceil(0, this.belly -amount);
+        this.save({fields:['belly']});
     }
 
     Shinx.prototype.getHunger = function(){
-        return MAX_RANGE - this.fullness;
+        return MAX_RANGE - this.belly;
     }
 
-    Shinx.prototype.getFullness = () => {
-        return this.fullness
+    Shinx.prototype.getBelly = () => {
+        return this.belly
     }
-    Shinx.prototype.getFullnessPercent = function(){
-        return Math.round(this.fullness*100/MAX_RANGE).toString()+'%'
+    Shinx.prototype.getBellyPercent = function(){
+        return Math.round(this.belly*100/MAX_RANGE).toString()+'%'
     }
-    Shinx.prototype.getFullnessProportion = function(){
-        return this.fullness/MAX_RANGE
+    Shinx.prototype.getBellyProportion = function(){
+        return this.belly/MAX_RANGE
     }
 
     // Nickname
     Shinx.prototype.changeNick = function(nick){
         this.nickname = nick;
-        this.save();
+        this.save({fields:['nickname']});
     }
     // Gender
     Shinx.prototype.swapAndGetTrainerGender = function(){
         this.user_male = !this.user_male;
-        this.save();
+        this.save({fields:['user_male']});
         return this.user_male;
     }
     // Battle
     Shinx.prototype.saveBattle = function(shinxBattle, wins){
         this.experience = Math.floor(shinxBattle.exp * (1 + wins*0.2));
-        this.save();
+        this.save({fields:['experience']});
     }
 
     return Shinx;
