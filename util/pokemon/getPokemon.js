@@ -5,21 +5,21 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
+        const isAdmin = require('../isAdmin');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
         const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
         const getTypeEmotes = require('./getTypeEmotes');
 
         if (!pokemon) return;
-
         let description = "";
-
         let pokemonGender = "";
         if (pokemon.gender == "M") pokemonGender = "♂️";
         if (pokemon.gender == "F") pokemonGender = "♀️";
 
+        let adminBot = isAdmin(client, interaction.guild.me)
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
 
         // Typing
         let type1 = pokemon.types[0];

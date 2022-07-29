@@ -7,9 +7,11 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
         const imageExists = require('../../util/imageExists');
+        const isAdmin = require('../isAdmin');
 
+        let adminBot = isAdmin(client, interaction.guild.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         // Game names
         let MHRise = "Monster Hunter Rise";
         let MHW = "Monster Hunter World";

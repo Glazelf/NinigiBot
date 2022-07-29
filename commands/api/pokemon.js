@@ -9,13 +9,15 @@ exports.run = async (client, interaction) => {
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
+        const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
 
+        let adminBot = isAdmin(client, interaction.guild.me);
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let pokemonEmbed = new Discord.MessageEmbed()
