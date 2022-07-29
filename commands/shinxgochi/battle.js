@@ -8,6 +8,7 @@ const ShinxBattle = require('../../shinx/shinxBattle');
 const shinxApi = require('../../database/dbServices/shinx.api');
 const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
+const api_history = require('../../database/dbServices/history.api');
 
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
@@ -143,6 +144,7 @@ exports.run = async (client, interaction) => {
                     };
                     text += addLine(`**${nicks[(i + 1) % 2]}** fainted!`);
                     for (let h = 0; h < 2; h++) {
+                        await api_history.incrementCombatAmount(trainers[h].id, i==h);
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);
                         if (exp[1] > 0) {

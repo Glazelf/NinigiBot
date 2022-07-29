@@ -52,11 +52,12 @@ module.exports = {
               [attribute, "DESC"],
             ],
         }) 
+        if(instances.length==0){return}
         await userdata.models.EventTrophyUser.destroy({ 
-            where: {shopTrophyTrophyId:trophy_id}
+            where: {EventTrophyTrophyId:trophy_id}
         });
         await userdata.models.EventTrophyUser.create({ 
-            UserUserId:instances[0].id,
+            UserUserId:instances[0].user_id,
             EventTrophyTrophyId: trophy_id
         });
     },
@@ -64,7 +65,7 @@ module.exports = {
     async checkEvents(){
         const events = [
             this.checkEvent(User, 'Capitalism Addict', 'money'),
-            this.checkEvent(Shinx, 'Unbreakable Bond', 'level'),
+            this.checkEvent(Shinx, 'Unbreakable Bond', 'experience'),
             this.checkEvent(History, 'Fighter Trophy', 'combat_amount'),
             this.checkEvent(History, 'Frontier Brain Trophy', 'win_amount'),
             this.checkEvent(History, 'Stanned Being', 'stan_amount'),

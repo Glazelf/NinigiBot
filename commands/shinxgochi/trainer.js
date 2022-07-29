@@ -35,11 +35,11 @@ exports.run = async (client, interaction) => {
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
-                    trophy_string += ':'+trophy.icon+': ';
+                    trophy_string += (trophy.icon+' ');
                 })
                 trophies = await user.getEventTrophies();
                 trophies.forEach(trophy=>{
-                    trophy_string += ':'+trophy.icon+': ';
+                    trophy_string += (trophy.icon+' ');
                 })
                 if (trophy_string.length > 0) {
                     embed.addFields(
