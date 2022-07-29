@@ -28,7 +28,7 @@ exports.run = async (client, interaction) => {
                 if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                trophies = await api_trophy.getFullBuyableShopTrophys(master.id);
+                trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
                 trophies.forEach(trophy=>{
                     let trophy_header = { name: '\u200B', value: `:${trophy.icon}: **${trophy.trophy_id}**`, inline: true}
                     let trophy_price = { name: '\u200B', value: '```diff\n'+`[${trophy.price}]`+'\n```', inline: true};
@@ -109,7 +109,7 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
-                    embed:trophy_slice.embed,
+                    embeds:[trophy_slice.embed],
                     components: trophy_slice.components});
 
             case "asktrophy":

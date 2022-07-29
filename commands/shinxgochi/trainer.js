@@ -32,18 +32,18 @@ exports.run = async (client, interaction) => {
                     { name: "Money:", value: user.money.toString(), inline: true},
                     { name: "Food:", value: user.food.toString(), inline: true},
                 )  
-                trophies = await user.getShopTrophys();
+                trophies = await user.getShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += ':'+trophy.icon+': ';
                 })
-                trophies = await user.getEventTrophys();
+                trophies = await user.getEventTrophies();
                 trophies.forEach(trophy=>{
                     trophy_string += ':'+trophy.icon+': ';
                 })
                 if (trophy_string.length > 0) {
                     embed.addFields(
-                        { name: "Trophys:", value: trophy_string},
+                        { name: "Trophies:", value: trophy_string},
                     )
                 }
                 return sendMessage({ 

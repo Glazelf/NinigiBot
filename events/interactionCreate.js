@@ -97,7 +97,7 @@ module.exports = async (client, interaction) => {
                         }else if (interaction.customId.startsWith("bgd")) {
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
-                            await interaction.update({ embeds: [trophy_slice.embed], components: trophy_slice.components });
+                            await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else {
                             // Other buttons
                             return;
@@ -261,7 +261,7 @@ module.exports = async (client, interaction) => {
                     case "shop":
                         switch (focusedOption.name) {
                             case "shoptrophy":
-                                const buyable_items = await api_trophy.getBuyableShopTrophys(interaction.user.id);
+                                const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
 
                                 buyable_items.forEach(trophy => {
                                     choices.push({ name: trophy, value: trophy });
@@ -272,13 +272,13 @@ module.exports = async (client, interaction) => {
 
                                 break;
                             case "trophy":
-                                let trophies = await api_trophy.getShopTrophys();
+                                let trophies = await api_trophy.getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
-                                trophies = await api_trophy.getEventTrophys();
+                                trophies = await api_trophy.getEventTrophies();
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }

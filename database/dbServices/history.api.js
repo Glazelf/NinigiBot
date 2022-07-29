@@ -21,15 +21,15 @@ module.exports = {
     },
     async getTrophieslice(offset, trophies_per_page){
         
-        let EventTrophies = await EventTrophy.findAll({attributes: ['trophy_id', 'icon']});
-        let shoptrophies = await ShopTrophy.findAll({attributes: ['trophy_id', 'icon']});
+        let EventTrophies = await EventTrophy.findall({attributes: ['trophy_id', 'icon']});
+        let shoptrophies = await ShopTrophy.findall({attributes: ['trophy_id', 'icon']});
         let trophies = EventTrophies.concat(shoptrophies);
         let up_range = Math.min(offset + trophies_per_page, trophies.length);
         let answer = 'LR';
         if(up_range==trophies.length){
-            answer = 'L';
+            answer == 'L';
         } else if (offset==0){
-            answer = 'R';
+            answer == 'R';
         }
         return {slice : trophies.slice(offset, offset+trophies_per_page), buttons: answer}
     },

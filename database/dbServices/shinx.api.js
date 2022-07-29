@@ -32,7 +32,7 @@ module.exports = {
         return user;
     },
     async getRandomShinx(amount, exclude, guild) {
-        const results = await Shinx.findAll({ where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
+        const results = await Shinx.findAll({ attributes:['user_id','shiny','user_male'], where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
         return results.map(res => res.dataValues);
     },
     async getShinxShininess(id) {
@@ -49,7 +49,7 @@ module.exports = {
         return shinx.switchShininessAndGet();
     },
     async addExperience(id, experience)  {
-        let shinx = await this.getShinx(id, ['experience']);
+        let shinx = await this.getShinx(id, ['user_id','experience']);
         const res = await shinx.addExperienceAndLevelUp(experience);
         if(res.pre != res.post) {
             if(hasPassedLevel(res.pre, res.post, 5)){
@@ -123,12 +123,12 @@ module.exports = {
         } else if (!pnick.match(/^[a-z0-9]+$/i)){
             return 'InvalidChars'
         }
-        let shinx = await this.getShinx(id);
+        let shinx = await this.getShinx(id, ['user_id','nickname']);
         shinx.changeNick(pnick);
         return 'Ok'
     },
     async isTrainerMale (id) {
-        let shinx = await this.getShinx(id);
+        let shinx = await this.getShinx(id, 'user_male');
         return shinx.user_male
     },
     async saveBattle(shinxBattleData, wins) {

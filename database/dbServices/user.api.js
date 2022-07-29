@@ -34,7 +34,7 @@ module.exports = {
     },
     // Money
     async addMoney(id, money){
-        let user = await this.getUser(id, ['money']);
+        let user = await this.getUser(id, ['user_id','money']);
         await user.addMoney(money);
     },
     async getMoney(id){
@@ -58,7 +58,7 @@ module.exports = {
         return user.birthday;
     },
     async setBirthday(id, birthday){
-        let user = await this.getUser(id, ['birthday']);
+        let user = await this.getUser(id, ['user_id','birthday']);
         user.setBirthday(birthday);
     },
     // Switch Code
@@ -67,11 +67,11 @@ module.exports = {
         return user.swcode;
     },
     async setSwitchCode(id, swcode){
-        let user = await this.getUser(id, ['swcode']);
+        let user = await this.getUser(id, ['user_id','swcode']);
         user.setSwitchCode(swcode);
     },
     async buyFood (id, amount) {
-        let user = await this.getUser(id, ['food', 'money']);
+        let user = await this.getUser(id, ['user_id','food', 'money']);
         
         let res = await user.hasMoney(amount);
         if (res) {
