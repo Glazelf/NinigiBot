@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { userdata } =  require('../dbConnection/dbConnection');
-const { User, Shinx, ShinxTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 
 module.exports = async (reset_db) => {
     
@@ -11,37 +11,75 @@ module.exports = async (reset_db) => {
         }
         await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
-        await ShinxTrophy.sync({ alter: true });
+        await EventTrophy.sync({ alter: true });
         await ShopTrophy.sync({ alter: true });
         const trophies = [
             // ===================
             //       SHINX
             // ===================
-            ShinxTrophy.upsert({ 
-                trophy_id: 'Bronze ShinxTrophy', 
+            EventTrophy.upsert({ 
+                trophy_id: 'Bronze Badge', 
                 icon: 'third_place', 
                 description: 'Badge given to novice Shinx trainers',
                 origin: 'Raise your Shinx to level 5'
             }),
-            ShinxTrophy.upsert({ 
-                trophy_id: 'Silver ShinxTrophy', 
+            EventTrophy.upsert({ 
+                trophy_id: 'Silver Badge', 
                 icon: 'second_place', 
                 description: 'Badge given to amateur Shinx trainers',
                 origin: 'Raise your Shinx to level 15'
             }),
-            ShinxTrophy.upsert({ 
-                trophy_id: 'Gold ShinxTrophy', 
+            EventTrophy.upsert({ 
+                trophy_id: 'Gold Badge', 
                 icon: 'first_place', 
                 description: 'Badge given to expert Shinx trainers',
                 origin: 'Raise your Shinx to level 30'
             }),
-            ShinxTrophy.upsert({ 
+            EventTrophy.upsert({ 
                 trophy_id: 'Shiny Charm', 
                 icon: 'sparkles', 
                 description: 'Charm given only to the best Shinx trainers',
                 origin: 'Raise your Shinx to level 50'
             }),
-            
+            // ===================
+            //       EVENTS
+            // ===================
+            EventTrophy.upsert({ 
+                trophy_id: 'Fighter Badge', 
+                icon: 'boom', 
+                description: 'Badge given only to trainers that find pleasure in fighting',
+                origin: 'Become the user that has battled the most'
+            }),
+            EventTrophy.upsert({ 
+                trophy_id: 'Frontier Brain Badge', 
+                icon: 'trident', 
+                description: 'Badge given only to most unbeatable trainer',
+                origin: 'Become the user with most wins in combat'
+            }),
+            EventTrophy.upsert({ 
+                trophy_id: 'Shinx Breeder', 
+                icon: 'muscle', 
+                description: 'Badge given only to most dedicated Shinx breeders',
+                origin: 'Become the user with the highest Shinx level'
+            }),
+            EventTrophy.upsert({ 
+                trophy_id: 'Unbreakable Bond', 
+                icon: 'heart_on_fire', 
+                description: 'Badge given only to people whose bond with Shinx is unbreakable',
+                origin: 'Become the user with the highest amount of interactions with Shinx'
+            }),
+            EventTrophy.upsert({ 
+                trophy_id: 'Stanned Being', 
+                icon: 'clap', 
+                description: 'Award given only to most stanned people',
+                origin: 'Become the most stanned user by Ninigi'
+            }),
+            EventTrophy.upsert({ 
+                trophy_id: 'Capitalism Addict', 
+                icon: 'money_with_wings', 
+                description: 'Certificate that only the wealthiest beings possess.',
+                origin: 'Become the user with the highest amount of money'
+            }),
             // ===================
             //       SHOP
             // ===================

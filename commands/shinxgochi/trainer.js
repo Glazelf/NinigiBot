@@ -37,7 +37,7 @@ exports.run = async (client, interaction) => {
                 trophies.forEach(trophy=>{
                     trophy_string += ':'+trophy.icon+': ';
                 })
-                trophies = await user.getShinxTrophies();
+                trophies = await user.getEventTrophies();
                 trophies.forEach(trophy=>{
                     trophy_string += ':'+trophy.icon+': ';
                 })

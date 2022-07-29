@@ -275,7 +275,7 @@ module.exports = async (client, interaction) => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
-                                trophies = await api_shinx.getShinxTrophies();
+                                trophies = await api_shinx.getEventTrophies();
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }

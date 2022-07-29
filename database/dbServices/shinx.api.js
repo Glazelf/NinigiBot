@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { userdata, serverdata} =  require('../dbConnection/dbConnection');
 const { Op } = require('sequelize');
-const { Shinx,ShinxTrophy, User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { Shinx,EventTrophy, User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 const shinx_util = require('../../util/nwu/shinx.util');
 const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
@@ -51,54 +51,54 @@ module.exports = {
         const res = await shinx.addExperienceAndLevelUp(experience);
         if(res.pre != res.post) {
             if(hasPassedLevel(res.pre, res.post, 5)){
-                await this.addShinxTrophyUnchecked(id, 'bronze shinxtrophy')
+                await this.addEventTrophyUnchecked(id, 'bronze EventTrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 15)){
-                await this.addShinxTrophyUnchecked(id, 'silver shinxtrophy')
+                await this.addEventTrophyUnchecked(id, 'silver EventTrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 30)){
-                await this.addShinxTrophyUnchecked(id, 'gold shinxtrophy')
+                await this.addEventTrophyUnchecked(id, 'gold EventTrophy')
             }
             if(hasPassedLevel(res.pre, res.post, 50)){
-                await this.addShinxTrophyUnchecked(id, 'shiny charm')
+                await this.addEventTrophyUnchecked(id, 'shiny charm')
             }
         }
     },
-    async addShinxTrophy(user_id, trophy_id) {
+    async addEventTrophy(user_id, trophy_id) {
         
         let user = await this.getUser(user_id);
-        let trophy = await ShinxTrophy.findOne({
+        let trophy = await EventTrophy.findOne({
             where: { trophy_id: trophy_id.toLowerCase() },
         });
         
-        if (!(await user.hasShinxTrophy(trophy))) {
-            await user.addShinxTrophy(trophy);
+        if (!(await user.hasEventTrophy(trophy))) {
+            await user.addEventTrophy(trophy);
         };
     },
-    async hasShinxTrophy(user_id, trophy_id) {
+    async hasEventTrophy(user_id, trophy_id) {
         let user = await this.getUser(user_id);
-        let trophy = await ShinxTrophy.findOne({
+        let trophy = await EventTrophy.findOne({
             where: { trophy_id: trophy_id.toLowerCase() },
         });
         
-        return (await user.hasShinxTrophy(trophy))
+        return (await user.hasEventTrophy(trophy))
     },
 
-    async addShinxTrophyUnchecked(user_id, trophy_id) {
+    async addEventTrophyUnchecked(user_id, trophy_id) {
         let user = await this.getUser(user_id);
-        let trophy = await ShinxTrophy.findOne({
+        let trophy = await EventTrophy.findOne({
             where: { trophy_id },
         });
-        await user.addShinxTrophy(trophy);
+        await user.addEventTrophy(trophy);
 
     },
-    async getShinxTrophies() {
-        const trophies = await ShinxTrophy.findAll();
+    async getEventTrophies() {
+        const trophies = await EventTrophy.findAll();
         return trophies;
     },
-    async  getShinxTrophyWithName(name) {
+    async  getEventTrophyWithName(name) {
         let name_t = name.toLowerCase();
-        const trophy = await ShinxTrophy.findOne(
+        const trophy = await EventTrophy.findOne(
             {
                 where: {
                     [Op.or]: [

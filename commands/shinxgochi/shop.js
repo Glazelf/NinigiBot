@@ -112,7 +112,7 @@ exports.run = async (client, interaction) => {
                 trophy_name = interaction.options.getString("trophy");
                 res =  await api_shop.getShopTrophyWithName(trophy_name);
                 let isShop = true;
-                if (!res) { res =  await api_shinx.getShinxTrophyWithName(trophy_name); isShop = false;} 
+                if (!res) { res =  await api_shinx.getEventTrophyWithName(trophy_name); isShop = false;} 
                 if (!res) { 
                     embed = null;
                     returnString = `**${trophy_name}** doesn't exist.`;

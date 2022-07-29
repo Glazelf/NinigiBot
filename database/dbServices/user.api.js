@@ -30,7 +30,7 @@ module.exports = {
          await userdata.models.Shinx.destroy({
             where: { user_id: id_arr},
          });
-         await userdata.models.ShinxTrophyUser.destroy({
+         await userdata.models.EventTrophyUser.destroy({
             where: { UserUserId: id_arr},
          });
          await userdata.models.ShopTrophyUser.destroy({

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { Op, fn, where, col } = require('sequelize');
 const {userdata} =  require('../dbConnection/dbConnection');
 
-const { User, ShopTrophy, ShinxTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 
 const DAILY_TROPHIES = 5;
 
@@ -18,9 +18,9 @@ module.exports = {
         return user;
     },
     async getTrophySlice(amount){
-        let shinxtrophies = await ShinxTrophy.findall({attributes: ['trophy_id', 'icon']});
+        let EventTrophies = await EventTrophy.findall({attributes: ['trophy_id', 'icon']});
         let shoptrophies = await ShopTrophy.findall({attributes: ['trophy_id', 'icon']});
-        shinxtrophies.concat(shoptrophies);
+        EventTrophies.concat(shoptrophies);
     },
     async  getShopTrophies() {
         const trophies = await ShopTrophy.findAll();
