@@ -16,6 +16,6 @@ module.exports = (sequelize, DataTypes) => {
 	User.hasOne(Shinx);
 	User.hasOne(History);
 	sequelize.sync();
-	return {Shinx, User, EventTrophy, ShopTrophy};
+	return {Shinx, User, EventTrophy, ShopTrophy, History};
 }
 

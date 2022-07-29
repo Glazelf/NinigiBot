@@ -20,16 +20,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
-        interact_amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        win_amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
     }, {
         timestamps: false,
     });

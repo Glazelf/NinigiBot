@@ -25,7 +25,7 @@ module.exports = async (client) => {
 
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
             let candidateRandom = candidates[randomPick];
-
+            await require('../database/dbServices/history.api').incrementStanAmount(candidateRandom.id);
             // Random gif
             const randomGif = await getRandomGif(gifTags);
 

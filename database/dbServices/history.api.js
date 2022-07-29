@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { Op, fn, where, col } = require('sequelize');
 const {userdata} =  require('../dbConnection/dbConnection');
 
-const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User, Shinx, ShopTrophy, EventTrophy, History } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 
 const DAILY_TROPHIES = 5;
 
@@ -19,173 +19,56 @@ module.exports = {
         };
         return user;
     },
-    async getTrophieslice(offset, trophies_per_page){
-        
-        let EventTrophies = await EventTrophy.findall({attributes: ['trophy_id', 'icon']});
-        let shoptrophies = await ShopTrophy.findall({attributes: ['trophy_id', 'icon']});
-        let trophies = EventTrophies.concat(shoptrophies);
-        let up_range = Math.min(offset + trophies_per_page, trophies.length);
-        let answer = 'LR';
-        if(up_range==trophies.length){
-            answer == 'L';
-        } else if (offset==0){
-            answer == 'R';
-        }
-        return {slice : trophies.slice(offset, offset+trophies_per_page), buttons: answer}
-    },
-    async  getShopTrophies() {
-        const trophies = await ShopTrophy.findAll();
-        return trophies;
-    },
+    async getHistory(id, attributes=null) {
+        let history = await History.findByPk(param=id, options={
+            
+            attributes:attributes
+        });
 
-    async  getTodayShopTrophies() {
-        const d = new Date();
-        
-        const trophies = await ShopTrophy.findAll();
-        let index = (d.getDate() + d.getFullYear() ) % trophies.length;
-        const today_trophies = []
-        const today_indexes = []
-        for (let i = 0; i < DAILY_TROPHIES  ; i++){
-            while (today_indexes.includes(index)){
-                index = ((index+1)%trophies.length);
-            }
-            today_trophies.push(trophies[index])
-            today_indexes.push(index)
-            index = (index+DAILY_TROPHIES)%trophies.length
-        }
-        return today_trophies;
-    },
-
-    async  getTodayShopTrophiesToBuy(money) {
-        const d = new Date();
-        
-        const trophies = await ShopTrophy.findAll({attributes: [
-            'trophy_id', 'price'
-        ]});
-        let index = (d.getDate() + d.getFullYear()) % trophies.length;
-        let today_trophies = []
-        const today_indexes = []
-        for (let i = 0; i < DAILY_TROPHIES  ; i++){
-            while (today_indexes.includes(index)){
-                index = ((index+1)%trophies.length);
-            }
-            today_trophies.push(trophies[index])
-            today_indexes.push(index)
-            index = (index+DAILY_TROPHIES)%trophies.length
-        }
-        today_trophies = today_trophies.filter(trophy => trophy.price <= money)
-        trophies_ids = today_trophies.map(trophy=> trophy.trophy_id)
-        return trophies_ids;
-    },
-    
-    async  getShopTrophyWithName(name) {
-        let name_t = name.toLowerCase();
-        const trophy = await ShopTrophy.findOne(
-            {
-                where: {
-                    [Op.or]: [
-                        where(fn('lower', col('trophy_id')), name_t),
-                      { icon: name_t }
-                    ]
-                  }
-              }
-        );
-        return trophy;
-    },
-
-    async getBuyableShopTrophies(user_id) {        
-        let user = await this.getUser(user_id)
-        const user_trophies = await user.getShopTrophies()
-        const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
-
-        let today_trophies = await this.getTodayShopTrophiesToBuy(user.money);
-        today_trophies = today_trophies.filter(trophy => !(trophy in user_trophies_list))
-        return today_trophies
-    },
-
-    async getFullBuyableShopTrophies(user_id) {        
-        let user = await this.getUser(user_id)
-        const user_trophies = await user.getShopTrophies()
-        const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
-
-        let today_trophies = await this.getTodayShopTrophies();
-        today_trophies.forEach(trophy => {
-            // can't buy, can buy, bought
-            if(user_trophies_list.includes(trophy.trophy_id)){
-                trophy.temp_bought = 'Bought'
-            } else {
-                trophy.temp_bought = trophy.price > user.money? 'CantBuy' : 'CanBuy'
-            }
-        })
-        return today_trophies
-    },
-
-    async buyShopTrophy(user_id, trophy_id) {
-        const trophy_id_t = trophy_id.toLowerCase()
-        const trophies = await this.getTodayShopTrophies();
-        let trophy = trophies.find(elem => elem.trophy_id.toLowerCase() == trophy_id_t);
-        if (!trophy){
-            return 'NoTrophy'
-        }
-        let user = await this.getUser(user_id, ['money']);
-        if (await user.hasShopTrophy(trophy)){
-            return 'HasTrophy'
-        }
-        if (user.money < trophy.price){
-            return 'NoMoney'
-        }
-        
-        await user.addShopTrophy(trophy);
-        await user.addMoney(-trophy.price);
-        return 'Ok'
-    },
-    async addEventTrophy(user_id, trophy_id) {
-        
-        let user = await this.getUser(user_id, ['user_id']);
-        let trophy_id_t = trophy_id.toLowerCase();
-        const trophy = await EventTrophy.findOne(
-            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
-        );
-        
-        if (!(await user.hasEventTrophy(trophy))) {
-            await user.addEventTrophy(trophy);
+        if (!history) {
+            await this.getUser(id);
+            history = await History.create({ user_id: id });
         };
+        return history;
     },
-    async hasEventTrophy(user_id, trophy_id) {
-        let user = await this.getUser(user_id, ['user_id']);
-        let trophy_id_t = trophy_id.toLowerCase();
-        const trophy = await EventTrophy.findOne(
-            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
-        );
-        
-        return (await user.hasEventTrophy(trophy))
+    async incrementStanAmount(id){
+        let history = await this.getHistory(id, ['user_id']);
+        await history.increment('stan_amount');
+    },
+    async incrementCombatAmount(id, won=false){
+        let attributes = ['combat_amount'];
+        if(won){
+            attributes = attributes.concat(['win_amount']);
+        } 
+        history = await this.getHistory(id, ['user_id']);
+        await history.increment(attributes);
+    },
+    async checkEvent(Model, trophy_id, attribute){
+        let instances = await Model.findAll({
+            attributes: [
+                'user_id', attribute
+            ],
+            order: [
+              [attribute, "DESC"],
+            ],
+        }) 
+        await userdata.models.EventTrophyUser.destroy({ 
+            where: {shopTrophyTrophyId:trophy_id}
+        });
+        await userdata.models.EventTrophyUser.create({ 
+            UserUserId:instances[0].id,
+            EventTrophyTrophyId: trophy_id
+        });
     },
 
-    async addEventTrophyUnchecked(user_id, trophy_id) {
-        let user = await this.getUser(user_id, ['user_id']);
-        let trophy_id_t = trophy_id.toLowerCase();
-        const trophy = await EventTrophy.findOne(
-            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
-        );
-        await user.addEventTrophy(trophy);
-
-    },
-    async getEventTrophies() {
-        const trophies = await EventTrophy.findAll();
-        return trophies;
-    },
-    async  getEventTrophyWithName(name) {
-        let name_t = name.toLowerCase();
-        const trophy = await EventTrophy.findOne(
-            {
-                where: {
-                    [Op.or]: [
-                      { trophy_id: name_t },
-                      { icon: name_t }
-                    ]
-                  }
-              }
-        );
-        return trophy;
+    async checkEvents(){
+        const events = [
+            this.checkEvent(User, 'Capitalism Addict', 'money'),
+            this.checkEvent(Shinx, 'Unbreakable Bond', 'level'),
+            this.checkEvent(History, 'Fighter Trophy', 'combat_amount'),
+            this.checkEvent(History, 'Frontier Brain Trophy', 'win_amount'),
+            this.checkEvent(History, 'Stanned Being', 'stan_amount'),
+        ]
+        await Promise.all(events);
     },
 };

@@ -57,16 +57,10 @@ module.exports = async (reset_db) => {
                 origin: 'Become the user with most wins in combat'
             }),
             EventTrophy.upsert({ 
-                trophy_id: 'Shinx Breeder', 
-                icon: ':muscle:', 
-                description: 'Trophy given only to most dedicated Shinx breeders',
-                origin: 'Become the user with the highest Shinx level'
-            }),
-            EventTrophy.upsert({ 
                 trophy_id: 'Unbreakable Bond', 
                 icon: ':heart_on_fire:', 
                 description: 'Trophy given only to people whose bond with Shinx is unbreakable',
-                origin: 'Become the user with the highest amount of interactions with Shinx'
+                origin: 'Become the user with the highest Shinx level'
             }),
             EventTrophy.upsert({ 
                 trophy_id: 'Stanned Being', 
