@@ -4,8 +4,8 @@ const { User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataT
 const { Op } = require('sequelize');
 module.exports = {
     async getUser(id, attributes=null) {
-        let user = await User.findByPk({
-            param:id,
+        let user = await User.findByPk(param=id, options={
+            
             attributes:attributes
         });
 
@@ -25,10 +25,10 @@ module.exports = {
          await userdata.models.Shinx.destroy({
             where: { user_id: id_arr},
          });
-         await userdata.models.EventBadgeUser.destroy({
+         await userdata.models.EventTrophyUser.destroy({
             where: { UserUserId: id_arr},
          });
-         await userdata.models.ShopBadgeUser.destroy({
+         await userdata.models.ShopTrophyUser.destroy({
             where: { UserUserId: id_arr},
          });
     },

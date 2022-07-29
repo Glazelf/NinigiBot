@@ -137,7 +137,7 @@ exports.run = async (client, interaction) => {
 
 
             case "shiny":
-                res = await shinxApi.hasEventBadge(master.id, 'shiny charm');
+                res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
                 if(res){
                     const is_shiny = await shinxApi.switchShininessAndGet(master.id)
                     returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`

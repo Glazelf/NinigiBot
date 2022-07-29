@@ -1,15 +1,15 @@
 const Sequelize = require('sequelize');
 const { userdata, serverdata} =  require('../dbConnection/dbConnection');
 const { Op, fn, where, col  } = require('sequelize');
-const { Shinx, EventBadge, User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { Shinx, EventTrophy, User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 const shinx_util = require('../../util/nwu/shinx.util');
 const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
 
 module.exports = {
     async getShinx(id, attributes=null) {
-        let shinx = await Shinx.findByPk({
-            param:id,
+        let shinx = await Shinx.findByPk(param=id, options={
+            
             attributes:attributes
         });
         if (!shinx) {
@@ -21,8 +21,8 @@ module.exports = {
     },
         
     async getUser(id, attributes=null) {
-        let user = await User.findByPk({
-            param:id,
+        let user = await User.findByPk(param=id, options={
+            
             attributes:attributes
         });
 
@@ -53,47 +53,47 @@ module.exports = {
         const res = await shinx.addExperienceAndLevelUp(experience);
         if(res.pre != res.post) {
             if(hasPassedLevel(res.pre, res.post, 5)){
-                await this.addEventBadgeUnchecked(id, 'Bronze Badge')
+                await this.addEventTrophyUnchecked(id, 'Bronze Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 15)){
-                await this.addEventBadgeUnchecked(id, 'Silver Badge')
+                await this.addEventTrophyUnchecked(id, 'Silver Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 30)){
-                await this.addEventBadgeUnchecked(id, 'Gold Badge')
+                await this.addEventTrophyUnchecked(id, 'Gold Trophy')
             }
             if(hasPassedLevel(res.pre, res.post, 50)){
-                await this.addEventBadgeUnchecked(id, 'Shiny Charm')
+                await this.addEventTrophyUnchecked(id, 'Shiny Charm')
             }
         }
     },
-    async hasEventBadge(user_id, badge_id) {
+    async hasEventTrophy(user_id, trophy_id) {
         let user = await this.getUser(user_id, ['user_id']);
-        let badge_id_t = badge_id.toLowerCase();
-        const badge = await EventBadge.findOne(
-            {attributes:['badge_id'], where: where(fn('lower', col('badge_id')), badge_id_t)}
+        let trophy_id_t = trophy_id.toLowerCase();
+        const trophy = await EventTrophy.findOne(
+            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
         );
         
-        return (await user.hasEventBadge(badge))
+        return (await user.hasEventTrophy(trophy))
     },
-    async addEventBadge(user_id, badge_id) {
+    async addEventTrophy(user_id, trophy_id) {
         
         let user = await this.getUser(user_id, ['user_id']);
-        let badge_id_t = badge_id.toLowerCase();
-        const badge = await EventBadge.findOne(
-            {attributes:['badge_id'], where: where(fn('lower', col('badge_id')), badge_id_t)}
+        let trophy_id_t = trophy_id.toLowerCase();
+        const trophy = await EventTrophy.findOne(
+            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
         );
         
-        if (!(await user.hasEventBadge(badge))) {
-            await user.addEventBadge(badge);
+        if (!(await user.hasEventTrophy(trophy))) {
+            await user.addEventTrophy(trophy);
         };
     },
-    async addEventBadgeUnchecked(user_id, badge_id) {
+    async addEventTrophyUnchecked(user_id, trophy_id) {
         let user = await this.getUser(user_id, ['user_id']);
-        let badge_id_t = badge_id.toLowerCase();
-        const badge = await EventBadge.findOne(
-            {attributes:['badge_id'], where: where(fn('lower', col('badge_id')), badge_id_t)}
+        let trophy_id_t = trophy_id.toLowerCase();
+        const trophy = await EventTrophy.findOne(
+            {attributes:['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t)}
         );
-        await user.addEventBadge(badge);
+        await user.addEventTrophy(trophy);
 
     },
     async feedShinx(id) {

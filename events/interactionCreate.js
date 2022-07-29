@@ -14,8 +14,7 @@ module.exports = async (client, interaction) => {
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
 
-        const api_badge = require('../database/dbServices/badge.api');
-        const api_badge = require('../database/dbServices/badge.api');
+        const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
 
         if (!interaction) return;
@@ -97,8 +96,8 @@ module.exports = async (client, interaction) => {
                             return;
                         }else if (interaction.customId.startsWith("bgd")) {
                             const offset = parseInt(interaction.customId.substring(3));
-                            let badge_slice = await require('../util/badges/getBadgeEmbedSlice')(offset);
-                            await interaction.update({ embeds: [badge_slice.embed], components: badge_slice.components });
+                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
+                            await interaction.update({ embeds: [trophy_slice.embed], components: trophy_slice.components });
                         } else {
                             // Other buttons
                             return;
@@ -261,27 +260,27 @@ module.exports = async (client, interaction) => {
                         break;
                     case "shop":
                         switch (focusedOption.name) {
-                            case "shopbadge":
-                                const buyable_items = await api_badge.getBuyableShopBadges(interaction.user.id);
+                            case "shoptrophy":
+                                const buyable_items = await api_trophy.getBuyableShopTrophys(interaction.user.id);
 
-                                buyable_items.forEach(badge => {
-                                    choices.push({ name: badge, value: badge });
+                                buyable_items.forEach(trophy => {
+                                    choices.push({ name: trophy, value: trophy });
                                 })
                                 // if (choices.length == 0){
                                 //     choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 // }
 
                                 break;
-                            case "badge":
-                                let badges = await api_badge.getShopBadges();
+                            case "trophy":
+                                let trophies = await api_trophy.getShopTrophys();
                                 let temp = ''
-                                badges.forEach(badge => {
-                                    temp = badge.badge_id;
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
-                                badges = await api_badge.getEventBadges();
-                                badges.forEach(badge => {
-                                    temp = badge.badge_id;
+                                trophies = await api_trophy.getEventTrophys();
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
                                 // if (choices.length == 0){
