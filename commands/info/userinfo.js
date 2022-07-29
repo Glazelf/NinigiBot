@@ -7,9 +7,11 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const { bank } = require('../../database/bank');
         const { Users } = require('../../database/dbObjects');
-        const parseDate = require('../../util/parseDate')
+        const parseDate = require('../../util/parseDate');
+        const isAdmin = require('../../util/isAdmin');
         const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
 
+        let adminBot = isAdmin(client, interaction.guild.me);
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -54,7 +56,7 @@ exports.run = async (client, interaction) => {
         // Profile badges
         let badgesArray = [];
         let badgesString = "";
-        if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
+        if (interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) {
             try {
                 if (user.bot) badgesArray.push("🤖");
                 let guildOwner = await interaction.guild.fetchOwner();
