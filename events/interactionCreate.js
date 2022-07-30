@@ -98,6 +98,12 @@ module.exports = async (client, interaction) => {
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
                             await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
+                        }else if (interaction.customId.startsWith("usf")) {
+                            const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/)
+                            const page = parseInt(data[1]);
+                            const user = data[2];
+                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, user);
+                            await interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
                             return;

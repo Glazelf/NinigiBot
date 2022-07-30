@@ -25,10 +25,8 @@ exports.run = async (client, interaction) => {
                 if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                
                 trophies = await user.getShopTrophies();
-                if(!emotesAllowed){
-                    trophies = replaceDiscordEmotes(trophies);
-                }
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
@@ -37,6 +35,9 @@ exports.run = async (client, interaction) => {
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
                 })
+                if(!emotesAllowed){
+                    trophies = replaceDiscordEmotes(trophies);
+                }
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setThumbnail(avatar)

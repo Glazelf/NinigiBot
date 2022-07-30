@@ -5,7 +5,18 @@ const api_user = require('../../database/dbServices/user.api');
 // Amount of userinfo pages
 const NUMBER_OF_PAGES = 2;
 
-module.exports = async (client, interaction, page) => {
+module.exports = async (client, interaction, page, user_id) => {
+    let user = await client.users.fetch(user_id, { force: true });
+    console.log(user)
+    let member = user.member;
+    // Accent color
+    let embedColor = globalVars.embedColor;
+    if (user.accentColor) embedColor = user.accentColor;
+    // Avatar
+    let serverAvatar = null;
+    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+    let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
+
     const profileEmbed = new Discord.MessageEmbed()
     .setColor(embedColor)
     .setAuthor({ name: user.tag, iconURL: avatar })
@@ -13,20 +24,18 @@ module.exports = async (client, interaction, page) => {
     let profileButtons = new Discord.MessageActionRow()
     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
     if(page > 0){
-        navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'usrinfo'+(page-1), style: 'PRIMARY', emoji: '⬅️'}))
+        profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page-1}:${user_id}`, style: 'PRIMARY', emoji: '⬅️'}))
     }
     if(page < NUMBER_OF_PAGES){
-        navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'usrinfo'+(page+1), style: 'PRIMARY', emoji: '➡️'}))
+        profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page+1}:${user_id}`, style: 'PRIMARY', emoji: '➡️'}))
     }
     let ephemeral = true;
     await interaction.deferReply({ ephemeral: ephemeral });
-    let user = interaction.options.getUser("user");
-    user = await client.users.fetch(user.id, { force: true });
-    let member = interaction.options.getMember("user");
-    let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday']);
+    
+    let user_db;
     switch(page){
         case 0:
-            const sendMessage = require('../../util/sendMessage');
+            user_db  = await api_user.getUser(user.id, ['swcode', 'money', 'birthday']);
             const Discord = require("discord.js");
             
             
@@ -57,15 +66,10 @@ module.exports = async (client, interaction, page) => {
             };
             let roleCount = 0;
             if (memberRoles) roleCount = memberRoles.size;
-            // Avatar and banner
-            let serverAvatar = null;
-            if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-            let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
+            // Banner
             let banner = null;
             if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
-            // Accent color
-            let embedColor = globalVars.embedColor;
-            if (user.accentColor) embedColor = user.accentColor;
+            
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
@@ -107,11 +111,37 @@ module.exports = async (client, interaction, page) => {
             if (banner) profileEmbed.setImage(banner);
             profileEmbed
                 .setFooter({ text: user.id });
-    
-            return sendMessage({ client: client, interaction: interaction, embeds: profileEmbed, components: profileButtons });
-    
+            profileEmbed.aa = user.id;
+            break;
         case 1:
+            user_db  = await api_user.getUser(user.id, ['user_id','food']);
+            profileEmbed.addFields(
+                { name: "Food:", value: user_db.food.toString()+' :poultry_leg:', inline: true},
+                
+            )  
+            let trophies = await user_db.getShopTrophies();
+            trophy_string = '';
+            trophies.forEach(trophy=>{
+                trophy_string += (trophy.icon+' ');
+            })
+            trophies = await user_db.getEventTrophies();
+            trophies.forEach(trophy=>{
+                trophy_string += (trophy.icon+' ');
+            })
+            if (trophy_string.length > 0) {
+                profileEmbed.addFields(
+                    { name: "Trophy Level:", value: trophies.length.toString()+' :beginner:', inline: true},
+                    { name: "Trophies:", value: trophy_string},
+                )
+            }
+            break;
     }
+    return { 
+        client: client, 
+        interaction: interaction, 
+        embeds: profileEmbed, 
+        components: profileButtons 
+    };
 };
 
 async function getJoinRank(userID, guild) {
