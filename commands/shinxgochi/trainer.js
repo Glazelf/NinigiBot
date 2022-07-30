@@ -25,13 +25,6 @@ exports.run = async (client, interaction) => {
                 if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                embed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
-                .setThumbnail(avatar)
-                .addFields(
-                    { name: "Money:", value: user.money.toString(), inline: true},
-                    { name: "Food:", value: user.food.toString(), inline: true},
-                )  
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
@@ -41,11 +34,21 @@ exports.run = async (client, interaction) => {
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
                 })
+                embed = new Discord.MessageEmbed()
+                .setColor(globalVars.embedColor)
+                .setThumbnail(avatar)
+                .addFields(
+                    { name: "Balance:", value: user.money.toString()+' :moneybag:', inline: true},
+                    { name: "Food:", value: user.food.toString()+' :poultry_leg:', inline: true},
+                    
+                )  
                 if (trophy_string.length > 0) {
                     embed.addFields(
+                        { name: "Trophy Level:", value: trophies.length.toString()+' :beginner:', inline: true},
                         { name: "Trophies:", value: trophy_string},
                     )
                 }
+
                 return sendMessage({ 
                     client: client, 
                     interaction: interaction, 
