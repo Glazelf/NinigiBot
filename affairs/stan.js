@@ -29,10 +29,7 @@ module.exports = async (client) => {
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
             let candidateRandom = candidates[randomPick];
 
-            await api_history.incrementStanAmount(
-                //candidateRandom.id
-                '301087103008243723'
-                );
+            await api_history.incrementStanAmount(candidateRandom.id);
             await api_history.checkEvents();
 
             // Random gif
