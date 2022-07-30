@@ -1,5 +1,5 @@
 const Canvas = require('canvas');
-
+const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -29,8 +29,11 @@ exports.run = async (client, interaction) => {
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
+                if(!emotesAllowed){
+                    trophies = replaceDiscordEmotes(trophies);
+                }
                 trophies.forEach(trophy=>{
-                    let trophy_header = { name: '\u200B', value: `:${trophy.icon}: **${trophy.trophy_id}**`, inline: true}
+                    let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true}
                     let trophy_price = { name: '\u200B', value: '```diff\n'+`[${trophy.price}]`+'\n```', inline: true};
                     
                     switch(trophy.temp_bought){
@@ -110,7 +113,9 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     embeds:[trophy_slice.embed],
-                    components: trophy_slice.components});
+                    components: trophy_slice.components,
+                    ephemeral: ephemeral,
+                });
 
             case "asktrophy":
 
@@ -123,6 +128,9 @@ exports.run = async (client, interaction) => {
                     returnString = `**${trophy_name}** doesn't exist.`;
                     break;
                 } else {
+                    if(!emotesAllowed){
+                        res = replaceDiscordEmotes(res, is_array=false);
+                    }
                     embed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setTitle(`${res.trophy_id}`)
@@ -144,7 +152,7 @@ exports.run = async (client, interaction) => {
                     client: client, 
                     interaction: interaction, 
                     embeds: [embed],  
-                    ephemeral: ephemeral || (res!=true) });
+                    ephemeral: ephemeral || (res==null) });
         };
 
     } catch (e) {

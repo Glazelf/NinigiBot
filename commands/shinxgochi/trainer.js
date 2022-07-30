@@ -1,5 +1,5 @@
 
-
+const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes')
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -26,6 +26,9 @@ exports.run = async (client, interaction) => {
                 user = await userApi.getUser(master.id);
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 trophies = await user.getShopTrophies();
+                if(!emotesAllowed){
+                    trophies = replaceDiscordEmotes(trophies);
+                }
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
