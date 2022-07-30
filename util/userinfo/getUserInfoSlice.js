@@ -7,8 +7,7 @@ const NUMBER_OF_PAGES = 2;
 
 module.exports = async (client, interaction, page, user_id) => {
     let user = await client.users.fetch(user_id, { force: true });
-    console.log(user)
-    let member = user.member;
+    let member = await interaction.guild.members.fetch(user_id);
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -26,11 +25,11 @@ module.exports = async (client, interaction, page, user_id) => {
     if(page > 0){
         profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page-1}:${user_id}`, style: 'PRIMARY', emoji: '⬅️'}))
     }
-    if(page < NUMBER_OF_PAGES){
+    if(page < NUMBER_OF_PAGES-1){
         profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page+1}:${user_id}`, style: 'PRIMARY', emoji: '➡️'}))
     }
     let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
+    //await interaction.deferReply({ ephemeral: ephemeral });
     
     let user_db;
     switch(page){
