@@ -5,6 +5,8 @@ exports.run = async (client, interaction) => {
     // Import globals
     let globalVars = require('../../events/ready');
     const checker = require('../../util/string/checkFormat');
+    const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu
+    const regexpDiscord = /<a*:[a-zA-Z0-9]+:[0-9]+>/
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -49,13 +51,23 @@ exports.run = async (client, interaction) => {
                     case "InvalidChars":
                         error += 'Description has invalid characters\n'
                 }
-                console.log(interaction.options.getString("emote"))
-                const trophy_emote = interaction.options.getString("emote").trim().replace(/^:+/, '').replace(/:+$/, '');;
-                console.log(trophy_emote)
+                let trophy_emote = interaction.options.getString("emote").trim().replace(/^:+/, '').replace(/:+$/, '');
+                let parsed_emote = trophy_emote.match(regexpDiscord);
+                if(!parsed_emote){
+                    parsed_emote = trophy_emote.match(regexpUnicode)
+                    if(!parsed_emote) {
+                        error+='Emote is not a valid Unicode Emoji or Discord custom emote'
+                    }
+                }
+                if(parsed_emote){
+                    trophy_emote = parsed_emote[0];
+                }
+                
                 const trophy_price = interaction.options.getInteger("price");
                 if(trophy_price<1){
                     error+='Price cannot be lower than 1'
                 }
+                
 
                 if(error.length>0){
                     returnString = 'Could not add the trophy due to the following issues:```\n'+error+'\n```'
