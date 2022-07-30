@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 	User.belongsToMany(ShopTrophy, { through: 'ShopTrophyUser', timestamps: false});
 	ShopTrophy.belongsToMany(User, { through: 'ShopTrophyUser', timestamps: false});
 
-	User.hasOne(Shinx);
-	User.hasOne(History);
+	User.hasOne(Shinx, {foreignKey:'user_id'});
+	User.hasOne(History, {foreignKey:'user_id'});
 	sequelize.sync();
 	return {Shinx, User, EventTrophy, ShopTrophy, History};
 }
