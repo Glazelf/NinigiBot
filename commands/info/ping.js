@@ -8,7 +8,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let commands = client.application.commands.fetch();
+        let commands = await client.application.commands.fetch();
         return sendMessage({ client: client, interaction: interaction, content: commands.toString() });
 
         let pongString = `Pong!'ed back in`;
