@@ -9,8 +9,10 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         console.log(client.application.commands.cache)
-        let commands = client.application.commands.cache.find(command => command.name == "bet");
-        console.log(commands)
+        let commands = client.application.commands.cache.find(command => {
+            console.log(command)
+            command.name == "bet"
+        });
         return sendMessage({ client: client, interaction: interaction, content: commands.toString() });
 
         let pongString = `Pong!'ed back in`;
