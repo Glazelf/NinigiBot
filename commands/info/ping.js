@@ -8,14 +8,6 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-
-        let commands = client.application.commands.cache.find(command => {
-            console.log(command.name)
-            command.name == "bet"
-        });
-        console.log(client.application.commands.cache.size)
-        return sendMessage({ client: client, interaction: interaction, content: commands.toString() });
-
         let pongString = `Pong!'ed back in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
