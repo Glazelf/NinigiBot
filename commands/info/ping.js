@@ -10,6 +10,7 @@ exports.run = async (client, interaction) => {
 
         console.log(client.application.commands.cache)
         let commands = client.application.commands.cache.find(command => command.name == "bet");
+        console.log(commands)
         return sendMessage({ client: client, interaction: interaction, content: commands.toString() });
 
         let pongString = `Pong!'ed back in`;
