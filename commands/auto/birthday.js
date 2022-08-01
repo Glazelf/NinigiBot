@@ -8,17 +8,16 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let day = interaction.options.getInteger("day");
         let month = interaction.options.getInteger("month");
-        let date = `${day}-${month}`;
 
-        // Check and sanitize birthday
-        let birthday = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])/.exec(date);
-        if (!birthday) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday in dd-mm format.` });
+        if (day < 1 || day > 31 || month < 1 || month > 12) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday.` });
+        // Birthdays are stored as string DDMM instead of being seperated by a -
+        if (day < 10) day = `0${day}`;
+        if (month < 10) month = `0${month}`;
+        bank.currency.birthday(interaction.user.id, `${day}${month}`);
 
-        bank.currency.birthday(interaction.user.id, birthday[1] + birthday[2]);
-        return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${date}\` (dd-mm).` });
+        return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
 
     } catch (e) {
         // Log error
