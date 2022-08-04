@@ -175,12 +175,15 @@ exports.run = async (client, interaction) => {
                 if (format.ruleset && format.ruleset.length > 0) ruleset = format.ruleset.join(", ");
                 let banlist = null;
                 if (format.banlist && format.banlist.length > 0) banlist = format.banlist.join(", ");
+                let unbanlist = null;
+                if (format.unbanlist && format.unbanlist.length > 0) unbanlist = format.unbanlist.join(", ");
 
                 pokemonEmbed
                     .setAuthor({ name: `${format.name} (${format.section})` })
                     .setDescription(formatDescription)
                 if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
                 if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
+                if (unbanlist) pokemonEmbed.addField("Unbanlist:", unbanlist, false);
                 if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
                 break;
 
