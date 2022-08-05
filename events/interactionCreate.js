@@ -268,12 +268,9 @@ module.exports = async (client, interaction) => {
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
                 if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
-                    // Only display random suggestion if there are other choices or value matches "random"
-                    if ((choices.length < 25 && choices.length > 0) || (choices.length < 25 && "random".includes(focusedOption.value.toLowerCase()))) {
-                        choices.push({ name: "Random", value: "random" });
-                    } else if (choices.length == 25) {
-                        choices[choices.length - 1] = { name: "Random", value: "random" };
-                    };
+                    // Only display random suggestion if there enough other choices or value matches "random"
+                    if (choices.length == 25) choices.pop();
+                    if (choices.length > 2 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
                 };
                 // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
