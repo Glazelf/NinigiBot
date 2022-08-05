@@ -360,7 +360,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
@@ -375,7 +375,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "move",
@@ -390,7 +390,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "nature",
@@ -405,7 +405,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "format",
@@ -420,7 +420,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "pokemon",
@@ -435,7 +435,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "usage",
@@ -469,7 +469,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }]
 };
