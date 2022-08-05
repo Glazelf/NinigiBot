@@ -6,7 +6,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const crypto = require('crypto');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
-        const imageExists = require('../../util/imageExists');
+        const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
 
         let adminBot = isAdmin(client, interaction.guild.me);
