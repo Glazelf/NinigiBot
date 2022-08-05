@@ -5,6 +5,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
+        const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
@@ -151,11 +152,16 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`; // Use Serebii images
         // let banner = pokemon.sprites.other.home.front_default; // Use Home renders
 
-        // Shuffle icons, only works for pokemon in pokemon shuffle
-        let iconShuffle = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
+        // PMD portraits
+        let pokemonIDLength4 = (pokemonID.length < 4 ? '0' : '') + pokemonID; // Add leading zeroes
+        let iconAuthor = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
+        let iconAuthorExists = imageExists(iconAuthor);
+        // Shuffle icons, only works for pokemon in pokemon shuffle but has form support
+        if (!iconAuthorExists) iconAuthor = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
 
+        //// Find a better way to check image existence otherwise these will become very ugly if loops in a few generations
         // Small party icons, only works for pokemon in SWSH
-        let iconParty = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        let iconFooter = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
 
         // Shiny sprite, only works for pokemon in SWSH
         // let spriteShiny = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
@@ -254,7 +260,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
-            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconParty })
+            .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
             .setThumbnail(spriteShiny)
             .setDescription(description)
             .addField("Type:", typeString, true);
@@ -273,7 +279,7 @@ SpD: **${pokemon.baseStats.spd}** ${SpDstats}
 Spe: **${pokemon.baseStats.spe}** ${Spestats}
 BST: ${pokemon.bst}`, false)
             .setImage(banner)
-            .setFooter({ text: interaction.user.tag, iconURL: iconShuffle })
+            .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
             .setTimestamp();
 
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
