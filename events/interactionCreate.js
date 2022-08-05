@@ -293,7 +293,7 @@ module.exports = async (client, interaction) => {
 
                         const bugReportEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `Bug Report` })
+                            .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescribe)
