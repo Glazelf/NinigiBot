@@ -149,23 +149,29 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
 
         // Official art
-        let banner = `https://www.serebii.net/pokemon/art/${pokemonID}.png`; // Use Serebii images
-        // let banner = pokemon.sprites.other.home.front_default; // Use Home renders
-
+        let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+        // Game render
+        let renderGame = `https://www.serebii.net/swordshield/pokemon/${pokemonID}.png`;
         // PMD portraits
         let pokemonIDLength4 = (pokemonID.length < 4 ? '0' : '') + pokemonID; // Add leading zeroes
-        let iconAuthor = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
-        let iconAuthorExists = imageExists(iconAuthor);
+        let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
+        let PMDPortraitExists = imageExists(PMDPortrait);
         // Shuffle icons, only works for pokemon in pokemon shuffle but has form support
-        if (!iconAuthorExists) iconAuthor = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
-
-        //// Find a better way to check image existence otherwise these will become very ugly if loops in a few generations
+        let shuffleIcon = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
         // Small party icons, only works for pokemon in SWSH
-        let iconFooter = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        let partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        // Shiny render
+        let shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
 
-        // Shiny sprite, only works for pokemon in SWSH
-        // let spriteShiny = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
-        let spriteShiny = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        let banner = render;
+        let iconAuthor = PMDPortrait;
+        let iconFooter = shuffleIcon;
+        let iconThumbnail = render;
+        if (!PMDPortraitExists) {
+            iconAuthor = shuffleIcon;
+            iconFooter = partyIcon;
+        };
 
         let abilityString = pokemon.abilities['0'];
         if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
@@ -261,7 +267,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
-            .setThumbnail(spriteShiny)
+            .setThumbnail(iconThumbnail)
             .setDescription(description)
             .addField("Type:", typeString, true);
         if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
@@ -278,7 +284,7 @@ SpA: **${pokemon.baseStats.spa}** ${SpAstats}
 SpD: **${pokemon.baseStats.spd}** ${SpDstats}
 Spe: **${pokemon.baseStats.spe}** ${Spestats}
 BST: ${pokemon.bst}`, false)
-            .setImage(banner)
+            // .setImage(banner)
             .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
             .setTimestamp();
 
