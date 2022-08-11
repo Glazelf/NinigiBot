@@ -42,7 +42,7 @@ module.exports = async (client, message) => {
             return DMChannel.send(dmLogObject);
         };
 
-        if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
+        if (!message.channel.type == "GUILD_FORUM" && !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
 
         // Automod
         let modBool = false;
