@@ -3,12 +3,11 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
     let globalVars = require('../../events/ready');
     try {
         const Discord = require("discord.js");
-        const crypto = require('crypto');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
+        const getWikiURL = require('../getWikiURL');
         const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
-
         let adminBot = isAdmin(client, interaction.guild.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
@@ -17,6 +16,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         let MHW = "Monster Hunter World";
         let MHGU = "Monster Hunter Generations Ultimate";
         let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+        let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
         let gameDBName;
         // Get icon, description and game appearances
         let monsterIcon;
@@ -69,24 +69,24 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         let monsterGameIndicator = gameDBName;
         if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
         let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
-        let monsterRender = getRenderURL(monsterRenderName);
+        let monsterRender = getWikiURL(monsterRenderName, mhWiki);
         let renderExists = imageExists(monsterRender);
         if (!renderExists) {
             if (monsterGameIndicator == "MHGU" || monsterGameIndicator == "MH4U") {
                 // Check for 4U only renders
                 if (monsterGameIndicator == "MHGU") {
                     monsterRenderName = monsterRenderName.replace("MHGU", "MH4U");
-                    monsterRender = getRenderURL(monsterRenderName);
+                    monsterRender = getWikiURL(monsterRenderName, mhWiki);
                     renderExists = imageExists(monsterRender);
                 };
                 if (!renderExists) {
                     monsterRenderName = monsterRenderName.replace("MH4U", "MH4");
-                    monsterRender = getRenderURL(monsterRenderName);
+                    monsterRender = getWikiURL(monsterRenderName, mhWiki);
                 };
             } else {
                 // Check if there's a render 2 (seems to be for spinoff exclusive monsters, namely Oltura)
                 monsterRenderName = monsterRenderName.replace("Render_001", "Render_002");
-                monsterRender = getRenderURL(monsterRenderName);
+                monsterRender = getWikiURL(monsterRenderName, mhWiki);
             };
         };
         if (!monsterBanner) {
@@ -169,14 +169,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
 
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
-
-        function getRenderURL(monsterRenderName) {
-            let md5 = crypto.createHash("md5").update(monsterRenderName).digest("hex");
-            let md5first = md5.substring(0, 1);
-            let md5duo = md5.substring(0, 2);
-            let url = `https://static.wikia.nocookie.net/monsterhunter/images/${md5first}/${md5duo}/${encodeURIComponent(monsterRenderName)}`;
-            return url;
-        };
 
     } catch (e) {
         // Log error
