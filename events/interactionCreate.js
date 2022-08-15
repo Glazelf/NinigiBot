@@ -9,7 +9,9 @@ module.exports = async (client, interaction) => {
         const getPokemon = require('../util/pokemon/getPokemon');
         const getMonster = require('../util/mh/getMonster');
         const randomNumber = require('../util/randomNumber');
+        const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
+        const axios = require("axios");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbObjects');
@@ -237,6 +239,35 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                         break;
+                    case "genshin":
+                        let giAPI = `https://api.genshin.dev/`;
+                        let giResponse;
+                        switch (focusedOption.name) {
+                            case "character":
+                                giAPI += `characters/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giCharacter of giResponse.data) {
+                                    let giCharacterCapitalized = await capitalizeString(giCharacter);
+                                    if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
+                                };
+                                break;
+                            case "weapon":
+                                giAPI += `weapons/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giWeapon of giResponse.data) {
+                                    let giWeaponCapitalized = await capitalizeString(giWeapon);
+                                    if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
+                                };
+                                break;
+                            case "artifact":
+                                giAPI += `artifacts/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giArtifact of giResponse.data) {
+                                    let giArtifactCapitalized = await capitalizeString(giArtifact);
+                                    if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                };
+                                break;
+                        };
                     case "coinflip":
                         switch (focusedOption.name) {
                             case "side":
