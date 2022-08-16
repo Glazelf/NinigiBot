@@ -38,22 +38,34 @@ exports.run = async (client, interaction) => {
                 let characterBannerFile = `Character_${character.name}_Full_Wish.png`;
                 let characterBanner = getWikiURL(characterBannerFile, giWiki);
                 // We should REALLY change how birthdays are stored LOL
-                let characterBirthdayArray = character.birthday.split("-");
-                let characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
+                let characterBirthdayArray = [];
+                let characterBirthday = "";
+                if (character.birthday) {
+                    characterBirthdayArray = character.birthday.split("-");
+                    characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
+                };
 
                 giEmbed
                     .setAuthor({ name: `${character.name} - ${character.affiliation}` })
                     .setThumbnail(characterThumbnail)
+                    .setImage(characterBanner)
                     .setDescription(character.description)
                     .addField("Rarity:", `${character.rarity}⭐`, true)
                     .addField("Vision:", character.vision, true)
-                    .addField("Weapon:", character.weapon, true)
-                    .addField("Birthday:", characterBirthday, true)
-                    .setImage(characterBanner)
+                    .addField("Weapon:", character.weapon, true);
+                if (character.birthday) giEmbed.addField("Birthday:", characterBirthday, true);
+
                 if (detailed) {
+                    // All three of these functions can probably be combined better but whatever
                     // Every (most) characters have 3 active and 3 passive skills and 6 constellations, making 12 fields
                     await character.skillTalents.forEach(skill => {
-                        giEmbed.addField(`${skill.name} (Active)`, skill.description.replace("\n\n", "\n"), false);
+                        let skillDesc = skill.description.replace("\n\n", "\n");
+                        if (skillDesc.length <= 1028) {
+                            giEmbed.addField(`${skill.name} (Active)`, skillDesc, false);
+                        } else {
+                            giEmbed.addField(`${skill.name} (Active) Part 1`, `${skillDesc.substring(0, 1021)}...`, false);
+                            giEmbed.addField(`${skill.name} (Active) Part 2`, `...${skillDesc.substring(1021,)}`, false);
+                        };
                     });
                     await character.passiveTalents.forEach(passive => {
                         giEmbed.addField(`${passive.name} (Passive)`, `${passive.unlock}\n${passive.description.replace("\n\n", "\n")}`, false);
