@@ -48,7 +48,7 @@ module.exports = async (client, message) => {
             if (message.channel == log && message.author == client.user) return;
 
             let messageContent = message.content;
-            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
+            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (messageContent.length < 1) return;
 
             let isReply = false;

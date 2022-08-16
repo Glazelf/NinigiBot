@@ -30,7 +30,7 @@ exports.run = async (client, interaction) => {
         const permissions = permissionSerializer(role.permissions);
         let permissionString = "None";
         if (permissions.length > 0) permissionString = permissions.join(", ");
-        if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1020)}...`;
+        if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
         let roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
