@@ -172,7 +172,7 @@ module.exports = {
         if (!trophy){
             return 'NoTrophy'
         }
-        let user = await this.getUser(user_id, ['money']);
+        let user = await this.getUser(user_id, ['user_id','money']);
         if (await user.hasShopTrophy(trophy)){
             return 'HasTrophy'
         }
