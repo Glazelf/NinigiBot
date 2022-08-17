@@ -1,13 +1,13 @@
 const Discord = require("discord.js");
-const api_trophy = require('../../database/dbServices/trophy.api');      
+const api_trophy = require('../../database/dbServices/trophy.api');
 let globalVars = require('../../events/ready');
 const api_user = require('../../database/dbServices/user.api');
 // Amount of userinfo pages
 const NUMBER_OF_PAGES = 2;
 
-module.exports = async (client, interaction, page, user_id) => {
-    let user = await client.users.fetch(user_id, { force: true });
-    let member = await interaction.guild.members.fetch(user_id);
+module.exports = async (client, interaction, page, user) => {
+    user = await client.users.fetch(user.id, { force: true });
+    let member = await interaction.guild.members.fetch(user.id);
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -17,29 +17,25 @@ module.exports = async (client, interaction, page, user_id) => {
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new Discord.MessageEmbed()
-    .setColor(embedColor)
-    .setAuthor({ name: user.tag, iconURL: avatar })
-    .setThumbnail(serverAvatar)
+        .setColor(embedColor)
+        .setAuthor({ name: user.tag, iconURL: avatar })
+        .setThumbnail(serverAvatar);
     let profileButtons = new Discord.MessageActionRow()
-    .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
-    if(page > 0){
-        profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page-1}:${user_id}`, style: 'PRIMARY', emoji: '⬅️'}))
-    }
-    if(page < NUMBER_OF_PAGES-1){
-        profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page+1}:${user_id}`, style: 'PRIMARY', emoji: '➡️'}))
-    }
+        .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
+    if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: 'PRIMARY', emoji: '⬅️' }));
+    if (page < NUMBER_OF_PAGES - 1) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
     let ephemeral = true;
-    //await interaction.deferReply({ ephemeral: ephemeral });
-    
+    await interaction.deferReply({ ephemeral: ephemeral });
+
     let user_db;
-    switch(page){
+    switch (page) {
         case 0:
-            user_db  = await api_user.getUser(user.id, ['swcode', 'money', 'birthday']);
+            user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday']);
             const Discord = require("discord.js");
-            
-            
             const parseDate = require('../../util/parseDate')
+            const isAdmin = require('../../util/isAdmin');
             const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
+            let adminBot = isAdmin(client, interaction.guild.me);
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
@@ -68,11 +64,10 @@ module.exports = async (client, interaction, page, user_id) => {
             // Banner
             let banner = null;
             if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
-            
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
-            if (interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) {
+            if (interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) {
                 try {
                     if (user.bot) badgesArray.push("🤖");
                     let guildOwner = await interaction.guild.fetchOwner();
@@ -95,10 +90,8 @@ module.exports = async (client, interaction, page, user_id) => {
             let joinRank = await getJoinRank(user.id, interaction.guild);
             let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
             let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
-    
 
-
-            profileEmbed.addField("Account:", `${user} ${badgesString}`, true)
+            profileEmbed.addField("Account:", `${user} ${badgesString}`, true);
             if (!user.bot && (roleCount > 0 && dbBalance !== 0)) profileEmbed.addField("Balance:", userBalance, true);
             if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
             if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
@@ -113,33 +106,32 @@ module.exports = async (client, interaction, page, user_id) => {
             profileEmbed.aa = user.id;
             break;
         case 1:
-            user_db  = await api_user.getUser(user.id, ['user_id','food']);
+            user_db = await api_user.getUser(user.id, ['user_id', 'food']);
             profileEmbed.addFields(
-                { name: "Food:", value: user_db.food.toString()+' :poultry_leg:', inline: true},
-                
-            )  
+                { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true },
+            );
             let trophies = await user_db.getShopTrophies();
             trophy_string = '';
-            trophies.forEach(trophy=>{
-                trophy_string += (trophy.icon+' ');
-            })
+            trophies.forEach(trophy => {
+                trophy_string += (trophy.icon + ' ');
+            });
             trophies = await user_db.getEventTrophies();
-            trophies.forEach(trophy=>{
-                trophy_string += (trophy.icon+' ');
-            })
+            trophies.forEach(trophy => {
+                trophy_string += (trophy.icon + ' ');
+            });
             if (trophy_string.length > 0) {
                 profileEmbed.addFields(
-                    { name: "Trophy Level:", value: trophies.length.toString()+' :beginner:', inline: true},
-                    { name: "Trophies:", value: trophy_string},
+                    { name: "Trophy Level:", value: trophies.length.toString() + ' :beginner:', inline: true },
+                    { name: "Trophies:", value: trophy_string },
                 )
-            }
+            };
             break;
-    }
-    return { 
-        client: client, 
-        interaction: interaction, 
-        embeds: profileEmbed, 
-        components: profileButtons 
+    };
+    return {
+        client: client,
+        interaction: interaction,
+        embeds: profileEmbed,
+        components: profileButtons
     };
 };
 
@@ -165,5 +157,3 @@ function capitalizeString(str) {
     let string = `${firstCharUpper}${rest} `;
     return string;
 };
-
-
