@@ -5,11 +5,11 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const permissionSerializer = require('../../util/permissionBitfieldSerializer');
         let DefaultEmbedColor = globalVars.embedColor;
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
-
         let role = interaction.options.getRole("role");
 
         // Role visuals
@@ -20,14 +20,17 @@ exports.run = async (client, interaction) => {
 
         let guildMembers = await interaction.guild.members.fetch();
         let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
-
         // Properties
         let roleProperties = "";
         if (role.hoist) roleProperties = `${roleProperties}Sorted seperately\n`;
         if (role.mentionable) roleProperties = `${roleProperties}Can be mentioned\n`;
         if (role.managed) roleProperties = `${roleProperties}Managed by integration\n`;
         if (roleProperties.length == 0) roleProperties = "None";
-
+        // Permissions
+        const permissions = permissionSerializer(role.permissions);
+        let permissionString = "None";
+        if (permissions.length > 0) permissionString = permissions.join(", ");
+        if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
         let roleEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
@@ -39,6 +42,7 @@ exports.run = async (client, interaction) => {
             .addField("Members:", memberCount.toString(), true)
             .addField("Position:", role.rawPosition.toString(), true)
             .addField("Properties:", roleProperties, false)
+            .addField("Permissions:", permissionString, false)
             .setFooter({ text: role.id });
 
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });

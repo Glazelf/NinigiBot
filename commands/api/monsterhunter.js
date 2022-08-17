@@ -8,16 +8,18 @@ exports.run = async (client, interaction) => {
         const crypto = require('crypto');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
+        const isAdmin = require('../../util/isAdmin');
         const getMonster = require('../../util/mh/getMonster');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
+        let adminBot = isAdmin(client, interaction.guild.me);
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
         let mhEmbed = new Discord.MessageEmbed()
@@ -219,7 +221,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "quests",
@@ -234,7 +236,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "monster",
@@ -249,7 +251,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }]
 };

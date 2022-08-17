@@ -1,10 +1,11 @@
-const getUserInfoSlice = require('../../util/userinfo/getUserInfoSlice')
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const getUserInfoSlice = require('../../util/userinfo/getUserInfoSlice');
         const user = interaction.options.getUser("user");
-        const msg = await getUserInfoSlice(client, interaction, 0, user.id);
+        const msg = await getUserInfoSlice(client, interaction, 0, user);
         return sendMessage(msg);
     } catch (e) {
         // Log error

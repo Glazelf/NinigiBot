@@ -9,13 +9,15 @@ exports.run = async (client, interaction) => {
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
+        const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
 
+        let adminBot = isAdmin(client, interaction.guild.me);
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let pokemonEmbed = new Discord.MessageEmbed()
@@ -112,10 +114,87 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
 
+            // Natures
+            case "nature":
+                let natureSearch = interaction.options.getString("nature");
+                let nature = Dex.natures.get(natureSearch);
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature by that name.` });
+
+                let boosted = Dex.stats.names[nature.plus];
+                let lowered = Dex.stats.names[nature.minus];
+                let arrowUp = "<:arrow_up_red:909901820732784640>";
+                let arrowDown = "<:arrow_down_blue:909903420054437929>";
+                let resultString = "Neutral nature, no stat changes.";
+                if (boosted && lowered) {
+                    if (emotesAllowed) {
+                        boosted = `${arrowUp}${boosted}`;
+                        lowered = `${arrowDown}${lowered}`;
+                    } else {
+                        boosted = `Boosted: ${boosted}`;
+                        lowered = `Lowered: ${lowered}`;
+                    };
+                    resultString = `${boosted}\n${lowered}`;
+                };
+                pokemonEmbed
+                    .setAuthor({ name: nature.name })
+                    .setDescription(resultString);
+                break;
+
+            // Format
+            case "format":
+                let formatSearch = interaction.options.getString("format");
+                let format = Dex.formats.get(formatSearch);
+                if (!format || !format.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+
+                if (format.threads) {
+                    format.threads.forEach(thread => {
+                        pokemonButtons
+                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: 'LINK', url: thread.split("\"")[1] }));
+                    });
+                };
+                // Leading newlines get ignored if format.desc is empty
+                let formatDescription = (format.desc + "\n").replace("Pok&eacute;mon", "Pokémon");
+                if (format.searchShow) {
+                    formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
+                } else if (format.rated) {
+                    formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on said ladder.`;
+                } else {
+                    formatDescription += "\nThis format does not have a ladder.";
+                };
+                if (format.challengeShow) {
+                    formatDescription += "\nYou can challenge users in this format.";
+                } else {
+                    formatDescription += "\nYou can not challenge users in this format.";
+                };
+                if (format.tournamentShow) {
+                    formatDescription += "\nThis format can be used for tournaments.";
+                } else {
+                    formatDescription += "\nThis format can not be used for tournaments.";
+                };
+                let ruleset = null;
+                if (format.ruleset && format.ruleset.length > 0) ruleset = format.ruleset.join(", ");
+                let banlist = null;
+                if (format.banlist && format.banlist.length > 0) banlist = format.banlist.join(", ");
+                let unbanlist = null;
+                if (format.unbanlist && format.unbanlist.length > 0) unbanlist = format.unbanlist.join(", ");
+
+                pokemonEmbed
+                    .setAuthor({ name: `${format.name} (${format.section})` })
+                    .setDescription(formatDescription)
+                if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
+                if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
+                if (unbanlist) pokemonEmbed.addField("Unbanlist:", unbanlist, false);
+                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
+                break;
+
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
-                if (!pokemon || !pokemon.exists || pokemon.isNonstandard == "Custom" || pokemon.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (pokemonName.toLowerCase() == "random") {
+                    let allPokemon = Dex.species.all();
+                    let allKeys = Object.keys(allPokemon);
+                    pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
+                } else if (!pokemon || !pokemon.exists || pokemon.isNonstandard == "Custom" || pokemon.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon(client, interaction, pokemon, ephemeral);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
                 break;
@@ -141,11 +220,11 @@ exports.run = async (client, interaction) => {
                         };
                     };
                 };
-                let format = "gen8vgc2022";
+                let formatInput = "gen8vgc2022";
                 let formatArg = interaction.options.getString("format");
-                if (formatArg) format = formatArg;
+                if (formatArg) formatInput = formatArg;
                 // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
-                if (format == "gen7vgc2019") format = "gen7vgc2019ultraseries";
+                if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
 
                 let monthArg = interaction.options.getInteger("month");
                 let yearArg = interaction.options.getInteger("year");
@@ -164,13 +243,13 @@ exports.run = async (client, interaction) => {
 
                 let rating = "1500";
                 let ratingTresholds = [0, 1500, 1630, 1760];
-                if (format == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
+                if (formatInput == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
                 let ratingArg = interaction.options.getInteger("rating");
                 if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
 
                 let wasSuccessful = true;
                 let triedLastMonth = false;
-                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                 await getData(searchURL);
                 return useData();
@@ -228,7 +307,7 @@ exports.run = async (client, interaction) => {
                         stringMonth = month;
                         if (stringMonth < 10) stringMonth = "0" + stringMonth;
                         triedLastMonth = true;
-                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${format}/${rating}/${pokemonName}`;
+                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
 
                         await getData(searchURL);
                         return useData();
@@ -238,11 +317,11 @@ exports.run = async (client, interaction) => {
                         let usageButtons = new Discord.MessageActionRow()
                             .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
                             .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${format}-${rating}.txt` }));
+                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt` }));
 
                         let replyText = `Sorry! Could not fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.\nHere are some usage resources you might find usefull instead:`;
 
-                        return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
+                        return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons, ephemeral: true });
                     };
                 };
                 break;
@@ -281,7 +360,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
@@ -296,7 +375,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "move",
@@ -311,7 +390,37 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "nature",
+        type: "SUB_COMMAND",
+        description: "Get info on a nature.",
+        options: [{
+            name: "nature",
+            type: "STRING",
+            description: "Nature to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "format",
+        type: "SUB_COMMAND",
+        description: "Get info on a format.",
+        options: [{
+            name: "format",
+            type: "STRING",
+            description: "Format to get info on.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "pokemon",
@@ -326,7 +435,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "usage",
@@ -360,7 +469,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }]
 };

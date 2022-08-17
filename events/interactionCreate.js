@@ -9,7 +9,9 @@ module.exports = async (client, interaction) => {
         const getPokemon = require('../util/pokemon/getPokemon');
         const getMonster = require('../util/mh/getMonster');
         const randomNumber = require('../util/randomNumber');
+        const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
+        const axios = require("axios");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
@@ -201,10 +203,15 @@ module.exports = async (client, interaction) => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
+                            case "nature":
+                                let natures = Dex.natures.all();
+                                await natures.forEach(nature => {
+                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && nature.exists) choices.push({ name: nature.name, value: nature.name });
+                                });
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
-                                    if (format.id.includes(focusedOption.value.toLowerCase()) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
+                                    if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase()))) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;
                             case "rating":
@@ -245,6 +252,35 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                         break;
+                    case "genshin":
+                        let giAPI = `https://api.genshin.dev/`;
+                        let giResponse;
+                        switch (focusedOption.name) {
+                            case "character":
+                                giAPI += `characters/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giCharacter of giResponse.data) {
+                                    let giCharacterCapitalized = await capitalizeString(giCharacter);
+                                    if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
+                                };
+                                break;
+                            case "weapon":
+                                giAPI += `weapons/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giWeapon of giResponse.data) {
+                                    let giWeaponCapitalized = await capitalizeString(giWeapon);
+                                    if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
+                                };
+                                break;
+                            case "artifact":
+                                giAPI += `artifacts/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giArtifact of giResponse.data) {
+                                    let giArtifactCapitalized = await capitalizeString(giArtifact);
+                                    if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                };
+                                break;
+                        };
                     case "coinflip":
                         switch (focusedOption.name) {
                             case "side":
@@ -308,7 +344,15 @@ module.exports = async (client, interaction) => {
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
+                // Add random suggestion
+                if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
+                    // Only display random suggestion if there enough other choices or value matches "random"
+                    if (choices.length == 25) choices.pop();
+                    if (choices.length > 2 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
+                };
+                // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
+                // Return choices
                 return interaction.respond(choices).catch(e => {
                     //console.log(e);
                 });
@@ -327,7 +371,7 @@ module.exports = async (client, interaction) => {
 
                         const bugReportEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `Bug Report` })
+                            .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescribe)

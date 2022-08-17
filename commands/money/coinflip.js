@@ -64,6 +64,6 @@ module.exports.config = {
     }, {
         name: "ephemeral",
         type: "BOOLEAN",
-        description: "Whether this command is only visible to you.",
+        description: "Whether the reply will be private.",
     }]
 };
