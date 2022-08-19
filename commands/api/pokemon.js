@@ -241,7 +241,7 @@ exports.run = async (client, interaction) => {
                 let year = date.getFullYear();
                 if (yearArg > 2013 && yearArg < (year + 1)) year = yearArg; // Smogon stats only exist from 2014 onwards
 
-                let rating = "1500";
+                let rating = 0;
                 let ratingTresholds = [0, 1500, 1630, 1760];
                 if (formatInput == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
                 let ratingArg = interaction.options.getInteger("rating");
