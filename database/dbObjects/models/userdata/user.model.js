@@ -27,8 +27,12 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
     });
     //  Money
-    User.prototype.addMoney = function(money){
+    User.prototype.addMoneyGeneric = function(money){
         this.money = Math.max(this.money + money, 0);
+    }
+
+    User.prototype.addMoney = function(money){
+        this.addMoneyGeneric(money);
         this.save({fields:['money']});
     }
     User.prototype.getMoney = function(){
@@ -51,14 +55,18 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.hasFood = function(food){
         return this.food>=food;
     }
-    User.prototype.addFood = function(food){
+    User.prototype.addFoodGeneric = function(food){
         this.food = Math.max(this.food + food, 0);
+    }
+
+    User.prototype.addFood = function(food){
+        this.addFoodGeneric(food);
         this.save({fields:['food']});
     }
 
     User.prototype.buyFood = function(food){
-        this.money = Math.max(this.money - food, 0);
-        this.food = Math.max(this.food + food, 0);
+        this.addMoneyGeneric(-food);
+        this.addFoodGeneric(food);
         this.save({fields:['money','food']});
     }
 

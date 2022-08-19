@@ -68,8 +68,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     //  Experience
-    Shinx.prototype.addExperience = function(experience){
+    Shinx.prototype.addExperienceGeneric = function(experience){
         this.experience += Math.ceil(experience);
+    }
+
+    Shinx.prototype.addExperience = function(experience){
+        this.addExperienceGeneric(experience)
         this.save({fields:['experience']});
     }
     Shinx.prototype.addExperienceAndLevelUp = function(experience){
@@ -95,15 +99,15 @@ module.exports = (sequelize, DataTypes) => {
     Shinx.prototype.feedAndExp = function(food){
         const prev_level = Math.ceil(getExpFromLevel(this.getLevel()))
         const next_level = Math.ceil(getExpFromLevel(this.getLevel()+1))
-        this.experience += Math.ceil((next_level - prev_level) * (food/MAX_RANGE));
-        this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + food);
+        this.addExperienceGeneric((next_level - prev_level) * (food/MAX_RANGE));
+        this.feedGeneric(food);
         this.save({fields:['belly', 'experience']});
     }
 
 
     Shinx.prototype.addExperienceAndUnfeed = function(experience, food){
-        this.experience += Math.ceil(experience);
-        this.belly = Math.ceil(0, this.belly -food);
+        this.addExperienceGeneric(experience);
+        this.unfeedGeneric(food);
         this.save({fields:['experience', 'belly']});
     }
 
@@ -118,13 +122,22 @@ module.exports = (sequelize, DataTypes) => {
         return this.shiny
     }
     // Belly
-    Shinx.prototype.feed = function(amount){
+    Shinx.prototype.feedGeneric = function(amount){
         this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + amount);
+    }
+
+
+    Shinx.prototype.feed = function(amount){
+        this.feedGeneric(amount);
         this.save({fields:['belly']});
     }
 
+    Shinx.prototype.unfeedGeneric = function(amount){
+        this.belly = Math.max(0, this.belly -amount);
+    }
+
     Shinx.prototype.unfeed = function(amount){
-        this.belly = Math.ceil(0, this.belly -amount);
+        this.unfeedGeneric(amount);
         this.save({fields:['belly']});
     }
 

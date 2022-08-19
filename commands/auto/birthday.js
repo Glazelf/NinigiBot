@@ -13,9 +13,9 @@ exports.run = async (client, interaction) => {
 
         if (day < 1 || day > 31 || month < 1 || month > 12) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday.` });
         // Birthdays are stored as string DDMM instead of being seperated by a -
-        if (day < 10) day = `0${day}`;
-        if (month < 10) month = `0${month}`;
-        api_user.setBirthday(interaction.user.id, birthday[1] + birthday[2]);
+        if (day < 10) {day = `0${day}`} else {day = `${day}`};
+        if (month < 10) {month = `0${month}`} else {month = `${month}`};
+        api_user.setBirthday(interaction.user.id, day + month);
 
         return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
 

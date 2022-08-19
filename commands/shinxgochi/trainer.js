@@ -15,7 +15,8 @@ exports.run = async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
-        let embed,avatar;
+        let embed;
+        let avatar = null;
 
         let master = interaction.user
 
@@ -24,7 +25,8 @@ exports.run = async (client, interaction) => {
             case "card":
                 if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
-                avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                let member = await interaction.guild.members.fetch(master.id);
+                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
                 trophy_level = 0;
                 trophies = await user.getShopTrophies();
                 trophy_string = '';

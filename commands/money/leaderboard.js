@@ -5,7 +5,6 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const { bank } = require('../../database/bank');
         const user_api = require('../../database/dbServices/user.api');
 
         let ephemeral = true;
@@ -25,7 +24,7 @@ exports.run = async (client, interaction) => {
             icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
-                .first(10)
+                .slice(0, 10)
                 .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
@@ -37,7 +36,7 @@ exports.run = async (client, interaction) => {
             icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
-                .first(10)
+                .slice(0, 10)
                 .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
