@@ -8,7 +8,6 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const shinxApi = require('../../database/dbServices/shinx.api');
-        const userApi = require('../../database/dbServices/user.api');
         
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -16,7 +15,7 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         if (ephemeralArg === false) ephemeral = false;
         //await interaction.deferReply({ ephemeral: ephemeral });
-        let shinx, embed,foodArg,res,avatar;
+        let shinx,foodArg,res,avatar;
 
         let canvas, ctx, img;
         let userFinder = await interaction.guild.members.fetch();
@@ -26,7 +25,7 @@ exports.run = async (client, interaction) => {
         const now = new Date();
         let master = interaction.user
         switch (interaction.options.getSubcommand()) {
-            case "data":
+            case "info":
                 shinx = await shinxApi.getShinx(master.id);
                 const is_user_male = shinx.user_male;
                 
@@ -77,95 +76,6 @@ exports.run = async (client, interaction) => {
             
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
-            case "release":
-                let confirm = false
-                let confirmArg = interaction.options.getBoolean("confirm");
-                if (confirmArg === true) confirm = confirmArg;
-                if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
-                shinx = await shinxApi.getShinx(master.id);
-                await shinx.destroy();
-
-                return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
-            case "addexp":
-                const isOwner = require('../../util/isOwner');
-                let ownerBool = await isOwner(client, interaction.user);
-                if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-
-                let expArg = interaction.options.getInteger("exp");
-                await shinxApi.addExperience(master.id, expArg);
-                returnString = `Added experience to your Shinx!`;
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral});
-            case "changenick":
-                let new_nick = interaction.options.getString("nickname");
-                res = await shinxApi.nameShinx(master.id, new_nick);
-                messageFile = null;
-                switch(res){
-                    case 'TooShort':
-                        returnString = `Could not rename because provided nickname was empty`;
-                        break;
-                    case 'TooLong':
-                        returnString = `Could not rename because provided nickname length was greater than 12`
-                        break;
-                    case 'InvalidChars':
-                        returnString = `Could not rename because provided nickname was not alphanumeric`
-                        break;
-                    case 'Ok':
-                        if (ephemeralArg === false) ephemeral = true;
-                        is_shiny = await shinxApi.getShinxShininess(master.id);
-                        canvas = Canvas.createCanvas(471, 355);
-                        ctx = canvas.getContext('2d');
-                        img = await Canvas.loadImage('./assets/nicks.png');
-                        ctx.drawImage(img, 0, 0);
-                        img = await Canvas.loadImage('./assets/mc.png');
-                        const is_user_male = await shinxApi.isTrainerMale(master.id);
-                        ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
-                        img = await Canvas.loadImage('./assets/fieldShinx.png');
-                        ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
-                        img = await Canvas.loadImage('./assets/reactions.png');
-                        ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
-                        returnString = `Nickname changed to **${new_nick}**!`;
-                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                        break;
-                }
-
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    files: messageFile,
-                    ephemeral: ephemeral || (res!='Ok') });
-
-
-            case "shiny":
-                res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
-                if(res){
-                    const is_shiny = await shinxApi.switchShininessAndGet(master.id)
-                    returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
-                    canvas = Canvas.createCanvas(255, 192);
-                    ctx = canvas.getContext('2d');
-                    img = await Canvas.loadImage('./assets/sky.png');
-                    ctx.drawImage(img, 0, 0);
-                    img = await Canvas.loadImage('./assets/sprite.png');
-                    ctx.drawImage(img, 94 * is_shiny, 0, 94, 72, 87, 61, 94, 72);
-                    if (is_shiny) {
-                        img = await Canvas.loadImage('./assets/sparkle.png');
-                        ctx.drawImage(img, 49, 10);
-                    };
-                    messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                } else {
-                    returnString = 'You need that your shinx arrives to level 50 for that.' 
-                    messageFile = null;   
-                }
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    files:messageFile,
-                    ephemeral: ephemeral || (res!=true) }); 
             case "feed":
                 foodArg = interaction.options.getInteger("food");
                 res = await shinxApi.feedShinx(master.id);  
@@ -174,7 +84,7 @@ exports.run = async (client, interaction) => {
                         returnString = `Shinx is not hungry!`;
                         break;
                     case 'NoFood':
-                        returnString = `You don't have enough food!`
+                        returnString = `Not enough food\nTip: you can buy more using \`/buyfood\``
                         break;
                     case 'Ok':
                         reaction = require('../../util/shinx/getRandomEatingReaction')();
@@ -279,7 +189,7 @@ exports.run = async (client, interaction) => {
                     ephemeral : ephemeral
                 });
                 break;
-            case "park":
+            case "talk":
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(256, 160);
                 ctx = canvas.getContext('2d');
@@ -307,8 +217,85 @@ exports.run = async (client, interaction) => {
                     content: `**${shinx.nickname}** ${conversation.quote}`, 
                     files: messageFile,
                     ephemeral: ephemeral
-                 });
+                    });
                 break;
+            case "nick":
+                let new_nick = interaction.options.getString("nickname");
+                res = await shinxApi.nameShinx(master.id, new_nick);
+                messageFile = null;
+                switch(res){
+                    case 'TooShort':
+                        returnString = `Could not rename because provided nickname was empty`;
+                        break;
+                    case 'TooLong':
+                        returnString = `Could not rename because provided nickname length was greater than 12`
+                        break;
+                    case 'InvalidChars':
+                        returnString = `Could not rename because provided nickname was not alphanumeric`
+                        break;
+                    case 'Ok':
+                        if (ephemeralArg === false) ephemeral = true;
+                        is_shiny = await shinxApi.getShinxShininess(master.id);
+                        canvas = Canvas.createCanvas(471, 355);
+                        ctx = canvas.getContext('2d');
+                        img = await Canvas.loadImage('./assets/nicks.png');
+                        ctx.drawImage(img, 0, 0);
+                        img = await Canvas.loadImage('./assets/mc.png');
+                        const is_user_male = await shinxApi.isTrainerMale(master.id);
+                        ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
+                        img = await Canvas.loadImage('./assets/fieldShinx.png');
+                        ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
+                        img = await Canvas.loadImage('./assets/reactions.png');
+                        ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
+                        returnString = `Nickname changed to **${new_nick}**!`;
+                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                        break;
+                }
+
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: returnString, 
+                    files: messageFile,
+                    ephemeral: ephemeral || (res!='Ok') });
+
+
+            case "shiny":
+                res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
+                if(res){
+                    const is_shiny = await shinxApi.switchShininessAndGet(master.id)
+                    returnString = is_shiny? `Your shinx is shiny now` : `Your shinx is no longer shiny`
+                    canvas = Canvas.createCanvas(255, 192);
+                    ctx = canvas.getContext('2d');
+                    img = await Canvas.loadImage('./assets/sky.png');
+                    ctx.drawImage(img, 0, 0);
+                    img = await Canvas.loadImage('./assets/sprite.png');
+                    ctx.drawImage(img, 94 * is_shiny, 0, 94, 72, 87, 61, 94, 72);
+                    if (is_shiny) {
+                        img = await Canvas.loadImage('./assets/sparkle.png');
+                        ctx.drawImage(img, 49, 10);
+                    };
+                    messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                } else {
+                    returnString = 'You need that your shinx arrives to level 50 for that.' 
+                    messageFile = null;   
+                }
+                return sendMessage({ 
+                    client: client, 
+                    interaction: interaction, 
+                    content: returnString, 
+                    files:messageFile,
+                    ephemeral: ephemeral || (res!=true) }); 
+            
+            case "release":
+                let confirm = false
+                let confirmArg = interaction.options.getBoolean("confirm");
+                if (confirmArg === true) confirm = confirmArg;
+                if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+                shinx = await shinxApi.getShinx(master.id);
+                await shinx.destroy();
+
+                return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
         };
     } catch (e) {
         // Log error
@@ -321,7 +308,7 @@ module.exports.config = {
     name: "shinx",
     description: "Interact with your Shinx.",
     options: [{
-        name: "data",
+        name: "info",
         type: "SUB_COMMAND",
         description: "See your shinx!",
         options: [{
@@ -329,14 +316,14 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    }, {
-        name: "release",
+    },{
+        name: "feed",
         type: "SUB_COMMAND",
-        description: "Release Shinx.",
+        description: "Feed Shinx!",
         options: [{
-            name: "confirm",
+            name: "ephemeral",
             type: "BOOLEAN",
-            description: "Are you sure? You can never get this Shinx back."
+            description: "Whether this command is only visible to you."
         }]
     },{
         name: "play",
@@ -348,16 +335,16 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "park",
+        name: "talk",
         type: "SUB_COMMAND",
-        description: "Visit the National Park with shinx!",
+        description: "Talk with your shinx!",
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
-        name: "changenick",
+    }, {
+        name: "nick",
         type: "SUB_COMMAND",
         description: "Change your Shinx nickname!",
         options: [{
@@ -371,25 +358,6 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "addexp",
-        type: "SUB_COMMAND",
-        description: "Add experience!",
-        options: [{
-            name: "exp",
-            type: "INTEGER",
-            description: "The amount of exp you want to add.",
-            required: true,
-        }]
-    },{
-        name: "feed",
-        type: "SUB_COMMAND",
-        description: "Feed Shinx!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
-    },{
         name: "shiny",
         type: "SUB_COMMAND",
         description: "Change shinx's color!",
@@ -398,5 +366,14 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    }],
+    },{
+        name: "release",
+        type: "SUB_COMMAND",
+        description: "Release Shinx.",
+        options: [{
+            name: "confirm",
+            type: "BOOLEAN",
+            description: "Are you sure? You can never get this Shinx back."
+        }]
+    },],
 };

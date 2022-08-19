@@ -22,7 +22,7 @@ exports.run = async (client, interaction) => {
 
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
-            case "card":
+            case "info":
                 if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
@@ -64,7 +64,7 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            case "swapgender":
+            case "swapsprite":
                 if (ephemeralArg === false) ephemeral = false;
                 const shinx = await shinxApi.getShinx(master.id)
                 return sendMessage({ 
@@ -80,23 +80,22 @@ exports.run = async (client, interaction) => {
     };
 };
 
-// Level and Shiny subcommands are missing on purpose
 module.exports.config = {
     name: "trainer",
     description: "Check your trainer stats.",
     options: [{
-        name: "card",
+        name: "info",
         type: "SUB_COMMAND",
-        description: "Check your trainer card!",
+        description: "Check your trainer stats!",
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "swapgender",
+        name: "swapsprite",
         type: "SUB_COMMAND",
-        description: "Swap your trainer's gender.",
+        description: "Swap your trainer sprite between Dawn and Lucas",
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",

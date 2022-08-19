@@ -9,16 +9,11 @@ exports.run = async (client, interaction) => {
     const regexpDiscord = /<a*:[a-zA-Z0-9]+:[0-9]+>/
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
-        const Canvas = require('canvas');
         const isOwner = require('../../util/isOwner');
-        const api_shinx = require('../../database/dbServices/shinx.api');
-        const api_user = require('../../database/dbServices/user.api');
         const api_trophy = require('../../database/dbServices/trophy.api');
-        let messageFile = null;
         let ephemeral = true;
-        let embed, trophy_name, res, returnString;
-        let canvas, ctx, img, shinx;
+        let trophy_name, res, returnString;
+
 
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
@@ -28,9 +23,6 @@ exports.run = async (client, interaction) => {
         if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
-        let master = interaction.user;
-
-        let trophies;
         switch (interaction.options.getSubcommand()) {
             case "addshoptrophy":
                 let error = '';
@@ -98,12 +90,12 @@ exports.run = async (client, interaction) => {
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
     name: "manager",
-    description: "Manage multiple aspects about the shop",
+    description: "Owner only, manage multiple aspects about Ninigi Virtual Simulation Core",
     serverID: ["759344085420605471"],
     options: [{
         name: "addshoptrophy",
         type: "SUB_COMMAND",
-        description: "Add a custom trophy to the shop.",
+        description: "Owner only, add a custom trophy to the shop.",
         options: [{
             name: "name",
             type: "STRING",
@@ -129,7 +121,7 @@ module.exports.config = {
     {
         name: "deleteshoptrophy",
         type: "SUB_COMMAND",
-        description: "Delete a trophy from the shop",
+        description: "Owner only, delete a trophy from the shop",
         options: [{
             name: "name",
             type: "STRING",

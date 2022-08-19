@@ -13,7 +13,8 @@ exports.run = async (client, interaction) => {
         const api_trophy = require('../../database/dbServices/trophy.api');        
         let messageFile = null;
         let ephemeral = true;
-        let embed,trophy_name,res, returnString;
+        let embed,trophy_name,res;
+        let returnString = ''
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
@@ -24,7 +25,7 @@ exports.run = async (client, interaction) => {
 
         let  trophies;
         switch (interaction.options.getSubcommand()) {
-            case "seetrophies":
+            case "stock":
                 if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
@@ -59,19 +60,18 @@ exports.run = async (client, interaction) => {
                     interaction: interaction, 
                     embeds: [embed],  
                     ephemeral: ephemeral });
-            case "buytrophy":
+            case "buy":
                 trophy_name = interaction.options.getString("shoptrophy");
                 res =  await api_trophy.buyShopTrophy(master.id, trophy_name.toLowerCase());
-                returnString = ''
                 switch(res){
                     case 'NoTrophy':
-                        returnString = `**${trophy_name}** isn't available.`;
+                        returnString = `**${trophy_name}** isn't available.\nTip: check today's stock with \`/trophy stock\``;
                         break;
                     case 'HasTrophy':
-                        returnString = `You already have **${trophy_name}**`
+                        returnString = `You already have **${trophy_name}!**`
                         break;
                     case 'NoMoney':
-                        returnString = `You don't have enough money for **${trophy_name}**`
+                        returnString = `Not enough money for **${trophy_name}. **`
                         break;
                     case 'Ok':
                         returnString = `Bought **${trophy_name}**!`
@@ -97,17 +97,7 @@ exports.run = async (client, interaction) => {
                     content: returnString, 
                     files: messageFile,
                     ephemeral: ephemeral || (res!='Ok') });
-            case "buyfood":
-                foodArg = interaction.options.getInteger("food");
-                const userApi = require('../../database/dbServices/user.api');
-                res = await userApi.buyFood(master.id, foodArg);
-                returnString = res ? `Added food to your account!`:`Not enough money!`;
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
-                    ephemeral: ephemeral || res != true }); 
-            case "trophylist":
+            case "list":
                 let trophy_slice = await require('../../util/trophies/getTrophyEmbedSlice')(0);
                 return sendMessage({ 
                     client: client, 
@@ -117,16 +107,18 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral,
                 });
 
-            case "asktrophy":
+            case "ask":
 
                 trophy_name = interaction.options.getString("trophy");
                 res =  await api_trophy.getShopTrophyWithName(trophy_name);
                 let isShop = true;
                 if (!res) { res =  await api_trophy.getEventTrophyWithName(trophy_name); isShop = false;} 
                 if (!res) { 
-                    embed = null;
-                    returnString = `**${trophy_name}** doesn't exist.`;
-                    break;
+                    return sendMessage({ 
+                        client: client, 
+                        interaction: interaction, 
+                        content: `**${trophy_name}** doesn't exist.\nTip: check all trophies with \`/trophy list\``, 
+                        ephemeral: true  });
                 } else {
                     if(!emotesAllowed){
                         res = replaceDiscordEmotes(res, is_array=false);
@@ -146,13 +138,13 @@ exports.run = async (client, interaction) => {
                     embed.addFields(
                         { name: "Location", value: location},
                     )
+                    return sendMessage({ 
+                        client: client, 
+                        interaction: interaction, 
+                        embeds: [embed],  
+                        ephemeral: ephemeral });
 
                 }
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    embeds: [embed],  
-                    ephemeral: ephemeral || (res==null) });
         };
 
     } catch (e) {
@@ -163,21 +155,21 @@ exports.run = async (client, interaction) => {
 
 // Level and Shiny subcommands are missing on purpose
 module.exports.config = {
-    name: "shop",
-    description: "Interact with the built in shop!",
+    name: "trophy",
+    description: "Handles all interactions with trophies",
     options: [{
-        name: "seetrophies",
+        name: "stock",
         type: "SUB_COMMAND",
-        description: "Check available trophies",
+        description: `Check today's available trophies`,
         options: [{
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "buytrophy",
+        name: "buy",
         type: "SUB_COMMAND",
-        description: "Buy trophies!",
+        description: `Buy a trophy from today's stock`,
         options: [{
             name: "shoptrophy",
             type: "STRING",
@@ -190,7 +182,16 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     },{
-        name: "asktrophy",
+        name: "list",
+        type: "SUB_COMMAND",
+        description: "See a list of all trophies!",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether this command is only visible to you."
+        }]
+    },{
+        name: "ask",
         type: "SUB_COMMAND",
         description: "Get info about a trophy",
         options: [{
@@ -204,28 +205,5 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
-        name: "buyfood",
-        type: "SUB_COMMAND",
-        description: "Buy food!",
-        options: [{
-            name: "food",
-            type: "INTEGER",
-            description: "The amount of food you want to buy.",
-            required: true,
-        },{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
-    },{
-        name: "trophylist",
-        type: "SUB_COMMAND",
-        description: "See a list of all  trophies!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
-    },]
+    }]
 };

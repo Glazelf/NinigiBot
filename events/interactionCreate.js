@@ -309,7 +309,7 @@ module.exports = async (client, interaction) => {
                                 })
                         }
                         break;
-                    case "shop":
+                    case "trophy":
                         switch (focusedOption.name) {
                             case "shoptrophy":
                                 const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
