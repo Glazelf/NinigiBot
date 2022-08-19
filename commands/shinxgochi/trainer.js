@@ -25,19 +25,23 @@ exports.run = async (client, interaction) => {
                 if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
                 avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-                
+                trophy_level = 0;
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
                 })
+                trophy_level += trophies.length;
                 trophies = await user.getEventTrophies();
+                
                 trophies.forEach(trophy=>{
                     trophy_string += (trophy.icon+' ');
                 })
+                trophy_level += trophies.length;
                 if(!emotesAllowed){
                     trophies = replaceDiscordEmotes(trophies);
                 }
+                
                 embed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setThumbnail(avatar)
@@ -48,7 +52,7 @@ exports.run = async (client, interaction) => {
                 )  
                 if (trophy_string.length > 0) {
                     embed.addFields(
-                        { name: "Trophy Level:", value: trophies.length.toString()+' :beginner:', inline: true},
+                        { name: "Trophy Level:", value: trophy_level+' :beginner:', inline: true},
                         { name: "Trophies:", value: trophy_string},
                     )
                 }

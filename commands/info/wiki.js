@@ -6,8 +6,8 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "sim":
                 const sendMessage = require('../../util/sendMessage');
-                let replyText = `Ninigi Virtual Simulation Wiki: [here](https://github.com/Glazelf/NinigiBot/wiki/Virtual-Simulation)`;
-                return sendMessage({ client: client, interaction: interaction, content: replyText });
+                let replyText = `Ninigi Virtual Simulation Wiki: [here](<https://github.com/Glazelf/NinigiBot/wiki/Virtual-Simulation>)`;
+                return sendMessage({ client: client, interaction: interaction, content: replyText, ephemeral:false });
         };
     } catch (e) {
         // Log error

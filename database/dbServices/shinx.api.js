@@ -3,7 +3,6 @@ const { userdata, serverdata} =  require('../dbConnection/dbConnection');
 const { Op, fn, where, col  } = require('sequelize');
 const { Shinx, EventTrophy, User} = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
-const shinx_util = require('../../util/nwu/shinx.util');
 const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
 
 module.exports = {
@@ -45,7 +44,7 @@ module.exports = {
         return result;
     },
     async switchShininessAndGet(id) {
-        let shinx = await this.getShinx(id, ['shiny']);
+        let shinx = await this.getShinx(id, ['user_id','shiny']);
         return shinx.switchShininessAndGet();
     },
     async addExperience(id, experience)  {
@@ -88,20 +87,19 @@ module.exports = {
         };
     },
     async feedShinx(id) {
-        let shinx = await this.getShinx(id, ['belly']);
+        let shinx = await this.getShinx(id, ['user_id','belly', 'experience']);
         let shinx_hunger = shinx.getHunger()
         if(shinx_hunger == 0){
             return 'NoHungry'
         }
-        let user = await this.getUser(id,['food']);
+        let user = await this.getUser(id,['user_id','food']);
 
         let feed_amount = Math.min(shinx_hunger, user.getFood())
         if (feed_amount==0) {
             return 'NoFood'
         }
         await user.addFood(-feed_amount);
-        await shinx.feed(feed_amount);
-        await this.addExperience(id, feed_amount);
+        await shinx.feedAndExp(feed_amount);
         return 'Ok'
     },
 
@@ -114,7 +112,7 @@ module.exports = {
         return check
     },
     async isTrainerMale (id) {
-        let shinx = await this.getShinx(id, 'user_male');
+        let shinx = await this.getShinx(id, ['user_male']);
         return shinx.user_male
     },
     async saveBattle(shinxBattleData, wins) {

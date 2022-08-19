@@ -87,6 +87,10 @@ exports.run = async (client, interaction) => {
 
                 return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
             case "addexp":
+                const isOwner = require('../../util/isOwner');
+                let ownerBool = await isOwner(client, interaction.user);
+                if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+
                 let expArg = interaction.options.getInteger("exp");
                 await shinxApi.addExperience(master.id, expArg);
                 returnString = `Added experience to your Shinx!`;
@@ -220,37 +224,6 @@ exports.run = async (client, interaction) => {
                     content: returnString, 
                     files: messageFile,
                     ephemeral: ephemeral || (res!='Ok') });
-            case "tap":
-                shinx = await shinxApi.getShinx(master.id);
-                canvas = Canvas.createCanvas(468, 386);
-                ctx = canvas.getContext('2d');
-                img = await Canvas.loadImage('./assets/room.png');
-                ctx.drawImage(img, 0, 0);
-                img = await Canvas.loadImage('./assets/mc.png');
-                ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 188, 148, 51, 72);
-                img = await Canvas.loadImage('./assets/fieldShinx.png');
-                reaction = require('../../util/shinx/getRandomSleepingReaction')();
-                
-                ctx.drawImage(img, 57 * reaction[1], 48 * shinx.shiny, 57, 48, 284, 177, 57, 48);
-
-                if (!isNaN(reaction[2])) {
-                    img = await Canvas.loadImage('./assets/reactions.png');
-                    ctx.drawImage(img, 10 + 30 * reaction[2], 8, 30, 32, 289, 147, 30, 32);
-                };
-                
-                if (now.getHours() > 20 || now.getHours() < 4) {
-                    img = await Canvas.loadImage('./assets/winNight.png');
-                    ctx.drawImage(img, 198, 52);
-                };
-
-                messageFile = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-                return sendMessage({ 
-                    client: client,
-                    interaction: interaction, 
-                    content: `**${shinx.nickname}** ${reaction[0]}`, 
-                    files: messageFile,
-                    ephemeral: ephemeral
-                });
             case "play":
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
@@ -296,8 +269,7 @@ exports.run = async (client, interaction) => {
 
                 img = await Canvas.loadImage('./assets/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
-                shinx.addExperience(100 * reaction[2]);
-                shinx.unfeed(1);
+                shinx.addExperienceAndUnfeed(100 * reaction[2], 1);
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ 
                     client: client, 
@@ -329,7 +301,7 @@ exports.run = async (client, interaction) => {
                 ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
-                shinx.addExperience(50);
+                shinx.addExperienceAndUnfeed(50, 1);
                 return sendMessage({ client: client, 
                     interaction: interaction, 
                     content: `**${shinx.nickname}** ${conversation.quote}`, 
@@ -365,15 +337,6 @@ module.exports.config = {
             name: "confirm",
             type: "BOOLEAN",
             description: "Are you sure? You can never get this Shinx back."
-        }]
-    },{
-        name: "tap",
-        type: "SUB_COMMAND",
-        description: "Tap your shinx!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
         }]
     },{
         name: "play",

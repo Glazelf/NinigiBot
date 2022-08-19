@@ -75,8 +75,7 @@ module.exports = {
         
         let res = await user.hasMoney(amount);
         if (res) {
-            await user.addMoney(id, -amount);
-            await user.addFood(id, amount);
+            await user.buyFood(amount);
             return true
         }
         return false

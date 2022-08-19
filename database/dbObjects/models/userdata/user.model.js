@@ -55,6 +55,13 @@ module.exports = (sequelize, DataTypes) => {
         this.food = Math.max(this.food + food, 0);
         this.save({fields:['food']});
     }
+
+    User.prototype.buyFood = function(food){
+        this.money = Math.max(this.money - food, 0);
+        this.food = Math.max(this.food + food, 0);
+        this.save({fields:['money','food']});
+    }
+
     User.prototype.getFood = function(){
         return this.food;
     }

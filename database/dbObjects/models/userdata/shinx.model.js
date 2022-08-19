@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const MIN_RANGE = 0;
     const MAX_RANGE = 10;
-    const shinx_util = require('../../../../util/nwu/shinx.util');
+    const getExpFromLevel = require('../../../../util/shinx/getExpFromLevel');
     const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
     const getLevelFromExp = require('../../../../util/shinx/getLevelFromExp');
 
@@ -84,13 +84,29 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Shinx.prototype.getNextExperience = function(){
-        const prev_level = Math.ceil(shinx_util.levelToExp(this.getLevel()))
-        const next_level = Math.ceil(shinx_util.levelToExp(this.getLevel()+1))
+        const prev_level = Math.ceil(getExpFromLevel(this.getLevel()))
+        const next_level = Math.ceil(getExpFromLevel(this.getLevel()+1))
         return {
             exp_pts : next_level - this.experience, 
             curr_percent : (this.experience - prev_level)/(next_level-prev_level)
         };
     }
+
+    Shinx.prototype.feedAndExp = function(food){
+        const prev_level = Math.ceil(getExpFromLevel(this.getLevel()))
+        const next_level = Math.ceil(getExpFromLevel(this.getLevel()+1))
+        this.experience += Math.ceil((next_level - prev_level) * (food/MAX_RANGE));
+        this.belly = Math.min(MAX_RANGE, Math.max(0, this.belly) + food);
+        this.save({fields:['belly', 'experience']});
+    }
+
+
+    Shinx.prototype.addExperienceAndUnfeed = function(experience, food){
+        this.experience += Math.ceil(experience);
+        this.belly = Math.ceil(0, this.belly -food);
+        this.save({fields:['experience', 'belly']});
+    }
+
     // Level
     Shinx.prototype.getLevel = function(){
         return getLevelFromExp(this.experience);

@@ -6,6 +6,7 @@ const api_user = require('../../database/dbServices/user.api');
 const NUMBER_OF_PAGES = 2;
 
 module.exports = async (client, interaction, page, user) => {
+    
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id);
     // Accent color
@@ -25,7 +26,6 @@ module.exports = async (client, interaction, page, user) => {
     if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: 'PRIMARY', emoji: '⬅️' }));
     if (page < NUMBER_OF_PAGES - 1) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
     let ephemeral = true;
-    await interaction.deferReply({ ephemeral: ephemeral });
 
     let user_db;
     switch (page) {
@@ -110,18 +110,21 @@ module.exports = async (client, interaction, page, user) => {
             profileEmbed.addFields(
                 { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true },
             );
+            trophy_level = 0;
             let trophies = await user_db.getShopTrophies();
             trophy_string = '';
             trophies.forEach(trophy => {
                 trophy_string += (trophy.icon + ' ');
             });
+            trophy_level += trophies.length;
             trophies = await user_db.getEventTrophies();
             trophies.forEach(trophy => {
                 trophy_string += (trophy.icon + ' ');
             });
+            trophy_level += trophies.length;
             if (trophy_string.length > 0) {
                 profileEmbed.addFields(
-                    { name: "Trophy Level:", value: trophies.length.toString() + ' :beginner:', inline: true },
+                    { name: "Trophy Level:", value: trophy_level + ' :beginner:', inline: true },
                     { name: "Trophies:", value: trophy_string },
                 )
             };
