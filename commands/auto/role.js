@@ -42,7 +42,7 @@ exports.run = async (client, interaction) => {
         // Role help embed and logic
         let roleHelpMessage = "";
         let rolesArray = [];
-        let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/addrole\` to add roles to this list.`;
+        let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/roleadd\` to add roles to this list.`;
 
         if (!requestRole) {
             // Select Menu
