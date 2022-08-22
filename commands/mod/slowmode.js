@@ -7,7 +7,7 @@ exports.run = async (client, interaction) => {
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
 
-        let ephemeral = true;
+        let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
