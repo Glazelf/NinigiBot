@@ -70,6 +70,18 @@ module.exports = (sequelize, DataTypes) => {
         this.save({fields:['money','food']});
     }
 
+    User.prototype.reduceFoodMoney = function(food, money){
+        if (food !=0 && money != 0){
+            this.addMoneyGeneric(-money);
+            this.addFoodGeneric(-food);
+            this.save({fields:['money','food']});    
+        } else if (food == 0){
+            this.addMoney(-money);
+        } else {
+            this.addFood(-food);
+        }
+    }
+
     User.prototype.getFood = function(){
         return this.food;
     }

@@ -47,6 +47,10 @@ module.exports = {
         let shinx = await this.getShinx(id, ['user_id','shiny']);
         return shinx.switchShininessAndGet();
     },
+    async changeAutoFeed(id, mode) {
+        let shinx = await this.getShinx(id, ['user_id','auto_feed']);
+        return shinx.setAutoFeed(mode);
+    },
     async addExperience(id, experience)  {
         let shinx = await this.getShinx(id, ['user_id','experience']);
         const res = await shinx.addExperienceAndLevelUp(experience);
@@ -101,6 +105,54 @@ module.exports = {
         await user.addFood(-feed_amount);
         await shinx.feedAndExp(feed_amount);
         return 'Ok'
+    },
+    async getShinxAutofeed(id) {
+        let shinx = await this.getShinx(id, ['auto_feed'])
+        return shinx.auto_feed;
+    },   
+
+    async autoFeedShinx1(id) {
+        let shinx = await this.getShinx(id, ['user_id','belly', 'experience']);
+        let shinx_hunger = shinx.getHunger()
+        if(shinx_hunger == 0){
+            return
+        }
+        let user = await this.getUser(id,['user_id','food']);
+
+        let feed_amount = Math.min(shinx_hunger, user.getFood())
+        if (feed_amount==0) {
+            return
+        }
+        await user.addFood(-feed_amount);
+        await shinx.feedAndExp(feed_amount);
+    },
+
+    async autoFeedShinx2(id) {
+        let shinx = await this.getShinx(id, ['user_id','belly', 'experience']);
+        let shinx_hunger = shinx.getHunger()
+        if(shinx_hunger == 0){
+            return
+        }
+        let user = await this.getUser(id,['user_id','food', 'money']);
+        let used_food = 0;
+        let used_money = 0;
+
+        let feed_amount = Math.min(shinx_hunger, user.getFood())
+        if (feed_amount!=0) {
+            used_food = feed_amount;
+            await user.addFood(-feed_amount);
+            await shinx.feedAndExp(feed_amount);
+        }
+        shinx_hunger -= feed_amount;
+        if(shinx_hunger != 0){
+            feed_amount = Math.min(shinx_hunger, user.getMoney())
+            if (feed_amount!=0) {
+                used_money = feed_amount;
+                await user.addMoney(-used_money);
+            }
+        }
+        await user.reduceFoodMoney(used_food, used_money);
+        await shinx.feedAndExp(used_food + used_money);
     },
 
     async nameShinx(id, nick) {

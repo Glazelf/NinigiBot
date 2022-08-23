@@ -14,6 +14,7 @@ exports.run = async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         if (ephemeralArg === false) ephemeral = false;
+
         //await interaction.deferReply({ ephemeral: ephemeral });
         let shinx,foodArg,res,avatar;
 
@@ -24,6 +25,17 @@ exports.run = async (client, interaction) => {
         const applyText = require('../../util/shinx/applyCanvasText')
         const now = new Date();
         let master = interaction.user
+
+        // Auto feed
+        let auto_feed = await shinxApi.getShinxAutofeed(master.id);
+        if(auto_feed > 0){
+            if(auto_feed == 1){
+                await shinxApi.autoFeedShinx1(master.id);
+            } else {
+                await shinxApi.autoFeedShinx2(master.id);
+            }
+        }
+        
         switch (interaction.options.getSubcommand()) {
             case "info":
                 shinx = await shinxApi.getShinx(master.id);

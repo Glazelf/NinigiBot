@@ -54,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false,
             allowNull: false,
         },
+        auto_feed: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
 
     }, {
         timestamps: false,
@@ -171,6 +176,21 @@ module.exports = (sequelize, DataTypes) => {
         this.experience = Math.floor(shinxBattle.exp * (1 + wins*0.2));
         this.save({fields:['experience']});
     }
+    // Auto feed
+    Shinx.prototype.setAutoFeedUnchecked = function(mode){
+        this.auto_feed = mode;
+        this.save({fields:['auto_feed']});
+        return this.auto_feed;
+    }
 
+    Shinx.prototype.setAutoFeed = function(mode){
+        if (this.auto_feed==mode){
+            return false
+        } else {
+            this.auto_feed = mode;
+            this.save({fields:['auto_feed']});
+            return true;
+        }
+    }
     return Shinx;
 };
