@@ -60,7 +60,7 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let master = interaction.user
+        let master = interaction.user;
         let shinx = await bank.currency.getShinx(master.id);
         const user = await Users.findOne({ where: { user_id: master.id } });
         if (!user) user = await Users.create({ user_id: master.id });
@@ -276,7 +276,6 @@ exports.run = async (client, interaction) => {
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/landscapes.png');
                 ctx.drawImage(img, 0, 0);
-                const now = new Date();
 
                 if (now.getHours() >= 20 || now.getHours() < 4) {
                     time = 2;
