@@ -85,8 +85,8 @@ exports.run = async (client, interaction) => {
                 specialID = specialID[specialID.length - 1].split(".")[0];
                 let subID = weaponObject.SubWeapon.split("/");
                 subID = subID[subID.length - 1].split(".")[0];
-                weaponStats += `\nSpecial: ${languageJSON[specialID]}`;
                 weaponStats += `\nSub: ${languageJSON[subID]}`;
+                weaponStats += `\nSpecial: ${languageJSON[specialID]}`;
 
                 await weaponObject.UIParam.forEach(stat => {
                     weaponStats += `\n${stat.Type}: ${stat.Value}`;
