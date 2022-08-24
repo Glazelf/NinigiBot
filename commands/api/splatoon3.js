@@ -76,11 +76,9 @@ exports.run = async (client, interaction) => {
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
-                console.log(inputID)
                 const weaponIDs = getNames(languageJSON, "weapons");
                 let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
                 if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
-                console.log(weaponObject)
 
                 let weaponStats = "";
                 let specialID = weaponObject.SpecialWeapon.split("/");
@@ -95,12 +93,10 @@ exports.run = async (client, interaction) => {
                 });
                 weaponStats += `\nSpecial Points: ${weaponObject.SpecialPoint}`;
 
-                console.log(specialID)
                 let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
                 let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
-                console.log(subImage)
-                console.log(weaponImage)
+
                 splat3Embed
                     .setAuthor({ name: languageJSON[inputID], iconURL: subImage })
                     .setThumbnail(specialImage)
