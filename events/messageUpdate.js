@@ -19,7 +19,7 @@ module.exports = async (client, message, newMessage) => {
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await message.guild.members.fetch(client.user.id);
+        let botMember = message.guild.me;
 
         // Check message content
         let adminBool = isAdmin(client, botMember);

@@ -11,7 +11,7 @@ module.exports = async (client, member) => {
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await member.guild.members.fetch(client.user.id);
+        let botMember = member.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);

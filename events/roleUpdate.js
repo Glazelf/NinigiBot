@@ -11,7 +11,7 @@ module.exports = async (client, oldRole, newRole) => {
         let log = newRole.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await newRole.guild.members.fetch(client.user.id);
+        let botMember = newRole.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
