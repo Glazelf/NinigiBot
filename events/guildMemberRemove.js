@@ -14,7 +14,7 @@ module.exports = async (client, member) => {
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
-        let botMember = await member.guild.members.fetch(client.user.id);
+        let botMember = member.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             let memberLeaveObject = {};

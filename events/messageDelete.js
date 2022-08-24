@@ -42,7 +42,7 @@ module.exports = async (client, message) => {
         if (!log) return;
 
         // Check message content
-        let botMember = await message.guild.members.fetch(client.user.id);
+        let botMember = message.guild.me;
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
