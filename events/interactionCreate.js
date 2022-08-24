@@ -240,7 +240,7 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        const getClothes = require("../util/splat3/getClothes");
+                        const getNames = require("../util/splat3/getNames");
                         const chineseJSON = require("../submodules/leanny.github.io/splat3/data/language/CNzh.json");
                         const EUGermanJSON = require("../submodules/leanny.github.io/splat3/data/language/EUde.json");
                         const EUEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUen.json");
@@ -258,7 +258,7 @@ module.exports = async (client, interaction) => {
                         let languageJSON = USEnglishJSON;
                         switch (focusedOption.name) {
                             case "clothing":
-                                const clothesIDs = getClothes(languageJSON);
+                                const clothesIDs = getNames(languageJSON, "clothes");
                                 for await (const [key, value] of Object.entries(clothesIDs)) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };

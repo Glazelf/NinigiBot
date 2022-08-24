@@ -5,7 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const getClothes = require('../../util/splat3/getClothes');
+        const getNames = require('../../util/splat3/getNames');
         // Language JSON
         const chineseJSON = require("../../submodules/leanny.github.io/splat3/data/language/CNzh.json");
         const EUGermanJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUde.json");
@@ -42,7 +42,7 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 let inputID = interaction.options.getString("clothing");
-                const clothesIDs = getClothes(languageJSON);
+                const clothesIDs = getNames(languageJSON, "clothes");
                 let allClothesJSON = {
                     ...GearInfoHeadJSON,
                     ...GearInfoClothesJSON,
