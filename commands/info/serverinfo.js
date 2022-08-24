@@ -20,8 +20,7 @@ exports.run = async (client, interaction) => {
         await guild.members.fetch();
         await guild.channels.fetch();
 
-        let botMember = await guild.members.fetch(client.user.id);
-
+        let botMember = guild.members.me;
         let botMembers = guild.members.cache.filter(member => member.user.bot);
         let humanMemberCount = guild.members.cache.size - botMembers.size;
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
