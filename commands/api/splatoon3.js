@@ -4,6 +4,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const getClothes = require('../../util/splat3/getClothes');
         // Language JSON
         const chineseJSON = require("../../submodules/leanny.github.io/splat3/data/language/CNzh.json");
@@ -33,16 +34,42 @@ exports.run = async (client, interaction) => {
         // Add language arg?
         let languageJSON = EUEnglishJSON;
 
+        let github = `https://github.com/Leanny/leanny.github.io/`;
+        let splat3Embed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor);
+
         switch (interaction.options.getSubcommand()) {
             case "clothing":
+                let inputID = interaction.options.getString("clothing");
                 const clothesIDs = getClothes(languageJSON);
+                let allClothesJSON = {
+                    ...GearInfoHeadJSON,
+                    ...GearInfoClothesJSON,
+                    ...GearInfoShoesJSON
+                };
+                // Doesn't always find the correct item despite its existence
+                let clothingPiece = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
+                if (!clothingPiece) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\nNote that this command currently being based on a datamine of the Splatoon 3 Splatfest World Premier, data is unstable, incomplete and prone to error.` });
+                console.log(clothingPiece)
 
+                let star = "⭐";
+                let rarity = star.repeat(clothingPiece.Rarity);
+
+                let clothingAuthor = languageJSON[inputID];
+                if (rarity.length > 0) clothingAuthor = `${languageJSON[inputID]} (${rarity})`;
+
+                splat3Embed
+                    .setAuthor({ name: clothingAuthor, iconURL: `${github}blob/master/splat3/images/brand/${clothingPiece.Brand}.png?raw=true` })
+                    .setThumbnail(`${github}blob/master/splat3/images/gear/${clothingPiece.__RowId}.png?raw=true`)
+                    .addField("Brand:", languageJSON[clothingPiece.Brand], true)
+                    .addField("Main Skill:", languageJSON[clothingPiece.Skill], true)
+                    .addField("How to get:", clothingPiece.HowToGet, true)
                 break;
             case "weapon":
                 break;
         };
 
-        return sendMessage({ client: client, interaction: interaction, content: `test` });
+        return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
 
     } catch (e) {
         // Log error
