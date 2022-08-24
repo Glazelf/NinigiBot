@@ -6,7 +6,6 @@ const api_user = require('../../database/dbServices/user.api');
 const NUMBER_OF_PAGES = 2;
 
 module.exports = async (client, interaction, page, user) => {
-    
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id);
     // Accent color
@@ -87,7 +86,7 @@ module.exports = async (client, interaction, page, user) => {
                     // console.log(e);
                 };
             };
-            let joinRank = await getJoinRank(user.id, interaction.guild);
+            let joinRank = await getJoinRank(user, interaction.guild);
             let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
             let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
@@ -138,11 +137,7 @@ module.exports = async (client, interaction, page, user) => {
     };
 };
 
-async function getJoinRank(userID, guild) {
-    let user = await guild.members.fetch(userID)
-        .catch(e => {
-            return null;
-        });
+async function getJoinRank(user, guild) {
     if (!user) return;
     await guild.members.fetch();
     // Sort all users by join time
@@ -150,7 +145,7 @@ async function getJoinRank(userID, guild) {
     arr.sort((a, b) => a.joinedAt - b.joinedAt);
     // Get provided user
     for (let i = 0; i < arr.length; i++) {
-        if (arr[i].id == userID) return i + 1;
+        if (arr[i].id == user.id) return i + 1;
     };
 };
 
