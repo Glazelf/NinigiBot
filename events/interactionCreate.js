@@ -239,6 +239,34 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                         break;
+                    case "splatoon3":
+                        const getClothes = require("../util/splat3/getClothes");
+                        const chineseJSON = require("../submodules/leanny.github.io/splat3/data/language/CNzh.json");
+                        const EUGermanJSON = require("../submodules/leanny.github.io/splat3/data/language/EUde.json");
+                        const EUEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUen.json");
+                        const EUSpanishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUes.json");
+                        const EUFrenchJSON = require("../submodules/leanny.github.io/splat3/data/language/EUfr.json");
+                        const EUItalianJSON = require("../submodules/leanny.github.io/splat3/data/language/EUit.json");
+                        const EUDutchJSON = require("../submodules/leanny.github.io/splat3/data/language/EUnl.json");
+                        const EURussianJSON = require("../submodules/leanny.github.io/splat3/data/language/EUru.json");
+                        const japaneseJSON = require("../submodules/leanny.github.io/splat3/data/language/JPja.json");
+                        const koreanJSON = require("../submodules/leanny.github.io/splat3/data/language/KRko.json");
+                        const taiwaneseJSON = require("../submodules/leanny.github.io/splat3/data/language/TWzh.json");
+                        const USEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/USen.json");
+                        const USSpanishJSON = require("../submodules/leanny.github.io/splat3/data/language/USes.json");
+                        const USFrenchJSON = require("../submodules/leanny.github.io/splat3/data/language/USfr.json");
+                        let languageJSON = USEnglishJSON;
+                        switch (focusedOption.name) {
+                            case "clothing":
+                                const clothesIDs = getClothes(languageJSON);
+                                for await (const [key, value] of Object.entries(clothesIDs)) {
+                                    choices.push({ name: value, value: key })
+                                };
+                                break;
+                            case "weapon":
+                                break;
+                        };
+                        break;
                     case "genshin":
                         let giAPI = `https://api.genshin.dev/`;
                         let giResponse;
@@ -268,6 +296,7 @@ module.exports = async (client, interaction) => {
                                 };
                                 break;
                         };
+                        break;
                     case "coinflip":
                         switch (focusedOption.name) {
                             case "side":
