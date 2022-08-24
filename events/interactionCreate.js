@@ -258,12 +258,16 @@ module.exports = async (client, interaction) => {
                         let languageJSON = USEnglishJSON;
                         switch (focusedOption.name) {
                             case "clothing":
-                                const clothesIDs = getNames(languageJSON, "clothes");
-                                for await (const [key, value] of Object.entries(clothesIDs)) {
+                                const clothingIDs = getNames(languageJSON, "clothes");
+                                for await (const [key, value] of Object.entries(clothingIDs)) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "weapon":
+                                const weaponIDs = getNames(languageJSON, "weapons");
+                                for await (const [key, value] of Object.entries(weaponIDs)) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                };
                                 break;
                         };
                         break;

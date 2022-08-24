@@ -30,43 +30,83 @@ exports.run = async (client, interaction) => {
         const WeaponInfoSubJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/WeaponInfoSub.json");
 
         let ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg === false) ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
         // Add language arg?
         let languageJSON = EUEnglishJSON;
 
-        let demoDisclaimer = `Note that this command currently uses data from a datamine of the Splatoon 3 Splatfest World Premier\nThis causes data to be unstable, incomplete and prone to error.`;
-        let github = `https://github.com/Leanny/leanny.github.io/`;
+        let inputID;
+        let demoDisclaimer = `Note that this command currently uses data from a datamine of the Splatoon 3 Splatfest World Premier.\nThis causes data to be unstable, incomplete and prone to error.`;
+        let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "clothing":
-                let inputID = interaction.options.getString("clothing");
-                const clothesIDs = getNames(languageJSON, "clothes");
+                inputID = interaction.options.getString("clothing");
+                const clothingIDs = getNames(languageJSON, "clothes");
                 let allClothesJSON = {
                     ...GearInfoHeadJSON,
                     ...GearInfoClothesJSON,
                     ...GearInfoShoesJSON
                 };
                 // Doesn't always find the correct item despite its existence
-                let clothingPiece = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
-                if (!clothingPiece) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
-                console.log(clothingPiece)
+                let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
+                if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
 
                 let star = "⭐";
-                let rarity = star.repeat(clothingPiece.Rarity);
+                let rarity = star.repeat(clothingObject.Rarity);
 
                 let clothingAuthor = languageJSON[inputID];
                 if (rarity.length > 0) clothingAuthor = `${languageJSON[inputID]} (${rarity})`;
 
+                let ObtainMethod = clothingObject.HowToGet;
+                if (ObtainMethod == "Shop") ObtainMethod = `${ObtainMethod} (${clothingObject.Price})`;
+
+                let brandImage = `${github}images/brand/${clothingObject.Brand}.png?raw=true`;
+                let clothingImage = `${github}images/gear/${clothingObject.__RowId}.png?raw=true`;
                 splat3Embed
-                    .setAuthor({ name: clothingAuthor, iconURL: `${github}blob/master/splat3/images/brand/${clothingPiece.Brand}.png?raw=true` })
-                    .setThumbnail(`${github}blob/master/splat3/images/gear/${clothingPiece.__RowId}.png?raw=true`)
-                    .addField("Brand:", languageJSON[clothingPiece.Brand], true)
-                    .addField("Main Skill:", languageJSON[clothingPiece.Skill], true)
-                    .addField("How to get:", clothingPiece.HowToGet, true)
+                    .setAuthor({ name: clothingAuthor })
+                    .setThumbnail(brandImage)
+                    .addField("Brand:", languageJSON[clothingObject.Brand], true)
+                    .addField("Main Skill:", languageJSON[clothingObject.Skill], true)
+                    .addField("Obtain Method:", ObtainMethod, true)
+                    .setImage(clothingImage)
                 break;
             case "weapon":
+                inputID = interaction.options.getString("weapon");
+                console.log(inputID)
+                const weaponIDs = getNames(languageJSON, "weapons");
+                let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
+                if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                console.log(weaponObject)
+
+                let weaponStats = "";
+                let specialID = weaponObject.SpecialWeapon.split("/");
+                specialID = specialID[specialID.length - 1].split(".")[0];
+                let subID = weaponObject.SubWeapon.split("/");
+                subID = subID[subID.length - 1].split(".")[0];
+                weaponStats += `\nSpecial: ${languageJSON[specialID]}`;
+                weaponStats += `\nSub: ${languageJSON[subID]}`;
+
+                await weaponObject.UIParam.forEach(stat => {
+                    weaponStats += `\n${stat.Type}: ${stat.Value}`;
+                });
+                weaponStats += `\nSpecial Points: ${weaponObject.SpecialPoint}`;
+
+                console.log(specialID)
+                let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
+                let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
+                let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
+                console.log(subImage)
+                console.log(weaponImage)
+                splat3Embed
+                    .setAuthor({ name: languageJSON[inputID], iconURL: subImage })
+                    .setThumbnail(specialImage)
+                    .setDescription(weaponStats)
+                    .addField("Shop:", `${weaponObject.ShopPrice} from rank ${weaponObject.ShopUnlockRank}`)
+                    .setImage(weaponImage)
                 break;
         };
 
