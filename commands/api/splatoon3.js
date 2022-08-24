@@ -135,7 +135,7 @@ module.exports.config = {
     }, {
         name: "weapon",
         type: "SUB_COMMAND",
-        description: "Get info on a weapon..",
+        description: "Get info on a weapon.",
         options: [{
             name: "weapon",
             type: "STRING",
