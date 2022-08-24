@@ -260,7 +260,7 @@ module.exports = async (client, interaction) => {
                             case "clothing":
                                 const clothesIDs = getClothes(languageJSON);
                                 for await (const [key, value] of Object.entries(clothesIDs)) {
-                                    choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "weapon":
