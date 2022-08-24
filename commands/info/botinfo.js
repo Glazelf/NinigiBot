@@ -103,17 +103,6 @@ exports.run = async (client, interaction) => {
             await client.guilds.cache.forEach(guild => {
                 if (guild.memberCount) userCount += guild.memberCount;
             });
-
-            // Slow but accurate method
-            // var userList = [];
-            // await client.guilds.cache.forEach(guild => {
-            //     guild.members.fetch().then(
-            //         guild.members.cache.forEach(member => {
-            //             if (!member.user.bot) userList.push(member.id);
-            //         }));
-            // });
-            // userCount = [...new Set(userList)];
-
             return userCount;
         };
 
