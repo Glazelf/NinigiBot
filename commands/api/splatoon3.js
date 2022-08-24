@@ -34,6 +34,7 @@ exports.run = async (client, interaction) => {
         // Add language arg?
         let languageJSON = EUEnglishJSON;
 
+        let demoDisclaimer = `Note that this command currently uses data from a datamine of the Splatoon 3 Splatfest World Premier\nThis causes data to be unstable, incomplete and prone to error.`;
         let github = `https://github.com/Leanny/leanny.github.io/`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -49,7 +50,7 @@ exports.run = async (client, interaction) => {
                 };
                 // Doesn't always find the correct item despite its existence
                 let clothingPiece = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
-                if (!clothingPiece) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\nNote that this command currently being based on a datamine of the Splatoon 3 Splatfest World Premier, data is unstable, incomplete and prone to error.` });
+                if (!clothingPiece) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 console.log(clothingPiece)
 
                 let star = "⭐";
@@ -69,7 +70,7 @@ exports.run = async (client, interaction) => {
                 break;
         };
 
-        return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
+        return sendMessage({ client: client, interaction: interaction, content: demoDisclaimer, embeds: splat3Embed });
 
     } catch (e) {
         // Log error
