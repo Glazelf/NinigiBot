@@ -1,6 +1,6 @@
 module.exports = async (hp) => {
     if (hp == 0) return 'a';
-    return [color(hp), size(hp)]
+    return [color(hp), size(hp)];
 };
 
 const color = hp => {
@@ -12,5 +12,5 @@ const color = hp => {
 };
 
 const size = hp => {
-    return Math.floor(hp * 96) % 97
+    return Math.floor(hp * 96) % 97;
 };
