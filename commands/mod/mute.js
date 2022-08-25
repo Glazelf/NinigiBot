@@ -17,11 +17,12 @@ exports.run = async (client, interaction) => {
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
 
         let muteTime = 60;
-        let maxMuteTime = 2.419e+9; // Max time is 28 days
+        let maxMuteTime = 40320; // Max time is 28 days
         let timeArg = interaction.options.getInteger("time");
         if (timeArg) muteTime = timeArg;
         if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
-        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
+        muteTime = muteTime * 1000 * 60; // Convert to minutes
+        if (muteTime > maxMuteTime * 60 * 1000) muteTime = maxMuteTime;
 
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
 
@@ -35,10 +36,7 @@ exports.run = async (client, interaction) => {
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
 
-        let displayTime = muteTime; // Save time for return strings
-        muteTime = muteTime * 1000 * 60; // Convert to minutes
-        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
-        let muteReturnString = `Muted ${member} (${member.id}) for ${displayTime} minute(s) for reason: \`${reason}\`.`;
+        let muteReturnString = `Muted ${member} (${member.id}) for ${muteTime} minute(s) for reason: \`${reason}\`.`;
 
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
