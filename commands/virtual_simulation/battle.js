@@ -94,8 +94,10 @@ exports.run = async (client, interaction) => {
         ctx.drawImage(background, 0, 0);
         ctx.font = 'normal bolder 14px Arial';
         ctx.fillStyle = '#FFFFFF';
+        const image_nicks = [];
+        for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? image_nicks.push(`${shinxes[i].owner.username}'s Shinx`) : image_nicks.push(shinxes[i].nick);
         for (let i = 0; i < 2; i++) {
-            ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
+            ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
         };
 
         const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
@@ -107,8 +109,9 @@ exports.run = async (client, interaction) => {
         };
 
         const nicks = [];
+        
         const prevColors = [0, 0];
-        for (let i = 0; i < 2; i++) shinxes[i].nick.trim().toLowerCase() === 'shinx' ? nicks.push(`${shinxes[i].owner.username}'s Shinx`) : nicks.push(shinxes[i].nick);
+        for (let i = 0; i < 2; i++) nicks.push(`${shinxes[i].owner.username}'s ${shinxes[i].nick}`);
         const geasson = await Canvas.loadImage('./assets/geasson.png');
         const geassoff = await Canvas.loadImage('./assets/geassoff.png');
 
@@ -182,14 +185,14 @@ exports.run = async (client, interaction) => {
                     ctx.drawImage(geasson, 52 + 35 * i * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#fc03c2';
-                    ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
+                    ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
                 };
                 if (shinxes[i].reduceGeass()) {
                     text += addLine(`**${nicks[i]} no longer has Geass mode!**`);
                     ctx.drawImage(geassoff, 52 + 35 * i * i, 20 + 79 * i);
                     ctx.font = 'normal bolder 14px Arial';
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
+                    ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
                 };
             };
             let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
