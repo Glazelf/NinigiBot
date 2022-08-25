@@ -6,7 +6,8 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../../util/sendMessage');
         const Discord = require("discord.js");
         const roulette = require('../../../affairs/roulette');
-        const { bank } = require('../../../database/bank');
+        
+        const api_user = require('../../../database/dbServices/user.api');
         const randomNumber = require('../../../util/randomNumber');
 
         let ephemeral = false;
@@ -34,7 +35,7 @@ exports.run = async (client, interaction) => {
                     for (let i = 0; i < winners.length; i++) {
                         const winner = winners[i];
                         resultAnnouncement += (i + 1) + ') ' + interaction.guild.members.cache.find(member => member.id === winner[0]).user.username + ` wins ${winner[1]}${globalVars.currency}!\n`;
-                        bank.currency.add(interaction.user.id, winner[1]);
+                        api_user.addMoney(interaction.user.id, winner[1]);
                     };
                 };
 

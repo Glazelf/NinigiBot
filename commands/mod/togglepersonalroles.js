@@ -8,7 +8,7 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const { PersonalRoleServers } = require('../../database/dbObjects');
+        const { PersonalRoleServers } = require('../../database/dbServices/server.api');
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
 
         // Database

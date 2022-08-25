@@ -4,10 +4,9 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const randomNumber = require('../../util/randomNumber');
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
         let currency = globalVars.currency;
-        let balance = await bank.currency.getBalance(interaction.user.id);
+        let balance = await api_user.getMoney(interaction.user.id);
 
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -39,7 +38,7 @@ exports.run = async (client, interaction) => {
             amount = Math.abs(amount) * -1;
         };
 
-        bank.currency.add(interaction.user.id, amount);
+        api_user.addMoney(interaction.user.id, amount);
         sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {

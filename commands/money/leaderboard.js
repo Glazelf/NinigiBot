@@ -5,7 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const { bank } = require('../../database/bank');
+        const user_api = require('../../database/dbServices/user.api');
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -15,18 +15,17 @@ exports.run = async (client, interaction) => {
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
         let icon = null;
-
+        const money_db = await user_api.getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
         if (global) {
             // Global leaderboard
             icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-            let leaderboardStringGlobal = bank.currency.sort((a, b) => b.balance - a.balance)
-                .filter(user => client.users.cache.has(user.user_id))
+            let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
-                .first(10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
+                .slice(0, 10)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
             leaderboardEmbed
@@ -35,11 +34,10 @@ exports.run = async (client, interaction) => {
         } else {
             // Server leaderboard
             icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            let leaderboardString = bank.currency.sort((a, b) => b.balance - a.balance)
-                .filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
+            let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
-                .first(10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.balance)}${globalVars.currency}`)
+                .slice(0, 10)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });
