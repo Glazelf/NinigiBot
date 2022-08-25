@@ -101,7 +101,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON[inputID], iconURL: subImage })
                     .setThumbnail(specialImage)
                     .setDescription(weaponStats)
-                    .addField("Shop:", `${weaponObject.ShopPrice} from rank ${weaponObject.ShopUnlockRank}`)
+                    .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`)
                     .setImage(weaponImage)
                 break;
         };
