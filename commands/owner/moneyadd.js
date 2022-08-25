@@ -11,18 +11,18 @@ exports.run = async (client, interaction) => {
         const api_user = require('../../database/dbServices/user.api');
         let currency = globalVars.currency;
 
-        let transferTarget = interaction.options.getUser("user");
+        let transferTargetID = interaction.options.getString("user");
         let transferAmount = interaction.options.getInteger("amount");
 
-        if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
+        if (!transferTargetID) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
 
-        let dbBalance = await api_user.getMoney(transferTarget.id);
+        let dbBalance = await api_user.getMoney(transferTargetID);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await api_user.addMoney(transferTarget.id, +transferAmount);
+        await api_user.addMoney(transferTargetID, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
-        return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
 
     } catch (e) {
         // Log error
@@ -41,8 +41,8 @@ module.exports.config = {
         required: true
     }, {
         name: "user",
-        type: "USER",
-        description: "Specify user.",
+        type: "STRING",
+        description: "Specify user by id.",
         required: true
     }]
 };
