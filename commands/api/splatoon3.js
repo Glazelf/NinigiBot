@@ -37,7 +37,7 @@ exports.run = async (client, interaction) => {
         let languageJSON = EUEnglishJSON;
 
         let inputID;
-        let demoDisclaimer = `Note that this command currently uses data from a datamine of the Splatoon 3 Splatfest World Premier.\nThis causes data to be unstable, incomplete and prone to error.`;
+        let demoDisclaimer = `Note that this command currently uses data from [a datamine of the Splatoon 3 Splatfest World Premier](https://github.com/Leanny/leanny.github.io/tree/master/splat3/data).\nThis causes data to be unstable, incomplete and prone to error.`;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
