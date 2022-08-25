@@ -31,7 +31,8 @@ exports.run = async (client, interaction) => {
         };
 
         if (!target) return sendMessage({ client: client, interaction: interaction, content: `I could not find a user or channel with that ID.` });
-        let targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
+        let targetFormat = null;
+        if (channelIDArg) targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
         if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
 
         try {
