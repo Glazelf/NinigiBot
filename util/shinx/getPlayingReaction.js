@@ -8,6 +8,6 @@ const playing =
         //['']
     ];
 
-    module.exports = (index=-1) => {
-        return index!=-1 ? playing[index] : playing[Math.floor(Math.random() * (playing.length - 1)) + 1];
-    };
+module.exports = (index = -1) => {
+    return index != -1 ? playing[index] : playing[Math.floor(Math.random() * (playing.length - 1)) + 1];
+};

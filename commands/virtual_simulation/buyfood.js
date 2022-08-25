@@ -9,16 +9,18 @@ exports.run = async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-        let master = interaction.user
+        let master = interaction.user;
         foodArg = interaction.options.getInteger("food");
         const userApi = require('../../database/dbServices/user.api');
         res = await userApi.buyFood(master.id, foodArg);
-        returnString = res ? `Added ${foodArg}🍗 to your account!`:`Not enough money!`;
-        return sendMessage({ 
-            client: client, 
-            interaction: interaction, 
-            content: returnString, 
-            ephemeral: ephemeral || res != true }); 
+        returnString = res ? `Added ${foodArg}🍗 to your account!` : `Not enough money!`;
+        return sendMessage({
+            client: client,
+            interaction: interaction,
+            content: returnString,
+            ephemeral: ephemeral || res != true
+        });
+
     } catch (e) {
         // Log error
         logger(e, client, interaction);
@@ -33,7 +35,7 @@ module.exports.config = {
         type: "INTEGER",
         description: "The amount of food you want to buy.",
         required: true,
-    },{
+    }, {
         name: "ephemeral",
         type: "BOOLEAN",
         description: "Whether this command is only visible to you."

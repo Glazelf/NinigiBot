@@ -1,14 +1,14 @@
 const Sequelize = require('sequelize');
-const { serverdata } =  require('../dbConnection/dbConnection');
+const { serverdata } = require('../dbConnection/dbConnection');
 
-const {shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages} = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
+const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 
 module.exports = async (reset_db) => {
     try {
-        if(reset_db) {
-            await serverdata.drop()
+        if (reset_db) {
+            await serverdata.drop();
             console.log(`Deleted Database: Server Data ✔`);
-        }
+        };
         await EligibleRoles.sync({ alter: true });
         await PersonalRoles.sync({ alter: true });
         await PersonalRoleServers.sync({ alter: true });
@@ -58,6 +58,3 @@ module.exports = async (reset_db) => {
         console.log(e)
     };
 };
-
-
-

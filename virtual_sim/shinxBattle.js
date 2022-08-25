@@ -37,7 +37,6 @@ module.exports = class ShinxBattle {
         this.geass = 0;
     };
 
-
     gainExperience(enemyLevel, loses) {
         const experience = Math.ceil(gainedExp(enemyLevel) * ((1 / 2) ** (loses)));
         this.exp += experience;
@@ -73,7 +72,7 @@ module.exports = class ShinxBattle {
     geassMode() {
         if (this.geass < 1) {
             const geass_activated_chance = Math.random(0, 1);
-            if (geass_activated_chance < 0.2 ) {
+            if (geass_activated_chance < 0.2) {
                 this.geass = 3;
                 return true;
             };

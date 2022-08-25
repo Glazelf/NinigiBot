@@ -106,9 +106,7 @@ module.exports = async (client, interaction, page, user) => {
             break;
         case 1:
             user_db = await api_user.getUser(user.id, ['user_id', 'food']);
-            profileEmbed.addFields(
-                { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true },
-            );
+            profileEmbed.addField("Food:", user_db.food.toString() + ' :poultry_leg:', true);
             trophy_level = 0;
             let trophies = await user_db.getShopTrophies();
             trophy_string = '';
@@ -122,10 +120,9 @@ module.exports = async (client, interaction, page, user) => {
             });
             trophy_level += trophies.length;
             if (trophy_string.length > 0) {
-                profileEmbed.addFields(
-                    { name: "Trophy Level:", value: trophy_level + ' :beginner:', inline: true },
-                    { name: "Trophies:", value: trophy_string },
-                )
+                profileEmbed
+                    .addField("Trophy Level:", value: trophy_level + ' :beginner:', true)
+                    .addField("Trophies:", trophy_string, true);
             };
             break;
     };

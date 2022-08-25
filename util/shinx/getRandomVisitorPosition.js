@@ -6,7 +6,6 @@ const visitors = [
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
 
-
 module.exports = () => {
     return visitors[Math.floor(Math.random() * visitors.length)];
 };

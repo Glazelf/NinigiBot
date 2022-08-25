@@ -14,7 +14,6 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         let trophy_name, res, returnString;
 
-
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
@@ -52,7 +51,7 @@ exports.run = async (client, interaction) => {
                     parsed_emote = trophy_emote.match(regexpUnicode)
                     if (!parsed_emote) error += 'Emote is not a valid Unicode Emoji or Discord custom emote';
                 };
-                if (parsed_emote) trophy_emote = parsed_emote[0];;
+                if (parsed_emote) trophy_emote = parsed_emote[0];
 
                 const trophy_price = interaction.options.getInteger("price");
                 if (trophy_price < 1) error += 'Price cannot be lower than 1'
@@ -117,8 +116,7 @@ module.exports.config = {
             description: "Amount of money to charge for it",
             required: true,
         },]
-    },
-    {
+    }, {
         name: "deleteshoptrophy",
         type: "SUB_COMMAND",
         description: "Owner only, delete a trophy from the shop",
@@ -129,6 +127,5 @@ module.exports.config = {
             description: "Name of the trophy. Make sure it's valid!",
             required: true
         }]
-    }
-    ]
+    }]
 };
