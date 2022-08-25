@@ -27,6 +27,12 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");
+        return sendMessage({
+            client: client,
+            interaction: interaction,
+            content: `Unavailable for now...`,
+            ephemeral: true
+        });
         let res = await shinxApi.changeAutoFeed(master.id, mode_num);
         let mode_str = autofeed_modes[mode_num].name;
         returnString = res ? `Changed autofeed to: ${mode_str}` : `Autofeed already set to: ${mode_str}`;
