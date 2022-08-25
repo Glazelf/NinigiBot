@@ -121,7 +121,7 @@ module.exports = async (client, interaction, page, user) => {
             trophy_level += trophies.length;
             if (trophy_string.length > 0) {
                 profileEmbed
-                    .addField("Trophy Level:", value: trophy_level + ' :beginner:', true)
+                    .addField("Trophy Level:", trophy_level + ' :beginner:', true)
                     .addField("Trophies:", trophy_string, true);
             };
             break;
