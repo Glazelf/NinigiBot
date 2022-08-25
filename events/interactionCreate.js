@@ -96,15 +96,17 @@ module.exports = async (client, interaction) => {
                             }, componentsCopy);
                             await interaction.update({ components: componentsCopy });
                             return;
-                        }else if (interaction.customId.startsWith("bgd")) {
+                        } else if (interaction.customId.startsWith("bgd")) {
+                            // trophy shop??
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
                             await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
-                        }else if (interaction.customId.startsWith("usf")) {
-                            const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/)
+                        } else if (interaction.customId.startsWith("usf")) {
+                            // userinfo
+                            const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
-                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, {id:user});
+                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, { id: user });
                             await interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
@@ -299,7 +301,7 @@ module.exports = async (client, interaction) => {
                                 break;
                         };
                     case "manager":
-                        switch(focusedOption.name){
+                        switch (focusedOption.name) {
                             case "name":
                                 let trophies = await api_trophy.getShopTrophies();
                                 let temp = ''
