@@ -39,14 +39,12 @@ module.exports = async (client) => {
 
             const gifEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
-                .setDescription(`Bot Testing`)
-                //.setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
+                .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
                 .setImage(randomGif);
-            channel.send({ content: 
-                "a"
-                // candidateRandom.toString()
-                , embeds: [gifEmbed], 
-                //allowedMentions: { parse: ['users'] } 
+
+            channel.send({
+                content: candidateRandom.toString(), embeds: [gifEmbed],
+                //allowedMentions: { parse: ['users'] }
             });
         }, timeZone = timezone, start = true);
 
