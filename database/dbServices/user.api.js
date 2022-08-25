@@ -17,9 +17,7 @@ module.exports = {
         return users;
     },
     async bulkDeleteUsers(id_arr) {
-        await User.destroy({
-            where: { user_id: id_arr },
-        });
+        
         await userdata.models.Shinx.destroy({
             where: { user_id: id_arr },
         });
@@ -28,6 +26,9 @@ module.exports = {
         });
         await userdata.models.ShopTrophyUser.destroy({
             where: { UserUserId: id_arr },
+        });
+        await User.destroy({
+            where: { user_id: id_arr },
         });
     },
     // Money
