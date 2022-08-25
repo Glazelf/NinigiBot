@@ -6,9 +6,10 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
 
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
+        
         let currency = globalVars.currency
-        let balance = await bank.currency.getBalance(interaction.user.id);
+        let balance = await api_user.getMoney(interaction.user.id);
 
         let amount = interaction.options.getInteger("bet-amount");
         let playerChoice = interaction.options.getString("weapon").toLowerCase();
@@ -41,7 +42,7 @@ exports.run = async (client, interaction) => {
         };
 
         // Update currency
-        bank.currency.add(interaction.user.id, amount);
+        api_user.addMoney(interaction.user.id, amount);
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {

@@ -13,7 +13,7 @@ module.exports = async (client, message, newMessage) => {
         await message.guild.fetch();
 
         // Get log
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbServices/server.api');
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);

@@ -4,9 +4,9 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
 
-        let switchCodeGet = await bank.currency.getSwitchCode(interaction.user.id);
+        let switchCodeGet = await api_user.getSwitchCode(interaction.user.id);
         let switchFC = interaction.options.getString('switch-fc');
 
         let invalidString = `Please specify a valid Nintendo Switch friend code.`;
@@ -22,7 +22,7 @@ exports.run = async (client, interaction) => {
         if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
         switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
 
-        bank.currency.switchCode(interaction.user.id, switchFC);
+        api_user.setSwitchCode(interaction.user.id, switchFC);
         return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code.` });
 
     } catch (e) {

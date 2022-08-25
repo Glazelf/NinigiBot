@@ -8,19 +8,18 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
         let currency = globalVars.currency;
 
-        let transferTargetID = interaction.options.getString("user-id");
+        let transferTarget = interaction.options.getUser("user");
         let transferAmount = interaction.options.getInteger("amount");
 
-        let transferTarget = await client.users.fetch(transferTargetID);
         if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
 
-        let dbBalance = await bank.currency.getBalance(transferTarget.id);
+        let dbBalance = await api_user.getMoney(transferTarget.id);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await bank.currency.add(transferTarget.id, +transferAmount);
+        await api_user.addMoney(transferTarget.id, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
         return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.` });
@@ -41,9 +40,9 @@ module.exports.config = {
         description: "Amount of money to add.",
         required: true
     }, {
-        name: "user-id",
-        type: "STRING",
-        description: "User to add money to.",
+        name: "user",
+        type: "USER",
+        description: "Specify user.",
         required: true
     }]
 };

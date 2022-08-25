@@ -14,8 +14,11 @@ module.exports = async (client, interaction) => {
         const axios = require("axios");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbObjects');
-        const { bank } = require('../database/bank');
+        const { EligibleRoles } = require('../database/dbServices/server.api');
+
+        const api_trophy = require('../database/dbServices/trophy.api');
+        const api_user = require('../database/dbServices/user.api');
+
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
@@ -93,6 +96,16 @@ module.exports = async (client, interaction) => {
                             }, componentsCopy);
                             await interaction.update({ components: componentsCopy });
                             return;
+                        }else if (interaction.customId.startsWith("bgd")) {
+                            const offset = parseInt(interaction.customId.substring(3));
+                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
+                            await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
+                        }else if (interaction.customId.startsWith("usf")) {
+                            const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/)
+                            const page = parseInt(data[1]);
+                            const user = data[2];
+                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, {id:user});
+                            await interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
                             return;
@@ -141,7 +154,7 @@ module.exports = async (client, interaction) => {
                 switch (focusedOption.name) {
                     // Used in: coinflip, bet
                     case "bet-amount":
-                        let balance = await bank.currency.getBalance(interaction.user.id);
+                        let balance = await api_user.getMoney(interaction.user.id);
                         if (balance > 0) {
                             balance = Math.floor(balance);
                             let balanceHalf = Math.floor(balance / 2);
@@ -318,14 +331,48 @@ module.exports = async (client, interaction) => {
                                 choices.push({ name: "Scissors", value: "Scissors" });
                                 break;
                         };
-                    case "shop":
+                    case "manager":
+                        switch(focusedOption.name){
+                            case "name":
+                                let trophies = await api_trophy.getShopTrophies();
+                                let temp = ''
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                })
+                        }
+                        break;
+                    case "trophy":
                         switch (focusedOption.name) {
-                            case "category":
-                                choices.push({ name: "Equipment", value: "Equipment" });
-                                choices.push({ name: "Food", value: "Food" });
+                            case "shoptrophy":
+                                const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
+
+                                buyable_items.forEach(trophy => {
+                                    choices.push({ name: trophy, value: trophy });
+                                })
+                                // if (choices.length == 0){
+                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                // }
+
+                                break;
+                            case "trophy":
+                                let trophies = await api_trophy.getShopTrophies();
+                                let temp = ''
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                })
+                                trophies = await api_trophy.getEventTrophies();
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                })
+                                // if (choices.length == 0){
+                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                // }
+
                                 break;
                         };
-                    case "inventory":
                         break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
@@ -340,7 +387,7 @@ module.exports = async (client, interaction) => {
                 if (choices.length < 1) return interaction.respond([]);
                 // Return choices
                 return interaction.respond(choices).catch(e => {
-                    // console.log(e);
+                    //console.log(e);
                 });
                 break;
             case "MODAL_SUBMIT":
