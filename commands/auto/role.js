@@ -71,7 +71,9 @@ exports.run = async (client, interaction) => {
                 let rolesSelects = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
 
-                return sendMessage({ client: client, interaction: interaction, content: `Choose a role to assign to yourself: `, components: rolesSelects, ephemeral: ephemeral });
+                let returnString = `Choose a role to assign to yourself:`;
+                if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${returnString}`;
+                return sendMessage({ client: client, interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
             };
 
             // Help menu
