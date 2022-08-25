@@ -10,60 +10,54 @@ exports.run = async (client, interaction) => {
 
         const api_shinx = require('../../database/dbServices/shinx.api');
         const api_user = require('../../database/dbServices/user.api');
-        const api_trophy = require('../../database/dbServices/trophy.api');        
+        const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
         let ephemeral = true;
-        let embed,trophy_name,res;
+        let embed, trophy_name, res;
         let returnString = ''
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
         if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-
-        let master = interaction.user
-
-        let  trophies;
+        let master = interaction.user;
+        let trophies;
         switch (interaction.options.getSubcommand()) {
             case "stock":
                 if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
+                    .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
-                if(!emotesAllowed){
-                    trophies = replaceDiscordEmotes(trophies);
-                }
-                trophies.forEach(trophy=>{
-                    let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true}
-                    let trophy_price = { name: '\u200B', value: '```diff\n'+`[${trophy.price}]`+'\n```', inline: true};
-                    
-                    switch(trophy.temp_bought){
+                if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
+                trophies.forEach(trophy => {
+                    let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
+                    let trophy_price = { name: '\u200B', value: '```diff\n' + `[${trophy.price}]` + '\n```', inline: true };
+
+                    switch (trophy.temp_bought) {
                         case 'Bought':
                             trophy_price.value = '```yaml\n+Bought\n```'
                             break;
                         case 'CantBuy':
-                            trophy_price.value = '```css\n['+`${trophy.price}`+']\n```'
+                            trophy_price.value = '```css\n[' + `${trophy.price}` + ']\n```'
                             break;
                         case 'CanBuy':
                             break;
-                    }
-                    
-                    embed.addFields(
-                        trophy_header,
-                        trophy_price,
-                        { name: '\u200B', value: '\u200B', inline: true },
-                    )
-
-                })
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    embeds: [embed],  
-                    ephemeral: ephemeral });
+                    };
+                    embed
+                        .addField(trophy_header.name, trophy_header.value, trophy_header.inline)
+                        .addField(trophy_price.name, trophy_price.value, trophy_price.inline)
+                        .addField("\u200B", "\u200B", true);
+                });
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    embeds: [embed],
+                    ephemeral: ephemeral
+                });
             case "buy":
                 trophy_name = interaction.options.getString("shoptrophy");
-                res =  await api_trophy.buyShopTrophy(master.id, trophy_name.toLowerCase());
-                switch(res){
+                res = await api_trophy.buyShopTrophy(master.id, trophy_name.toLowerCase());
+                switch (res) {
                     case 'NoTrophy':
                         returnString = `**${trophy_name}** isn't available.\nTip: check today's stock with \`/trophy stock\``;
                         break;
@@ -89,20 +83,21 @@ exports.run = async (client, interaction) => {
 
                         messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                         break;
-                }
+                };
 
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: returnString, 
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    content: returnString,
                     files: messageFile,
-                    ephemeral: ephemeral || (res!='Ok') });
+                    ephemeral: ephemeral || (res != 'Ok')
+                });
             case "list":
                 let trophy_slice = await require('../../util/trophies/getTrophyEmbedSlice')(0);
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    embeds:[trophy_slice.embed],
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    embeds: [trophy_slice.embed],
                     components: trophy_slice.components,
                     ephemeral: ephemeral,
                 });
@@ -110,39 +105,32 @@ exports.run = async (client, interaction) => {
             case "ask":
 
                 trophy_name = interaction.options.getString("trophy");
-                res =  await api_trophy.getShopTrophyWithName(trophy_name);
+                res = await api_trophy.getShopTrophyWithName(trophy_name);
                 let isShop = true;
-                if (!res) { res =  await api_trophy.getEventTrophyWithName(trophy_name); isShop = false;} 
-                if (!res) { 
-                    return sendMessage({ 
-                        client: client, 
-                        interaction: interaction, 
-                        content: `**${trophy_name}** doesn't exist.\nTip: check all trophies with \`/trophy list\``, 
-                        ephemeral: true  });
+                if (!res) { res = await api_trophy.getEventTrophyWithName(trophy_name); isShop = false; }
+                if (!res) {
+                    return sendMessage({
+                        client: client,
+                        interaction: interaction,
+                        content: `**${trophy_name}** doesn't exist.\nTip: check all trophies with \`/trophy list\``,
+                        ephemeral: true
+                    });
                 } else {
-                    if(!emotesAllowed){
-                        res = replaceDiscordEmotes(res, is_array=false);
-                    }
+                    if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                     embed = new Discord.MessageEmbed()
-                    .setColor(globalVars.embedColor)
-                    .setTitle(`${res.trophy_id}`)
-                    .addFields(
-                        { name: "Icon:", value: `${res.icon}`},
-                        { name: "Description:", value: `${res.description}`},
-                    )
+                        .setColor(globalVars.embedColor)
+                        .setTitle(`${res.trophy_id}`)
+                        .addField("Icon:", `${res.icon}`, true)
+                        .addField("Description:", `${res.description}`, true)
                     let location = `Sometimes found in the Shop.`;
-                    if (!isShop){
-                        location = res.origin; 
-                        
-                    } 
-                    embed.addFields(
-                        { name: "Location", value: location},
-                    )
-                    return sendMessage({ 
-                        client: client, 
-                        interaction: interaction, 
-                        embeds: [embed],  
-                        ephemeral: ephemeral });
+                    if (!isShop) location = res.origin;
+                    embed.addField("Location:", `${location}`, true);
+                    return sendMessage({
+                        client: client,
+                        interaction: interaction,
+                        embeds: [embed],
+                        ephemeral: ephemeral
+                    });
 
                 }
         };
@@ -166,7 +154,7 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
+    }, {
         name: "buy",
         type: "SUB_COMMAND",
         description: `Buy a trophy from today's stock`,
@@ -176,12 +164,12 @@ module.exports.config = {
             description: "Item to buy",
             autocomplete: true,
             required: true
-        },{
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
+    }, {
         name: "list",
         type: "SUB_COMMAND",
         description: "See a list of all trophies!",
@@ -190,7 +178,7 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
+    }, {
         name: "ask",
         type: "SUB_COMMAND",
         description: "Get info about a trophy",
@@ -200,7 +188,7 @@ module.exports.config = {
             description: "Trophy or it's icon",
             autocomplete: true,
             required: true
-        },{
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."

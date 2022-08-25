@@ -17,9 +17,7 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
         let embed;
         let avatar = null;
-
-        let master = interaction.user
-
+        let master = interaction.user;
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "info":
@@ -30,48 +28,43 @@ exports.run = async (client, interaction) => {
                 trophy_level = 0;
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
-                trophies.forEach(trophy=>{
-                    trophy_string += (trophy.icon+' ');
-                })
+                trophies.forEach(trophy => {
+                    trophy_string += (trophy.icon + ' ');
+                });
                 trophy_level += trophies.length;
                 trophies = await user.getEventTrophies();
-                
-                trophies.forEach(trophy=>{
-                    trophy_string += (trophy.icon+' ');
-                })
-                trophy_level += trophies.length;
-                if(!emotesAllowed){
-                    trophies = replaceDiscordEmotes(trophies);
-                }
-                
-                embed = new Discord.MessageEmbed()
-                .setColor(globalVars.embedColor)
-                .setThumbnail(avatar)
-                .addFields(
-                    { name: "Balance:", value: user.money.toString()+' :moneybag:', inline: true},
-                    { name: "Food:", value: user.food.toString()+' :poultry_leg:', inline: true},
-                    
-                )  
-                if (trophy_string.length > 0) {
-                    embed.addFields(
-                        { name: "Trophy Level:", value: trophy_level+' :beginner:', inline: true},
-                        { name: "Trophies:", value: trophy_string},
-                    )
-                }
 
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    embeds: [embed],  
-                    ephemeral: ephemeral });
+                trophies.forEach(trophy => {
+                    trophy_string += (trophy.icon + ' ');
+                });
+                trophy_level += trophies.length;
+                if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
+
+                embed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setThumbnail(avatar)
+                    .addField("Balance:", user.money.toString(), true)
+                    .addField("Food:", user.food.toString(), true);
+                if (trophy_string.length > 0) {
+                    embed
+                        .addField("Trophy Level:", trophy_level + " :beginner", true)
+                        .addField("Trophies:", trophy_string, true);
+                };
+
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    embeds: [embed],
+                    ephemeral: ephemeral
+                });
             case "swapsprite":
                 if (ephemeralArg === false) ephemeral = false;
-                const shinx = await shinxApi.getShinx(master.id)
-                return sendMessage({ 
-                    client: client, 
-                    interaction: interaction, 
-                    content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!`})
-
+                const shinx = await shinxApi.getShinx(master.id);
+                return sendMessage({
+                    client: client,
+                    interaction: interaction,
+                    content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!`
+                });
         };
 
     } catch (e) {
@@ -92,7 +85,7 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether this command is only visible to you."
         }]
-    },{
+    }, {
         name: "swapsprite",
         type: "SUB_COMMAND",
         description: "Swap your trainer sprite between Dawn and Lucas",
