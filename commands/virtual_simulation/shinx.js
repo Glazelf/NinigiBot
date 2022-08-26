@@ -335,12 +335,7 @@ module.exports.config = {
     }, {
         name: "feed",
         type: "SUB_COMMAND",
-        description: "Feed Shinx!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
+        description: "Feed Shinx!"
     }, {
         name: "play",
         type: "SUB_COMMAND",
@@ -368,20 +363,11 @@ module.exports.config = {
             type: "STRING",
             description: "Alphanumeric string (between 1 and 12 characters)",
             required: true
-        }, {
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "shiny",
         type: "SUB_COMMAND",
-        description: "Change shinx's color!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
+        description: "Change Shinx's color!"
     }, {
         name: "release",
         type: "SUB_COMMAND",
@@ -391,5 +377,5 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Are you sure? You can never get this Shinx back."
         }]
-    },],
+    }]
 };

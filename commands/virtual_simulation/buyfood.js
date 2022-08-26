@@ -35,9 +35,5 @@ module.exports.config = {
         type: "INTEGER",
         description: "The amount of food you want to buy.",
         required: true,
-    }, {
-        name: "ephemeral",
-        type: "BOOLEAN",
-        description: "Whether this command is only visible to you."
     }]
 };

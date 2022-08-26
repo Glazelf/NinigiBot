@@ -10,7 +10,7 @@ exports.run = async (client, interaction) => {
         const userApi = require('../../database/dbServices/user.api');
         const shinxApi = require('../../database/dbServices/shinx.api');
 
-        let ephemeral = false;
+        let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
@@ -79,20 +79,10 @@ module.exports.config = {
     options: [{
         name: "info",
         type: "SUB_COMMAND",
-        description: "Check your trainer stats!",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
+        description: "Check your trainer stats!"
     }, {
         name: "swapsprite",
         type: "SUB_COMMAND",
-        description: "Swap your trainer sprite between Dawn and Lucas",
-        options: [{
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
-        }]
+        description: "Swap your trainer sprite between Dawn and Lucas"
     }]
 };

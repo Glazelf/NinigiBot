@@ -164,10 +164,6 @@ module.exports.config = {
             description: "Item to buy",
             autocomplete: true,
             required: true
-        }, {
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
         }]
     }, {
         name: "list",

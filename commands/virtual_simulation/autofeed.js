@@ -52,9 +52,5 @@ module.exports.config = {
         description: "Mode you want to set",
         required: true,
         choices: autofeed_modes
-    }, {
-        name: "ephemeral",
-        type: "BOOLEAN",
-        description: "Whether this command is only visible to you."
     }]
 };
