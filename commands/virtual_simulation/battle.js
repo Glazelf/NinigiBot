@@ -1,10 +1,10 @@
 
 // const { Users } = require('../../database/dbServices/server.api');
-// const ShinxBattle = require('../../shinx/shinxBattle');
+// const ShinxBattle = require('../../util/shinx/shinxBattle');
 // const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
-const ShinxBattle = require('../../virtual_sim/shinxBattle');
+const ShinxBattle = require('../../util/shinx/shinxBattle');
 const shinxApi = require('../../database/dbServices/shinx.api');
 const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
