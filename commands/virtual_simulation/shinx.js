@@ -89,12 +89,6 @@ exports.run = async (client, interaction) => {
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "feed":
-                return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: `Unavailable for now...`,
-                    ephemeral: true
-                });
                 foodArg = interaction.options.getInteger("food");
                 res = await shinxApi.feedShinx(master.id);
                 switch (res) {

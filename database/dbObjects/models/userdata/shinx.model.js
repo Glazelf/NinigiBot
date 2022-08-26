@@ -66,9 +66,12 @@ module.exports = (sequelize, DataTypes) => {
         
     //  checkup
     Shinx.prototype.checkup = function(){
-        const diff = this.lastmeet - getDay();
+        const today = getDay();
+        const diff = this.lastmeet - today;
         if(diff>1){
-            this.unfeed(Math.floor(diff/3));
+            this.unfeedGeneric(Math.floor(2*diff));
+            this.lastmeet = today;
+            this.save({fields:['belly', 'lastmeet']});
         }
     }
 
