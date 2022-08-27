@@ -20,7 +20,6 @@ module.exports = async (client) => {
             if (!guild) return;
             let stanRoleID = "743144948328562729";
             let candidates = guild.roles.cache.find(role => role.id == stanRoleID).members.map(m => m.user);
-            let candidates = (await guild.members.fetch()).map(m => m.user);
             if (candidates.length < 1) return;
 
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
