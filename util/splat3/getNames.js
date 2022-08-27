@@ -11,6 +11,12 @@ module.exports = (languageJSON, type) => {
             first = "Maneuver_Gallon_00";
             last = "Spinner_Hyper_00";
             extraBool = (key !== "Stringer_Short_00"); // Random misplaced entry?
+        } else if (type === "subweapons") {
+            first = "Bomb_Curling";
+            last = "Bomb_Fizzy";
+        } else if (type === "specials") {
+            first = "SpUltraShot";
+            last = "SpMicroLaser";
         };
         if ((key === first || first in prev) && extraBool) prev[key] = value;
         if (key === last) array.splice(1); // Break early

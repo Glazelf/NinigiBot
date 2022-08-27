@@ -284,6 +284,18 @@ module.exports = async (client, interaction) => {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
+                            case "subweapon":
+                                const subweaponIDs = getNames(languageJSON, "subweapons");
+                                for await (const [key, value] of Object.entries(subweaponIDs)) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                };
+                                break;
+                            case "special":
+                                const specialIDs = getNames(languageJSON, "specials");
+                                for await (const [key, value] of Object.entries(specialIDs)) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                };
+                                break;
                         };
                         break;
                     case "genshin":

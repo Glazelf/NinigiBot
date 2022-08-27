@@ -45,7 +45,6 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
-                const clothingIDs = getNames(languageJSON, "clothes");
                 let allClothesJSON = {
                     ...GearInfoHeadJSON,
                     ...GearInfoClothesJSON,
@@ -76,7 +75,6 @@ exports.run = async (client, interaction) => {
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
-                const weaponIDs = getNames(languageJSON, "weapons");
                 let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
                 if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
 
@@ -99,10 +97,48 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON[inputID], iconURL: subImage })
                     .setThumbnail(specialImage)
                     .setDescription(weaponStats)
-                    .addField("Sub:", languageJSON[subID], true)
+                    .addField("Subweapon:", languageJSON[subID], true)
                     .addField("Special:", languageJSON[specialID], true)
                     .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`, true)
                     .setImage(weaponImage)
+                break;
+            case "subweapon":
+                inputID = interaction.options.getString("subweapon");
+                let subweaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
+                    let weaponSubID = weapon.SubWeapon.split("/");
+                    weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
+                    if (inputID == weaponSubID) return true;
+                });
+                if (!subweaponMatches) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                let allSubweaponMatchesNames = "";
+                subweaponMatches.forEach(subweapon => {
+                    allSubweaponMatchesNames += `${languageJSON[subweapon.__RowId]}\n`;
+                });
+                let subThumbnail = `${github}images/subspe/Wsb_${inputID}00.png?raw=true`;
+
+                splat3Embed
+                    .setAuthor({ name: languageJSON[inputID] })
+                    .setThumbnail(subThumbnail)
+                    .addField("Weapons:", allSubweaponMatchesNames, false);
+                break;
+            case "special":
+                inputID = interaction.options.getString("special");
+                let specialweaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
+                    let weaponSpecialID = weapon.SpecialWeapon.split("/");
+                    weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
+                    if (inputID == weaponSpecialID) return true;
+                });
+                if (!specialweaponMatches) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                let allSpecialweaponMatchesNames = "";
+                specialweaponMatches.forEach(specialweapon => {
+                    allSpecialweaponMatchesNames += `${languageJSON[specialweapon.__RowId]}\n`;
+                });
+                let specialThumbnail = `${github}images/subspe/Wsp_${inputID}00.png?raw=true`;
+
+                splat3Embed
+                    .setAuthor({ name: languageJSON[inputID] })
+                    .setThumbnail(specialThumbnail)
+                    .addField("Weapons:", allSpecialweaponMatchesNames, false);
                 break;
         };
 
@@ -140,6 +176,36 @@ module.exports.config = {
             name: "weapon",
             type: "STRING",
             description: "Specify a weapon by name.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "subweapon",
+        type: "SUB_COMMAND",
+        description: "Get info on a subweapon.",
+        options: [{
+            name: "subweapon",
+            type: "STRING",
+            description: "Specify a subweapon by name.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "special",
+        type: "SUB_COMMAND",
+        description: "Get info on a special weapon.",
+        options: [{
+            name: "special",
+            type: "STRING",
+            description: "Specify a special weapon by name.",
             autocomplete: true,
             required: true
         }, {
