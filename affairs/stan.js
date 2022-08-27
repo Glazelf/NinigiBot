@@ -11,7 +11,6 @@ module.exports = async (client) => {
         const time = '00 00 18 * * *'; // Sec Min Hour, 8pm CEST
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = globalVars.ShinxServerID;
-        const guildID = '759344085420605471'
 
         if (client.user.id != globalVars.NinigiID) return;
 
