@@ -85,8 +85,6 @@ exports.run = async (client, interaction) => {
                 specialID = specialID[specialID.length - 1].split(".")[0];
                 let subID = weaponObject.SubWeapon.split("/");
                 subID = subID[subID.length - 1].split(".")[0];
-                weaponStats += `\nSub: ${languageJSON[subID]}`;
-                weaponStats += `\nSpecial: ${languageJSON[specialID]}`;
 
                 await weaponObject.UIParam.forEach(stat => {
                     weaponStats += `\n${stat.Type}: ${stat.Value}`;
@@ -101,7 +99,9 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON[inputID], iconURL: subImage })
                     .setThumbnail(specialImage)
                     .setDescription(weaponStats)
-                    .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`)
+                    .addField("Sub:", languageJSON[subID], true)
+                    .addField("Special:", languageJSON[specialID], true)
+                    .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`, true)
                     .setImage(weaponImage)
                 break;
         };
