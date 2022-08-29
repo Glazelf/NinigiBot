@@ -53,25 +53,26 @@ exports.run = async (client, interaction) => {
                 // Doesn't always find the correct item despite its existence
                 let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
                 if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
-
+                // Rarity
                 let star = "⭐";
-                let rarity = star.repeat(clothingObject.Rarity);
-
                 let clothingAuthor = languageJSON[inputID];
-                if (rarity.length > 0) clothingAuthor = `${languageJSON[inputID]} (${rarity})`;
-
+                let starRating = star.repeat(clothingObject.Rarity);
+                if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
+                // Obtainability
                 let ObtainMethod = clothingObject.HowToGet;
                 if (ObtainMethod == "Shop") ObtainMethod = `${ObtainMethod} (${clothingObject.Price})`;
 
                 let brandImage = `${github}images/brand/${clothingObject.Brand}.png?raw=true`;
                 let clothingImage = `${github}images/gear/${clothingObject.__RowId}.png?raw=true`;
+
                 splat3Embed
                     .setAuthor({ name: clothingAuthor })
                     .setThumbnail(brandImage)
-                    .addField("Brand:", languageJSON[clothingObject.Brand], true)
                     .addField("Main Skill:", languageJSON[clothingObject.Skill], true)
+                    .addField("Slots:", (clothingObject.Rarity + 1).toString(), true)
+                    .addField("Brand:", languageJSON[clothingObject.Brand], true)
                     .addField("Obtain Method:", ObtainMethod, true)
-                    .setImage(clothingImage)
+                    .setImage(clothingImage);
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
@@ -100,7 +101,7 @@ exports.run = async (client, interaction) => {
                     .addField("Subweapon:", languageJSON[subID], true)
                     .addField("Special:", languageJSON[specialID], true)
                     .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`, true)
-                    .setImage(weaponImage)
+                    .setImage(weaponImage);
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -109,7 +110,7 @@ exports.run = async (client, interaction) => {
                     weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
                     if (inputID == weaponSubID) return true;
                 });
-                if (!subweaponMatches) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (subweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 let allSubweaponMatchesNames = "";
                 subweaponMatches.forEach(subweapon => {
                     allSubweaponMatchesNames += `${languageJSON[subweapon.__RowId]}\n`;
@@ -128,7 +129,7 @@ exports.run = async (client, interaction) => {
                     weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
                     if (inputID == weaponSpecialID) return true;
                 });
-                if (!specialweaponMatches) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (specialweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 let allSpecialweaponMatchesNames = "";
                 specialweaponMatches.forEach(specialweapon => {
                     allSpecialweaponMatchesNames += `${languageJSON[specialweapon.__RowId]}\n`;
@@ -141,7 +142,6 @@ exports.run = async (client, interaction) => {
                     .addField("Weapons:", allSpecialweaponMatchesNames, false);
                 break;
         };
-
         return sendMessage({ client: client, interaction: interaction, content: demoDisclaimer, embeds: splat3Embed });
 
     } catch (e) {
