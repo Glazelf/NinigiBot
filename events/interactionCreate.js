@@ -272,7 +272,12 @@ module.exports = async (client, interaction) => {
                         let languageJSON = USEnglishJSON;
                         switch (focusedOption.name) {
                             case "clothing":
-                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Gear/GearName_Clothes"])) {
+                                let allClothesNames = {
+                                    ...languageJSON["CommonMsg/Gear/GearName_Head"],
+                                    ...languageJSON["CommonMsg/Gear/GearName_Clothes"],
+                                    ...languageJSON["CommonMsg/Gear/GearName_Shoes"]
+                                };
+                                for await (const [key, value] of Object.entries(allClothesNames)) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
