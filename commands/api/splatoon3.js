@@ -96,10 +96,10 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID], iconURL: subImage })
                     .setThumbnail(specialImage)
-                    .setDescription(weaponStats)
                     .addField("Subweapon:", languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
                     .addField("Special:", languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
                     .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`, true)
+                    .addField("Stats:", weaponStats, false)
                     .setImage(weaponImage);
                 break;
             case "subweapon":
@@ -112,13 +112,14 @@ exports.run = async (client, interaction) => {
                 if (subweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 let allSubweaponMatchesNames = "";
                 subweaponMatches.forEach(subweapon => {
-                    allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subweapon.__RowId]}\n`;
+                    allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
                 });
                 let subThumbnail = `${github}images/subspe/Wsb_${inputID}00.png?raw=true`;
 
                 splat3Embed
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID] })
                     .setThumbnail(subThumbnail)
+                    .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID].replace("\\n", " "))
                     .addField("Weapons:", allSubweaponMatchesNames, false);
                 break;
             case "special":
@@ -131,13 +132,14 @@ exports.run = async (client, interaction) => {
                 if (specialweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 let allSpecialweaponMatchesNames = "";
                 specialweaponMatches.forEach(specialweapon => {
-                    allSpecialweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialweapon.__RowId]}\n`;
+                    allSpecialweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]}\n`;
                 });
                 let specialThumbnail = `${github}images/subspe/Wsp_${inputID}00.png?raw=true`;
 
                 splat3Embed
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID] })
                     .setThumbnail(specialThumbnail)
+                    .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
                     .addField("Weapons:", allSpecialweaponMatchesNames, false);
                 break;
         };
