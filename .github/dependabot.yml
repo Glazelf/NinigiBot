@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "gitsubmodule"
-    directory: "/submodules"
+    directory: "/"
     assignees: ["glazelf"]
     schedule:
       interval: "daily"
