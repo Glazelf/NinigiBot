@@ -44,17 +44,15 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
-                let allClothesJSON = {
-                    ...GearInfoHeadJSON,
-                    ...GearInfoClothesJSON,
-                    ...GearInfoShoesJSON
-                };
+                let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON);
                 // Doesn't always find the correct item despite its existence
-                let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.LObjParam.includes(inputID));
+                let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
                 if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
                 // Rarity
                 let star = "⭐";
                 let clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Clothes"][inputID];
+                if (clothingObject.__RowId.startsWith("Shs")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Shoes"][inputID];
+                if (clothingObject.__RowId.startsWith("Hed")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Head"][inputID];
                 let starRating = star.repeat(clothingObject.Rarity);
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
@@ -124,15 +122,15 @@ exports.run = async (client, interaction) => {
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
-                let specialweaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
+                let specialWeaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
                     let weaponSpecialID = weapon.SpecialWeapon.split("/");
                     weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
                     if (inputID == weaponSpecialID) return true;
                 });
-                if (specialweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
-                let allSpecialweaponMatchesNames = "";
-                specialweaponMatches.forEach(specialweapon => {
-                    allSpecialweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]}\n`;
+                if (specialWeaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                let allSpecialWeaponMatchesNames = "";
+                specialWeaponMatches.forEach(specialweapon => {
+                    allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]}\n`;
                 });
                 let specialThumbnail = `${github}images/subspe/Wsp_${inputID}00.png?raw=true`;
 
@@ -140,7 +138,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID] })
                     .setThumbnail(specialThumbnail)
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
-                    .addField("Weapons:", allSpecialweaponMatchesNames, false);
+                    .addField("Weapons:", allSpecialWeaponMatchesNames, false);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, content: demoDisclaimer, embeds: splat3Embed });
