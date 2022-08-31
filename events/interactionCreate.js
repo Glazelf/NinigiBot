@@ -255,7 +255,6 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        const getNames = require("../util/splat3/getNames");
                         const chineseJSON = require("../submodules/leanny.github.io/splat3/data/language/CNzh.json");
                         const EUGermanJSON = require("../submodules/leanny.github.io/splat3/data/language/EUde.json");
                         const EUEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUen.json");
@@ -273,26 +272,22 @@ module.exports = async (client, interaction) => {
                         let languageJSON = USEnglishJSON;
                         switch (focusedOption.name) {
                             case "clothing":
-                                const clothingIDs = getNames(languageJSON, "clothes");
-                                for await (const [key, value] of Object.entries(clothingIDs)) {
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Gear/GearName_Clothes"])) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "weapon":
-                                const weaponIDs = getNames(languageJSON, "weapons");
-                                for await (const [key, value] of Object.entries(weaponIDs)) {
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "subweapon":
-                                const subweaponIDs = getNames(languageJSON, "subweapons");
-                                for await (const [key, value] of Object.entries(subweaponIDs)) {
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "special":
-                                const specialIDs = getNames(languageJSON, "specials");
-                                for await (const [key, value] of Object.entries(specialIDs)) {
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
                                 };
                                 break;
