@@ -44,7 +44,7 @@ exports.run = async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
-                let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON);
+                let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
                 // Doesn't always find the correct item despite its existence
                 let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
                 if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
