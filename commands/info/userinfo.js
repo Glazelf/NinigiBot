@@ -15,11 +15,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "userinfo",
-    description: "Displays info about a user.",
-    options: [{
-        name: "user",
-        type: "USER",
-        description: "Specify user.",
-        required: true
-    }]
+    type: "USER"
 };
