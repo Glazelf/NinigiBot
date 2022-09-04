@@ -83,7 +83,7 @@ exports.run = async (client, interaction) => {
                 subID = subID[subID.length - 1].split(".")[0];
 
                 await weaponObject.UIParam.forEach(stat => {
-                    weaponStats += `\n${stat.Type}: ${stat.Value}`;
+                    weaponStats += `\n${stat.Type}: ${stat.Value}/100`;
                 });
                 weaponStats += `\nSpecial Points: ${weaponObject.SpecialPoint}`;
 
