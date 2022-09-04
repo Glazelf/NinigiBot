@@ -283,7 +283,7 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop")) choices.push({ name: value, value: key })
                                 };
                                 break;
                             case "subweapon":
