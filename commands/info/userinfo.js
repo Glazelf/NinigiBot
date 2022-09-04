@@ -14,6 +14,6 @@ exports.run = async (client, interaction) => {
 };
 
 module.exports.config = {
-    name: "userinfo",
+    name: "Userinfo",
     type: "USER"
 };
