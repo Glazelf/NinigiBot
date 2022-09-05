@@ -85,7 +85,7 @@ exports.run = async (client, interaction) => {
             if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
-            let icon = guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
 
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
