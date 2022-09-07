@@ -21,12 +21,12 @@ exports.run = async (client, interaction) => {
         const USSpanishJSON = require("../../submodules/leanny.github.io/splat3/data/language/USes.json");
         const USFrenchJSON = require("../../submodules/leanny.github.io/splat3/data/language/USfr.json");
         // Game data
-        const GearInfoClothesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/GearInfoClothes.json");
-        const GearInfoHeadJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/GearInfoHead.json");
-        const GearInfoShoesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/GearInfoShoes.json");
-        const WeaponInfoMainJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/WeaponInfoMain.json");
-        const WeaponInfoSpecialJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/WeaponInfoSpecial.json");
-        const WeaponInfoSubJSON = require("../../submodules/leanny.github.io/splat3/data/mush/099/WeaponInfoSub.json");
+        const GearInfoClothesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoClothes.json");
+        const GearInfoHeadJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoHead.json");
+        const GearInfoShoesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoShoes.json");
+        const WeaponInfoMainJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoMain.json");
+        const WeaponInfoSpecialJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoSpecial.json");
+        const WeaponInfoSubJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoSub.json");
 
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -36,7 +36,6 @@ exports.run = async (client, interaction) => {
         let languageJSON = EUEnglishJSON;
 
         let inputID;
-        let demoDisclaimer = `Note that this command currently uses data from [a datamine of the Splatoon 3 Splatfest World Premier](https://github.com/Leanny/leanny.github.io/tree/master/splat3/data).\nThis causes data to be unstable, incomplete and prone to error.`;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -47,7 +46,7 @@ exports.run = async (client, interaction) => {
                 let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
                 // Doesn't always find the correct item despite its existence
                 let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
-                if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.` });
                 // Rarity
                 let star = "⭐";
                 let clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Clothes"][inputID];
@@ -74,7 +73,7 @@ exports.run = async (client, interaction) => {
             case "weapon":
                 inputID = interaction.options.getString("weapon");
                 let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
-                if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
 
                 let weaponStats = "";
                 let specialID = weaponObject.SpecialWeapon.split("/");
@@ -107,7 +106,7 @@ exports.run = async (client, interaction) => {
                     weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
                     if (inputID == weaponSubID) return true;
                 });
-                if (subweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (subweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.` });
                 let allSubweaponMatchesNames = "";
                 subweaponMatches.forEach(subweapon => {
                     allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
@@ -127,7 +126,7 @@ exports.run = async (client, interaction) => {
                     weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
                     if (inputID == weaponSpecialID) return true;
                 });
-                if (specialWeaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.\n${demoDisclaimer}` });
+                if (specialWeaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.` });
                 let allSpecialWeaponMatchesNames = "";
                 specialWeaponMatches.forEach(specialweapon => {
                     allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]}\n`;
@@ -141,7 +140,7 @@ exports.run = async (client, interaction) => {
                     .addField("Weapons:", allSpecialWeaponMatchesNames, false);
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, content: demoDisclaimer, embeds: splat3Embed });
+        return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
 
     } catch (e) {
         // Log error
