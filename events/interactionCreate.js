@@ -395,7 +395,7 @@ module.exports = async (client, interaction) => {
                 if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
                     // Only display random suggestion if there enough other choices or value matches "random"
                     if (choices.length == 25) choices.pop();
-                    if (choices.length > 2 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
+                    if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
                 };
                 // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
