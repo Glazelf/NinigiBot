@@ -28,9 +28,9 @@ exports.run = async (client, interaction) => {
 
         let inputID;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
+        let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
-
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
@@ -47,18 +47,22 @@ exports.run = async (client, interaction) => {
                 let starRating = star.repeat(clothingObject.Rarity);
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
+                let shopsTitle = languageJSON["LayoutMsg/Cmn_Menu_00"]["T_Shop_00"];
                 let ObtainMethod = clothingObject.HowToGet;
-                if (ObtainMethod == "Shop") ObtainMethod = `${ObtainMethod} (${clothingObject.Price})`;
+                if (ObtainMethod == "Shop") ObtainMethod = `${shopsTitle} (${clothingObject.Price})`;
 
+                let abilityTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["001"]}:`;
+                let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
+                let slotsTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_Player_02-T_BlackText_00"]}:`;
                 let brandImage = `${github}images/brand/${clothingObject.Brand}.png?raw=true`;
                 let clothingImage = `${github}images/gear/${clothingObject.__RowId}.png?raw=true`;
 
                 splat3Embed
                     .setAuthor({ name: clothingAuthor })
                     .setThumbnail(brandImage)
-                    .addField("Main Skill:", languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill], true)
-                    .addField("Slots:", (clothingObject.Rarity + 1).toString(), true)
-                    .addField("Brand:", languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
+                    .addField(abilityTitle, languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill], true)
+                    .addField(slotsTitle, (clothingObject.Rarity + 1).toString(), true)
+                    .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
                     .addField("Obtain Method:", ObtainMethod, true)
                     .setImage(clothingImage);
                 break;
@@ -76,10 +80,16 @@ exports.run = async (client, interaction) => {
                 subID = subID[subID.length - 1].split(".")[0];
 
                 await weaponObject.UIParam.forEach(stat => {
-                    weaponStats += `\n${stat.Type}: ${stat.Value}/100`;
+                    weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
                 });
-                weaponStats += `\nSpecial Points: ${weaponObject.SpecialPoint}`;
+                let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}:`;
+                weaponStats += `\n${specialPointsTitle} ${weaponObject.SpecialPoint}`;
 
+                let subTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["004"]}:`;
+                let specialTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["005"]}:`;
+                let shopTitle = `${languageJSON["CommonMsg/Glossary"]["WeaponShop"]}:`;
+                let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
+                let levelTitle = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
                 let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
                 let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
@@ -87,10 +97,10 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
-                    .addField("Subweapon:", languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
-                    .addField("Special:", languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
-                    .addField("Shop:", `${weaponObject.ShopPrice}  (Rank ${weaponObject.ShopUnlockRank}+)`, true)
-                    .addField("Stats:", weaponStats, false)
+                    .addField(subTitle, languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
+                    .addField(specialTitle, languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
+                    .addField(shopTitle, `${weaponObject.ShopPrice}  (${levelTitle} ${weaponObject.ShopUnlockRank}+)`, true)
+                    .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage);
                 break;
             case "subweapon":
@@ -111,7 +121,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID] })
                     .setThumbnail(subThumbnail)
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID].replace("\\n", " "))
-                    .addField("Weapons:", allSubweaponMatchesNames, false);
+                    .addField(weaponListTitle, allSubweaponMatchesNames, false);
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -131,7 +141,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID] })
                     .setThumbnail(specialThumbnail)
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
-                    .addField("Weapons:", allSpecialWeaponMatchesNames, false);
+                    .addField(weaponListTitle, allSpecialWeaponMatchesNames, false);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
