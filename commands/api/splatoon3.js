@@ -8,12 +8,12 @@ exports.run = async (client, interaction) => {
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
-        const GearInfoClothesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoClothes.json");
-        const GearInfoHeadJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoHead.json");
-        const GearInfoShoesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoShoes.json");
-        const WeaponInfoMainJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoMain.json");
-        const WeaponInfoSpecialJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoSpecial.json");
-        const WeaponInfoSubJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/WeaponInfoSub.json");
+        const GearInfoClothesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/GearInfoClothes.json");
+        const GearInfoHeadJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/GearInfoHead.json");
+        const GearInfoShoesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/GearInfoShoes.json");
+        const WeaponInfoMainJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/WeaponInfoMain.json");
+        const WeaponInfoSpecialJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/WeaponInfoSpecial.json");
+        const WeaponInfoSubJSON = require("../../submodules/leanny.github.io/splat3/data/mush/110/WeaponInfoSub.json");
 
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

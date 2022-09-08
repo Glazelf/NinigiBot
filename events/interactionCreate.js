@@ -274,17 +274,17 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop")) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Msn") && !key.includes("_Rival") && key !== "Free") choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "subweapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.includes("_Rival") && !key.includes("_Coop") && value !== "-") choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "special":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-") choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "language":
