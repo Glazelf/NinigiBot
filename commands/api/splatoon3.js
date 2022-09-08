@@ -57,11 +57,12 @@ exports.run = async (client, interaction) => {
                 let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
                 let slotsTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_Player_02-T_BlackText_00"]}:`;
                 let brandImage = `${github}images/brand/${clothingObject.Brand}.png?raw=true`;
+                let abilityImage = `${github}images/skill/${clothingObject.Skill}.png?raw=true`;
                 let clothingImage = `${github}images/gear/${clothingObject.__RowId}.png?raw=true`;
 
                 splat3Embed
-                    .setAuthor({ name: clothingAuthor })
-                    .setThumbnail(brandImage)
+                    .setAuthor({ name: clothingAuthor, iconURL: brandImage })
+                    .setThumbnail(abilityImage)
                     .addField(abilityTitle, languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill], true)
                     .addField(slotsTitle, (clothingObject.Rarity + 1).toString(), true)
                     .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
