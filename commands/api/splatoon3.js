@@ -5,6 +5,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const randomNumber = require('../../util/randomNumber');
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
@@ -108,6 +109,7 @@ exports.run = async (client, interaction) => {
                 let subweaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
                     let weaponSubID = weapon.SubWeapon.split("/");
                     weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
+                    if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                     if (inputID == weaponSubID) return true;
                 });
                 if (subweaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that subweapon. Make sure you select an autocomplete option.` });
@@ -128,6 +130,7 @@ exports.run = async (client, interaction) => {
                 let specialWeaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
                     let weaponSpecialID = weapon.SpecialWeapon.split("/");
                     weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
+                    if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
                     if (inputID == weaponSpecialID) return true;
                 });
                 if (specialWeaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.` });
@@ -142,6 +145,19 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialThumbnail)
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false);
+                break;
+            case "title-random":
+                let userTitle = interaction.member.nickname;
+                if (!userTitle) userTitle = interaction.user.username;
+
+                let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]);
+                let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
+                let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => subject.length !== "");
+                let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
+
+                splat3Embed
+                    .setAuthor({ name: `${randomAdjective} ${randomSubject}` })
+                    .setTitle(userTitle)
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
@@ -226,6 +242,20 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }, {
+            name: "language",
+            type: "STRING",
+            description: "Specify a language.",
+            autocomplete: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "title-random",
+        type: "SUB_COMMAND",
+        description: "Generate a random title.",
+        options: [{
             name: "language",
             type: "STRING",
             description: "Specify a language.",
