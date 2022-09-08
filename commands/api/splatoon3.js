@@ -6,20 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         // Language JSON
-        const chineseJSON = require("../../submodules/leanny.github.io/splat3/data/language/CNzh.json");
-        const EUGermanJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUde.json");
-        const EUEnglishJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUen.json");
-        const EUSpanishJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUes.json");
-        const EUFrenchJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUfr.json");
-        const EUItalianJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUit.json");
-        const EUDutchJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUnl.json");
-        const EURussianJSON = require("../../submodules/leanny.github.io/splat3/data/language/EUru.json");
-        const japaneseJSON = require("../../submodules/leanny.github.io/splat3/data/language/JPja.json");
-        const koreanJSON = require("../../submodules/leanny.github.io/splat3/data/language/KRko.json");
-        const taiwaneseJSON = require("../../submodules/leanny.github.io/splat3/data/language/TWzh.json");
-        const USEnglishJSON = require("../../submodules/leanny.github.io/splat3/data/language/USen.json");
-        const USSpanishJSON = require("../../submodules/leanny.github.io/splat3/data/language/USes.json");
-        const USFrenchJSON = require("../../submodules/leanny.github.io/splat3/data/language/USfr.json");
+        const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
         const GearInfoClothesJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoClothes.json");
         const GearInfoHeadJSON = require("../../submodules/leanny.github.io/splat3/data/mush/100/GearInfoHead.json");
@@ -32,8 +19,12 @@ exports.run = async (client, interaction) => {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg === false) ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
-        // Add language arg?
-        let languageJSON = EUEnglishJSON;
+
+        let languageDefault = "EUen";
+        let languageJSON = null;
+        let languageArg = interaction.options.getString("language");
+        if (languageArg && Object.keys(splatoonLanguages).includes(languageArg)) languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageArg}.json`);
+        if (!languageJSON) languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
 
         let inputID;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
@@ -165,6 +156,11 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }, {
+            name: "language",
+            type: "STRING",
+            description: "Specify a language.",
+            autocomplete: true
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether the reply will be private."
@@ -179,6 +175,11 @@ module.exports.config = {
             description: "Specify a weapon by name.",
             autocomplete: true,
             required: true
+        }, {
+            name: "language",
+            type: "STRING",
+            description: "Specify a language.",
+            autocomplete: true
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
@@ -195,6 +196,11 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }, {
+            name: "language",
+            type: "STRING",
+            description: "Specify a language.",
+            autocomplete: true
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether the reply will be private."
@@ -209,6 +215,11 @@ module.exports.config = {
             description: "Specify a special weapon by name.",
             autocomplete: true,
             required: true
+        }, {
+            name: "language",
+            type: "STRING",
+            description: "Specify a language.",
+            autocomplete: true
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
