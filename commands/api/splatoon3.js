@@ -102,7 +102,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialImage)
                     .addField(subTitle, languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
                     .addField(specialTitle, languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
-                    .addField(shopTitle, `${weaponObject.ShopPrice}  (${levelTitle} ${weaponObject.ShopUnlockRank}+)`, true)
+                    .addField(shopTitle, `${levelTitle} ${weaponObject.ShopUnlockRank}+`, true)
                     .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage);
                 break;
