@@ -152,7 +152,7 @@ exports.run = async (client, interaction) => {
 
                 let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]);
                 let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
-                let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => subject.length !== "");
+                let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => subject !== "");
                 let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
 
                 splat3Embed
