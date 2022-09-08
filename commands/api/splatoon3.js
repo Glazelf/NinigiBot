@@ -160,7 +160,7 @@ exports.run = async (client, interaction) => {
                 let randomTitle = `${randomAdjective} ${randomSubject}`;
                 if (reversedLanguages.includes(languageUsed)) randomTitle = `${randomSubject} ${randomAdjective}`;
                 splat3Embed
-                    .setAuthor({ name: `${randomAdjective} ${randomSubject}` })
+                    .setAuthor({ name: randomTitle })
                     .setTitle(userTitle)
                 break;
         };
