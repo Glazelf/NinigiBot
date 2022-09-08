@@ -52,6 +52,7 @@ exports.run = async (client, interaction) => {
                 let clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Clothes"][inputID];
                 if (clothingObject.__RowId.startsWith("Shs")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Shoes"][inputID];
                 if (clothingObject.__RowId.startsWith("Hed")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Head"][inputID];
+                if (!clothingAuthor) clothingAuthor = inputID;
                 let starRating = star.repeat(clothingObject.Rarity);
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
@@ -75,6 +76,8 @@ exports.run = async (client, interaction) => {
                 let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
                 if (!weaponObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
 
+                let weaponAuthor = languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID];
+                if (!weaponAuthor) weaponAuthor = inputID;
                 let weaponStats = "";
                 let specialID = weaponObject.SpecialWeapon.split("/");
                 specialID = specialID[specialID.length - 1].split(".")[0];
@@ -91,7 +94,7 @@ exports.run = async (client, interaction) => {
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
 
                 splat3Embed
-                    .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Main"][inputID], iconURL: subImage })
+                    .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
                     .addField("Subweapon:", languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
                     .addField("Special:", languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
