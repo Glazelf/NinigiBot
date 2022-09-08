@@ -13,7 +13,7 @@ module.exports = async (client, member, newMember) => {
         let botMember = member.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            newMember = await newMember.fetch({ force: true });
+            if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
