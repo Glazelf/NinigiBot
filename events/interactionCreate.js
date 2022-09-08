@@ -255,21 +255,12 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        const chineseJSON = require("../submodules/leanny.github.io/splat3/data/language/CNzh.json");
-                        const EUGermanJSON = require("../submodules/leanny.github.io/splat3/data/language/EUde.json");
-                        const EUEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUen.json");
-                        const EUSpanishJSON = require("../submodules/leanny.github.io/splat3/data/language/EUes.json");
-                        const EUFrenchJSON = require("../submodules/leanny.github.io/splat3/data/language/EUfr.json");
-                        const EUItalianJSON = require("../submodules/leanny.github.io/splat3/data/language/EUit.json");
-                        const EUDutchJSON = require("../submodules/leanny.github.io/splat3/data/language/EUnl.json");
-                        const EURussianJSON = require("../submodules/leanny.github.io/splat3/data/language/EUru.json");
-                        const japaneseJSON = require("../submodules/leanny.github.io/splat3/data/language/JPja.json");
-                        const koreanJSON = require("../submodules/leanny.github.io/splat3/data/language/KRko.json");
-                        const taiwaneseJSON = require("../submodules/leanny.github.io/splat3/data/language/TWzh.json");
-                        const USEnglishJSON = require("../submodules/leanny.github.io/splat3/data/language/USen.json");
-                        const USSpanishJSON = require("../submodules/leanny.github.io/splat3/data/language/USes.json");
-                        const USFrenchJSON = require("../submodules/leanny.github.io/splat3/data/language/USfr.json");
-                        let languageJSON = USEnglishJSON;
+                        const splatoonLanguages = require("../objects/splatoon/languages.json");
+                        let languageDefault = "EUen";
+                        let languageJSON = null;
+                        let languageInput = interaction.options.getString("language");
+                        if (languageInput && Object.keys(splatoonLanguages).includes(languageInput)) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}.json`);
+                        if (!languageJSON) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
                         switch (focusedOption.name) {
                             case "clothing":
                                 let allClothesNames = {
@@ -278,22 +269,27 @@ module.exports = async (client, interaction) => {
                                     ...languageJSON["CommonMsg/Gear/GearName_Shoes"]
                                 };
                                 for await (const [key, value] of Object.entries(allClothesNames)) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop")) choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop")) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "subweapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "special":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key })
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
+                                };
+                                break;
+                            case "language":
+                                for await (const [key, value] of Object.entries(splatoonLanguages)) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
                                 };
                                 break;
                         };
