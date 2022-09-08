@@ -22,10 +22,11 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let languageDefault = "EUen";
+        let languageUsed = languageDefault;
         let languageJSON = null;
         let languageArg = interaction.options.getString("language");
-        if (languageArg && Object.keys(splatoonLanguages).includes(languageArg)) languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageArg}.json`);
-        if (!languageJSON) languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
+        if (languageArg && Object.keys(splatoonLanguages).includes(languageArg)) languageUsed = languageArg;
+        languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageUsed}.json`);
 
         let inputID;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
@@ -155,6 +156,9 @@ exports.run = async (client, interaction) => {
                 let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => subject !== "");
                 let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
 
+                let reversedLanguages = ["EUfr", "EUes", "EUit"];
+                let randomTitle = `${randomAdjective} ${randomSubject}`;
+                if (reversedLanguages.includes(languageUsed)) randomTitle = `${randomSubject} ${randomAdjective}`;
                 splat3Embed
                     .setAuthor({ name: `${randomAdjective} ${randomSubject}` })
                     .setTitle(userTitle)
