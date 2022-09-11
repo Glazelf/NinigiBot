@@ -175,6 +175,7 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${github}images/badge/${badgeRandom}?raw=true` })
                     .setTitle(userTitle)
+                    .setDescription(`#${interaction.user.discriminator}`)
                     .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
                     .setImage(`${github}images/npl/${bannerRandom}?raw=true`);
                 break;
