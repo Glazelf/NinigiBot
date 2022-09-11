@@ -92,7 +92,8 @@ exports.run = async (client, interaction) => {
                 let specialTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["005"]}:`;
                 let shopTitle = `${languageJSON["CommonMsg/Glossary"]["WeaponShop"]}:`;
                 let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
-                let levelTitle = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
+                let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
+                if (levelString.includes("[")) levelString = levelString.split(" ")[0]; // Fix for https://github.com/Leanny/leanny.github.io/issues/159
                 let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
                 let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
@@ -102,7 +103,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialImage)
                     .addField(subTitle, languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
                     .addField(specialTitle, languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
-                    .addField(shopTitle, `${levelTitle} ${weaponObject.ShopUnlockRank}+`, true)
+                    .addField(shopTitle, `${levelString} ${weaponObject.ShopUnlockRank}+`, true)
                     .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage);
                 break;
