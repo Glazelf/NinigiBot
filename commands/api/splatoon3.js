@@ -5,6 +5,8 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const fs = require("fs");
+        const path = require("path");
         const randomNumber = require('../../util/randomNumber');
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
@@ -149,21 +151,32 @@ exports.run = async (client, interaction) => {
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false);
                 break;
-            case "title-random":
+            case "splashtag-random":
                 let userTitle = interaction.member.nickname;
                 if (!userTitle) userTitle = interaction.user.username;
 
-                let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]);
+                let adjectives = Object.values(languageJSON["CommonMsg/Byname/BynameAdjective"]).filter(adjective => !adjective.includes("[") && adjective !== "");
                 let randomAdjective = adjectives[randomNumber(0, adjectives.length - 1)];
-                let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => subject !== "");
+                let subjects = Object.values(languageJSON["CommonMsg/Byname/BynameSubject"]).filter(subject => !subject.includes("[") && subject !== "");
                 let randomSubject = subjects[randomNumber(0, subjects.length - 1)];
 
                 let reversedLanguages = ["EUfr", "EUes", "EUit"];
                 let randomTitle = `${randomAdjective} ${randomSubject}`;
                 if (reversedLanguages.includes(languageUsed)) randomTitle = `${randomSubject} ${randomAdjective}`;
+
+                const bannerFolder = path.resolve(__dirname, "../../submodules/leanny.github.io/splat3/images/npl/");
+                const badgeFolder = path.resolve(__dirname, "../../submodules/leanny.github.io/splat3/images/badge/");
+                let bannerOptions = fs.readdirSync(bannerFolder).filter(file => file.endsWith(".png"));
+                let badgeOptions = fs.readdirSync(badgeFolder).filter(file => file.endsWith(".png"));
+                let bannerRandom = bannerOptions[randomNumber(0, bannerOptions.length - 1)];
+                let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
+                let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
+
                 splat3Embed
-                    .setAuthor({ name: randomTitle })
+                    .setAuthor({ name: randomTitle, iconURL: `${github}images/badge/${badgeRandom}?raw=true` })
                     .setTitle(userTitle)
+                    .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
+                    .setImage(`${github}images/npl/${bannerRandom}?raw=true`);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
@@ -258,9 +271,9 @@ module.exports.config = {
             description: "Whether the reply will be private."
         }]
     }, {
-        name: "title-random",
+        name: "splashtag-random",
         type: "SUB_COMMAND",
-        description: "Generate a random title.",
+        description: "Generate a random splashtag.",
         options: [{
             name: "language",
             type: "STRING",
