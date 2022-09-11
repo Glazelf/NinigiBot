@@ -93,7 +93,7 @@ exports.run = async (client, interaction) => {
                 let shopTitle = `${languageJSON["CommonMsg/Glossary"]["WeaponShop"]}:`;
                 let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
                 let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
-                if (levelString.includes("[")) levelString = levelString.split(" ")[0]; // Fix for https://github.com/Leanny/leanny.github.io/issues/159
+                if (levelString.includes("[")) levelString = levelString.split(" ")[0];
                 let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
                 let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
