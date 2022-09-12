@@ -292,6 +292,12 @@ module.exports = async (client, interaction) => {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
                                 };
                                 break;
+                            case "mode":
+                                choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
+                                choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
+                                choices.push({ name: "Anarchy Battle (Open)", value: "Anarchy Battle (Open)|bankaraSchedules|open" });
+                                choices.push({ name: "Salmon Run", value: "Salmon Run|coopGroupingSchedule" });
+                                break;
                         };
                         break;
                     case "genshin":

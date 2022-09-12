@@ -7,6 +7,7 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const fs = require("fs");
         const path = require("path");
+        const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
@@ -32,6 +33,7 @@ exports.run = async (client, interaction) => {
 
         let inputID;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
+        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`;
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -151,6 +153,70 @@ exports.run = async (client, interaction) => {
                     .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false);
                 break;
+            case "schedule":
+                let inputData = interaction.options.getString("mode");
+                let modeName = inputData.split("|")[0];
+                let inputMode = inputData.split("|")[1];
+                let submode = inputData.split("|")[2];
+                let modeIndex = null;
+                if (submode == "series") modeIndex = 0;
+                if (submode == "open") modeIndex = 1;
+
+                let allowedModes = ["regularSchedules", "bankaraSchedules", "coopGroupingSchedule"];
+                if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `We don't have schedules for the mode you provided (yet!) or that mode does not exist.` });
+
+                let responseSchedules = await axios.get(schedulesAPI);
+                if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
+                let scheduleData = responseSchedules.data.data[inputMode];
+                if (inputMode == "coopGroupingSchedule") scheduleData = scheduleData.regularSchedules;
+
+                let scheduleMode = inputMode.split("Schedule")[0];
+
+                console.log(scheduleData)
+                let currentTime = new Date().valueOf();
+                let currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
+                let upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
+
+                let randomStageIndex = randomNumber(0, 1);
+                let modeSettings = `${scheduleMode}MatchSetting`;
+                if (!currentMaps[`${scheduleMode}MatchSetting`]) modeSettings = `${scheduleMode}MatchSettings`;
+                let entrySettings = currentMaps[modeSettings];
+                if (inputMode == "bankaraSchedules") entrySettings = entrySettings[modeIndex];
+                let currentMapsSettings = entrySettings;
+
+                splat3Embed.setAuthor({ name: modeName });
+                let mapEntryTimes;
+                if (inputMode == "coopGroupingSchedule") {
+                    await scheduleData.nodes.forEach(async (entry) => {
+                        mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
+                        if (entry == currentMaps) mapEntryTimes = `${mapEntryTimes} (Current)`;
+                        let weaponString = "";
+                        await entry.setting.weapons.forEach(weapon => {
+                            weaponString += `${weapon.name}\n`;
+                        });
+                        splat3Embed.addField(entry.setting.coopStage.name, `${mapEntryTimes}\n${weaponString}`, true);
+                    });
+                    splat3Embed
+                        .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
+                        .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
+                } else {
+                    await scheduleData.nodes.forEach(entry => {
+                        entrySettings = entry[modeSettings];
+                        let rankedMode = "";
+                        if (inputMode == "bankaraSchedules") {
+                            entrySettings = entrySettings[modeIndex];
+                            rankedMode = `**${entrySettings.vsRule.name}**\n`;
+                        };
+                        mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
+                        let mapEntryTitle = `Maps ${mapEntryTimes}`
+                        let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
+                        splat3Embed.addField(mapEntryTitle, `${rankedMode}${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
+                    });
+                    splat3Embed
+                        .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
+                        .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
+                };
+                break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
                 if (!userTitle) userTitle = interaction.user.username;
@@ -171,13 +237,15 @@ exports.run = async (client, interaction) => {
                 let bannerRandom = bannerOptions[randomNumber(0, bannerOptions.length - 1)];
                 let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
+                let badgeRandom3 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
 
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${github}images/badge/${badgeRandom}?raw=true` })
                     .setTitle(userTitle)
                     .setDescription(`#${interaction.user.discriminator}`)
                     .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
-                    .setImage(`${github}images/npl/${bannerRandom}?raw=true`);
+                    .setImage(`${github}images/npl/${bannerRandom}?raw=true`)
+                    .setFooter({ text: "Report grammar errors on Github!", iconURL: `${github}images/badge/${badgeRandom3}?raw=true` })
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
@@ -266,6 +334,21 @@ module.exports.config = {
             type: "STRING",
             description: "Specify a language.",
             autocomplete: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "schedule",
+        type: "SUB_COMMAND",
+        description: "Get a mode's schedule.",
+        options: [{
+            name: "mode",
+            type: "STRING",
+            description: "Specify a mode.",
+            autocomplete: true,
+            required: true
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
