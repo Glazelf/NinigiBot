@@ -183,16 +183,14 @@ exports.run = async (client, interaction) => {
                 let currentMapsSettings = entrySettings;
 
                 splat3Embed.setAuthor({ name: modeName });
-                let mapEntryTimes;
                 if (inputMode == "coopGroupingSchedule") {
                     await scheduleData.nodes.forEach(async (entry) => {
-                        mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
-                        if (entry == currentMaps) mapEntryTimes = `${mapEntryTimes} (Current)`;
+                        let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
                         let weaponString = "";
                         await entry.setting.weapons.forEach(weapon => {
                             weaponString += `${weapon.name}\n`;
                         });
-                        splat3Embed.addField(entry.setting.coopStage.name, `${mapEntryTimes}\n${weaponString}`, true);
+                        splat3Embed.addField(entry.setting.coopStage.name, `${salmonRotationTime}\n${weaponString}`, true);
                     });
                     splat3Embed
                         .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
@@ -205,7 +203,7 @@ exports.run = async (client, interaction) => {
                             entrySettings = entrySettings[modeIndex];
                             rankedMode = `**${entrySettings.vsRule.name}**\n`;
                         };
-                        mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
+                        let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
                         let mapEntryTitle = `Maps ${mapEntryTimes}`
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
                         splat3Embed.addField(mapEntryTitle, `${rankedMode}${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
