@@ -204,7 +204,7 @@ exports.run = async (client, interaction) => {
                             rankedMode = `**${entrySettings.vsRule.name}**\n`;
                         };
                         let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
-                        let mapEntryTitle = `Maps ${mapEntryTimes}`
+                        let mapEntryTitle = `Maps ${mapEntryTimes}`;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
                         splat3Embed.addField(mapEntryTitle, `${rankedMode}${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
                     });
