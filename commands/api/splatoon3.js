@@ -67,11 +67,12 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
                     .setThumbnail(abilityImage)
-                    .addField(abilityTitle, languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill], true)
+                    .addField(abilityTitle, `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, true)
                     .addField(slotsTitle, (clothingObject.Rarity + 1).toString(), true)
                     .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
                     .addField("Obtain Method:", ObtainMethod, true)
-                    .setImage(clothingImage);
+                    .setImage(clothingImage)
+                    .setFooter({ text: "*Main abilities can differ because of SplatNet or Murch." });
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
