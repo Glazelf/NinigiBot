@@ -31,7 +31,7 @@ exports.run = async (client, interaction) => {
                 let detailedArg = interaction.options.getBoolean("detailed");
                 if (detailedArg === true) detailed = true;
                 response = await axios.get(giAPI + characterName);
-                if (response.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred, make sure that character exists.`, ephemeral: true });
+                if (response.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred, make sure that character exists.` });
                 let character = response.data;
                 let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
                 let characterThumbnail = getWikiURL(characterThumbnailFile, giWiki);
