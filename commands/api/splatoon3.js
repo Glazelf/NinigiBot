@@ -169,10 +169,8 @@ exports.run = async (client, interaction) => {
                 if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
                 let scheduleData = responseSchedules.data.data[inputMode];
                 if (inputMode == "coopGroupingSchedule") scheduleData = scheduleData.regularSchedules;
-
                 let scheduleMode = inputMode.split("Schedule")[0];
 
-                console.log(scheduleData)
                 let currentTime = new Date().valueOf();
                 let currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
                 let upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
