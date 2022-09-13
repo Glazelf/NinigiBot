@@ -127,10 +127,15 @@ exports.run = async (client, interaction) => {
                 });
                 let subThumbnail = `${github}images/subspe/Wsb_${inputID}00.png?raw=true`;
 
+                let subName = languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID];
+                let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
+                    .replace("\\n", " ")
+                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "**R**");
+
                 splat3Embed
-                    .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID] })
+                    .setAuthor({ name: subName })
                     .setThumbnail(subThumbnail)
-                    .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID].replace("\\n", " "))
+                    .setDescription(subDescription)
                     .addField(weaponListTitle, allSubweaponMatchesNames, false);
                 break;
             case "special":
@@ -148,10 +153,15 @@ exports.run = async (client, interaction) => {
                 });
                 let specialThumbnail = `${github}images/subspe/Wsp_${inputID}00.png?raw=true`;
 
+                let specialName = languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID];
+                let specialDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID]
+                    .replace("\\n", " ")
+                    .replaceAll("[group=0003 type=000c params=00 00 80 3f 00 00 00 00]", "**ZR**").replaceAll("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "**R**").replaceAll("[group=0003 type=000b params=00 00 80 3f 00 00 00 00]", "**ZL**").replaceAll("[group=0003 type=0001 params=00 00 80 3f 00 00 00 00]", "**B**");
+
                 splat3Embed
-                    .setAuthor({ name: languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID] })
+                    .setAuthor({ name: specialName })
                     .setThumbnail(specialThumbnail)
-                    .setDescription(languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID].replace("\\n", " "))
+                    .setDescription(specialDescription)
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false);
                 break;
             case "schedule":
