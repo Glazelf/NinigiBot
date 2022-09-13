@@ -191,7 +191,7 @@ exports.run = async (client, interaction) => {
                         await entry.setting.weapons.forEach(weapon => {
                             weaponString += `${weapon.name}\n`;
                         });
-                        splat3Embed.addField(entry.setting.coopStage.name, `${salmonRotationTime}\n${weaponString}`, true);
+                        splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}`, `${weaponString}`, true);
                     });
                     splat3Embed
                         .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
@@ -199,15 +199,14 @@ exports.run = async (client, interaction) => {
                 } else {
                     await scheduleData.nodes.forEach(entry => {
                         entrySettings = entry[modeSettings];
-                        let rankedMode = "";
-                        if (inputMode == "bankaraSchedules") {
-                            entrySettings = entrySettings[modeIndex];
-                            rankedMode = `**${entrySettings.vsRule.name}**\n`;
-                        };
                         let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
                         let mapEntryTitle = `Maps ${mapEntryTimes}`;
+                        if (inputMode == "bankaraSchedules") {
+                            entrySettings = entrySettings[modeIndex];
+                            mapEntryTitle = `${mapEntryTimes}\n${entrySettings.vsRule.name}`;
+                        };
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
-                        splat3Embed.addField(mapEntryTitle, `${rankedMode}${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
+                        splat3Embed.addField(mapEntryTitle, `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
                     });
                     splat3Embed
                         .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
