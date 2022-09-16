@@ -21,7 +21,7 @@
     "pokemon-showdown": "^0.11.7",
     "pureimage": "^0.3.14",
     "sequelize": "^6.21.6",
-    "sqlite3": "^5.1.0",
+    "sqlite3": "^5.1.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
