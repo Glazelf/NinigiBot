@@ -37,27 +37,24 @@ module.exports = async (client, oldRole, newRole) => {
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
                 .addField(`Role:`, `${newRole} (${newRole.id})`)
-                .setTimestamp()
+                .setTimestamp();
+            console.log(oldRole.position)
+            console.log(newRole.position)
 
             if (executor) {
                 updateEmbed
                     .addField('Updated by:', `${executor} (${executor.id})`)
                     .setFooter({ text: executor.tag });
             };
-
             if (oldRole.name !== newRole.name) {
                 updateEmbed
                     .addField(`Old name:`, oldRole.name)
                     .addField(`New name:`, newRole.name);
-            };
-
-            if (oldRole.color !== newRole.color) {
+            } else if (oldRole.color !== newRole.color) {
                 updateEmbed
                     .addField(`Old color:`, oldRole.hexColor)
                     .addField(`New color:`, newRole.hexColor);
-            };
-
-            if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
+            } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 const permissionSerializer = require('../util/permissionBitfieldSerializer');
                 const oldPermissions = permissionSerializer(oldRole.permissions);
                 const newPermissions = permissionSerializer(newRole.permissions);
@@ -66,6 +63,8 @@ module.exports = async (client, oldRole, newRole) => {
                         .addField(`Old permissions:`, oldPermissions.join(', '))
                         .addField(`New permissions:`, newPermissions.join(', '));
                 };
+            } else {
+                return;
             };
 
             if (oldRole.icon !== newRole.icon) {

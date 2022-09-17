@@ -34,7 +34,6 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             let footer = newChannel.id;
             if (executor) footer = executor.tag;
-
             let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.MessageEmbed()
@@ -45,7 +44,6 @@ module.exports = async (client, oldChannel, newChannel) => {
                 .setTimestamp();
 
             if (executor) updateEmbed.addField('Updated by:', `${executor} (${executor.id})`);
-
             if (oldChannel.name !== newChannel.name) {
                 updateEmbed
                     .addField(`Old name:`, oldChannel.name)
@@ -53,31 +51,27 @@ module.exports = async (client, oldChannel, newChannel) => {
             } else {
                 updateEmbed.addField('Channel name: ', newChannel.name);
             };
-
             if (oldChannel.type !== newChannel.type) {
                 updateEmbed
                     .addField(`Old type:`, oldChannelType)
                     .addField(`New type:`, newChannelType);
-            };
-
-            if (oldChannel.parentId !== newChannel.parentId) {
+            } else if (oldChannel.parentId !== newChannel.parentId) {
                 updateEmbed
                     .addField(`Old category:`, oldChannel.parent?.name ?? '(None)')
                     .addField(`New category:`, newChannel.parent?.name ?? '(None)');
             };
-
             if (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     updateEmbed
                         .addField(`Old topic:`, oldChannel.topic || '(None)')
                         .addField(`New topic:`, newChannel.topic || '(None)');
-                };
-                if (oldChannel.nsfw !== newChannel.nsfw) {
+                } else if (oldChannel.nsfw !== newChannel.nsfw) {
                     updateEmbed
-                        .addField(`Old Is NSFW:`, `${oldChannel.nsfw}`)
-                        .addField(`New Is NSFW:`, `${newChannel.nsfw}`);
+                        .addField(`Old Is NSFW:`, oldChannel.nsfw.toString())
+                        .addField(`New Is NSFW:`, newChannel.nsfw.toString());
+                } else {
+                    return;
                 };
-
                 // these will both be undefined on a GUILD_NEWS channel, since there is no rate limit there, possibly also for GUILD_STORE channels
                 let oldSlowmode = 0;
                 let newSlowmode = 0;
@@ -93,19 +87,18 @@ module.exports = async (client, oldChannel, newChannel) => {
                     updateEmbed
                         .addField(`Old bitrate:`, `${(oldChannel.bitrate / 1000)}kbps`)
                         .addField(`New bitrate:`, `${(newChannel.bitrate / 1000)}kbps`);
-                };
-                if (oldChannel.userLimit !== newChannel.userLimit) {
+                } else if (oldChannel.userLimit !== newChannel.userLimit) {
                     updateEmbed
                         .addField(`Old user limit:`, `${oldChannel.userLimit || 'No limit'}`)
                         .addField(`New user limit:`, `${newChannel.userLimit || 'No limit'}`);
-                };
-                if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
+                } else if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
                     updateEmbed
                         .addField(`Old region:`, oldChannel.rtcRegion || 'automatic')
                         .addField(`New region:`, newChannel.rtcRegion || 'automatic');
+                } else {
+                    return;
                 };
             };
-
             if (!updateEmbed.fields.some(field => field.name.startsWith('New'))) {
                 // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
                 // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
