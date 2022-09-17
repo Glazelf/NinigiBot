@@ -28,14 +28,10 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-
             const channelType = getChannelTypeName(channel);
-
             let footer = channel.id;
             if (executor) footer = executor.tag;
-
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
-
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })

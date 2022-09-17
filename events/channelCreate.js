@@ -28,21 +28,16 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-
             const channelType = getChannelTypeName(channel);
-
             let footer = channel.id;
             if (executor) footer = executor.tag;
-
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
-
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
                 .addField(`Channel:`, `${channel} (${channel.id})`)
                 .setFooter({ text: footer })
                 .setTimestamp();
-
             if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
             if (executor) createEmbed.addField('Created by:', `${executor} (${executor.id})`);
 

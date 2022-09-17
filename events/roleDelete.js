@@ -26,7 +26,6 @@ module.exports = async (client, role) => {
                 if (target.id !== role.id) return;
                 executor = deleteExecutor;
             };
-
             // Role color
             let embedColor = role.hexColor;
             if (!embedColor || embedColor == "#000000") embedColor = globalVars.embedColor;
@@ -44,7 +43,6 @@ module.exports = async (client, role) => {
                     .addField('Deleted by:', `${executor} (${executor.id})`)
                     .setFooter({ text: executor.tag });
             };
-
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
