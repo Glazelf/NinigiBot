@@ -269,7 +269,7 @@ module.exports = async (client, interaction) => {
                                     ...languageJSON["CommonMsg/Gear/GearName_Shoes"]
                                 };
                                 for await (const [key, value] of Object.entries(allClothesNames)) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.startsWith("COP00")) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "weapon":
