@@ -173,10 +173,12 @@ exports.run = async (client, interaction) => {
                 if (submode == "series") modeIndex = 0;
                 if (submode == "open") modeIndex = 1;
                 let turfWarID = "regularSchedules";
-                let rankedID = "bankaraSchedules";
+                let anarchyID = "bankaraSchedules";
                 let salmonRunID = "coopGroupingSchedule";
+                let xBattleID = "xSchedules";
+                let leagueSchedules = "leagueSchedules";
 
-                let allowedModes = [turfWarID, anarchyID, salmonRunID];
+                let allowedModes = [turfWarID, anarchyID, salmonRunID, xBattleID, leagueSchedules];
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `We don't have schedules for the mode you provided (yet!) or that mode does not exist.` });
 
                 let responseSchedules = await axios.get(schedulesAPI);
