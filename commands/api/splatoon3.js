@@ -202,6 +202,12 @@ exports.run = async (client, interaction) => {
 
                 splat3Embed.setAuthor({ name: modeName });
                 if (inputMode == salmonRunID) {
+                    let responseSalmonRunGear = await axios.get(salmonRunGearAPI);
+                    if (responseSalmonRunGear.status == 200) {
+                        splat3Embed
+                            .setDescription(`Monthly Gear: ${responseSalmonRunGear.data.data.coopResult.monthlyGear.name}`)
+                            .setThumbnail(responseSalmonRunGear.data.data.coopResult.monthlyGear.image.url);
+                    };
                     // Add functionality for big run whenever that gets added
                     await scheduleData.nodes.forEach(async (entry) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
