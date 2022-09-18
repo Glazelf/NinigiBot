@@ -236,7 +236,7 @@ exports.run = async (client, interaction) => {
                 if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
                 let splatnetData = responseSplatnet.data.data.gesotown;
                 // Limited time brand
-                splat3Embed.addField(`Daily Drop (${splatnetData.pickupBrand.brand.name})`, `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}.\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, false);
+                splat3Embed.addField(`Daily Drop (${splatnetData.pickupBrand.brand.name})`, `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, false);
                 await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                     let brandGearString = getGearString(brandGear, "brand");
                     splat3Embed.addField(brandGear.gear.name, brandGearString, true);
