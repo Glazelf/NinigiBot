@@ -33,7 +33,10 @@ exports.run = async (client, interaction) => {
 
         let inputID;
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
-        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`;
+        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
+        let splatnetAPI = `https://splatoon3.ink/data/gear.json;`; // SplatNet gear data.
+        let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
+        let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -229,6 +232,41 @@ exports.run = async (client, interaction) => {
                         .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
                 };
                 break;
+            case "splatnet":
+                // WIP
+                let responseSplatnet = await axios.get(splatnetAPI);
+                if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
+                console.log(responseSplatnet);
+                break;
+            case "splatfests":
+                // Command needs a rework once there is 1 finished Splatfest to show results, and then again when there's a second scheduled Splatfest to make sure ordering and comparisons work properly
+                let responseSplatfest = await axios.get(splatfestAPI);
+                if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
+                let splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
+                console.log(splatfestData[0].teams)
+
+                let splatfestBanner = null;
+                splatfestData = await splatfestData.sort((a, b) => Date.parse(a.endTime) - Date.parse(b.endTime));
+                await splatfestData.forEach(async (splatfest) => {
+                    let splatfestTitle = splatfest.title;
+                    let splatfestDescription = "";
+                    splatfestBanner = splatfest.image.url;
+                    if (splatfest.state == "SCHEDULED") splatfestTitle = `⚠️🥳UPCOMING🥳⚠️\n${splatfestTitle}`;
+                    let splatfestTeamIndex = 0;
+                    await splatfest.teams.forEach(team => {
+                        if (splatfestTeamIndex !== 0) splatfestDescription += " vs. ";
+                        splatfestTeamIndex++;
+                        splatfestDescription += team.teamName;
+                    });
+                    splatfestDescription = `${splatfestDescription}\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
+                    splat3Embed.addField(splatfestTitle, splatfestDescription, false);
+                });
+                splat3Embed
+                    .setAuthor({ name: "Splatfests" })
+                    .setImage(splatfestBanner)
+                    .setFooter({ text: "Image is from upcoming or most recent Splatfest." })
+
+                break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
                 if (!userTitle) userTitle = interaction.user.username;
@@ -366,6 +404,10 @@ module.exports.config = {
             type: "BOOLEAN",
             description: "Whether the reply will be private."
         }]
+    }, {
+        name: "splatfests",
+        type: "SUB_COMMAND",
+        description: "Get all Splatfests data."
     }, {
         name: "splashtag-random",
         type: "SUB_COMMAND",
