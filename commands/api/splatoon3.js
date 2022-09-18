@@ -264,8 +264,7 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
-                    .setFooter({ text: "Image is from upcoming or most recent Splatfest." })
-
+                    .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
                 break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
