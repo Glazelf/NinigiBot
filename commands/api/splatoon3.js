@@ -32,9 +32,10 @@ exports.run = async (client, interaction) => {
         languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageUsed}.json`);
 
         let inputID;
+        let star = "⭐";
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
-        let splatnetAPI = `https://splatoon3.ink/data/gear.json;`; // SplatNet gear data.
+        let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
         let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
@@ -47,8 +48,6 @@ exports.run = async (client, interaction) => {
                 // Doesn't always find the correct item despite its existence
                 let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
                 if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.` });
-                // Rarity
-                let star = "⭐";
                 let clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Clothes"][inputID];
                 if (clothingObject.__RowId.startsWith("Shs")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Shoes"][inputID];
                 if (clothingObject.__RowId.startsWith("Hed")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Head"][inputID];
@@ -233,10 +232,25 @@ exports.run = async (client, interaction) => {
                 };
                 break;
             case "splatnet":
-                // WIP
                 let responseSplatnet = await axios.get(splatnetAPI);
                 if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
-                console.log(responseSplatnet);
+                let splatnetData = responseSplatnet.data.data.gesotown;
+                // Limited time brand
+                splat3Embed.addField(`Daily Drop (${splatnetData.pickupBrand.brand.name})`, `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}.\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, false);
+                await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
+                    let brandGearString = getGearString(brandGear, "brand");
+                    splat3Embed.addField(brandGear.gear.name, brandGearString, true);
+                });
+                // Individual gear pieces
+                splat3Embed.addField("Gear On Sale Now", `New item <t:${Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000}:R>.`, false);
+                await splatnetData.limitedGears.forEach(limitedGear => {
+                    let limitedGearString = getGearString(limitedGear, "limited");
+                    splat3Embed.addField(limitedGear.gear.name, limitedGearString, true);
+                });
+                splat3Embed
+                    .setAuthor({ name: "SplatNet3 Shop" })
+                    .setImage(splatnetData.pickupBrand.image.url)
+                    .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` });
                 break;
             case "splatfests":
                 // Command needs a rework once there is 1 finished Splatfest to show results, and then again when there's a second scheduled Splatfest to make sure ordering and comparisons work properly
@@ -298,6 +312,19 @@ exports.run = async (client, interaction) => {
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
+
+        function getGearString(gear, type) {
+            let limitedGearString = "";
+            if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
+            limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
+            let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
+            let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;
+            if (gear.gear.additionalGearPowers.length > 1) limitedGearStarString += ` (${limitedGearStars})`;
+            limitedGearString += `${limitedGearStarString}\n`;
+            limitedGearString += `Brand: ${gear.gear.brand.name}\n`;
+            limitedGearString += `Price: ${gear.price}\n`;
+            return limitedGearString;
+        };
 
     } catch (e) {
         // Log error
@@ -404,9 +431,23 @@ module.exports.config = {
             description: "Whether the reply will be private."
         }]
     }, {
+        name: "splatnet",
+        type: "SUB_COMMAND",
+        description: "Get SplatNet3 data.",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
         name: "splatfests",
         type: "SUB_COMMAND",
-        description: "Get all Splatfests data."
+        description: "Get all Splatfests data.",
+        options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
     }, {
         name: "splashtag-random",
         type: "SUB_COMMAND",
