@@ -172,14 +172,17 @@ exports.run = async (client, interaction) => {
                 let modeIndex = null;
                 if (submode == "series") modeIndex = 0;
                 if (submode == "open") modeIndex = 1;
+                let turfWarID = "regularSchedules";
+                let rankedID = "bankaraSchedules";
+                let salmonRunID = "coopGroupingSchedule";
 
-                let allowedModes = ["regularSchedules", "bankaraSchedules", "coopGroupingSchedule"];
+                let allowedModes = [turfWarID, anarchyID, salmonRunID];
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `We don't have schedules for the mode you provided (yet!) or that mode does not exist.` });
 
                 let responseSchedules = await axios.get(schedulesAPI);
                 if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
                 let scheduleData = responseSchedules.data.data[inputMode];
-                if (inputMode == "coopGroupingSchedule") scheduleData = scheduleData.regularSchedules;
+                if (inputMode == salmonRunID) scheduleData = scheduleData.regularSchedules;
                 let scheduleMode = inputMode.split("Schedule")[0];
 
                 let currentTime = new Date().valueOf();
@@ -190,11 +193,12 @@ exports.run = async (client, interaction) => {
                 let modeSettings = `${scheduleMode}MatchSetting`;
                 if (!currentMaps[`${scheduleMode}MatchSetting`]) modeSettings = `${scheduleMode}MatchSettings`;
                 let entrySettings = currentMaps[modeSettings];
-                if (inputMode == "bankaraSchedules") entrySettings = entrySettings[modeIndex];
+                if (inputMode == anarchyID) entrySettings = entrySettings[modeIndex];
                 let currentMapsSettings = entrySettings;
 
                 splat3Embed.setAuthor({ name: modeName });
-                if (inputMode == "coopGroupingSchedule") {
+                if (inputMode == salmonRunID) {
+                    // Add functionality for big run whenever that gets added
                     await scheduleData.nodes.forEach(async (entry) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
                         let weaponString = "";
@@ -211,7 +215,7 @@ exports.run = async (client, interaction) => {
                         entrySettings = entry[modeSettings];
                         let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
                         let mapEntryTitle = `Maps ${mapEntryTimes}`;
-                        if (inputMode == "bankaraSchedules") {
+                        if (inputMode == anarchyID) {
                             entrySettings = entrySettings[modeIndex];
                             mapEntryTitle = `${mapEntryTimes}\n${entrySettings.vsRule.name}`;
                         };
