@@ -84,9 +84,7 @@ module.exports = async (client, interaction, page, user) => {
             let joinRank = await getJoinRank(user, interaction.guild);
             let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
             let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
-
             profileEmbed.addField("Account:", `${user} ${badgesString}`, true);
-
             if (birthday && birthdayParsed && member) profileEmbed.addField("Birthday:", birthdayParsed, true);
             if (switchCode && switchCode !== 'None' && member) profileEmbed.addField("Switch FC:", switchCode, true);
             if (joinRank) profileEmbed.addField("Join Ranking:", joinRankText, true);
