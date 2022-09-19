@@ -7,7 +7,7 @@ const NUMBER_OF_PAGES = 2;
 
 module.exports = async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
-    let member = await interaction.guild.members.fetch(user.id);
+    let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -23,22 +23,17 @@ module.exports = async (client, interaction, page, user) => {
     let profileButtons = new Discord.MessageActionRow()
         .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
     if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: 'PRIMARY', emoji: '⬅️' }));
-    if (page < NUMBER_OF_PAGES - 1) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
+    if (page < NUMBER_OF_PAGES - 1 && member && !user.bot) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
     let ephemeral = true;
 
-    let user_db;
+    let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday']);
             const Discord = require("discord.js");
             const parseDate = require('../../util/parseDate')
             const isAdmin = require('../../util/isAdmin');
             const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
             let adminBot = isAdmin(client, interaction.guild.me);
-            // Balance check
-            let dbBalance = user_db.money;
-            dbBalance = Math.floor(dbBalance);
-            let userBalance = `${dbBalance}${globalVars.currency}`;
             let switchCode = user_db.swcode;
             let birthday = user_db.birthday;
             let birthdayParsed = parseDate(birthday);
@@ -91,9 +86,9 @@ module.exports = async (client, interaction, page, user) => {
             let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
 
             profileEmbed.addField("Account:", `${user} ${badgesString}`, true);
-            if (!user.bot && (roleCount > 0 && dbBalance !== 0)) profileEmbed.addField("Balance:", userBalance, true);
-            if (birthday && birthdayParsed) profileEmbed.addField("Birthday:", birthdayParsed, true);
-            if (switchCode && switchCode !== 'None') profileEmbed.addField("Switch FC:", switchCode, true);
+
+            if (birthday && birthdayParsed && member) profileEmbed.addField("Birthday:", birthdayParsed, true);
+            if (switchCode && switchCode !== 'None' && member) profileEmbed.addField("Switch FC:", switchCode, true);
             if (joinRank) profileEmbed.addField("Join Ranking:", joinRankText, true);
             if (memberRoles) profileEmbed.addField(`Roles: (${roleCount})`, rolesSorted, false);
             profileEmbed.addField("Created:", `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, true);
@@ -105,8 +100,13 @@ module.exports = async (client, interaction, page, user) => {
             profileEmbed.aa = user.id;
             break;
         case 1:
-            user_db = await api_user.getUser(user.id, ['user_id', 'food']);
-            profileEmbed.addField("Food:", user_db.food.toString() + ' :poultry_leg:', true);
+            // Balance check
+            let dbBalance = user_db.money;
+            dbBalance = Math.floor(dbBalance);
+            let userBalance = `${dbBalance}${globalVars.currency}`;
+            profileEmbed
+                .addField("Balance:", userBalance, true)
+                .addField("Food:", user_db.food.toString() + ' :poultry_leg:', true);
             trophy_level = 0;
             let trophies = await user_db.getShopTrophies();
             trophy_string = '';
