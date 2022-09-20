@@ -311,10 +311,9 @@ exports.run = async (client, interaction) => {
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${github}images/badge/${badgeRandom}?raw=true` })
                     .setTitle(userTitle)
-                    .setDescription(`#${interaction.user.discriminator}`)
                     .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
                     .setImage(`${github}images/npl/${bannerRandom}?raw=true`)
-                    .setFooter({ text: "Report grammar errors on Github!", iconURL: `${github}images/badge/${badgeRandom3}?raw=true` })
+                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${github}images/badge/${badgeRandom3}?raw=true` })
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
