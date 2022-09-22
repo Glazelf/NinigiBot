@@ -46,9 +46,8 @@ module.exports = async (client, member, newMember) => {
             } else if (member.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
-            } else {
-                return;
             };
+            if (!updateCase) return;
 
             let fetchedLogs;
             let executor = null;
