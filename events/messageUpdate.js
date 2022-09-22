@@ -11,7 +11,6 @@ module.exports = async (client, message, newMessage) => {
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-
         // Get log
         const { LogChannels } = require('../database/dbServices/server.api');
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });

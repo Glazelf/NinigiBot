@@ -5,7 +5,6 @@ module.exports = async (client, member, newMember) => {
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
-
         let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
@@ -47,8 +46,9 @@ module.exports = async (client, member, newMember) => {
             } else if (member.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
+            } else {
+                return;
             };
-            if (!updateCase) return;
 
             let fetchedLogs;
             let executor = null;
