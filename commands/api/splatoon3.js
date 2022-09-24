@@ -33,6 +33,8 @@ exports.run = async (client, interaction) => {
         languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageUsed}.json`);
 
         let inputID;
+        let responseSplatfest;
+        let splatfestData;
         let star = "⭐";
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
@@ -180,8 +182,9 @@ exports.run = async (client, interaction) => {
                 let salmonRunID = "coopGroupingSchedule";
                 let xBattleID = "xSchedules";
                 let leagueSchedules = "leagueSchedules";
+                let festSchedules = "festSchedules";
 
-                let allowedModes = [turfWarID, anarchyID, salmonRunID, xBattleID, leagueSchedules];
+                let allowedModes = [turfWarID, anarchyID, salmonRunID, xBattleID, leagueSchedules, festSchedules];
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `We don't have schedules for the mode you provided (yet!) or that mode does not exist.` });
 
                 let responseSchedules = await axios.get(schedulesAPI);
@@ -189,6 +192,7 @@ exports.run = async (client, interaction) => {
                 let scheduleData = responseSchedules.data.data[inputMode];
                 if (inputMode == salmonRunID) scheduleData = scheduleData.regularSchedules;
                 let scheduleMode = inputMode.split("Schedule")[0];
+                let currentFest = responseSchedules.data.data.currentFest;
 
                 let currentTime = new Date().valueOf();
                 let currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
@@ -203,6 +207,7 @@ exports.run = async (client, interaction) => {
 
                 splat3Embed.setAuthor({ name: modeName });
                 if (inputMode == salmonRunID) {
+                    // Salmon Run
                     let responseSalmonRunGear = await axios.get(salmonRunGearAPI);
                     if (responseSalmonRunGear.status == 200) {
                         splat3Embed
@@ -221,7 +226,26 @@ exports.run = async (client, interaction) => {
                     splat3Embed
                         .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
                         .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
+                } else if (currentFest) {
+                    // Splatfest
+
+                    let splatfestScheduleDescription = currentFest.title;
+                    splatfestScheduleDescription += `\n<t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                    responseSplatfest = await axios.get(splatfestAPI);
+                    // console.log(responseSplatfest.data.EU.data.festRecords.nodes)
+                    splatfestData = await responseSplatfest.data.EU.data.festRecords.nodes.find(fest => fest.id == currentFest.id);
+                    console.log(currentFest.id)
+                    console.log(splatfestData)
+                    splat3Embed
+                        .setDescription(splatfestScheduleDescription)
+                    if (Date.now() > Date.parse(currentFest.midTermTime)) {
+                        // Add Tricolor data
+                        splat3Embed
+                            .addField("Tricolor Stage:", currentFest.tricolorStage.name, false);
+
+                    };
                 } else {
+                    // Turf War & Anarchy
                     await scheduleData.nodes.forEach(entry => {
                         entrySettings = entry[modeSettings];
                         let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
@@ -261,10 +285,9 @@ exports.run = async (client, interaction) => {
                 break;
             case "splatfests":
                 // Command needs a rework once there is 1 finished Splatfest to show results, and then again when there's a second scheduled Splatfest to make sure ordering and comparisons work properly
-                let responseSplatfest = await axios.get(splatfestAPI);
+                responseSplatfest = await axios.get(splatfestAPI);
                 if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
-                let splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
-                console.log(splatfestData[0].teams)
+                splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
 
                 let splatfestBanner = null;
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(a.endTime) - Date.parse(b.endTime));
@@ -272,7 +295,17 @@ exports.run = async (client, interaction) => {
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     splatfestBanner = splatfest.image.url;
-                    if (splatfest.state == "SCHEDULED") splatfestTitle = `⚠️🥳UPCOMING🥳⚠️\n${splatfestTitle}`;
+                    switch (splatfest.state) {
+                        case "SCHEDULED":
+                            splatfestTitle = `⚠️🥳UPCOMING🥳⚠️\n${splatfestTitle}`;
+                            break;
+                        case "PAST":
+                            // Change case name for past splatfests
+                            break;
+                        default:
+                            splatfestTitle = `⚠️🥳ONGOING🥳⚠️\n${splatfestTitle}`;
+                            break;
+                    };
                     let splatfestTeamIndex = 0;
                     await splatfest.teams.forEach(team => {
                         if (splatfestTeamIndex !== 0) splatfestDescription += " vs. ";

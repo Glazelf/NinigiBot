@@ -293,12 +293,20 @@ module.exports = async (client, interaction) => {
                                 };
                                 break;
                             case "mode":
-                                // choices.push({name: "Splatfest", value: "Splatfest|festSchedules"}); // Should be tested during a splatfest to see data format. Replace all non-available modes with this option when a Splatfest is active.
-                                choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
-                                choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
-                                choices.push({ name: "Anarchy Battle (Open)", value: "Anarchy Battle (Open)|bankaraSchedules|open" });
-                                // choices.push({ name: "X Battle", value: "X Battle|xSchedules" }); // Uncomment when X Battle is available.
-                                // choices.push({ name: "League Battle", value: "League Battle|leagueSchedules" }); // Uncomment when League Battle is available.
+                                let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
+                                let responseSchedules = await axios.get(schedulesAPI);
+                                if (responseSchedules.data.data.currentFest) {
+                                    let SplatfestBattleOpenName = "Splatfest Battle (Open)";
+                                    if (Date.now() > Date.parse(responseSchedules.data.data.currentFest.midTermTime)) SplatfestBattleOpenName = "Splatfest Battle (Open)/Tricolor Battle";
+                                    choices.push({ name: SplatfestBattleOpenName, value: "Splatfest Battle (Open)|festSchedules" });
+                                    choices.push({ name: "Splatfest Battle (Pro)", value: "Splatfest Battle (Pro)|festSchedules" });
+                                } else {
+                                    choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
+                                    choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
+                                    choices.push({ name: "Anarchy Battle (Open)", value: "Anarchy Battle (Open)|bankaraSchedules|open" });
+                                };
+                                // choices.push({ name: "X Battle", value: "X Battle|xSchedules" }); // Uncomment when X Battle is available, also check if available during Splatfest
+                                // choices.push({ name: "League Battle", value: "League Battle|leagueSchedules" }); // Uncomment when League Battle is available, also check if available during Splatfest
                                 choices.push({ name: "Salmon Run", value: "Salmon Run|coopGroupingSchedule" }); // Make name "Salmon Run (Big Run)" if Big Run is active, assuming all other modes are also available. If not, do something similar to Splatfests.
                                 break;
                         };
