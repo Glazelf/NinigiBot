@@ -35,6 +35,7 @@ exports.run = async (client, interaction) => {
         let inputID;
         let responseSplatfest;
         let splatfestData;
+        let splatfestTeamIndex = 0;
         let star = "⭐";
         let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
         let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
@@ -177,22 +178,30 @@ exports.run = async (client, interaction) => {
                 let modeIndex = null;
                 if (submode == "series") modeIndex = 0;
                 if (submode == "open") modeIndex = 1;
+                let responseSchedules = await axios.get(schedulesAPI);
+                if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
+                let currentFest = responseSchedules.data.data.currentFest;
+
+                console.log(responseSchedules.data.data)
+
                 let turfWarID = "regularSchedules";
                 let anarchyID = "bankaraSchedules";
                 let salmonRunID = "coopGroupingSchedule";
                 let xBattleID = "xSchedules";
-                let leagueSchedules = "leagueSchedules";
-                let festSchedules = "festSchedules";
+                let leagueBattleID = "leagueSchedules";
+                let splatfestBattleID = "festSchedules";
+                let allowedModes = [];
+                allowedModes.push(salmonRunID); // Add xBattleID, leagueBattleID when they become available
+                if (currentFest) {
+                    allowedModes.push(splatfestBattleID);
+                } else {
+                    allowedModes.push(turfWarID, anarchyID);
+                };
+                if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
-                let allowedModes = [turfWarID, anarchyID, salmonRunID, xBattleID, leagueSchedules, festSchedules];
-                if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `We don't have schedules for the mode you provided (yet!) or that mode does not exist.` });
-
-                let responseSchedules = await axios.get(schedulesAPI);
-                if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
                 let scheduleData = responseSchedules.data.data[inputMode];
                 if (inputMode == salmonRunID) scheduleData = scheduleData.regularSchedules;
                 let scheduleMode = inputMode.split("Schedule")[0];
-                let currentFest = responseSchedules.data.data.currentFest;
 
                 let currentTime = new Date().valueOf();
                 let currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
@@ -228,23 +237,22 @@ exports.run = async (client, interaction) => {
                         .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
                 } else if (currentFest) {
                     // Splatfest
-
-                    let splatfestScheduleDescription = currentFest.title;
-                    splatfestScheduleDescription += `\n<t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                    let splatfestScheduleDescription = `${currentFest.title}\n`;
                     responseSplatfest = await axios.get(splatfestAPI);
                     // console.log(responseSplatfest.data.EU.data.festRecords.nodes)
-                    splatfestData = await responseSplatfest.data.EU.data.festRecords.nodes.find(fest => fest.id == currentFest.id);
-                    console.log(currentFest.id)
-                    console.log(splatfestData)
+                    splatfestData = responseSplatfest.data.EU.data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
+                    await splatfestData.teams.forEach(team => {
+                        if (splatfestTeamIndex !== 0) splatfestScheduleDescription += " vs. ";
+                        splatfestTeamIndex++;
+                        splatfestScheduleDescription += team.teamName;
+                    });
+                    splatfestScheduleDescription += `\nDuration: <t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
                     splat3Embed
                         .setDescription(splatfestScheduleDescription)
-                    if (Date.now() > Date.parse(currentFest.midTermTime)) {
-                        // Add Tricolor data
-                        splat3Embed
-                            .addField("Tricolor Stage:", currentFest.tricolorStage.name, false);
-
-                    };
-                } else {
+                        .addField("Tricolor Battle:", `<t:${Date.parse(currentFest.midtermTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>\n${currentFest.tricolorStage.name}`, false)
+                        .setImage(splatfestData.image.url);
+                };
+                if (inputMode == turfWarID || inputMode == anarchyID || inputMode == splatfestBattleID) {
                     // Turf War & Anarchy
                     await scheduleData.nodes.forEach(entry => {
                         entrySettings = entry[modeSettings];
@@ -257,9 +265,11 @@ exports.run = async (client, interaction) => {
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
                         splat3Embed.addField(mapEntryTitle, `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
                     });
-                    splat3Embed
-                        .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
-                        .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
+                    if (inputMode == turfWarID || inputMode == anarchyID) {
+                        splat3Embed
+                            .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
+                            .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
+                    };
                 };
                 break;
             case "splatnet":
@@ -306,7 +316,6 @@ exports.run = async (client, interaction) => {
                             splatfestTitle = `⚠️🥳ONGOING🥳⚠️\n${splatfestTitle}`;
                             break;
                     };
-                    let splatfestTeamIndex = 0;
                     await splatfest.teams.forEach(team => {
                         if (splatfestTeamIndex !== 0) splatfestDescription += " vs. ";
                         splatfestTeamIndex++;

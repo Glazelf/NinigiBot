@@ -296,10 +296,7 @@ module.exports = async (client, interaction) => {
                                 let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
                                 let responseSchedules = await axios.get(schedulesAPI);
                                 if (responseSchedules.data.data.currentFest) {
-                                    let SplatfestBattleOpenName = "Splatfest Battle (Open)";
-                                    if (Date.now() > Date.parse(responseSchedules.data.data.currentFest.midTermTime)) SplatfestBattleOpenName = "Splatfest Battle (Open)/Tricolor Battle";
-                                    choices.push({ name: SplatfestBattleOpenName, value: "Splatfest Battle (Open)|festSchedules" });
-                                    choices.push({ name: "Splatfest Battle (Pro)", value: "Splatfest Battle (Pro)|festSchedules" });
+                                    choices.push({ name: "Splatfest Battle", value: "Splatfest Battle (Open)|festSchedules" });
                                 } else {
                                     choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
                                     choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
