@@ -182,8 +182,6 @@ exports.run = async (client, interaction) => {
                 if (responseSchedules.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting schedule data. Please try again later.` });
                 let currentFest = responseSchedules.data.data.currentFest;
 
-                console.log(responseSchedules.data.data)
-
                 let turfWarID = "regularSchedules";
                 let anarchyID = "bankaraSchedules";
                 let salmonRunID = "coopGroupingSchedule";
