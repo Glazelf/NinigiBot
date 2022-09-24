@@ -309,11 +309,11 @@ exports.run = async (client, interaction) => {
                         case "SCHEDULED":
                             splatfestTitle = `⚠️🥳UPCOMING🥳⚠️\n${splatfestTitle}`;
                             break;
-                        case "PAST":
-                            // Change case name for past splatfests
+                        case "FIRST_HALF":
+                        case "SECOND_HALF":
+                            splatfestTitle = `⚠️🥳ONGOING🥳⚠️\n${splatfestTitle}`;
                             break;
                         default:
-                            splatfestTitle = `⚠️🥳ONGOING🥳⚠️\n${splatfestTitle}`;
                             break;
                     };
                     await splatfest.teams.forEach(team => {
