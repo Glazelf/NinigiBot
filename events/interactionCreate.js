@@ -296,7 +296,7 @@ module.exports = async (client, interaction) => {
                                 let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
                                 let responseSchedules = await axios.get(schedulesAPI);
                                 if (responseSchedules.data.data.currentFest) {
-                                    choices.push({ name: "Splatfest Battle", value: "Splatfest Battle (Open)|festSchedules" });
+                                    choices.push({ name: "Splatfest Battle", value: "Splatfest Battle|festSchedules" });
                                 } else {
                                     choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
                                     choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
