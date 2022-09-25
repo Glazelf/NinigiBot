@@ -311,11 +311,11 @@ exports.run = async (client, interaction) => {
                     splatfestBanner = splatfest.image.url;
                     switch (splatfest.state) {
                         case "SCHEDULED":
-                            splatfestTitle = `⚠️🥳UPCOMING🥳⚠️\n${splatfestTitle}`;
+                            splatfestTitle = `⚠️UPCOMING⚠️\n${splatfestTitle}`;
                             break;
                         case "FIRST_HALF":
                         case "SECOND_HALF":
-                            splatfestTitle = `⚠️🥳ONGOING🥳⚠️\n${splatfestTitle}`;
+                            splatfestTitle = `🥳ONGOING🥳\n${splatfestTitle}`;
                             break;
                         default:
                             break;
