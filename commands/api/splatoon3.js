@@ -233,21 +233,25 @@ exports.run = async (client, interaction) => {
                     splat3Embed
                         .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
                         .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
-                } else if (currentFest) {
+                } else if (inputMode == splatfestBattleID) {
                     // Splatfest
                     let splatfestScheduleDescription = `${currentFest.title}\n`;
                     responseSplatfest = await axios.get(splatfestAPI);
-                    // console.log(responseSplatfest.data.EU.data.festRecords.nodes)
                     splatfestData = responseSplatfest.data.EU.data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
+                    let splatfestDefender = null;
                     await splatfestData.teams.forEach(team => {
                         if (splatfestTeamIndex !== 0) splatfestScheduleDescription += " vs. ";
                         splatfestTeamIndex++;
                         splatfestScheduleDescription += team.teamName;
+                        if (team.role == "DEFENSE") splatfestDefender = team.teamName;
                     });
                     splatfestScheduleDescription += `\nDuration: <t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                    let tricolorSchedule = `<t:${Date.parse(currentFest.midtermTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                    if (splatfestDefender) tricolorSchedule += `\nDefense: Team ${splatfestDefender}`;
+                    tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                     splat3Embed
                         .setDescription(splatfestScheduleDescription)
-                        .addField("Tricolor Battle:", `<t:${Date.parse(currentFest.midtermTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>\n${currentFest.tricolorStage.name}`, false)
+                        .addField("Tricolor Battle:", tricolorSchedule, false)
                         .setImage(splatfestData.image.url);
                 };
                 if (inputMode == turfWarID || inputMode == anarchyID || inputMode == splatfestBattleID) {
@@ -260,6 +264,7 @@ exports.run = async (client, interaction) => {
                             entrySettings = entrySettings[modeIndex];
                             mapEntryTitle = `${mapEntryTimes}\n${entrySettings.vsRule.name}`;
                         };
+                        if (!entrySettings) return;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
                         splat3Embed.addField(mapEntryTitle, `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
                     });
@@ -286,6 +291,7 @@ exports.run = async (client, interaction) => {
                     let limitedGearString = getGearString(limitedGear, "limited");
                     splat3Embed.addField(limitedGear.gear.name, limitedGearString, true);
                 });
+
                 splat3Embed
                     .setAuthor({ name: "SplatNet3 Shop" })
                     .setImage(splatnetData.pickupBrand.image.url)
@@ -314,14 +320,18 @@ exports.run = async (client, interaction) => {
                         default:
                             break;
                     };
+                    let midTermWinner = null;
                     await splatfest.teams.forEach(team => {
                         if (splatfestTeamIndex !== 0) splatfestDescription += " vs. ";
                         splatfestTeamIndex++;
                         splatfestDescription += team.teamName;
+                        if (team.role == "DEFENSE") midTermWinner = team.teamName;
                     });
+                    if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     splatfestDescription = `${splatfestDescription}\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
                     splat3Embed.addField(splatfestTitle, splatfestDescription, false);
                 });
+
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
