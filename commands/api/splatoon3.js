@@ -343,7 +343,7 @@ exports.run = async (client, interaction) => {
                         if (team.result && team.result.isWinner) {
                             splatfestDescription += `**${team.teamName}**`;
                             splatfestResultsTitleTeams += `**${team.teamName}**`;
-                            splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName);
+                            splatfestResultsWinner = splatfestResultsWinner.replace("{1}", `Team ${team.teamName}`);
                         } else {
                             splatfestDescription += team.teamName;
                             splatfestResultsTitleTeams += team.teamName;
