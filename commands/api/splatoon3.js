@@ -302,7 +302,6 @@ exports.run = async (client, interaction) => {
                 responseSplatfest = await axios.get(splatfestAPI);
                 if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
                 splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
-
                 let splatfestBanner = null;
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(a.endTime) - Date.parse(b.endTime));
                 await splatfestData.forEach(async (splatfest) => {
@@ -317,18 +316,68 @@ exports.run = async (client, interaction) => {
                         case "SECOND_HALF":
                             splatfestTitle = `🥳ONGOING🥳\n${splatfestTitle}`;
                             break;
+                        case "CLOSED":
+                            break;
                         default:
                             break;
                     };
                     let midTermWinner = null;
-                    await splatfest.teams.forEach(team => {
-                        if (splatfestTeamIndex !== 0) splatfestDescription += " vs. ";
+                    let splatfestResultsTitle = "**Results:** ({1})";
+                    let splatfestResultsTitleTeams = "";
+                    let splatfestResultsDescription = "";
+                    let splatfestResultsVote = "Popularity: ";
+                    let splatfestResultsHoragai = "Conch Shells: ";
+                    let splatfestResultsRegular = "Regular Battles: ";
+                    let splatfestResultsChallenge = "Pro Battles: ";
+                    let splatfestResultsWinner = "**Winner: {1}**"; // Winner field can be removed if embed bolding works on mobile lol
+                    await splatfest.teams.forEach(async (team) => {
+                        if (splatfestTeamIndex !== 0) {
+                            splatfestDescription += " vs. ";
+                            splatfestResultsTitleTeams += "|";
+                            splatfestResultsVote += "|";
+                            splatfestResultsHoragai += "|";
+                            splatfestResultsRegular += "|";
+                            splatfestResultsChallenge += "|";
+                        };
                         splatfestTeamIndex++;
-                        splatfestDescription += team.teamName;
+                        if (team.result && team.result.isWinner) {
+                            splatfestDescription += `**${team.teamName}**`;
+                            splatfestResultsTitleTeams += `**${team.teamName}**`;
+                            splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName);
+                        } else {
+                            splatfestDescription += team.teamName;
+                            splatfestResultsTitleTeams += team.teamName;
+                        };
+                        // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
+                        if (team.result && team.result.isVoteRatioTop) {
+                            splatfestResultsVote += `**${Math.round(team.result.voteRatio * 100) / 100}%**`;
+                        } else {
+                            splatfestResultsVote += `${Math.round(team.result.voteRatio * 100) / 100}%`;
+                        };
+                        if (team.result && team.result.isHoragaiRatioTop) {
+                            splatfestResultsHoragai += `**${Math.round(team.result.horagaiRatio * 100) / 100}%**`;
+                        } else {
+                            splatfestResultsHoragai += `${Math.round(team.result.horagaiRatio * 100) / 100}%`;
+                        };
+                        if (team.result && team.result.isRegularContributionRatioTop) {
+                            splatfestResultsRegular += `**${Math.round(team.result.regularContributionRatio * 100) / 100}%**`;
+                        } else {
+                            splatfestResultsRegular += `${Math.round(team.result.regularContributionRatio * 100) / 100}%`;
+                        };
+                        if (team.result && team.result.isChallengeContributionRatioTop) {
+                            splatfestResultsChallenge += `**${Math.round(team.result.challengeContributionRatio * 100) / 100}%**`;
+                        } else {
+                            splatfestResultsChallenge += `${Math.round(team.result.challengeContributionRatio * 100) / 100}%`;
+                        };
                         if (team.role == "DEFENSE") midTermWinner = team.teamName;
                     });
+                    if (splatfest.teams[0].result) {
+                        splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
+                        splatfestResultsDescription += `${splatfestResultsVote} (10p)\n${splatfestResultsHoragai} (10p)\n${splatfestResultsRegular} (15p)\n${splatfestResultsChallenge} (10p)\n${splatfestResultsWinner}`;
+                    };
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
-                    splatfestDescription = `${splatfestDescription}\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
+                    splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
+                    if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
                     splat3Embed.addField(splatfestTitle, splatfestDescription, false);
                 });
 
