@@ -171,7 +171,6 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "time":
-                        // There is currently no autocomplete for non-string inputs, but this is here for whenever that does get added (i hope)
                         choices.push({ name: "1 hour", value: 60 });
                         choices.push({ name: "2 hours", value: 120 });
                         choices.push({ name: "4 hours", value: 240 });
