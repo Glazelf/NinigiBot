@@ -80,7 +80,8 @@ module.exports.config = {
     }, {
         name: "time",
         type: "INTEGER",
-        description: "Amount of minutes to mute."
+        description: "Amount of minutes to mute.",
+        autocomplete: true
     }, {
         name: "reason",
         type: "STRING",

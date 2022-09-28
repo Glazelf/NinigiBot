@@ -170,6 +170,16 @@ module.exports = async (client, interaction) => {
                             choices.push({ name: "Talk to earn some money!", value: 0 });
                         };
                         break;
+                    case "time":
+                        // There is currently no autocomplete for non-string inputs, but this is here for whenever that does get added (i hope)
+                        choices.push({ name: "1 hour", value: 60 });
+                        choices.push({ name: "2 hours", value: 120 });
+                        choices.push({ name: "4 hours", value: 240 });
+                        choices.push({ name: "8 hours", value: 480 });
+                        choices.push({ name: "12 hours", value: 720 });
+                        choices.push({ name: "1 day", value: 1440 });
+                        choices.push({ name: "1 week", value: 10080 });
+                        break;
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {
@@ -364,7 +374,7 @@ module.exports = async (client, interaction) => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 })
-                        }
+                        };
                         break;
                     case "trophy":
                         switch (focusedOption.name) {
