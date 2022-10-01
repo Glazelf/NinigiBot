@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const Minesweeper = require('discord.js-minesweeper');
 
         let correctionString = "";
@@ -95,15 +97,15 @@ module.exports.config = {
     description: "Play minesweeper.",
     options: [{
         name: "mines",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of mines."
     }, {
         name: "rows",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of rows."
     }, {
         name: "columns",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of columns."
     }]
 };

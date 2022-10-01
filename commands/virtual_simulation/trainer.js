@@ -1,12 +1,14 @@
 
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes')
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const userApi = require('../../database/dbServices/user.api');
         const shinxApi = require('../../database/dbServices/shinx.api');
 
@@ -40,7 +42,7 @@ exports.run = async (client, interaction) => {
                 trophy_level += trophies.length;
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
-                embed = new Discord.MessageEmbed()
+                embed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addField("Balance:", user.money.toString(), true)
@@ -78,11 +80,11 @@ module.exports.config = {
     description: "Check your trainer stats.",
     options: [{
         name: "info",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Check your trainer stats!"
     }, {
         name: "swapsprite",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Swap your trainer sprite between Dawn and Lucas"
     }]
 };

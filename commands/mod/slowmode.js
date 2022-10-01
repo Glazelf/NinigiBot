@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -33,7 +35,7 @@ module.exports.config = {
     description: "Set slowmode in the current channel.",
     options: [{
         name: "time",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Time in seconds. 0 to disable.",
         required: true
     }]

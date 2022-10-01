@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const owoify = require('owoify-js').default;
 
         let ephemeral = true;
@@ -22,7 +24,7 @@ exports.run = async (client, interaction) => {
         };
 
         let inputOwOified = owoify(input, severity);
-        let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
+        let returnString = Discord.codeBlock("fix", `${inputOwOified} (${severity})`);
 
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
@@ -37,16 +39,16 @@ module.exports.config = {
     description: "OwOifies text.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Text to owoify",
         required: true
     }, {
         name: "severity",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Severity of owoification. (1-3)",
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether or not to send the owoified text as an ephemeral message.",
     }]
 };

@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
 
         let input = null;
 
@@ -16,7 +18,7 @@ exports.run = async (client, interaction) => {
                 let failText = `Please provide a valid number to convert to hex.`;
                 let hexString = input.toString(16).toUpperCase();
                 while (hexString.length < 6) hexString = "0" + hexString;
-                let returnString = Discord.Formatters.codeBlock("js", `0x${hexString}`)
+                let returnString = Discord.codeBlock("js", `0x${hexString}`)
                 return sendMessage({ client: client, interaction: interaction, content: returnString });
                 break;
             case "todecimal":
@@ -25,7 +27,7 @@ exports.run = async (client, interaction) => {
                     while (input.length < 6) input = "0" + input;
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);
-                    let returnString = Discord.Formatters.codeBlock("js", hexInt.toString())
+                    let returnString = Discord.codeBlock("js", hexInt.toString())
                     return sendMessage({ client: client, interaction: interaction, content: returnString });
                 } catch (e) {
                     return sendMessage({ client: client, interaction: interaction, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
@@ -44,21 +46,21 @@ module.exports.config = {
     description: "Convert a number to hexadecimal.",
     options: [{
         name: "tohex",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Convert from decimal to hex.",
         options: [{
             name: "input",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Decimal number to convert.",
             required: true
         }]
     }, {
         name: "todecimal",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Convert from hex to decimal.",
         options: [{
             name: "input",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Hexadecimal to convert.",
             required: true
         }]

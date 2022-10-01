@@ -1,4 +1,6 @@
 
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     try {
@@ -32,7 +34,7 @@ module.exports.config = {
     description: "Buy food for shinx",
     options: [{
         name: "food",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of food you want to buy.",
         required: true,
     }]

@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -25,12 +27,12 @@ module.exports.config = {
     description: "Generate a random number.",
     options: [{
         name: "number-min",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Minimal number.",
         required: true
     }, {
         name: "number-max",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Maximum number.",
         required: true
     }]

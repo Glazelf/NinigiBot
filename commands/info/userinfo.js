@@ -1,4 +1,6 @@
 
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     try {
@@ -15,5 +17,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "Userinfo",
-    type: "USER"
+    type: Discord.ApplicationCommandType.User
 };

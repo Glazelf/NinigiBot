@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
@@ -20,7 +22,7 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let pokemonEmbed = new Discord.MessageEmbed()
+        let pokemonEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         let pokemonName = interaction.options.getString("pokemon");
@@ -287,7 +289,7 @@ exports.run = async (client, interaction) => {
                             teammateStats = `${teammateStats}\n${key}: ${value}`;
                         };
 
-                        let usageEmbed = new Discord.MessageEmbed()
+                        let usageEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
                             .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
@@ -346,129 +348,129 @@ exports.run = async (client, interaction) => {
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
-    type: "SUB_COMMAND",
+    type: Discord.ApplicationCommandOptionType.Subcommand,
     options: [{
         name: "ability",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an ability.",
         options: [{
             name: "ability",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Ability to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "move",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "nature",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a nature.",
         options: [{
             name: "nature",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Nature to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "format",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a format.",
         options: [{
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "pokemon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "usage",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Shows Smogon usage data.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get data on.",
             autocomplete: true,
             required: true
         }, {
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get data from.",
             autocomplete: true,
             required: true
         }, {
             name: "month",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Month (number) to get data from."
         }, {
             name: "year",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Year to get data from."
         }, {
             name: "rating",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Minimum rating to get data from.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

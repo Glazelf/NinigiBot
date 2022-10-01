@@ -57,7 +57,7 @@ module.exports = async (client, message, newMessage) => {
             let updateButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
-            const updateEmbed = new Discord.MessageEmbed()
+            const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Edited ⚒️`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);

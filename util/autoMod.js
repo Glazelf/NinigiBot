@@ -28,7 +28,7 @@ module.exports = async (client, message) => {
         .toLowerCase();
 
     let messageContentBlock = "";
-    if (message.content.length > 0) messageContentBlock = Discord.Formatters.codeBlock(message.content);
+    if (message.content.length > 0) messageContentBlock = Discord.codeBlock(message.content);
 
     const genericLinks = [
         "http.?:\/\/[^s]*.*..{1,}"

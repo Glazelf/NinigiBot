@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
@@ -29,7 +31,7 @@ exports.run = async (client, interaction) => {
             if (evaled.includes(value)) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
 
-        let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
+        let returnString = Discord.codeBlock("js", clean(evaled));
 
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
@@ -52,7 +54,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "JS to execute.",
         required: true
     }]

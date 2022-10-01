@@ -22,7 +22,7 @@ module.exports = async (client, interaction) => {
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
-            case "APPLICATION_COMMAND":
+            case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
                 // Grab the command data from the client.commands Enmap
                 let cmd;
@@ -46,9 +46,9 @@ module.exports = async (client, interaction) => {
                 } else {
                     return;
                 };
-            case "MESSAGE_COMPONENT":
+            case Discord.InteractionType.MessageComponent:
                 switch (interaction.componentType) {
-                    case "BUTTON":
+                    case Discord.ComponentType.Button:
                         let messageObject = null;
                         if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
@@ -112,7 +112,7 @@ module.exports = async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-                    case "SELECT_MENU":
+                    case Discord.ComponentType.SelectMenu:
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
@@ -149,7 +149,7 @@ module.exports = async (client, interaction) => {
                         // Other component types
                         return;
                 };
-            case "APPLICATION_COMMAND_AUTOCOMPLETE":
+            case Discord.InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
                 // Common arguments 
@@ -423,7 +423,7 @@ module.exports = async (client, interaction) => {
                     //console.log(e);
                 });
                 break;
-            case "MODAL_SUBMIT":
+            case Discord.InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
@@ -435,7 +435,7 @@ module.exports = async (client, interaction) => {
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
-                        const bugReportEmbed = new Discord.MessageEmbed()
+                        const bugReportEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
@@ -457,7 +457,7 @@ module.exports = async (client, interaction) => {
                         let profileButtons = new Discord.MessageActionRow()
                             .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${interaction.user.id}` }));
 
-                        const modMailEmbed = new Discord.MessageEmbed()
+                        const modMailEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Mod Mail 💌` })
                             .setThumbnail(userAvatar)
@@ -470,7 +470,7 @@ module.exports = async (client, interaction) => {
                         break;
                 };
                 return;
-            case "PING":
+            case Discord.InteractionType.Ping:
                 return;
             default:
                 return;

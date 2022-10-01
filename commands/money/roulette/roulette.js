@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../../util/logger');
     // Import globals
     let globalVars = require('../../../events/ready');
     try {
         const sendMessage = require('../../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const roulette = require('../../../affairs/roulette');
         
         const api_user = require('../../../database/dbServices/user.api');
@@ -39,7 +41,7 @@ exports.run = async (client, interaction) => {
                     };
                 };
 
-                const results = new Discord.MessageEmbed()
+                const results = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: `Roulette`, iconURL: avatar })
                     .setDescription(`Rolling, rolling, rolling like a Wooloo! And the number is... ** ${result} ** !`)
@@ -51,7 +53,7 @@ exports.run = async (client, interaction) => {
                 return interaction.channel.send({ embeds: [results] });
             }, 20000);
 
-            const welcome = new Discord.MessageEmbed()
+            const welcome = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Roulette`, iconURL: avatar })
                 .setDescription("Welcome to the roulette! We hope you'll participate!")

@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const isAdmin = require('../../util/isAdmin');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
@@ -130,7 +132,7 @@ exports.run = async (client, interaction) => {
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
 
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);

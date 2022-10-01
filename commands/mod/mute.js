@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -74,17 +76,17 @@ module.exports.config = {
     description: "Times the target out.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }, {
         name: "time",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of minutes to mute.",
         autocomplete: true
     }, {
         name: "reason",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for mute."
     }]
 }; 

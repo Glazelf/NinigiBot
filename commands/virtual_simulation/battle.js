@@ -10,6 +10,8 @@ const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
 const api_history = require('../../database/dbServices/history.api');
 
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -18,7 +20,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Canvas = require('canvas');
         const hp = require('../../util/battle/getHP');
-        const Discord = require("discord.js");
+        
 
         let author = interaction.user;
         let target = interaction.options.getUser("user");
@@ -209,7 +211,7 @@ module.exports.config = {
     description: "Battle someone's Shinx.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }]

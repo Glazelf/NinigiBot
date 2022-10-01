@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -59,12 +61,12 @@ module.exports.config = {
     description: "Kick a target user from the server.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "User to kick.",
         required: true
     }, {
         name: "reason",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for kick."
     }]
 };

@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -57,15 +59,15 @@ module.exports.config = {
     description: "Choose a starboard channel.",
     options: [{
         name: "channel",
-        type: "CHANNEL",
+        type: Discord.ApplicationCommandOptionType.Channel,
         description: "Specify channel."
     }, {
         name: "starlimit",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Required amount of stars on a message."
     }, {
         name: "disable",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Disable starboard."
     }]
 };

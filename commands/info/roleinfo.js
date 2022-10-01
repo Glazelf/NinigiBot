@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const permissionSerializer = require('../../util/permissionBitfieldSerializer');
         let DefaultEmbedColor = globalVars.embedColor;
 
@@ -32,7 +34,7 @@ exports.run = async (client, interaction) => {
         if (permissions.length > 0) permissionString = permissions.join(", ");
         if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
-        let roleEmbed = new Discord.MessageEmbed()
+        let roleEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
@@ -58,7 +60,7 @@ module.exports.config = {
     description: "Displays info about a role.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify role.",
         required: true
     }]

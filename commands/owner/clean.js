@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -44,7 +46,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "confirm",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Are you sure? This is an irreversible and expensive command."
     }]
 };

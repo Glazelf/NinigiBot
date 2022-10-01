@@ -16,7 +16,7 @@ module.exports = async (client, interaction, page, user) => {
     if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
     let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-    const profileEmbed = new Discord.MessageEmbed()
+    const profileEmbed = new Discord.EmbedBuilder()
         .setColor(embedColor)
         .setAuthor({ name: user.tag, iconURL: avatar })
         .setThumbnail(serverAvatar);

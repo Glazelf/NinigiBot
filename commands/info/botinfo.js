@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -5,7 +7,7 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
-        const Discord = require("discord.js");
+        
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 
@@ -72,7 +74,7 @@ exports.run = async (client, interaction) => {
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
 
-        let botEmbed = new Discord.MessageEmbed()
+        let botEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)

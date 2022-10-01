@@ -11,7 +11,7 @@ module.exports = async (client, guild) => {
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let guildOwner = await guild.fetchOwner();
 
-        const guildEmbed = new Discord.MessageEmbed()
+        const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
             .setThumbnail(icon)

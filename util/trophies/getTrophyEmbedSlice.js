@@ -5,7 +5,7 @@ let globalVars = require('../../events/ready');
 module.exports = async (offset) => {
     const trophies_per_page = 10;
     let trophy_list = await api_trophy.getTrophieslice(offset, trophies_per_page);
-    const embed = new Discord.MessageEmbed().setColor(globalVars.embedColor);
+    const embed = new Discord.EmbedBuilder().setColor(globalVars.embedColor);
     trophy_list.slice.forEach(trophy => {
         embed.addField("\u200B", `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`, true);
     });

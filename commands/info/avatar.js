@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -20,7 +22,7 @@ exports.run = async (client, interaction) => {
             avatar = null;
         };
 
-        const avatarEmbed = new Discord.MessageEmbed()
+        const avatarEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
@@ -36,5 +38,5 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: "USER"
+    type: Discord.ApplicationCommandType.User
 };

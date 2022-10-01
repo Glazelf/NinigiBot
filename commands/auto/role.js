@@ -1,10 +1,12 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
+        
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles } = require('../../database/dbServices/server.api');
 
@@ -87,7 +89,7 @@ exports.run = async (client, interaction) => {
 
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const rolesHelp = new Discord.MessageEmbed()
+            const rolesHelp = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: icon })
                 .setDescription(roleHelpMessage);
@@ -120,11 +122,11 @@ module.exports.config = {
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify the role."
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

@@ -15,6 +15,8 @@ const autofeed_modes =
         }
     ];
 
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     try {
@@ -48,7 +50,7 @@ module.exports.config = {
     description: "Automatize the feeding process of Shinx",
     options: [{
         name: "mode",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Mode you want to set",
         required: true,
         choices: autofeed_modes

@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -40,7 +42,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "avatar",
-        type: "ATTACHMENT",
+        type: Discord.ApplicationCommandOptionType.Attachment,
         description: "Image to set avatar to.",
         required: true
     }]

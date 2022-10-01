@@ -32,7 +32,7 @@ module.exports = async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
-            const gifEmbed = new Discord.MessageEmbed()
+            const gifEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.tag}, everyone!`)
                 .setImage(randomGif);

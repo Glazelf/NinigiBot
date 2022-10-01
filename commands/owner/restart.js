@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
     // Import globals
@@ -57,7 +59,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "reset-interactions",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Reset all interactions?"
     }]
 };
