@@ -8,12 +8,11 @@ module.exports = async (client) => {
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'utc';
-        const time = '00 20 20 * * *'; // Sec Min Hour, 8pm CEST
+        const time = '00 00 20 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = globalVars.ShinxServerID;
 
         if (client.user.id != globalVars.NinigiID) return;
-
         // Create cronjob
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
@@ -27,9 +26,9 @@ module.exports = async (client) => {
 
             await api_history.incrementStanAmount(candidateRandom.id);
             await api_history.checkEvents();
-
             // Random gif
             const randomGif = await getRandomGif(gifTags);
+            if (!randomGif) return;
 
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
@@ -49,4 +48,3 @@ module.exports = async (client) => {
         logger(e, client);
     };
 };
-
