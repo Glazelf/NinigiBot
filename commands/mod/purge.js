@@ -53,8 +53,6 @@ exports.run = async (client, interaction) => {
                 await interaction.channel.bulkDelete(messages, [true])
                     .then(messagesDeleted => {
                         returnString = `Deleted ${messagesDeleted.size} messages.`;
-                        console.log(messagesDeleted.size)
-                        console.log(amount)
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
                         sendMessage({ client: client, interaction: interaction, content: returnString });
                     });
