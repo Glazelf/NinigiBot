@@ -1,6 +1,5 @@
 module.exports = async (client) => {
     try {
-
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
         // const { bank } = require('../database/bank');
@@ -55,12 +54,12 @@ function initPresence() {
 
 module.exports.NinigiID = "592760951103684618";
 module.exports.ShinxServerID = "549214833858576395";
+// module.exports.ShinxServerID = "759344085420605471"; // Testing
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";
 module.exports.eventChannelID = "752626723345924157"; // General2
 // module.exports.eventChannelID = "922972585992532022"; // Testing
-
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.presence = initPresence();

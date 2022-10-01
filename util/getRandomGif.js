@@ -7,5 +7,6 @@ module.exports = async (gifTags = []) => {
     const { data } = await giphyRandom(config.giphy, {
         tag: randomElement
     });
+    console.log(data)
     return data.images.original.url;
 };
