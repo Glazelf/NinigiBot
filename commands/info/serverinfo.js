@@ -125,11 +125,11 @@ exports.run = async (client, interaction) => {
 
         let serverButtons = new Discord.MessageActionRow();
         // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental Discord feature)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
         // Should link to <id:browse>, availability unknown
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
         // Should link to <id:customize>, perm requirement is an educated guess
-        if (interaction.member.permissions.has("MANAGE_SERVER") || adminBool) serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
+        if (interaction.member.permissions.has("MANAGE_SERVER") || adminBool) serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
