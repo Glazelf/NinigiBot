@@ -131,7 +131,7 @@ exports.run = async (client, interaction) => {
         // Should link to <id:customize>, perm requirement is an educated guess
         if (interaction.member.permissions.has("MANAGE_SERVER") || adminBool) serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
         // Doesn't seem like there's a feature yet for having guild web pages enabled
-        let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(" ", "-"))}-${guild.id}`;
+        let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
