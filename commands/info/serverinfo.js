@@ -123,6 +123,7 @@ exports.run = async (client, interaction) => {
             // };
         });
 
+        console.log(guild)
         let serverButtons = new Discord.MessageActionRow();
         // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
         serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental Discord feature)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
