@@ -126,7 +126,9 @@ exports.run = async (client, interaction) => {
         let serverButtons = new Discord.MessageActionRow();
         // Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
         serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental Discord feature)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+        // Should link to <id:browse>, availability unknown
         serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
+        // Should link to <id:customize>, perm requirement is an educated guess
         if (interaction.member.permissions.has("MANAGE_SERVER")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
 
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
