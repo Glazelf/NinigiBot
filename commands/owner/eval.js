@@ -13,11 +13,12 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: true });
 
         const input = interaction.options.getString("input");
+        let evaled;
         try {
-            var evaled = eval(input);
+            evaled = eval(input);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `An error occurred and has been logged.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.Formatters.codeBlock(e.stack)}` });
         };
 
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
