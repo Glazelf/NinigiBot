@@ -9,8 +9,8 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-
-        await interaction.deferReply({ ephemeral: true });
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
 
         const input = interaction.options.getString("input");
         let evaled;
@@ -27,7 +27,7 @@ exports.run = async (client, interaction) => {
 
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
         for (const [key, value] of Object.entries(client.config)) {
-            if (evaled.includes(value)) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
+            if (evaled.includes(value) && ephemeral == false) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
 
         let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
