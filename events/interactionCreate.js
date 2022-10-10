@@ -167,7 +167,7 @@ module.exports = async (client, interaction) => {
                             if (balance >= 4) choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
                             if (balance >= 5) choices.push({ name: `Random amount`, value: balanceRandom });
                         } else {
-                            choices.push({ name: "Talk to earn some money!", value: 0 });
+                            choices.push({ name: "Chat to earn money!", value: 0 });
                         };
                         break;
                     case "time":
