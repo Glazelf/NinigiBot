@@ -226,103 +226,81 @@ exports.run = async (client, interaction) => {
                 // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
                 if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
 
+                let rating = 0;
+                let ratingTresholds = [0, 1500, 1630, 1760];
+                if (formatInput.match(/gen.{1,2}(ou)$/g)) ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
+                let ratingArg = interaction.options.getInteger("rating");
+                if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
+
                 let monthArg = interaction.options.getInteger("month");
                 let yearArg = interaction.options.getInteger("year");
                 // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
                 const date = new Date();
                 let month = date.getMonth();
+                let year = date.getFullYear();
                 if (month == 0) month = 12;
                 let stringCurrentMonth = month;
                 if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
                 if (monthArg < 13 && monthArg > 0) month = monthArg;
-
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
-                let year = date.getFullYear();
-                if (yearArg > 2013 && yearArg < (year + 1)) year = yearArg; // Smogon stats only exist from 2014 onwards
+                if (yearArg > 2013 && yearArg <= year) year = yearArg; // Smogon stats only exist from 2014 onwards
 
-                let rating = 0;
-                let ratingTresholds = [0, 1500, 1630, 1760];
-                if (formatInput == "gen8ou") ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
-                let ratingArg = interaction.options.getInteger("rating");
-                if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
-
-                let wasSuccessful = true;
-                let triedLastMonth = false;
                 let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
-
                 await getData(searchURL);
-                return useData();
 
-                async function useData() {
-                    if (wasSuccessful) {
-                        // console.log(JSONresponse);
-                        if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
+                if (wasSuccessful) {
+                    // console.log(JSONresponse);
+                    if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
 
-                        let moveStats = "";
-                        for await (const [key, value] of Object.entries(JSONresponse.moves)) {
-                            moveStats = `${moveStats}\n${key}: ${value}`;
-                        };
-                        let itemStats = "";
-                        for await (const [key, value] of Object.entries(JSONresponse.items)) {
-                            itemStats = `${itemStats}\n${key}: ${value}`;
-                        };
-                        let abilityStats = "";
-                        for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
-                            abilityStats = `${abilityStats}\n${key}: ${value}`;
-                        };
-                        let spreadStats = "";
-                        for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
-                            if (typeof value == "object") {
-                                spreadStats = `${spreadStats}\n${key}:`;
-                                for await (const [key2, value2] of Object.entries(value)) {
-                                    spreadStats = `${spreadStats}\n${key2}: ${value2}`;
-                                };
-                            } else {
-                                spreadStats = `${spreadStats}\n${key}: ${value}`;
-                            };
-                        };
-                        let teammateStats = "";
-                        for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
-                            teammateStats = `${teammateStats}\n${key}: ${value}`;
-                        };
-
-                        let usageEmbed = new Discord.MessageEmbed()
-                            .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
-                            .setDescription(`#${JSONresponse.rank} | ${JSONresponse.usage} | ${JSONresponse.raw} uses`)
-                            .addField("Moves:", moveStats, true)
-                            .addField("Items:", itemStats, true)
-                            .addField("Abilities:", abilityStats, true)
-                            .addField("Spreads:", spreadStats, true)
-                            .addField("Teammates:", teammateStats, true);
-
-                        return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
-
-                    } else if (triedLastMonth == false && year == date.getYear() && month == stringCurrentMonth) {
-                        // Try month-1 in case it's early in the month and last month's stats haven't been posted yet :)
-                        // Downside to this approach is that it will try fetching on typos twice
-                        month = month - 1;
-                        if (month == 0) month = 12;
-                        stringMonth = month;
-                        if (stringMonth < 10) stringMonth = "0" + stringMonth;
-                        triedLastMonth = true;
-                        searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
-
-                        await getData(searchURL);
-                        return useData();
-
-                    } else {
-                        // make generic embed to guide people to usage statistics :)
-                        let usageButtons = new Discord.MessageActionRow()
-                            .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                            .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt` }));
-
-                        let replyText = `Sorry! Could not fetch data for the inputs you provided. The most common reasons for this are spelling mistakes and a lack of Smogon data.\nHere are some usage resources you might find usefull instead:`;
-
-                        return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
+                    let moveStats = "";
+                    for await (const [key, value] of Object.entries(JSONresponse.moves)) {
+                        moveStats = `${moveStats}\n${key}: ${value}`;
                     };
+                    let itemStats = "";
+                    for await (const [key, value] of Object.entries(JSONresponse.items)) {
+                        itemStats = `${itemStats}\n${key}: ${value}`;
+                    };
+                    let abilityStats = "";
+                    for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
+                        abilityStats = `${abilityStats}\n${key}: ${value}`;
+                    };
+                    let spreadStats = "";
+                    for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
+                        if (typeof value == "object") {
+                            spreadStats = `${spreadStats}\n${key}:`;
+                            for await (const [key2, value2] of Object.entries(value)) {
+                                spreadStats = `${spreadStats}\n${key2}: ${value2}`;
+                            };
+                        } else {
+                            spreadStats = `${spreadStats}\n${key}: ${value}`;
+                        };
+                    };
+                    let teammateStats = "";
+                    for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
+                        teammateStats = `${teammateStats}\n${key}: ${value}`;
+                    };
+
+                    let usageEmbed = new Discord.MessageEmbed()
+                        .setColor(globalVars.embedColor)
+                        .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
+                        .setDescription(`#${JSONresponse.rank} | ${Math.round(JSONresponse.usage.replace("%", "") * 100) / 100}% | ${JSONresponse.raw} uses`)
+                        .addField("Moves:", moveStats, true)
+                        .addField("Items:", itemStats, true)
+                        .addField("Abilities:", abilityStats, true)
+                        .addField("Spreads:", spreadStats, true)
+                        .addField("Teammates:", teammateStats, true);
+
+                    return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
+                } else {
+                    // Make generic embed to guide people to usage statistics :)
+                    let usageButtons = new Discord.MessageActionRow()
+                        .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
+                        .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
+                        .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt` }));
+
+                    let replyText = `Sorry! Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.\nHere are some usage resources you might find usefull instead:`;
+                    return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
                 };
                 break;
         };

@@ -222,15 +222,13 @@ module.exports = async (client, interaction) => {
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
-                                    if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase()))) choices.push({ name: format.id, value: format.id });
+                                    if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase())) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;
                             case "rating":
                                 let ratings = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options.getString("format");
-                                if (formatInput) {
-                                    if (formatInput.startsWith("gen") && formatInput.endsWith("ou")) ratings = [0, 1500, 1695, 1825];
-                                };
+                                if (formatInput && formatInput.match(/gen.{1,2}(ou)$/g)) ratings = [0, 1500, 1695, 1825];
                                 await ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
