@@ -43,6 +43,8 @@ exports.run = async (client, interaction) => {
         let roleHelpMessage = "";
         let rolesArray = [];
         let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/roleadd\` to add roles to this list.`;
+        let receiveEmote = "❌";
+        let removeEmote = "✅";
 
         if (!requestRole) {
             // Select Menu
@@ -60,8 +62,14 @@ exports.run = async (client, interaction) => {
                 for await (const [key, value] of Object.entries(roles)) {
                     let currentRole = await interaction.guild.roles.fetch(value[1].role.id);
                     if (!currentRole) continue;
+                    let roleOptionName = currentRole.name;
+                    if (ephemeral && interaction.member.roles.cache.has(currentRole.id)) {
+                        roleOptionName = `${removeEmote} ${roleOptionName}`;
+                    } else if (ephemeral) {
+                        roleOptionName = `${receiveEmote} ${roleOptionName}`;
+                    };
                     rolesArray.push({
-                        label: currentRole.name,
+                        label: roleOptionName,
                         value: currentRole.id,
                         description: value[1].description,
                     });
@@ -69,10 +77,10 @@ exports.run = async (client, interaction) => {
                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
                 let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray }));
+                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
 
-                let returnString = `Choose a role to assign to yourself:`;
-                if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${returnString}`;
+                let returnString = `Choose roles to toggle:`;
+                if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
                 return sendMessage({ client: client, interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
             };
 

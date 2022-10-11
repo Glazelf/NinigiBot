@@ -116,31 +116,37 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
-                                const role = await interaction.guild.roles.fetch(interaction.values[0]);
-                                if (!role) return sendMessage({ client: client, interaction: interaction, content: `This role does not exist.` });
+                                const rolesArray = [];
+                                for await (const value of interaction.values) {
+                                    const roleArrayItem = await interaction.guild.roles.fetch(value);
+                                    rolesArray.push(roleArrayItem);
+                                };
+                                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `None of the selected roles are valid.` });
                                 let adminBool = isAdmin(client, interaction.guild.me);
 
-                                let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
-                                if (!checkRoleEligibility) return sendMessage({ client: client, interaction: interaction, content: `This role is not available anymore.` });
-
-                                if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${role} because it is being automatically managed by an integration.` });
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
-                                try {
-                                    if (interaction.member.roles.cache.has(role.id)) {
-                                        await interaction.member.roles.remove(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You no longer have ${role}!` });
-                                    } else {
-                                        await interaction.member.roles.add(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You now have ${role}!` });
+                                let roleSelectReturnString = "Role toggling results:\n";
+                                for await (const role of rolesArray) {
+                                    let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
+                                    if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
+                                    if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
+                                    if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
+                                    try {
+                                        if (interaction.member.roles.cache.has(role.id)) {
+                                            await interaction.member.roles.remove(role);
+                                            roleSelectReturnString += `✅ You no longer have ${role}!\n`
+                                        } else {
+                                            await interaction.member.roles.add(role);
+                                            roleSelectReturnString += `✅ You now have ${role}!\n`;
+                                        };
+                                    } catch (e) {
+                                        roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
                                     };
-                                } catch (e) {
-                                    return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle ${role}, probably because I lack permissions.` });
                                 };
+                                return sendMessage({ client: client, interaction: interaction, content: roleSelectReturnString });
                             } catch (e) {
                                 console.log(e);
                                 return;
                             };
-
                         } else {
                             // Other select menus
                             return;
