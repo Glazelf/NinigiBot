@@ -206,6 +206,7 @@ module.exports = async (client, interaction) => {
                                     };
                                 });
                                 roleObject = roleObject.sort((r, r2) => r2.position - r.position).map(role => role.value);
+                                delete roleObject.position;
                                 choices = roleObject;
                                 break;
                         };
