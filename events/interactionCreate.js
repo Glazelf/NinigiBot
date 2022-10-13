@@ -197,7 +197,7 @@ module.exports = async (client, interaction) => {
                                 await dbRoles.forEach(eligibleRole => {
                                     roleIDs.push(eligibleRole.role_id);
                                 });
-                                await interaction.guild.roles.cache.each(async (role) => {
+                                await interaction.guild.roles.cache.forEach(async (role) => {
                                     if (roleIDs.includes(role.id)) {
                                         let choiceName = role.name;
                                         let dbRole = dbRoles.find(eligibleRole => eligibleRole.role_id == role.id);
@@ -205,9 +205,11 @@ module.exports = async (client, interaction) => {
                                         roleObject.push({ name: choiceName, value: role.id, position: role.position });
                                     };
                                 });
-                                roleObject = roleObject.sort((r, r2) => r2.position - r.position).map(role => role.value);
-                                delete roleObject.position;
-                                choices = roleObject;
+                                roleObject = roleObject.sort((r, r2) => r2.position - r.position);
+                                await roleObject.forEach(role => {
+                                    console.log(roleObject)
+                                    if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
+                                });
                                 break;
                         };
                         break;

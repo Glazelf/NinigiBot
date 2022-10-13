@@ -34,18 +34,14 @@ exports.run = async (client, interaction) => {
                 roleText.push(role);
             };
         });
-
         // Role sorting for role help
-        roleText = roleText.sort((r, r2) => r2.position - r.position)
-        // roleText = roleText.map(role => role.id);
-
+        roleText = roleText.sort((r, r2) => r2.position - r.position);
         // Role help embed and logic
         let roleHelpMessage = "";
         let rolesArray = [];
         let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/roleadd\` to add roles to this list.`;
         let receiveEmote = "❌";
         let removeEmote = "✅";
-
         if (!requestRole) {
             // Select Menu
             if (roleText.length <= selectOptionLimit) {
@@ -83,18 +79,15 @@ exports.run = async (client, interaction) => {
                 if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
                 return sendMessage({ client: client, interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
             };
-
             // Help menu
             for (let i = 0; i < roleText.length; i++) {
-                roleHelpMessage = `${roleHelpMessage}
-        > ${i + 1}. <@&${roleText[i]}>`;
+                // Might want to add descriptions here but you might get character limit issues lol
+                roleHelpMessage = `${roleHelpMessage}\n${i + 1}. ${roleText[i]}`;
             };
-
             if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-
             const rolesHelp = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: icon })
