@@ -15,7 +15,7 @@ exports.run = async (client, interaction) => {
 
         await interaction.guild.roles.fetch();
 
-        let roleArgument = interaction.options.getRole('role');
+        let roleArgument = interaction.options.getString('role');
         let requestRole = null;
         if (roleArgument) requestRole = roleArgument;
         let adminBoolBot = isAdmin(client, interaction.guild.me);
@@ -102,6 +102,7 @@ exports.run = async (client, interaction) => {
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
         } else {
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
+            requestRole = await interaction.guild.roles.fetch(requestRole);
             if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
             if (requestRole.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
             if (interaction.guild.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
@@ -128,8 +129,9 @@ module.exports.config = {
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
-        type: "ROLE",
-        description: "Specify the role."
+        type: "STRING",
+        description: "Specify the role to toggle.",
+        autocomplete: true
     }, {
         name: "ephemeral",
         type: "BOOLEAN",

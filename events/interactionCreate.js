@@ -188,6 +188,25 @@ module.exports = async (client, interaction) => {
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {
+                    case "role":
+                        switch (focusedOption.name) {
+                            case "role":
+                                let dbRoles = await EligibleRoles.findAll();
+                                let roleIDs = [];
+                                await dbRoles.forEach(eligibleRole => {
+                                    roleIDs.push(eligibleRole.role_id);
+                                });
+                                await interaction.guild.roles.cache.each(async (role) => {
+                                    if (roleIDs.includes(role.id)) {
+                                        let choiceName = role.name;
+                                        let dbRole = dbRoles.find(eligibleRole => eligibleRole.role_id == role.id);
+                                        if (dbRole.description) choiceName = `${choiceName}: ${dbRole.description}`;
+                                        choices.push({ name: choiceName, value: role.id });
+                                    };
+                                });
+                                break;
+                        };
+                        break;
                     case "pokemon":
                         switch (focusedOption.name) {
                             case "pokemon":
