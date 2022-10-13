@@ -207,7 +207,6 @@ module.exports = async (client, interaction) => {
                                 });
                                 roleObject = roleObject.sort((r, r2) => r2.position - r.position);
                                 await roleObject.forEach(role => {
-                                    console.log(roleObject)
                                     if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
                                 });
                                 break;
