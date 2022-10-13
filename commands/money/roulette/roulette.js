@@ -6,7 +6,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../../util/sendMessage');
         const Discord = require("discord.js");
         const roulette = require('../../../affairs/roulette');
-        
+
         const api_user = require('../../../database/dbServices/user.api');
         const randomNumber = require('../../../util/randomNumber');
 
@@ -55,8 +55,8 @@ exports.run = async (client, interaction) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Roulette`, iconURL: avatar })
                 .setDescription("Welcome to the roulette! We hope you'll participate!")
-                .addField("Rules:", `You bet money on the roulette numbers, from 1 to 36 using \`/bet\`.
-The roulette will spin and a slot will be chosen, people who bet on that slot will get 36x their slot investment.`)
+                .addField("Rules:", `You bet money on the roulette numbers, from 1 to 36 using </bet:978076597703802890>.
+The roulette will spin and a slot will be chosen, people who bet on that slot will get 36x their slot investment.`) // Make ID adaptive
                 .setImage('https://i.imgur.com/MPKiQM2.png');
 
             return sendMessage({ client: client, interaction: interaction, embeds: welcome, ephemeral: ephemeral });

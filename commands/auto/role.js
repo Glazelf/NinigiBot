@@ -39,7 +39,7 @@ exports.run = async (client, interaction) => {
         // Role help embed and logic
         let roleHelpMessage = "";
         let rolesArray = [];
-        let noRolesString = `No roles have been made selfassignable yet. Moderators can use \`/roleadd\` to add roles to this list.`;
+        let noRolesString = `No roles have been made selfassignable yet. Moderators can use </roleadd:978076328567926834> to add roles to this list.`; // Make ID adaptive
         let receiveEmote = "❌";
         let removeEmote = "✅";
         if (!requestRole) {
@@ -94,7 +94,7 @@ exports.run = async (client, interaction) => {
                 .setDescription(roleHelpMessage);
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
         } else {
-            let invalidRoleText = `That role does not exist or isn't selfassignable. Use \`/role\` without any argument to see a drop down menu of available roles.`;
+            let invalidRoleText = `That role does not exist or isn't selfassignable. Use </role:978075106276429864> without any argument to see a drop down menu of available roles.`; // Make ID adaptive
             requestRole = await interaction.guild.roles.fetch(requestRole);
             if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
             if (requestRole.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });

@@ -7,7 +7,7 @@ exports.run = async (client, interaction) => {
         const roulette = require('../../../affairs/roulette')
         const api_user = require('../../../database/dbServices/user.api');
 
-        if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use \`/roulette\` to start one.` });
+        if (!roulette.on) return sendMessage({ client: client, interaction: interaction, content: `There is currently no roulette going on. Use </roulette:978076599482212382> to start one.` }); // Make ID adaptive
         if (roulette.hadBet(interaction.user.id)) return sendMessage({ client: client, interaction: interaction, content: `You already placed a bet.` });
 
         let ephemeral = true;
