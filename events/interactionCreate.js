@@ -205,8 +205,7 @@ module.exports = async (client, interaction) => {
                                         roleObject.push({ name: choiceName, value: role.id, position: role.position });
                                     };
                                 });
-                                roleObject = roleObject.sort((r, r2) => r2.position - r.position).join(", ");
-                                roleObject = roleObject.map(role => role.id);
+                                roleObject = roleObject.sort((r, r2) => r2.position - r.position).map(role => role.value);
                                 choices = roleObject;
                                 break;
                         };
