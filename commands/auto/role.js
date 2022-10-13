@@ -36,7 +36,7 @@ exports.run = async (client, interaction) => {
         });
 
         // Role sorting for role help
-        roleText.sort((r, r2) => r2.position - r.position).join(", ");
+        roleText = roleText.sort((r, r2) => r2.position - r.position).join(", ");
         roleText = roleText.map(role => role.id);
 
         // Role help embed and logic

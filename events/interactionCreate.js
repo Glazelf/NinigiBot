@@ -193,6 +193,7 @@ module.exports = async (client, interaction) => {
                             case "role":
                                 let dbRoles = await EligibleRoles.findAll();
                                 let roleIDs = [];
+                                let roleObject = [];
                                 await dbRoles.forEach(eligibleRole => {
                                     roleIDs.push(eligibleRole.role_id);
                                 });
@@ -200,10 +201,13 @@ module.exports = async (client, interaction) => {
                                     if (roleIDs.includes(role.id)) {
                                         let choiceName = role.name;
                                         let dbRole = dbRoles.find(eligibleRole => eligibleRole.role_id == role.id);
-                                        if (dbRole.description) choiceName = `${choiceName}: ${dbRole.description}`;
-                                        choices.push({ name: choiceName, value: role.id });
+                                        if (dbRole.description) choiceName = `${choiceName} | ${dbRole.description}`;
+                                        roleObject.push({ name: choiceName, value: role.id, position: role.position });
                                     };
                                 });
+                                roleObject = roleObject.sort((r, r2) => r2.position - r.position).join(", ");
+                                roleObject = roleObject.map(role => role.id);
+                                choices = roleObject;
                                 break;
                         };
                         break;
