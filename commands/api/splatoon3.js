@@ -303,7 +303,7 @@ exports.run = async (client, interaction) => {
                 if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
                 splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
-                let isUpcomingSplatfest = false;
+                let isUpcomingOrOngoingSplatfest = false;
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(a.endTime) - Date.parse(b.endTime));
                 await splatfestData.forEach(async (splatfest) => {
                     let splatfestTitle = splatfest.title;
@@ -312,11 +312,12 @@ exports.run = async (client, interaction) => {
                     switch (splatfest.state) {
                         case "SCHEDULED":
                             splatfestTitle = `⚠️UPCOMING⚠️\n${splatfestTitle}`;
-                            isUpcomingSplatfest = true;
+                            isUpcomingOrOngoingSplatfest = true;
                             break;
                         case "FIRST_HALF":
                         case "SECOND_HALF":
                             splatfestTitle = `🥳ONGOING🥳\n${splatfestTitle}`;
+                            isUpcomingOrOngoingSplatfest = true;
                             break;
                         case "CLOSED":
                             break;
@@ -387,7 +388,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
                     .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
-                if (!isUpcomingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here when you can choose a team ingame.");
+                if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here when you can choose a team ingame.");
                 break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
