@@ -27,7 +27,7 @@ exports.run = async (client, interaction) => {
 
         let dbBalance = await api_user.getMoney(interaction.user.id);
         if (bets.size * betAmount > dbBalance) {
-            return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency}.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
+            return sendMessage({ client: client, interaction: interaction, content: `You don't have enough currency.\nYou only have ${Math.floor(dbBalance)}${globalVars.currency}.` });
         };
         await bets.forEach(bet => {
             roulette.addBet(bet, interaction.user.id, 36 * betAmount);
