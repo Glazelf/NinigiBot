@@ -61,7 +61,7 @@ exports.run = async (client, interaction) => {
         let emoteCapTier1 = 200;
         let emoteCapTier2 = 300;
         let emoteCapTier3 = 500;
-        let stickerCapTier0 = 0;
+        let stickerCapTier0 = 5;
         let stickerCapTier1 = 15;
         let stickerCapTier2 = 30;
         let stickerCapTier3 = 60;
