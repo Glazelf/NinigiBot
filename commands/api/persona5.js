@@ -5,6 +5,8 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
+        const fs = require("fs");
+        const path = require("path");
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');
@@ -19,6 +21,8 @@ exports.run = async (client, interaction) => {
 
         switch (interaction.options.getSubcommand()) {
             case "persona":
+                let personaData = fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js");
+                console.log(personaData)
                 // List abilities and skills with unlock levels and descriptions
                 // List weaknesses, arcana, starting level etc.
                 // add banner images with following format: https://static.wikia.nocookie.net/megamitensei/images/f/ff/Jack_Frost_P5R.jpg
