@@ -16,13 +16,23 @@ exports.run = async (client, interaction) => {
         if (ephemeralArg === false) ephemeral = false;
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
+        // Imports:
+        // rarePersonaeRoyal; list of treasure Persona
+        // rareCombosRoyal; ??
+        // arcana2CombosRoyal; arcana fusion combos
+        // specialCombosRoyal; special fusions
+        // dlcPersonaRoyal; list of DLC Persona
+        eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
+        // Imports personaMapRoyal; object including all persona data
+        eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+        // Imports skillMapRoyal; object including all skill AND trait data
+        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         let p5Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "persona":
-                let personaData = fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js");
-                console.log(personaData)
+                console.log(personaMapRoyal)
                 // List abilities and skills with unlock levels and descriptions
                 // List weaknesses, arcana, starting level etc.
                 // add banner images with following format: https://static.wikia.nocookie.net/megamitensei/images/f/ff/Jack_Frost_P5R.jpg
