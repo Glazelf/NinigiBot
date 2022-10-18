@@ -5,7 +5,6 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const crypto = require('crypto');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');

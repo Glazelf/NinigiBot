@@ -5,7 +5,6 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const crypto = require('crypto');
         const axios = require("axios");
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
