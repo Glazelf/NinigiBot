@@ -403,10 +403,8 @@ exports.run = async (client, interaction) => {
                 let randomTitle = `${randomAdjective} ${randomSubject}`;
                 if (reversedLanguages.includes(languageUsed)) randomTitle = `${randomSubject} ${randomAdjective}`;
 
-                const bannerFolder = path.resolve(__dirname, "../../submodules/leanny.github.io/splat3/images/npl/");
-                const badgeFolder = path.resolve(__dirname, "../../submodules/leanny.github.io/splat3/images/badge/");
-                let bannerOptions = fs.readdirSync(bannerFolder).filter(file => file.endsWith(".png"));
-                let badgeOptions = fs.readdirSync(badgeFolder).filter(file => file.endsWith(".png"));
+                let bannerOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/npl/").filter(file => file.endsWith(".png"));
+                let badgeOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/badge/").filter(file => file.endsWith(".png"));
                 let bannerRandom = bannerOptions[randomNumber(0, bannerOptions.length - 1)];
                 let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
