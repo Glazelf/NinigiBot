@@ -1,6 +1,6 @@
 [submodule "monster-hunter-DB"]
 	path = submodules/monster-hunter-DB
 	url = https://github.com/CrimsonNynja/monster-hunter-DB.git
-[submodule "submodules/leanny.github.io"]
+[submodule "leanny.github.io"]
 	path = submodules/leanny.github.io
 	url = https://github.com/Leanny/leanny.github.io
