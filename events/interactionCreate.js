@@ -355,7 +355,7 @@ module.exports = async (client, interaction) => {
                                 giAPI += `characters/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giCharacter of giResponse.data) {
-                                    let giCharacterCapitalized = await capitalizeString(giCharacter);
+                                    let giCharacterCapitalized = capitalizeString(giCharacter);
                                     if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
                                 };
                                 break;
@@ -363,7 +363,7 @@ module.exports = async (client, interaction) => {
                                 giAPI += `weapons/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giWeapon of giResponse.data) {
-                                    let giWeaponCapitalized = await capitalizeString(giWeapon);
+                                    let giWeaponCapitalized = capitalizeString(giWeapon);
                                     if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
                                 };
                                 break;
@@ -371,7 +371,7 @@ module.exports = async (client, interaction) => {
                                 giAPI += `artifacts/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giArtifact of giResponse.data) {
-                                    let giArtifactCapitalized = await capitalizeString(giArtifact);
+                                    let giArtifactCapitalized = capitalizeString(giArtifact);
                                     if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
                                 };
                                 break;
