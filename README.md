@@ -17,3 +17,4 @@ This repository is mostly public for transparency and easy contributing.
 [MHRise-Database](https://github.com/RoboMechE/MHRise-Database), [MHW-Database](https://github.com/RoboMechE/MHW-Database), [MHGU-Database](https://github.com/RoboMechE/MHGU-Database): Data PNGs for monsters.  
 [Leanny](https://github.com/Leanny/leanny.github.io), [Splatoon3.ink](https://github.com/misenhower/splatoon3.ink): Splatoon data.  
 [genshindevapi](https://github.com/genshindev/api): Genshin Impact data.  
+[peersona5_calculator](https://github.com/chinhodado/persona5_calculator): Persona 5 data.  
