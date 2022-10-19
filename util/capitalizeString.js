@@ -1,4 +1,4 @@
-module.exports = async (str) => {
+module.exports = (str) => {
     let exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy", "soul-heart", "multi-attack"];
     let exceptionsLowercase = ["v-create", "u-turn"];
 

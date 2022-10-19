@@ -12,6 +12,7 @@ module.exports = async (client, interaction) => {
         const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
+        const fs = require("fs");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
@@ -354,7 +355,7 @@ module.exports = async (client, interaction) => {
                                 giAPI += `characters/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giCharacter of giResponse.data) {
-                                    let giCharacterCapitalized = await capitalizeString(giCharacter);
+                                    let giCharacterCapitalized = capitalizeString(giCharacter);
                                     if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
                                 };
                                 break;
@@ -362,7 +363,7 @@ module.exports = async (client, interaction) => {
                                 giAPI += `weapons/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giWeapon of giResponse.data) {
-                                    let giWeaponCapitalized = await capitalizeString(giWeapon);
+                                    let giWeaponCapitalized = capitalizeString(giWeapon);
                                     if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
                                 };
                                 break;
@@ -370,8 +371,30 @@ module.exports = async (client, interaction) => {
                                 giAPI += `artifacts/`;
                                 giResponse = await axios.get(giAPI);
                                 for (const giArtifact of giResponse.data) {
-                                    let giArtifactCapitalized = await capitalizeString(giArtifact);
+                                    let giArtifactCapitalized = capitalizeString(giArtifact);
                                     if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                };
+                                break;
+                        };
+                        break;
+                    case "persona5":
+                        // Submodule is documented in persona5 command
+                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        switch (focusedOption.name) {
+                            case "persona":
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                for await (const [key, value] of Object.entries(personaMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "skill":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element !== "trait") choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "trait":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element == "trait") choices.push({ name: key, value: key });
                                 };
                                 break;
                         };

@@ -89,7 +89,7 @@ exports.run = async (client, interaction) => {
                 if (move.accuracy === true) accuracy = "Can't miss";
 
                 // Smogon target is camelcased for some reason, this splits it on capital letters and formats them better
-                let target = await capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
+                let target = capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
                 if (target == "Normal") target = "Any Adjacent";
 
                 let moveTitle = move.name;
