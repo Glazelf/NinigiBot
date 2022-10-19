@@ -11,7 +11,8 @@ module.exports = async (client, id) => {
         let timestamp = await getTime();
 
         // Console log status
-        return console.log(`Reconnected shard ${id}. (${timestamp})`);
+        // console.log(`Reconnected shard ${id}. (${timestamp})`);
+        return;
 
     } catch (e) {
         // Log error
