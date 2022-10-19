@@ -33,10 +33,7 @@ exports.run = async (client, interaction) => {
 
         switch (interaction.options.getSubcommand()) {
             case "persona":
-                // List abilities and skills with unlock levels and descriptions
-                // List weaknesses, arcana, starting level etc.
-                // add banner images with following format: https://static.wikia.nocookie.net/megamitensei/images/f/ff/Jack_Frost_P5R.jpg
-                // Optional: use calculator to calc paths to fuse this monster
+                // TODO: use calculator to calc paths to fuse this monster
                 let personaInput = interaction.options.getString("persona");
                 let personaObject = personaMapRoyal[personaInput];
                 if (!personaObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that Persona.` });
@@ -59,7 +56,6 @@ exports.run = async (client, interaction) => {
                     .setImage(personaImage);
                 break;
             case "skill":
-                // List description and personas with this skill
                 let skillInput = interaction.options.getString("skill");
                 let skillObject = skillMapRoyal[skillInput];
                 if (!skillObject || skillObject.element == "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that skill.` });
@@ -73,7 +69,6 @@ exports.run = async (client, interaction) => {
                     .addField("Personas:", skillPersonas);
                 break;
             case "trait":
-                // List description and personas with this trait
                 let traitInput = interaction.options.getString("trait");
                 let traitObject = skillMapRoyal[traitInput];
                 if (!traitObject || traitObject.element !== "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
