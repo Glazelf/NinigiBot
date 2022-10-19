@@ -12,6 +12,7 @@ module.exports = async (client, interaction) => {
         const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
+        const fs = require("fs");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');
@@ -372,6 +373,28 @@ module.exports = async (client, interaction) => {
                                 for (const giArtifact of giResponse.data) {
                                     let giArtifactCapitalized = await capitalizeString(giArtifact);
                                     if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                };
+                                break;
+                        };
+                        break;
+                    case "persona5":
+                        // Submodule is documented in persona5 command
+                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        switch (focusedOption.name) {
+                            case "persona":
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                for await (const [key, value] of Object.entries(personaMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "skill":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element !== "trait") choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "trait":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element == "trait") choices.push({ name: key, value: key });
                                 };
                                 break;
                         };
