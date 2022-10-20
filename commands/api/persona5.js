@@ -37,7 +37,9 @@ exports.run = async (client, interaction) => {
                 let personaInput = interaction.options.getString("persona");
                 let personaObject = personaMapRoyal[personaInput];
                 if (!personaObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that Persona.` });
-                let personaImageFile = `${personaInput.replace(" ", "_")}_P5R.jpg`;
+                let personaWikiName = personaInput.replaceAll(" ", "_");
+                if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
+                let personaImageFile = `${personaWikiName}_P5R.jpg`;
                 let personaImage = getWikiURL(personaImageFile, personaWiki);
                 // Weaknesses string
                 let elementalMatchup = `Physical: ${getWeaknessString(personaObject.elems[0])}\nGun: ${getWeaknessString(personaObject.elems[1])}\nFire: ${getWeaknessString(personaObject.elems[2])}\nIce: ${getWeaknessString(personaObject.elems[3])}\nElectric: ${getWeaknessString(personaObject.elems[4])}\nWind: ${getWeaknessString(personaObject.elems[5])}\nPsychic: ${getWeaknessString(personaObject.elems[6])}\nNuclear: ${getWeaknessString(personaObject.elems[7])}\nBless: ${getWeaknessString(personaObject.elems[8])}\nCurse: ${getWeaknessString(personaObject.elems[9])}`;
