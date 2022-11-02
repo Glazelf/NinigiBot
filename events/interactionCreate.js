@@ -13,8 +13,7 @@ module.exports = async (client, interaction) => {
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
         const fs = require("fs");
-        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
+        let monstersJSON;
         const { EligibleRoles } = require('../database/dbServices/server.api');
 
         const api_trophy = require('../database/dbServices/trophy.api');
@@ -67,6 +66,7 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;
                         } else if (interaction.customId.startsWith("mhSub")) {
+                            monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
                             // Monster Hunter forms
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
@@ -267,6 +267,8 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "monsterhunter":
+                        monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
+                        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
                         switch (focusedOption.name) {
                             case "monster":
                                 await monstersJSON.monsters.forEach(monster => {
