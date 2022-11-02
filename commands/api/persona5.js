@@ -74,10 +74,7 @@ exports.run = async (client, interaction) => {
                 let traitInput = interaction.options.getString("trait");
                 let traitObject = skillMapRoyal[traitInput];
                 if (!traitObject || traitObject.element !== "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
-                let traitPersonas = "";
-                for await (const [key, value] of Object.entries(traitObject.personas)) {
-                    traitPersonas += `${key}\n`;
-                };
+                let traitPersonas = Object.keys(traitObject.personas).join("\n");
                 p5Embed
                     .setAuthor({ name: `${traitInput}` })
                     .setDescription(traitObject.effect)
