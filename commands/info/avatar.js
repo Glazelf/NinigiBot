@@ -5,11 +5,9 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require('discord.js');
-
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
-
-        // Get avatar
+        // Get avatars
         let avatar = null;
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
@@ -19,13 +17,11 @@ exports.run = async (client, interaction) => {
             serverAvatar = avatar;
             avatar = null;
         };
-
         const avatarEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
             .setImage(serverAvatar);
-
         return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });
 
     } catch (e) {
