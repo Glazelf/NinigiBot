@@ -308,11 +308,12 @@ exports.run = async (client, interaction) => {
                 splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
-                splatfestData = await splatfestData.sort((a, b) => Date.parse(a.endTime) - Date.parse(b.endTime));
+                splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
+                    splatfestTeamIndex = 0;
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
-                    splatfestBanner = splatfest.image.url;
+                    if (!splatfestBanner) splatfestBanner = splatfest.image.url;
                     switch (splatfest.state) {
                         case "SCHEDULED":
                             splatfestTitle = `⚠️UPCOMING⚠️\n${splatfestTitle}`;
@@ -355,26 +356,28 @@ exports.run = async (client, interaction) => {
                             splatfestDescription += team.teamName;
                             splatfestResultsTitleTeams += team.teamName;
                         };
-                        // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
-                        if (team.result && team.result.isVoteRatioTop) {
-                            splatfestResultsVote += `**${Math.round(team.result.voteRatio * 100) / 100}%**`;
-                        } else {
-                            splatfestResultsVote += `${Math.round(team.result.voteRatio * 100) / 100}%`;
-                        };
-                        if (team.result && team.result.isHoragaiRatioTop) {
-                            splatfestResultsHoragai += `**${Math.round(team.result.horagaiRatio * 100) / 100}%**`;
-                        } else {
-                            splatfestResultsHoragai += `${Math.round(team.result.horagaiRatio * 100) / 100}%`;
-                        };
-                        if (team.result && team.result.isRegularContributionRatioTop) {
-                            splatfestResultsRegular += `**${Math.round(team.result.regularContributionRatio * 100) / 100}%**`;
-                        } else {
-                            splatfestResultsRegular += `${Math.round(team.result.regularContributionRatio * 100) / 100}%`;
-                        };
-                        if (team.result && team.result.isChallengeContributionRatioTop) {
-                            splatfestResultsChallenge += `**${Math.round(team.result.challengeContributionRatio * 100) / 100}%**`;
-                        } else {
-                            splatfestResultsChallenge += `${Math.round(team.result.challengeContributionRatio * 100) / 100}%`;
+                        if (splatfest.state == "CLOSED") {
+                            // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
+                            if (team.result && team.result.isVoteRatioTop) {
+                                splatfestResultsVote += `**${Math.round(team.result.voteRatio * 100) / 100}%**`;
+                            } else {
+                                splatfestResultsVote += `${Math.round(team.result.voteRatio * 100) / 100}%`;
+                            };
+                            if (team.result && team.result.isHoragaiRatioTop) {
+                                splatfestResultsHoragai += `**${Math.round(team.result.horagaiRatio * 100) / 100}%**`;
+                            } else {
+                                splatfestResultsHoragai += `${Math.round(team.result.horagaiRatio * 100) / 100}%`;
+                            };
+                            if (team.result && team.result.isRegularContributionRatioTop) {
+                                splatfestResultsRegular += `**${Math.round(team.result.regularContributionRatio * 100) / 100}%**`;
+                            } else {
+                                splatfestResultsRegular += `${Math.round(team.result.regularContributionRatio * 100) / 100}%`;
+                            };
+                            if (team.result && team.result.isChallengeContributionRatioTop) {
+                                splatfestResultsChallenge += `**${Math.round(team.result.challengeContributionRatio * 100) / 100}%**`;
+                            } else {
+                                splatfestResultsChallenge += `${Math.round(team.result.challengeContributionRatio * 100) / 100}%`;
+                            };
                         };
                         if (team.role == "DEFENSE") midTermWinner = team.teamName;
                     });
@@ -382,8 +385,8 @@ exports.run = async (client, interaction) => {
                         splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
                         splatfestResultsDescription += `${splatfestResultsVote} (10p)\n${splatfestResultsHoragai} (10p)\n${splatfestResultsRegular} (15p)\n${splatfestResultsChallenge} (10p)\n${splatfestResultsWinner}`;
                     };
-                    if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
+                    if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
                     splat3Embed.addField(splatfestTitle, splatfestDescription, false);
                 });
@@ -419,7 +422,7 @@ exports.run = async (client, interaction) => {
                     .setTitle(userTitle)
                     .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
                     .setImage(`${github}images/npl/${bannerRandom}?raw=true`)
-                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${github}images/badge/${badgeRandom3}?raw=true` })
+                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${github}images/badge/${badgeRandom3}?raw=true` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
