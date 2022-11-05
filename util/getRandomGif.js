@@ -9,6 +9,9 @@ module.exports = async (gifTags = []) => {
     if (gifTags.length > 0) giphyParams.tag = gifTags;
     const { data } = await axios.get("https://api.giphy.com/v1/gifs/random", {
         giphyParams
+    }).catch(e => {
+        console.log(e);
+        return null;
     });
     let images = data.images;
     if (data.images && data.images.original) {
