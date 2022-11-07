@@ -7,12 +7,15 @@ module.exports = async (gifTags = []) => {
         rating: "g"
     };
     if (gifTags.length > 0) giphyParams.tag = randomTag;
-    const { data } = await axios.get("https://api.giphy.com/v1/gifs/random", {
+    const giphyResponse = await axios.get("https://api.giphy.com/v1/gifs/random", {
         giphyParams
     }).catch(e => {
         console.log(e);
         return null;
     });
+    let data = null;
+    if (giphyResponse) data = giphyResponse.data;
+    if (!data) return null;
     let images = data.images;
     if (data.images && data.images.original) {
         return data.images.original.url;
