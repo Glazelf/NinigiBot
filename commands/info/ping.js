@@ -8,10 +8,6 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        const getRandomGif = require("../../util/getRandomGif");
-        const randomGif = await getRandomGif(["ping"]);
-        console.log(randomGif)
-
         let pongString = `Pong!'ed back in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;
