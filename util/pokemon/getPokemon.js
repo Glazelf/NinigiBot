@@ -158,10 +158,12 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let PMDPortraitExists = imageExists(PMDPortrait);
         // Shuffle icons, only works for pokemon in pokemon shuffle but has form support
         let shuffleIcon = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
-        // Small party icons, only works for pokemon in SWSH
-        let partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        // Small party icons
+        let partyIcon = `https://www.serebii.net/pokedex-sv/icon/${pokemonID}.png`;
+        if (!imageExists(partIcon)) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
         // Shiny render
-        let shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        let shinyModel = `https://www.serebii.net/Shiny/SV/${pokemonID}.png`;
+        if (!imageExists(shinyModel)) shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
         // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
 
         let banner = render;
