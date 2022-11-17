@@ -156,23 +156,23 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let pokemonIDLength4 = (pokemonID.length < 4 ? '0' : '') + pokemonID; // Add leading zeroes
         let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
         let PMDPortraitExists = imageExists(PMDPortrait);
-        // Shuffle icons, only works for pokemon in pokemon shuffle but has form support
-        let shuffleIcon = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-sv/icon/${pokemonID}.png`;
-        if (!imageExists(partyIcon)) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
-        // Shiny render
-        let shinyModel = `https://www.serebii.net/Shiny/SV/${pokemonID}.png`;
-        if (!imageExists(shinyModel)) shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
+        let partyIconExists = imageExists(partyIcon);
+        if (!partyIconExists) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        // Shiny render, currently unused
+        // let shinyModel = `https://www.serebii.net/Shiny/SV/${pokemonID}.png`;
+        // let shinyModelExists = imageExists(shinyModel);
+        // if (!shinyModelExists) shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
         // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
 
         let banner = render;
         let iconAuthor = PMDPortrait;
-        let iconFooter = shuffleIcon;
+        let iconFooter = partyIcon;
         let iconThumbnail = render;
         if (!PMDPortraitExists) {
-            iconAuthor = shuffleIcon;
-            iconFooter = partyIcon;
+            iconAuthor = partyIcon;
+            iconFooter = null;
         };
 
         let abilityString = pokemon.abilities['0'];
