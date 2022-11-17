@@ -160,7 +160,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let shuffleIcon = `https://www.serebii.net/shuffle/pokemon/${pokemonID}.png`;
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-sv/icon/${pokemonID}.png`;
-        if (!imageExists(partIcon)) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        if (!imageExists(partyIcon)) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
         // Shiny render
         let shinyModel = `https://www.serebii.net/Shiny/SV/${pokemonID}.png`;
         if (!imageExists(shinyModel)) shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
