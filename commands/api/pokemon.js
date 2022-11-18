@@ -110,7 +110,7 @@ exports.run = async (client, interaction) => {
                 if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
                 // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
-                if (move.maxMove && move.maxMove.basePower && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
+                // if (move.maxMove && move.maxMove.basePower && move.gen < 9 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
 
