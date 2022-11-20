@@ -100,7 +100,6 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         };
 
         var pokemonID = leadingZeros(pokemon.num.toString());
-
         // Forms
         const alolaString = "-Alola";
         const galarString = "-Galar";
@@ -187,7 +186,6 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         if (pokemon.abilities.S) abilityString = `${abilityString}\n${pokemon.abilities.S} (Special)`;
 
         let statLevels = `(50) (100)`;
-
         let HPstats = calcHP(pokemon.baseStats.hp);
         let Atkstats = calcStat(pokemon.baseStats.atk);
         let Defstats = calcStat(pokemon.baseStats.def);
@@ -202,7 +200,6 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
 
         let previousPokemon = null;
         let nextPokemon = null;
-
         let allPokemon = Dex.species.all();
         let allPokemonSorted = allPokemon.sort(compare);
         let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
@@ -214,21 +211,27 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
 
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
+        // Skip placeholders, should clean this sometime but this code might become obsolete later in Showdown's SV support
+        if (!previousPokemon) {
+            previousPokemonID = previousPokemonID - 1;
+            previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
+        };
+        if (!nextPokemon) {
+            nextPokemonID += 1;
+            nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
+        };
 
-        let pkmButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons = new Discord.MessageActionRow();
+        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();
 
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
-
-        pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
-
+        if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
-
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
