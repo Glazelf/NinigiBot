@@ -162,16 +162,22 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
             iconFooter = null;
         };
 
-        let abilityString = pokemon.abilities['0'];
-        if (pokemon.abilities['1']) abilityString = `${abilityString}\n${pokemon.abilities['1']}`;
-        if (pokemon.abilities.H) {
+        let ability0Desc = Dex.abilities.get(pokemon.abilities[0]).shortDesc;
+        let ability1Desc = Dex.abilities.get(pokemon.abilities[1]).shortDesc;
+        let abilityString = `**${pokemon.abilities['0']}**: ${ability0Desc}`;
+        if (pokemon.abilities['1']) abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
+        if (pokemon.abilities['H']) {
+            let abilityHDesc = Dex.abilities.get(pokemon.abilities['H']).shortDesc;
             if (pokemon.unreleasedHidden) {
-                abilityString = `${abilityString}\n${pokemon.abilities.H} (Unreleased Hidden)`;
+                abilityString += `\n**${pokemon.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
             } else {
-                abilityString = `${abilityString}\n${pokemon.abilities.H} (Hidden)`;
+                abilityString += `\n**${pokemon.abilities['H']}** (Hidden): ${abilityHDesc}`;
             };
         };
-        if (pokemon.abilities.S) abilityString = `${abilityString}\n${pokemon.abilities.S} (Special)`;
+        if (pokemon.abilities['S']) {
+            let abilitySDesc = Dex.abilities.get(pokemon.abilities['S']).shortDesc;
+            abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
+        };
 
         let statLevels = `(50) (100)`;
         let HPstats = calcHP(pokemon.baseStats.hp);
