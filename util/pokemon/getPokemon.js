@@ -109,6 +109,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const totemBool = pokemon.name.endsWith(totemString);
         const gmaxBool = pokemon.name.endsWith(gmaxString);
         const eternamaxBool = pokemon.name.endsWith(eternamaxString);
+        const dynamaxBool = Boolean(gmaxBool || eternamaxBool);
         const totemAlolaBool = totemBool && pokemon.name.split("-")[1] == "Alola";
         let formChar;
 
@@ -128,10 +129,15 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
 
         // Metrics
         let metricsString = "";
-        if (pokemon.weightkg) metricsString = `Weight: ${pokemon.weightkg}kg`;
-        if (pokemon.weightkg && pokemon.heightm) metricsString = `${metricsString}\n`;
-        if (pokemon.heightm) metricsString = `${metricsString}Height: ${pokemon.heightm}m`;
-        if (gmaxBool || eternamaxBool) metricsString = "";
+        if (pokemon.weightkg) {
+            metricsString += `Weight: ${pokemon.weightkg}kg`;
+        } else if (dynamaxBool) {
+            metricsString += `Weight: ???kg`;
+        };
+        if (pokemon.heightm) {
+            metricsString += `\nHeight: ${pokemon.heightm}m`;
+            if (dynamaxBool) metricsString += `+`;
+        };
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
 
@@ -268,9 +274,8 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
             .setThumbnail(iconThumbnail)
             .setDescription(description)
-            .addField("Type:", typeString, true);
-        if (metricsString.length > 0) pkmEmbed.addField("Metrics:", metricsString, true);
-        pkmEmbed
+            .addField("Type:", typeString, true)
+            .addField("Metrics:", metricsString, true)
             .addField("Abilities:", abilityString, false);
         if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
         if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
