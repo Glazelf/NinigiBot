@@ -192,12 +192,24 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         };
         let levelMovesString = "";
         for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
-        let tmMovesString = tmMoves.join(", ");
+        let tmMovesStrings = [];
+        let tmMoveIndex = 0;
+        for (const tmMove of tmMoves) {
+            if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
+            tmMovesStrings[tmMoveIndex].push(tmMove);
+            if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1028 to add an extra entry for the overflow
+        };
         let eggMovesString = eggMoves.join(", ");
         let tutorMovesString = tutorMoves.join(", ");
-
+        let transferMovesStrings = [];
+        let transferMoveIndex = 0;
         transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
-        let transferMovesString = transferMoves.join(", ");
+        for (const transferMove of transferMoves) {
+            if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
+            transferMovesStrings[transferMoveIndex].push(transferMove);
+            if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
+
+        };
 
         let embedColor = globalVars.embedColor;
         if (pokemon.color) {
@@ -297,15 +309,14 @@ BST: ${pokemon.bst}`, false)
         // .setImage(banner)
         if (learnsetBool) {
             if (levelMovesString.length > 0) pkmEmbed.addField("Levelup Moves:", levelMovesString, false);
-            if (tmMovesString.length > 0) pkmEmbed.addField("TM Moves:", tmMovesString, false);
+            tmMovesStrings.forEach(tmMovesString => pkmEmbed.addField("TM Moves:", tmMovesString.join(", "), false));
             if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
             if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
-            if (transferMovesString.length > 0) pkmEmbed.addField("Transfer Moves:", transferMovesString, false);
+            transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
         };
         pkmEmbed
             .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
             .setTimestamp();
-
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 
