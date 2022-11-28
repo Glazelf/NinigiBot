@@ -168,6 +168,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         let eggMoves = [];
         let tutorMoves = [];
         let transferMoves = [];
+        let prevo = null;
+        if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
+        if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
+        console.log(prevo)
         if (learnsetBool) {
             let learnset = learnsets[pokemon.id].learnset;
             for (let [moveName, learnData] of Object.entries(learnset)) {
@@ -189,6 +193,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
                 };
             };
             levelMoves = await Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
+            // Prevo egg moves
+            if (prevo) {
+                for (let [moveName, learnData] of Object.entries(learnsets[prevo.id].learnset)) {
+                    moveName = Dex.moves.get(moveName).name;
+                    for (let moveLearnData of learnData) {
+                        if (moveLearnData.startsWith("9E")) {
+                            eggMoves.push(moveName);
+                        };
+                    };
+                };
+            };
         };
         let levelMovesString = "";
         for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
@@ -208,7 +223,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
             if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
-
         };
 
         let embedColor = globalVars.embedColor;
