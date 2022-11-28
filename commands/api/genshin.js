@@ -62,8 +62,8 @@ exports.run = async (client, interaction) => {
                         if (skillDesc.length <= 1028) {
                             giEmbed.addField(`${skill.name} (Active)`, skillDesc, false);
                         } else {
-                            giEmbed.addField(`${skill.name} (Active) Part 1`, `${skillDesc.substring(0, 1021)}...`, false);
-                            giEmbed.addField(`${skill.name} (Active) Part 2`, `...${skillDesc.substring(1021,)}`, false);
+                            giEmbed.addField(`${skill.name} (Active)`, `${skillDesc.substring(0, 1024)}...`, false);
+                            giEmbed.addField(`${skill.name} (Active) (cont.)`, `...${skillDesc.substring(1024,)}`, false);
                         };
                     });
                     await character.passiveTalents.forEach(passive => {
