@@ -9,7 +9,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const isAdmin = require('../isAdmin');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
-        const typeMatchups = require('../../objects/pokemon/typeMatchups.json');
+        const typechart = require('../../node_modules/pokemon-showdown/.data-dist/typechart.js').TypeChart;
         const getTypeEmotes = require('./getTypeEmotes');
 
         if (!pokemon) return;
@@ -21,83 +21,51 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let adminBot = isAdmin(client, interaction.guild.me)
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
-
         // Typing
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
-        let typeString = await getTypeEmotes({ type1: type1, type2: type2, emotes: emotesAllowed });
-
-        // Check type matchups, maybe use Dex.types sometime 
-        let superEffectives = "";
-        let resistances = "";
-        let immunities = "";
-
-        for (let [key, type] of Object.entries(typeMatchups)) {
-            let typeName = key;
-
-            // Dual type Pokemon
-            if (pokemon.types[1]) {
-                if (type.se.includes(type1)) type.effect += 1;
-                if (type.se.includes(type2)) type.effect += 1;
-                if (type.res.includes(type1)) type.effect += -1;
-                if (type.res.includes(type2)) type.effect += -1;
-                if (type.immune.includes(type1) || type.immune.includes(type2)) type.effect = -3;
-                if (type.effect == 2 || type.effect == -2) {
-                    typeName = await getTypeEmotes({ type1: typeName, bold: true, emotes: emotesAllowed });
-                } else {
-                    typeName = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                };
-                if (type.effect == 1 || type.effect == 2) {
-                    if (superEffectives.length == 0) {
-                        superEffectives = typeName;
-                    } else {
-                        superEffectives = `${superEffectives}, ${typeName}`;
-                    };
-                };
-                if (type.effect == -1 || type.effect == -2) {
-                    if (resistances.length == 0) {
-                        resistances = typeName;
-                    } else {
-                        resistances = `${resistances}, ${typeName}`;
-                    };
-                };
-                if (type.effect == -3) {
-                    if (immunities.length == 0) {
-                        immunities = typeName;
-                    } else {
-                        immunities = `${immunities}, ${typeName}`;
-                    };
-                };
-                type.effect = 0;
-
-                // Single type Pokemon
-            } else {
-                if (type.se.includes(type1)) {
-                    if (superEffectives.length == 0) {
-                        superEffectives = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                    } else {
-                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                        superEffectives = `${superEffectives}, ${typeEmote}`;
-                    };
-                };
-                if (type.res.includes(type1)) {
-                    if (resistances.length == 0) {
-                        resistances = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                    } else {
-                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                        resistances = `${resistances}, ${typeEmote}`;
-                    };
-                };
-                if (type.immune.includes(type1)) {
-                    if (immunities.length == 0) {
-                        immunities = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                    } else {
-                        let typeEmote = await getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
-                        immunities = `${immunities}, ${typeEmote}`;
-                    };
-                };
+        let typeString = getTypeEmotes({ type1: type1, type2: type2, emotes: emotesAllowed });
+        // Check type matchups, maybe use Dex.types sometime
+        let typeEffectString = "";
+        let superEffectives = [];
+        let resistances = [];
+        let immunities = [];
+        let typeEffects = {};
+        type1 = typechart[type1.toLowerCase()].damageTaken;
+        if (pokemon.types[1]) type2 = typechart[type2.toLowerCase()].damageTaken;
+        for (let [typeName, matchup] of Object.entries(type1)) {
+            typeEffects[typeName] = 0;
+            if (typeName[0] == typeName[0].toLowerCase()) continue; // Skip status effects like paralysis and poison
+            if (matchup == 1) typeEffects[typeName] += 1;
+            if (matchup == 2) typeEffects[typeName] += -1;
+            if (matchup == 3) typeEffects[typeName] = -3;
+            if (!pokemon.types[1]) {
+                typeEffectString = getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
+                if (typeEffects[typeName] == 1) superEffectives.push(typeEffectString);
+                if (typeEffects[typeName] == -1) resistances.push(typeEffectString);
+                if (typeEffects[typeName] == -3) immunities.push(typeEffectString);
             };
         };
+        if (pokemon.types[1]) {
+            for (let [typeName, matchup] of Object.entries(type2)) {
+                if (typeName[0] == typeName[0].toLowerCase()) continue; // Skip status effects like paralysis and poison
+                if (matchup == 1) typeEffects[typeName] += 1;
+                if (matchup == 2) typeEffects[typeName] += -1;
+                if (matchup == 3) typeEffects[typeName] = -3;
+                // Should make the results functionality prettier sometime
+                if (typeEffects[typeName] == 2 || typeEffects[typeName] == -2) {
+                    typeEffectString = getTypeEmotes({ type1: typeName, bold: true, emotes: emotesAllowed });
+                } else {
+                    typeEffectString = getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
+                };
+                if (typeEffects[typeName] == 1 || typeEffects[typeName] == 2) superEffectives.push(typeEffectString);
+                if (typeEffects[typeName] == -1 || typeEffects[typeName] == -2) resistances.push(typeEffectString);
+                if (typeEffects[typeName] == -3) immunities.push(typeEffectString);
+            };
+        };
+        superEffectives = superEffectives.join(", ");
+        resistances = resistances.join(", ");
+        immunities = immunities.join(", ");
 
         var pokemonID = leadingZeros(pokemon.num.toString());
         // Forms

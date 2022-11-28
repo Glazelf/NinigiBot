@@ -80,7 +80,7 @@ exports.run = async (client, interaction) => {
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
 
-                let type = await getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
+                let type = getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
                 let category = move.category;
                 let ppString = `${move.pp}|${move.pp * 1.2}|${move.pp * 1.4}|${move.pp * 1.6}`;
                 if (move.pp == 1 || move.isMax) ppString = null;
