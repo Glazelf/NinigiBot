@@ -1,4 +1,4 @@
-module.exports = async (client, interaction, pokemon, ephemeral) => {
+module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral }) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -10,6 +10,7 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
         const typechart = require('../../node_modules/pokemon-showdown/.data-dist/typechart.js').TypeChart;
+        const learnsets = require('../../node_modules/pokemon-showdown/.data-dist/learnsets.js').Learnsets;
         const getTypeEmotes = require('./getTypeEmotes');
 
         if (!pokemon) return;
@@ -161,6 +162,43 @@ module.exports = async (client, interaction, pokemon, ephemeral) => {
         let SpDstats = calcStat(pokemon.baseStats.spd);
         let Spestats = calcStat(pokemon.baseStats.spe);
 
+        let levelMoves = [];
+        let levelMovesNames = [];
+        let tmMoves = [];
+        let eggMoves = [];
+        let tutorMoves = [];
+        let transferMoves = [];
+        if (learnsetBool) {
+            let learnset = learnsets[pokemon.id].learnset;
+            for (let [moveName, learnData] of Object.entries(learnset)) {
+                moveName = Dex.moves.get(moveName).name;
+                for (let moveLearnData of learnData) {
+                    if (!moveLearnData.startsWith("9")) {
+                        transferMoves.push(moveName);
+                        continue;
+                    } else if (moveLearnData.includes("L")) {
+                        levelMoves[moveName] = parseInt(moveLearnData.replace("9L", ""));
+                        levelMovesNames.push(moveName);
+                    } else if (moveLearnData.includes("M")) {
+                        tmMoves.push(moveName);
+                    } else if (moveLearnData.includes("E")) {
+                        eggMoves.push(moveName);
+                    } else if (moveLearnData.includes("T")) {
+                        tutorMoves.push(moveName);
+                    };
+                };
+            };
+            levelMoves = await Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
+        };
+        let levelMovesString = "";
+        for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
+        let tmMovesString = tmMoves.join(", ");
+        let eggMovesString = eggMoves.join(", ");
+        let tutorMovesString = tutorMoves.join(", ");
+
+        transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
+        let transferMovesString = transferMoves.join(", ");
+
         let embedColor = globalVars.embedColor;
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
@@ -256,7 +294,15 @@ SpA: **${pokemon.baseStats.spa}** ${SpAstats}
 SpD: **${pokemon.baseStats.spd}** ${SpDstats}
 Spe: **${pokemon.baseStats.spe}** ${Spestats}
 BST: ${pokemon.bst}`, false)
-            // .setImage(banner)
+        // .setImage(banner)
+        if (learnsetBool) {
+            if (levelMovesString.length > 0) pkmEmbed.addField("Levelup Moves:", levelMovesString, false);
+            if (tmMovesString.length > 0) pkmEmbed.addField("TM Moves:", tmMovesString, false);
+            if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
+            if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
+            if (transferMovesString.length > 0) pkmEmbed.addField("Transfer Moves:", transferMovesString, false);
+        };
+        pkmEmbed
             .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
             .setTimestamp();
 

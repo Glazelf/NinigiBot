@@ -61,7 +61,7 @@ module.exports = async (client, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon(client, interaction, pokemon);
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon });
                             if (!messageObject) return;
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;

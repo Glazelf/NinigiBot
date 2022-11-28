@@ -20,6 +20,10 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
+        let learnsetBool = false;
+        let learnsetArg = interaction.options.getBoolean("learnset");
+        if (learnsetArg === true) learnsetBool = true;
+
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
@@ -195,7 +199,7 @@ exports.run = async (client, interaction) => {
                     let allKeys = Object.keys(allPokemon);
                     pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
                 } else if (!pokemon || !pokemon.exists || pokemon.isNonstandard == "Custom" || pokemon.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
-                let messageObject = await getPokemon(client, interaction, pokemon, ephemeral);
+                let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, ephemeral: ephemeral });
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
                 break;
 
@@ -410,6 +414,10 @@ module.exports.config = {
             description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
+        }, {
+            name: "learnset",
+            type: "BOOLEAN",
+            description: "Whether to show the Pokémon's learnset."
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
