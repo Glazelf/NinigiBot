@@ -326,7 +326,8 @@ BST: ${pokemon.bst}`, false)
             tmMovesStrings.forEach(tmMovesString => pkmEmbed.addField("TM Moves:", tmMovesString.join(", "), false));
             if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
             if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
-            transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
+            // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
+            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
         };
         pkmEmbed
             .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
