@@ -1,4 +1,4 @@
-module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral }) => {
+module.exports = async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, ephemeral = true }) => {
     // Import globals
     let globalVars = require('../../events/ready');
     try {
@@ -14,6 +14,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         const getTypeEmotes = require('./getTypeEmotes');
 
         if (!pokemon) return;
+        let recentGame = "SV";
         let description = "";
         let pokemonGender = "";
         if (pokemon.gender == "M") pokemonGender = "♂️";
@@ -109,7 +110,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         };
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
-
         // Official art
         let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         // Game render
@@ -119,19 +119,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
         let PMDPortraitExists = imageExists(PMDPortrait);
         // Small party icons
-        let partyIcon = `https://www.serebii.net/pokedex-sv/icon/${pokemonID}.png`;
-        let partyIconExists = imageExists(partyIcon);
-        if (!partyIconExists) partyIcon = `https://www.serebii.net/pokedex-swsh/icon/${pokemonID}.png`;
+        let partyIcon = `https://www.serebii.net/pokedex-${recentGame.toLowerCase()}/icon/${pokemonID}.png`;
         // Shiny render, currently unused
-        // let shinyModel = `https://www.serebii.net/Shiny/SV/${pokemonID}.png`;
-        // let shinyModelExists = imageExists(shinyModel);
-        // if (!shinyModelExists) shinyModel = `https://www.serebii.net/Shiny/SWSH/${pokemonID}.png`;
-        // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res
+        let shinyModel = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
+        // Smaller, low-res render
+        // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; 
 
         let banner = render;
         let iconAuthor = PMDPortrait;
         let iconFooter = partyIcon;
         let iconThumbnail = render;
+        if (shinyBool) iconThumbnail = shinyModel;
         if (!PMDPortraitExists) {
             iconAuthor = partyIcon;
             iconFooter = null;
@@ -253,15 +251,15 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         };
 
         let pkmButtons = new Discord.MessageActionRow();
-        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmleft', style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();
 
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmbase', style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
-        if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: 'pkmright', style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
+        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
+        if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`;
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
@@ -269,10 +267,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
                 };
             };
         };
@@ -285,7 +283,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
             if (pokemonForms.length > 0) {
                 if (pokemonForms.length < 6) {
                     for (let i = 0; i < pokemonForms.length; i++) {
-                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}`, style: 'SECONDARY', label: pokemonForms[i] }));
+                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
                     };
                 } else {
                     // Pokémon with way too many forms

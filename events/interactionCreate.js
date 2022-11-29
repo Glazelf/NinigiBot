@@ -58,10 +58,12 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
+                            let learnsetBool = (interaction.customId.split("|")[1] == "true");
+                            let shinyBool = (interaction.customId.split("|")[2] == "true");
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon });
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool });
                             if (!messageObject) return;
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;
