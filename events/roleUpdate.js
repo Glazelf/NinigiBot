@@ -38,9 +38,6 @@ module.exports = async (client, oldRole, newRole) => {
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
                 .addField(`Role:`, `${newRole} (${newRole.id})`)
                 .setTimestamp();
-            console.log(oldRole.position)
-            console.log(newRole.position)
-
             if (executor) {
                 updateEmbed
                     .addField('Updated by:', `${executor} (${executor.id})`)

@@ -171,7 +171,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool, ephemeral 
         let prevo = null;
         if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
         if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
-        console.log(prevo)
         if (learnsetBool) {
             let learnset = learnsets[pokemon.id].learnset;
             for (let [moveName, learnData] of Object.entries(learnset)) {
