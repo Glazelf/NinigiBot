@@ -193,11 +193,11 @@ exports.run = async (client, interaction) => {
                 let leagueBattleID = "leagueSchedules";
                 let splatfestBattleID = "festSchedules";
                 let allowedModes = [];
-                allowedModes.push(salmonRunID); // Add xBattleID, leagueBattleID when they become available
+                allowedModes.push(salmonRunID);
                 if (currentFest) {
                     allowedModes.push(splatfestBattleID);
                 } else {
-                    allowedModes.push(turfWarID, anarchyID);
+                    allowedModes.push(turfWarID, anarchyID, xBattleID); // leagueBattleID when it becomes available
                 };
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
