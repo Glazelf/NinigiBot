@@ -258,7 +258,7 @@ exports.run = async (client, interaction) => {
                         .addField("Tricolor Battle:", tricolorSchedule, false)
                         .setImage(splatfestData.image.url);
                 };
-                if (inputMode == turfWarID || inputMode == anarchyID || inputMode == splatfestBattleID) {
+                if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
                     // Turf War & Anarchy
                     await scheduleData.nodes.forEach(entry => {
                         entrySettings = entry[modeSettings];
@@ -272,7 +272,7 @@ exports.run = async (client, interaction) => {
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
                         splat3Embed.addField(mapEntryTitle, `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
                     });
-                    if (inputMode == turfWarID || inputMode == anarchyID) {
+                    if ([turfWarID, anarchyID, xBattleID].includes(inputMode)) {
                         splat3Embed
                             .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
                             .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
