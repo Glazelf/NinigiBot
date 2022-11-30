@@ -12,7 +12,7 @@ exports.run = async (client, interaction) => {
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
-        let version = 120;
+        let version = 200;
         let versionString = `Splatoon 3 v${version.toString().split("").join(".")}`;
         const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoClothes.json`);
         const GearInfoHeadJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoHead.json`);
