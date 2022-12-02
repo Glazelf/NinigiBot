@@ -9,7 +9,7 @@
     "axios": "^1.2.0",
     "canvas": "^2.10.2",
     "cron": "^2.1.0",
-    "discord.js": "^13.11.0",
+    "discord.js": "^14.7.1",
     "discord.js-minesweeper": "^1.1.0",
     "enmap": "^5.9.2",
     "forever": "^4.0.3",
