@@ -50,6 +50,7 @@ exports.run = async (client, interaction) => {
                 let abilityMatchesString = "";
                 abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
                 abilityMatchesString = abilityMatchesString.slice(0, -2);
+
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
                     .setDescription(ability.desc)
@@ -63,7 +64,6 @@ exports.run = async (client, interaction) => {
                 if (!item || !item.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
-
                 nameBulbapedia = item.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
@@ -78,7 +78,6 @@ exports.run = async (client, interaction) => {
             case "move":
                 let moveSearch = interaction.options.getString("move");
                 let move = Dex.moves.get(moveSearch);
-
                 if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
