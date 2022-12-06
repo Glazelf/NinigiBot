@@ -224,8 +224,7 @@ module.exports = async (client, interaction) => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && species.exists
-                                        && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP"
+                                        && species.num > 0
                                         && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
