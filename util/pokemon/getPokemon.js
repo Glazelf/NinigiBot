@@ -186,7 +186,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let prevo = null;
         if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
         if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
-        if (learnsetBool) {
+        if (learnsetBool && learnsets[pokemon.id]) {
             let learnset = learnsets[pokemon.id].learnset;
             for (let [moveName, learnData] of Object.entries(learnset)) {
                 moveName = Dex.moves.get(moveName).name;
