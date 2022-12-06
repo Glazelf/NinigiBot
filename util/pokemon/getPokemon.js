@@ -108,7 +108,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             // Catches all forms where the form extension on Serebii is just the first letter of the form name
             if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
         };
-
         // edgecase ID corrections
         // TODO: add a bunch of meaningless forms like Unown and Vivillon
         await correctValue(correctionID, pokemon.name, pokemonID);
@@ -376,7 +375,6 @@ BST: ${pokemon.bst}`, false)
             if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
-
         function calcStat(base) {
             //// Gen 1-2
             // let min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
@@ -402,14 +400,12 @@ BST: ${pokemon.bst}`, false)
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };
-
         function leadingZeros(str) {
             for (var i = str.length; i < 3; i++) {
                 str = "0" + str;
             };
             return str;
         };
-
         async function correctValue(object, pokemonName, input) {
             var uncorrectedNames = Object.keys(object);
             uncorrectedNames.forEach(function (key) {
@@ -420,7 +416,6 @@ BST: ${pokemon.bst}`, false)
                 };
             });
         };
-
         function getEvoMethod(pokemon) {
             let evoMethod;
             switch (pokemon.evoType) {
@@ -453,7 +448,6 @@ BST: ${pokemon.bst}`, false)
             if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
             return evoMethod;
         };
-
         function compare(a, b) {
             return a.num - b.num;
         };
