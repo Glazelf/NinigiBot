@@ -11,7 +11,7 @@ exports.run = async (client, interaction) => {
         const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
-
+        // Command settings
         let adminBot = isAdmin(client, interaction.guild.me);
         let ephemeral = true;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -26,16 +26,15 @@ exports.run = async (client, interaction) => {
         let shinyBool = false;
         let shinyArg = interaction.options.getBoolean("shiny");
         if (shinyArg === true) shinyBool = true;
-
+        // Variables
         let pokemonEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
-
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.MessageActionRow();
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         let JSONresponse;
-
+        let allPokemon = Dex.species.all();
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
@@ -47,12 +46,16 @@ exports.run = async (client, interaction) => {
                 // Ability is capitalized on Bulbapedia URLs
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
+                let abilityMatches = Object.values(allPokemon).filter(pokemon => Object.values(pokemon.abilities).includes(ability.name) && pokemon.exists && pokemon.num > 0);
+                let abilityMatchesString = "";
+                abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
+                abilityMatchesString = abilityMatchesString.slice(0, -2);
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
                     .setDescription(ability.desc)
-                    .addField("Introduced:", `Gen ${ability.gen}`, false);
+                    .addField("Introduced:", `Gen ${ability.gen}`, true);
+                if (abilityMatchesString.length > 0) pokemonEmbed.addField("Pokémon:", abilityMatchesString, false);
                 break;
-
             // Items
             case "item":
                 let itemSearch = interaction.options.getString("item");
@@ -71,7 +74,6 @@ exports.run = async (client, interaction) => {
                 if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
                 pokemonEmbed.addField("Introduced:", `Gen ${item.gen}`, true);
                 break;
-
             // Moves
             case "move":
                 let moveSearch = interaction.options.getString("move");
@@ -94,7 +96,6 @@ exports.run = async (client, interaction) => {
 
                 let accuracy = `${move.accuracy}%`;
                 if (move.accuracy === true) accuracy = "Can't miss";
-
                 // Smogon target is camelcased for some reason, this splits it on capital letters and formats them better
                 let target = capitalizeString(move.target.split(/(?=[A-Z])/).join(" "));
                 if (target == "Normal") target = "Any Adjacent";
@@ -120,7 +121,6 @@ exports.run = async (client, interaction) => {
                 // if (move.maxMove && move.maxMove.basePower && move.gen < 9 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
                 break;
-
             // Natures
             case "nature":
                 let natureSearch = interaction.options.getString("nature");
@@ -146,7 +146,6 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: nature.name })
                     .setDescription(resultString);
                 break;
-
             // Format
             case "format":
                 let formatSearch = interaction.options.getString("format");
@@ -193,19 +192,16 @@ exports.run = async (client, interaction) => {
                 if (unbanlist) pokemonEmbed.addField("Unbanlist:", unbanlist, false);
                 if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
                 break;
-
             // Pokémon
             case "pokemon":
                 let pokemon = Dex.species.get(pokemonName);
                 if (pokemonName.toLowerCase() == "random") {
-                    let allPokemon = Dex.species.all();
                     let allKeys = Object.keys(allPokemon);
                     pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
-                } else if (!pokemon || !pokemon.exists || pokemon.isNonstandard == "Custom" || pokemon.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
+                } else if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, ephemeral: ephemeral });
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
                 break;
-
             case "usage":
                 // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
                 const getData = async url => {
@@ -311,13 +307,11 @@ exports.run = async (client, interaction) => {
                 };
                 break;
         };
-
         // Bulbapedia button
         if (linkBulbapedia) {
             pokemonButtons
                 .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: linkBulbapedia }));
         };
-
         // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
         return;
