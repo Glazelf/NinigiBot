@@ -12,17 +12,34 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const typechart = require('../../node_modules/pokemon-showdown/.data-dist/typechart.js').TypeChart;
         const learnsets = require('../../node_modules/pokemon-showdown/.data-dist/learnsets.js').Learnsets;
         const getTypeEmotes = require('./getTypeEmotes');
-
+        // Common settings
         if (!pokemon) return;
-        let recentGame = "SV";
-        let description = "";
-        let pokemonGender = "";
-        if (pokemon.gender == "M") pokemonGender = "♂️";
-        if (pokemon.gender == "F") pokemonGender = "♀️";
-
-        let adminBot = isAdmin(client, interaction.guild.me)
+        let adminBot = isAdmin(client, interaction.guild.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        let recentGame = "SV";
+        let description = "";
+        // Gender studies
+        let pokemonGender = "";
+        let genderString = "";
+        let iconMale = "♂️";
+        let iconFemale = "♀️";
+        switch (pokemon.gender) {
+            case "M":
+                pokemonGender = iconMale;
+                genderString = `100% ${iconMale}`;
+                break;
+            case "F":
+                pokemonGender = iconFemale;
+                genderString = `100% ${iconFemale}`;
+                break;
+            case "N":
+                genderString = "Unknown";
+                break;
+            default:
+                genderString = `${pokemon.genderRatio.M * 100}% ${iconMale}\n${pokemon.genderRatio.F * 100}% ${iconFemale}`;
+                break;
+        };
         // Typing
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
@@ -258,7 +275,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
-            description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`;
+            description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
@@ -296,7 +313,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
-
         // Embed building
         const pkmEmbed = new Discord.MessageEmbed()
             .setColor(embedColor)
@@ -305,6 +321,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             .setDescription(description)
             .addField("Type:", typeString, true)
             .addField("Metrics:", metricsString, true)
+            .addField("Gender:", genderString, true)
             .addField("Abilities:", abilityString, false);
         if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
         if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
