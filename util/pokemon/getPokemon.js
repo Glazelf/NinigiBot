@@ -136,7 +136,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let PMDPortraitExists = imageExists(PMDPortrait);
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-${recentGame.toLowerCase()}/icon/${pokemonID}.png`;
-        // Shiny render, currently unused
+        // Shiny render
         let shinyModel = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
         // Smaller, low-res render
         // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; 
