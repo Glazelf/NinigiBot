@@ -128,9 +128,9 @@ exports.run = async (client, interaction) => {
         //// Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
         // serverButtons.addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
         //// Should link to <id:browse>, availability unknown
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@browse` }));
         // Should link to <id:customize>, availability unknown
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize` }));
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
