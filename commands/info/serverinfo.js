@@ -105,8 +105,8 @@ exports.run = async (client, interaction) => {
         let archivedThreadCount = 0;
         let serverLinks = "";
         if (guild.features.includes("COMMUNITY")) serverLinks += `<id:home>\n<id:customize>\n`;
+        serverLinks += `<id:browse>\n`;
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
-        serverLinks += `<id:browse>`
 
         await guild.channels.cache.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
