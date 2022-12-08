@@ -124,16 +124,17 @@ exports.run = async (client, interaction) => {
         });
 
         let serverButtons = new Discord.MessageActionRow();
+        //// Some of these might be(come) limited to Community servers
         //// Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
-        // serverButtons.addComponents(new Discord.MessageButton({ label: 'Home (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
+        // serverButtons.addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
         //// Should link to <id:browse>, availability unknown
-        // serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
-        //// Should link to <id:customize>, perm requirement is an educated guess
-        // if (interaction.member.permissions.has("MANAGE_SERVER") || adminBool) serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community (Experimental)', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
-        //// Doesn't seem like there's a feature yet for having guild web pages enabled
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
+        // Should link to <id:customize>, availability unknown
+        serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
+        // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
-        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page (Experimental)', style: 'LINK', url: guildwebpage }));
-        //// Doesn't consider canary or ptb
+        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
+        // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
 
