@@ -12,14 +12,13 @@ exports.run = async (client, interaction) => {
 
         let adminBool = isAdmin(client, interaction.member);
         let adminBot = isAdmin(client, interaction.guild.me);
-
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let guild = interaction.guild;
         await guild.members.fetch();
         await guild.channels.fetch();
-
+        let guildOwner = await guild.fetchOwner();
         let botMember = guild.members.me;
         let botMembers = guild.members.cache.filter(member => member.user.bot);
         let humanMemberCount = guild.members.cache.size - botMembers.size;
@@ -28,7 +27,6 @@ exports.run = async (client, interaction) => {
         let guildsByShard = client.guilds.cache;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
-
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         var shardNumber = 1;
         if (client.shard) {
@@ -42,7 +40,6 @@ exports.run = async (client, interaction) => {
                 });
             });
         };
-
         // Bans
         let banCount = 0;
         try {
@@ -51,7 +48,6 @@ exports.run = async (client, interaction) => {
         } catch (e) {
             banCount = 0;
         };
-
         // Check emote and sticker caps, and boosters
         let emoteMax;
         let stickerMax;
@@ -96,22 +92,21 @@ exports.run = async (client, interaction) => {
             };
         };
         if (guild.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) boosterString = boosterString + nitroEmote;
-
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
         if (guild.bannerURL()) banner = guild.bannerURL(globalVars.displayAvatarSettings);
-
-        let guildOwner = await guild.fetchOwner();
-
         // Rules
         let rules = null;
         if (guild.rulesChannel) rules = guild.rulesChannel;
-
         // Text channels
         let channelCount = 0;
         let threadCount = 0;
         let archivedThreadCount = 0;
+        let serverLinks = "";
+        if (guild.features.includes("COMMUNITY")) serverLinks += `<id:home>\n<id:customize>\n`;
+        if (guild.rulesChannel) serverLinks += `${rules}\n`;
+        serverLinks += `<id:browse>`
 
         await guild.channels.cache.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
@@ -124,13 +119,13 @@ exports.run = async (client, interaction) => {
         });
 
         let serverButtons = new Discord.MessageActionRow();
-        //// Some of these might be(come) limited to Community servers
+        //// Some of these might be(come) limited to Community servers or not have/get internal links, so are put in a field for now. Buttons would be cool in the future though.
         //// Add check to see if Home/Directory/Whatever feature is enabled. atm doesn't seem to be a guild.feature entry for it.
         // serverButtons.addComponents(new Discord.MessageButton({ label: 'Home', style: 'LINK', url: `discord://-/channels/${guild.id}/@home` }));
         //// Should link to <id:browse>, availability unknown
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@browse` }));
-        // Should link to <id:customize>, availability unknown
-        serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize` }));
+        // serverButtons.addComponents(new Discord.MessageButton({ label: 'Browse Channels', style: 'LINK', url: `discord://-/channels/${guild.id}/@channel-browser` }));
+        //// Should link to <id:customize>, availability unknown
+        // serverButtons.addComponents(new Discord.MessageButton({ label: 'Customise Community', style: 'LINK', url: `discord://-/channels/${guild.id}/@customize-community` }));
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
@@ -144,8 +139,8 @@ exports.run = async (client, interaction) => {
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
-            .addField("Owner:", `${guildOwner} (${guildOwner.id})`, false);
-        if (guild.rulesChannel) serverEmbed.addField("Rules:", rules.toString(), true);
+            .addField("Links:", serverLinks, false)
+            .addField("Owner:", guildOwner.toString(), true);
         if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
             if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
