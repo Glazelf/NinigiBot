@@ -27,17 +27,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         switch (pokemon.gender) {
             case "M":
                 pokemonGender = iconMale;
-                genderString = `100% ${iconMale}`;
+                genderString = `${iconMale} 100%`;
                 break;
             case "F":
                 pokemonGender = iconFemale;
-                genderString = `100% ${iconFemale}`;
+                genderString = `${iconFemale} 100%`;
                 break;
             case "N":
                 genderString = "Unknown";
                 break;
             default:
-                genderString = `${pokemon.genderRatio.M * 100}% ${iconMale}\n${pokemon.genderRatio.F * 100}% ${iconFemale}`;
+                genderString = `${iconMale} ${pokemon.genderRatio.M * 100}%\n${iconFemale} ${pokemon.genderRatio.F * 100}%`;
                 break;
         };
         // Typing
