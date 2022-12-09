@@ -53,9 +53,9 @@ exports.run = async (client, interaction) => {
 
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
-                    .setDescription(ability.desc)
-                    .addField("Introduced:", `Gen ${ability.gen}`, true);
+                    .setDescription(ability.desc);
                 if (abilityMatchesString.length > 0) pokemonEmbed.addField("Pokémon:", abilityMatchesString, false);
+                pokemonEmbed.addField("Introduced:", `Gen ${ability.gen}`, true);
                 break;
             // Items
             case "item":
