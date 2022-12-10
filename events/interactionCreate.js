@@ -340,14 +340,16 @@ module.exports = async (client, interaction) => {
                                 if (responseSchedules.data.data.currentFest) {
                                     choices.push({ name: "Splatfest Battle", value: "Splatfest Battle|festSchedules" });
                                 } else {
-                                    // Check what's available during Big Run (dec 10)
                                     choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
                                     choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
                                     choices.push({ name: "Anarchy Battle (Open)", value: "Anarchy Battle (Open)|bankaraSchedules|open" });
                                     choices.push({ name: "X Battle", value: "X Battle|xSchedules" }); // Check if available during Splatfest
                                 };
                                 // choices.push({ name: "League Battle", value: "League Battle|leagueSchedules" }); // Uncomment when League Battle is available, also check if available during Splatfest or Big Run
-                                choices.push({ name: "Salmon Run", value: "Salmon Run|coopGroupingSchedule" }); // Make name "Salmon Run (Big Run)" if Big Run is active, assuming all other modes are also available. If not, do something similar to Splatfests.
+                                let currentBigRun = responseSchedules.data.data.coopGroupingSchedule.bigRunSchedules.nodes[0];
+                                let salmonRunTitle = "Salmon Run";
+                                if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) salmonRunTitle += " (Big Run)";
+                                choices.push({ name: salmonRunTitle, value: "Salmon Run|coopGroupingSchedule" });
                                 break;
                         };
                         break;

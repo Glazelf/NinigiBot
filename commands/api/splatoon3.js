@@ -202,17 +202,24 @@ exports.run = async (client, interaction) => {
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
                 let scheduleData = responseSchedules.data.data[inputMode];
-                if (inputMode == salmonRunID) scheduleData = scheduleData.regularSchedules;
+                let currentBigRun = null;
+                if (inputMode == salmonRunID) {
+                    scheduleData = scheduleData.regularSchedules;
+                    currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
+                };
                 let scheduleMode = inputMode.split("Schedule")[0];
 
                 let currentTime = new Date().valueOf();
-                let currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
-                let upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
+                let currentMaps = null;
+                let upcomingMaps = null;
+                if (!currentBigRun) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
+                upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
                 let randomStageIndex = randomNumber(0, 1);
                 let modeSettings = `${scheduleMode}MatchSetting`;
-                if (!currentMaps[`${scheduleMode}MatchSetting`]) modeSettings = `${scheduleMode}MatchSettings`;
-                let entrySettings = currentMaps[modeSettings];
+                if (currentMaps && !currentMaps[`${scheduleMode}MatchSetting`]) modeSettings = `${scheduleMode}MatchSettings`;
+                let entrySettings = null;
+                if (currentMaps) entrySettings = currentMaps[modeSettings];
                 if (inputMode == anarchyID) entrySettings = entrySettings[modeIndex];
                 let currentMapsSettings = entrySettings;
 
@@ -225,7 +232,7 @@ exports.run = async (client, interaction) => {
                             .setDescription(`Monthly Gear: ${responseSalmonRunGear.data.data.coopResult.monthlyGear.name}`)
                             .setThumbnail(responseSalmonRunGear.data.data.coopResult.monthlyGear.image.url);
                     };
-                    // Add functionality for big run whenever that gets added
+                    if (currentBigRun) splat3Embed.setDescription(`⚠️ Big Run ⚠️\nStart: <t:${Date.parse(currentBigRun.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentBigRun.endTime) / 1000}:f>\nMap: **${currentBigRun.setting.coopStage.name}**.\nWeapons: Random`);
                     await scheduleData.nodes.forEach(async (entry) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
                         let weaponString = "";
@@ -234,9 +241,13 @@ exports.run = async (client, interaction) => {
                         });
                         splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}`, `${weaponString}`, true);
                     });
-                    splat3Embed
-                        .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
-                        .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
+                    if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) {
+                        splat3Embed.setImage(currentBigRun.setting.coopStage.image.url);
+                    } else {
+                        splat3Embed
+                            .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
+                            .setFooter({ text: `Image is from ${currentMaps.setting.coopStage.name}.` });
+                    };
                 } else if (inputMode == splatfestBattleID) {
                     // Splatfest
                     let splatfestScheduleDescription = `${currentFest.title}\n`;
