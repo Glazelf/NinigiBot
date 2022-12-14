@@ -11,7 +11,7 @@
     "cron": "^2.1.0",
     "discord.js": "^13.11.0",
     "discord.js-minesweeper": "^1.1.0",
-    "enmap": "^5.9.4",
+    "enmap": "^5.9.5",
     "forever": "^4.0.3",
     "forever-monitor": "^3.0.3",
     "minimist": "^1.2.7",
@@ -19,12 +19,12 @@
     "path": "^0.12.7",
     "pokemon-showdown": "^0.11.7",
     "pureimage": "^0.3.14",
-    "sequelize": "^6.26.0",
-    "sqlite3": "^5.1.2",
+    "sequelize": "^6.27.0",
+    "sqlite3": "^5.1.4",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
-    "mocha": "^10.1.0"
+    "mocha": "^10.2.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
