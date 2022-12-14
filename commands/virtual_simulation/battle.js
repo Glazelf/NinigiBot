@@ -76,7 +76,7 @@ exports.run = async (client, interaction) => {
         if (!trainer_answer) {
             return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] });
         } else if (trainer_answer.customId === 'no_battle') {
-            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, user rejected the battle.`, components: [] });
+            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
         };
         if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
         globalVars.battling.yes = true;
