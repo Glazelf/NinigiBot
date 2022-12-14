@@ -61,7 +61,7 @@ exports.run = async (client, interaction) => {
         const sent_message = await sendMessage({
             client: client,
             interaction: interaction,
-            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}`,
+            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`,
             components: answer_buttons,
             files: [messageFile]
         });
