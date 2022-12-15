@@ -202,31 +202,10 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
                 break;
             case "usage":
-                return sendMessage({ client: client, interaction: interaction, content: `The API used for this command (details: <https://www.smogon.com/forums/threads/usage-stats-api.3661849>) is currently down.\nPlease be patient while we look for and build towards an alternative!` });
-                // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
-                const getData = async url => {
-                    try {
-                        const response = await axios.get(url);
-                        JSONresponse = response.data;
-                        lastMonthRank = JSONresponse.rank;
-                        wasSuccessful = true;
-                    } catch (error) {
-                        wasSuccessful = false;
-                        if (error.response.status = "404") {
-                            if (error.response.statusText === "Service Unavailable") {
-                                text = "Unable to communicate with the usage stats API. Tell fingerprint it's not working: https://www.smogon.com/forums/members/fingerprint.510904/";
-                            } else {
-                                text = "No usage data found for " + pokemonName + ".";
-                            };
-                        } else {
-                            // console.log(error);
-                        };
-                    };
-                };
                 let formatInput = "gen9vgc2023series1";
                 let formatArg = interaction.options.getString("format");
                 if (formatArg) formatInput = formatArg;
-                // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
+                // There's a LOT of inconsistencies between the format names in Showdown and https://www.smogon.com/stats/
                 if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
 
                 let rating = 0;
@@ -248,64 +227,61 @@ exports.run = async (client, interaction) => {
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
                 if (yearArg > 2013 && yearArg <= year) year = yearArg; // Smogon stats only exist from 2014 onwards
-
-                let searchURL = `https://smogon-usage-stats.herokuapp.com/${year}/${stringMonth}/${formatInput}/${rating}/${pokemonName}`;
-                await getData(searchURL);
-
-                if (wasSuccessful) {
-                    // console.log(JSONresponse);
-                    if (Object.keys(JSONresponse.moves).length == 0) return sendMessage({ client: client, interaction: interaction, content: `${JSONresponse.pokemon} only has ${JSONresponse.usage} usage (${JSONresponse.raw} total uses) in ${JSONresponse.tier} (${stringMonth}/${year}) so there's not enough data to form an embed!` });
-
-                    let moveStats = "";
-                    for await (const [key, value] of Object.entries(JSONresponse.moves)) {
-                        moveStats = `${moveStats}\n${key}: ${value}`;
-                    };
-                    let itemStats = "";
-                    for await (const [key, value] of Object.entries(JSONresponse.items)) {
-                        itemStats = `${itemStats}\n${key}: ${value}`;
-                    };
-                    let abilityStats = "";
-                    for await (const [key, value] of Object.entries(JSONresponse.abilities)) {
-                        abilityStats = `${abilityStats}\n${key}: ${value}`;
-                    };
-                    let spreadStats = "";
-                    for await (const [key, value] of Object.entries(JSONresponse.spreads)) {
-                        if (typeof value == "object") {
-                            spreadStats = `${spreadStats}\n${key}:`;
-                            for await (const [key2, value2] of Object.entries(value)) {
-                                spreadStats = `${spreadStats}\n${key2}: ${value2}`;
-                            };
-                        } else {
-                            spreadStats = `${spreadStats}\n${key}: ${value}`;
-                        };
-                    };
-                    let teammateStats = "";
-                    for await (const [key, value] of Object.entries(JSONresponse.teammates)) {
-                        teammateStats = `${teammateStats}\n${key}: ${value}`;
-                    };
-
-                    let usageEmbed = new Discord.MessageEmbed()
-                        .setColor(globalVars.embedColor)
-                        .setAuthor({ name: `${JSONresponse.pokemon} ${JSONresponse.tier} ${rating}+ (${stringMonth}/${year})` })
-                        .setDescription(`#${JSONresponse.rank} | ${Math.round(JSONresponse.usage.replace("%", "") * 100) / 100}% | ${JSONresponse.raw} uses`)
-                        .addField("Moves:", moveStats, true)
-                        .addField("Items:", itemStats, true)
-                        .addField("Abilities:", abilityStats, true)
-                        .addField("Spreads:", spreadStats, true)
-                        .addField("Teammates:", teammateStats, true);
-
-                    return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
-                } else {
+                // Format URL and other variables
+                let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
+                let response = null;
+                let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
+                let usageButtons = new Discord.MessageActionRow()
+                    .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: searchURL }));
+                try {
+                    response = await axios.get(searchURL);
+                } catch (e) {
+                    console.log(e);
                     // Make generic embed to guide people to usage statistics :)
-                    let usageButtons = new Discord.MessageActionRow()
-                        .addComponents(new Discord.MessageButton({ label: 'Pikalytics', style: 'LINK', url: "https://pikalytics.com" }))
-                        .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                        .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt` }));
-
-                    let replyText = `Sorry! Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.\nHere are some usage resources you might find usefull instead:`;
+                    let replyText = failText;
                     return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
                 };
-                break;
+                let usageArray = response.data.replaceAll("+", "").replaceAll("--", "").replaceAll("|", "").replaceAll("\n", "").trim().split(`Checks and Counters`);
+                usageArray = usageArray.map(element => element.trim());
+                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName));
+                if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
+                // Data from generic usage stats
+                let totalBattleCount = 0;
+                let rawUsage = 0;
+                let usagePercentage = 0;
+                let usageRank = 0;
+                try {
+                    genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
+                    totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
+                    let genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                    let pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
+                    rawUsage = pokemonDataSplitLine[2].trim();
+                    usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
+                    usageRank = genericDataSplitPokemon[0].split("|");
+                    usageRank = usageRank[usageRank.length - 2].trim();
+                } catch (e) {
+                    // console.log(e);
+                };
+                // Specific data
+                let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n");
+                let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n");
+                let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll(":", " ");
+                let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n");
+                let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n");
+
+                let usageEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor)
+                    .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
+                    .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
+                    .addField("Moves:", movesString, true)
+                    .addField("Items:", itemsString, true)
+                    .addField("Abilities:", abilitiesString, true)
+                    .addField("Spreads:", spreadsString, true)
+                    .addField("Teammates:", teammatesString, true);
+
+                return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
         };
         // Bulbapedia button
         if (linkBulbapedia) {
