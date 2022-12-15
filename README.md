@@ -12,7 +12,7 @@ I wouldn't recommend it but you're welcome to try as long as you follow the lice
 This repository is mostly public for transparency and easy contributing.
 
 ## Credits
-[Pokémon Showdown](https://github.com/smogon/pokemon-showdown), [Smogon Usage API](https://www.smogon.com/forums/threads/usage-stats-api.3661849): Pokémon data.  
+[Pokémon Showdown](https://github.com/smogon/pokemon-showdown): Pokémon data.  
 [Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB), [MHRise-Database](https://github.com/RoboMechE/MHRise-Database), [MHW-Database](https://github.com/RoboMechE/MHW-Database), [MHGU-Database](https://github.com/RoboMechE/MHGU-Database): Monster Hunter data.  
 [Leanny](https://github.com/Leanny/leanny.github.io), [Splatoon3.ink](https://github.com/misenhower/splatoon3.ink): Splatoon 3 data.  
 [genshindevapi](https://github.com/genshindev/api): Genshin Impact data.  
