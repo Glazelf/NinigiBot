@@ -143,8 +143,8 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: `${gameName} Quests` }); // Game name instead of input because of capitalization
 
                 let totalQuests = questsTotal.length;
-                let pageLength = 10;
-                let currentPage = 1; // Load page 1 on command use (duh)
+                let pageLength = 25;
+                let currentPage = 1; // Load page 1 on command use
                 let questsPaged = questsTotal.reduce((questsTotal, item, index) => {
                     const chunkIndex = Math.floor(index / pageLength);
 
