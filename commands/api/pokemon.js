@@ -271,8 +271,6 @@ exports.run = async (client, interaction) => {
                 let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("  ", "");
                 let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n").replaceAll("  ", "");
 
-                console.log(`${abilitiesString.length} ${itemsString.length} ${spreadsString.length} ${movesString.length} ${teammatesString.length}`)
-
                 let usageEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
