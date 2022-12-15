@@ -265,11 +265,13 @@ exports.run = async (client, interaction) => {
                     // console.log(e);
                 };
                 // Specific data
-                let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n");
-                let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n");
-                let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll(":", " ");
-                let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n");
-                let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n");
+                let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n").replaceAll("  ", "");
+                let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n").replaceAll("  ", "");
+                let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll("  ", "").replaceAll(":", " ");
+                let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("  ", "");
+                let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n").replaceAll("  ", "");
+
+                console.log(`${abilitiesString.length} ${itemsString.length} ${spreadsString.length} ${movesString.length} ${teammatesString.length}`)
 
                 let usageEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
@@ -280,7 +282,6 @@ exports.run = async (client, interaction) => {
                     .addField("Abilities:", abilitiesString, true)
                     .addField("Spreads:", spreadsString, true)
                     .addField("Teammates:", teammatesString, true);
-
                 return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
         };
         // Bulbapedia button
