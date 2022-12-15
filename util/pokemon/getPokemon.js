@@ -87,6 +87,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         immunities = immunities.join(", ");
 
         var pokemonID = leadingZeros(pokemon.num.toString());
+        pokemonIDPMD = pokemonID;
+        if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
         // Forms
         const primalString = "-Primal";
         const totemString = "-Totem";
@@ -131,8 +133,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // Game render
         let renderGame = `https://www.serebii.net/swordshield/pokemon/${pokemonID}.png`;
         // PMD portraits
-        let pokemonIDLength4 = (pokemonID.length < 4 ? '0' : '') + pokemonID; // Add leading zeroes
-        let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDLength4}/Normal.png`;
+        let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDPMD}/Normal.png`;
         let PMDPortraitExists = imageExists(PMDPortrait);
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-${recentGame.toLowerCase()}/icon/${pokemonID}.png`;
@@ -401,7 +402,7 @@ BST: ${pokemon.bst}`, false)
             return StatText;
         };
         function leadingZeros(str) {
-            for (var i = str.length; i < 3; i++) {
+            for (var i = str.length; i < 4; i++) {
                 str = "0" + str;
             };
             return str;
