@@ -132,7 +132,7 @@ exports.run = async (client, interaction) => {
                 if (MHST2Titles.includes(gameName)) gameName = "Monster Hunter Stories 2";
 
                 // Add quests matching game title to an array
-                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
+                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
                 if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
 
                 // Sort by difficulty
@@ -140,7 +140,7 @@ exports.run = async (client, interaction) => {
 
                 mhEmbed
                     .setColor(globalVars.embedColor)
-                    .setAuthor({ name: `${gameInput} Quests` }); // Game name instead of input because of capitalization
+                    .setAuthor({ name: `${gameName} Quests` }); // Game name instead of input because of capitalization
 
                 let totalQuests = questsTotal.length;
                 let pageLength = 10;
