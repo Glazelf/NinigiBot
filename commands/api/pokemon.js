@@ -202,6 +202,7 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
                 break;
             case "usage":
+                return sendMessage({ client: client, interaction: interaction, content: `The API used for this command (details: <https://www.smogon.com/forums/threads/usage-stats-api.3661849>) is currently down.\nPlease be patient while we look for and build towards an alternative!` });
                 // Initialize function, Usage stats API: https://www.smogon.com/forums/threads/usage-stats-api.3661849 (Some of this code is inspired by: https://github.com/DaWoblefet/BoTTT-III)
                 const getData = async url => {
                     try {
@@ -222,7 +223,7 @@ exports.run = async (client, interaction) => {
                         };
                     };
                 };
-                let formatInput = "gen8vgc2022";
+                let formatInput = "gen9vgc2023series1";
                 let formatArg = interaction.options.getString("format");
                 if (formatArg) formatInput = formatArg;
                 // There's a LOT of inconsistencies between the format names in pokemon-showdown and https://www.smogon.com/stats/
