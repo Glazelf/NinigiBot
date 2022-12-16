@@ -87,8 +87,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         immunities = immunities.join(", ");
 
         var pokemonID = leadingZeros(pokemon.num.toString());
-        pokemonIDPMD = pokemonID;
-        if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
         // Forms
         const primalString = "-Primal";
         const totemString = "-Totem";
@@ -114,6 +112,9 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // TODO: add a bunch of meaningless forms like Unown and Vivillon
         await correctValue(correctionID, pokemon.name, pokemonID);
         if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
+        // 3 digit IDs for now
+        pokemonIDPMD = pokemonID;
+        if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
 
         // Metrics
         let metricsString = "";
