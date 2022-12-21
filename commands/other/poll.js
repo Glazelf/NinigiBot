@@ -24,10 +24,10 @@ exports.run = async (client, interaction) => {
             .setAuthor({ name: `Poll` })
             .setDescription(prompt)
             .addField(`1️⃣: ${option1}`, "0%", false)
-            .addField(`2️⃣: ${option2}`, "0%", false)
-            .addField(`3️⃣: ${option3}`, "0%", false)
-            .addField(`4️⃣: ${option4}`, "0%", false)
-            .addField(`5️⃣: ${option5}`, "0%", false);
+            .addField(`2️⃣: ${option2}`, "0%", false);
+        if (option3) pollEmbed.addField(`3️⃣: ${option3}`, "0%", false);
+        if (option4) pollEmbed.addField(`4️⃣: ${option4}`, "0%", false);
+        if (option5) pollEmbed.addField(`5️⃣: ${option5}`, "0%", false);
         return sendMessage({ client: client, interaction: interaction, embeds: pollEmbed });
 
     } catch (e) {
