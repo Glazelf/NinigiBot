@@ -87,6 +87,7 @@ exports.run = async (client, interaction) => {
                 let description = move.desc;
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
+                if (move.isNonstandard == "Past") description += "\nThis move is not usable in Gen 9.";
 
                 let type = getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
                 let category = move.category;
