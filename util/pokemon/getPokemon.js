@@ -9,8 +9,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const isAdmin = require('../isAdmin');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
-        const typechart = require('../../node_modules/pokemon-showdown/.data-dist/typechart.js').TypeChart;
-        const learnsets = require('../../node_modules/pokemon-showdown/.data-dist/learnsets.js').Learnsets;
+        const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
+        const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const getTypeEmotes = require('./getTypeEmotes');
         // Common settings
         if (!pokemon) return;
