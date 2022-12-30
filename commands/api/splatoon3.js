@@ -429,35 +429,33 @@ exports.run = async (client, interaction) => {
                 };
                 let matchData = `${replayStage}\n${replayResult}\n${replayTimestamp}`;
                 // Player data
-                let replayPlayerName = `Player: ${replayData.player.name}#${replayData.player.nameId} (${replayData.player.byname})`;
-                let replayPlayerWeapon = `Weapon: ${replayData.player.weapon.name}`;
-                let replayPlayerHead = `Head: ${replayData.player.headGear.name}`;
-                let replayPlayerClothing = `Clothing: ${replayData.player.clothingGear.name}`;
-                let replayPlayerShoes = `Shoes: ${replayData.player.shoesGear.name}`;
-                let playerData = "";
-                playerData += `${replayPlayerName}\n${replayPlayerWeapon}\n`;
-                if (replayIsTurfWar) playerData += `Points: ${replayData.myTeam.result.paintPoint}\n`;
-                playerData += `${replayPlayerHead}\n${replayPlayerClothing}\n${replayPlayerShoes}`;
+                let playerData = [];
+                playerData.push(`Player: ${replayData.player.name}#${replayData.player.nameId} (${replayData.player.byname})`);
+                playerData.push(`Weapon: ${replayData.player.weapon.name}`);
+                playerData.push(`Head: ${replayData.player.headGear.name}`);
+                playerData.push(`Clothing: ${replayData.player.clothingGear.name}`);
+                playerData.push(`Shoes: ${replayData.player.shoesGear.name}`);
+                if (replayIsTurfWar) playerData.push(`Points: ${replayData.myTeam.result.paintPoint}`);
                 // Skills
-                let headSkills = `**${replayData.player.headGear.primaryGearPower.name}**`;
-                replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills += `\n${power.name}` });
-                let clothingSkills = `**${replayData.player.clothingGear.primaryGearPower.name}**`;
-                replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills += `\n${power.name}` });
-                let shoesSkills = `**${replayData.player.shoesGear.primaryGearPower.name}**`;
-                replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills += `\n${power.name}` });
+                let headSkills = [`**${replayData.player.headGear.primaryGearPower.name}**`];
+                replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills.push(power.name) });
+                let clothingSkills = [`**${replayData.player.clothingGear.primaryGearPower.name}**`];
+                replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills.push(power.name) });
+                let shoesSkills = [`**${replayData.player.shoesGear.primaryGearPower.name}**`];
+                replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills.push(power.name) });
                 // Awards
-                let replayAwards = "";
-                replayData.awards.forEach(award => { replayAwards += `${award.name}\n` });
+                let replayAwards = [];
+                replayData.awards.forEach(award => { replayAwards.push(award.name) });
 
                 splat3Embed
                     .setAuthor({ name: replayMode })
                     .setThumbnail(replayData.player.weapon.image.url)
                     .setDescription(matchData)
-                    .addField("Player Data:", playerData, false)
-                    .addField(`${replayData.player.headGear.name} Skills:`, headSkills, false)
-                    .addField(`${replayData.player.clothingGear.name} Skills:`, clothingSkills, false)
-                    .addField(`${replayData.player.shoesGear.name} Skills:`, shoesSkills, false);
-                if (replayAwards.length > 0) splat3Embed.addField("Awards:", replayAwards, false);
+                    .addField("Player Data:", playerData.join("\n"), false)
+                    .addField(`${replayData.player.headGear.name} Skills:`, headSkills.join("\n"), false)
+                    .addField(`${replayData.player.clothingGear.name} Skills:`, clothingSkills.join("\n"), false)
+                    .addField(`${replayData.player.shoesGear.name} Skills:`, shoesSkills.join("\n"), false);
+                if (replayAwards.length > 0) splat3Embed.addField("Awards:", replayAwards.join("\n"), false);
                 splat3Embed.setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` });
                 break;
             case "splashtag-random":
