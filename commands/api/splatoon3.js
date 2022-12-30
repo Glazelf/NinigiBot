@@ -43,6 +43,7 @@ exports.run = async (client, interaction) => {
         let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
         let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
+        let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup.
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
@@ -408,6 +409,57 @@ exports.run = async (client, interaction) => {
                     .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
                 if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here when you can choose a team ingame.");
                 break;
+            case "replay":
+                let replayCode = interaction.options.getString("code");
+                replayCode = replayCode.replace("-", "");
+                let replayResponse = await axios.get(`${replayAPI}${replayCode.toUpperCase()}`);
+                if (replayResponse.status !== 200) return interaction.reply({ content: "Error occurred getting that replay. Make sure the code is correct." });
+                let replayData = replayResponse.data.replay.historyDetail;
+                let replayIsTurfWar = replayData.vsRule.name == "Turf War";
+                // Match data
+                let replayTimestamp = `Timestamp: <t:${Date.parse(replayData.playedTime) / 1000}:f>`;
+                let replayMode = `${replayData.vsRule.name} Replay`;
+                if (!replayIsTurfWar) replayMode += ` (${replayData.vsMode.name})`;
+                let replayStage = `Stage: ${replayData.vsStage.name}`;
+                let replayResult = `Result: ${replayData.judgement}`;
+                if (replayData.knockout !== "NEITHER") {
+                    replayResult += ` (KNOCKOUT)`;
+                } else if (replayData.myTeam.result.score) {
+                    replayResult += ` (83 points)`;
+                };
+                let matchData = `${replayStage}\n${replayResult}\n${replayTimestamp}`;
+                // Player data
+                let replayPlayerName = `Player: ${replayData.player.name}#${replayData.player.nameId} (${replayData.player.byname})`;
+                let replayPlayerWeapon = `Weapon: ${replayData.player.weapon.name}`;
+                let replayPlayerHead = `Head: ${replayData.player.headGear.name}`;
+                let replayPlayerClothing = `Clothing: ${replayData.player.clothingGear.name}`;
+                let replayPlayerShoes = `Shoes: ${replayData.player.shoesGear.name}`;
+                let playerData = "";
+                playerData += `${replayPlayerName}\n${replayPlayerWeapon}\n`;
+                if (replayIsTurfWar) playerData += `Points: ${replayData.myTeam.result.paintPoint}\n`;
+                playerData += `${replayPlayerHead}\n${replayPlayerClothing}\n${replayPlayerShoes}`;
+                // Skills
+                let headSkills = `**${replayData.player.headGear.primaryGearPower.name}**`;
+                replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills += `\n${power.name}` });
+                let clothingSkills = `**${replayData.player.clothingGear.primaryGearPower.name}**`;
+                replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills += `\n${power.name}` });
+                let shoesSkills = `**${replayData.player.shoesGear.primaryGearPower.name}**`;
+                replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills += `\n${power.name}` });
+                // Awards
+                let replayAwards = "";
+                replayData.awards.forEach(award => { replayAwards += `${award.name}\n` });
+
+                splat3Embed
+                    .setAuthor({ name: replayMode })
+                    .setThumbnail(replayData.player.weapon.image.url)
+                    .setDescription(matchData)
+                    .addField("Player Data:", playerData, false)
+                    .addField(`${replayData.player.headGear.name} Skills:`, headSkills, false)
+                    .addField(`${replayData.player.clothingGear.name} Skills:`, clothingSkills, false)
+                    .addField(`${replayData.player.shoesGear.name} Skills:`, shoesSkills, false);
+                if (replayAwards.length > 0) splat3Embed.addField("Awards:", replayAwards, false);
+                splat3Embed.setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` });
+                break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
                 if (!userTitle) userTitle = interaction.user.username;
@@ -569,6 +621,20 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get all Splatfests data.",
         options: [{
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "replay",
+        type: "SUB_COMMAND",
+        description: "Get a replay.",
+        options: [{
+            name: "code",
+            type: "STRING",
+            description: "Specify a replay code.",
+            required: true
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether the reply will be private."
