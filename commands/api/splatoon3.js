@@ -371,24 +371,24 @@ exports.run = async (client, interaction) => {
                         if (splatfest.state == "CLOSED") {
                             // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
                             if (team.result && team.result.isVoteRatioTop) {
-                                splatfestResultsVote += `**${Math.round(team.result.voteRatio * 100) / 100}%**`;
+                                splatfestResultsVote += `**${Math.round(team.result.voteRatio * 10000) / 100}%**`;
                             } else {
-                                splatfestResultsVote += `${Math.round(team.result.voteRatio * 100) / 100}%`;
+                                splatfestResultsVote += `${Math.round(team.result.voteRatio * 10000) / 100}%`;
                             };
                             if (team.result && team.result.isHoragaiRatioTop) {
-                                splatfestResultsHoragai += `**${Math.round(team.result.horagaiRatio * 100) / 100}%**`;
+                                splatfestResultsHoragai += `**${Math.round(team.result.horagaiRatio * 10000) / 100}%**`;
                             } else {
-                                splatfestResultsHoragai += `${Math.round(team.result.horagaiRatio * 100) / 100}%`;
+                                splatfestResultsHoragai += `${Math.round(team.result.horagaiRatio * 10000) / 100}%`;
                             };
                             if (team.result && team.result.isRegularContributionRatioTop) {
-                                splatfestResultsRegular += `**${Math.round(team.result.regularContributionRatio * 100) / 100}%**`;
+                                splatfestResultsRegular += `**${Math.round(team.result.regularContributionRatio * 10000) / 100}%**`;
                             } else {
-                                splatfestResultsRegular += `${Math.round(team.result.regularContributionRatio * 100) / 100}%`;
+                                splatfestResultsRegular += `${Math.round(team.result.regularContributionRatio * 10000) / 100}%`;
                             };
                             if (team.result && team.result.isChallengeContributionRatioTop) {
-                                splatfestResultsChallenge += `**${Math.round(team.result.challengeContributionRatio * 100) / 100}%**`;
+                                splatfestResultsChallenge += `**${Math.round(team.result.challengeContributionRatio * 10000) / 100}%**`;
                             } else {
-                                splatfestResultsChallenge += `${Math.round(team.result.challengeContributionRatio * 100) / 100}%`;
+                                splatfestResultsChallenge += `${Math.round(team.result.challengeContributionRatio * 10000) / 100}%`;
                             };
                         };
                         if (team.role == "DEFENSE") midTermWinner = team.teamName;
