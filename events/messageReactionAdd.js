@@ -37,12 +37,14 @@ module.exports = async (client, messageReaction) => {
         };
 
         let isReply = false;
-        let replyMessage
+        let replyMessage = null;
+        let replyString = "";
         if (targetMessage.reference) isReply = true;
-
         if (isReply) {
             try {
                 replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
+                if (replyMessage.content) replyString += `"${replyMessage.content}"`;
+                if (replyMessage.author) replyString += `\n-${replyMessage.author}`;
             } catch (e) {
                 isReply = false;
             };
@@ -56,7 +58,7 @@ module.exports = async (client, messageReaction) => {
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)
             .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
-        if (isReply && replyMessage) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+        if (isReply && replyString.length > 0) starEmbed.addField(`Replying to:`, replyString);
         starEmbed
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.tag })
