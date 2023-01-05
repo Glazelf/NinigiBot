@@ -221,7 +221,10 @@ exports.run = async (client, interaction) => {
                 const date = new Date();
                 let month = date.getMonth();
                 let year = date.getFullYear();
-                if (month == 0) month = 12;
+                if (month == 0) {
+                    month = 12;
+                    year = year - 1;
+                };
                 let stringCurrentMonth = month;
                 if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
                 if (monthArg < 13 && monthArg > 0) month = monthArg;
