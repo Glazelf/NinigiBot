@@ -241,49 +241,71 @@ exports.run = async (client, interaction) => {
                     .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: searchURL }));
                 try {
                     response = await axios.get(searchURL);
+                    genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                     // Make generic embed to guide people to usage statistics :)
                     let replyText = failText;
                     return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
                 };
-                let usageArray = response.data.replaceAll("+", "").replaceAll("--", "").replaceAll("|", "").replaceAll("\n", "").trim().split(`Checks and Counters`);
+                // Filter, split and trim pokemon data
+                let usageArray = response.data.replaceAll("|", "").replaceAll("\n", "").trim().split(`----------------------------------------+  +----------------------------------------+`);
+                await Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replaceAll("+", "").replaceAll("--", "") });
                 usageArray = usageArray.map(element => element.trim());
-                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName));
-                if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
-                // Data from generic usage stats
-                let totalBattleCount = 0;
+
+                // Variables for generic usage data
+                let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
                 let rawUsage = 0;
                 let usagePercentage = 0;
                 let usageRank = 0;
-                try {
-                    genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
-                    totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
-                    let genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
-                    let pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
+                let genericDataSplitPokemon = null;
+                let pokemonDataSplitLine = null;
+                let usageEmbed = new Discord.MessageEmbed()
+                    .setColor(globalVars.embedColor);
+                if (pokemonName) {
+                    let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName));
+                    if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
+                    // Data from generic usage page
+                    genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                    pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                     rawUsage = pokemonDataSplitLine[2].trim();
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
                     usageRank = genericDataSplitPokemon[0].split("|");
                     usageRank = usageRank[usageRank.length - 2].trim();
-                } catch (e) {
-                    // console.log(e);
+                    // Specific data
+                    let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "").replaceAll(":", " ");
+                    let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    usageEmbed
+                        .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
+                        .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
+                        .addField("Moves:", movesString, true)
+                        .addField("Items:", itemsString, true)
+                        .addField("Abilities:", abilitiesString, true)
+                        .addField("Spreads:", spreadsString, true)
+                        .addField("Teammates:", teammatesString, true);
+                } else {
+                    // Format generic data display
+                    let usageList = [];
+                    let usageListIndex = 1;
+                    await usageArray.forEach(element => {
+                        pokemonName = element.split("Raw count")[0].trim();
+                        genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                        pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
+                        usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
+                        usageList.push(`${usageListIndex}.${pokemonName} ${usagePercentage}`); // Percentage determination copied from generic usage data parsing for specific pokemon
+                        usageListIndex++;
+                    });
+                    let usageListPart1 = [];
+                    let usageListPart2 = [];
+                    await usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
+                    usageEmbed
+                        .setAuthor({ name: `Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})` })
+                        .addField("1-50", usageListPart1.join("\n"), true)
+                        .addField("51-100", usageListPart2.join("\n"), true)
                 };
-                // Specific data
-                let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "").replaceAll(":", " ");
-                let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-
-                let usageEmbed = new Discord.MessageEmbed()
-                    .setColor(globalVars.embedColor)
-                    .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
-                    .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
-                    .addField("Moves:", movesString, true)
-                    .addField("Items:", itemsString, true)
-                    .addField("Abilities:", abilitiesString, true)
-                    .addField("Spreads:", spreadsString, true)
-                    .addField("Teammates:", teammatesString, true);
                 return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
         };
         // Bulbapedia button
@@ -408,17 +430,16 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Shows Smogon usage data.",
         options: [{
-            name: "pokemon",
-            type: "STRING",
-            description: "Pokémon to get data on.",
-            autocomplete: true,
-            required: true
-        }, {
             name: "format",
             type: "STRING",
             description: "Format to get data from.",
             autocomplete: true,
             required: true
+        }, {
+            name: "pokemon",
+            type: "STRING",
+            description: "Pokémon to get data on.",
+            autocomplete: true
         }, {
             name: "month",
             type: "INTEGER",
