@@ -227,10 +227,10 @@ exports.run = async (client, interaction) => {
                 };
                 let stringCurrentMonth = month;
                 if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
-                if (monthArg < 13 && monthArg > 0) month = monthArg;
+                if (monthArg <= 12 && monthArg > 0) month = monthArg;
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
-                if (yearArg > 2013 && yearArg <= year) year = yearArg; // Smogon stats only exist from 2014 onwards
+                if (yearArg >= 2014 && yearArg <= year) year = yearArg; // Smogon stats only exist from 2014 onwards
                 // Format URL and other variables
                 let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
                 let response = null;
