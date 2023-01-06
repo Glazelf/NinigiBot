@@ -277,7 +277,8 @@ exports.run = async (client, interaction) => {
                     let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
                     let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "").replaceAll(":", " ");
                     let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                    let teammatesString = usagePokemonString.split("Teammates")[1].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
+                    let countersString = usagePokemonString.split("Checks and Counters")[1].trim().replaceAll("out)", "out)\n").replaceAll("   ", "");
                     usageEmbed
                         .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
@@ -286,6 +287,7 @@ exports.run = async (client, interaction) => {
                         .addField("Abilities:", abilitiesString, true)
                         .addField("Spreads:", spreadsString, true)
                         .addField("Teammates:", teammatesString, true);
+                    if (countersString.length > 0) usageEmbed.addField("Checks and Counters:", countersString, true);
                 } else {
                     // Format generic data display
                     let usageList = [];
