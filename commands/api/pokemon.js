@@ -272,13 +272,13 @@ exports.run = async (client, interaction) => {
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
                     usageRank = genericDataSplitPokemon[0].split("|");
                     usageRank = usageRank[usageRank.length - 2].trim();
-                    // Specific data
-                    let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                    let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                    let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "").replaceAll(":", " ");
-                    let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                    let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].trim().replaceAll("%", "%\n").replaceAll("   ", "");
-                    let countersString = usagePokemonString.split("Checks and Counters")[1].trim().replaceAll("out)", "out)\n").replaceAll("   ", "");
+                    // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
+                    let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
+                    let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
+                    let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "").replaceAll(":", " ");
+                    let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
+                    let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
+                    let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replaceAll("   ", "");
                     usageEmbed
                         .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
@@ -294,10 +294,11 @@ exports.run = async (client, interaction) => {
                     let usageListIndex = 1;
                     await usageArray.forEach(element => {
                         pokemonName = element.split("Raw count")[0].trim();
+                        // Percentage determination copied from generic usage data parsing for specific pokemon
                         genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
                         pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                         usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
-                        usageList.push(`${usageListIndex}.${pokemonName} ${usagePercentage}`); // Percentage determination copied from generic usage data parsing for specific pokemon
+                        usageList.push(`${usageListIndex}.${pokemonName} ${usagePercentage}`);
                         usageListIndex++;
                     });
                     let usageListPart1 = [];
