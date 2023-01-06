@@ -57,12 +57,12 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             if (typeName[0] == typeName[0].toLowerCase()) continue; // Skip status effects like paralysis and poison
             if (matchup == 1) typeEffects[typeName] += 1;
             if (matchup == 2) typeEffects[typeName] += -1;
-            if (matchup == 3) typeEffects[typeName] = -3;
+            if (matchup == 3) typeEffects[typeName] = -5;
             if (!pokemon.types[1]) {
                 typeEffectString = getTypeEmotes({ type1: typeName, emotes: emotesAllowed });
                 if (typeEffects[typeName] == 1) superEffectives.push(typeEffectString);
                 if (typeEffects[typeName] == -1) resistances.push(typeEffectString);
-                if (typeEffects[typeName] == -3) immunities.push(typeEffectString);
+                if (typeEffects[typeName] <= -3) immunities.push(typeEffectString);
             };
         };
         if (pokemon.types[1]) {
@@ -70,7 +70,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 if (typeName[0] == typeName[0].toLowerCase()) continue; // Skip status effects like paralysis and poison
                 if (matchup == 1) typeEffects[typeName] += 1;
                 if (matchup == 2) typeEffects[typeName] += -1;
-                if (matchup == 3) typeEffects[typeName] = -3;
+                if (matchup == 3) typeEffects[typeName] = -5;
                 // Should make the results functionality prettier sometime
                 if (typeEffects[typeName] == 2 || typeEffects[typeName] == -2) {
                     typeEffectString = getTypeEmotes({ type1: typeName, bold: true, emotes: emotesAllowed });
@@ -79,7 +79,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 };
                 if (typeEffects[typeName] == 1 || typeEffects[typeName] == 2) superEffectives.push(typeEffectString);
                 if (typeEffects[typeName] == -1 || typeEffects[typeName] == -2) resistances.push(typeEffectString);
-                if (typeEffects[typeName] == -3) immunities.push(typeEffectString);
+                if (typeEffects[typeName] <= -3) immunities.push(typeEffectString);
             };
         };
         superEffectives = superEffectives.join(", ");
