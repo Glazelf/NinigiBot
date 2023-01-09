@@ -353,7 +353,7 @@ exports.run = async (client, interaction) => {
                     let splatfestResultsRegular = "Open Battles: ";
                     let splatfestResultsChallenge = "Pro Battles: ";
                     let splatfestResultsTricolor = "Tricolor Battles: ";
-                    let splatfestResultsWinner = "**Winner: {1} ({2})**";
+                    let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
                     await splatfest.teams.forEach(async (team) => {
                         if (!team.role) pointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 }; // Check if new tricolor system is in use
                         if (splatfestTeamIndex !== 0) {
@@ -369,13 +369,12 @@ exports.run = async (client, interaction) => {
                         if (team.result && team.result.isWinner) {
                             splatfestDescription += `**${team.teamName}**`;
                             splatfestResultsTitleTeams += `**${team.teamName}**`;
-
                             if (team.result.isVoteRatioTop) splatfestWinnerPoints += pointValues.vote;
                             if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += pointValues.horagai;
-                            if (team.result.isRegularRatioTop) splatfestWinnerPoints += pointValues.regular;
-                            if (team.result.isChallengeRatioTop) splatfestWinnerPoints += pointValues.challenge;
-                            if (team.result.isTricolorRatioTop) splatfestWinnerPoints += pointValues.tricolor;
-                            splatfestResultsWinner = splatfestResultsWinner.replace("{1}", `Team ${team.teamName}`).replace("{2}", splatfestWinnerPoints);;
+                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += pointValues.regular;
+                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += pointValues.challenge;
+                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += pointValues.tricolor;
+                            splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
                         } else {
                             splatfestDescription += team.teamName;
                             splatfestResultsTitleTeams += team.teamName;
@@ -399,7 +398,7 @@ exports.run = async (client, interaction) => {
                             };
                             if (team.result && team.result.challengeContributionRatio) {
                                 let proBattleResultString = `${Math.round(team.result.challengeContributionRatio * 10000) / 100}%`;
-                                if (team.result.isChallengeContributionRatioTop) splatfestResultsChallenge = `**${proBattleResultString}**`;
+                                if (team.result.isChallengeContributionRatioTop) proBattleResultString = `**${proBattleResultString}**`;
                                 splatfestResultsChallenge += proBattleResultString;
                             };
                             if (team.result && team.result.tricolorContributionRatio) {
