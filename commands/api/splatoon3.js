@@ -322,7 +322,6 @@ exports.run = async (client, interaction) => {
                 let isUpcomingOrOngoingSplatfest = false;
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
-                    splatfestTeamIndex = 0;
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
@@ -354,6 +353,7 @@ exports.run = async (client, interaction) => {
                     let splatfestResultsChallenge = "Pro Battles: ";
                     let splatfestResultsTricolor = "Tricolor Battles: ";
                     let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
+                    splatfestTeamIndex = 0;
                     await splatfest.teams.forEach(async (team) => {
                         if (!team.role) pointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 }; // Check if new tricolor system is in use
                         if (splatfestTeamIndex !== 0) {
