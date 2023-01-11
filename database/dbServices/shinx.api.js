@@ -22,7 +22,6 @@ module.exports = {
         let user = await User.findByPk(param = id, options = {
             attributes: attributes
         });
-
         if (!user) user = await User.create({ user_id: id });
         return user;
     },
@@ -63,7 +62,6 @@ module.exports = {
         const trophy = await EventTrophy.findOne(
             { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
         );
-
         return (await user.hasEventTrophy(trophy))
     },
     async addEventTrophy(user_id, trophy_id) {
@@ -72,7 +70,6 @@ module.exports = {
         const trophy = await EventTrophy.findOne(
             { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
         );
-
         if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
     },
     async feedShinx(id) {

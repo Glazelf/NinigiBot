@@ -1,6 +1,4 @@
 module.exports = (client, member) => {
-    // Import globals
-    let globalVars = require('../events/ready');
     try {
         if (!member || !member.guild || !member.permissions) return false;
         if (member.guild.ownerID == member.id) {

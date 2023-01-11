@@ -5,7 +5,7 @@ module.exports = (str) => {
     str = str.replace("-s-", "'s-")
     let splitStr = str;
     if (!exceptionsLowercase.includes(str)) splitStr = str.split('-');
-    if (typeof splitStr != 'array' && typeof splitStr != 'object') splitStr = str.split(" "); // experimental catch for monster hunter usage?
+    if (typeof splitStr != 'object') splitStr = str.split(" "); // experimental catch for monster hunter usage?
 
     if (str.toLowerCase() == "rks-system") {
         splitStr = "RKS System";
@@ -15,11 +15,10 @@ module.exports = (str) => {
             splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
         };
     };
-
     // Return the joined string
     let returnStr = splitStr;
 
-    if (splitStr.length == 1 && (typeof splitStr == 'array' || typeof splitStr == 'object')) returnStr = splitStr[0];
+    if (splitStr.length == 1 && typeof splitStr == 'object') returnStr = splitStr[0];
     returnStr = splitStr.join(' ');
     let dashException = returnStr.replaceAll(" ", "-");
     if (exceptions.includes(dashException.toLowerCase())) returnStr = dashException;

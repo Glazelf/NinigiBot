@@ -4,6 +4,6 @@ module.exports = (birthday) => {
 };
 
 const parseMonth = (month) => {
-    const months = [, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    return months[parseInt(month)];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[parseInt(month) - 1];
 };

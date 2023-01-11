@@ -1,9 +1,7 @@
 const Sequelize = require('sequelize');
 const { Op, fn, where, col } = require('sequelize');
 const { userdata } = require('../dbConnection/dbConnection');
-
 const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
-
 const DAILY_TROPHIES = 5;
 
 module.exports = {
@@ -125,7 +123,7 @@ module.exports = {
                     where: where(fn('lower', col('trophy_id')), name_t),
                 }
             );
-            if (trophy) { return true }
+            if (trophy) { return true };
         }
         return false;
     },

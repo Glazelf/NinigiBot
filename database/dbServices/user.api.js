@@ -5,7 +5,6 @@ const { Op } = require('sequelize');
 module.exports = {
     async getUser(id, attributes = null) {
         let user = await User.findByPk(param = id, options = {
-
             attributes: attributes
         });
 
@@ -17,7 +16,6 @@ module.exports = {
         return users;
     },
     async bulkDeleteUsers(id_arr) {
-        
         await userdata.models.Shinx.destroy({
             where: { user_id: id_arr },
         });

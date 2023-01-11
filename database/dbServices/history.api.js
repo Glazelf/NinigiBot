@@ -1,17 +1,13 @@
 const Sequelize = require('sequelize');
 const { Op, fn, where, col } = require('sequelize');
 const { userdata } = require('../dbConnection/dbConnection');
-
 const { User, Shinx, ShopTrophy, EventTrophy, History } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
-
 const DAILY_TROPHIES = 5;
-
 module.exports = {
     async getUser(id, attributes = null) {
         let user = await User.findByPk(param = id, options = {
             attributes: attributes
         });
-
         if (!user) {
             user = await User.create({ user_id: id });
         };
@@ -19,10 +15,8 @@ module.exports = {
     },
     async getHistory(id, attributes = null) {
         let history = await History.findByPk(param = id, options = {
-
             attributes: attributes
         });
-
         if (!history) {
             await this.getUser(id);
             history = await History.create({ user_id: id });
@@ -47,7 +41,7 @@ module.exports = {
             order: [
                 [attribute, "DESC"],
             ],
-        })
+        });
         if (instances.length == 0) return;
         await userdata.models.EventTrophyUser.destroy({
             where: { EventTrophyTrophyId: trophy_id }
@@ -57,7 +51,6 @@ module.exports = {
             EventTrophyTrophyId: trophy_id
         });
     },
-
     async checkEvents() {
         const events = [
             this.checkEvent(User, 'Capitalism Addict', 'money'),

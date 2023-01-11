@@ -1,10 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-
     const Trophy = sequelize.define('shopTrophy', {
-		trophy_id: {
-			type: DataTypes.STRING,
-			primaryKey: true,
-		},
+        trophy_id: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+        },
         icon: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -17,13 +16,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        
+
     }, {
         timestamps: false,
     });
-    // Class Methods
-
-    // Instance Methods
-    
     return Trophy;
 };
