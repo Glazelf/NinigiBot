@@ -12,8 +12,8 @@ exports.run = async (client, interaction) => {
         // Language JSON
         const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
-        let version = 200;
-        let versionString = `Splatoon 3 v${version.toString().split("").join(".")}`;
+        let version = "210";
+        let versionSplit = `Splatoon 3 v${version.split("").join(".")}`;
         const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoClothes.json`);
         const GearInfoHeadJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoHead.json`);
         const GearInfoShoesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoShoes.json`);
@@ -80,7 +80,7 @@ exports.run = async (client, interaction) => {
                     .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
                     .addField("Obtain Method:", ObtainMethod, true)
                     .setImage(clothingImage)
-                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
+                    .setFooter({ text: `${versionSplit} | *Main abilities can differ because of SplatNet or Murch.` });
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
@@ -119,7 +119,7 @@ exports.run = async (client, interaction) => {
                     .addField(shopTitle, `${levelString} ${weaponObject.ShopUnlockRank}+`, true)
                     .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage)
-                    .setFooter(versionString);
+                    .setFooter(versionSplit);
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -146,7 +146,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
                     .addField(weaponListTitle, allSubweaponMatchesNames, false)
-                    .setFooter(versionString);
+                    .setFooter(versionSplit);
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -173,7 +173,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false)
-                    .setFooter(versionString);
+                    .setFooter(versionSplit);
                 break;
             case "schedule":
                 let inputData = interaction.options.getString("mode");
