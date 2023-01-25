@@ -55,6 +55,7 @@ exports.run = async (client, interaction) => {
                     .setDescription(elementalMatchup)
                     .addField("Stats:", `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, true)
                     .addField("Skills:", personaSkills, true)
+                    .addField("Item:", personaObject.item, true)
                     .setImage(personaImage);
                 break;
             case "skill":
