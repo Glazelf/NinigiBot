@@ -15,7 +15,8 @@ module.exports = async (client, guild) => {
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
             .setThumbnail(icon)
-            .setDescription(`${guild.name}`);
+            .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)
+            .addField(`Name:`, guild.name, true);
         if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.user.tag} (${guildOwner.id})`, false);
         guildEmbed
             .addField(`Users:`, guild.memberCount.toString(), false)
