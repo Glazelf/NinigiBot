@@ -40,7 +40,6 @@ module.exports = async (client, role) => {
                 .addField(`Role:`, `${role} (${role.id})`)
                 .addField(`Role name:`, role.name)
                 .setTimestamp();
-
             if (executor) {
                 createEmbed
                     .addField('Created by:', `${executor} (${executor.id})`)

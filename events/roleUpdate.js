@@ -63,7 +63,6 @@ module.exports = async (client, oldRole, newRole) => {
             } else {
                 return;
             };
-
             if (oldRole.icon !== newRole.icon) {
                 let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
                 let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);

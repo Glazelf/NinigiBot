@@ -37,7 +37,6 @@ module.exports = async (client, role) => {
                 .setAuthor({ name: `Role Deleted ❌`, iconURL: icon })
                 .addField(`Role:`, `${role.name} (${role.id})`)
                 .setTimestamp();
-
             if (executor) {
                 deleteEmbed
                     .addField('Deleted by:', `${executor} (${executor.id})`)
