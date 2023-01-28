@@ -29,6 +29,7 @@ exports.run = async (client, interaction) => {
         let frequencyPenalty = 0.0; // Range -2 to 2
         let stopChars = "\n"; // Example stop character, unused
 
+        let errorResponse = "An error occurred. Please try again later.";
         let response = null;
         let openaiEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -43,7 +44,8 @@ exports.run = async (client, interaction) => {
                     });
                 } catch (e) {
                     // console.log(e.response.data);
-                    return sendMessage({ client: client, interaction: interaction, content: "An error occurred. Please try again later." });
+                    if (e.response.data.error.message) errorResponse = e.response.data.error.message;
+                    return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setImage(response.data.data[0].url);
                 break;
@@ -61,7 +63,8 @@ exports.run = async (client, interaction) => {
                     });
                 } catch (e) {
                     // console.log(e.response.data);
-                    return sendMessage({ client: client, interaction: interaction, content: "An error occurred. Please try again later." });
+                    if (e.response.data.error.message) errorResponse = e.response.data.error.message;
+                    return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setDescription(response.data.choices[0].text);
                 break;
