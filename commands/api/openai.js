@@ -103,7 +103,7 @@ module.exports.config = {
             name: "prompt",
             type: "STRING",
             description: "Prompt to get a response to.",
-            maxLength: 2048,
+            maxLength: 1000,
             required: true
         }, {
             name: "ephemeral",
