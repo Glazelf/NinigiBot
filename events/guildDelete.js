@@ -9,7 +9,13 @@ module.exports = async (client, guild) => {
         if (!log) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
-        let guildOwner = await guild.fetchOwner();
+        let guildOwner = null;
+        try {
+            guildOwner = await guild.fetchOwner();
+        } catch (e) {
+            // console.log(e);
+            return;
+        };
 
         const guildEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
