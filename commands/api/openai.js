@@ -19,6 +19,7 @@ exports.run = async (client, interaction) => {
         // Documentation: https://beta.openai.com/docs/api-reference/images/create?lang=node.js
         // Examples: https://beta.openai.com/examples
         let model = "text-davinci-003"; // Text generation model; https://beta.openai.com/docs/models/gpt-3
+        // model = "code-davinci-002"; // Code generation model
         let promptInput = interaction.options.getString("prompt");
         let imageCount = 1; // Range 1-10
         let imageSize = "1024x1024"; // Options are 256x256, 512x512 and 1024x1024
@@ -28,37 +29,43 @@ exports.run = async (client, interaction) => {
         let frequencyPenalty = 0.0; // Range -2 to 2
         let stopChars = "\n"; // Example stop character, unused
 
-        switch (interaction.options.getSubcommand()) {
-            case "image":
-                break;
-            case "code":
-                model = "code-davinci-002"; // Code generation model
-            case "text":
-            default:
-                maxTokens = 2048;
-                samplingTemperature = 0.1;
-                break;
-        };
-        // API call
         let response = null;
-        try {
-            response = await openai.createCompletion({
-                model: model,
-                prompt: promptInput,
-                max_tokens: maxTokens,
-                temperature: samplingTemperature,
-                presence_penalty: presencePenalty,
-                frequency_penalty: frequencyPenalty,
-            });
-        } catch (e) {
-            console.log(e.response.data);
-            return sendMessage({ client: client, interaction: interaction, content: "An error occurred. Please try again later." });
-        };
-
         let openaiEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setDescription(response.data.choices[0].text)
             .setFooter({ text: promptInput });
+        switch (interaction.options.getSubcommand()) {
+            case "image":
+                try {
+                    response = await openai.createImage({
+                        prompt: promptInput,
+                        n: imageCount,
+                        size: imageSize
+                    });
+                } catch (e) {
+                    // console.log(e.response.data);
+                    return sendMessage({ client: client, interaction: interaction, content: "An error occurred. Please try again later." });
+                };
+                openaiEmbed.setImage(response.data.data[0].url);
+                break;
+            case "text":
+                maxTokens = 2048;
+                samplingTemperature = 0.1;
+                try {
+                    response = await openai.createCompletion({
+                        model: model,
+                        prompt: promptInput,
+                        max_tokens: maxTokens,
+                        temperature: samplingTemperature,
+                        presence_penalty: presencePenalty,
+                        frequency_penalty: frequencyPenalty,
+                    });
+                } catch (e) {
+                    // console.log(e.response.data);
+                    return sendMessage({ client: client, interaction: interaction, content: "An error occurred. Please try again later." });
+                };
+                openaiEmbed.setDescription(response.data.choices[0].text);
+                break;
+        };
         return sendMessage({ client: client, interaction: interaction, embeds: openaiEmbed });
 
     } catch (e) {
@@ -79,21 +86,6 @@ module.exports.config = {
             type: "STRING",
             description: "Prompt to get a response to.",
             maxLength: 2048,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "code",
-        type: "SUB_COMMAND",
-        description: "Generate code.",
-        options: [{
-            name: "prompt",
-            type: "STRING",
-            description: "Prompt to get a response to.",
-            maxLength: 2048, // Max cap of subcommand options is 6000, api cap is 8000
             required: true
         }, {
             name: "ephemeral",
