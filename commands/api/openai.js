@@ -43,12 +43,15 @@ exports.run = async (client, interaction) => {
                         size: imageSize
                     });
                 } catch (e) {
-                    // Testing unknown error types, probably rate limits
+                    // Testing unknown error types
                     console.log(e);
                     console.log(e.response);
                     console.log(e.response.data);
 
-                    if (e.response.data.error) errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
+                    if (e.response.data.error) {
+                        errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
+                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again later.`;
+                    };
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setImage(response.data.data[0].url);
@@ -66,12 +69,16 @@ exports.run = async (client, interaction) => {
                         frequency_penalty: frequencyPenalty,
                     });
                 } catch (e) {
-                    // Testing unknown error types, probably rate limits
+                    // Testing unknown error types
                     console.log(e);
                     console.log(e.response);
                     console.log(e.response.data);
 
-                    if (e.response.data.error) errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
+                    // Combine error message checking with image generation sometime i guess im lazy rn though
+                    if (e.response.data.error) {
+                        errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
+                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again later.`;
+                    };
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setDescription(response.data.choices[0].text);
