@@ -29,7 +29,7 @@ exports.run = async (client, interaction) => {
         let frequencyPenalty = 0.0; // Range -2 to 2
         let stopChars = "\n"; // Example stop character, unused
 
-        let errorResponse = "An error occurred. Please try again later.";
+        let errorResponse = "OpenAI error: Unknown error";
         let response = null;
         let openaiEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -43,8 +43,12 @@ exports.run = async (client, interaction) => {
                         size: imageSize
                     });
                 } catch (e) {
-                    // console.log(e.response.data);
-                    if (e.response.data.error.message) errorResponse = e.response.data.error.message;
+                    // Testing unknown error types, probably rate limits
+                    console.log(e);
+                    console.log(e.response);
+                    console.log(e.response.data);
+
+                    if (e.response.data.error) errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setImage(response.data.data[0].url);
@@ -62,8 +66,12 @@ exports.run = async (client, interaction) => {
                         frequency_penalty: frequencyPenalty,
                     });
                 } catch (e) {
-                    // console.log(e.response.data);
-                    if (e.response.data.error.message) errorResponse = e.response.data.error.message;
+                    // Testing unknown error types, probably rate limits
+                    console.log(e);
+                    console.log(e.response);
+                    console.log(e.response.data);
+
+                    if (e.response.data.error) errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
                 openaiEmbed.setDescription(response.data.choices[0].text);
