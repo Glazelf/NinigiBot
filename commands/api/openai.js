@@ -69,9 +69,9 @@ exports.run = async (client, interaction) => {
         function errorHandler(e) {
             let errorResponse = "OpenAI error: Unknown error";
             // Testing unknown error types
-            console.log(e);
-            console.log(e.response);
-            console.log(e.response.data);
+            if (!e.response) console.log(e);
+            if (!e.response.data) console.log(e.response);
+            if (!e.response.data.message) console.log(e.response.data);
 
             if (e.response.data.error) {
                 errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
