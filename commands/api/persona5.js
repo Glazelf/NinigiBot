@@ -28,6 +28,8 @@ exports.run = async (client, interaction) => {
         eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
         // Imports skillMapRoyal; object including all skill AND trait data
         eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+        // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
+        eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
         let p5Embed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
@@ -50,12 +52,16 @@ exports.run = async (client, interaction) => {
                 for await (const [key, value] of Object.entries(personaObject.skills)) {
                     personaSkills += `Level ${value}: ${key}\n`;
                 };
+                // Itemization string
+                let personaItem = getItemString(personaObject.item);
+                let personaItemAlarm = getItemString(personaObject.itemr);
                 p5Embed
                     .setAuthor({ name: `${personaInput} (${personaObject.arcana})` })
                     .setDescription(elementalMatchup)
                     .addField("Stats:", `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, true)
                     .addField("Skills:", personaSkills, true)
-                    .addField("Item:", personaObject.item, true)
+                    .addField("Item:", personaItem, false)
+                    .addField("Item (Fusion Alarm):", personaItemAlarm, false)
                     .setImage(personaImage);
                 break;
             case "skill":
@@ -77,15 +83,36 @@ exports.run = async (client, interaction) => {
                 if (!traitObject || traitObject.element !== "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
                 let traitPersonas = Object.keys(traitObject.personas).join("\n");
                 p5Embed
-                    .setAuthor({ name: `${traitInput}` })
+                    .setAuthor({ name: traitInput })
                     .setDescription(traitObject.effect)
                     .addField("Personas:", traitPersonas);
                 break;
+            case "item":
+                let itemInput = interaction.options.getString("item");
+                let itemObject = itemMapRoyal[itemInput];
+                if (!itemObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
+
+                if (itemObject.type && itemObject.description) {
+                    p5Embed.addField(itemObject.type, itemObject.description, false);
+                } else if (itemObject.skillCard) {
+                    p5Embed.addField(`Skill Card:`, `Teaches a Persona ${itemInput}.`, false);
+                };
+                p5Embed.setAuthor({ name: itemInput });
         };
         return sendMessage({ client: client, interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 
         function getWeaknessString(string) {
             string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
+            return string;
+        };
+        function getItemString(string) {
+            let itemObject = itemMapRoyal[string];
+            if (!itemObject) return "None";
+            if (itemObject.type && itemObject.description) {
+                string = `${string} (${itemObject.type}): ${itemObject.description}`;
+            } else if (itemObject.skillCard) {
+                string = `${string} (Skill Card)`;
+            };
             return string;
         };
 
@@ -136,6 +163,21 @@ module.exports.config = {
             name: "trait",
             type: "STRING",
             description: "Specify trait by name.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "item",
+        type: "SUB_COMMAND",
+        description: "Get info on an item.",
+        options: [{
+            name: "item",
+            type: "STRING",
+            description: "Specify item by name.",
             autocomplete: true,
             required: true
         }, {

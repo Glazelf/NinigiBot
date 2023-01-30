@@ -403,6 +403,11 @@ module.exports = async (client, interaction) => {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element == "trait") choices.push({ name: key, value: key });
                                 };
                                 break;
+                            case "item":
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+                                for await (const [key, value] of Object.entries(itemMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && !value.skillCard) choices.push({ name: key, value: key });
+                                };
                         };
                         break;
                     case "coinflip":
