@@ -50,7 +50,7 @@ exports.run = async (client, interaction) => {
 
                     if (e.response.data.error) {
                         errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
-                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again later.`;
+                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again in a few minutes.`;
                     };
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
@@ -77,7 +77,7 @@ exports.run = async (client, interaction) => {
                     // Combine error message checking with image generation sometime i guess im lazy rn though
                     if (e.response.data.error) {
                         errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
-                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again later.`;
+                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again in a few minutes.`;
                     };
                     return sendMessage({ client: client, interaction: interaction, content: errorResponse });
                 };
