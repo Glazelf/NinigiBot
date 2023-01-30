@@ -91,7 +91,6 @@ exports.run = async (client, interaction) => {
                 let itemInput = interaction.options.getString("item");
                 let itemObject = itemMapRoyal[itemInput];
                 if (!itemObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
-
                 if (itemObject.type && itemObject.description) {
                     p5Embed.addField(itemObject.type, itemObject.description, false);
                 } else if (itemObject.skillCard) {
