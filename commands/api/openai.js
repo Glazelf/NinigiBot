@@ -29,7 +29,6 @@ exports.run = async (client, interaction) => {
         let frequencyPenalty = 0.0; // Range -2 to 2
         let stopChars = "\n"; // Example stop character, unused
 
-        let errorResponse = "OpenAI error: Unknown error";
         let response = null;
         let openaiEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
@@ -43,16 +42,7 @@ exports.run = async (client, interaction) => {
                         size: imageSize
                     });
                 } catch (e) {
-                    // Testing unknown error types
-                    console.log(e);
-                    console.log(e.response);
-                    console.log(e.response.data);
-
-                    if (e.response.data.error) {
-                        errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
-                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again in a few minutes.`;
-                    };
-                    return sendMessage({ client: client, interaction: interaction, content: errorResponse });
+                    return errorHandler(e);
                 };
                 openaiEmbed.setImage(response.data.data[0].url);
                 break;
@@ -69,22 +59,26 @@ exports.run = async (client, interaction) => {
                         frequency_penalty: frequencyPenalty,
                     });
                 } catch (e) {
-                    // Testing unknown error types
-                    console.log(e);
-                    console.log(e.response);
-                    console.log(e.response.data);
-
-                    // Combine error message checking with image generation sometime i guess im lazy rn though
-                    if (e.response.data.error) {
-                        errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
-                        if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again in a few minutes.`;
-                    };
-                    return sendMessage({ client: client, interaction: interaction, content: errorResponse });
+                    return errorHandler(e);
                 };
                 openaiEmbed.setDescription(response.data.choices[0].text);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: openaiEmbed });
+
+        function errorHandler(e) {
+            let errorResponse = "OpenAI error: Unknown error";
+            // Testing unknown error types
+            console.log(e);
+            console.log(e.response);
+            console.log(e.response.data);
+
+            if (e.response.data.error) {
+                errorResponse = errorResponse.replace("Unknown error", e.response.data.error.message);
+                if (errorResponse.includes("Rate limit reached")) errorResponse = `${errorResponse.split("Rate")[0]}Rate limit reached. Please try again in a few minutes.`;
+            };
+            return sendMessage({ client: client, interaction: interaction, content: errorResponse });
+        }
 
     } catch (e) {
         // Log error
