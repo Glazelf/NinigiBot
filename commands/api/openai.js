@@ -104,7 +104,7 @@ module.exports.config = {
         }, {
             name: "max-length",
             type: "INTEGER",
-            description: "Maximum length of the response.",
+            description: "Maximum length of the response in tokens.",
             minValue: 1,
             maxValue: 2048
         }, {
