@@ -21,12 +21,16 @@ exports.run = async (client, interaction) => {
         let model = "text-davinci-003"; // Text generation model; https://beta.openai.com/docs/models/gpt-3
         // model = "code-davinci-002"; // Code generation model
         let promptInput = interaction.options.getString("prompt");
+        let maxTokens = interaction.options.getInteger("max-length");
+        if (!maxTokens) maxTokens = 2048; // Range 1-4096, default: 16
+        let samplingTemperature = interaction.options.getNumber("temperature");
+        if (!samplingTemperature) samplingTemperature = 0.1; // Range 0.0-1.0, default: 1.0
+        let presencePenalty = interaction.options.getNumber("presence-penalty");
+        if (!presencePenalty) presencePenalty = 0.0; // Range -2 to 2
+        let frequencyPenalty = interaction.options.getNumber("frequency-penalty");
+        if (!frequencyPenalty) frequencyPenalty = 0.0; // Range -2 to 2
         let imageCount = 1; // Range 1-10
         let imageSize = "1024x1024"; // Options are 256x256, 512x512 and 1024x1024
-        let maxTokens = 16; // Range 1-4096
-        let samplingTemperature = 1.0; // Range 0.0-1.0
-        let presencePenalty = 0.0; // Range -2 to 2
-        let frequencyPenalty = 0.0; // Range -2 to 2
         let stopChars = "\n"; // Example stop character, unused
 
         let response = null;
@@ -47,8 +51,6 @@ exports.run = async (client, interaction) => {
                 openaiEmbed.setImage(response.data.data[0].url);
                 break;
             case "text":
-                maxTokens = 2048;
-                samplingTemperature = 0.1;
                 try {
                     response = await openai.createCompletion({
                         model: model,
@@ -99,6 +101,30 @@ module.exports.config = {
             description: "Prompt to get a response to.",
             maxLength: 2048,
             required: true
+        }, {
+            name: "max-length",
+            type: "INTEGER",
+            description: "Maximum length of the response.",
+            minValue: 1,
+            maxValue: 2048
+        }, {
+            name: "temperature",
+            type: "NUMBER",
+            description: "Higher value makes it more creative, less factual.",
+            minValue: 0.0,
+            maxValue: 1.0
+        }, {
+            name: "presence-penalty",
+            type: "NUMBER",
+            description: "Higher value avoid topic repetition at the cost of quality.",
+            minValue: -2.0,
+            maxValue: 2.0
+        }, {
+            name: "frequency-penalty",
+            type: "NUMBER",
+            description: "Higher value avoid proportional repetition at the cost of quality.",
+            minValue: -2.0,
+            maxValue: 2.0
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
