@@ -11,10 +11,17 @@ exports.run = async (client, interaction) => {
         let day = interaction.options.getInteger("day");
         let month = interaction.options.getInteger("month");
 
-        if (day < 1 || day > 31 || month < 1 || month > 12) return sendMessage({ client: client, interaction: interaction, content: `Please specify a valid birthday.` });
         // Birthdays are stored as string DDMM instead of being seperated by a -
-        if (day < 10) {day = `0${day}`} else {day = `${day}`};
-        if (month < 10) {month = `0${month}`} else {month = `${month}`};
+        if (day < 10) {
+            day = `0${day}`;
+        } else {
+            day = `${day}`;
+        };
+        if (month < 10) {
+            month = `0${month}`;
+        } else {
+            month = `${month}`;
+        };
         api_user.setBirthday(interaction.user.id, day + month);
 
         return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
@@ -32,11 +39,15 @@ module.exports.config = {
         name: "day",
         type: "INTEGER",
         description: "Birth day of the month.",
-        required: true
+        required: true,
+        minValue: 1,
+        maxValue: 31
     }, {
         name: "month",
         type: "INTEGER",
         description: "Birth month of the year.",
-        required: true
+        required: true,
+        minValue: 1,
+        maxValue: 12
     }]
 };
