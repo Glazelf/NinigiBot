@@ -281,18 +281,6 @@ module.exports = async (client, interaction) => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
-                            case "game":
-                                let MHGames = ["Monster Hunter 3 Ultimate",
-                                    "Monster Hunter 4 Ultimate",
-                                    "Monster Hunter Generations Ultimate",
-                                    "Monster Hunter World",
-                                    "Monster Hunter Rise",
-                                    "Monster Hunter Stories",
-                                    "Monster Hunter Stories 2"];
-                                await MHGames.forEach(game => {
-                                    choices.push({ name: game, value: game });
-                                });
-                                break;
                         };
                         break;
                     case "splatoon3":
