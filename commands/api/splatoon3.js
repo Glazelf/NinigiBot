@@ -92,7 +92,8 @@ exports.run = async (client, interaction) => {
                 await weaponObject.UIParam.forEach(stat => {
                     weaponStats += `\n${languageJSON["CommonMsg/Weapon/WeaponParamName"][stat.Type]}: ${stat.Value}/100`;
                 });
-                let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}:`;
+                let specialPointsTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_DetailWpn_00-T_Special_00"]}`;
+                if (!specialPointsTitle.endsWith(":")) specialPointsTitle += ":";
                 weaponStats += `\n${specialPointsTitle} ${weaponObject.SpecialPoint}`;
 
                 let subTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["004"]}:`;
