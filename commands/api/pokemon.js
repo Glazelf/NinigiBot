@@ -252,7 +252,6 @@ exports.run = async (client, interaction) => {
                 let usageArray = response.data.replaceAll("|", "").replaceAll("\n", "").trim().split(`----------------------------------------+  +----------------------------------------+`);
                 await Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replaceAll("+", "").replaceAll("--", "") });
                 usageArray = usageArray.map(element => element.trim());
-
                 // Variables for generic usage data
                 let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
                 let rawUsage = 0;

@@ -31,11 +31,11 @@ module.exports = async (exception, client, interaction = null) => {
         if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(interaction.content);
 
         // log to dev channel
-        let baseMessage;
+        let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
-Link: ${interaction.url}
+User: **${user.tag}** (${user.id})
+Message link: ${interaction.url}
 Error:\n${exceptionCode}
-Message by **${user.tag}** (${user.id}):
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + `...`;
