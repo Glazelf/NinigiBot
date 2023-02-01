@@ -215,12 +215,12 @@ exports.run = async (client, interaction) => {
                 let ratingArg = interaction.options.getInteger("rating");
                 if (ratingTresholds.includes(ratingArg)) rating = ratingArg;
 
-                let monthArg = interaction.options.getInteger("month");
-                let yearArg = interaction.options.getInteger("year");
+                let month = interaction.options.getInteger("month");
+                let year = interaction.options.getInteger("year");
                 // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
                 const date = new Date();
-                let month = date.getMonth();
-                let year = date.getFullYear();
+                if (!month) month = date.getMonth();
+                if (!year) year = date.getFullYear();
                 if (month == 0) {
                     month = 12;
                     year = year - 1;
