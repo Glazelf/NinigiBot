@@ -284,11 +284,10 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        const splatoonLanguages = require("../objects/splatoon/languages.json");
                         let languageDefault = "EUen";
                         let languageJSON = null;
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput && Object.keys(splatoonLanguages).includes(languageInput)) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}.json`);
+                        if (languageInput) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}.json`);
                         if (!languageJSON) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
                         switch (focusedOption.name) {
                             case "clothing":
@@ -315,11 +314,6 @@ module.exports = async (client, interaction) => {
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
                                     // Gachihoko = Rainmaker
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-" && !value.includes("Gachihoko")) choices.push({ name: value, value: key });
-                                };
-                                break;
-                            case "language":
-                                for await (const [key, value] of Object.entries(splatoonLanguages)) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "mode":

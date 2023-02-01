@@ -9,8 +9,6 @@ exports.run = async (client, interaction) => {
         const path = require("path");
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
-        // Language JSON
-        const splatoonLanguages = require("../../objects/splatoon/languages.json");
         // Game data
         let version = "210";
         let versionSplit = `Splatoon 3 v${version.split("").join(".")}`;
@@ -26,13 +24,9 @@ exports.run = async (client, interaction) => {
         if (ephemeralArg === false) ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let languageDefault = "EUen";
-        let languageUsed = languageDefault;
-        let languageJSON = null;
-        let languageArg = interaction.options.getString("language");
-        if (languageArg && Object.keys(splatoonLanguages).includes(languageArg)) languageUsed = languageArg;
-        languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageUsed}.json`);
-
+        let languageKey = interaction.options.getString("language");
+        if (!languageKey) languageKey = "EUen";
+        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}.json`);
         let inputID;
         let responseSplatfest;
         let splatfestData;
@@ -487,7 +481,7 @@ exports.run = async (client, interaction) => {
 
                 let reversedLanguages = ["EUfr", "EUes", "EUit"];
                 let randomTitle = `${randomAdjective} ${randomSubject}`;
-                if (reversedLanguages.includes(languageUsed)) randomTitle = `${randomSubject} ${randomAdjective}`;
+                if (reversedLanguages.includes(languageKey)) randomTitle = `${randomSubject} ${randomAdjective}`;
 
                 let bannerOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/npl/").filter(file => file.endsWith(".png"));
                 let badgeOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/badge/").filter(file => file.endsWith(".png"));
@@ -525,6 +519,19 @@ exports.run = async (client, interaction) => {
     };
 };
 
+let splatoon3Languages = [
+    { name: "English", value: "EUen" },
+    { name: "French|Français", value: "EUfr" },
+    { name: "German|Deutsch", value: "EUde" },
+    { name: "Spanish|Español", value: "EUes" },
+    { name: "Dutch|Nederlands", value: "EUnl" },
+    { name: "Italian|Italiano", value: "EUit" },
+    { name: "Russian|Русский", value: "EUru" },
+    { name: "Japanese|日本語", value: "JPja" },
+    { name: "Korean|한국어", value: "KRko" },
+    { name: "Chinese (Simplified)|中文（简体)", value: "CNzh" },
+    { name: "Chinese (Traditional)|中文（繁體)", value: "TWzh" }
+];
 module.exports.config = {
     name: "splatoon3",
     description: `Shows Splatoon 3 data.`,
@@ -582,7 +589,7 @@ module.exports.config = {
             name: "language",
             type: "STRING",
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
@@ -602,7 +609,7 @@ module.exports.config = {
             name: "language",
             type: "STRING",
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
@@ -663,7 +670,7 @@ module.exports.config = {
             name: "language",
             type: "STRING",
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
