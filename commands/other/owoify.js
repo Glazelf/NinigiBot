@@ -13,13 +13,8 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let input = interaction.options.getString("input");
-        let severityArg = interaction.options.getInteger("severity");
-        let severity = "owo";
-        if (severityArg) {
-            if (severityArg <= 1) severity = "owo";
-            if (severityArg == 2) severity = "uwu";
-            if (severityArg >= 3) severity = "uvu";
-        };
+        let severity = interaction.options.getString("severity");
+        if (!severity) severity = "owo";
 
         let inputOwOified = owoify(input, severity);
         let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
@@ -42,8 +37,13 @@ module.exports.config = {
         required: true
     }, {
         name: "severity",
-        type: "INTEGER",
-        description: "Severity of owoification. (1-3)",
+        type: "STRING",
+        description: "Severity of owoification.",
+        choices: [
+            { name: "owo", value: "owo" },
+            { name: "uwu", value: "uwu" },
+            { name: "uvu", value: "uvu" }
+        ]
     }, {
         name: "ephemeral",
         type: "BOOLEAN",
