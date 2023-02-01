@@ -225,9 +225,6 @@ exports.run = async (client, interaction) => {
                     month = 12;
                     year = year - 1;
                 };
-                let stringCurrentMonth = month;
-                if (stringCurrentMonth < 10) stringCurrentMonth = "0" + stringCurrentMonth;
-                if (monthArg <= 12 && monthArg > 0) month = monthArg;
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
                 // Format URL and other variables
