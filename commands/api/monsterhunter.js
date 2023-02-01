@@ -19,6 +19,7 @@ exports.run = async (client, interaction) => {
         if (ephemeralArg === false) ephemeral = false;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
         let mhEmbed = new Discord.MessageEmbed()
@@ -163,7 +164,6 @@ module.exports.config = {
                 { name: "Monster Hunter 3 Ultimate", value: "Monster Hunter 3 Ultimate" },
                 { name: "Monster Hunter Stories 2", value: "Monster Hunter Stories 2" }
                 { name: "Monster Hunter Stories", value: "Monster Hunter Stories" }
-
             ]
         }, {
             name: "ephemeral",
