@@ -406,38 +406,31 @@ module.exports = async (client, interaction) => {
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
-                                })
+                                });
                         };
                         break;
                     case "trophy":
                         switch (focusedOption.name) {
                             case "shoptrophy":
                                 const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
-
                                 buyable_items.forEach(trophy => {
                                     choices.push({ name: trophy, value: trophy });
-                                })
-                                // if (choices.length == 0){
-                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
-                                // }
-
+                                });
+                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 break;
                             case "trophy":
                                 let trophies = await api_trophy.getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
-                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
-                                })
+                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                });
                                 trophies = await api_trophy.getEventTrophies();
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
-                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
-                                })
-                                // if (choices.length == 0){
-                                //     choices.push({ name: "You need more money in order to buy!", value: "1"});
-                                // }
-
+                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                });
+                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 break;
                         };
                         break;
@@ -454,7 +447,7 @@ module.exports = async (client, interaction) => {
                 if (choices.length < 1) return interaction.respond([]);
                 // Return choices
                 return interaction.respond(choices).catch(e => {
-                    //console.log(e);
+                    // console.log(e);
                 });
                 break;
             case "MODAL_SUBMIT":
