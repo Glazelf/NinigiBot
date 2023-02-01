@@ -7,7 +7,6 @@ module.exports = async (client) => {
         // const storedBalances = await Users.findAll();
         // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
         const getTime = require('../util/getTime');
-
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
@@ -22,17 +21,14 @@ module.exports = async (client) => {
         console.log("Loaded interactions!");
 
         await client.guilds.fetch();
-
         // Set bot status
         let presence = initPresence();
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
-
         // List and fetch servers the bot is connected to
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
-
         let timestamp = await getTime(client);
 
         console.log(`Commands: ${client.commands.size}
