@@ -55,7 +55,7 @@ let botjsFunction = async function botjsFunction() {
                     } else if (stats.isFile() && file.endsWith('.js')) {
                         let props = require(`./${filepath}`);
                         let commandName = file.split(".")[0];
-                        //console.log(`Loaded command: ${commandName} ✔`);
+                        // console.log(`Loaded command: ${commandName} ✔`);
                         client.commands.set(commandName, props);
                         if (props.config.aliases) {
                             props.config.aliases.forEach(alias => {
