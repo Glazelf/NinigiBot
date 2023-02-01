@@ -398,23 +398,6 @@ module.exports = async (client, interaction) => {
                                 };
                         };
                         break;
-                    case "coinflip":
-                        switch (focusedOption.name) {
-                            case "side":
-                                choices.push({ name: "Heads", value: "Heads" });
-                                choices.push({ name: "Tails", value: "Tails" });
-                                break;
-                        };
-                        break;
-                    // VERY low priority
-                    case "rps":
-                        switch (focusedOption.name) {
-                            case "weapon":
-                                choices.push({ name: "Rock", value: "Rock" });
-                                choices.push({ name: "Paper", value: "Paper" });
-                                choices.push({ name: "Scissors", value: "Scissors" });
-                                break;
-                        };
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
