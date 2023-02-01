@@ -230,7 +230,6 @@ exports.run = async (client, interaction) => {
                 if (monthArg <= 12 && monthArg > 0) month = monthArg;
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
-                if (yearArg >= 2014 && yearArg <= year) year = yearArg; // Smogon stats only exist from 2014 onwards
                 // Format URL and other variables
                 let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
                 let response = null;
@@ -445,16 +444,21 @@ module.exports.config = {
         }, {
             name: "month",
             type: "INTEGER",
-            description: "Month (number) to get data from."
+            description: "Month (number) to get data from.",
+            minValue: 1,
+            maxValue: 12
         }, {
             name: "year",
             type: "INTEGER",
-            description: "Year to get data from."
+            description: "Year to get data from.",
+            minValue: 2014,
+            maxValue: new Date().getFullYear()
         }, {
             name: "rating",
             type: "INTEGER",
             description: "Minimum rating to get data from.",
-            autocomplete: true
+            autocomplete: true,
+            minValue: 1000
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
