@@ -162,7 +162,7 @@ module.exports.config = {
                 { name: "Monster Hunter Generations Ultimate", value: "Monster Hunter Generations Ultimate" },
                 { name: "Monster Hunter 4 Ultimate", value: "Monster Hunter 4 Ultimate" },
                 { name: "Monster Hunter 3 Ultimate", value: "Monster Hunter 3 Ultimate" },
-                { name: "Monster Hunter Stories 2", value: "Monster Hunter Stories 2" }
+                { name: "Monster Hunter Stories 2", value: "Monster Hunter Stories 2" },
                 { name: "Monster Hunter Stories", value: "Monster Hunter Stories" }
             ]
         }, {
