@@ -24,7 +24,7 @@ exports.run = async (client, interaction) => {
         let maxTokens = interaction.options.getInteger("max-length");
         if (!maxTokens) maxTokens = 2048; // Range 1-4096, default: 16
         let samplingTemperature = interaction.options.getNumber("temperature");
-        if (!samplingTemperature) samplingTemperature = 0.1; // Range 0.0-2.0, default: 1.0
+        if (!samplingTemperature) samplingTemperature = 1; // Range 0.0-2.0
         let presencePenalty = interaction.options.getNumber("presence-penalty");
         if (!presencePenalty) presencePenalty = 0.0; // Range -2 to 2
         let frequencyPenalty = interaction.options.getNumber("frequency-penalty");
