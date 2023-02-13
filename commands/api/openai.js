@@ -24,13 +24,13 @@ exports.run = async (client, interaction) => {
         let maxTokens = interaction.options.getInteger("max-length");
         if (!maxTokens) maxTokens = 2048; // Range 1-4096, default: 16
         let samplingTemperature = interaction.options.getNumber("temperature");
-        if (!samplingTemperature) samplingTemperature = 1; // Range 0.0-2.0
+        if (!samplingTemperature) samplingTemperature = 1; // Range 0.0-2.0, default: 1.0
         let presencePenalty = interaction.options.getNumber("presence-penalty");
-        if (!presencePenalty) presencePenalty = 0.0; // Range -2 to 2
+        if (!presencePenalty) presencePenalty = 0.0; // Range -2.0 to 2.0, default: 0.0
         let frequencyPenalty = interaction.options.getNumber("frequency-penalty");
-        if (!frequencyPenalty) frequencyPenalty = 0.0; // Range -2 to 2
-        let imageCount = 1; // Range 1-10
-        let imageSize = "1024x1024"; // Options are 256x256, 512x512 and 1024x1024
+        if (!frequencyPenalty) frequencyPenalty = 0.0; // Range -2.0 to 2.0, default: 0.0
+        let imageCount = 1; // Range 1-10, default: 1
+        let imageSize = "1024x1024"; // Options are 256x256, 512x512 and 1024x1024, default: 1024x1024
         let stopChars = "\n"; // Example stop character, unused
 
         let response = null;
