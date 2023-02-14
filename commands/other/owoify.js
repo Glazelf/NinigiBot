@@ -16,7 +16,7 @@ exports.run = async (client, interaction) => {
         if (!severity) severity = "owo";
 
         let inputOwOified = owoify(input, severity);
-        let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
+        let returnString = Discord.Formatters.codeBlock("fix", inputOwOified);
 
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
