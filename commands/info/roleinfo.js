@@ -8,7 +8,8 @@ exports.run = async (client, interaction) => {
         const permissionSerializer = require('../../util/permissionBitfieldSerializer');
         let DefaultEmbedColor = globalVars.embedColor;
 
-        let ephemeral = true;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
         let role = interaction.options.getRole("role");
 
@@ -61,5 +62,9 @@ module.exports.config = {
         type: "ROLE",
         description: "Specify role.",
         required: true
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the reply will be private."
     }]
 };

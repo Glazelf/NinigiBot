@@ -9,7 +9,8 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 
-        let ephemeral = true;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let DiscordJSVersion = Discord.version;
@@ -117,5 +118,10 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "botinfo",
-    description: `Displays info about this bot.`
+    description: `Displays info about this bot.`,
+    options: [{
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the reply will be private."
+    }]
 };

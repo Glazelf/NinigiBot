@@ -11,7 +11,6 @@ exports.run = async (client, interaction) => {
         const shinxApi = require('../../database/dbServices/shinx.api');
 
         let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -21,7 +20,6 @@ exports.run = async (client, interaction) => {
         let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "info":
-                if (ephemeralArg === false) ephemeral = false;
                 user = await userApi.getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
                 if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -58,7 +56,6 @@ exports.run = async (client, interaction) => {
                     ephemeral: ephemeral
                 });
             case "swapsprite":
-                if (ephemeralArg === false) ephemeral = false;
                 const shinx = await shinxApi.getShinx(master.id);
                 return sendMessage({
                     client: client,

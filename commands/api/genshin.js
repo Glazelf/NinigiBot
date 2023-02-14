@@ -10,9 +10,8 @@ exports.run = async (client, interaction) => {
         const parseDate = require('../../util/parseDate');
         const capitalizeString = require('../../util/capitalizeString');
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let giAPI = `https://api.genshin.dev/`;

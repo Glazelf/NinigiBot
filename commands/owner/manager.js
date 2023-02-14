@@ -11,15 +11,13 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         const api_trophy = require('../../database/dbServices/trophy.api');
-        let ephemeral = true;
         let trophy_name, res, returnString;
 
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        let ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
         switch (interaction.options.getSubcommand()) {

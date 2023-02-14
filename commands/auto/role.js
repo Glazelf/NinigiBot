@@ -8,9 +8,8 @@ exports.run = async (client, interaction) => {
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles } = require('../../database/dbServices/server.api');
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         await interaction.guild.roles.fetch();

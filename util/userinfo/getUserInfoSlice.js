@@ -24,7 +24,6 @@ module.exports = async (client, interaction, page, user) => {
         .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
     if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: 'PRIMARY', emoji: '⬅️' }));
     if (page < NUMBER_OF_PAGES - 1 && member && !user.bot) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
-    let ephemeral = true;
 
     let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {

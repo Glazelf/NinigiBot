@@ -7,9 +7,8 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const { Configuration, OpenAIApi } = require("openai");
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         const configuration = new Configuration({

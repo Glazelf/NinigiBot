@@ -9,11 +9,10 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const shinxApi = require('../../database/dbServices/shinx.api');
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-        if (ephemeralArg === false) ephemeral = false;
 
         //await interaction.deferReply({ ephemeral: ephemeral });
         let shinx, foodArg, res, avatar;
@@ -248,7 +247,6 @@ exports.run = async (client, interaction) => {
                         returnString = `Could not rename because provided nickname was not alphanumeric`;
                         break;
                     case 'Ok':
-                        if (ephemeralArg === false) ephemeral = true;
                         is_shiny = await shinxApi.getShinxShininess(master.id);
                         canvas = Canvas.createCanvas(471, 355);
                         ctx = canvas.getContext('2d');

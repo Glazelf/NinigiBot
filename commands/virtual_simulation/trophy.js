@@ -12,19 +12,17 @@ exports.run = async (client, interaction) => {
         const api_user = require('../../database/dbServices/user.api');
         const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
-        let ephemeral = true;
         let embed, trophy_name, res;
         let returnString = ''
         let canvas, ctx, img, shinx;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let master = interaction.user;
         let trophies;
         switch (interaction.options.getSubcommand()) {
             case "stock":
-                if (ephemeralArg === false) ephemeral = false;
                 embed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);

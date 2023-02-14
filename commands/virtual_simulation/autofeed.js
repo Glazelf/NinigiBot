@@ -1,19 +1,18 @@
 const shinxApi = require('../../database/dbServices/shinx.api');
-const autofeed_modes =
-    [
-        {
-            "name": "No auto mode",
-            "value": 0
-        },
-        {
-            "name": "Feed automatically",
-            "value": 1
-        },
-        {
-            "name": "Feed automatically, buy more food if needed.",
-            "value": 2
-        }
-    ];
+const autofeed_modes = [
+    {
+        "name": "No auto mode",
+        "value": 0
+    },
+    {
+        "name": "Feed automatically",
+        "value": 1
+    },
+    {
+        "name": "Feed automatically, buy more food if needed.",
+        "value": 2
+    }
+];
 
 exports.run = async (client, interaction) => {
     const logger = require('../../util/logger');
@@ -21,9 +20,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         let ephemeral = true;
         let returnString;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
-        if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");

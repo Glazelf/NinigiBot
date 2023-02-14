@@ -5,9 +5,7 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         let ephemeral = true;
         let res, returnString;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
         let emotesAllowed = true;
-        if (ephemeralArg === false) ephemeral = false;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let master = interaction.user;
         foodArg = interaction.options.getInteger("food");

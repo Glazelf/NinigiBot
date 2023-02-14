@@ -19,9 +19,8 @@ exports.run = async (client, interaction) => {
         const WeaponInfoSpecialJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
         const WeaponInfoSubJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/WeaponInfoSub.json`);
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let languageKey = interaction.options.getString("language");

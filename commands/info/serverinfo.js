@@ -12,7 +12,9 @@ exports.run = async (client, interaction) => {
 
         let adminBool = isAdmin(client, interaction.member);
         let adminBot = isAdmin(client, interaction.guild.me);
-        let ephemeral = true;
+
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let guild = interaction.guild;
@@ -176,4 +178,9 @@ exports.run = async (client, interaction) => {
 module.exports.config = {
     name: "serverinfo",
     description: "Displays info about the server.",
+    options: [{
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the reply will be private."
+    }]
 };

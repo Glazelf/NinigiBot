@@ -11,11 +11,10 @@ exports.run = async (client, interaction) => {
         const isAdmin = require('../../util/isAdmin');
         const getWikiURL = require('../../util/getWikiURL');
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
-        let buttonArray = [];
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
+        let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
         // Imports:
         // rarePersonaeRoyal; list of treasure Persona
