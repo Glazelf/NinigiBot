@@ -106,7 +106,7 @@ exports.run = async (client, interaction) => {
                 pokemonEmbed
                     .setAuthor({ name: moveTitle })
                     .setDescription(description);
-                if (move.basePower > 0 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
+                if (move.basePower > 1 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
                 if (target !== "Self") pokemonEmbed.addField("Accuracy:", accuracy, true);
                 pokemonEmbed
                     .addField("Type:", type, true)
