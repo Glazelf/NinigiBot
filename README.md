@@ -10,10 +10,3 @@ For questions or other support either [create a discussion](https://github.com/G
 This bot and repository are not maintained with selfhosting in mind. You're pretty much on your own there.  
 I wouldn't recommend it but you're welcome to try as long as you follow the license.  
 This repository is mostly public for transparency and easy contributing.
-
-## Credits
-[Pokémon Showdown](https://github.com/smogon/pokemon-showdown): Pokémon data.  
-[Monser-Hunter-DB](https://github.com/CrimsonNynja/monster-hunter-DB), [MHRise-Database](https://github.com/RoboMechE/MHRise-Database), [MHW-Database](https://github.com/RoboMechE/MHW-Database), [MHGU-Database](https://github.com/RoboMechE/MHGU-Database): Monster Hunter data.  
-[Leanny](https://github.com/Leanny/leanny.github.io), [Splatoon3.ink](https://github.com/misenhower/splatoon3.ink): Splatoon 3 data.  
-[genshindevapi](https://github.com/genshindev/api): Genshin Impact data.  
-[peersona5_calculator](https://github.com/chinhodado/persona5_calculator): Persona 5 data.  
