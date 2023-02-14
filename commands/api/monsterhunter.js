@@ -128,6 +128,14 @@ exports.run = async (client, interaction) => {
     };
 };
 
+let mhRiseString = "Monster Hunter Rise";
+let mhWorldString = "Monster Hunter World";
+let mhguString = "Monster Hunter Generations Ultimate";
+let mh4uString = "Monster Hunter 4 Ultimate";
+let mh3uString = "Monster Hunter 3 Ultimate";
+let mhStories2String = "Monster Hunter Stories 2";
+let mhStoriesString = "Monster Hunter Stories";
+
 module.exports.config = {
     name: "monsterhunter",
     description: "Shows Monster Hunter data.",
@@ -156,13 +164,13 @@ module.exports.config = {
             description: "Specify game by name or abbreviation.",
             required: true,
             choices: [
-                { name: "Monster Hunter Rise", value: "Monster Hunter Rise" },
-                { name: "Monster Hunter World", value: "Monster Hunter World" },
-                { name: "Monster Hunter Generations Ultimate", value: "Monster Hunter Generations Ultimate" },
-                { name: "Monster Hunter 4 Ultimate", value: "Monster Hunter 4 Ultimate" },
-                { name: "Monster Hunter 3 Ultimate", value: "Monster Hunter 3 Ultimate" },
-                { name: "Monster Hunter Stories 2", value: "Monster Hunter Stories 2" },
-                { name: "Monster Hunter Stories", value: "Monster Hunter Stories" }
+                { name: mhRiseString, value: mhRiseString },
+                { name: mhWorldString, value: mhWorldString },
+                { name: mhguString, value: mhguString },
+                { name: mh4uString, value: mh4uString },
+                { name: mh3uString, value: mh3uString },
+                { name: mhStories2String, value: mhStories2String },
+                { name: mhStoriesString, value: mhStoriesString }
             ]
         }, {
             name: "ephemeral",
