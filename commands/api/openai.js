@@ -12,7 +12,7 @@ exports.run = async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         // Remove this when i figure out billing
-        return sendMessage({ client: client, interaction: interaction, content: `This command is currently unavailable since the free trial for OpenAI expired. We are currently looking into the options and pricing plans OpenAI has available.\nI am currently making absolutely no money with this bot, but I am paying for quite a few services, and a pay-as-you-go AI would rack up quite a cost with ${client.user.username} being in ${client.guilds.cache.size} servers. Consider donating at [Paypal](<https://www.paypal.com/paypalme/glazelf>) or even [Github](<https://github.com/sponsors/Glazelf>).\n It would mean a bunch to me and enable stupid stuff like this. Thanks!` });
+        return sendMessage({ client: client, interaction: interaction, content: `This command is currently unavailable since you guys used up the free trial credit for OpenAI. We are currently looking into the options and pricing plans OpenAI has available.\nI am currently making absolutely no money with this bot, but I am paying for quite a few services, and a pay-as-you-go AI would rack up quite a cost with ${client.user.username} being in ${client.guilds.cache.size} servers. Consider donating at [Paypal](<https://www.paypal.com/paypalme/glazelf>) or even [Github](<https://github.com/sponsors/Glazelf>).\n It would mean a bunch to me and enable stupid stuff like this. Thanks!` });
 
         const configuration = new Configuration({
             apiKey: client.config.openai,
