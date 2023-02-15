@@ -11,17 +11,19 @@ exports.run = async (client, interaction) => {
         if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
+        // Remove this when i figure out billing
+        return sendMessage({ client: client, interaction: interaction, content: `This command is currently unavailable since the free trial for OpenAI expired. We are currently looking into the options and pricing plans OpenAI has available.\nI am currently making absolutely no money with this bot, but I am paying for quite a few services, and a pay-as-you-go AI would rack up quite a cost with ${client.user.username} being in ${client.guilds.cache.size} servers. Consider donating at [Paypal](<https://www.paypal.com/paypalme/glazelf>) or even [Github](<https://github.com/sponsors/Glazelf>).\n It would mean a bunch to me and enable stupid stuff like this. Thanks!` });
+
         const configuration = new Configuration({
             apiKey: client.config.openai,
         });
         const openai = new OpenAIApi(configuration);
         // Documentation: https://beta.openai.com/docs/api-reference/images/create?lang=node.js
         // Examples: https://beta.openai.com/examples
-        let model = "text-davinci-003"; // Text generation model; https://beta.openai.com/docs/models/gpt-3
-        // model = "code-davinci-002"; // Code generation model
+        let model = "text-curie-001"; // Text generation model; https://beta.openai.com/docs/models/gpt-3
         let promptInput = interaction.options.getString("prompt");
         let maxTokens = interaction.options.getInteger("max-length");
-        if (!maxTokens) maxTokens = 2048; // Range 1-4096, default: 16
+        if (!maxTokens) maxTokens = 1024; // Range 1-4096, default: 16
         let samplingTemperature = interaction.options.getNumber("temperature");
         if (!samplingTemperature) samplingTemperature = 1; // Range 0.0-2.0, default: 1.0
         let presencePenalty = interaction.options.getNumber("presence-penalty");
@@ -98,14 +100,14 @@ module.exports.config = {
             name: "prompt",
             type: "STRING",
             description: "Prompt to get a response to.",
-            maxLength: 2048,
+            maxLength: 512,
             required: true
         }, {
             name: "max-length",
             type: "INTEGER",
             description: "Maximum length of the response in tokens.",
             minValue: 1,
-            maxValue: 2048
+            maxValue: 1536
         }, {
             name: "temperature",
             type: "NUMBER",
