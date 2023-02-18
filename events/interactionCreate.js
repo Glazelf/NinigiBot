@@ -163,22 +163,6 @@ module.exports = async (client, interaction) => {
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
-                    // Used in: coinflip, bet
-                    case "bet-amount":
-                        let balance = await api_user.getMoney(interaction.user.id);
-                        if (balance > 0) {
-                            balance = Math.floor(balance);
-                            let balanceHalf = Math.floor(balance / 2);
-                            let balanceQuarter = Math.floor(balance / 4);
-                            let balanceRandom = randomNumber(1, balance);
-                            choices.push({ name: `All your money: ${balance}${globalVars.currency}`, value: balance });
-                            if (balance >= 2) choices.push({ name: `Half your money: ${balanceHalf}${globalVars.currency}`, value: balanceHalf });
-                            if (balance >= 4) choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
-                            if (balance >= 5) choices.push({ name: `Random amount`, value: balanceRandom });
-                        } else {
-                            choices.push({ name: "Chat to earn money!", value: 0 });
-                        };
-                        break;
                     case "time":
                         choices.push({ name: "1 hour", value: 60 });
                         choices.push({ name: "2 hours", value: 120 });
