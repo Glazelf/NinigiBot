@@ -9,6 +9,7 @@ exports.run = async (client, interaction) => {
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
+        const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
         // Command settings
@@ -32,6 +33,7 @@ exports.run = async (client, interaction) => {
         let pokemonButtons = new Discord.MessageActionRow();
         let nameBulbapedia = null;
         let linkBulbapedia = null;
+        let currentGeneration = 9; // Set current generation
         let JSONresponse;
         let allPokemon = Dex.species.all();
         switch (interaction.options.getSubcommand()) {
@@ -79,6 +81,16 @@ exports.run = async (client, interaction) => {
                 let move = Dex.moves.get(moveSearch);
                 if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
+                let moveLearnPool = [];
+                for await (const [key, value] of Object.entries(learnsets)) {
+                    let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
+                    if (!pokemonMatch || !pokemonMatch.exists || pokemonMatch.num <= 0 || !value.learnset) continue;
+                    if (!Object.keys(value.learnset).includes(move.id)) continue;
+                    if (value.learnset[move.id].some(learnstring => learnstring.startsWith(currentGeneration))) moveLearnPool.push(pokemonMatch.name);
+                };
+                let moveLearnPoolString = moveLearnPool.join(", ");
+                if (moveLearnPoolString.length > 1024) moveLearnPoolString = "Many Pokémon!";
+
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 // Move is NOT capitalized on Bulbapedia URLs
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
@@ -119,6 +131,7 @@ exports.run = async (client, interaction) => {
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
                 // if (move.maxMove && move.maxMove.basePower && move.gen < 9 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
                 pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
+                if (moveLearnPool.length > 0) pokemonEmbed.addField(`Learned By (Gen ${currentGeneration}):`, moveLearnPoolString, false);
                 break;
             // Natures
             case "nature":
@@ -238,7 +251,6 @@ exports.run = async (client, interaction) => {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
                 } catch (e) {
-                    // console.log(e);
                     // Make generic embed to guide people to usage statistics :)
                     let replyText = failText;
                     return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
