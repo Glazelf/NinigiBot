@@ -227,7 +227,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         for (const tmMove of tmMoves) {
             if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
             tmMovesStrings[tmMoveIndex].push(tmMove);
-            if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1028 to add an extra entry for the overflow
+            if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
         };
         let eggMovesString = eggMoves.join(", ");
         let tutorMovesString = tutorMoves.join(", ");

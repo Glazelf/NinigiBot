@@ -58,7 +58,7 @@ exports.run = async (client, interaction) => {
                     // Every (most) characters have 3 active and 3 passive skills and 6 constellations, making 12 fields
                     await character.skillTalents.forEach(skill => {
                         let skillDesc = skill.description.replace("\n\n", "\n");
-                        if (skillDesc.length <= 1028) {
+                        if (skillDesc.length <= 1024) {
                             giEmbed.addField(`${skill.name} (Active)`, skillDesc, false);
                         } else {
                             giEmbed.addField(`${skill.name} (Active)`, `${skillDesc.substring(0, 1024)}...`, false);
