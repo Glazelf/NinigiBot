@@ -7,7 +7,7 @@ module.exports = async (client, message) => {
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
 
-        const { LogChannels, StarboardMessages } = require('../database/dbObjects');
+        const { LogChannels, StarboardMessages } = require('../database/dbServices/server.api');
 
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
@@ -42,13 +42,13 @@ module.exports = async (client, message) => {
         if (!log) return;
 
         // Check message content
-        let botMember = await message.guild.members.fetch(client.user.id);
+        let botMember = message.guild.me;
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
             let messageContent = message.content;
-            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
+            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (messageContent.length < 1) return;
 
             let isReply = false;
@@ -75,7 +75,7 @@ module.exports = async (client, message) => {
                 .setAuthor({ name: `Message Deleted ❌`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
                 .addField(`Content:`, messageContent, false);
-            if (isReply && replyMessage) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
+            if (isReply && replyMessage && replyMessage.author) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
             if (executor) deleteEmbed.addField('Executor:', `${executor} (${executor.id})`, true)
             deleteEmbed
                 .setFooter({ text: message.author.tag })

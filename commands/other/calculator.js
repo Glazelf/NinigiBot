@@ -6,14 +6,13 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        let ephemeral = true;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let maxMessageLength = 2000;
         let noInputString = `You need to provide a valid input.`;
-
         let input = interaction.options.getString("input");
-
         // Sanitize input
         let sanitizeValues = [
             " ",
@@ -34,25 +33,22 @@ exports.run = async (client, interaction) => {
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
         });
-
         if (!calcInput) return sendMessage({ client: client, interaction: interaction, content: noInputString });
-
         try {
             var evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: noInputString });
         };
-
         // Test out rounding based on remainder sometime
         // let remainder = evaled % 1;
-
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
-
         let output = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
+        if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently [not supported](<https://github.com/Glazelf/NinigiBot/issues/436>).`;
         let returnString = output;
         if (output.length > maxMessageLength) returnString = Discord.Formatters.codeBlock("js", rounded.toString());
+
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
@@ -69,5 +65,9 @@ module.exports.config = {
         type: "STRING",
         description: "Input to calculate.",
         required: true
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the response should be ephemeral."
     }]
 };

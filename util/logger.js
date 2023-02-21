@@ -1,4 +1,5 @@
-module.exports = async (exception, client, message = null) => {
+module.exports = async (exception, client, interaction = null) => {
+    // Note: interaction may be a message
     // Import globals
     let globalVars = require('../events/ready');
     try {
@@ -20,29 +21,30 @@ module.exports = async (exception, client, message = null) => {
         };
 
         let user;
-        if (message) {
-            if (message.member) user = message.author;
+        if (interaction) {
+            if (interaction.member) user = interaction.author;
+            if (interaction.user) user = interaction.user;
         };
 
         let exceptionCode = Discord.Formatters.codeBlock(exception.stack);
         let messageContentCode = "";
-        if (message && message.content && message.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(message.content);
+        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(interaction.content);
 
         // log to dev channel
-        let baseMessage;
-        baseMessage = message && user ? `An error occurred in ${message.channel}!
-Link: ${message.url}
+        let baseMessage = "";
+        baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
+User: **${user.tag}** (${user.id})
+Message link: ${interaction.url}
 Error:\n${exceptionCode}
-Message by **${user.tag}** (${user.id}):
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + `...`;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(client.config.devChannelID);
-        if (message) {
+        if (interaction) {
             if (baseMessage.includes("Missing Permissions")) {
                 try {
-                    return message.reply(`I lack permissions to perform the requested action.`);
+                    return interaction.reply(`I lack permissions to perform the requested action.`);
                 } catch (e) {
                     return;
                 };

@@ -9,11 +9,16 @@ module.exports = async (client, interaction) => {
         const getPokemon = require('../util/pokemon/getPokemon');
         const getMonster = require('../util/mh/getMonster');
         const randomNumber = require('../util/randomNumber');
+        const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
-        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbObjects');
-        const { bank } = require('../database/bank');
+        const axios = require("axios");
+        const fs = require("fs");
+        let monstersJSON;
+        const { EligibleRoles } = require('../database/dbServices/server.api');
+
+        const api_trophy = require('../database/dbServices/trophy.api');
+        const api_user = require('../database/dbServices/user.api');
+
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
@@ -53,14 +58,17 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
+                            let learnsetBool = (interaction.customId.split("|")[1] == "true");
+                            let shinyBool = (interaction.customId.split("|")[2] == "true");
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon(client, interaction, pokemon);
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool });
                             if (!messageObject) return;
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                             return;
                         } else if (interaction.customId.startsWith("mhSub")) {
+                            monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
                             // Monster Hunter forms
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
@@ -147,6 +155,18 @@ module.exports = async (client, interaction) => {
                                 return buttonRowArray;
                             };
                             return;
+                        } else if (interaction.customId.startsWith("bgd")) {
+                            // trophy shop??
+                            const offset = parseInt(interaction.customId.substring(3));
+                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
+                            await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
+                        } else if (interaction.customId.startsWith("usf")) {
+                            // userinfo
+                            const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
+                            const page = parseInt(data[1]);
+                            const user = data[2];
+                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, { id: user });
+                            await interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
                             return;
@@ -155,31 +175,37 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
-                                const role = await interaction.guild.roles.fetch(interaction.values[0]);
-                                if (!role) return sendMessage({ client: client, interaction: interaction, content: `This role does not exist.` });
+                                const rolesArray = [];
+                                for await (const value of interaction.values) {
+                                    const roleArrayItem = await interaction.guild.roles.fetch(value);
+                                    rolesArray.push(roleArrayItem);
+                                };
+                                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `None of the selected roles are valid.` });
                                 let adminBool = isAdmin(client, interaction.guild.me);
 
-                                let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
-                                if (!checkRoleEligibility) return sendMessage({ client: client, interaction: interaction, content: `This role is not available anymore.` });
-
-                                if (role.managed) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${role} because it is being automatically managed by an integration.` });
-                                if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `I do not have permission to manage this role.` });
-                                try {
-                                    if (interaction.member.roles.cache.has(role.id)) {
-                                        await interaction.member.roles.remove(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You no longer have ${role}!` });
-                                    } else {
-                                        await interaction.member.roles.add(role);
-                                        return sendMessage({ client: client, interaction: interaction, content: `You now have ${role}!` });
+                                let roleSelectReturnString = "Role toggling results:\n";
+                                for await (const role of rolesArray) {
+                                    let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
+                                    if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
+                                    if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
+                                    if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
+                                    try {
+                                        if (interaction.member.roles.cache.has(role.id)) {
+                                            await interaction.member.roles.remove(role);
+                                            roleSelectReturnString += `✅ You no longer have ${role}!\n`
+                                        } else {
+                                            await interaction.member.roles.add(role);
+                                            roleSelectReturnString += `✅ You now have ${role}!\n`;
+                                        };
+                                    } catch (e) {
+                                        roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
                                     };
-                                } catch (e) {
-                                    return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle ${role}, probably because I lack permissions.` });
                                 };
+                                return sendMessage({ client: client, interaction: interaction, content: roleSelectReturnString });
                             } catch (e) {
                                 console.log(e);
                                 return;
                             };
-
                         } else {
                             // Other select menus
                             return;
@@ -193,25 +219,42 @@ module.exports = async (client, interaction) => {
                 let choices = [];
                 // Common arguments 
                 switch (focusedOption.name) {
-                    // Used in: coinflip, bet
-                    case "bet-amount":
-                        let balance = await bank.currency.getBalance(interaction.user.id);
-                        if (balance > 0) {
-                            balance = Math.floor(balance);
-                            let balanceHalf = Math.floor(balance / 2);
-                            let balanceQuarter = Math.floor(balance / 4);
-                            let balanceRandom = randomNumber(1, balance);
-                            choices.push({ name: `All your money: ${balance}${globalVars.currency}`, value: balance });
-                            if (balance >= 2) choices.push({ name: `Half your money: ${balanceHalf}${globalVars.currency}`, value: balanceHalf });
-                            if (balance >= 4) choices.push({ name: `A quarter: ${balanceQuarter}${globalVars.currency}`, value: balanceQuarter });
-                            if (balance >= 5) choices.push({ name: `Random amount: ${balanceRandom}${globalVars.currency}`, value: balanceRandom });
-                        } else {
-                            choices.push({ name: "Talk to earn some money!", value: 0 });
-                        };
+                    case "time":
+                        choices.push({ name: "1 hour", value: 60 });
+                        choices.push({ name: "2 hours", value: 120 });
+                        choices.push({ name: "4 hours", value: 240 });
+                        choices.push({ name: "8 hours", value: 480 });
+                        choices.push({ name: "12 hours", value: 720 });
+                        choices.push({ name: "1 day", value: 1440 });
+                        choices.push({ name: "1 week", value: 10080 });
                         break;
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {
+                    case "role":
+                        switch (focusedOption.name) {
+                            case "role":
+                                let dbRoles = await EligibleRoles.findAll();
+                                let roleIDs = [];
+                                let roleObject = [];
+                                await dbRoles.forEach(eligibleRole => {
+                                    roleIDs.push(eligibleRole.role_id);
+                                });
+                                await interaction.guild.roles.cache.forEach(async (role) => {
+                                    if (roleIDs.includes(role.id)) {
+                                        let choiceName = role.name;
+                                        let dbRole = dbRoles.find(eligibleRole => eligibleRole.role_id == role.id);
+                                        if (dbRole.description) choiceName = `${choiceName} | ${dbRole.description}`;
+                                        roleObject.push({ name: choiceName, value: role.id, position: role.position });
+                                    };
+                                });
+                                roleObject = roleObject.sort((r, r2) => r2.position - r.position);
+                                await roleObject.forEach(role => {
+                                    if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
+                                });
+                                break;
+                        };
+                        break;
                     case "pokemon":
                         switch (focusedOption.name) {
                             case "pokemon":
@@ -221,8 +264,7 @@ module.exports = async (client, interaction) => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && species.exists
-                                        && species.isNonstandard !== "Custom"
-                                        && species.isNonstandard !== "CAP"
+                                        && species.num > 0
                                         && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
@@ -244,18 +286,21 @@ module.exports = async (client, interaction) => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
+                            case "nature":
+                                let natures = Dex.natures.all();
+                                await natures.forEach(nature => {
+                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && nature.exists) choices.push({ name: nature.name, value: nature.name });
+                                });
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
-                                    if (format.id.includes(focusedOption.value.toLowerCase()) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
+                                    if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase())) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;
                             case "rating":
                                 let ratings = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options.getString("format");
-                                if (formatInput) {
-                                    if (formatInput.startsWith("gen") && formatInput.endsWith("ou")) ratings = [0, 1500, 1695, 1825];
-                                };
+                                if (formatInput && formatInput.match(/gen.{1,2}(ou)$/g)) ratings = [0, 1500, 1695, 1825];
                                 await ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
@@ -263,6 +308,8 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "monsterhunter":
+                        monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
+                        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
                         switch (focusedOption.name) {
                             case "monster":
                                 await monstersJSON.monsters.forEach(monster => {
@@ -274,50 +321,165 @@ module.exports = async (client, interaction) => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
-                            case "game":
-                                let MHGames = ["Monster Hunter 3 Ultimate",
-                                    "Monster Hunter 4 Ultimate",
-                                    "Monster Hunter Generations Ultimate",
-                                    "Monster Hunter World",
-                                    "Monster Hunter Rise",
-                                    "Monster Hunter Stories",
-                                    "Monster Hunter Stories 2"];
-                                await MHGames.forEach(game => {
-                                    choices.push({ name: game, value: game });
-                                });
-                                break;
                         };
                         break;
-                    case "coinflip":
+                    case "splatoon3":
+                        let languageDefault = "EUen";
+                        let languageJSON = null;
+                        let languageInput = interaction.options.getString("language");
+                        if (languageInput) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}.json`);
+                        if (!languageJSON) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
                         switch (focusedOption.name) {
-                            case "side":
-                                choices.push({ name: "Heads", value: "Heads" });
-                                choices.push({ name: "Tails", value: "Tails" });
+                            case "clothing":
+                                let allClothesNames = {
+                                    ...languageJSON["CommonMsg/Gear/GearName_Head"],
+                                    ...languageJSON["CommonMsg/Gear/GearName_Clothes"],
+                                    ...languageJSON["CommonMsg/Gear/GearName_Shoes"]
+                                };
+                                for await (const [key, value] of Object.entries(allClothesNames)) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.startsWith("COP00")) choices.push({ name: value, value: key });
+                                };
                                 break;
-                        };
-                        break;
-                    // VERY low priority
-                    case "rps":
-                        switch (focusedOption.name) {
                             case "weapon":
-                                choices.push({ name: "Rock", value: "Rock" });
-                                choices.push({ name: "Paper", value: "Paper" });
-                                choices.push({ name: "Scissors", value: "Scissors" });
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Msn") && !key.includes("_Rival") && !key.includes("_AMB_") && key !== "Free") choices.push({ name: value, value: key });
+                                };
+                                break;
+                            case "subweapon":
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.includes("_Rival") && !key.includes("_Coop") && value !== "-" && !key.includes("SalmonBuddy")) choices.push({ name: value, value: key });
+                                };
+                                break;
+                            case "special":
+                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
+                                    // Gachihoko = Rainmaker
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-" && !value.includes("Gachihoko")) choices.push({ name: value, value: key });
+                                };
+                                break;
+                            case "mode":
+                                let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
+                                let responseSchedules = await axios.get(schedulesAPI);
+                                if (responseSchedules.data.data.currentFest) {
+                                    choices.push({ name: "Splatfest Battle", value: "Splatfest Battle|festSchedules" });
+                                } else {
+                                    choices.push({ name: "Turf War", value: "Turf War|regularSchedules" });
+                                    choices.push({ name: "Anarchy Battle (Series)", value: "Anarchy Battle (Series)|bankaraSchedules|series" });
+                                    choices.push({ name: "Anarchy Battle (Open)", value: "Anarchy Battle (Open)|bankaraSchedules|open" });
+                                    choices.push({ name: "X Battle", value: "X Battle|xSchedules" }); // Check if available during Splatfest
+                                };
+                                // choices.push({ name: "League Battle", value: "League Battle|leagueSchedules" }); // Uncomment when League Battle is available, also check if available during Splatfest or Big Run
+                                let currentBigRun = responseSchedules.data.data.coopGroupingSchedule.bigRunSchedules.nodes[0];
+                                let salmonRunTitle = "Salmon Run";
+                                if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) salmonRunTitle += " (Big Run)";
+                                choices.push({ name: salmonRunTitle, value: "Salmon Run|coopGroupingSchedule" });
                                 break;
                         };
-                    case "shop":
+                        break;
+                    case "genshin":
+                        let giAPI = `https://api.genshin.dev/`;
+                        let giResponse;
                         switch (focusedOption.name) {
-                            case "category":
-                                choices.push({ name: "Equipment", value: "Equipment" });
-                                choices.push({ name: "Food", value: "Food" });
+                            case "character":
+                                giAPI += `characters/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giCharacter of giResponse.data) {
+                                    let giCharacterCapitalized = capitalizeString(giCharacter);
+                                    if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
+                                };
+                                break;
+                            case "weapon":
+                                giAPI += `weapons/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giWeapon of giResponse.data) {
+                                    let giWeaponCapitalized = capitalizeString(giWeapon);
+                                    if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
+                                };
+                                break;
+                            case "artifact":
+                                giAPI += `artifacts/`;
+                                giResponse = await axios.get(giAPI);
+                                for (const giArtifact of giResponse.data) {
+                                    let giArtifactCapitalized = capitalizeString(giArtifact);
+                                    if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                };
                                 break;
                         };
-                    case "inventory":
+                        break;
+                    case "persona5":
+                        // Submodule is documented in persona5 command
+                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        switch (focusedOption.name) {
+                            case "persona":
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                for await (const [key, value] of Object.entries(personaMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "skill":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element !== "trait") choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "trait":
+                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element == "trait") choices.push({ name: key, value: key });
+                                };
+                                break;
+                            case "item":
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+                                for await (const [key, value] of Object.entries(itemMapRoyal)) {
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && !value.skillCard) choices.push({ name: key, value: key });
+                                };
+                        };
+                        break;
+                    case "manager":
+                        switch (focusedOption.name) {
+                            case "name":
+                                let trophies = await api_trophy.getShopTrophies();
+                                let temp = ''
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
+                                });
+                        };
+                        break;
+                    case "trophy":
+                        switch (focusedOption.name) {
+                            case "shoptrophy":
+                                const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
+                                buyable_items.forEach(trophy => {
+                                    choices.push({ name: trophy, value: trophy });
+                                });
+                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                break;
+                            case "trophy":
+                                let trophies = await api_trophy.getShopTrophies();
+                                let temp = ''
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                });
+                                trophies = await api_trophy.getEventTrophies();
+                                trophies.forEach(trophy => {
+                                    temp = trophy.trophy_id;
+                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                });
+                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                break;
+                        };
                         break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
+                // Add random suggestion
+                if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
+                    // Only display random suggestion if there enough other choices or value matches "random"
+                    if (choices.length == 25) choices.pop();
+                    if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
+                };
+                // Empty choices return empty array
                 if (choices.length < 1) return interaction.respond([]);
+                // Return choices
                 return interaction.respond(choices).catch(e => {
                     // console.log(e);
                 });
@@ -336,7 +498,7 @@ module.exports = async (client, interaction) => {
 
                         const bugReportEmbed = new Discord.MessageEmbed()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `Bug Report` })
+                            .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescribe)
@@ -362,9 +524,9 @@ module.exports = async (client, interaction) => {
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescribe)
-                            .setFooter({ text: interaction.user.tag });
+                            .setFooter({ text: `${interaction.user.tag} (${interaction.user.id})` });
 
-                        await interaction.guild.publicUpdatesChannel.send({ content: interaction.user.id, embeds: [modMailEmbed], components: [profileButtons] });
+                        await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                         break;
                 };

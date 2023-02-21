@@ -4,7 +4,7 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { StarboardChannels, StarboardMessages } = require('../database/dbObjects');
+        const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
 
         if (messageReaction.count == null || messageReaction.count == undefined) return;
 

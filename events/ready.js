@@ -1,13 +1,12 @@
 module.exports = async (client) => {
     try {
-        const { bank } = require('../database/bank');
-        const { Users } = require('../database/dbObjects');
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
-        const storedBalances = await Users.findAll();
-        storedBalances.forEach(b => bank.currency.set(b.user_id, b));
+        // const { bank } = require('../database/bank');
+        // const { Users } = require('../database/dbServices/server.api');
+        // const storedBalances = await Users.findAll();
+        // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
         const getTime = require('../util/getTime');
-
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
@@ -22,17 +21,14 @@ module.exports = async (client) => {
         console.log("Loaded interactions!");
 
         await client.guilds.fetch();
-
         // Set bot status
         let presence = initPresence();
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
-
         // List and fetch servers the bot is connected to
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
-
         let timestamp = await getTime(client);
 
         console.log(`Commands: ${client.commands.size}
@@ -54,13 +50,13 @@ function initPresence() {
 
 module.exports.NinigiID = "592760951103684618";
 module.exports.ShinxServerID = "549214833858576395";
+// module.exports.ShinxServerID = "759344085420605471"; // Testing
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
 module.exports.lackPerms = "You do not have the required permissions to do this.";
 module.exports.eventChannelID = "752626723345924157"; // General2
-//module.exports.eventChannelID = "665274079397281835"; // Old stan channel
-//module.exports.eventChannelID = "593014621095329812";  // Testing
+// module.exports.eventChannelID = "922972585992532022"; // Testing
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.presence = initPresence();
-module.exports.displayAvatarSettings = { size: 256, format: "png", dynamic: true };
+module.exports.displayAvatarSettings = { size: 512, format: "png", dynamic: true };

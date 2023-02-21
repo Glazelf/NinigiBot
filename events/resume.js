@@ -11,7 +11,8 @@ module.exports = async (client) => {
         let timestamp = await getTime(client);
 
         // Console log status
-        return console.log(`Resumed. (${timestamp})`);
+        // console.log(`Resumed. (${timestamp})`);
+        return;
 
     } catch (e) {
         // Log error

@@ -25,17 +25,11 @@ exports.run = async (client, interaction) => {
         if (removeInteractions) {
             // Delete all global commands
             await client.application.commands.set([]);
-
             // Delete all guild commands
             await client.guilds.cache.forEach(async (guild) => {
-                let adminBool = isAdmin(client, guild.me);
-                if (adminBool) {
-                    try {
-                        guild.commands.set([]);
-                    } catch (e) {
-                        // console.log(e);
-                    };
-                };
+                guild.commands.set([]).catch(e => {
+                    return;
+                });
             });
         };
 

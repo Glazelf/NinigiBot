@@ -1,3 +1,9 @@
 [submodule "monster-hunter-DB"]
 	path = submodules/monster-hunter-DB
 	url = https://github.com/CrimsonNynja/monster-hunter-DB.git
+[submodule "leanny.github.io"]
+	path = submodules/leanny.github.io
+	url = https://github.com/Leanny/leanny.github.io
+[submodule "persona5_calculator"]
+	path = submodules/persona5_calculator
+	url = https://github.com/chinhodado/persona5_calculator

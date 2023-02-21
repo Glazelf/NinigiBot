@@ -9,7 +9,8 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 
-        let ephemeral = true;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let DiscordJSVersion = Discord.version;
@@ -86,7 +87,7 @@ exports.run = async (client, interaction) => {
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Created:", `<t:${createdAt}:f>`, true);
         if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
-        if (githubRepoResponse) botEmbed.addField("Github Stars:", `${githubRepoResponse.data.stargazers_count}⭐`, true);
+        if (githubRepoResponse) botEmbed.addField("Github Stars:", `[${githubRepoResponse.data.stargazers_count}⭐](https://github.com/${githubURLVars}/stargazers)`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
         let botButtons = new Discord.MessageActionRow()
@@ -94,8 +95,11 @@ exports.run = async (client, interaction) => {
             // Uncomment this when app directory goes live
             // .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }))
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
+        // Uncomment this whenever App Directory launches
+        // .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }));
 
-        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: true, });
+
+        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons });
 
         async function getUsers() {
             // Fast but inaccurate method
@@ -103,17 +107,6 @@ exports.run = async (client, interaction) => {
             await client.guilds.cache.forEach(guild => {
                 if (guild.memberCount) userCount += guild.memberCount;
             });
-
-            // Slow but accurate method
-            // var userList = [];
-            // await client.guilds.cache.forEach(guild => {
-            //     guild.members.fetch().then(
-            //         guild.members.cache.forEach(member => {
-            //             if (!member.user.bot) userList.push(member.id);
-            //         }));
-            // });
-            // userCount = [...new Set(userList)];
-
             return userCount;
         };
 
@@ -125,5 +118,10 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "botinfo",
-    description: `Displays info about this bot.`
+    description: `Displays info about this bot.`,
+    options: [{
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the reply will be private."
+    }]
 };

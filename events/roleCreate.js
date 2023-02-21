@@ -4,14 +4,14 @@ module.exports = async (client, role) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbServices/server.api');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: role.guild.id } });
         if (!logChannel) return;
         let log = role.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await role.guild.members.fetch(client.user.id);
+        let botMember = role.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
@@ -40,13 +40,11 @@ module.exports = async (client, role) => {
                 .addField(`Role:`, `${role} (${role.id})`)
                 .addField(`Role name:`, role.name)
                 .setTimestamp();
-
             if (executor) {
                 createEmbed
                     .addField('Created by:', `${executor} (${executor.id})`)
                     .setFooter({ text: executor.tag });
             };
-
             if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
 
             return log.send({ embeds: [createEmbed] });

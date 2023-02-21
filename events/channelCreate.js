@@ -4,14 +4,14 @@ module.exports = async (client, channel) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbServices/server.api');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;
         let log = channel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await channel.guild.members.fetch(client.user.id);
+        let botMember = channel.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const getChannelTypeName = require('../util/getChannelType');
@@ -28,21 +28,16 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-
             const channelType = getChannelTypeName(channel);
-
             let footer = channel.id;
             if (executor) footer = executor.tag;
-
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
-
             const createEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
                 .addField(`Channel:`, `${channel} (${channel.id})`)
                 .setFooter({ text: footer })
                 .setTimestamp();
-
             if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
             if (executor) createEmbed.addField('Created by:', `${executor} (${executor.id})`);
 

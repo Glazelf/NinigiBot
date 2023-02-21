@@ -1,9 +1,9 @@
 const forever = require('forever');
-const forevermonitor = require('forever-monitor');
+// const forevermonitor = require('forever-monitor');
 
-let foreverConfig = {
-    "root": "./forever/log"
-};
+// let foreverConfig = {
+//     "root": "./forever/log"
+// };
 
 let foreverOptions = [{
     "uid": "Ninigi",

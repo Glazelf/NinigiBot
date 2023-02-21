@@ -4,14 +4,14 @@ module.exports = async (client, oldRole, newRole) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbServices/server.api');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: newRole.guild.id } });
         if (!logChannel) return;
         let log = newRole.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await newRole.guild.members.fetch(client.user.id);
+        let botMember = newRole.guild.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
@@ -37,27 +37,21 @@ module.exports = async (client, oldRole, newRole) => {
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
                 .addField(`Role:`, `${newRole} (${newRole.id})`)
-                .setTimestamp()
-
+                .setTimestamp();
             if (executor) {
                 updateEmbed
                     .addField('Updated by:', `${executor} (${executor.id})`)
                     .setFooter({ text: executor.tag });
             };
-
             if (oldRole.name !== newRole.name) {
                 updateEmbed
                     .addField(`Old name:`, oldRole.name)
                     .addField(`New name:`, newRole.name);
-            };
-
-            if (oldRole.color !== newRole.color) {
+            } else if (oldRole.color !== newRole.color) {
                 updateEmbed
                     .addField(`Old color:`, oldRole.hexColor)
                     .addField(`New color:`, newRole.hexColor);
-            };
-
-            if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
+            } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 const permissionSerializer = require('../util/permissionBitfieldSerializer');
                 const oldPermissions = permissionSerializer(oldRole.permissions);
                 const newPermissions = permissionSerializer(newRole.permissions);
@@ -66,8 +60,9 @@ module.exports = async (client, oldRole, newRole) => {
                         .addField(`Old permissions:`, oldPermissions.join(', '))
                         .addField(`New permissions:`, newPermissions.join(', '));
                 };
+            } else {
+                return;
             };
-
             if (oldRole.icon !== newRole.icon) {
                 let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
                 let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);

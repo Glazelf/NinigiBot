@@ -4,6 +4,8 @@
     "pikachu-starter": "025",
     "nidoran-f": "029",
     "nidoran-m": "032",
+    "tauros-paldea-fire": "128-b",
+    "tauros-paldea-water": "128-a",
     "eevee-starter": "133",
     "mewtwo-mega-x": "150-mx",
     "mewtwo-mega-y": "150-my",
@@ -33,5 +35,9 @@
     "cramorant-gulping": "845-gu",
     "cramorant-gorging": "845-go",
     "urshifu-rapid-strike-gmax": "892-rgi",
-    "enamorus-therian": "905-s"
+    "enamorus-therian": "905-s",
+    "wo-chien": "1001",
+    "chien-pao": "1002",
+    "ting-lu": "1003",
+    "chi-yu": "1004"
 }

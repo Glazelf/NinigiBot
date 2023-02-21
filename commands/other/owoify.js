@@ -7,22 +7,16 @@ exports.run = async (client, interaction) => {
         const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let input = interaction.options.getString("input");
-        let severityArg = interaction.options.getInteger("severity");
-        let severity = "owo";
-        if (severityArg) {
-            if (severityArg <= 1) severity = "owo";
-            if (severityArg == 2) severity = "uwu";
-            if (severityArg >= 3) severity = "uvu";
-        };
+        let severity = interaction.options.getString("severity");
+        if (!severity) severity = "owo";
 
         let inputOwOified = owoify(input, severity);
-        let returnString = Discord.Formatters.codeBlock("fix", `${inputOwOified} (${severity})`);
+        let returnString = Discord.Formatters.codeBlock("fix", inputOwOified);
 
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
@@ -31,6 +25,12 @@ exports.run = async (client, interaction) => {
         logger(e, client, interaction);
     };
 };
+
+let severityChoices = [
+    { name: "1. owo", value: "owo" },
+    { name: "2. uwu", value: "uwu" },
+    { name: "3. uvu", value: "uvu" }
+];
 
 module.exports.config = {
     name: "owoify",
@@ -42,8 +42,9 @@ module.exports.config = {
         required: true
     }, {
         name: "severity",
-        type: "INTEGER",
-        description: "Severity of owoification. (1-3)",
+        type: "STRING",
+        description: "Severity of owoification.",
+        choices: severityChoices
     }, {
         name: "ephemeral",
         type: "BOOLEAN",

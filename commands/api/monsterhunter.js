@@ -5,19 +5,20 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const crypto = require('crypto');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
+        const isAdmin = require('../../util/isAdmin');
         const getMonster = require('../../util/mh/getMonster');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
-        let ephemeral = true;
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg === false) ephemeral = false;
+        let adminBot = isAdmin(client, interaction.guild.me);
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });
         let mhEmbed = new Discord.MessageEmbed()
@@ -32,11 +33,9 @@ exports.run = async (client, interaction) => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
                 if (!questData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified quest." });
-
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
                 if (questData.isKey) questTitle += ` 🔑`;
-
                 // Set up quest targets
                 let targets = "";
                 if (questData.targets && questData.targets.length > 1) {
@@ -58,95 +57,24 @@ exports.run = async (client, interaction) => {
                     .addField("Objective:", questData.objective, true);
                 if (targets.length > 0) mhEmbed.addField("Targets:", targets, true);
                 break;
-
             // All quests from a game
             case "quests":
                 let gameName = interaction.options.getString("game").toLowerCase();
-
-                // Generalize game names and abbreviations
-                // Only World and Rise are currently supported; but since other game are WIP I want to filter them either way
-                let MH3Titles = [
-                    "monster hunter 3 ultimate",
-                    "monster hunter 3",
-                    "monster hunter 3u",
-                    "mh3",
-                    "mh3u",
-                    "3",
-                    "3u"
-                ];
-                let MH4Titles = [
-                    "monster hunter 4 ultimate",
-                    "monster hunter 4",
-                    "monster hunter 4u",
-                    "mh4",
-                    "mh4u",
-                    "3",
-                    "3u"
-                ];
-                let MHGUTitles = [
-                    "monster hunter generations ultimate",
-                    "monster hunter generations",
-                    "monster hunter generations u",
-                    "mhg",
-                    "mhgu",
-                    "g",
-                    "gu"
-                ];
-                let MH5Titles = [
-                    "monster hunter world",
-                    "monster hunter 5",
-                    "monster hunter world iceborne",
-                    "mh5",
-                    "mhw",
-                    "mhwi",
-                    "world"
-                ];
-                let MH5PTitles = [
-                    "monster hunter rise",
-                    "monster hunter 5 portable",
-                    "monster hunter rise sunbreak",
-                    "mhr",
-                    "mh5p",
-                    "rise"
-                ];
-                let MHSTTitles = [
-                    "monster hunter stories",
-                    "mhs",
-                    "mhst",
-                    "stories"
-                ];
-                let MHST2Titles = [
-                    "monster hunter stories 2",
-                    "monster hunter stories 2 wings of ruin",
-                    "mhs2",
-                    "mhst2",
-                    "stories 2"
-                ];
-                if (MH3Titles.includes(gameName)) gameName = "Monster Hunter 3 Ultimate"
-                if (MH4Titles.includes(gameName)) gameName = "Monster Hunter 4 Ultimate";
-                if (MHGUTitles.includes(gameName)) gameName = "Monster Hunter Generations Ultimate";
-                if (MH5Titles.includes(gameName)) gameName = "Monster Hunter World";
-                if (MH5PTitles.includes(gameName)) gameName = "Monster Hunter Rise";
-                if (MHSTTitles.includes(gameName)) gameName = "Monster Hunter Stories";
-                if (MHST2Titles.includes(gameName)) gameName = "Monster Hunter Stories 2";
-
                 // Add quests matching game title to an array
-                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameInput);
+                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
                 if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
-
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
 
                 mhEmbed
                     .setColor(globalVars.embedColor)
-                    .setAuthor({ name: `${gameInput} Quests` }); // Game name instead of input because of capitalization
+                    .setAuthor({ name: `${gameName} Quests` });
 
                 let totalQuests = questsTotal.length;
-                let pageLength = 10;
-                let currentPage = 1; // Load page 1 on command use (duh)
+                let pageLength = 25;
+                let currentPage = 1; // Load page 1 on command use
                 let questsPaged = questsTotal.reduce((questsTotal, item, index) => {
                     const chunkIndex = Math.floor(index / pageLength);
-
                     // start a new chunk
                     if (!questsTotal[chunkIndex]) questsTotal[chunkIndex] = [];
 
@@ -164,7 +92,6 @@ exports.run = async (client, interaction) => {
                 let startIndex = currentPage + pageLength * currentPage;
                 let endIndex = startIndex + pageLength - 1;
                 mhEmbed.setFooter({ text: `Page ${currentPage}/${totalPages}` });
-
                 // Function to sort by difficulty
                 function compare(a, b) {
                     if (a.difficulty > b.difficulty) return -1;
@@ -172,11 +99,9 @@ exports.run = async (client, interaction) => {
                     return 0;
                 };
                 break;
-
             // Monsters
             case "monster":
                 let monsterName = interaction.options.getString("monster").toLowerCase();
-
                 // Get monster
                 let monsterData;
                 if (monsterName == "random") {
@@ -203,6 +128,14 @@ exports.run = async (client, interaction) => {
     };
 };
 
+let mhRiseString = "Monster Hunter Rise";
+let mhWorldString = "Monster Hunter World";
+let mhguString = "Monster Hunter Generations Ultimate";
+let mh4uString = "Monster Hunter 4 Ultimate";
+let mh3uString = "Monster Hunter 3 Ultimate";
+let mhStories2String = "Monster Hunter Stories 2";
+let mhStoriesString = "Monster Hunter Stories";
+
 module.exports.config = {
     name: "monsterhunter",
     description: "Shows Monster Hunter data.",
@@ -219,7 +152,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "quests",
@@ -229,12 +162,20 @@ module.exports.config = {
             name: "game",
             type: "STRING",
             description: "Specify game by name or abbreviation.",
-            autocomplete: true,
-            required: true
+            required: true,
+            choices: [
+                { name: mhRiseString, value: mhRiseString },
+                { name: mhWorldString, value: mhWorldString },
+                { name: mhguString, value: mhguString },
+                { name: mh4uString, value: mh4uString },
+                { name: mh3uString, value: mh3uString },
+                { name: mhStories2String, value: mhStories2String },
+                { name: mhStoriesString, value: mhStoriesString }
+            ]
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }, {
         name: "monster",
@@ -249,7 +190,7 @@ module.exports.config = {
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
-            description: "Whether this command is only visible to you."
+            description: "Whether the reply will be private."
         }]
     }]
 };

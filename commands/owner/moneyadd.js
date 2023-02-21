@@ -8,22 +8,21 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        const { bank } = require('../../database/bank');
+        const api_user = require('../../database/dbServices/user.api');
         let currency = globalVars.currency;
 
-        let transferTargetID = interaction.options.getString("user-id");
+        let transferTargetID = interaction.options.getString("user");
         let transferAmount = interaction.options.getInteger("amount");
 
-        let transferTarget = await client.users.fetch(transferTargetID);
-        if (!transferTarget) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
+        if (!transferTargetID) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
 
-        let dbBalance = await bank.currency.getBalance(transferTarget.id);
+        let dbBalance = await api_user.getMoney(transferTargetID);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await bank.currency.add(transferTarget.id, +transferAmount);
+        await api_user.addMoney(transferTargetID, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
-        return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to ${transferTarget}. ${transferTarget} now has ${userBalance}.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
 
     } catch (e) {
         // Log error
@@ -41,9 +40,9 @@ module.exports.config = {
         description: "Amount of money to add.",
         required: true
     }, {
-        name: "user-id",
+        name: "user",
         type: "STRING",
-        description: "User to add money to.",
+        description: "Specify user by id.",
         required: true
     }]
 };

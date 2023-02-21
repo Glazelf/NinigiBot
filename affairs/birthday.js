@@ -10,7 +10,7 @@ module.exports = async (client) => {
         const guildID = globalVars.ShinxServerID;
         const channelID = globalVars.eventChannelID;
         const Discord = require("discord.js");
-        const { bank } = require('../database/bank');
+        const api_user = require('../database/dbServices/user.api');
         const gifTags = ["birthday"];
 
         if (client.user.id != globalVars.NinigiID) return;
@@ -30,9 +30,10 @@ module.exports = async (client) => {
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
-                const birthday = await bank.currency.getBirthday(member.id);
+                const birthday = await api_user.getBirthday(member.id);
                 if (birthday) {
                     let now = new Date();
+                    // Birthdays are stored as string DDMM instead of being seperated by a -
                     if (now.getDate() === parseInt(birthday.substring(0, 2)) && (now.getMonth() + 1) === parseInt(birthday.substring(2))) {
                         cuties.push(member.user.tag);
                         await member.roles.add(birthdayRole);

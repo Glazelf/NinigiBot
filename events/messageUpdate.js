@@ -11,15 +11,14 @@ module.exports = async (client, message, newMessage) => {
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-
         // Get log
-        const { LogChannels } = require('../database/dbObjects');
+        const { LogChannels } = require('../database/dbServices/server.api');
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = await message.guild.members.fetch(client.user.id);
+        let botMember = message.guild.me;
 
         // Check message content
         let adminBool = isAdmin(client, botMember);
@@ -31,8 +30,8 @@ module.exports = async (client, message, newMessage) => {
 
             let messageContent = message.content;
             let newMessageContent = newMessage.content
-            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1020)}...`;
-            if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1020)}...`;
+            if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
+            if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1021)}...`;
 
             await autoMod(client, newMessage);
 
