@@ -26,6 +26,12 @@ exports.run = async (client, interaction) => {
     };
 };
 
+let severityChoices = [
+    { name: "1. owo", value: "owo" },
+    { name: "2. uwu", value: "uwu" },
+    { name: "3. uvu", value: "uvu" }
+];
+
 module.exports.config = {
     name: "owoify",
     description: "OwOifies text.",
@@ -38,11 +44,7 @@ module.exports.config = {
         name: "severity",
         type: "STRING",
         description: "Severity of owoification.",
-        choices: [
-            { name: "1. owo", value: "owo" },
-            { name: "2. uwu", value: "uwu" },
-            { name: "3. uvu", value: "uvu" }
-        ]
+        choices: severityChoices
     }, {
         name: "ephemeral",
         type: "BOOLEAN",
