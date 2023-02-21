@@ -39,9 +39,9 @@ module.exports.config = {
         type: "STRING",
         description: "Severity of owoification.",
         choices: [
-            { name: "owo", value: "owo" },
-            { name: "uwu", value: "uwu" },
-            { name: "uvu", value: "uvu" }
+            { name: "1. owo", value: "owo" },
+            { name: "2. uwu", value: "uwu" },
+            { name: "3. uvu", value: "uvu" }
         ]
     }, {
         name: "ephemeral",
