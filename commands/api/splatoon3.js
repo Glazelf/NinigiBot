@@ -113,7 +113,7 @@ exports.run = async (client, interaction) => {
                     .addField(shopTitle, `${levelString} ${weaponObject.ShopUnlockRank}+`, true)
                     .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage)
-                    .setFooter(versionSplit);
+                    .setFooter({ text: versionSplit });
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -140,7 +140,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
                     .addField(weaponListTitle, allSubweaponMatchesNames, false)
-                    .setFooter(versionSplit);
+                    .setFooter({ text: versionSplit });
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -167,7 +167,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false)
-                    .setFooter(versionSplit);
+                    .setFooter({ text: versionSplit });
                 break;
             case "schedule":
                 let inputData = interaction.options.getString("mode");
