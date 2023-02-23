@@ -20,7 +20,7 @@
     "path": "^0.12.7",
     "pokemon-showdown": "github:smogon/pokemon-showdown#master",
     "pureimage": "^0.3.17",
-    "sequelize": "^6.28.1",
+    "sequelize": "^6.28.2",
     "sqlite3": "^5.1.4",
     "xmlhttprequest": "^1.8.0"
   },
