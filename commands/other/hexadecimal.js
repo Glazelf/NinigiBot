@@ -6,6 +6,9 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
+        let ephemeral = interaction.options.getBoolean("ephemeral");
+        if (ephemeral === null) ephemeral = true;
+
         let input = null;
 
         // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
@@ -17,7 +20,7 @@ exports.run = async (client, interaction) => {
                 let hexString = input.toString(16).toUpperCase();
                 while (hexString.length < 6) hexString = "0" + hexString;
                 let returnString = Discord.Formatters.codeBlock("js", `0x${hexString}`)
-                return sendMessage({ client: client, interaction: interaction, content: returnString });
+                return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
                 break;
             case "todecimal":
                 try {
@@ -26,7 +29,7 @@ exports.run = async (client, interaction) => {
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);
                     let returnString = Discord.Formatters.codeBlock("js", hexInt.toString())
-                    return sendMessage({ client: client, interaction: interaction, content: returnString });
+                    return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
                 } catch (e) {
                     return sendMessage({ client: client, interaction: interaction, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
                 };
@@ -51,6 +54,10 @@ module.exports.config = {
             type: "INTEGER",
             description: "Decimal number to convert.",
             required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the response should be ephemeral."
         }]
     }, {
         name: "todecimal",
@@ -61,6 +68,10 @@ module.exports.config = {
             type: "STRING",
             description: "Hexadecimal to convert.",
             required: true
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the response should be ephemeral."
         }]
     }]
 };
