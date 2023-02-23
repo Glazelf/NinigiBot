@@ -4,7 +4,7 @@ module.exports = async (client, message) => {
     const isAdmin = require('./isAdmin');
     let adminBool = isAdmin(client, message.member);
     const Sequelize = require('sequelize');
-    const { serverdata} =  require('../database/dbConnection/dbConnection');
+    const { serverdata } = require('../database/dbConnection/dbConnection');
     const { ModEnabledServers } = require('../database/dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
     const dbServers = await ModEnabledServers.findAll();
     const servers = dbServers.map(server => server.server_id);
@@ -15,7 +15,6 @@ module.exports = async (client, message) => {
     if (!message.content) return false;
 
     let time = await getTime(client);
-
     let memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone");
 
     let reason = "Unspecified.";
@@ -34,26 +33,22 @@ module.exports = async (client, message) => {
         "http.?:\/\/[^s]*.*..{1,}"
     ];
     let genericLinkRegex = new RegExp(genericLinks.join("|"), "i");
-
     const scamLinks = [
         "http.?:\/\/(dicsord-nitro|discrod-egifts|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)", // Discord gift links
         // "http.?:\/\/.*\.ru", // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done. Currently matches any URL containing "ru" after a period. Can't seem to replicate this on online regex testers though
         "http.?:\/\/gidthub.com"
     ];
     let scamRegex = new RegExp(scamLinks.join("|"), "i");
-
     const adLinks = [
         "discord.gg",
         "bit.ly",
         "twitch.tv"
     ];
     let adRegex = new RegExp(adLinks.join("|"), "i");
-
     const testArray = [
         "triceratops"
     ];
     let testRegex = new RegExp(testArray.join("|"), "i");
-
     // Scam links
     let specificScamLink = scamRegex.test(message.content);
     let genericLinkPing = genericLinkRegex.test(message.content) && message.content.includes("@everyone") && message.mentions.everyone == false;
@@ -83,16 +78,13 @@ module.exports = async (client, message) => {
     async function kick() {
         if (!message.member.kickable) return false;
         await message.delete();
-
         let dmResult = "(DM succeeded)";
-
         try {
             await message.author.send({ content: `You've been automatically kicked for the following reason: \`${reason}\`\n${messageContentBlock}` });
         } catch (e) {
             // console.log(e);
             dmResult = "(DM failed)";
         };
-
         try {
             await message.member.kick([`${reason} -${client.user.tag} (${time})`]);
         } catch (e) {
@@ -100,34 +92,28 @@ module.exports = async (client, message) => {
             await message.channel.send({ content: `Failed to auto-kick **${message.author.tag}** (${message.author.id}). This is probably a permission issue.` });
             return false;
         };
-
         await message.channel.send({ content: `Automatically kicked **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
-
         return true;
     };
 
     async function ban() {
         if (!message.member.bannable) return false;
-
         let dmResult = "(DM succeeded)";
-
+        let deleteMessageDays = 1;
         try {
             await message.author.send({ content: `You've been automatically banned for the following reason: \`${reason}\`\n${messageContentBlock}` });
         } catch (e) {
             // console.log(e);
             dmResult = "(DM failed)";
         };
-
         try {
-            await message.member.ban({ days: 1, reason: `${reason} -${client.user.tag} (${time})` });
+            await message.member.ban({ deleteMessageSeconds: deleteMessageDays * 86400, reason: `${reason} -${client.user.tag} (${time})` });
         } catch (e) {
             // console.log(e);
             await message.channel.send({ content: `Failed to auto-ban **${message.author.tag}** (${message.author.id}). This is probably a permission issue.` });
             return false;
         };
-
         await message.channel.send({ content: `Automatically banned **${message.author.tag}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
-
         return true;
     };
 
