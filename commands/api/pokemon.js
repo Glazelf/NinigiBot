@@ -89,7 +89,7 @@ exports.run = async (client, interaction) => {
                     if (value.learnset[move.id].some(learnstring => learnstring.startsWith(currentGeneration))) moveLearnPool.push(pokemonMatch.name);
                 };
                 let moveLearnPoolString = moveLearnPool.join(", ");
-                if (moveLearnPoolString.length > 1024) moveLearnPoolString = "Many Pokémon!";
+                if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
 
                 nameBulbapedia = move.name.replaceAll(" ", "_");
                 // Move is NOT capitalized on Bulbapedia URLs
