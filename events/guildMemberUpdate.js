@@ -9,7 +9,7 @@ module.exports = async (client, member, newMember) => {
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-        let botMember = member.guild.me;
+        let botMember = member.guild.members.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             if (newMember) newMember = await newMember.fetch({ force: true });

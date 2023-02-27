@@ -8,9 +8,9 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const getWikiURL = require('../getWikiURL');
         const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
-        let adminBot = isAdmin(client, interaction.guild.me);
+        let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         // Game names
         let MHRise = "Monster Hunter Rise";
         let MHW = "Monster Hunter World";

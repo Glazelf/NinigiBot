@@ -32,7 +32,7 @@ module.exports = async (client, interaction, page, user) => {
             const parseDate = require('../../util/parseDate')
             const isAdmin = require('../../util/isAdmin');
             const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
-            let adminBot = isAdmin(client, interaction.guild.me);
+            let adminBot = isAdmin(client, interaction.guild.members.me);
             let switchCode = user_db.swcode;
             let birthday = user_db.birthday;
             let birthdayParsed = parseDate(birthday);
@@ -60,7 +60,7 @@ module.exports = async (client, interaction, page, user) => {
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
-            if (interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) {
+            if (interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) {
                 try {
                     if (user.bot) badgesArray.push("🤖");
                     let guildOwner = await interaction.guild.fetchOwner();

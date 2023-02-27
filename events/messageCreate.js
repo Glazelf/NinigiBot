@@ -42,7 +42,7 @@ module.exports = async (client, message) => {
             return DMChannel.send(dmLogObject);
         };
 
-        if (!message.channel.type == "GUILD_FORUM" && !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
+        if (!message.channel.type == "GUILD_FORUM" && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
 
         // Automod
         let modBool = false;
@@ -55,7 +55,7 @@ module.exports = async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-                
+
                 api_user.addMoney(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {

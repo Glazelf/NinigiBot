@@ -17,7 +17,7 @@ exports.run = async (client, interaction) => {
         let roleArgument = interaction.options.getString('role');
         let requestRole = null;
         if (roleArgument) requestRole = roleArgument;
-        let adminBoolBot = isAdmin(client, interaction.guild.me);
+        let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
@@ -97,7 +97,7 @@ exports.run = async (client, interaction) => {
             requestRole = await interaction.guild.roles.fetch(requestRole);
             if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: client, interaction: interaction, content: invalidRoleText });
             if (requestRole.managed == true) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
-            if (interaction.guild.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
+            if (interaction.guild.members.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
 
             let returnString;
             if (interaction.member.roles.cache.has(requestRole.id)) {

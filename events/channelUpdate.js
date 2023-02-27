@@ -11,7 +11,7 @@ module.exports = async (client, oldChannel, newChannel) => {
         let log = newChannel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let botMember = newChannel.guild.me;
+        let botMember = newChannel.guild.members.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const getChannelTypeName = require('../util/getChannelType');

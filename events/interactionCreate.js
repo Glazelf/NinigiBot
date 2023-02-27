@@ -125,14 +125,14 @@ module.exports = async (client, interaction) => {
                                     rolesArray.push(roleArrayItem);
                                 };
                                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `None of the selected roles are valid.` });
-                                let adminBool = isAdmin(client, interaction.guild.me);
+                                let adminBool = isAdmin(client, interaction.guild.members.me);
 
                                 let roleSelectReturnString = "Role toggling results:\n";
                                 for await (const role of rolesArray) {
                                     let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
                                     if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
                                     if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
-                                    if (interaction.guild.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
+                                    if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
                                     try {
                                         if (interaction.member.roles.cache.has(role.id)) {
                                             await interaction.member.roles.remove(role);

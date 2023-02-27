@@ -11,7 +11,7 @@ exports.run = async (client, interaction) => {
         let ShardUtil;
 
         let adminBool = isAdmin(client, interaction.member);
-        let adminBot = isAdmin(client, interaction.guild.me);
+        let adminBot = isAdmin(client, interaction.guild.members.me);
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
@@ -93,7 +93,7 @@ exports.run = async (client, interaction) => {
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (guild.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) boosterString = boosterString + nitroEmote;
+        if (guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;

@@ -13,11 +13,11 @@ exports.run = async (client, interaction) => {
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
-        let adminBot = isAdmin(client, interaction.guild.me);
+        let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
 
         let buttonArray = [];
         await interaction.deferReply({ ephemeral: ephemeral });

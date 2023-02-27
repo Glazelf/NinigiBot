@@ -13,11 +13,11 @@ exports.run = async (client, interaction) => {
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
         // Command settings
-        let adminBot = isAdmin(client, interaction.guild.me);
+        let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         await interaction.deferReply({ ephemeral: ephemeral });
         // Bools
         let learnsetBool = false;

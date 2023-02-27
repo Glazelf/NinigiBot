@@ -14,9 +14,9 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const getTypeEmotes = require('./getTypeEmotes');
         // Common settings
         if (!pokemon) return;
-        let adminBot = isAdmin(client, interaction.guild.me);
+        let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
         let description = "";
         // Gender studies
