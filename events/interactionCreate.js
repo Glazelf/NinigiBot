@@ -271,8 +271,8 @@ module.exports = async (client, interaction) => {
                         let languageDefault = "EUen";
                         let languageJSON = null;
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}.json`);
-                        if (!languageJSON) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageDefault}.json`);
+                        if (languageInput) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageInput}_full.json`);
+                        if (!languageJSON) languageJSON = require(`../submodules/leanny.github.io/splat3/data/language/${languageDefault}_full.json`);
                         switch (focusedOption.name) {
                             case "clothing":
                                 let allClothesNames = {

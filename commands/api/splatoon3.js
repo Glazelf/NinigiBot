@@ -26,7 +26,7 @@ exports.run = async (client, interaction) => {
 
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
-        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}.json`);
+        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}_full.json`);
         let inputID;
         let responseSplatfest;
         let splatfestData;
