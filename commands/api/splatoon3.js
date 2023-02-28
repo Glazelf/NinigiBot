@@ -265,14 +265,14 @@ exports.run = async (client, interaction) => {
                         .setImage(splatfestData.image.url);
                 };
                 if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
-                    // Turf War & Anarchy
+                    // Turf War, Anarchy, xBattle and SplatfestTW
                     await scheduleData.nodes.forEach(entry => {
                         entrySettings = entry[modeSettings];
                         let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
-                        let mapEntryTitle = `Maps ${mapEntryTimes}`;
+                        let mapEntryTitle = mapEntryTimes;
                         if (inputMode == anarchyID) {
                             entrySettings = entrySettings[modeIndex];
-                            mapEntryTitle = `${mapEntryTimes}\n${entrySettings.vsRule.name}`;
+                            mapEntryTitle += `\n${entrySettings.vsRule.name}`;
                         };
                         if (!entrySettings) return;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
