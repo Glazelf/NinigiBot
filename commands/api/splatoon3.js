@@ -10,14 +10,15 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "210";
-        let versionSplit = `Splatoon 3 v${version.split("").join(".")}`;
-        const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoClothes.json`);
-        const GearInfoHeadJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoHead.json`);
-        const GearInfoShoesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/GearInfoShoes.json`);
-        const WeaponInfoMainJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${version}/WeaponInfoSub.json`);
+        let version = "3.0.0";
+        let versionJoined = version.split(".").join("");
+        let versionString = `Splatoon 3 v${version}`;
+        const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
+        const GearInfoHeadJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoHead.json`);
+        const GearInfoShoesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoShoes.json`);
+        const WeaponInfoMainJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoMain.json`);
+        const WeaponInfoSpecialJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
+        const WeaponInfoSubJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
@@ -25,7 +26,7 @@ exports.run = async (client, interaction) => {
 
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
-        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}.json`);
+        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}_full.json`);
         let inputID;
         let responseSplatfest;
         let splatfestData;
@@ -73,7 +74,7 @@ exports.run = async (client, interaction) => {
                     .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
                     .addField("Obtain Method:", ObtainMethod, true)
                     .setImage(clothingImage)
-                    .setFooter({ text: `${versionSplit} | *Main abilities can differ because of SplatNet or Murch.` });
+                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
@@ -113,7 +114,7 @@ exports.run = async (client, interaction) => {
                     .addField(shopTitle, `${levelString} ${weaponObject.ShopUnlockRank}+`, true)
                     .addField(infoTitle, weaponStats, false)
                     .setImage(weaponImage)
-                    .setFooter({ text: versionSplit });
+                    .setFooter({ text: versionString });
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -140,7 +141,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
                     .addField(weaponListTitle, allSubweaponMatchesNames, false)
-                    .setFooter({ text: versionSplit });
+                    .setFooter({ text: versionString });
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -167,7 +168,7 @@ exports.run = async (client, interaction) => {
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
                     .addField(weaponListTitle, allSpecialWeaponMatchesNames, false)
-                    .setFooter({ text: versionSplit });
+                    .setFooter({ text: versionString });
                 break;
             case "schedule":
                 let inputData = interaction.options.getString("mode");
