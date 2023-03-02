@@ -49,6 +49,8 @@ module.exports = async (client, message) => {
         if (message.type != 'APPLICATION_COMMAND') modBool = await autoMod(client, message);
         if (modBool) return;
 
+        if (!message.member) return;
+
         let memberRoles = 0;
         if (message.member.roles) memberRoles = message.member.roles.cache.filter(element => element.name !== "@everyone").size;
 
