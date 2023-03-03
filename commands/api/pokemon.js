@@ -36,6 +36,17 @@ exports.run = async (client, interaction) => {
         let currentGeneration = 9; // Set current generation
         let JSONresponse;
         let allPokemon = Dex.species.all();
+        // Used for pokemon and learn
+        let noPokemonString = `Sorry, I could not find a Pokémon by that name.`;
+        let pokemon = Dex.species.get(pokemonName);
+        if (pokemonName && pokemonName.toLowerCase() == "random") {
+            let allKeys = Object.keys(allPokemon);
+            pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
+        };
+        // Used for move and learn
+        let moveSearch = interaction.options.getString("move");
+        let move = Dex.moves.get(moveSearch);
+
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
@@ -77,8 +88,6 @@ exports.run = async (client, interaction) => {
                 break;
             // Moves
             case "move":
-                let moveSearch = interaction.options.getString("move");
-                let move = Dex.moves.get(moveSearch);
                 if (!move || !move.exists || move.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name.` });
 
                 let moveLearnPool = [];
@@ -206,13 +215,44 @@ exports.run = async (client, interaction) => {
                 break;
             // Pokémon
             case "pokemon":
-                let pokemon = Dex.species.get(pokemonName);
-                if (pokemonName.toLowerCase() == "random") {
-                    let allKeys = Object.keys(allPokemon);
-                    pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
-                } else if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a Pokémon by that name.` });
+                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, ephemeral: ephemeral });
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
+                break;
+            case "learn":
+                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                let learnOptions = [];
+                let learnAuthor = `${pokemon.name} learns ${move.name}`;
+                let learnInfo = "";
+                if (learnsets[pokemon.id]) {
+                    let learnset = learnsets[pokemon.id].learnset;
+                    for (let [moveName, learnData] of Object.entries(learnset)) {
+                        if (moveName == move.id) {
+                            learnData.forEach(learnMethod => {
+                                let learnGen = learnMethod.charAt(0);
+                                let learnType = learnMethod.charAt(1);
+                                switch (learnType) {
+                                    case "L":
+                                        learnInfo += `Gen ${learnGen}: Level ${learnMethod.split("L")[1]}\n`;
+                                        break;
+                                    case "M":
+                                        learnInfo += `Gen ${learnGen}: TM\n`;
+                                        break;
+                                    case "E":
+                                        learnInfo += `Gen ${learnGen}: Egg move\n`;
+                                        break;
+                                    case "T":
+                                        learnInfo += `Gen ${learnGen}: Move Tutor\n`;
+                                };
+                            });
+                        };
+                    };
+                    if (learnInfo.length == 1) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
+                pokemonEmbed
+                    .setAuthor({ name: learnAuthor })
+                    .setDescription(learnInfo);
+                return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: ephemeral });
                 break;
             case "usage":
                 let formatInput = "gen9vgc2023series1";
@@ -429,6 +469,27 @@ module.exports.config = {
             name: "shiny",
             type: "BOOLEAN",
             description: "Whether to show the Pokémon's shiny sprite."
+        }, {
+            name: "ephemeral",
+            type: "BOOLEAN",
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "learn",
+        type: "SUB_COMMAND",
+        description: "Check if a Pokémon can learn a move.",
+        options: [{
+            name: "move",
+            type: "STRING",
+            description: "Move to check availability.",
+            autocomplete: true,
+            required: true
+        }, {
+            name: "pokemon",
+            type: "STRING",
+            description: "Pokémon to check availability.",
+            autocomplete: true,
+            required: true
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
