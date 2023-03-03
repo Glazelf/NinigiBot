@@ -183,6 +183,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let tmMoves = [];
         let eggMoves = [];
         let tutorMoves = [];
+        let specialMoves = [];
         let transferMoves = [];
         let prevo = null;
         if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
@@ -204,6 +205,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                         eggMoves.push(moveName);
                     } else if (moveLearnData.includes("T")) {
                         tutorMoves.push(moveName);
+                    } else if (moveLearnData.includes("S")) {
+                        specialMoves.push(moveName);
                     };
                 };
             };
@@ -231,9 +234,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         };
         let eggMovesString = eggMoves.join(", ");
         let tutorMovesString = tutorMoves.join(", ");
+        let specialMovesString = specialMoves.join(", ");
         let transferMovesStrings = [];
         let transferMoveIndex = 0;
-        transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
+        transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
         for (const transferMove of transferMoves) {
             if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
             transferMovesStrings[transferMoveIndex].push(transferMove);
@@ -341,6 +345,7 @@ BST: ${pokemon.bst}`, false)
             tmMovesStrings.forEach(tmMovesString => pkmEmbed.addField("TM Moves:", tmMovesString.join(", "), false));
             if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
             if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
+            if (specialMovesString.length > 0) pkmEmbed.addField("Special Moves:", specialMovesString, false);
             // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
             // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
         };
