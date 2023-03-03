@@ -227,27 +227,21 @@ exports.run = async (client, interaction) => {
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
                     for (let [moveName, learnData] of Object.entries(learnset)) {
-                        if (moveName == move.id) {
-                            learnData.forEach(learnMethod => {
-                                let learnGen = learnMethod.charAt(0);
-                                let learnType = learnMethod.charAt(1);
-                                switch (learnType) {
-                                    case "L":
-                                        learnInfo += `Gen ${learnGen}: Level ${learnMethod.split("L")[1]}\n`;
-                                        break;
-                                    case "M":
-                                        learnInfo += `Gen ${learnGen}: TM\n`;
-                                        break;
-                                    case "E":
-                                        learnInfo += `Gen ${learnGen}: Egg move\n`;
-                                        break;
-                                    case "T":
-                                        learnInfo += `Gen ${learnGen}: Move Tutor\n`;
-                                };
-                            });
+                        if (moveName !== move.id) continue;
+                        learnInfo += getLearnData(learnData);
+                    };
+                    let prevo = null;
+                    if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
+                    if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
+                    if (prevo && learnInfo.length == 0) {
+                        let prevoLearnset = learnsets[prevo.id].learnset;
+                        for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
+                            if (moveName !== move.id) continue;
+                            learnInfo += `As ${prevo.name}:\n`;
+                            learnInfo += getLearnData(learnData);
                         };
                     };
-                    if (learnInfo.length == 1) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                    if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
                 pokemonEmbed
                     .setAuthor({ name: learnAuthor })
@@ -365,6 +359,32 @@ exports.run = async (client, interaction) => {
         // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
         return;
+
+        function getLearnData(learnData) {
+            let learnInfo = "";
+            learnData.forEach(learnMethod => {
+                let learnGen = learnMethod.charAt(0);
+                let learnType = learnMethod.charAt(1);
+                switch (learnType) {
+                    case "L":
+                        learnInfo += `Gen ${learnGen}: Level ${learnMethod.split("L")[1]}\n`;
+                        break;
+                    case "M":
+                        learnInfo += `Gen ${learnGen}: TM\n`;
+                        break;
+                    case "T":
+                        learnInfo += `Gen ${learnGen}: Move Tutor\n`;
+                        break;
+                    case "S":
+                        learnInfo += `Gen ${learnGen}: Special\n`;
+                        break;
+                    case "E":
+                        learnInfo += `Gen ${learnGen}: Egg move\n`;
+                        break;
+                };
+            });
+            return learnInfo;
+        };
 
     } catch (e) {
         // Log error
