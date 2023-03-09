@@ -78,7 +78,7 @@ exports.run = async (client, interaction) => {
             .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
-            .addField("Author:", owner, false)
+            .addField("Owner:", owner, false)
             .addField("Discord.JS:", DiscordJSVersion, true);
         if (ownerBool) botEmbed.addField("Memory Usage:", memoryUsage, true);
         if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
