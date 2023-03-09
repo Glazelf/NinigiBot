@@ -234,6 +234,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         };
         let eggMovesString = eggMoves.join(", ");
         let tutorMovesString = tutorMoves.join(", ");
+        specialMoves = [...new Set(specialMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
         let specialMovesString = specialMoves.join(", ");
         let transferMovesStrings = [];
         let transferMoveIndex = 0;
