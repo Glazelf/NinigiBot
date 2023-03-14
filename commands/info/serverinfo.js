@@ -149,9 +149,7 @@ exports.run = async (client, interaction) => {
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("Members:", guild.memberCount.toString(), true)
-            // .addField("Human Members:", humanMemberCount.toString(), true) // Redundant info
-            .addField("Bots:", `${botMembers.size} 🤖`, true)
+            .addField("Members:", `(${guild.memberCount} (${botMembers.size} 🤖)`, true)
             .addField("Channels:", channelCount.toString(), true);
         // Change "Active Threads" to "Threads" when archived threads get added
         if (threadCount > 0) serverEmbed.addField("Active Threads:", threadCount.toString(), true);
