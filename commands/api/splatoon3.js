@@ -235,7 +235,7 @@ exports.run = async (client, interaction) => {
                         await entry.setting.weapons.forEach(weapon => {
                             weaponString += `${weapon.name}\n`;
                         });
-                        splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}`, `${weaponString}`, true);
+                        splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, weaponString, true);
                     });
                     if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) {
                         splat3Embed.setImage(currentBigRun.setting.coopStage.image.url);
