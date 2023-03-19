@@ -109,6 +109,7 @@ exports.run = async (client, interaction) => {
         if (guild.features.includes("COMMUNITY")) serverLinks += `<id:home>\n<id:customize>\n`;
         serverLinks += `<id:browse>\n`;
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
+        if (guild.vanityURLCode) serverLinks += `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
 
         await guild.channels.cache.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
@@ -143,7 +144,6 @@ exports.run = async (client, interaction) => {
         serverEmbed
             .addField("Links:", serverLinks, false)
             .addField("Owner:", guildOwner.toString(), true);
-        if (guild.vanityURLCode) serverEmbed.addField("Vanity Invite:", `[discord.gg/${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})`, true);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
             if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
         };
