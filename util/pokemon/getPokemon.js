@@ -147,7 +147,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // let shinyRender = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res render
         // April Fools Day sprites
         let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${showdownSpriteName}.png`;
-        if (shinyBool) afdSprite = `https://play.pokemonshowdown.com/sprites/afd-shiny/${showdownSpriteName}.png`;
+        if (shinyBool) afdSprite = afdSprite.replace("/afd/", "/afd-shiny/");
 
         let banner = render;
         let iconAuthor = PMDPortrait;
