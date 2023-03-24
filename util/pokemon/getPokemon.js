@@ -115,7 +115,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // 3 digit IDs for now
         pokemonIDPMD = pokemonID;
         if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
-
         // Metrics
         let metricsString = "";
         if (pokemon.weightkg) {
@@ -127,11 +126,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             metricsString += `\nHeight: ${pokemon.heightm}m`;
             if (dynamaxBool) metricsString += `+`;
         };
-
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
-        // For some reason some showdown sprite lists cut out all form-signifying dashes except the first
-        let showdownSpriteNameArray = urlName.split("-");
-        let showdownSpriteName = showdownSpriteNameArray.splice(0, 2).join('-') + showdownSpriteNameArray.join('');
         // Official art
         let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         // Game render
@@ -146,18 +141,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let shinyRender = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
         // let shinyRender = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res render
         // April Fools Day sprites
-        let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${showdownSpriteName}.png`;
+        let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${pokemon.spriteid}.png`;
         if (shinyBool) afdSprite = afdSprite.replace("/afd/", "/afd-shiny/");
 
         let banner = render;
         let iconAuthor = PMDPortrait;
         let iconFooter = partyIcon;
         let iconThumbnail = render;
-
         // Check if date is march 31st to april 2nd for April Fools
-        let date = Date.now();
+        let date = new Date;
         let day = date.getDate();
-        let month = date.getMonth();
+        let month = date.getMonth() + 1;
         if ((month == 3 && day == 31) || (month == 4 && day <= 2)) iconThumbnail = afdSprite;
 
         if (shinyBool) iconThumbnail = shinyRender;
@@ -181,7 +175,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             let abilitySDesc = Dex.abilities.get(pokemon.abilities['S']).shortDesc;
             abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
         };
-
         let statLevels = `(50) (100)`;
         let HPstats = calcHP(pokemon.baseStats.hp);
         let Atkstats = calcStat(pokemon.baseStats.atk);
@@ -256,12 +249,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-
         let embedColor = globalVars.embedColor;
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };
-
         let previousPokemon = null;
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
@@ -284,7 +275,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             nextPokemonID += 1;
             nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         };
-
         let pkmButtons = new Discord.MessageActionRow();
         if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();
@@ -309,7 +299,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 };
             };
         };
-
         let formButtons = new Discord.MessageActionRow();
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = pokemon.otherFormes;
@@ -326,7 +315,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 };
             };
         };
-
         let buttonArray = [];
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
         buttonArray.push(pkmButtons);
