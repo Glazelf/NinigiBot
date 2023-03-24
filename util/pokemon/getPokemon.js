@@ -129,30 +129,42 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         };
 
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
+        // For some reason some showdown sprite lists cut out all form-signifying dashes except the first
+        let showdownSpriteNameArray = urlName.split("-");
+        let showdownSpriteName = showdownSpriteNameArray.splice(0, 2).join('-') + showdownSpriteNameArray.join('');
         // Official art
         let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         // Game render
         let renderGame = `https://www.serebii.net/swordshield/pokemon/${pokemonID}.png`;
+        // Shiny
         // PMD portraits
         let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDPMD}/Normal.png`;
         let PMDPortraitExists = imageExists(PMDPortrait);
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-${recentGame.toLowerCase()}/icon/${pokemonID}.png`;
         // Shiny render
-        let shinyModel = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
-        // Smaller, low-res render
-        // let shinyModel = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; 
+        let shinyRender = `https://www.serebii.net/Shiny/${recentGame}/${pokemonID}.png`;
+        // let shinyRender = `https://play.pokemonshowdown.com/sprites/dex-shiny/${urlName}.png`; // Smaller, low-res render
+        // April Fools Day sprites
+        let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${showdownSpriteName}.png`;
+        if (shinyBool) afdSprite = `https://play.pokemonshowdown.com/sprites/afd-shiny/${showdownSpriteName}.png`;
 
         let banner = render;
         let iconAuthor = PMDPortrait;
         let iconFooter = partyIcon;
         let iconThumbnail = render;
-        if (shinyBool) iconThumbnail = shinyModel;
+
+        // Check if date is march 31st to april 2nd for April Fools
+        let date = Date.now();
+        let day = date.getDate();
+        let month = date.getMonth();
+        if ((month == 3 && day == 31) || (month == 4 && day <= 2)) iconThumbnail = afdSprite;
+
+        if (shinyBool) iconThumbnail = shinyRender;
         if (!PMDPortraitExists) {
             iconAuthor = partyIcon;
             iconFooter = null;
         };
-
         let ability0Desc = Dex.abilities.get(pokemon.abilities[0]).shortDesc;
         let ability1Desc = Dex.abilities.get(pokemon.abilities[1]).shortDesc;
         let abilityString = `**${pokemon.abilities['0']}**: ${ability0Desc}`;
