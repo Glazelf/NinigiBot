@@ -62,8 +62,7 @@ module.exports = async (client, message, newMessage) => {
                 .setAuthor({ name: `Message Edited ⚒️`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);
             if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
-            updateEmbed
-                .addField(`After:`, newMessageContent, false)
+            updateEmbed.addField(`After:`, newMessageContent, false);
             if (isReply && replyMessage) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
                 .setImage(messageImage)
