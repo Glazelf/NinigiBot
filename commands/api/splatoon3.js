@@ -315,8 +315,14 @@ exports.run = async (client, interaction) => {
                 splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
+                let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
+                    let currentSplatfestPointValues = pointValues;
+                    // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
+                    if (splatfest.endTime > splatfestData.find(s => s.teams[0].teamName == "Spicy").startTime) currentSplatfestPointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 };
+                    // Second check is for a minor points change
+                    if (splatfest.endTime > splatfestData.find(s => s.teams[0].teamName == "Nessie").startTime) currentSplatfestPointValues = { vote: 8, horagai: 7, regular: 12, challenge: 12, tricolor: 18 };
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
@@ -336,8 +342,6 @@ exports.run = async (client, interaction) => {
                             break;
                     };
                     let midTermWinner = null;
-                    // Third splatfest onwards uses a new point system, also has no midterm winner anymore
-                    let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
                     let splatfestResultsTitle = "**Results:** ({1})";
                     let splatfestResultsTitleTeams = "";
                     let splatfestResultsDescription = "";
@@ -350,7 +354,6 @@ exports.run = async (client, interaction) => {
                     let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
                     splatfestTeamIndex = 0;
                     await splatfest.teams.forEach(async (team) => {
-                        if (!team.role) pointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 }; // Check if new tricolor system is in use
                         if (splatfestTeamIndex !== 0) {
                             splatfestDescription += " vs. ";
                             splatfestResultsTitleTeams += "|";
@@ -364,11 +367,11 @@ exports.run = async (client, interaction) => {
                         if (team.result && team.result.isWinner) {
                             splatfestDescription += `**${team.teamName}**`;
                             splatfestResultsTitleTeams += `**${team.teamName}**`;
-                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += pointValues.vote;
-                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += pointValues.horagai;
-                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += pointValues.regular;
-                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += pointValues.challenge;
-                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += pointValues.tricolor;
+                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote;
+                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai;
+                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular;
+                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge;
+                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor;
                             splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
                         } else {
                             splatfestDescription += team.teamName;
@@ -406,8 +409,8 @@ exports.run = async (client, interaction) => {
                     });
                     if (splatfest.teams[0].result) {
                         splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
-                        splatfestResultsDescription += `${splatfestResultsVote} (${pointValues.vote}p)\n${splatfestResultsHoragai} (${pointValues.horagai}p)\n${splatfestResultsRegular} (${pointValues.regular}p)\n${splatfestResultsChallenge} (${pointValues.challenge}p)`;
-                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${pointValues.tricolor}p)`;
+                        splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge}p)`;
+                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor}p)`;
                         splatfestResultsDescription += `\n${splatfestResultsWinner}`;
                     };
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
