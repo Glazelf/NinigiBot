@@ -5,15 +5,19 @@ module.exports = async (exception, client, interaction = null) => {
     try {
         const Discord = require("discord.js");
         const getTime = require('./getTime');
+        const sendMessage = require('./sendMessage');
         let timestamp = await getTime(client);
 
         let exceptionString = exception.toString();
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error")) {
-            return; // Internal server errors, not my problem
+            // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled.
+            return sendMessage({ client: client, interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
         } else if (exceptionString.includes("Unknown interaction")) {
-            return; // Users clicking old interactions (~15+ minutes)
+            returnsendMessage({ client: client, interaction: interaction, content: "This interaction has probably expired. The lifetime of most interactions is ~15 minutes.", ephemeral: true });
+        } else if (exceptionString.includes("connect ETIMEDOUT")) {
+            return sendMessage({ client: client, interaction: interaction, content: "Could not reach the server for this command. Please try again later.", ephemeral: true });
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`Error at ${timestamp}:`);
