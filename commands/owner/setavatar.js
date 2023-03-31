@@ -17,14 +17,12 @@ exports.run = async (client, interaction) => {
         if (iconArg.contentType.includes('image')) fileIsImg = true;
 
         if (!fileIsImg) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
-
         try {
             await client.user.setAvatar(iconImg);
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `Failed to update my avatar.` });
         };
-
         return sendMessage({ client: client, interaction: interaction, content: `Updated my avatar.` });
 
     } catch (e) {

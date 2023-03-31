@@ -9,7 +9,6 @@ exports.run = async (client, interaction) => {
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         await interaction.deferReply({ ephemeral: true });
-
         // Split off command
         let textMessage = interaction.options.getString("input");
         let userIDArg = interaction.options.getString("user-id");

@@ -14,7 +14,6 @@ exports.run = async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
-        //await interaction.deferReply({ ephemeral: ephemeral });
         let shinx, foodArg, res, avatar;
 
         let canvas, ctx, img;

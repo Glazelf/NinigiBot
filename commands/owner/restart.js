@@ -11,8 +11,6 @@ exports.run = async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        await interaction.deferReply({ ephemeral: true });
-
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
@@ -25,6 +23,7 @@ exports.run = async (client, interaction) => {
         console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
 
         if (removeInteractions) {
+            await interaction.deferReply({ ephemeral: true });
             // Delete all global commands
             await client.application.commands.set([]);
             // Delete all guild commands

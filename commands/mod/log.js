@@ -8,9 +8,6 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         const { LogChannels } = require('../../database/dbServices/server.api');
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
@@ -30,9 +27,7 @@ exports.run = async (client, interaction) => {
 
         if (oldChannel) await oldChannel.destroy();
         if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
-
         await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
-
         return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
 
     } catch (e) {

@@ -20,7 +20,6 @@ exports.run = async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
 
         let buttonArray = [];
-        await interaction.deferReply({ ephemeral: ephemeral });
         let mhEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
 
@@ -62,7 +61,7 @@ exports.run = async (client, interaction) => {
                 let gameName = interaction.options.getString("game").toLowerCase();
                 // Add quests matching game title to an array
                 let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
-                if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
+                if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress.", ephemeral: true });
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
 
@@ -114,7 +113,7 @@ exports.run = async (client, interaction) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
+                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster.", ephemeral: true });
 
                 let messageObject = await getMonster(client, interaction, monsterData, ephemeral);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })

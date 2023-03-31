@@ -10,7 +10,6 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
@@ -29,7 +28,6 @@ exports.run = async (client, interaction) => {
         };
 
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
-
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
@@ -41,17 +39,14 @@ exports.run = async (client, interaction) => {
         if (reasonArg) reason = reasonArg;
 
         let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime} minute(s) for reason: \`${reason}\`.`;
-
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
                 muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
             };
         };
-
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.tag} (${time})`;
-
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);

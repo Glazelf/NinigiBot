@@ -6,11 +6,8 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const api_user = require('../../database/dbServices/user.api');
 
-        let ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
         let day = interaction.options.getInteger("day");
         let month = interaction.options.getInteger("month");
-
         // Birthdays are stored as string DDMM instead of being seperated by a -
         if (day < 10) {
             day = `0${day}`;
@@ -23,7 +20,6 @@ exports.run = async (client, interaction) => {
             month = `${month}`;
         };
         api_user.setBirthday(interaction.user.id, day + month);
-
         return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
 
     } catch (e) {

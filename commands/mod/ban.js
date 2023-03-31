@@ -10,7 +10,6 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.permissions.has("BAN_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
@@ -36,10 +35,8 @@ exports.run = async (client, interaction) => {
             // console.log(e);
             bansFetch = null;
         };
-
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.tag} (${time})`;
-
         // If user is found
         if (member) {
             // Check permissions
@@ -47,12 +44,10 @@ exports.run = async (client, interaction) => {
             let targetRole = member.roles.highest;
             if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
             if (!member.bannable) return sendMessage({ client: client, interaction: interaction, content: banFailString });
-
             // See if target isn't already banned
             if (bansFetch) {
                 if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `**${member.user.tag}** (${member.id}) is already banned.` });
             };
-
             banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
             await user.send({ content: dmString })
                 .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`)

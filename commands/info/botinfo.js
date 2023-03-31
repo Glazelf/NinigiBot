@@ -11,8 +11,6 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         let DiscordJSVersion = Discord.version;
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
@@ -24,10 +22,8 @@ exports.run = async (client, interaction) => {
         // let memberFetch = await interaction.guild.members.fetch();
         // console.log(userCount);
         // console.log(Object.keys(userCount));
-
         let totalGuilds = 0;
         let totalMembers = 0;
-
         // Get shards (Currently not properly functional)
         if (client.shard) {
             const promises = [
@@ -44,7 +40,6 @@ exports.run = async (client, interaction) => {
             totalGuilds = client.guilds.cache.size;
             totalMembers = await getUsers();
         };
-
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
         let githubRepoResponse = null;
@@ -57,7 +52,6 @@ exports.run = async (client, interaction) => {
             githubRepoResponse = null;
             githubMasterResponse = null;
         };
-
         // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
         let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
         let date = Date.now();
@@ -69,7 +63,6 @@ exports.run = async (client, interaction) => {
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-
         // Owner
         let owner = "Glaze#6669 (232875725898645504)";
 
@@ -97,8 +90,6 @@ exports.run = async (client, interaction) => {
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
         // Uncomment this whenever App Directory launches
         // .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }));
-
-
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons });
 
         async function getUsers() {

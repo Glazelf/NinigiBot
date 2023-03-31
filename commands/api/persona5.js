@@ -13,7 +13,6 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
         let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
         // Imports:

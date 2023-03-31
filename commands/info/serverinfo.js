@@ -14,9 +14,7 @@ exports.run = async (client, interaction) => {
         let adminBot = isAdmin(client, interaction.guild.members.me);
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
+        if (ephemeral === null) ephemeral = true
         let guild = interaction.guild;
         await guild.members.fetch();
         await guild.channels.fetch();
@@ -155,7 +153,6 @@ exports.run = async (client, interaction) => {
             .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, true)
             .setFooter({ text: guild.id });
         if (banner) serverEmbed.setImage(banner);
-
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons });
 
     } catch (e) {

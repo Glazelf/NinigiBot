@@ -4,10 +4,6 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-
-        let ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         let pongString = `Pong!'ed back in`;
         let pauseString = `${pongString} (hold on, processing latency...)`;
         let wsLatencyString = `Websocket latency is ${client.ws.ping}ms`;

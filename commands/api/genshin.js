@@ -12,15 +12,12 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         let giAPI = `https://api.genshin.dev/`;
         let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
         let response;
         let buttonArray = [];
         let giEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor);
-
         switch (interaction.options.getSubcommand()) {
             case "character":
                 giAPI += `characters/`;
@@ -42,7 +39,6 @@ exports.run = async (client, interaction) => {
                     characterBirthdayArray = character.birthday.split("-");
                     characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
                 };
-
                 giEmbed
                     .setAuthor({ name: `${character.name} - ${character.affiliation}` })
                     .setThumbnail(characterThumbnail)
@@ -52,7 +48,6 @@ exports.run = async (client, interaction) => {
                     .addField("Vision:", character.vision, true)
                     .addField("Weapon:", character.weapon, true);
                 if (character.birthday) giEmbed.addField("Birthday:", characterBirthday, true);
-
                 if (detailed) {
                     // All three of these functions can probably be combined better but whatever
                     // Every (most) characters have 3 active and 3 passive skills and 6 constellations, making 12 fields
@@ -96,7 +91,6 @@ exports.run = async (client, interaction) => {
                 let artifactName = interaction.options.getString("artifact").toLowerCase();
                 response = await axios.get(giAPI + artifactName);
                 let artifact = response.data;
-
                 giEmbed
                     .setAuthor({ name: artifact.name })
                     .addField("Max Rarity:", `${artifact.max_rarity}⭐`, true);
@@ -107,7 +101,6 @@ exports.run = async (client, interaction) => {
                 if (artifact["5-piece_bonus"]) giEmbed.addField("5-Piece Bonus:", artifact["5-piece_bonus"], false);
                 break;
         };
-
         return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {

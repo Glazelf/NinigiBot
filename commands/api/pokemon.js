@@ -18,7 +18,6 @@ exports.run = async (client, interaction) => {
         if (ephemeral === null) ephemeral = true;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
         // Bools
         let learnsetBool = false;
         let learnsetArg = interaction.options.getBoolean("learnset");

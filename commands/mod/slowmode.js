@@ -8,7 +8,6 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
 
         let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });

@@ -10,9 +10,6 @@ exports.run = async (client, interaction) => {
         let adminBoolUser = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
-
         let role = interaction.options.getRole("role");
         let description = null;
         let descriptionArg = interaction.options.getString("description");

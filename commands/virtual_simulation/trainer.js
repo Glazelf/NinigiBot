@@ -13,7 +13,6 @@ exports.run = async (client, interaction) => {
         let ephemeral = true;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
         let embed;
         let avatar = null;
         let master = interaction.user;
@@ -48,7 +47,6 @@ exports.run = async (client, interaction) => {
                         .addField("Trophy Level:", trophy_level + " :beginner", true)
                         .addField("Trophies:", trophy_string, true);
                 };
-
                 return sendMessage({
                     client: client,
                     interaction: interaction,

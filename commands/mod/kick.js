@@ -10,14 +10,12 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
-
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
@@ -30,7 +28,6 @@ exports.run = async (client, interaction) => {
 
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.tag} (${time})`;
-
         // Kick
         let kickReturn = `Kicked ${user} (${user.id}) for the following reason: \`${reason}\`.`;
         await user.send({ content: `You've been kicked from **${interaction.guild.name}** for the following reason: \`${reason}\`` })

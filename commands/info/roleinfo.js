@@ -10,9 +10,7 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
         let role = interaction.options.getRole("role");
-
         // Role visuals
         let icon = role.iconURL(globalVars.displayAvatarSettings);
         let defaultColor = "#000000";
@@ -45,7 +43,6 @@ exports.run = async (client, interaction) => {
             .addField("Properties:", roleProperties, false)
             .addField("Permissions:", permissionString, false)
             .setFooter({ text: role.id });
-
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });
 
     } catch (e) {
