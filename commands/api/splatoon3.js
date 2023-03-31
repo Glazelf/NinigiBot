@@ -10,7 +10,7 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "3.0.0";
+        let version = "3.1.0";
         let versionJoined = version.split(".").join("");
         let versionString = `Splatoon 3 v${version}`;
         const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
