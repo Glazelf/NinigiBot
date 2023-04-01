@@ -500,7 +500,7 @@ exports.run = async (client, interaction) => {
                     .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${github}images/badge/${badgeRandom3}?raw=true` });
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed });
+        return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
 
         function getGearString(gear, type) {
             let limitedGearString = "";

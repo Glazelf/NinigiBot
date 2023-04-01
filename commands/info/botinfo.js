@@ -90,7 +90,7 @@ exports.run = async (client, interaction) => {
             .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
         // Uncomment this whenever App Directory launches
         // .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }));
-        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons });
+        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
         async function getUsers() {
             // Fast but inaccurate method

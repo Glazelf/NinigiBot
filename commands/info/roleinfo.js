@@ -43,7 +43,7 @@ exports.run = async (client, interaction) => {
             .addField("Properties:", roleProperties, false)
             .addField("Permissions:", permissionString, false)
             .setFooter({ text: role.id });
-        return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
