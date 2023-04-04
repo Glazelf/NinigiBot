@@ -421,7 +421,7 @@ exports.run = async (client, interaction) => {
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
                     .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
-                if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here when you can choose a team ingame.");
+                if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.");
                 break;
             case "replay":
                 let replayCode = interaction.options.getString("code");
