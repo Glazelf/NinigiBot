@@ -213,7 +213,7 @@ exports.run = async (client, interaction) => {
                 let currentTime = new Date().valueOf();
                 let currentMaps = null;
                 let upcomingMaps = null;
-                if (!salmonRunEventBool) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
+                if (!currentSalmonRunEvent) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
                 upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
                 let randomStageIndex = randomNumber(0, 1);
