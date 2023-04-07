@@ -67,7 +67,7 @@ module.exports = async (client, member, newMember) => {
             const { PersonalRoles, PersonalRoleServers } = require('../database/dbServices/server.api');
             let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-            if (!newMember.premiumSince && serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
+            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
 
             switch (updateCase) {
                 case "nickname":
