@@ -103,7 +103,6 @@ exports.run = async (client, interaction) => {
                 let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
                 let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
                 let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
-
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
@@ -133,7 +132,6 @@ exports.run = async (client, interaction) => {
                 let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
                     .replace("\\n", " ")
                     .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "**R**");
-
                 splat3Embed
                     .setAuthor({ name: subName })
                     .setThumbnail(subThumbnail)
@@ -160,7 +158,6 @@ exports.run = async (client, interaction) => {
                 let specialDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID]
                     .replace("\\n", " ")
                     .replaceAll("[group=0003 type=000c params=00 00 80 3f 00 00 00 00]", "**ZR**").replaceAll("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "**R**").replaceAll("[group=0003 type=000b params=00 00 80 3f 00 00 00 00]", "**ZL**").replaceAll("[group=0003 type=0001 params=00 00 80 3f 00 00 00 00]", "**B**");
-
                 splat3Embed
                     .setAuthor({ name: specialName })
                     .setThumbnail(specialThumbnail)
@@ -196,17 +193,27 @@ exports.run = async (client, interaction) => {
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
                 let scheduleData = responseSchedules.data.data[inputMode];
-                let currentBigRun = null;
+                let currentSalmonRunEvent = null;
+                let currentSalmonRunEventTitle = null;
                 if (inputMode == salmonRunID) {
                     scheduleData = scheduleData.regularSchedules;
-                    currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
+                    let currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
+                    let currentEggstraWork = responseSchedules.data.data[inputMode].teamContestSchedules.nodes[0];
+                    if (currentBigRun) {
+                        currentSalmonRunEventTitle = "⚠️ Big Run ⚠️";
+                        currentSalmonRunEvent = currentBigRun;
+                    };
+                    if (currentEggstraWork) {
+                        currentSalmonRunEventTitle = "🥚 Eggstra Work 🥚";
+                        currentSalmonRunEvent = currentEggstraWork;
+                    };
                 };
                 let scheduleMode = inputMode.split("Schedule")[0];
 
                 let currentTime = new Date().valueOf();
                 let currentMaps = null;
                 let upcomingMaps = null;
-                if (!currentBigRun) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
+                if (!salmonRunEventBool) currentMaps = scheduleData.nodes.find(entry => Date.parse(entry.startTime) < currentTime);
                 upcomingMaps = scheduleData.nodes.find(entry => entry !== currentMaps && Date.parse(entry.startTime) < currentTime + (2 * 60 * 60 * 1000)); // Add 2 hours to current time
 
                 let randomStageIndex = randomNumber(0, 1);
@@ -226,17 +233,23 @@ exports.run = async (client, interaction) => {
                             .setDescription(`Monthly Gear: ${responseSalmonRunGear.data.data.coopResult.monthlyGear.name}`)
                             .setThumbnail(responseSalmonRunGear.data.data.coopResult.monthlyGear.image.url);
                     };
-                    if (currentBigRun) splat3Embed.setDescription(`⚠️ Big Run ⚠️\nStart: <t:${Date.parse(currentBigRun.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentBigRun.endTime) / 1000}:f>\nMap: **${currentBigRun.setting.coopStage.name}**.\nWeapons: Random`);
+                    if (currentSalmonRunEvent) {
+                        let eventWeaponString = "";
+                        await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
+                            eventWeaponString += `-${weapon.name}\n`;
+                        });
+                        splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
+                    };
                     await scheduleData.nodes.forEach(async (entry) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
                         let weaponString = "";
                         await entry.setting.weapons.forEach(weapon => {
-                            weaponString += `${weapon.name}\n`;
+                            weaponString += `-${weapon.name}\n`;
                         });
                         splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, weaponString, true);
                     });
-                    if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) {
-                        splat3Embed.setImage(currentBigRun.setting.coopStage.image.url);
+                    if (&& Date.now() => Date.parse(currentSalmonRunEvent.startTime)) {
+                        splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
                     } else {
                         splat3Embed
                             .setImage(currentMaps.setting.coopStage.thumbnailImage.url)
