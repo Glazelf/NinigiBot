@@ -248,7 +248,7 @@ exports.run = async (client, interaction) => {
                         });
                         splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, weaponString, true);
                     });
-                    if (&& Date.now() => Date.parse(currentSalmonRunEvent.startTime)) {
+                    if (currentSalmonRunEvent && Date.now() >= Date.parse(currentSalmonRunEvent.startTime)) {
                         splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
                     } else {
                         splat3Embed
