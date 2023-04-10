@@ -10,6 +10,8 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         let catAPI = "https://aws.random.cat/meow";
         let response = await axios.get(catAPI);
         let catImage = response.data.file;
