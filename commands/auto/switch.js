@@ -37,6 +37,6 @@ module.exports.config = {
     options: [{
         name: "switch-fc",
         type: "STRING",
-        description: "Switch friend code, example: SW-1234-1234-1234"
+        description: "Switch friend code. Example: SW-1234-1234-1234."
     }]
 };
