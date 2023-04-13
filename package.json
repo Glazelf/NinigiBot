@@ -17,7 +17,7 @@
     "minimist": "^1.2.8",
     "owoify-js": "^2.0.0",
     "path": "^0.12.7",
-    "pokemon-showdown": "github:smogon/pokemon-showdown#master",
+    "pokemon-showdown": "github:smogon/pokemon-showdown",
     "pureimage": "^0.3.17",
     "sequelize": "^6.30.0",
     "sqlite3": "^5.1.6",
