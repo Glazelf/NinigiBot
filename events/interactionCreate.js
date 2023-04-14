@@ -235,6 +235,7 @@ module.exports = async (client, interaction) => {
                                 await natures.forEach(nature => {
                                     if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && nature.exists) choices.push({ name: nature.name, value: nature.name });
                                 });
+                                break;
                             case "format":
                                 let formats = Dex.formats.all();
                                 await formats.forEach(format => {
