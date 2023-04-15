@@ -238,7 +238,7 @@ exports.run = async (client, interaction) => {
                         await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
                             eventWeaponString += `-${weapon.name}\n`;
                         });
-                        splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
+                        splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
                     };
                     await scheduleData.nodes.forEach(async (entry) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
