@@ -12,17 +12,53 @@ exports.run = async (client, interaction) => {
         if (ephemeral === null) ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let catAPI = "https://aws.random.cat/meow";
-        let response = await axios.get(catAPI);
-        let catImage = response.data.file;
+        let catText = interaction.options.getString("text");
+        let standardCatText = "Meow";
+        if (!catText) catText = standardCatText;
+        let catAPIInput = interaction.options.getString("api");
+
+        let randomCat = "https://aws.random.cat/meow";
+        let catAAS = "https://cataas.com/cat";
+
+        let catAPI = null;
+        switch (catAPIInput) {
+            case "randomcat":
+                catAPI = randomCat;
+                break;
+            case "cataas":
+                catAPI = catAAS;
+                break;
+            default:
+                // catAAS is a replacement as random.cat has been down for ages!!! Alternate APIs here
+                catAPI = catAAS;
+        };
+
+        if (catAPI == catAAS) {
+            if (catText !== standardCatText) {
+                catAPI += `/says/${encodeURIComponent(catText)}`;
+            };
+        };
+        let response = null;
+        if (catAPI.includes(randomCat)) {
+            response = await axios.get(catAPI);
+            if (response.status !== 200) return sendMessage({ client: client, interaction: interaction, content: "An error occurred trying to get a cat image." });
+        };
+        let catImage = null;
+        let catNameSeed = null;
+        if (catAPI.includes(randomCat)) {
+            catImage = response.data.file;
+            catNameSeed = catImage;
+        } else if (catAPI.includes(catAAS)) {
+            catImage = catAPI;
+        };
         let catName = uniqueNamesGenerator({
             dictionaries: [names],
-            seed: catImage // Seed the random name generator with the cat image URL to get the same name every time
+            seed: catNameSeed
         });
         const catEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setImage(catImage)
-            .setFooter({ text: `"Meow" -${catName}` });
+            .setImage(catImage);
+        if (catAPI == randomCat) catEmbed.setFooter({ text: `"${catText}" -${catName}` });
         return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
 
     } catch (e) {
@@ -35,6 +71,18 @@ module.exports.config = {
     name: "randomcat",
     description: "Get a random cat image.",
     options: [{
+        name: "text",
+        type: "STRING",
+        description: "Text to put over a catAAS image."
+    }, {
+        name: "api",
+        type: "STRING",
+        description: "Choose which API you want to use.",
+        choices: [
+            { name: "random.cat", value: "randomcat" },
+            { name: "cataas.com", value: "cataas" }
+        ]
+    }, {
         name: "ephemeral",
         type: "BOOLEAN",
         description: "Whether the reply will be private."
