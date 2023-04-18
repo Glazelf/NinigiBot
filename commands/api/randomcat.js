@@ -30,20 +30,17 @@ exports.run = async (client, interaction) => {
                 // catAAS is a replacement as random.cat has been down for ages!!! Alternate APIs here
                 catAPI = catAAS;
         };
-        if (catAPI == catAAS) {
-            if (catText !== standardCatText) {
-                catAPI += `/says/${encodeURIComponent(catText)}`;
-            };
-        };
-        let response = null;
-        if (catAPI.includes(randomCat)) response = await axios.get(catAPI);
+        if (catAPI.includes(catAAS)) catAPI += "?json=true";
+        let response = await axios.get(catAPI);
         let catImage = null;
         let catNameSeed = null;
         if (catAPI.includes(randomCat)) {
             catImage = response.data.file;
             catNameSeed = catImage;
         } else if (catAPI.includes(catAAS)) {
-            catImage = catAPI;
+            catImage = `${catAAS}/${response.data.url.split("/")[2]}`;
+            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(catText)}`;
+            catNameSeed = response.data._id;
         };
         let catName = uniqueNamesGenerator({
             dictionaries: [names],
@@ -51,8 +48,8 @@ exports.run = async (client, interaction) => {
         });
         const catEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
-            .setImage(catImage);
-        if (catAPI == randomCat) catEmbed.setFooter({ text: `"${catText}" -${catName}` });
+            .setImage(catImage)
+            .setFooter({ text: `"${catText}" -${catName}` });
         return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
 
     } catch (e) {
