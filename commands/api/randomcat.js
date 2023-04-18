@@ -25,7 +25,7 @@ exports.run = async (client, interaction) => {
             case "randomcat":
                 catAPI = randomCat;
                 break;
-            case "cataas":
+            case "catAAS":
                 catAPI = catAAS;
                 break;
             default:
@@ -80,7 +80,7 @@ module.exports.config = {
         description: "Choose which API you want to use.",
         choices: [
             { name: "random.cat", value: "randomcat" },
-            { name: "cataas.com", value: "cataas" }
+            { name: "catAAS", value: "catAAS" }
         ]
     }, {
         name: "ephemeral",
