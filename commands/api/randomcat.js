@@ -10,7 +10,6 @@ exports.run = async (client, interaction) => {
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-        await interaction.deferReply({ ephemeral: ephemeral });
 
         let catText = interaction.options.getString("text");
         let standardCatText = "Meow";
@@ -19,7 +18,6 @@ exports.run = async (client, interaction) => {
 
         let randomCat = "https://aws.random.cat/meow";
         let catAAS = "https://cataas.com/cat";
-
         let catAPI = null;
         switch (catAPIInput) {
             case "randomcat":
@@ -32,17 +30,13 @@ exports.run = async (client, interaction) => {
                 // catAAS is a replacement as random.cat has been down for ages!!! Alternate APIs here
                 catAPI = catAAS;
         };
-
         if (catAPI == catAAS) {
             if (catText !== standardCatText) {
                 catAPI += `/says/${encodeURIComponent(catText)}`;
             };
         };
         let response = null;
-        if (catAPI.includes(randomCat)) {
-            response = await axios.get(catAPI);
-            if (response.status !== 200) return sendMessage({ client: client, interaction: interaction, content: "An error occurred trying to get a cat image." });
-        };
+        if (catAPI.includes(randomCat)) response = await axios.get(catAPI);
         let catImage = null;
         let catNameSeed = null;
         if (catAPI.includes(randomCat)) {

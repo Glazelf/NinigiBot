@@ -17,7 +17,7 @@ module.exports = async (exception, client, interaction = null) => {
         } else if (exceptionString.includes("Unknown interaction")) {
             returnsendMessage({ client: client, interaction: interaction, content: "This interaction has probably expired. The lifetime of most interactions is ~15 minutes.", ephemeral: true });
         } else if (exceptionString.includes("connect ETIMEDOUT")) {
-            return sendMessage({ client: client, interaction: interaction, content: "Could not reach the server for this command. Please try again later.", ephemeral: true });
+            return; // Server connection issue
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`Error at ${timestamp}:`);
