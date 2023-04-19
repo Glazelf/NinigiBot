@@ -17,7 +17,9 @@ module.exports = async (exception, client, interaction = null) => {
         } else if (exceptionString.includes("Unknown interaction")) {
             returnsendMessage({ client: client, interaction: interaction, content: "This interaction has probably expired. The lifetime of most interactions is ~15 minutes.", ephemeral: true });
         } else if (exceptionString.includes("connect ETIMEDOUT")) {
-            return; // Server connection issue
+            return;
+        } else if (exceptionString.includes("AxiosError")) {
+            return console.log(`Axios error occurred (likely remote server connection or bad gateway) at ${timestamp}`);
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`Error at ${timestamp}:`);
