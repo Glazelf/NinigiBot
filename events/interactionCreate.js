@@ -171,6 +171,8 @@ module.exports = async (client, interaction) => {
                         choices.push({ name: "12 hours", value: 720 });
                         choices.push({ name: "1 day", value: 1440 });
                         choices.push({ name: "1 week", value: 10080 });
+                        choices.push({ name: "2 weeks", value: 20160 });
+                        choices.push({ name: "1 month", value: 43800 });
                         break;
                 };
                 // Unique argument tree
