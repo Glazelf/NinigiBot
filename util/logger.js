@@ -19,10 +19,10 @@ module.exports = async (exception, client, interaction = null) => {
         } else if (exceptionString.includes("connect ETIMEDOUT")) {
             return;
         } else if (exceptionString.includes("AxiosError")) {
-            return console.log(`Axios error occurred (likely remote server connection or bad gateway) at ${timestamp}`);
+            return console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
-            console.log(`Error at ${timestamp}:`);
+            console.log(`${timestamp}: Error occurred`);
             console.log(exception);
         };
 
