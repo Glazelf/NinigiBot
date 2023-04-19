@@ -10,22 +10,26 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
-
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to mute.` });
 
         let muteTime = 60;
-        let maxMuteTime = 40320; // Max time is 28 days
+        let maxMuteTime = 2419200000; // Max time is 28 days
         let timeArg = interaction.options.getInteger("time");
         if (timeArg) muteTime = timeArg;
         if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
-        let displayMuteTime = muteTime;
-        muteTime = muteTime * 1000 * 60; // Convert to minutes
-        if (muteTime > maxMuteTime * 60 * 1000) {
-            muteTime = maxMuteTime;
-            displayMuteTime = maxMuteTime;
-        };
+        muteTime = muteTime * 1000 * 60; // Convert to milliseconds
+        if (muteTime > maxMuteTime) muteTime = maxMuteTime;
+        // Format display time
+        let displayMuteTime = muteTime / 1000 / 60; // Convert display back to minutes
+        let daysMuted = Math.floor(displayMuteTime / 1440); // Simple divide since it's the largest unit
+        let hoursMuted = Math.floor((displayMuteTime / 60) - daysMuted * 24);
+        let minutesMuted = Math.floor(displayMuteTime - hoursMuted * 60 - daysMuted * 60 * 24);
+        let daysMutedDisplay = daysMuted > 0 ? daysMuted + (daysMuted == 1 ? " day " : " days ") : "";
+        let hoursMutedDisplay = hoursMuted > 0 ? hoursMuted + (hoursMuted == 1 ? " hour " : " hours ") : "";
+        let minutesMutedDisplay = minutesMuted > 0 ? minutesMuted + (minutesMuted == 1 ? " minute " : " minutes ") : "";
+        displayMuteTime = daysMutedDisplay + hoursMutedDisplay + minutesMutedDisplay;
 
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
         // Check permissions
@@ -38,7 +42,7 @@ exports.run = async (client, interaction) => {
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
 
-        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime} minute(s) for reason: \`${reason}\`.`;
+        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}with reason: \`${reason}\`.`;
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
