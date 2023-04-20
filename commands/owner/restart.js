@@ -4,10 +4,8 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
-        let adminBool = isAdmin(client, interaction.user);
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
