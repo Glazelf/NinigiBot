@@ -8,6 +8,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         const { LogChannels } = require('../../database/dbServices/server.api');
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 

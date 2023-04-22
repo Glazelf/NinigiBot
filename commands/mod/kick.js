@@ -10,6 +10,7 @@ exports.run = async (client, interaction) => {
         if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
+        await interaction.deferReply({ ephemeral: ephemeral });
 
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");

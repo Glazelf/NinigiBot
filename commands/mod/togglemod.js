@@ -8,6 +8,9 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
         if (!adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
+
         const { ModEnabledServers } = require('../../database/dbServices/server.api');
         let serverID = await ModEnabledServers.findOne({ where: { server_id: interaction.guild.id } });
 
