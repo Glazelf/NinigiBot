@@ -30,7 +30,7 @@ exports.run = async (client, interaction) => {
         let splatfestData;
         let splatfestTeamIndex = 0;
         let star = "⭐";
-        let github = `https://github.com/Leanny/splat3/blob/master/`;
+        let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
         let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
         let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
         let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
@@ -60,9 +60,9 @@ exports.run = async (client, interaction) => {
                 let abilityTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["001"]}:`;
                 let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
                 let slotsTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_Player_02-T_BlackText_00"]}:`;
-                let brandImage = `${github}images/brand/${clothingObject.Brand}.png?raw=true`;
-                let abilityImage = `${github}images/skill/${clothingObject.Skill}.png?raw=true`;
-                let clothingImage = `${github}images/gear/${clothingObject.__RowId}.png?raw=true`;
+                let brandImage = `${githubRaw}images/brand/${clothingObject.Brand}.png`;
+                let abilityImage = `${githubRaw}images/skill/${clothingObject.Skill}.png`;
+                let clothingImage = `${githubRaw}images/gear/${clothingObject.__RowId}.png`;
 
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
@@ -100,9 +100,9 @@ exports.run = async (client, interaction) => {
                 let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
                 let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
                 if (levelString.includes("[")) levelString = levelString.split(" ")[0];
-                let subImage = `${github}images/subspe/Wsb_${subID}00.png?raw=true`;
-                let specialImage = `${github}images/subspe/Wsp_${specialID}00.png?raw=true`;
-                let weaponImage = `${github}images/weapon/Wst_${inputID}.png?raw=true`;
+                let subImage = `${githubRaw}images/subspe/Wsb_${subID}00.png`;
+                let specialImage = `${githubRaw}images/subspe/Wsp_${specialID}00.png`;
+                let weaponImage = `${githubRaw}images/weapon/Wst_${inputID}.png`;
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
@@ -126,7 +126,7 @@ exports.run = async (client, interaction) => {
                 subweaponMatches.forEach(subweapon => {
                     allSubweaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][subweapon.__RowId]}\n`;
                 });
-                let subThumbnail = `${github}images/subspe/Wsb_${inputID}00.png?raw=true`;
+                let subThumbnail = `${githubRaw}images/subspe/Wsb_${inputID}00.png`;
 
                 let subName = languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID];
                 let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
@@ -152,7 +152,7 @@ exports.run = async (client, interaction) => {
                 specialWeaponMatches.forEach(specialweapon => {
                     allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]}\n`;
                 });
-                let specialThumbnail = `${github}images/subspe/Wsp_${inputID}00.png?raw=true`;
+                let specialThumbnail = `${githubRaw}images/subspe/Wsp_${inputID}00.png`;
 
                 let specialName = languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID];
                 let specialDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID]
@@ -506,11 +506,11 @@ exports.run = async (client, interaction) => {
                 let badgeRandom3 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
 
                 splat3Embed
-                    .setAuthor({ name: randomTitle, iconURL: `${github}images/badge/${badgeRandom}?raw=true` })
+                    .setAuthor({ name: randomTitle, iconURL: `${githubRaw}images/badge/${badgeRandom}` })
                     .setTitle(userTitle)
-                    .setThumbnail(`${github}images/badge/${badgeRandom2}?raw=true`)
-                    .setImage(`${github}images/npl/${bannerRandom}?raw=true`)
-                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${github}images/badge/${badgeRandom3}?raw=true` });
+                    .setThumbnail(`${githubRaw}images/badge/${badgeRandom2}`)
+                    .setImage(`${githubRaw}images/npl/${bannerRandom}`)
+                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
