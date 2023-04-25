@@ -13,24 +13,24 @@ exports.run = async (client, interaction) => {
         let version = "3.1.0";
         let versionJoined = version.split(".").join("");
         let versionString = `Splatoon 3 v${version}`;
-        const GearInfoClothesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
-        const GearInfoHeadJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoHead.json`);
-        const GearInfoShoesJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/GearInfoShoes.json`);
-        const WeaponInfoMainJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/leanny.github.io/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
+        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
+        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoHead.json`);
+        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoShoes.json`);
+        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoMain.json`);
+        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
+        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
-        let languageJSON = require(`../../submodules/leanny.github.io/splat3/data/language/${languageKey}_full.json`);
+        let languageJSON = require(`../../submodules/splat3/data/language/${languageKey}_full.json`);
         let inputID;
         let responseSplatfest;
         let splatfestData;
         let splatfestTeamIndex = 0;
         let star = "⭐";
-        let github = `https://github.com/Leanny/leanny.github.io/blob/master/splat3/`;
+        let github = `https://github.com/Leanny/splat3/blob/master/`;
         let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
         let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
         let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
@@ -498,8 +498,8 @@ exports.run = async (client, interaction) => {
                 let randomTitle = `${randomAdjective} ${randomSubject}`;
                 if (reversedLanguages.includes(languageKey)) randomTitle = `${randomSubject} ${randomAdjective}`;
 
-                let bannerOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/npl/").filter(file => file.endsWith(".png"));
-                let badgeOptions = fs.readdirSync("submodules/leanny.github.io/splat3/images/badge/").filter(file => file.endsWith(".png"));
+                let bannerOptions = fs.readdirSync("submodules/splat3/images/npl/").filter(file => file.endsWith(".png"));
+                let badgeOptions = fs.readdirSync("submodules/splat3/images/badge/").filter(file => file.endsWith(".png"));
                 let bannerRandom = bannerOptions[randomNumber(0, bannerOptions.length - 1)];
                 let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
