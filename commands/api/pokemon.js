@@ -110,8 +110,7 @@ exports.run = async (client, interaction) => {
 
                 let type = getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
                 let category = move.category;
-                let ppString = `${move.pp}|${move.pp * 1.2}|${move.pp * 1.4}|${move.pp * 1.6}`;
-                if (move.pp == 1 || move.isMax) ppString = null;
+                let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
                 let accuracy = `${move.accuracy}%`;
                 if (move.accuracy === true) accuracy = "Can't miss";
@@ -133,7 +132,7 @@ exports.run = async (client, interaction) => {
                     .addField("Category:", category, true)
                     .addField("Target:", target, true);
                 if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
-                if (ppString) pokemonEmbed.addField("PP:", ppString, true);
+                if (!move.isMax) pokemonEmbed.addField("PP:", ppString, true);
                 if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
                 // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
                 // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
