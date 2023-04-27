@@ -236,7 +236,7 @@ exports.run = async (client, interaction) => {
                     if (currentSalmonRunEvent) {
                         let eventWeaponString = "";
                         await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
-                            eventWeaponString += `-${weapon.name}\n`;
+                            eventWeaponString += `- ${weapon.name}\n`;
                         });
                         splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
                     };
@@ -244,7 +244,7 @@ exports.run = async (client, interaction) => {
                         let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
                         let weaponString = "";
                         await entry.setting.weapons.forEach(weapon => {
-                            weaponString += `-${weapon.name}\n`;
+                            weaponString += `- ${weapon.name}\n`;
                         });
                         splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, weaponString, true);
                     });
@@ -357,11 +357,11 @@ exports.run = async (client, interaction) => {
                     let splatfestResultsTitleTeams = "";
                     let splatfestResultsDescription = "";
                     let splatfestWinnerPoints = 0;
-                    let splatfestResultsVote = "Popularity: ";
-                    let splatfestResultsHoragai = "Conch Shells: ";
-                    let splatfestResultsRegular = "Open Battles: ";
-                    let splatfestResultsChallenge = "Pro Battles: ";
-                    let splatfestResultsTricolor = "Tricolor Battles: ";
+                    let splatfestResultsVote = "- Popularity: ";
+                    let splatfestResultsHoragai = "- Conch Shells: ";
+                    let splatfestResultsRegular = "- Open Battles: ";
+                    let splatfestResultsChallenge = "- Pro Battles: ";
+                    let splatfestResultsTricolor = "- Tricolor Battles: ";
                     let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
                     splatfestTeamIndex = 0;
                     await splatfest.teams.forEach(async (team) => {

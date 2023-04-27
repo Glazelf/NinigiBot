@@ -16,7 +16,7 @@ exports.run = async (client, interaction) => {
         if (!message.stickers || !message.stickers.first()) return sendMessage({ client: client, interaction: interaction, content: noStickerString });
 
         if (message.stickers.size == 1) {
-            returnString += `\n${message.stickers.first().name} ${message.stickers.first().url}`;
+            returnString += `\n[${message.stickers.first().name}](${message.stickers.first().url})`;
         } else if (message.stickers.size > 1) {
             await message.stickers.forEach(sticker => {
                 returnString += `\n${sticker.name} ${sticker.url}`;
