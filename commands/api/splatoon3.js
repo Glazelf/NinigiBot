@@ -510,7 +510,7 @@ exports.run = async (client, interaction) => {
                     .setTitle(userTitle)
                     .setThumbnail(`${githubRaw}images/badge/${badgeRandom2}`)
                     .setImage(`${githubRaw}images/npl/${bannerRandom}`)
-                    .setFooter({ text: `#${interaction.user.discriminator}`, iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
+                    .setFooter({ iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
