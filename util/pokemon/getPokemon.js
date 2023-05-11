@@ -195,6 +195,11 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
         if (learnsetBool && learnsets[pokemon.id]) {
             let learnset = learnsets[pokemon.id].learnset;
+            // Catch forms without their own learnset
+            if (!learnset && pokemon.baseSpecies) {
+                let baseSpecies = Dex.species.get(pokemon.baseSpecies);
+                learnset = learnsets[baseSpecies.id].learnset;
+            };
             for (let [moveName, learnData] of Object.entries(learnset)) {
                 moveName = Dex.moves.get(moveName).name;
                 for (let moveLearnData of learnData) {
