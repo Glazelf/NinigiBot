@@ -107,7 +107,7 @@ exports.run = async (client, interaction) => {
         if (guild.features.includes("COMMUNITY")) serverLinks += `<id:home>\n<id:customize>\n`;
         serverLinks += `<id:browse>\n`;
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
-        if (guild.vanityURLCode) serverLinks += `Vanity Invite: [${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
+        if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
         await guild.channels.cache.forEach(async channel => {
             if (channel.isText() || channel.isVoice()) channelCount += 1;
             if (channel.isThread()) threadCount += 1;

@@ -80,7 +80,7 @@ exports.run = async (client, interaction) => {
             .addField("Total Users:", totalMembers.toString(), true)
             .addField("Created:", `<t:${createdAt}:f>`, true);
         if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
-        if (githubRepoResponse) botEmbed.addField("Github Stars:", `[${githubRepoResponse.data.stargazers_count}⭐](https://github.com/${githubURLVars}/stargazers)`, true);
+        if (githubRepoResponse) botEmbed.addField("Github Stars:", `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, true);
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
         let botButtons = new Discord.MessageActionRow()
