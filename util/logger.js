@@ -16,7 +16,7 @@ module.exports = async (exception, client, interaction = null) => {
             return sendMessage({ client: client, interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
         } else if (exceptionString.includes("Unknown interaction")) {
             returnsendMessage({ client: client, interaction: interaction, content: "This interaction has probably expired. The lifetime of most interactions is ~15 minutes.", ephemeral: true });
-        } else if (exceptionString.includes("connect ETIMEDOUT")) {
+        } else if (exceptionString.includes("connect ETIMEDOUT") || exceptionString.includes("connect ECONNREFUSED")) {
             return;
         } else if (exceptionString.includes("AxiosError")) {
             return console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
