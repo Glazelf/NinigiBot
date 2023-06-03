@@ -46,7 +46,6 @@ exports.run = async (client, interaction) => {
                         };
                     });
                 };
-
                 mhEmbed
                     .setAuthor({ name: questTitle })
                     .setDescription(`${questData.description} -${questData.client}`)
@@ -64,7 +63,6 @@ exports.run = async (client, interaction) => {
                 if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
-
                 mhEmbed
                     .setColor(globalVars.embedColor)
                     .setAuthor({ name: `${gameName} Quests` });
