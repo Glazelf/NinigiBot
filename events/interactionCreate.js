@@ -50,6 +50,7 @@ module.exports = async (client, interaction) => {
                 switch (interaction.componentType) {
                     case "BUTTON":
                         let messageObject = null;
+                        if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
                             let newPokemonName = null;
@@ -87,7 +88,6 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (interaction.user.id !== interaction.customId.split("-")[3]) return;
                             let componentsCopy = interaction.message.components;
                             await componentsCopy.forEach(async function (part, index) {
                                 await this[index].toJSON().components.forEach(function (part2, index2) {
@@ -100,12 +100,12 @@ module.exports = async (client, interaction) => {
                             await interaction.update({ components: componentsCopy });
                             return;
                         } else if (interaction.customId.startsWith("bgd")) {
-                            // trophy shop??
+                            // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
                             await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
-                            // userinfo
+                            // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
