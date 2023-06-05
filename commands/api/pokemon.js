@@ -224,6 +224,11 @@ exports.run = async (client, interaction) => {
                 let learnInfo = "";
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
+                    // Catch forms without their own learnset
+                    if (!learnset && pokemon.baseSpecies) {
+                        let baseSpecies = Dex.species.get(pokemon.baseSpecies);
+                        learnset = learnsets[baseSpecies.id].learnset;
+                    };
                     for (let [moveName, learnData] of Object.entries(learnset)) {
                         if (moveName !== move.id) continue;
                         learnInfo += getLearnData(learnData);
