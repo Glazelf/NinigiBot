@@ -22,12 +22,10 @@ module.exports = async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
-
             let leaveEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
-
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
@@ -35,7 +33,6 @@ module.exports = async (client, member) => {
                     type: 'MEMBER_KICK',
                 });
                 let kickLog = fetchedLogs.entries.first();
-
                 // Return if ban exists
                 const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
@@ -51,10 +48,8 @@ module.exports = async (client, member) => {
                     if (reason) reasonText = reason;
                     embedAuthor = `Member Kicked 💔`;
                 };
-
                 let leaveButtons = new Discord.MessageActionRow()
                     .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
-
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
@@ -67,10 +62,8 @@ module.exports = async (client, member) => {
                     leaveEmbed.addField(`Reason:`, reasonText, false);
                     if (executor) leaveEmbed.addField(`Executor:`, `${executor.username} (${executor.id})`, false);
                 };
-
                 memberLeaveObject['components'] = [leaveButtons];
             };
-
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);
 

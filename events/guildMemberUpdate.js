@@ -95,7 +95,6 @@ module.exports = async (client, member, newMember) => {
                 default:
                     return;
             };
-
             const updateEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: topText, iconURL: icon })

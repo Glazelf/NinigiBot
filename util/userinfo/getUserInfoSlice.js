@@ -8,8 +8,6 @@ const NUMBER_OF_PAGES = 2;
 module.exports = async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
-    console.log(user)
-    console.log(member)
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
