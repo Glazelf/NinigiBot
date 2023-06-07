@@ -33,7 +33,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             const newChannelType = getChannelTypeName(newChannel);
 
             let footer = newChannel.id;
-            if (executor) footer = executor.tag;
+            if (executor) footer = executor.username;
             let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.MessageEmbed()

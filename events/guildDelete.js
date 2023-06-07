@@ -23,7 +23,7 @@ module.exports = async (client, guild) => {
             .setThumbnail(icon)
             .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)
             .addField(`Name:`, guild.name, true);
-        if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.user.tag} (${guildOwner.id})`, false);
+        if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.user.username} (${guildOwner.id})`, false);
         guildEmbed
             .addField(`Users:`, guild.memberCount.toString(), false)
             .setFooter({ text: guild.id })

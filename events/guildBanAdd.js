@@ -42,8 +42,8 @@ module.exports = async (client, guildBan) => {
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
                 .addField(`User:`, `${target} (${target.id})`, false)
                 .addField(`Reason:`, reason, false)
-                .addField(`Executor:`, `${executor.tag} (${executor.id})`, false)
-                .setFooter({ text: target.tag })
+                .addField(`Executor:`, `${executor.username} (${executor.id})`, false)
+                .setFooter({ text: target.username })
                 .setTimestamp();
 
             return log.send({ embeds: [banEmbed], components: [banButtons] });

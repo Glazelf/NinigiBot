@@ -18,7 +18,7 @@ exports.run = async (client, interaction) => {
         let restartString = "Restarting.";
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
-        console.log(`Restarting for ${interaction.user.tag}. (${timestamp})`);
+        console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
 
         if (removeInteractions) {
             await interaction.deferReply({ ephemeral: true });

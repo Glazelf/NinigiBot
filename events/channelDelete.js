@@ -30,7 +30,7 @@ module.exports = async (client, channel) => {
             };
             const channelType = getChannelTypeName(channel);
             let footer = channel.id;
-            if (executor) footer = executor.tag;
+            if (executor) footer = executor.username;
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.MessageEmbed()
                 .setColor(globalVars.embedColor)

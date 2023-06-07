@@ -43,7 +43,7 @@ module.exports = async (client, role) => {
             if (executor) {
                 createEmbed
                     .addField('Created by:', `${executor} (${executor.id})`)
-                    .setFooter({ text: executor.tag });
+                    .setFooter({ text: executor.username });
             };
             if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
 

@@ -62,10 +62,10 @@ module.exports = async (client, member) => {
                 if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, true);
                 leaveEmbed
                     .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
-                    .setFooter({ text: member.user.tag });
+                    .setFooter({ text: member.user.username });
                 if (kicked == true) {
                     leaveEmbed.addField(`Reason:`, reasonText, false);
-                    if (executor) leaveEmbed.addField(`Executor:`, `${executor.tag} (${executor.id})`, false);
+                    if (executor) leaveEmbed.addField(`Executor:`, `${executor.username} (${executor.id})`, false);
                 };
 
                 memberLeaveObject['components'] = [leaveButtons];

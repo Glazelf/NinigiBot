@@ -41,7 +41,7 @@ exports.run = async (client, interaction) => {
             };
         };
 
-        console.log(`Bot killed by ${interaction.user.tag}. (${timestamp})`);
+        console.log(`Bot killed by ${interaction.user.username}. (${timestamp})`);
 
         await client.destroy();
         return process.exit();

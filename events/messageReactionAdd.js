@@ -61,7 +61,7 @@ module.exports = async (client, messageReaction) => {
         if (isReply && replyString.length > 0) starEmbed.addField(`Replying to:`, replyString);
         starEmbed
             .setImage(messageImage)
-            .setFooter({ text: targetMessage.author.tag })
+            .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count >= starLimit && !messageDB) {

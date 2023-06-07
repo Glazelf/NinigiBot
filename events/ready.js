@@ -35,7 +35,7 @@ module.exports = async (client) => {
 Guilds: ${client.guilds.cache.size}
 Channels: ${client.channels.cache.size}
 Users: ${client.users.cache.size} (cached)
-Connected as ${client.user.tag}. (${timestamp})`);
+Connected as ${client.user.username}. (${timestamp})`);
 
     } catch (e) {
         // Log error

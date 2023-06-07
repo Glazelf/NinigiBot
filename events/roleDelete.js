@@ -40,7 +40,7 @@ module.exports = async (client, role) => {
             if (executor) {
                 deleteEmbed
                     .addField('Deleted by:', `${executor} (${executor.id})`)
-                    .setFooter({ text: executor.tag });
+                    .setFooter({ text: executor.username });
             };
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {

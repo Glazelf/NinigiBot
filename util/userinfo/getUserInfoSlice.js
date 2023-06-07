@@ -8,6 +8,8 @@ const NUMBER_OF_PAGES = 2;
 module.exports = async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
+    console.log(user)
+    console.log(member)
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -18,7 +20,7 @@ module.exports = async (client, interaction, page, user) => {
 
     const profileEmbed = new Discord.MessageEmbed()
         .setColor(embedColor)
-        .setAuthor({ name: user.tag, iconURL: avatar })
+        .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
     let profileButtons = new Discord.MessageActionRow()
         .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));

@@ -66,7 +66,7 @@ module.exports = async (client, message, newMessage) => {
             if (isReply && replyMessage) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
             updateEmbed
                 .setImage(messageImage)
-                .setFooter({ text: message.author.tag })
+                .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
 
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });

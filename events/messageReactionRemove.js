@@ -53,7 +53,7 @@ module.exports = async (client, messageReaction) => {
         if (isReply && replyMessage) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
         starEmbed
             .setImage(messageImage)
-            .setFooter({ text: targetMessage.author.tag })
+            .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
 
         if (messageReaction.count == 0 && messageDB) {

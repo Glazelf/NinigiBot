@@ -31,7 +31,7 @@ module.exports = async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `DM Message` })
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.author.tag, false)
+                .addField(`Author:`, message.author.username, false)
             if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
             dmEmbed
                 .setImage(messageImage)

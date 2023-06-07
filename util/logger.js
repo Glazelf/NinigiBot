@@ -39,7 +39,7 @@ module.exports = async (exception, client, interaction = null) => {
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
-User: **${user.tag}** (${user.id})
+User: **${user.username}** (${user.id})
 Message link: ${interaction.url}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;

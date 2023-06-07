@@ -452,7 +452,7 @@ module.exports = async (client, interaction) => {
                             .addField("Reproduce:", bugReportReproduce, false)
                             .addField("Expected Behaviour:", bugReportBehaviour, false)
                             .addField("Device Context:", bugReportContext, false)
-                            .setFooter({ text: interaction.user.tag });
+                            .setFooter({ text: interaction.user.username });
 
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
@@ -471,7 +471,7 @@ module.exports = async (client, interaction) => {
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescribe)
-                            .setFooter({ text: `${interaction.user.tag} (${interaction.user.id})` });
+                            .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
