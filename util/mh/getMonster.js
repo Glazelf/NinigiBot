@@ -164,7 +164,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         mhEmbed
             .addField("Games:", gameAppearances, false)
             .setImage(monsterBanner)
-            .setFooter({ text: interaction.user.username })
             .setTimestamp();
 
         let messageObject = { embeds: mhEmbed, components: buttonArray };
