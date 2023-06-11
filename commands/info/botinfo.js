@@ -64,7 +64,7 @@ exports.run = async (client, interaction) => {
 
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
         // Owner
-        let owner = "Glaze#6669 (232875725898645504)";
+        let owner = "glazelf (232875725898645504)";
 
         let botEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
