@@ -72,7 +72,7 @@ exports.run = async (client, interaction) => {
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
-                console.log(e);
+                // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
             if (iconArg && iconsAllowed && fileIsImg) {
