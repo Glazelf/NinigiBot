@@ -8,6 +8,7 @@ exports.run = async (client, interaction) => {
         const colorHexes = require('../../objects/colorHexes.json');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
+        let modBool = interaction.member.permissions.has("MANAGE_ROLES");
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
@@ -41,9 +42,9 @@ exports.run = async (client, interaction) => {
         if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
-        if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.` });
+        if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
         let personalRolePosition = boosterRole.position + 1;
-        if (!interaction.member.roles.cache.has(boosterRole.id) && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
+        if (!interaction.member.roles.cache.has(boosterRole.id) && !modBool && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
         if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
@@ -57,7 +58,7 @@ exports.run = async (client, interaction) => {
         if (deleteBool == true) return deleteRole(`Deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-        if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!boosterRole && !modBool && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
 
         if (roleDB) {
             let editReturnString = `Updated your role.`;
@@ -71,7 +72,7 @@ exports.run = async (client, interaction) => {
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
-                // console.log(e);
+                console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
             if (iconArg && iconsAllowed && fileIsImg) {
