@@ -68,7 +68,7 @@ exports.run = async (client, interaction) => {
             if (roleColor != personalRole.color) editReturnString += `\n-Color set to \`#${roleColor}\`.`;
 
             personalRole.edit({
-                name: interaction.user,
+                name: interaction.user.username,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
