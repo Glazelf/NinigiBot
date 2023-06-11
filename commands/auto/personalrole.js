@@ -65,7 +65,7 @@ exports.run = async (client, interaction) => {
             let personalRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
             if (!personalRole) return createRole();
             if (!colorArg) roleColor = personalRole.color;
-            if (roleColor != personalRole.color) editReturnString += `\n-Color set to \`#${roleColor}\`.`;
+            if (roleColor != personalRole.color) editReturnString += `\n- Color set to \`#${roleColor}\`.`;
 
             personalRole.edit({
                 name: interaction.user.username,
@@ -82,10 +82,10 @@ exports.run = async (client, interaction) => {
                 } else {
                     try {
                         await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.username} (${interaction.user.id}).`]);
-                        editReturnString += `\n-Image updated.`;
+                        editReturnString += `\n- Image updated.`;
                     } catch (e) {
                         // console.log(e);
-                        editReturnString += `\n-Failed to update image.`;
+                        editReturnString += `\n- Failed to update image.`;
                     };
                 };
             } else if (iconArg && !iconsAllowed) {
