@@ -36,7 +36,7 @@ exports.run = async (client, interaction) => {
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute **${member.user.tag}** (${member.id}).` });
+        if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to mute ${member.user.username} (${member.id}).` });
         if (!member.moderatable) return sendMessage({ client: client, interaction: interaction, content: `I don't have permissions to mute this user.` });
 
         let reason = "Not specified.";
@@ -47,18 +47,18 @@ exports.run = async (client, interaction) => {
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
-                muteReturnString = `Unmuted **${member.user.tag}** (${member.id}).`;
+                muteReturnString = `Unmuted ${member.user.username} (${member.id}).`;
             };
         };
         let time = await getTime(client);
-        let reasonInfo = `-${interaction.user.tag} (${time})`;
+        let reasonInfo = `-${interaction.user.username} (${time})`;
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
             return sendMessage({ client: client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
-            if (e.toString().includes("Missing Permissions")) return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle timeout on **${user.tag}**. I probably lack permissions.` });
+            if (e.toString().includes("Missing Permissions")) return sendMessage({ client: client, interaction: interaction, content: `Failed to toggle timeout on ${user.username}. I probably lack permissions.` });
             // Log error
             logger(e, client, interaction);
         };

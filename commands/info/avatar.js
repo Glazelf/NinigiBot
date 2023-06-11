@@ -12,7 +12,7 @@ exports.run = async (client, interaction) => {
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
         if (member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `${user.tag} doesn't have an avatar.` });
+        if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `${user.username} doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;

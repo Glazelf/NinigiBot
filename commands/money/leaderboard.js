@@ -25,7 +25,7 @@ exports.run = async (client, interaction) => {
             let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
             leaderboardEmbed
@@ -37,7 +37,7 @@ exports.run = async (client, interaction) => {
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).tag)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
 
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });

@@ -34,7 +34,7 @@ exports.run = async (client, interaction) => {
                 let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
                 await interaction.channel.bulkDelete(messages, [true])
                     .then(messagesDeleted => {
-                        returnString = `Deleted ${messagesDeleted.size} messages from ${user.tag} within the last ${maxNumberOfMessages} messages.`;
+                        returnString = `Deleted ${messagesDeleted.size} messages from ${user.username} within the last ${maxNumberOfMessages} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
                         sendMessage({ client: client, interaction: interaction, content: returnString });
                     });

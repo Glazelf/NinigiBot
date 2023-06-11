@@ -35,12 +35,10 @@ exports.run = async (client, interaction) => {
             if (iconArg.contentType.includes('image')) fileIsImg = true;
         };
         if (deleteArg === true) deleteBool = deleteArg;
-
         // Check if icons are possible
         let iconsAllowed = false;
         let nitroLevel2Req = 7;
         if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
-
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Boost role. This role is created the first time someone boosts a server.` });
@@ -49,7 +47,6 @@ exports.run = async (client, interaction) => {
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
         if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
-
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
@@ -57,9 +54,7 @@ exports.run = async (client, interaction) => {
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
-
         if (deleteBool == true) return deleteRole(`Deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
-
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
         if (!boosterRole && !interaction.member.permissions.has("MANAGE_ROLES") && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
@@ -72,21 +67,20 @@ exports.run = async (client, interaction) => {
             if (roleColor != personalRole.color) editReturnString += `\n-Color set to \`#${roleColor}\`.`;
 
             personalRole.edit({
-                name: interaction.user.tag,
+                name: interaction.user,
                 color: roleColor,
                 position: personalRolePosition
             }).catch(e => {
                 // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
             });
-
             if (iconArg && iconsAllowed && fileIsImg) {
                 let roleIconSizeLimit = 256;
                 if (iconSize > roleIconSizeLimit) {
                     editReturnString += `\nFailed to update the image, make sure the image is under ${roleIconSizeLimit}kb. `;
                 } else {
                     try {
-                        await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.tag}.`]);
+                        await personalRole.setIcon(iconImg, [`Personal role image update requested by ${interaction.user.username} (${interaction.user.id}).`]);
                         editReturnString += `\n-Image updated.`;
                     } catch (e) {
                         // console.log(e);
@@ -97,10 +91,9 @@ exports.run = async (client, interaction) => {
                 editReturnString += `-**${interaction.guild.name}** does not have role icons unlocked.`;
             };
             // Re-add role if it got removed
-            if (!interaction.member.roles.cache.find(r => r.name == interaction.user.tag)) interaction.member.roles.add(personalRole.id);
+            if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
 
             return sendMessage({ client: client, interaction: interaction, content: editReturnString });
-
         } else {
             // Create role if it doesn't exit yet
             return createRole();
@@ -110,16 +103,14 @@ exports.run = async (client, interaction) => {
             // Clean up possible old entry
             let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
             if (oldEntry) await oldEntry.destroy();
-
             if (!colorArg) roleColor = 0;
-
             // Create role
             try {
                 await interaction.guild.roles.create({
-                    name: interaction.user.tag,
+                    name: interaction.user.username,
                     color: roleColor,
                     position: personalRolePosition,
-                    reason: `Personal role for ${interaction.user.tag}.`,
+                    reason: `Personal role for ${interaction.user.username} (${interaction.user.id}).`,
                 });
             } catch (e) {
                 // console.log(e);
@@ -129,8 +120,7 @@ exports.run = async (client, interaction) => {
                     return sendMessage({ client: client, interaction: interaction, content: `An error occurred creating a role.` });
                 };
             };
-
-            let createdRole = await interaction.guild.roles.cache.find(role => role.name == interaction.user.tag);
+            let createdRole = await interaction.guild.roles.cache.find(role => role.name == interaction.user.username);
             try {
                 if (iconArg && iconsAllowed && fileIsImg) createdRole.setIcon(iconImg);
             } catch (e) {

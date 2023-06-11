@@ -20,7 +20,7 @@ exports.run = async (client, interaction) => {
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick **${user.tag}** (${user.id}).` });
+        if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to kick ${user.username} (${user.id}).` });
         if (!member.kickable) return sendMessage({ client: client, interaction: interaction, content: kickFailString });
 
         let reason = "Not specified.";
@@ -28,7 +28,7 @@ exports.run = async (client, interaction) => {
         if (reasonArg) reason = reasonArg;
 
         let time = await getTime(client);
-        let reasonInfo = `-${interaction.user.tag} (${time})`;
+        let reasonInfo = `-${interaction.user.username} (${time})`;
         // Kick
         let kickReturn = `Kicked ${user} (${user.id}) for the following reason: \`${reason}\`.`;
         await user.send({ content: `You've been kicked from **${interaction.guild.name}** for the following reason: \`${reason}\`` })

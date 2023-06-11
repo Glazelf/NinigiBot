@@ -37,22 +37,22 @@ exports.run = async (client, interaction) => {
             bansFetch = null;
         };
         let time = await getTime(client);
-        let reasonInfo = `-${interaction.user.tag} (${time})`;
+        let reasonInfo = `-${interaction.user.username} (${time})`;
         // If user is found
         if (member) {
             // Check permissions
             let userRole = interaction.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban **${member.user.tag}** (${member.id}).` });
+            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to ban ${member.user.username} (${member.id}).` });
             if (!member.bannable) return sendMessage({ client: client, interaction: interaction, content: banFailString });
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `**${member.user.tag}** (${member.id}) is already banned.` });
+                if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `${member.user.username} (${member.id}) is already banned.` });
             };
             banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
             await user.send({ content: dmString })
-                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.tag}.`)
-                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${member.user.tag}.`);
+                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.username}.`)
+                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${member.user.username}.`);
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too? Maybe? deleteMessageSeconds got added in the meantime

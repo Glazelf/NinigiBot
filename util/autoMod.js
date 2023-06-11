@@ -71,7 +71,7 @@ module.exports = async (client, message) => {
     async function msgDelete() {
         if (!message.guild.members.me.permissions.has("MANAGE_MESSAGES")) return;
         await message.delete();
-        return message.channel.send({ content: `Deleted a message by **${message.author.username}** (${message.author.id}) for the following reason: \`${reason}\`` });
+        return message.channel.send({ content: `Deleted a message by ${message.author.username} (${message.author.id}) for the following reason: \`${reason}\`` });
         // return true;
     };
 
@@ -89,10 +89,10 @@ module.exports = async (client, message) => {
             await message.member.kick([`${reason} -${client.user.username} (${time})`]);
         } catch (e) {
             // console.log(e);
-            await message.channel.send({ content: `Failed to auto-kick **${message.author.username}** (${message.author.id}). This is probably a permission issue.` });
+            await message.channel.send({ content: `Failed to auto-kick ${message.author.username} (${message.author.id}). This is probably a permission issue.` });
             return false;
         };
-        await message.channel.send({ content: `Automatically kicked **${message.author.username}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+        await message.channel.send({ content: `Automatically kicked ${message.author.username} (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
         return true;
     };
 
@@ -110,10 +110,10 @@ module.exports = async (client, message) => {
             await message.member.ban({ deleteMessageSeconds: deleteMessageDays * 86400, reason: `${reason} -${client.user.username} (${time})` });
         } catch (e) {
             // console.log(e);
-            await message.channel.send({ content: `Failed to auto-ban **${message.author.username}** (${message.author.id}). This is probably a permission issue.` });
+            await message.channel.send({ content: `Failed to auto-ban ${message.author.username} (${message.author.id}). This is probably a permission issue.` });
             return false;
         };
-        await message.channel.send({ content: `Automatically banned **${message.author.username}** (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
+        await message.channel.send({ content: `Automatically banned ${message.author.username} (${message.author.id}) for the following reason: \`${reason}\` ${dmResult}` });
         return true;
     };
 

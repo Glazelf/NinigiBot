@@ -356,7 +356,7 @@ BST: ${pokemon.bst}`, false)
             // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
         };
         pkmEmbed
-            .setFooter({ text: interaction.user.tag, iconURL: iconFooter })
+            .setFooter({ iconURL: iconFooter })
             .setTimestamp();
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
