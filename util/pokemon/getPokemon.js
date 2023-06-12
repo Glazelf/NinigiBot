@@ -258,6 +258,16 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };
+        let footerText = pokemon.isNonstandard;
+        switch (footerText) {
+            case null:
+                footerText = "Available";
+                break;
+            case "Past":
+                footerText = "Unavailable";
+                break;
+        };
+        // Buttons
         let previousPokemon = null;
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
@@ -356,7 +366,7 @@ BST: ${pokemon.bst}`, false)
             // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
         };
         pkmEmbed
-            .setFooter({ iconURL: iconFooter })
+            .setFooter({ text: footerText, iconURL: iconFooter })
             .setTimestamp();
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
