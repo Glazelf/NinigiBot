@@ -84,12 +84,10 @@ exports.run = async (client, interaction) => {
         if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
 
         let botButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
-            // Uncomment this when app directory goes live
-            // .addComponents(new Discord.MessageButton({ label: 'Invite', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }))
-            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }));
-        // Uncomment this whenever App Directory launches
-        // .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }));
+            .addComponents(new Discord.MessageButton({ label: 'Invite Bot', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
+            .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }))
+            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }))
+            .addComponents(new Discord.MessageButton({ label: 'Support Server', style: 'LINK', url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
         async function getUsers() {

@@ -50,6 +50,7 @@ function initPresence() {
 
 module.exports.NinigiID = "592760951103684618";
 module.exports.ShinxServerID = "549214833858576395";
+module.exports.ShinxServerInvite = "2gkybyu";
 // module.exports.ShinxServerID = "759344085420605471"; // Testing
 module.exports.currency = "💰";
 module.exports.embedColor = "#219DCD";
