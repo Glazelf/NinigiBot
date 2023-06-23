@@ -65,16 +65,16 @@ module.exports.config = {
     options: [{
         name: "text",
         type: "STRING",
-        description: "Text to put over a catAAS image."
+        description: "Text to put over the image." // Only works with catAAS
     }, {
-        name: "api",
-        type: "STRING",
-        description: "Choose which API you want to use.",
-        choices: [
-            { name: "random.cat", value: "randomcat" },
-            { name: "catAAS", value: "catAAS" }
-        ]
-    }, {
+        //     name: "api",
+        //     type: "STRING",
+        //     description: "Choose which API you want to use.",
+        //     choices: [
+        //         { name: "random.cat", value: "randomcat" },
+        //         { name: "catAAS", value: "catAAS" }
+        //     ]
+        // }, {
         name: "ephemeral",
         type: "BOOLEAN",
         description: "Whether the reply will be private."
