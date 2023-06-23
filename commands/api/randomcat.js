@@ -67,6 +67,7 @@ module.exports.config = {
         type: "STRING",
         description: "Text to put over the image." // Only works with catAAS
     }, {
+        //// random.cat has been hidden since the api has been disfunctional for months
         //     name: "api",
         //     type: "STRING",
         //     description: "Choose which API you want to use.",
