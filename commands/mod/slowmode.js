@@ -8,9 +8,16 @@ exports.run = async (client, interaction) => {
         let adminBool = isAdmin(client, interaction.member);
 
         let ephemeral = false;
+        let slowmodeSupportedChannelTypes = [
+            "GUILD_TEXT",
+            "GUILD_PUBLIC_THREAD",
+            "GUILD_PRIVATE_THREAD",
+            "GUILD_STAGE_VOICE",
+            "GUILD_VOICE"
+        ];
 
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-        if (interaction.channel.type != "GUILD_TEXT") return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
+        if (!slowmodeSupportedChannelTypes.has(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
         let slowmodeMaxSeconds = 21600;
