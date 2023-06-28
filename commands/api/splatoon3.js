@@ -306,7 +306,7 @@ exports.run = async (client, interaction) => {
                         let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
                         let challengeTimes = "";
                         await entry.timePeriods.forEach(challengeTimePeriod => {
-                            challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:f>\n`;
+                            challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
                         });
                         splat3Embed.addField(entry.leagueMatchSetting.leagueMatchEvent.name, `${challengeDesc}・${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, false);
                     })
