@@ -183,6 +183,7 @@ exports.run = async (client, interaction) => {
                 let xBattleID = "xSchedules";
                 let leagueBattleID = "leagueSchedules";
                 let splatfestBattleID = "festSchedules";
+                let challengesID = "eventSchedules";
                 let allowedModes = [];
                 allowedModes.push(salmonRunID);
                 if (currentFest) {
@@ -190,6 +191,7 @@ exports.run = async (client, interaction) => {
                 } else {
                     allowedModes.push(turfWarID, anarchyID, xBattleID); // leagueBattleID when it becomes available
                 };
+                if (responseSchedules.data.data.eventSchedules.nodes.length > 0) allowedModes.push(challengesID);
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
 
                 let scheduleData = responseSchedules.data.data[inputMode];
@@ -295,7 +297,20 @@ exports.run = async (client, interaction) => {
                             .setImage(currentMapsSettings.vsStages[randomStageIndex].image.url)
                             .setFooter({ text: `Image is from ${currentMapsSettings.vsStages[randomStageIndex].name}.` });
                     };
-                };
+                } else if (inputMode == challengesID) (
+                    await scheduleData.nodes.forEach(async (entry) => {
+                        let challengeName = entry.leagueMatchSetting.leagueMatchEvent.name;
+                        let challengeDesc = entry.leagueMatchSetting.leagueMatchEvent.desc;
+                        let challengeDescLong = entry.leagueMatchSetting.leagueMatchEvent.regulation.replaceAll("<br />", "");
+                        let challengeMode = entry.leagueMatchSetting.vsRule.name;
+                        let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
+                        let challengeTimes = "";
+                        await entry.timePeriods.forEach(challengeTimePeriod => {
+                            challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:f>\n`;
+                        });
+                        splat3Embed.addField(entry.leagueMatchSetting.leagueMatchEvent.name, `${challengeDesc}・${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, false);
+                    })
+                );
                 break;
             case "splatnet":
                 let responseSplatnet = await axios.get(splatnetAPI);

@@ -319,6 +319,7 @@ module.exports = async (client, interaction) => {
                                 let salmonRunTitle = "Salmon Run";
                                 if (currentBigRun && Date.now() >= Date.parse(currentBigRun.startTime)) salmonRunTitle += " (Big Run)";
                                 choices.push({ name: salmonRunTitle, value: "Salmon Run|coopGroupingSchedule" });
+                                if (responseSchedules.data.data.eventSchedules.nodes.length > 0) choices.push({ name: "Challenges", value: "Challenges|eventSchedules" })
                                 break;
                         };
                         break;
