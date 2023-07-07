@@ -7,6 +7,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const { Dex } = require('pokemon-showdown');
         const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
+        const convertMeterFeet = require('../convertMeterFeet');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
         const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
@@ -117,14 +118,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
         // Metrics
         let metricsString = "";
+        let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
+        let heightAmerican = convertMeterFeet(pokemon.heightm);
+        console.log(pokemon.heightm)
         if (pokemon.weightkg) {
-            metricsString += `Weight: ${pokemon.weightkg}kg`;
+            metricsString += `**Weight:**\n${pokemon.weightkg}kg | ${weightAmerican}lbs`;
         } else if (dynamaxBool) {
-            metricsString += `Weight: ???kg`;
+            metricsString += `**Weight:**\n???`;
         };
         if (pokemon.heightm) {
-            metricsString += `\nHeight: ${pokemon.heightm}m`;
-            if (dynamaxBool) metricsString += `+`;
+            metricsString += `\n**Height:**\n${pokemon.heightm}m | ${heightAmerican}ft`;
+            if (dynamaxBool) metricsString = metricsString.replace("m", "m+").replace("ft", "ft+");
         };
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
         // Official art
