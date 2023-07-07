@@ -179,7 +179,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             let abilitySDesc = Dex.abilities.get(pokemon.abilities['S']).shortDesc;
             abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
         };
-        let statLevels = `(50) (100)`;
+        let statLevels = `(lvl50) (lvl100)`;
         let HPstats = calcHP(pokemon.baseStats.hp);
         let Atkstats = calcStat(pokemon.baseStats.atk);
         let Defstats = calcStat(pokemon.baseStats.def);
