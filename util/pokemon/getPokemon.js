@@ -120,7 +120,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
         let heightAmerican = convertMeterFeet(pokemon.heightm);
-        console.log(pokemon.heightm)
         if (pokemon.weightkg) {
             metricsString += `**Weight:**\n${pokemon.weightkg}kg | ${weightAmerican}lbs`;
         } else if (dynamaxBool) {
