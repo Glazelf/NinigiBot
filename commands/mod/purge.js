@@ -13,10 +13,6 @@ exports.run = async (client, interaction) => {
 
         let returnString = "";
         let amount = interaction.options.getInteger("amount");
-        let maxNumberOfMessages = 100;
-        if (amount > maxNumberOfMessages) amount = maxNumberOfMessages;
-        if (amount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid number.` });
-
         // Get users
         let user = null;
         let author = interaction.user;
@@ -25,7 +21,6 @@ exports.run = async (client, interaction) => {
 
         let deleteFailString = `An error occurred while bulk deleting.`;
         let missingMessagesString = `\nSome messages were not deleted, probably because they were older than 2 weeks.`;
-
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
@@ -84,7 +79,9 @@ module.exports.config = {
         name: "amount",
         type: "INTEGER",
         description: "The amount of messages to delete.",
-        required: true
+        required: true,
+        minValue: 0,
+        maxValue: 100
     }, {
         name: "user",
         type: "USER",

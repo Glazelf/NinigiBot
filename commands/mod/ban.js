@@ -106,7 +106,9 @@ module.exports.config = {
     }, {
         name: "delete-messages-days",
         type: "INTEGER",
-        description: "Amount of days to delete messages for. (0-7)"
+        description: "Amount of days to delete messages for.",
+        minValue: 0,
+        maxValue: 7
     }, {
         name: "user-id",
         type: "STRING",

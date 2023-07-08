@@ -62,7 +62,8 @@ module.exports.config = {
     }, {
         name: "starlimit",
         type: "INTEGER",
-        description: "Required amount of stars on a message."
+        description: "Required amount of stars on a message.",
+        minValue: 1
     }, {
         name: "disable",
         type: "BOOLEAN",

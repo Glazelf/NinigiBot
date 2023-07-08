@@ -27,11 +27,12 @@ exports.run = async (client, interaction) => {
 
 module.exports.config = {
     name: "buyfood",
-    description: "Buy food for shinx",
+    description: "Buy food for Shinx",
     options: [{
         name: "food",
         type: "INTEGER",
         description: "The amount of food you want to buy.",
         required: true,
+        minValue: 1
     }]
 };

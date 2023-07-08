@@ -20,11 +20,6 @@ exports.run = async (client, interaction) => {
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
-        let slowmodeMaxSeconds = 21600;
-
-        if (time < 0) return sendMessage({ client: client, interaction: interaction, content: `You need to provide a valid amount of seconds.` });
-        if (time > slowmodeMaxSeconds) time = slowmodeMaxSeconds;
-
         await interaction.channel.setRateLimitPerUser(time);
         return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.` });
 
@@ -41,6 +36,8 @@ module.exports.config = {
         name: "time",
         type: "INTEGER",
         description: "Time in seconds. 0 to disable.",
-        required: true
+        required: true,
+        minValue: 0,
+        maxValue: 21600
     }]
 };
