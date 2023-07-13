@@ -11,49 +11,42 @@ exports.run = async (client, interaction) => {
         // Date manipulation
         let currentDate = new Date();
         let targetDate = new Date();
-        console.log(currentDate.getUTCHours())
         let year = interaction.options.getInteger("year");
         if (year === null) {
             targetDate.setUTCFullYear(currentDate.getUTCFullYear());
         } else {
-            targetDate.setUTCFullYear(year);
+            targetDate.setFullYear(year);
         };
         let month = interaction.options.getInteger("month");
         if (month === null) {
             targetDate.setUTCMonth(currentDate.getUTCMonth());
         } else {
-            targetDate.setUTCMonth(month - 1);
+            targetDate.setMonth(month - 1);
         };
         let day = interaction.options.getInteger("day");
         if (day === null) {
             targetDate.setUTCDate(currentDate.getUTCDate());
         } else {
-            targetDate.setUTCDate(day);
+            targetDate.setDate(day);
         };
         let hour = interaction.options.getInteger("hour");
         if (hour === null) {
             targetDate.setUTCHours(currentDate.getUTCHours());
-            console.log(targetDate.getUTCHours)
         } else {
-            targetDate.setUTCHours(hour);
+            targetDate.setHours(hour);
         };
         let minute = interaction.options.getInteger("minute");
         if (minute === null) {
             targetDate.setUTCMinutes(currentDate.getUTCMinutes());
         } else {
-            targetDate.setUTCMinutes(minute);
+            targetDate.setMinutes(minute);
         };
-        let second = interaction.options.getInteger("second");
-        if (second === null) {
-            targetDate.setUTCSeconds(currentDate.getUTCSeconds());
-        } else {
-            targetDate.setUTCSeconds(second);
-        };
+        targetDate.setUTCSeconds(0);
         targetDate.setUTCMilliseconds(0);
         let timezone = interaction.options.getInteger("timezone");
         if (timezone === null) timezone = 0;
         if (timezone != 0) targetDate.setTime(targetDate.getTime() + (timezone * 60 * 60 * 1000)); // Add timezone difference
-        let dateString = `${currentDate.getUTCDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getUTCFullYear()} at ${targetDate.getUTCHours()}:${targetDate.getUTCMinutes()}:${targetDate.getUTCSeconds()} UTC`;
+        let dateString = `${currentDate.getDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getFullYear()} at ${targetDate.getHours()}:${targetDate.getMinutes()}:${targetDate.getSeconds()} UTC`;
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.MessageEmbed()
@@ -99,13 +92,13 @@ module.exports.config = {
         type: "INTEGER",
         description: "Specify hour. Default is current.",
         minValue: 0,
-        maxValue: 24
+        maxValue: 23
     }, {
-        name: "second",
+        name: "minute",
         type: "INTEGER",
-        description: "Specify second. Default is current.",
+        description: "Specify minute. Default is current.",
         minValue: 0,
-        maxValue: 60
+        maxValue: 59
     }, {
         name: "timezone",
         type: "INTEGER",
