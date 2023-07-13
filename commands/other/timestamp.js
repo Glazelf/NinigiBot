@@ -46,7 +46,7 @@ exports.run = async (client, interaction) => {
         let timezone = interaction.options.getInteger("timezone");
         if (timezone === null) timezone = 0;
         if (timezone != 0) targetDate.setTime(targetDate.getTime() + (timezone * 60 * 60 * 1000)); // Add timezone difference
-        let dateString = `${currentDate.getDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getFullYear()} at ${targetDate.getHours()}:${targetDate.getMinutes()}:${targetDate.getSeconds()} UTC`;
+        let dateString = `${currentDate.getUTCDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getUTCFullYear()} at ${targetDate.getUTCHours()}:${targetDate.getUTCMinutes()} UTC`;
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.MessageEmbed()
