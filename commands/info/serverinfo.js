@@ -125,6 +125,17 @@ exports.run = async (client, interaction) => {
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
 
+        let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
+        // Change "Active Threads" to "Threads" when archived threads get added
+        if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
+        if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
+        if (banCount > 0) statsString += `\nBans: ${banCount}`;
+        if (guild.premiumSubscriptionCount > 0) statsString += `\nNitro Boosters: ${boosterString}`;
+        let assetString = "";
+        if (unmanagedEmoteCount > 0) assetString += `\nEmotes: ${unmanagedEmoteCount}/${emoteMax} 😳`;
+        if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
+        if (guild.stickers.cache.size > 0) assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
+
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
@@ -132,22 +143,14 @@ exports.run = async (client, interaction) => {
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed
             .addField("Links:", serverLinks, false)
-            .addField("Owner:", guildOwner.toString(), true);
+            .addField("Owner:", `${guildOwner} (${guildOwner.user.username})`, true);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
             if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
         };
         serverEmbed
             .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("Members:", `${guild.memberCount} (${botMembers.size}🤖)`, true)
-            .addField("Channels:", channelCount.toString(), true);
-        // Change "Active Threads" to "Threads" when archived threads get added
-        if (threadCount > 0) serverEmbed.addField("Active Threads:", threadCount.toString(), true);
-        if (guild.roles.cache.size > 1) serverEmbed.addField("Roles:", (guild.roles.cache.size - 1).toString(), true);
-        if (unmanagedEmoteCount > 0) serverEmbed.addField("Emotes:", `${unmanagedEmoteCount}/${emoteMax} 😳`, true);
-        if (managedEmotes.size > 0) serverEmbed.addField("Twitch Emotes:", `${managedEmotes.size}`, true);
-        if (guild.stickers.cache.size > 0) serverEmbed.addField("Stickers:", `${guild.stickers.cache.size}/${stickerMax}`, true);
-        if (banCount > 0) serverEmbed.addField("Bans:", banCount.toString(), true);
-        if (guild.premiumSubscriptionCount > 0) serverEmbed.addField("Nitro Boosts:", boosterString, true);
+            .addField("Stats:", statsString, false)
+            .addField("Assets:", assetString, false);
         if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
         serverEmbed
             .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, true)
