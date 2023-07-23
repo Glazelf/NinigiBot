@@ -178,7 +178,7 @@ exports.run = async (client, interaction) => {
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
-                let formatDescription = (format.desc + "\n").replace("Pok&eacute;mon", "Pokémon");
+                let formatDescription = (format.desc + "\n").replaceAll("&eacute;", "é");
                 if (format.searchShow) {
                     formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
                 } else if (format.rated) {
