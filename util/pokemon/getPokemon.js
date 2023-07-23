@@ -264,10 +264,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let footerText = pokemon.isNonstandard;
         switch (footerText) {
             case null:
-                footerText = "Available";
+                footerText = `Available in ${recentGame}`;
                 break;
             case "Past":
-                footerText = "Unavailable";
+                footerText = `Unavailable in ${recentGame}`;
                 break;
         };
         // Buttons
