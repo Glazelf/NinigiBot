@@ -1,7 +1,7 @@
 {
     "NONE": "None",
-    "LOW": "Low",
-    "MEDIUM": "Medium",
-    "HIGH": "(╯°□°）╯︵  ┻━┻ (High)",
-    "VERY_HIGH": "┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻ (Very High)"
+    "LOW": "Low (Verified email)",
+    "MEDIUM": "Medium (Account age 5+ minutes)",
+    "HIGH": "High (Server member 10+ minutes)",
+    "VERY_HIGH": "Very High (Verified phone)"
 }
