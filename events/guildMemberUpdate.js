@@ -28,9 +28,6 @@ module.exports = async (client, member, newMember) => {
             } else if (member.premiumSince && !newMember.premiumSince) {
                 // Nitro boost end
                 updateCase = "nitroEnd";
-            } else if (oldAvatar !== avatar) {
-                // Update server avatar
-                updateCase = "guildAvatar";
             } else if (member.roles.cache.size !== newMember.roles.cache.size) {
                 // Roles updated
                 updateCase = null; // TODO
@@ -43,6 +40,9 @@ module.exports = async (client, member, newMember) => {
             } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
                 // I assume this does nothing but I want to be sure because of the weird nickname updates firing
                 updateCase = null;
+            } else if (oldAvatar !== avatar) {
+                // Update server avatar
+                updateCase = "guildAvatar";
             } else if (member.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
