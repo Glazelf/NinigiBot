@@ -28,6 +28,8 @@ exports.run = async (client, interaction) => {
         let inputID;
         let responseSplatfest;
         let splatfestData;
+        let inputRegion = interaction.options.getString("region");
+        if (!inputRegion) inputRegion = "EU";
         let splatfestTeamIndex = 0;
         let star = "⭐";
         let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
@@ -261,7 +263,7 @@ exports.run = async (client, interaction) => {
                     // Splatfest
                     let splatfestScheduleDescription = `${currentFest.title}\n`;
                     responseSplatfest = await axios.get(splatfestAPI);
-                    splatfestData = responseSplatfest.data.EU.data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
+                    splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes.find(fest => fest.startTime == currentFest.startTime);
                     let splatfestDefender = null;
                     await splatfestData.teams.forEach(team => {
                         if (splatfestTeamIndex !== 0) splatfestScheduleDescription += " vs. ";
@@ -335,20 +337,24 @@ exports.run = async (client, interaction) => {
                     .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` });
                 break;
             case "splatfests":
+                await interaction.deferReply({ ephemeral: ephemeral });
                 // Command needs a rework once there is 1 finished Splatfest to show results, and then again when there's a second scheduled Splatfest to make sure ordering and comparisons work properly
                 responseSplatfest = await axios.get(splatfestAPI);
                 if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
-                splatfestData = responseSplatfest.data.EU.data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
+                splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
                 let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
+                    if (splatfest.title.length < 1) return;
                     let currentSplatfestPointValues = pointValues;
                     // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
-                    if (splatfest.endTime > splatfestData.find(s => s.teams[0].teamName == "Spicy").startTime) currentSplatfestPointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 };
+                    // JUEA-00003 = Spicy|Sweet|Sour
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00003").startTime) currentSplatfestPointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 };
                     // Second check is for a minor points change
-                    if (splatfest.endTime > splatfestData.find(s => s.teams[0].teamName == "Nessie").startTime) currentSplatfestPointValues = { vote: 8, horagai: 7, regular: 12, challenge: 12, tricolor: 18 };
+                    // JUEA-00005 = Nessie|Aliens|Bigfoot
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00005").startTime) currentSplatfestPointValues = { vote: 8, horagai: 7, regular: 12, challenge: 12, tricolor: 18 };
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
@@ -444,7 +450,6 @@ exports.run = async (client, interaction) => {
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
                     splat3Embed.addField(splatfestTitle, splatfestDescription, false);
                 });
-
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
@@ -562,6 +567,12 @@ let splatoon3Languages = [
     { name: "Chinese (Simplified)|中文（简体)", value: "CNzh" },
     { name: "Chinese (Traditional)|中文（繁體)", value: "TWzh" }
 ];
+// There's also an AP region but I'm not sure what it is or how to name it. Seems to be for Oceania/Australia-ish territories.
+let splatoon3Regions = [
+    { value: "EU", name: "Europe" },
+    { value: "US", name: "United States" },
+    { value: "JP", name: "Japan" }
+];
 module.exports.config = {
     name: "splatoon3",
     description: `Shows Splatoon 3 data.`,
@@ -656,6 +667,11 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }, {
+            name: "region",
+            type: "STRING",
+            description: "Specify a region. Default is EU.",
+            choices: splatoon3Regions
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether the reply will be private."
@@ -674,6 +690,11 @@ module.exports.config = {
         type: "SUB_COMMAND",
         description: "Get all Splatfests data.",
         options: [{
+            name: "region",
+            type: "STRING",
+            description: "Specify a region. Default is EU.",
+            choices: splatoon3Regions
+        }, {
             name: "ephemeral",
             type: "BOOLEAN",
             description: "Whether the reply will be private."
