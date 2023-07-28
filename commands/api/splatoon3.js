@@ -347,7 +347,7 @@ exports.run = async (client, interaction) => {
                 let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
-                    if (splatfest.title.length < 1) return;
+                    if (splatfest.title.length < 1) splatfest.title = "Unknown Splatfest (API error)"; // In case no valid name in API return
                     let currentSplatfestPointValues = pointValues;
                     // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
                     // JUEA-00003 = Spicy|Sweet|Sour
@@ -385,7 +385,13 @@ exports.run = async (client, interaction) => {
                     let splatfestResultsTricolor = "- Tricolor Battles: ";
                     let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
                     splatfestTeamIndex = 0;
+                    let splatfestIdols = {
+                        0: "Shiver",
+                        1: "Frye",
+                        2: "Big Man"
+                    };
                     await splatfest.teams.forEach(async (team) => {
+                        if (team.teamName.length < 1) team.teamName = splatfestIdols[splatfestTeamIndex]; // In case no valid name in API return
                         if (splatfestTeamIndex !== 0) {
                             splatfestDescription += " vs. ";
                             splatfestResultsTitleTeams += "|";
