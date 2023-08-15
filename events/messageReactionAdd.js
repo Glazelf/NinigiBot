@@ -27,9 +27,10 @@ module.exports = async (client, messageReaction) => {
         // Attachments, messages don't send for some reason when attaching seperate files?
         let messageImage = null;
         let seperateFiles = null;
-        if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
-        if (messageImage && messageImage.endsWith(".mp4")) seperateFiles = messageImage;
-
+        if (targetMessage.attachments.size > 0) {
+            messageImage = await targetMessage.attachments.first().url;
+            if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
+        };
         let avatar;
         if (targetMessage.member) {
             avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
