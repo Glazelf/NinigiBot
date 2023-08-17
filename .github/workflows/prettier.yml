@@ -7,7 +7,7 @@ on:
     - cron: "0 0 * * 0"
 
 concurrency:
-  group: "main-branch"
+  group: "master-branch"
 
 jobs:
   format:
@@ -41,6 +41,6 @@ jobs:
       - name: create PR with formatted files
         if: steps.format-files.outputs.changes_detected == 'true'
         id: create-pr
-        run: git checkout formatting-${{ github.sha }} && gh pr create --base main --head formatting-${{ github.sha }} --title 'Merge formatting into main' --body 'Created by Github action'
+        run: git checkout formatting-${{ github.sha }} && gh pr create --base master --head formatting-${{ github.sha }} --title 'Merge formatting into master' --body 'Created by Github action'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
