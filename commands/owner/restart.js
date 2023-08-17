@@ -9,7 +9,7 @@ exports.run = async (client, interaction) => {
         const runCommand = require('../../util/runCommand');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-
+        await interaction.deferReply({ ephemeral: true });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
@@ -24,12 +24,12 @@ exports.run = async (client, interaction) => {
         // Return messages then destroy
         let timestamp = await getTime(client);
         let restartString = "Restarting.";
+        if (npmInstall) restartString = `Installed NPM packages. ${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
-
+        // Remove all interactions (will be reinstated on next boot)
         if (removeInteractions) {
-            await interaction.deferReply({ ephemeral: true });
             // Delete all global commands
             await client.application.commands.set([]);
             // Delete all guild commands
