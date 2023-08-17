@@ -14,7 +14,7 @@ exports.run = async (client, interaction) => {
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
         let npmInstall = false;
-        let installArg = interactions.options.getBoolean("npm-install");
+        let installArg = interaction.options.getBoolean("npm-install");
         if (installArg === true) npmInstall = installArg;
         // Run commands
         if (npmInstall) {
