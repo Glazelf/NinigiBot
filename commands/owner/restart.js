@@ -16,6 +16,7 @@ exports.run = async (client, interaction) => {
         let npmInstall = false;
         let installArg = interaction.options.getBoolean("npm-install");
         if (installArg === true) npmInstall = installArg;
+        console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         // Run commands
         if (npmInstall) {
             await runCommand("npm install");
@@ -27,7 +28,6 @@ exports.run = async (client, interaction) => {
         if (npmInstall) restartString = `Installed NPM packages. ${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
-        console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         // Remove all interactions (will be reinstated on next boot)
         if (removeInteractions) {
             // Delete all global commands
