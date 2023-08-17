@@ -6,13 +6,21 @@ exports.run = async (client, interaction) => {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
+        const runCommand = require('../../util/runCommand');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
-
+        let npmInstall = false;
+        let installArg = interactions.options.getBoolean("npm-install");
+        if (installArg === true) npmInstall = installArg;
+        // Run commands
+        if (npmInstall) {
+            await runCommand("npm install");
+            await runCommand("git stash");
+        };
         // Return messages then destroy
         let timestamp = await getTime(client);
         let restartString = "Restarting.";
@@ -31,11 +39,9 @@ exports.run = async (client, interaction) => {
                 });
             });
         };
-
         // Destroy, will reboot thanks to forever package
         await client.destroy();
         return process.exit();
-
         // Restarts a shard
         // await sendMessage({client: client, interaction: interaction, content: `Restarting...`);
         // await client.destroy();
@@ -56,5 +62,9 @@ module.exports.config = {
         name: "reset-interactions",
         type: "BOOLEAN",
         description: "Reset all interactions?"
+    }, {
+        name: "npm-install",
+        type: "BOOLEAN",
+        description: "Run npm install command?"
     }]
 };
