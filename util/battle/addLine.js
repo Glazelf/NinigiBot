@@ -1,3 +1,3 @@
 module.exports = (line) => {
-    return (line + '\n');
+  return line + "\n";
 };
