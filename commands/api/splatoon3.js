@@ -29,7 +29,7 @@ exports.run = async (client, interaction) => {
         let responseSplatfest;
         let splatfestData;
         let inputRegion = interaction.options.getString("region");
-        if (!inputRegion) inputRegion = "EU";
+        if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
         let splatfestTeamIndex = 0;
         let star = "⭐";
         let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
