@@ -16,6 +16,7 @@ exports.run = async (client, interaction) => {
         let npmInstall = false;
         let installArg = interaction.options.getBoolean("npm-install");
         if (installArg === true) npmInstall = installArg;
+        let timestamp = await getTime(client);
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         // Run commands
         if (npmInstall) {
@@ -23,7 +24,6 @@ exports.run = async (client, interaction) => {
             await runCommand("git stash");
         };
         // Return messages then destroy
-        let timestamp = await getTime(client);
         let restartString = "Restarting.";
         if (npmInstall) restartString = `Installed NPM packages. ${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
