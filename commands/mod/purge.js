@@ -24,12 +24,12 @@ exports.run = async (client, interaction) => {
         // Fetch 100 messages (will be filtered and lowered up to max amount requested), delete them and catch errors
         if (user) {
             try {
-                let messagesAll = await interaction.channel.messages.fetch({ limit: maxNumberOfMessages });
+                let messagesAll = await interaction.channel.messages.fetch({ limit: amount });
                 let messagesFiltered = await messagesAll.filter(m => m.author.id == user.id);
                 let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
                 await interaction.channel.bulkDelete(messages, [true])
                     .then(messagesDeleted => {
-                        returnString = `Deleted ${messagesDeleted.size} messages from ${user.username} within the last ${maxNumberOfMessages} messages.`;
+                        returnString = `Deleted ${messagesDeleted.size} messages from ${user.username} within the last ${amount} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
                         sendMessage({ client: client, interaction: interaction, content: returnString });
                     });
