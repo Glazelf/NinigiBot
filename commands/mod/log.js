@@ -14,19 +14,11 @@ exports.run = async (client, interaction) => {
         const { LogChannels } = require('../../database/dbServices/server.api');
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
 
-        let newLogChannel;
-        let channelArg = interaction.options.getChannel("channel");
-        if (channelArg) newLogChannel = channelArg;
+        let newLogChannel = interaction.options.getChannel("channel");
 
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;
-        if (!channelArg && !disableBool) {
-            if (oldChannel) {
-                return sendMessage({ client: client, interaction: interaction, content: `The current logging channel is <#${oldChannel.channel_id}>.` });
-            };
-            return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid channel.` });
-        };
 
         if (oldChannel) await oldChannel.destroy();
         if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
@@ -45,7 +37,8 @@ module.exports.config = {
     options: [{
         name: "channel",
         type: "CHANNEL",
-        description: "Specify channel."
+        description: "Specify channel.",
+        required: true
     }, {
         name: "disable",
         type: "BOOLEAN",
