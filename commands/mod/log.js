@@ -4,6 +4,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
@@ -13,9 +14,8 @@ exports.run = async (client, interaction) => {
 
         const { LogChannels } = require('../../database/dbServices/server.api');
         let oldChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-
         let newLogChannel = interaction.options.getChannel("channel");
-
+        if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;

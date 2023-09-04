@@ -4,6 +4,7 @@ exports.run = async (client, interaction) => {
     let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../../util/sendMessage');
+        const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
         const { StarboardChannels } = require('../../database/dbServices/server.api');
@@ -21,9 +22,9 @@ exports.run = async (client, interaction) => {
         } else {
             starlimit = globalVars.starboardLimit;
         };
-
         let targetChannel;
         let channelArg = interaction.options.getChannel("channel");
+        if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
         if (channelArg) targetChannel = channelArg;
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
@@ -35,15 +36,11 @@ exports.run = async (client, interaction) => {
             if (oldStarLimitDB) await oldStarLimitDB.destroy();
             await StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
         };
-
         if (!targetChannel && !disableBool) return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
-
         // Database
         if (oldChannel) await oldChannel.destroy();
         if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
-
         await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: targetChannel.id });
-
         return sendMessage({ client: client, interaction: interaction, content: `${targetChannel} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
 
     } catch (e) {
