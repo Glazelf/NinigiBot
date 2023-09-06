@@ -305,7 +305,7 @@ exports.run = async (client, interaction) => {
                 let usageEmbed = new Discord.MessageEmbed()
                     .setColor(globalVars.embedColor);
                 if (pokemonName) {
-                    let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName));
+                    let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
                     if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
                     // Data from generic usage page
                     genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
