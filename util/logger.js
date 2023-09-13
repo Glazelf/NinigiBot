@@ -11,8 +11,8 @@ module.exports = async (exception, client, interaction = null) => {
         let exceptionString = exception.toString();
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
-        } else if (exceptionString.includes("Internal Server Error")) {
-            // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled.
+        } else if (exceptionString.includes("Internal Server Error") && !mesaage.author) {
+            // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages.
             return sendMessage({ client: client, interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
         } else if (exceptionString.includes("Unknown interaction")) {
             return sendMessage({ client: client, interaction: interaction, content: "This interaction has probably expired. The lifetime of most interactions is ~15 minutes.", ephemeral: true });
