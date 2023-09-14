@@ -294,8 +294,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         };
         let pkmButtons = new Discord.MessageActionRow();
-        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
         let pkmButtons2 = new Discord.MessageActionRow();
+        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
 
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
@@ -318,23 +318,25 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             };
         };
         let formButtons = new Discord.MessageActionRow();
+        let formButtons2 = new Discord.MessageActionRow();
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = pokemon.otherFormes;
         if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
-                if (pokemonForms.length < 6) {
-                    for (let i = 0; i < pokemonForms.length; i++) {
+                for (let i = 0; i < pokemonForms.length; i++) {
+                    // Ugly fix for Ogerpon, needs revision for stuff like Arceus (or not)
+                    if (formButtons.components.length < 5) {
                         formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
+                    } else {
+                        formButtons2.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
                     };
-                } else {
-                    // Pokémon with way too many forms
-                    // Fuck you (for now)
                 };
             };
         };
         let buttonArray = [];
         if (formButtons.components.length > 0) buttonArray.push(formButtons);
+        if (formButtons2.components.length > 0) buttonArray.push(formButtons2);
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
         // Embed building
