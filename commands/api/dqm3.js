@@ -32,7 +32,7 @@ exports.run = async (client, interaction) => {
                 let monsterData = monstersJSON[inputID];
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
                 if (!monsterData.description) monsterData.description = "No description available in the demo.";
-                let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAttack: ${"⭐".repeat(monsterData.growth.atk)}\nDefense: ${"⭐".repeat(monsterData.growth.def)}\nAgility: ${"⭐".repeat(monsterData.growth.agi)}\nWisdom: ${"⭐".repeat(monsterData.growth.wis)}`;
+                let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
                 dqm3Embed
                     .setAuthor({ name: `${monsterData.name} (${monsterData.rank})` })
                     .setDescription(monsterData.description)
