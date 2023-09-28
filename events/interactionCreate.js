@@ -380,6 +380,20 @@ module.exports = async (client, interaction) => {
                                 };
                         };
                         break;
+                    case "dqm3":
+                        const areasJSON = require("../../submodules/DQM3-db/objects/areas.json");
+                        const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
+                        const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
+
+                        const skillsJSON = require("../../submodules/DQM3-db/objects/skills.json");
+                        const talentsJSON = require("../../submodules/DQM3-db/objects/talents.json");
+                        const traitsJSON = require("../../submodules/DQM3-db/objects/traits.json");
+                        switch (focusedOption.name) {
+                            case "monster":
+                                const monstersJSON = require("../../submodules/DQM3-db/objects/monsters.json");
+                                break;
+                        };
+                        break;
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
