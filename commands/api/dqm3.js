@@ -5,14 +5,34 @@ exports.run = async (client, interaction) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-        const axios = require("axios");
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
         const capitalizeString = require('../../util/capitalizeString');
+        const areasJSON = require("../../submodules/DQM3-db/objects/areas.json");
+        const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
+        const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
+        const monstersJSON = require("../../submodules/DQM3-db/objects/monsters.json");
+        const skillsJSON = require("../../submodules/DQM3-db/objects/skills.json");
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
 
+        switch (interaction.options.getSubcommand()) {
+            case "monster":
+                break;
+            case "talent":
+                break;
+            case "skill":
+                break;
+            case "trait":
+                break;
+            case "item":
+                break;
+            case "spawn":
+                break;
+            case "synthesis":
+                break;
+        };
 
     } catch (e) {
         // Log error
@@ -39,7 +59,7 @@ module.exports.config = {
             description: "Whether the reply will be private."
         }]
     }, {
-        name: "tralent",
+        name: "talent",
         type: "SUB_COMMAND",
         description: "Get info on a talent",
         options: [{
@@ -54,28 +74,13 @@ module.exports.config = {
             description: "Whether the reply will be private."
         }]
     }, {
-        name: "trait",
+        name: "skill",
         type: "SUB_COMMAND",
-        description: "Get info on a trait.",
+        description: "Get info on a skill.",
         options: [{
-            name: "trait",
+            name: "skill",
             type: "STRING",
-            description: "Specify trait by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "ability",
-        type: "SUB_COMMAND",
-        description: "Get info on an ability.",
-        options: [{
-            name: "ability",
-            type: "STRING",
-            description: "Specify ability by name.",
+            description: "Specify skill by name.",
             autocomplete: true,
             required: true
         }, {
@@ -129,7 +134,7 @@ module.exports.config = {
             description: "Whether the reply will be private."
         }]
     }, {
-        name: "synthesize",
+        name: "synthesis",
         type: "SUB_COMMAND",
         description: "Calculate synthesis.",
         options: [{
