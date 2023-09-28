@@ -13,12 +13,34 @@ exports.run = async (client, interaction) => {
         const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
         const monstersJSON = require("../../submodules/DQM3-db/objects/monsters.json");
         const skillsJSON = require("../../submodules/DQM3-db/objects/skills.json");
+        const talentsJSON = require("../../submodules/DQM3-db/objects/talents.json");
+        const traitsJSON = require("../../submodules/DQM3-db/objects/traits.json");
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
 
+        let inputID;
+        let detailed = false;
+        let detailedArg = interaction.options.getBoolean("detailed");
+        if (detailedArg === true) detailed = true;
+
+        let dqm3Embed = new Discord.MessageEmbed()
+            .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "monster":
+                inputID = interaction.options.getString("monster");
+                let monsterData = monstersJSON[inputID];
+                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
+                if (!monsterData.description) monsterData.description = "No description available in the demo.";
+                let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAttack: ${"⭐".repeat(monsterData.growth.atk)}\nDefense: ${"⭐".repeat(monsterData.growth.def)}\nAgility: ${"⭐".repeat(monsterData.growth.agi)}\nWisdom: ${"⭐".repeat(monsterData.growth.wis)}`;
+                dqm3Embed
+                    .setAuthor({ name: `${monsterData.name} (${monsterData.rank})` })
+                    .setDescription(monsterData.description)
+                    .addField("Innate Talents:", talentsJSON[monsterData.talents[0]].name, true)
+                    .addField("Growth:", growthString, false)
+                if (detailed) dqm3Embed.addField("Talent Pool:", "Coming Soon", true)
+                    .addField("Habitat:", "Coming Soon", false)
+                if (detailed) dqm3Embed.addField("Resistances:", "Coming Soon", true);
                 break;
             case "talent":
                 break;
@@ -33,6 +55,7 @@ exports.run = async (client, interaction) => {
             case "synthesis":
                 break;
         };
+        return sendMessage({ client: client, interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
@@ -53,6 +76,10 @@ module.exports.config = {
             description: "Specify monster by name.",
             autocomplete: true,
             required: true
+        }, {
+            name: "detailed",
+            type: "BOOLEAN",
+            description: "Show detailed info."
         }, {
             name: "ephemeral",
             type: "BOOLEAN",
