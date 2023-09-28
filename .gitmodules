@@ -7,3 +7,6 @@
 [submodule "submodules/splat3"]
 	path = submodules/splat3
 	url = https://github.com/Leanny/splat3
+[submodule "submodules/DQM3-db"]
+	path = submodules/DQM3-db
+	url = https://github.com/Glazelf/DQM3-db
