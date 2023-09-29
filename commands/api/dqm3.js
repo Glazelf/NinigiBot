@@ -34,7 +34,7 @@ exports.run = async (client, interaction) => {
                 if (!monsterData.description) monsterData.description = "No description available in the demo.";
                 let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
                 dqm3Embed
-                    .setAuthor({ name: `${monsterData.name} (${monsterData.rank})` })
+                    .setAuthor({ name: `${monsterData.number}: ${monsterData.name} (${monsterData.rank})` })
                     .setDescription(monsterData.description)
                     .addField("Innate Talents:", talentsJSON[monsterData.talents[0]].name, true)
                     .addField("Growth:", growthString, false)
