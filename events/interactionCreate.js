@@ -380,6 +380,38 @@ module.exports = async (client, interaction) => {
                                 };
                         };
                         break;
+                    case "dqm3":
+                        let targetJSON = null
+                        if (focusedOption.name.startsWith("trait")) {
+                            targetJSON = require("../submodules/DQM3-db/objects/traits.json");
+                        } else {
+                            switch (focusedOption.name) {
+                                case "monster":
+                                    targetJSON = require("../submodules/DQM3-db/objects/monsters.json");
+                                    break;
+                                case "area":
+                                    targetJSON = require("../submodules/DQM3-db/objects/areas.json");
+                                    break;
+                                case "family":
+                                    targetJSON = require("../submodules/DQM3-db/objects/families.json");
+                                    break;
+                                case "item":
+                                    targetJSON = require("../submodules/DQM3-db/objects/items.json");
+                                    break;
+                                case "skill":
+                                    targetJSON = require("../submodules/DQM3-db/objects/skills.json");
+                                    break;
+                                case "talent":
+                                    targetJSON = require("../submodules/DQM3-db/objects/talents.json");
+                                    break;
+                            };
+                        };
+                        if (targetJSON) {
+                            for await (const [key, value] of Object.entries(targetJSON)) {
+                                if (value.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value.name, value: key });
+                            };
+                        };
+                        break;
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
