@@ -46,9 +46,9 @@ exports.run = async (client, interaction) => {
                 dqm3Embed.addField("Growth:", growthString, false);
                 if (detailed) {
                     qm3Embed
-                        .addField("Talent Pool:", "Coming soon", true)
-                        .addField("Habitat:", "Coming Soon", false)
-                        .addField("Resistances:", "Coming Soon", true);
+                        .addField("Talent Pool:", "Coming soon.", true)
+                        .addField("Habitat:", "Coming soon.", false)
+                        .addField("Resistances:", "Coming soon.", true);
                 };
                 break;
             case "talent":
@@ -72,16 +72,24 @@ exports.run = async (client, interaction) => {
                 inputID = interaction.options.getString("trait");
                 let traitData = traitsJSON[inputID];
                 if (!traitData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
+                dqm3Embed
+                    .setAuthor({ name: traitData.name })
+                    .setDescription(traitData.description);
                 break;
             case "item":
                 inputID = interaction.options.getString("item");
                 let itemData = itemsJSON[inputID];
                 if (!itemData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
+                dqm3Embed
+                    .setAuthor({ name: itemData.name })
+                    .setDescription(itemData.description)
+                    .addField("Type:", itemData.type, true);
                 break;
             case "spawn":
                 inputID = interaction.options.getString("area");
                 let areaData = areasJSON[inputID];
                 if (!areaData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that area.` });
+                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` })
                 break;
             case "synthesis":
                 break;
