@@ -33,19 +33,41 @@ exports.run = async (client, interaction) => {
                 inputID = interaction.options.getString("monster");
                 let monsterData = monstersJSON[inputID];
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
+                let monsterTitle = `${monsterData.name} (${monsterData.rank})`;
+                if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
                 if (!monsterData.description) monsterData.description = "No description available in the demo.";
-                let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
+                let growthString = "Monster is unscoutable in the demo."; // Redundant check in complete dataset
+                if (monsterData.growth) growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
                 let innateTalentsString = "";
-                let innateTalents = monsterData.talents.forEach(talent => {
-                    if (talentsJSON[talent]) innateTalentsString += `${talentsJSON[talent].name}\n`; // Check will be redundant in complete dataset
-                });
+                if (monsterData.talents) { // Redundant check in complete dataset
+                    monsterData.talents.forEach(talent => {
+                        if (talentsJSON[talent]) innateTalentsString += `${talentsJSON[talent].name}\n`; // Check will be redundant in complete dataset
+                    });
+                } else {
+                    innateTalentsString = "Monster is unscoutable in the demo.";
+                };
+                let monsterTraitsString = "";
+                if (monsterData.traits) {
+                    for ([traitID, levelReq] of Object.entries(monsterData.traits.small)) {
+                        if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
+                    };
+                    console.log(Object.entries(monsterData.traits.large))
+                    for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
+                        if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq}) (L only)\n`;
+                    };
+                } else {
+                    monsterTraitsString = "Monster is unscoutable in the demo.";
+                };
                 dqm3Embed
-                    .setAuthor({ name: `${monsterData.number}: ${monsterData.name} (${monsterData.rank})` })
-                    .setDescription(monsterData.description);
-                if (innateTalentsString.length > 0) dqm3Embed.addField("Innate Talents:", innateTalentsString, true); // Check will be redundant in complete dataset
-                dqm3Embed.addField("Growth:", growthString, false);
+                    .setAuthor({ name: monsterTitle })
+                    .setDescription(monsterData.description)
+                    .addField("Rank:", monsterData.rank, true)
+                    .addField("Family:", familiesJSON[monsterData.family].name, true)
+                    .addField("Innate Talents:", innateTalentsString, true)
+                    .addField("Traits", monsterTraitsString, true)
+                    .addField("Growth:", growthString, false);
                 if (detailed) {
-                    qm3Embed
+                    dqm3Embed
                         .addField("Talent Pool:", "Coming soon.", true)
                         .addField("Habitat:", "Coming soon.", false)
                         .addField("Resistances:", "Coming soon.", true);
@@ -55,6 +77,34 @@ exports.run = async (client, interaction) => {
                 inputID = interaction.options.getString("talent");
                 let talentData = talentsJSON[inputID];
                 if (!talentData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that talent.` });
+                let talentSkillsString = "";
+                if (talentData.skills) {
+                    for (let [skillID, skillPoints] of Object.entries(talentData.skills)) {
+                        if (skillsJSON[skillID]) talentSkillsString += `${skillsJSON[skillID].name} (${skillPoints})\n`;
+                    };
+                };
+                let talentTraitsString = "";
+                if (talentData.traits) {
+                    for (let [traitID, traitPoints] of Object.entries(talentData.traits)) {
+                        let traitsLevels = traitPoints.join(", ");
+                        if (traitsJSON[traitID]) talentTraitsString += `${traitsJSON[traitID].name} (${traitsLevels})\n`;
+                    };
+                };
+                let talentMonstersString = "";
+                let talentMonstersArray = [];
+                let talentMonsters = await Object.entries(monstersJSON).filter(monster => {
+                    if (!monster[1].talents) return false; // Check might be redundant in complete dataset
+                    return monster[1].talents.includes(inputID);
+                });
+                talentMonsters.forEach(monster => {
+                    talentMonstersArray.push(monstersJSON[monster[0]].name);
+                });
+                talentMonstersString = talentMonstersArray.join(", ");
+                dqm3Embed
+                    .setAuthor({ name: talentData.name })
+                if (talentSkillsString.length > 0) dqm3Embed.addField("Skills: (Required points)", talentSkillsString, true);
+                if (talentTraitsString.length > 0) dqm3Embed.addField("Traits: (Required points)", talentTraitsString, true);
+                if (talentMonstersString.length > 0) dqm3Embed.addField("Monsters:", talentMonstersString, false);
                 break;
             case "skill":
                 inputID = interaction.options.getString("skill");
