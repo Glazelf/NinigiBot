@@ -46,6 +46,7 @@ exports.run = async (client, interaction) => {
                 } else {
                     innateTalentsString = "Monster is unscoutable in the demo.";
                 };
+                if (innateTalentsString.length < 1) innateTalentsString = "The talents this monster has have not yet been properly documented."; // Check will be redundant in complete dataset
                 let monsterTraitsString = "";
                 if (monsterData.traits) {
                     if (monsterData.traits.small) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
@@ -66,7 +67,7 @@ exports.run = async (client, interaction) => {
                     .setDescription(monsterData.description)
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true)
-                if (innateTalentsString.length > 0) dqm3Embed.addField("Innate Talents:", innateTalentsString, true) // Redundant check in complete dataset
+                    .addField("Innate Talents:", innateTalentsString, true)
                     .addField("Traits", monsterTraitsString, true)
                     .addField("Growth:", growthString, false);
                 if (detailed) {
