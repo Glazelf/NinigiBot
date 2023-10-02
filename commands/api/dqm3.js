@@ -146,7 +146,57 @@ exports.run = async (client, interaction) => {
                 return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
                 break;
             case "synthesis":
-                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
+                let parent1 = interaction.options.getString("parent1");
+                let parent2 = interaction.options.getString("parent2");
+                let target = interaction.options.getString("target");
+                let parent1Data = monstersJSON[parent1];
+                let parent2Data = monstersJSON[parent2];
+                let targetData = monstersJSON[target];
+                let parent1Name = "???";
+                let parent2Name = "???";
+                let targetName = "???";
+                if (parent1Data) parent1Name = `${parent1Data.name} (${parent1Data.rank})`;
+                if (parent2Data) parent2Name = `${parent2Data.name} (${parent2Data.rank})`;
+                if (targetData) targetName = `${targetData.name} (${targetData.rank})`;
+                let synthesisResult = await synthesis({ parents: [parent1, parent2], target: target });
+                if (!synthesisResult.routes) {
+                    let familySynthesisString = "";
+                    let uniqueSynthesisString = "";
+                    let familySynthesisNote = "Note: For synthesis between two families, at least one of the parents needs to match the target's rank.";
+                    synthesisResult.familySynthesis.forEach(result => {
+                        if (typeof result === "array") {
+                            for (let i = 0; i < result.length; i++) {
+                                result[i] = familiesJSON[result[i]].name;
+                            };
+                            if (result[0].startsWith("_")) result[0] = familiesJSON[result[0]].name;
+                            familySynthesisString += `${result[0]} + ${result[1]}\n`;
+                        } else {
+                            familySynthesisString += `${monstersJSON[result].name}\n`;
+                        };
+                    });
+                    synthesisResult.uniqueSynthesis.forEach(result => {
+                        console.log(result)
+                        if (typeof result === "array") {
+                            for (let i = 0; i < result.length; i++) {
+                                if (result[i].startsWith("_")) {
+                                    result[i] = familiesJSON[result[i]].name;
+                                } else {
+                                    result[i] = monstersJSON[result[i]].name;
+                                };
+                            };
+                            uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
+                        } else {
+                            uniqueSynthesisString += `${monstersJSON[result].name}\n`;
+                        };
+                    });
+                    dqm3Embed
+                        .setAuthor({ name: `Synthesis: ${parent1Name} + ${parent2Name} = ${targetName}` })
+                    if (familySynthesisString.length > 0) dqm3Embed.addField("Family Synthesis:", `${familySynthesisString}\n${familySynthesisNote}`, false);
+                    if (uniqueSynthesisString.length > 0) dqm3Embed.addField("Unique Synthesis:", uniqueSynthesisString, false);
+                    dqm3Embed.setFooter({ text: "Note: Monsters can always synthesize into their own species." });
+                } else {
+                    return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
+                };
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
@@ -272,21 +322,6 @@ module.exports.config = {
             name: "target",
             type: "STRING",
             description: "Specify target by name.",
-            autocomplete: true
-        }, {
-            name: "talent1",
-            type: "STRING",
-            description: "Specify talent by name.",
-            autocomplete: true
-        }, {
-            name: "talent2",
-            type: "STRING",
-            description: "Specify talent by name.",
-            autocomplete: true
-        }, {
-            name: "talent3",
-            type: "STRING",
-            description: "Specify talent by name.",
             autocomplete: true
         }, {
             name: "ephemeral",

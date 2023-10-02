@@ -386,6 +386,9 @@ module.exports = async (client, interaction) => {
                             targetJSON = require("../submodules/DQM3-db/objects/traits.json");
                         } else {
                             switch (focusedOption.name) {
+                                case "parent1":
+                                case "parent2":
+                                case "target":
                                 case "monster":
                                     targetJSON = require("../submodules/DQM3-db/objects/monsters.json");
                                     break;
