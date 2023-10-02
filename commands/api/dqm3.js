@@ -89,9 +89,10 @@ exports.run = async (client, interaction) => {
                 inputID = interaction.options.getString("area");
                 let areaData = areasJSON[inputID];
                 if (!areaData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that area.` });
-                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` })
+                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
                 break;
             case "synthesis":
+                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
