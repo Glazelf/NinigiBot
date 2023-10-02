@@ -68,7 +68,7 @@ exports.run = async (client, interaction) => {
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true)
                     .addField("Innate Talents:", innateTalentsString, true)
-                    .addField("Traits:", monsterTraitsString, true)
+                    .addField("Traits: (Lvl)", monsterTraitsString, true)
                     .addField("Growth:", growthString, false);
                 if (detailed) {
                     dqm3Embed
