@@ -33,7 +33,7 @@ exports.run = async (client, interaction) => {
                 inputID = interaction.options.getString("monster");
                 let monsterData = monstersJSON[inputID];
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
-                let monsterTitle = `${monsterData.name} (${monsterData.rank})`;
+                let monsterTitle = monsterData.name;
                 if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
                 if (!monsterData.description) monsterData.description = "No description available in the demo.";
                 let growthString = "Monster is unscoutable in the demo."; // Redundant check in complete dataset
@@ -68,7 +68,7 @@ exports.run = async (client, interaction) => {
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true)
                     .addField("Innate Talents:", innateTalentsString, true)
-                    .addField("Traits", monsterTraitsString, true)
+                    .addField("Traits:", monsterTraitsString, true)
                     .addField("Growth:", growthString, false);
                 if (detailed) {
                     dqm3Embed
@@ -119,8 +119,8 @@ exports.run = async (client, interaction) => {
                 dqm3Embed
                     .setAuthor({ name: skillData.name })
                     .setDescription(skillData.description)
-                    .addField("Type", skillData.type, true)
-                    .addField("MP Cost", mpCostString, true);
+                    .addField("Type:", skillData.type, true)
+                    .addField("MP Cost:", mpCostString, true);
                 break;
             case "trait":
                 inputID = interaction.options.getString("trait");
