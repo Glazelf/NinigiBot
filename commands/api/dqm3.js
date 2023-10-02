@@ -175,7 +175,6 @@ exports.run = async (client, interaction) => {
                         };
                     });
                     synthesisResult.uniqueSynthesis.forEach(result => {
-                        console.log(result)
                         if (typeof result === "array") {
                             for (let i = 0; i < result.length; i++) {
                                 if (result[i].startsWith("_")) {
