@@ -51,7 +51,6 @@ exports.run = async (client, interaction) => {
                     for ([traitID, levelReq] of Object.entries(monsterData.traits.small)) {
                         if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                     };
-                    console.log(Object.entries(monsterData.traits.large))
                     for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
                         if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq}) (L only)\n`;
                     };
