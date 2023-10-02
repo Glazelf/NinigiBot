@@ -11,15 +11,17 @@ exports.run = async (client, interaction) => {
         const areasJSON = require("../../submodules/DQM3-db/objects/areas.json");
         const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
         const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
+        const largeDifferencesJSON = require("../../submodules/DQM3-db/objects/largeDifferences.json");
         const monstersJSON = require("../../submodules/DQM3-db/objects/monsters.json");
+        const resistancesJSON = require("../../submodules/DQM3-db/objects/resistances.json");
         const skillsJSON = require("../../submodules/DQM3-db/objects/skills.json");
         const talentsJSON = require("../../submodules/DQM3-db/objects/talents.json");
         const traitsJSON = require("../../submodules/DQM3-db/objects/traits.json");
+        const synthesis = require("../../submodules/DQM3-db/util/synthesis");
 
         let ephemeral = interaction.options.getBoolean("ephemeral");
         if (ephemeral === null) ephemeral = true;
-
-        let inputID;
+        let inputID = null;
         let detailed = false;
         let detailedArg = interaction.options.getBoolean("detailed");
         if (detailedArg === true) detailed = true;
@@ -33,24 +35,53 @@ exports.run = async (client, interaction) => {
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
                 if (!monsterData.description) monsterData.description = "No description available in the demo.";
                 let growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
+                let innateTalentsString = "";
+                let innateTalents = monsterData.talents.forEach(talent => {
+                    if (talentsJSON[talent]) innateTalentsString += `${talentsJSON[talent].name}\n`; // Check will be redundant in complete dataset
+                });
                 dqm3Embed
                     .setAuthor({ name: `${monsterData.number}: ${monsterData.name} (${monsterData.rank})` })
-                    .setDescription(monsterData.description)
-                    .addField("Innate Talents:", talentsJSON[monsterData.talents[0]].name, true)
-                    .addField("Growth:", growthString, false)
-                if (detailed) dqm3Embed.addField("Talent Pool:", "Coming Soon", true)
-                    .addField("Habitat:", "Coming Soon", false)
-                if (detailed) dqm3Embed.addField("Resistances:", "Coming Soon", true);
+                    .setDescription(monsterData.description);
+                if (innateTalentsString.length > 0) dqm3Embed.addField("Innate Talents:", innateTalentsString, true); // Check will be redundant in complete dataset
+                dqm3Embed.addField("Growth:", growthString, false);
+                if (detailed) {
+                    qm3Embed
+                        .addField("Talent Pool:", "Coming soon", true)
+                        .addField("Habitat:", "Coming Soon", false)
+                        .addField("Resistances:", "Coming Soon", true);
+                };
                 break;
             case "talent":
+                inputID = interaction.options.getString("talent");
+                let talentData = talentsJSON[inputID];
+                if (!talentData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that talent.` });
                 break;
             case "skill":
+                inputID = interaction.options.getString("skill");
+                let skillData = skillsJSON[inputID];
+                if (!skillData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that skill.` });
+                let mpCostString = skillData.mp_cost.toString();
+                if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
+                dqm3Embed
+                    .setAuthor({ name: skillData.name })
+                    .setDescription(skillData.description)
+                    .addField("Type", skillData.type, true)
+                    .addField("MP Cost", mpCostString, true);
                 break;
             case "trait":
+                inputID = interaction.options.getString("trait");
+                let traitData = traitsJSON[inputID];
+                if (!traitData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
                 break;
             case "item":
+                inputID = interaction.options.getString("item");
+                let itemData = itemsJSON[inputID];
+                if (!itemData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
                 break;
             case "spawn":
+                inputID = interaction.options.getString("area");
+                let areaData = areasJSON[inputID];
+                if (!areaData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that area.` });
                 break;
             case "synthesis":
                 break;

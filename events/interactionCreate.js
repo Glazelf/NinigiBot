@@ -410,7 +410,7 @@ module.exports = async (client, interaction) => {
                             for await (const [key, value] of Object.entries(targetJSON)) {
                                 if (value.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value.name, value: key });
                             };
-                        }
+                        };
                         break;
                     case "manager":
                         switch (focusedOption.name) {
