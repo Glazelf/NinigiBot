@@ -163,31 +163,35 @@ exports.run = async (client, interaction) => {
                     let familySynthesisString = "";
                     let uniqueSynthesisString = "";
                     let familySynthesisNote = "Note: For synthesis between two families, at least one of the parents needs to match the target's rank.";
-                    synthesisResult.familySynthesis.forEach(result => {
-                        if (typeof result === "array") {
-                            for (let i = 0; i < result.length; i++) {
-                                result[i] = familiesJSON[result[i]].name;
-                            };
-                            if (result[0].startsWith("_")) result[0] = familiesJSON[result[0]].name;
-                            familySynthesisString += `${result[0]} + ${result[1]}\n`;
-                        } else {
-                            familySynthesisString += `${monstersJSON[result].name}\n`;
-                        };
-                    });
-                    synthesisResult.uniqueSynthesis.forEach(result => {
-                        if (typeof result === "array") {
-                            for (let i = 0; i < result.length; i++) {
-                                if (result[i].startsWith("_")) {
+                    if (synthesisResult.familySynthesis) {
+                        synthesisResult.familySynthesis.forEach(result => {
+                            if (typeof result === "array") {
+                                for (let i = 0; i < result.length; i++) {
                                     result[i] = familiesJSON[result[i]].name;
-                                } else {
-                                    result[i] = monstersJSON[result[i]].name;
                                 };
+                                if (result[0].startsWith("_")) result[0] = familiesJSON[result[0]].name;
+                                familySynthesisString += `${result[0]} + ${result[1]}\n`;
+                            } else {
+                                familySynthesisString += `${monstersJSON[result].name}\n`;
                             };
-                            uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
-                        } else {
-                            uniqueSynthesisString += `${monstersJSON[result].name}\n`;
-                        };
-                    });
+                        });
+                    };
+                    if (synthesisResult.uniqueSynthesis) {
+                        synthesisResult.uniqueSynthesis.forEach(result => {
+                            if (typeof result === "array") {
+                                for (let i = 0; i < result.length; i++) {
+                                    if (result[i].startsWith("_")) {
+                                        result[i] = familiesJSON[result[i]].name;
+                                    } else {
+                                        result[i] = monstersJSON[result[i]].name;
+                                    };
+                                };
+                                uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
+                            } else {
+                                uniqueSynthesisString += `${monstersJSON[result].name}\n`;
+                            };
+                        });
+                    };
                     dqm3Embed
                         .setAuthor({ name: `Synthesis: ${parent1Name} + ${parent2Name} = ${targetName}` })
                     if (familySynthesisString.length > 0) dqm3Embed.addField("Family Synthesis:", `${familySynthesisString}\n${familySynthesisNote}`, false);
