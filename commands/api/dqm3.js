@@ -48,11 +48,15 @@ exports.run = async (client, interaction) => {
                 };
                 let monsterTraitsString = "";
                 if (monsterData.traits) {
-                    for ([traitID, levelReq] of Object.entries(monsterData.traits.small)) {
-                        if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
+                    if (monsterData.traits.small) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
+                        for ([traitID, levelReq] of Object.entries(monsterData.traits.small)) {
+                            if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
+                        };
                     };
-                    for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
-                        if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq}) (L only)\n`;
+                    if (monsterData.traits.large) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
+                        for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
+                            if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq}) (L only)\n`;
+                        };
                     };
                 } else {
                     monsterTraitsString = "Monster is unscoutable in the demo.";
@@ -62,7 +66,7 @@ exports.run = async (client, interaction) => {
                     .setDescription(monsterData.description)
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true)
-                    .addField("Innate Talents:", innateTalentsString, true)
+                if (innateTalentsString.length > 0) dqm3Embed.addField("Innate Talents:", innateTalentsString, true) // Redundant check in complete dataset
                     .addField("Traits", monsterTraitsString, true)
                     .addField("Growth:", growthString, false);
                 if (detailed) {
