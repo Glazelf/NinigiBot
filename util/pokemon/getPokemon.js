@@ -112,7 +112,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // edgecase ID corrections
         // TODO: add a bunch of meaningless forms like Unown and Vivillon
         await correctValue(correctionID, pokemon.name, pokemonID);
-        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID}-${pokemon.types[0].toLowerCase()}`;
+        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID.split("-")[0]}-${pokemon.types[0].toLowerCase()}`;
         // 3 digit IDs for now
         pokemonIDPMD = pokemonID;
         if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
@@ -317,26 +317,30 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 };
             };
         };
-        let formButtons = new Discord.MessageActionRow();
-        let formButtons2 = new Discord.MessageActionRow();
+        let formButtonsComponentsCounter = 0;
+        let formButtonsObject = {
+            0: new Discord.MessageActionRow(),
+            1: new Discord.MessageActionRow(),
+            2: new Discord.MessageActionRow(),
+            3: new Discord.MessageActionRow(),
+            4: new Discord.MessageActionRow()
+        };
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = pokemon.otherFormes;
         if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
                 for (let i = 0; i < pokemonForms.length; i++) {
-                    // Ugly fix for Ogerpon, needs revision for stuff like Arceus (or not)
-                    if (formButtons.components.length < 5) {
-                        formButtons.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
-                    } else {
-                        formButtons2.addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
-                    };
+                    if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
+                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
                 };
             };
         };
         let buttonArray = [];
-        if (formButtons.components.length > 0) buttonArray.push(formButtons);
-        if (formButtons2.components.length > 0) buttonArray.push(formButtons2);
+        if (formButtonsObject[0].components.length > 0) buttonArray.push(formButtonsObject[0]);
+        if (formButtonsObject[1].components.length > 0) buttonArray.push(formButtonsObject[1]);
+        if (formButtonsObject[2].components.length > 0) buttonArray.push(formButtonsObject[2]);
+        if (formButtonsObject[3].components.length > 0 && pkmButtons2.components.length < 1) buttonArray.push(formButtonsObject[3]);
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
         // Embed building
