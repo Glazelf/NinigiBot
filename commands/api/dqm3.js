@@ -55,8 +55,9 @@ exports.run = async (client, interaction) => {
                         };
                     };
                     if (monsterData.traits.large) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
+                        monsterTraitsString += `**Large Traits:**\n`;
                         for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
-                            if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq}) (L only)\n`;
+                            if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                         };
                     };
                 } else {
