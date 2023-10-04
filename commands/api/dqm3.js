@@ -166,19 +166,19 @@ exports.run = async (client, interaction) => {
                     let familySynthesisNote = "Note: For synthesis between two families, at least one of the parents needs to match the target's rank.";
                     if (synthesisResult.familySynthesis) {
                         synthesisResult.familySynthesis.forEach(result => {
-                            if (typeof result === "array") {
+                            if (typeof result === "object") {
                                 for (let i = 0; i < result.length; i++) {
                                     result[i] = familiesJSON[result[i]].name;
                                 };
                                 familySynthesisString += `${result[0]} + ${result[1]}\n`;
                             } else {
-                                familySynthesisString += `${familiesJSON[result].name}\n`;
+                                familySynthesisString += `${monstersJSON[result].name}\n`;
                             };
                         });
                     };
                     if (synthesisResult.uniqueSynthesis) {
                         synthesisResult.uniqueSynthesis.forEach(result => {
-                            if (typeof result === "array") {
+                            if (typeof result === "object") {
                                 for (let i = 0; i < result.length; i++) {
                                     if (result[i].startsWith("_")) {
                                         result[i] = familiesJSON[result[i]].name;
