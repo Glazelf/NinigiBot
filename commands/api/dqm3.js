@@ -170,10 +170,9 @@ exports.run = async (client, interaction) => {
                                 for (let i = 0; i < result.length; i++) {
                                     result[i] = familiesJSON[result[i]].name;
                                 };
-                                if (result[0].startsWith("_")) result[0] = familiesJSON[result[0]].name;
                                 familySynthesisString += `${result[0]} + ${result[1]}\n`;
                             } else {
-                                familySynthesisString += `${monstersJSON[result].name}\n`;
+                                familySynthesisString += `${familiesJSON[result].name}\n`;
                             };
                         });
                     };
@@ -189,7 +188,11 @@ exports.run = async (client, interaction) => {
                                 };
                                 uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
                             } else {
-                                uniqueSynthesisString += `${monstersJSON[result].name}\n`;
+                                if (result.startsWith("_")) {
+                                    uniqueSynthesisString += `${familiesJSON[result].name}\n`;
+                                } else {
+                                    uniqueSynthesisString += `${monstersJSON[result].name}\n`;
+                                };
                             };
                         });
                     };
