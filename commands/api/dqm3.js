@@ -182,8 +182,10 @@ exports.run = async (client, interaction) => {
                                 for (let i = 0; i < result.length; i++) {
                                     if (result[i].startsWith("_")) {
                                         result[i] = familiesJSON[result[i]].name;
+                                        continue;
                                     } else {
                                         result[i] = monstersJSON[result[i]].name;
+                                        continue;
                                     };
                                 };
                                 uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
