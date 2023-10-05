@@ -199,7 +199,8 @@ exports.run = async (client, interaction) => {
                         });
                     };
                     dqm3Embed
-                        .setAuthor({ name: `Synthesis: ${parent1Name} + ${parent2Name} = ${targetName}` })
+                        .setAuthor({ name: "Synthesis" })
+                        .setDescription(`${parent1Name} + ${parent2Name} = ${targetName}`);
                     if (familySynthesisString.length > 0) dqm3Embed.addField("Family Synthesis:", `${familySynthesisString}\n${familySynthesisNote}`, false);
                     if (uniqueSynthesisString.length > 0) dqm3Embed.addField("Unique Synthesis:", uniqueSynthesisString, false);
                     dqm3Embed.setFooter({ text: "Note: Monsters can always synthesize into their own species." });
