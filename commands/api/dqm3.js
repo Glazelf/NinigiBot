@@ -165,30 +165,32 @@ exports.run = async (client, interaction) => {
                     let uniqueSynthesisString = "";
                     let familySynthesisNote = "Note: For synthesis between two families, at least one of the parents needs to match the target's rank.";
                     if (synthesisResult.familySynthesis) {
+                        let familyResults = [];
                         synthesisResult.familySynthesis.forEach(result => {
                             if (typeof result === "object") {
                                 for (let i = 0; i < result.length; i++) {
-                                    result[i] = familiesJSON[result[i]].name;
+                                    familyResults[i] = familiesJSON[result[i]].name;
                                 };
-                                familySynthesisString += `${result[0]} + ${result[1]}\n`;
+                                familySynthesisString += `${familyResults[0]} + ${familyResults[1]}\n`;
                             } else {
                                 familySynthesisString += `${monstersJSON[result].name}\n`;
                             };
                         });
                     };
                     if (synthesisResult.uniqueSynthesis) {
+                        let uniqueResults = [];
                         synthesisResult.uniqueSynthesis.forEach(result => {
                             if (typeof result === "object") {
                                 for (let i = 0; i < result.length; i++) {
                                     if (result[i].startsWith("_")) {
-                                        result[i] = familiesJSON[result[i]].name;
+                                        uniqueResults[i] = familiesJSON[result[i]].name;
                                         continue;
                                     } else {
-                                        result[i] = monstersJSON[result[i]].name;
+                                        uniqueResults[i] = monstersJSON[result[i]].name;
                                         continue;
                                     };
                                 };
-                                uniqueSynthesisString += `${result[0]} + ${result[1]}\n`;
+                                uniqueSynthesisString += `${uniqueResults[0]} + ${uniqueResults[1]}\n`;
                             } else {
                                 if (result.startsWith("_")) {
                                     uniqueSynthesisString += `${familiesJSON[result].name}\n`;
