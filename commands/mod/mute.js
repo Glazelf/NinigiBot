@@ -52,9 +52,13 @@ exports.run = async (client, interaction) => {
         };
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.username} (${time})`;
+        let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} with reason: \`${reason}\`.`;
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
+            await user.send({ content: dmString })
+                .then(message => muteReturnString += `\nSucceeded in sending a DM with the mute reason to ${user.username}.`)
+                .catch(e => muteReturnString += `\nFailed to send a DM with the mute reason to ${user.username}.`);
             return sendMessage({ client: client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
