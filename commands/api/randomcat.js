@@ -38,6 +38,7 @@ exports.run = async (client, interaction) => {
             catImage = response.data.file;
             catNameSeed = catImage;
         } else if (catAPI.includes(catAAS)) {
+            console.log(response)
             console.log(response.data)
             console.log(response.data.url)
             console.log(response.data.url.split)
