@@ -268,8 +268,16 @@ exports.run = async (client, interaction) => {
                 let year = interaction.options.getInteger("year");
                 // Indexing makes it 1 lower than the "natural" number associated with a month, but we want last month's data anyways so that works itself out
                 const date = new Date();
-                if (!month) month = date.getMonth();
                 if (!year) year = date.getFullYear();
+                if (!month) {
+                    month = date.getMonth();
+                    console.log(month)
+                    try {
+                        let testMonth = await axios.get(`https://www.smogon.com/stats/${year}-${month}/`);
+                    } catch (e) {
+                        month = month - 1;
+                    };
+                };
                 if (month == 0) {
                     month = 12;
                     year = year - 1;
