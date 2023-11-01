@@ -40,7 +40,6 @@ exports.run = async (client, interaction) => {
         } else if (catAPI.includes(catAAS)) {
             catImage = `${catAAS}/${response.data._id}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(catText)}`;
-            catImage += `.${response.data.mimetype.split("/")[1]}`; // Split is to get the file extension used
             catNameSeed = response.data._id;
         };
         let catName = uniqueNamesGenerator({
