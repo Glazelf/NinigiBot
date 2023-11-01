@@ -38,6 +38,9 @@ exports.run = async (client, interaction) => {
             catImage = response.data.file;
             catNameSeed = catImage;
         } else if (catAPI.includes(catAAS)) {
+            console.log(response.data)
+            console.log(response.data.url)
+            console.log(response.data.url.split)
             catImage = `${catAAS}/${response.data.url.split("/")[2]}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(catText)}`;
             catImage += `.${response.data.file.split(".")[1]}`; // Split is to get the file extension used
