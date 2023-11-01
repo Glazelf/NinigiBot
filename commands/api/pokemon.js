@@ -271,7 +271,6 @@ exports.run = async (client, interaction) => {
                 if (!year) year = date.getFullYear();
                 if (!month) {
                     month = date.getMonth();
-                    console.log(month)
                     try {
                         let testMonth = await axios.get(`https://www.smogon.com/stats/${year}-${month}/`);
                     } catch (e) {
