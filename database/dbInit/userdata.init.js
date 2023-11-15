@@ -5,9 +5,9 @@ const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.
 module.exports = async (reset_db) => {
     try {
         if (reset_db) {
-            await userdata.drop()
+            await userdata.drop();
             console.log(`Deleted Database: User Data ✔`);
-        }
+        };
         await User.sync({ alter: true });
         await Shinx.sync({ alter: true });
         await EventTrophy.sync({ alter: true });
@@ -292,6 +292,6 @@ module.exports = async (reset_db) => {
         console.log(`Initialized Database: User ✔`);
         await userdata.close();
     } catch (e) {
-        console.log(e)
+        console.log(e);
     };
 };

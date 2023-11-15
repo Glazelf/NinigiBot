@@ -48,13 +48,12 @@ module.exports = async (reset_db) => {
             shinxQuotes.upsert({ quote: "is singing something? ...? What was that? Dango?", reaction: 14 }),
             shinxQuotes.upsert({ quote: "lost on VGC so he\'s rage quitting like a real japanese player!", reaction: 12 }),
             shinxQuotes.upsert({ quote: "got voted off even though they did a medbay scan!", reaction: 12 }),
-
-            //shinxQuotes.upsert({ quote: "", reaction: }),
-        ]
+            // shinxQuotes.upsert({ quote: "", reaction: }),
+        ];
         await Promise.all(quotes);
         console.log(`Initialized Database: Server ✔`);
         await serverdata.close();
     } catch (e) {
-        console.log(e)
+        console.log(e);
     };
 };
