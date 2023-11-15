@@ -36,9 +36,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 api_user.setSwitchCode(interaction.user.id, switchFC);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
                 break;
-            case "ephemeral":
+            case "ephemeraldefault":
                 let ephemeralDefaultGet = await api_user.getEphemeralDefault(interaction.user.id);
-                let ephemeralDefault = interaction.options.getBoolean('ephemeraldefault');
+                let ephemeralDefault = interaction.options.getBoolean('ephemeral');
                 api_user.setEphemeralDefault(interaction.user.id, ephemeralDefault);
                 return sendMessage({ client: client, interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
                 break;
@@ -82,11 +82,11 @@ module.exports.config = {
             description: "Switch friend code. Example: SW-1234-1234-1234."
         }]
     }, {
-        name: "ephemeral",
+        name: "ephemeraldefault",
         type: "SUB_COMMAND",
         description: "Change ephemeral default.",
         options: [{
-            name: "ephemeraldefault",
+            name: "ephemeral",
             type: "BOOLEAN",
             description: "New ephemeral default.",
             required: true
