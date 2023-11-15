@@ -8,24 +8,32 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let confirm = false;
         let confirmArg = interaction.options.getBoolean("confirm");
         if (confirmArg === true) confirm = confirmArg;
-        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        await interaction.deferReply({ ephemeral: true });
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
         const users = await user_api.getAllUsers();
-        if (users.length == 0) { return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' }); }
+        if (users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' });
         let server_users = await interaction.guild.members.fetch();
         server_users = server_users.map(user => user.id);
         const pre_length = users.length;
-        const deleted_users = []
+        const deleted_users = [];
+        // Check duplicate user_id
         users.forEach(user => {
-            if (!server_users.includes(user.user_id) || ((!user.swcode) && (!user.birthday) && (user.money < 100))) {
-                deleted_users.push(user.user_id);
-            }
-        })
-        if (deleted_users.length == 0) { return sendMessage({ client: client, interaction: interaction, content: 'Database is already clean!' }); }
+            let checkedUsers = [];
+            if (checkedUsers.has(user.user_id)) deleted_users.push(user);
+            checkedUsers.push(user.user_id);
+        });
+        //// Check random stuff ??
+        // users.forEach(user => {
+        //     if (!server_users.includes(user.user_id) || ((!user.swcode) && (!user.birthday) && (user.money < 100))) {
+        //         deleted_users.push(user.user_id);
+        //     };
+        // });
+        if (deleted_users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already clean!' });
         await user_api.bulkDeleteUsers(deleted_users);
         return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 
