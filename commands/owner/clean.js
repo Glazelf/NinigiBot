@@ -22,17 +22,18 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const pre_length = users.length;
         const deleted_users = [];
         // Check duplicate user_id
-        users.forEach(user => {
+        await users.forEach(user => {
             let checkedUsers = [];
             if (checkedUsers.includes(user.user_id)) deleted_users.push(user);
             checkedUsers.push(user.user_id);
         });
-        //// Check random stuff ??
-        // users.forEach(user => {
+        // Check random stuff ??
+        // await users.forEach(user => {
         //     if (!server_users.includes(user.user_id) || ((!user.swcode) && (!user.birthday) && (user.money < 100))) {
         //         deleted_users.push(user.user_id);
         //     };
         // });
+        console.log(deleted_users)
         if (deleted_users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already clean!' });
         await user_api.bulkDeleteUsers(deleted_users);
         return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
