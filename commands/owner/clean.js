@@ -24,7 +24,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         // Check duplicate user_id
         users.forEach(user => {
             let checkedUsers = [];
-            if (checkedUsers.has(user.user_id)) deleted_users.push(user);
+            if (checkedUsers.includes(user.user_id)) deleted_users.push(user);
             checkedUsers.push(user.user_id);
         });
         //// Check random stuff ??
