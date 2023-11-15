@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const forever = require('forever');
@@ -31,7 +28,6 @@ exports.run = async (client, interaction) => {
                 });
             });
         };
-
         // Ignore forever if fails, mostly for test-bots not running it.
         if (forever) {
             try {
@@ -40,7 +36,6 @@ exports.run = async (client, interaction) => {
                 console.log(e);
             };
         };
-
         console.log(`Bot killed by ${interaction.user.username}. (${timestamp})`);
 
         await client.destroy();

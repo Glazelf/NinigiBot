@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -11,8 +8,8 @@ exports.run = async (client, interaction) => {
         const isAdmin = require('../../util/isAdmin');
         const getWikiURL = require('../../util/getWikiURL');
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
         // Imports:

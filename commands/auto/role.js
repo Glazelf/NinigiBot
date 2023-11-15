@@ -1,15 +1,12 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles } = require('../../database/dbServices/server.api');
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         await interaction.guild.roles.fetch();

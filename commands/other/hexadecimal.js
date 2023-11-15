@@ -1,16 +1,12 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
         let input = null;
-
         // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
         // Get this from an argument instead if using slash commands
         switch (interaction.options.getSubcommand()) {

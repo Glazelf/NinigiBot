@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -9,7 +6,6 @@ exports.run = async (client, interaction) => {
         const modal = new Discord.Modal()
             .setCustomId('bugReportModal')
             .setTitle('Bug Report');
-
         const titleInput = new Discord.TextInputComponent()
             .setCustomId('bugReportTitle')
             .setLabel("Title your bug report!")
@@ -50,7 +46,6 @@ exports.run = async (client, interaction) => {
             .setMinLength(1)
             .setMaxLength(100)
             .setRequired(true);
-
         const actionRow1 = new Discord.MessageActionRow().addComponents(titleInput);
         const actionRow2 = new Discord.MessageActionRow().addComponents(descriptionInput);
         const actionRow3 = new Discord.MessageActionRow().addComponents(reproduceInput);

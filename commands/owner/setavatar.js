@@ -1,14 +1,12 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        await interaction.deferReply({ ephemeral: true });
+        let ephemeral = true;
+        await interaction.deferReply({ ephemeral: ephemeral });
 
         let avatarArg = interaction.options.getAttachment("avatar");
         let iconImg = avatarArg.url;

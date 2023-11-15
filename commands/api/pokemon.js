@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -14,8 +11,8 @@ exports.run = async (client, interaction) => {
         const axios = require("axios");
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         // Bools

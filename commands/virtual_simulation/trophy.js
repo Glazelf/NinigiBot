@@ -1,9 +1,6 @@
 const Canvas = require('canvas');
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -15,8 +12,8 @@ exports.run = async (client, interaction) => {
         let embed, trophy_name, res;
         let returnString = ''
         let canvas, ctx, img, shinx;
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let master = interaction.user;

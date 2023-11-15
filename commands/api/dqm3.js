@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -19,8 +16,8 @@ exports.run = async (client, interaction) => {
         const traitsJSON = require("../../submodules/DQM3-db/objects/traits.json");
         const synthesis = require("../../submodules/DQM3-db/util/synthesis");
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let inputID = null;
         let detailed = false;
         let detailedArg = interaction.options.getBoolean("detailed");

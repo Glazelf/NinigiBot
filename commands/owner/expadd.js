@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
@@ -19,12 +16,7 @@ exports.run = async (client, interaction) => {
         let expArg = interaction.options.getInteger("amount");
         await shinxApi.addExperience(userArg.id, expArg);
         returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
-        return sendMessage({
-            client: client,
-            interaction: interaction,
-            content: returnString,
-            ephemeral: ephemeral
-        });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
     } catch (e) {
         // Log error
         logger(e, client, interaction);

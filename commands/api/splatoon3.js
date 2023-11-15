@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -20,8 +17,8 @@ exports.run = async (client, interaction) => {
         const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
         const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
         let languageJSON = require(`../../submodules/splat3/data/language/${languageKey}_full.json`);

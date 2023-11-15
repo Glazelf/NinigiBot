@@ -19,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         ephemeral_default: {
             type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
+            allowNull: true
         },
         food: {
             type: DataTypes.INTEGER,

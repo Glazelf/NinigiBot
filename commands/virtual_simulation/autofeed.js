@@ -14,8 +14,7 @@ const autofeed_modes = [
     }
 ];
 
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let ephemeral = true;

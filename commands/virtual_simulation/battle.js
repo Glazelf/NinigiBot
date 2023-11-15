@@ -10,10 +10,7 @@ const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
 const api_history = require('../../database/dbServices/history.api');
 
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Canvas = require('canvas');
@@ -35,7 +32,6 @@ exports.run = async (client, interaction) => {
             const shinx = await shinxApi.getShinx(trainers[i].id);
             shinxes.push(new ShinxBattle(trainers[i], shinx));
         };
-
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -58,13 +54,7 @@ exports.run = async (client, interaction) => {
         const answer_buttons = new Discord.MessageActionRow()
             .addComponents(new Discord.MessageButton({ customId: 'yes_battle', style: 'SUCCESS', label: 'Accept' }))
             .addComponents(new Discord.MessageButton({ customId: 'no_battle', style: 'DANGER', label: 'Reject' }))
-        const sent_message = await sendMessage({
-            client: client,
-            interaction: interaction,
-            content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`,
-            components: answer_buttons,
-            files: [messageFile]
-        });
+        const sent_message = await sendMessage({ client: client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
         const filter = (interaction) => (interaction.customId === 'yes_battle' || interaction.customId === 'no_battle') && interaction.user.id === trainers[1].id;
         let trainer_answer;
@@ -85,7 +75,6 @@ exports.run = async (client, interaction) => {
         await sendMessage({ client: client, interaction: interaction, components: [], content: 'Let the battle begin!', files: [messageFile] });
         await wait();
         // await interaction.channel.send({ files: [messageFile] });
-
         canvas = Canvas.createCanvas(240, 168);
         ctx = canvas.getContext('2d');
         background = await Canvas.loadImage('./assets/battleUI.png');
@@ -97,7 +86,6 @@ exports.run = async (client, interaction) => {
         for (let i = 0; i < 2; i++) {
             ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
         };
-
         const battleSprite = await Canvas.loadImage('./assets/battleSprite.png');
 
         for (let i = 0; i < 2; i++) {
@@ -122,7 +110,6 @@ exports.run = async (client, interaction) => {
                 ctx.fillText(trainers[i].username, 53 + 49 * i, 49 + 79 * i);
             };
         };
-
         if (text.length > 0) interaction.channel.send({ content: text });
         while (true) {
             text = '';
@@ -152,7 +139,6 @@ exports.run = async (client, interaction) => {
                             text += addLine(`**${nicks[h]}** grew to level **${shinxes[h].level}**!`);
                         };
                     };
-
                     for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
@@ -163,7 +149,6 @@ exports.run = async (client, interaction) => {
                     };
                 };
             };
-
             let shinxHP0 = await hp(shinxes[0].percent);
             let shinxHP1 = await hp(shinxes[1].percent);
             const hps = [shinxHP0, shinxHP1]

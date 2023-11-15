@@ -1,17 +1,14 @@
 
-const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes')
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const userApi = require('../../database/dbServices/user.api');
         const shinxApi = require('../../database/dbServices/shinx.api');
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
         let embed;
@@ -48,19 +45,10 @@ exports.run = async (client, interaction) => {
                         .addField("Trophy Level:", trophy_level + " :beginner", true)
                         .addField("Trophies:", trophy_string, true);
                 };
-                return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    embeds: [embed],
-                    ephemeral: ephemeral
-                });
+                return sendMessage({ client: client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":
                 const shinx = await shinxApi.getShinx(master.id);
-                return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!`
-                });
+                return sendMessage({ client: client, interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
         };
 
     } catch (e) {

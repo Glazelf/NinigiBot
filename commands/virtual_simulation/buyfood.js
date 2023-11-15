@@ -1,6 +1,5 @@
 
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let ephemeral = true;
@@ -12,12 +11,7 @@ exports.run = async (client, interaction) => {
         const userApi = require('../../database/dbServices/user.api');
         res = await userApi.buyFood(master.id, foodArg);
         returnString = res ? `Added ${foodArg}🍗 to your account!` : `Not enough money!`;
-        return sendMessage({
-            client: client,
-            interaction: interaction,
-            content: returnString,
-            ephemeral: ephemeral || res != true
-        });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
 
     } catch (e) {
         // Log error

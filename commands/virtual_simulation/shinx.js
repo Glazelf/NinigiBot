@@ -1,16 +1,13 @@
 const Canvas = require('canvas');
 
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
         const shinxApi = require('../../database/dbServices/shinx.api');
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
 
@@ -23,7 +20,6 @@ exports.run = async (client, interaction) => {
         const applyText = require('../../util/shinx/applyCanvasText');
         const now = new Date();
         let master = interaction.user;
-
         // Auto feed
         let auto_feed = await shinxApi.getShinxAutofeed(master.id);
         if (auto_feed > 0) {
@@ -50,7 +46,6 @@ exports.run = async (client, interaction) => {
                     const cap = await Canvas.loadImage('./assets/shiny.png');
                     ctx.drawImage(cap, 97, 202);
                 };
-
                 img = await Canvas.loadImage('./assets/owner.png');
                 ctx.drawImage(img, 59 * !is_user_male, 71, 59 - 5 * !is_user_male, 49, 403, 125, 59 - 5 * !is_user_male, 49);
                 ctx.font = applyText(canvas, shinx.nickname, 45, 266);
@@ -64,7 +59,6 @@ exports.run = async (client, interaction) => {
                 } else {
                     ctx.fillStyle = 'red';
                 };
-
                 ctx.fillText(master.username, 490, 153);
                 ctx.font = 'normal bolder 35px Arial';
                 ctx.fillStyle = '#000000';
@@ -78,12 +72,10 @@ exports.run = async (client, interaction) => {
                     ctx.fillStyle = require('../../util/shinx/getBelly')(shinx.getBellyProportion());
                     ctx.fillRect(467, 308, 245 * belly_prop, 14);
                 };
-
                 if (exp_struct.curr_percent > 0) {
                     ctx.fillStyle = '#00d4a8'
                     ctx.fillRect(467, 413, 245 * exp_struct.curr_percent, 14);
                 };
-
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "feed":
@@ -118,15 +110,12 @@ exports.run = async (client, interaction) => {
                                 ctx.fillText(nick[k], 298, 35 + 90 * i - 15 * (nick.length - 1 - k));
                             };
                         };
-
                         img = await Canvas.loadImage('./assets/fieldShinx.png');
                         ctx.drawImage(img, 57 * 7, 48 * shinx.shiny, 57, 48, 188, 150, 57, 48);
 
                         for (let i = 0; i < guests.length; i++) {
                             ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
                         };
-
-
                         img = await Canvas.loadImage('./assets/reactions.png');
                         ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
 
@@ -134,16 +123,11 @@ exports.run = async (client, interaction) => {
                             img = await Canvas.loadImage('./assets/dinNight.png');
                             ctx.drawImage(img, 199, 0);
                         };
-
                         messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                         break;
                 };
                 return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: returnString,
-                    files: messageFile,
-                    ephemeral: ephemeral || (res != 'Ok')
+                    client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok')
                 });
             case "play":
                 shinx = await shinxApi.getShinx(master.id);
@@ -174,7 +158,6 @@ exports.run = async (client, interaction) => {
                         ctx.fillText(nick[k], layout[i][0][1], layout[i][0][2] - 19 * (nick.length - 1 - k));
                     };
                 };
-
                 img = await Canvas.loadImage('./assets/fieldShinx.png');
                 ctx.drawImage(img, 57 * 8, 48 * shinx.shiny, 57, 48, 113, 245, 57, 48);
 
@@ -187,7 +170,6 @@ exports.run = async (client, interaction) => {
                 } else {
                     reaction = playing_reaction();
                 };
-
                 img = await Canvas.loadImage('./assets/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
                 shinx.addExperienceAndUnfeed(100 * reaction[2], 1);
@@ -213,7 +195,6 @@ exports.run = async (client, interaction) => {
                 } else {
                     time = 1;
                 };
-
                 ctx.drawImage(img, 256 * time, 0, 256, 160, 0, 0, 256, 160);
                 img = await Canvas.loadImage('./assets/trainer.png');
                 ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
@@ -223,13 +204,7 @@ exports.run = async (client, interaction) => {
 
                 messageFile = new Discord.MessageAttachment(canvas.toBuffer());
                 shinx.addExperienceAndUnfeed(50, 1);
-                return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: `**${shinx.nickname}** ${conversation.quote}`,
-                    files: messageFile,
-                    ephemeral: ephemeral
-                });
+                return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
                 break;
             case "nick":
                 let new_nick = interaction.options.getString("nickname");
@@ -264,11 +239,7 @@ exports.run = async (client, interaction) => {
                 };
 
                 return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: returnString,
-                    files: messageFile,
-                    ephemeral: ephemeral || (res != 'Ok')
+                    client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok')
                 });
 
             case "shiny":
@@ -292,11 +263,7 @@ exports.run = async (client, interaction) => {
                     messageFile = null;
                 };
                 return sendMessage({
-                    client: client,
-                    interaction: interaction,
-                    content: returnString,
-                    files: messageFile,
-                    ephemeral: ephemeral || (res != true)
+                    client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != true)
                 });
 
             case "release":

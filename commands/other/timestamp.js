@@ -1,13 +1,7 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
-
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
         // Date manipulation
         let currentDate = new Date();
         let targetDate = new Date();

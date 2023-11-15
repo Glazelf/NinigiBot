@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -20,18 +17,13 @@ exports.run = async (client, interaction) => {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.Formatters.codeBlock(e.stack)}` });
         };
-
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
-
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
-
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
         for (const [key, value] of Object.entries(client.config)) {
             if (evaled.includes(value) && ephemeral == false) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
-
         let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
-
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {

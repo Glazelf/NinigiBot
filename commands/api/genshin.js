@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -10,8 +7,8 @@ exports.run = async (client, interaction) => {
         const parseDate = require('../../util/parseDate');
         const capitalizeString = require('../../util/capitalizeString');
 
-        let ephemeral = interaction.options.getBoolean("ephemeral");
-        if (ephemeral === null) ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let giAPI = `https://api.genshin.dev/`;
         let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
         let response;

@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Discord = require("discord.js");
@@ -29,7 +26,6 @@ exports.run = async (client, interaction) => {
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
-
         const actionRow1 = new Discord.MessageActionRow().addComponents(titleInput);
         const actionRow2 = new Discord.MessageActionRow().addComponents(descriptionInput);
 

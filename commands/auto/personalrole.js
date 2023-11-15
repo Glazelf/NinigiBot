@@ -1,7 +1,4 @@
-exports.run = async (client, interaction) => {
-    const logger = require('../../util/logger');
-    // Import globals
-    let globalVars = require('../../events/ready');
+exports.run = async (client, interaction, globalVars, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbServices/server.api')
