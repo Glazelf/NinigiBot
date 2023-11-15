@@ -15,7 +15,6 @@ module.exports = async (client, interaction) => {
         const fs = require("fs");
         let monstersJSON;
         const { EligibleRoles } = require('../database/dbServices/server.api');
-
         const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
 
@@ -37,7 +36,8 @@ module.exports = async (client, interaction) => {
                 // Run the command
                 if (cmd) {
                     try {
-                        await cmd.run(client, interaction);
+                        let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
+                        await cmd.run(client, interaction, logger, globalVars, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
