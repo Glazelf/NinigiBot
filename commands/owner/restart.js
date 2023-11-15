@@ -16,12 +16,18 @@ exports.run = async (client, interaction) => {
         let npmInstall = false;
         let installArg = interaction.options.getBoolean("npm-install");
         if (installArg === true) npmInstall = installArg;
+        let dbinit = false;
+        let dbinitArg = interaction.options.getBoolean("dbinit");
+        if (dbinitArg === true) dbinit = dbinitArg;
         let timestamp = await getTime(client);
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         // Run commands
         if (npmInstall) {
             await runCommand("npm install");
             await runCommand("git stash");
+        };
+        if (dbinit) {
+            await runCommand("node dbInit.js");
         };
         // Return messages then destroy
         let restartString = "Restarting.";
@@ -66,5 +72,9 @@ module.exports.config = {
         name: "npm-install",
         type: "BOOLEAN",
         description: "Run npm install command?"
+    }, {
+        name: "dbinit",
+        type: "BOOLEAN",
+        description: "Initialize database?"
     }]
 };
