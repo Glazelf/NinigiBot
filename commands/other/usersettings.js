@@ -7,7 +7,6 @@ exports.run = async (client, interaction) => {
         const api_user = require('../../database/dbServices/user.api');
         switch (interaction.options.getSubcommand()) {
             case "birthday":
-
                 let day = interaction.options.getInteger("day");
                 let month = interaction.options.getInteger("month");
                 // Birthdays are stored as string DDMM instead of being seperated by a -
@@ -38,10 +37,13 @@ exports.run = async (client, interaction) => {
                 if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
                 switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
                 api_user.setSwitchCode(interaction.user.id, switchFC);
-                return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code.` });
+                return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
                 break;
             case "ephemeral":
-                // TODO
+                let ephemeralDefaultGet = await api_user.getEphemeralDefault(interaction.user.id);
+                let ephemeralDefault = interaction.options.getBoolean('ephemeraldefault');
+                api_user.setEphemeralDefault(interaction.user.id, ephemeralDefault);
+                return sendMessage({ client: client, interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
                 break;
         };
 
@@ -89,7 +91,8 @@ module.exports.config = {
         options: [{
             name: "ephemeraldefault",
             type: "BOOLEAN",
-            description: "New ephemeral default."
+            description: "New ephemeral default.",
+            required: true
         }]
     }]
 };

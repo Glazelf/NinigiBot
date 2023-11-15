@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        ephemeral_default: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
         food: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -48,6 +53,11 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.setSwitchCode = function (swcode) {
         this.swcode = swcode;
         this.save({ fields: ['swcode'] });
+    };
+    // Ephemeral default
+    User.prototype.setEphemeralDefault = function (ephemeral_default) {
+        this.ephemeral_default = ephemeral_default;
+        this.save({ fields: ['ephemeral_default'] });
     };
     // Food
     User.prototype.hasFood = function (food) {

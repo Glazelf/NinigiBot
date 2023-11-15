@@ -67,6 +67,16 @@ module.exports = {
         let user = await this.getUser(id, ['user_id', 'swcode']);
         user.setSwitchCode(swcode);
     },
+    // Ephemeral default
+    async getEphemeralDefault(id) {
+        let user = await this.getUser(id, ['ephemeral_default']);
+        return user.ephemeral_default;
+    },
+    async setEphemeralDefault(id, ephemeral_default) {
+        let user = await this.getUser(id, ['user_id', 'ephemeral_default']);
+        user.setEphemeralDefault(ephemeral_default);
+    },
+    // Buying food
     async buyFood(id, amount) {
         let user = await this.getUser(id, ['user_id', 'food', 'money']);
 
