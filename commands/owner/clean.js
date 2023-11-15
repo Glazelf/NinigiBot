@@ -21,9 +21,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
         server_users = server_users.map(user => user.id);
         const pre_length = users.length;
         const deleted_users = [];
+        let checkedUsers = [];
         // Check duplicate user_id
         await users.forEach(user => {
-            let checkedUsers = [];
             if (checkedUsers.includes(user.user_id)) deleted_users.push(user);
             checkedUsers.push(user.user_id);
         });
