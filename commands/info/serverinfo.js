@@ -128,10 +128,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
         if (banCount > 0) statsString += `\nBans: ${banCount}`;
         if (guild.premiumSubscriptionCount > 0) statsString += `\nNitro Boosters: ${boosterString}`;
-        let assetString = "";
-        if (unmanagedEmoteCount > 0) assetString += `\nEmotes: ${unmanagedEmoteCount}/${emoteMax} 😳`;
+        let assetString = `\nEmotes: ${unmanagedEmoteCount}/${emoteMax} 😳`;
         if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
-        if (guild.stickers.cache.size > 0) assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
+        assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
         const serverEmbed = new Discord.MessageEmbed()
             .setColor(globalVars.embedColor)
