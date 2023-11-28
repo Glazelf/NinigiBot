@@ -19,7 +19,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (deleteMessageDaysArg) deleteMessageDays = deleteMessageDaysArg;
         if (deleteMessageDays < 0) deleteMessageDays = 0;
         if (deleteMessageDays > 7) deleteMessageDays = 7;
-        let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} days.`;
+        let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
