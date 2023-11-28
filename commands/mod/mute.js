@@ -54,8 +54,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
             await user.send({ content: dmString })
-                .then(message => muteReturnString += `\nSucceeded in sending a DM with the mute reason to ${user.username}.`)
-                .catch(e => muteReturnString += `\nFailed to send a DM with the mute reason to ${user.username}.`);
+                .then(message => muteReturnString += `\nSucceeded in sending a DM with the reason to ${user.username}.`)
+                .catch(e => muteReturnString += `\nFailed to send a DM with the reason to ${user.username}.`);
             return sendMessage({ client: client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
