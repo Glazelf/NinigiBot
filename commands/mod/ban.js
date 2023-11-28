@@ -48,8 +48,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
             };
             banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
             await user.send({ content: dmString })
-                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${member.user.username}.`)
-                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${member.user.username}.`);
+                .then(message => banReturn += `\nSucceeded in sending a DM with the ban reason to ${user.username}.`)
+                .catch(e => banReturn += `\nFailed to send a DM with the ban reason to ${user.username}.`);
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 // Change input field name "days" to "deleteMessageDays" when updating to DiscordJS v14, for ID ban too? Maybe? deleteMessageSeconds got added in the meantime
