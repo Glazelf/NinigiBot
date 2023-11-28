@@ -29,8 +29,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
         // Kick
         let kickReturn = `Kicked ${user} (${user.id}) for the following reason: \`${reason}\`.`;
         await user.send({ content: `You've been kicked from **${interaction.guild.name}** for the following reason: \`${reason}\`` })
-            .then(message => kickReturn += " (DM Succeeded)")
-            .catch(e => kickReturn += " (DM Failed)");
+            .then(message => kickReturn += `\nSucceeded in sending a DM with the reason to ${member.user.username}.`)
+            .catch(e => kickReturn += `\nFailed to send a DM with the reason to ${user.username}.`);
         try {
             await member.kick([`${reason} ${reasonInfo}`]);
             return sendMessage({ client: client, interaction: interaction, content: kickReturn, ephemeral: ephemeral });
