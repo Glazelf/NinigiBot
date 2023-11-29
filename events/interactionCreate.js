@@ -37,6 +37,7 @@ module.exports = async (client, interaction) => {
                 if (cmd) {
                     try {
                         let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
+                        if (ephemeralDefault === null) ephemeralDefault = true;
                         await cmd.run(client, interaction, logger, globalVars, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
