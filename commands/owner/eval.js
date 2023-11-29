@@ -27,10 +27,11 @@ exports.run = async (client, interaction, logger, globalVars) => {
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {
-            if (typeof (text) === "string")
+            if (typeof (text) === "string") {
                 return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-            else
+            } else {
                 return text;
+            };
         };
 
     } catch (e) {
