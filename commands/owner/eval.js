@@ -12,7 +12,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const input = interaction.options.getString("input");
         let evaled;
         try {
-            evaled = await eval(`async () => ${input}`);
+            evaled = await eval(`async () => {${input}}`);
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.Formatters.codeBlock(e.stack)}` });
