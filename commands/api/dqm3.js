@@ -114,11 +114,17 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (!skillData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that skill.` });
                 let mpCostString = skillData.mp_cost.toString();
                 if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
+                let skillTalents = [];
+                for (let [talentID, talentObject] of Object.entries(talentsJSON)) {
+                    if (talentObject.skills == null) continue;
+                    if (Object.keys(talentObject.skills).includes(inputID)) skillTalents.push(`${talentObject.name} (${talentObject.skills[inputID]})`);
+                };
                 dqm3Embed
                     .setAuthor({ name: skillData.name })
                     .setDescription(skillData.description)
                     .addField("Type:", skillData.type, true)
                     .addField("MP Cost:", mpCostString, true);
+                if (skillTalents.length > 0) dqm3Embed.addField("Talents:", skillTalents.join("\n"), false);
                 break;
             case "trait":
                 inputID = interaction.options.getString("trait");
@@ -130,10 +136,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(inputID)) traitMonsters.push(monsterObject.name);
                     if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(inputID)) traitMonsters.push(`${monsterObject.name} (L)`);
                 };
+                let traitTalents = [];
+                for (let [talentID, talentObject] of Object.entries(talentsJSON)) {
+                    if (talentObject.traits == null) continue;
+                    if (Object.keys(talentObject.traits).includes(inputID)) traitTalents.push(`${talentObject.name} (${talentObject.traits[inputID]})`);
+                };
                 dqm3Embed
                     .setAuthor({ name: traitData.name })
-                    .setDescription(traitData.description)
-                    .addField("Monsters:", traitMonsters.join("\n"), false);
+                    .setDescription(traitData.description);
+                if (traitMonsters.length > 0) dqm3Embed.addField("Monsters:", traitMonsters.join("\n"), false);
+                if (traitTalents.length > 0) dqmEmbed.addField("Talents:", traitTalents.join("\n"), false);
                 break;
             case "item":
                 inputID = interaction.options.getString("item");
