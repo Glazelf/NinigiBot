@@ -149,7 +149,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (specialWeaponMatches.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that special weapon. Make sure you select an autocomplete option.` });
                 let allSpecialWeaponMatchesNames = "";
                 specialWeaponMatches.forEach(specialWeaponEntry => {
-                    allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialweapon.__RowId]} (${specialWeaponEntry.SpecialPoint}p)\n`;
+                    allSpecialWeaponMatchesNames += `${languageJSON["CommonMsg/Weapon/WeaponName_Main"][specialWeaponEntry.__RowId]} (${specialWeaponEntry.SpecialPoint}p)\n`;
                 });
                 let specialThumbnail = `${githubRaw}images/subspe/Wsp_${inputID}00.png`;
 
