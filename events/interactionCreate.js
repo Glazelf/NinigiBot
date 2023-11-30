@@ -300,8 +300,8 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "special":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
-                                    // Gachihoko = Rainmaker
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-" && !value.includes("Gachihoko")) choices.push({ name: value, value: key });
+                                    // Gachihoko = Rainmaker, Splashdown is only available in singleplayer missions but is for some reason still properly included here. To avoid importing more JSONs and reading whole objects, it's excluded this way.
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-" && !value.includes("Gachihoko") && value !== "Splashdown") choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "mode":
