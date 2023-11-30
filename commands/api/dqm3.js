@@ -145,7 +145,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setAuthor({ name: traitData.name })
                     .setDescription(traitData.description);
                 if (traitMonsters.length > 0) dqm3Embed.addField("Monsters:", traitMonsters.join("\n"), false);
-                if (traitTalents.length > 0) dqmEmbed.addField("Talents:", traitTalents.join("\n"), false);
+                if (traitTalents.length > 0) dqm3Embed.addField("Talents:", traitTalents.join("\n"), false);
                 break;
             case "item":
                 inputID = interaction.options.getString("item");
