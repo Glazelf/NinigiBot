@@ -127,8 +127,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let traitMonsters = [];
                 for (let [monsterID, monsterObject] of Object.entries(monstersJSON)) {
                     if (monsterObject.traits == null) continue;
-                    if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(inputID)) traitMosersSmall.push(mosterObject.name);
-                    if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(inputID)) traitMosersLarge.push(`${mosterObject.name} (L)`);
+                    if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(inputID)) traitMonsters.push(mosterObject.name);
+                    if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(inputID)) traitMonsters.push(`${mosterObject.name} (L)`);
                 };
                 dqm3Embed
                     .setAuthor({ name: traitData.name })
