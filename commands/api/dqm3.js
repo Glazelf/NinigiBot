@@ -5,7 +5,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
         const capitalizeString = require('../../util/capitalizeString');
-        const areasJSON = require("../../submodules/DQM3-db/objects/areas.json");
         const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
         const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
         const largeDifferencesJSON = require("../../submodules/DQM3-db/objects/largeDifferences.json");
