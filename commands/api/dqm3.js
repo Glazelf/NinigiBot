@@ -53,14 +53,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         };
                     };
                 };
+                dqm3Embed.setAuthor({ name: monsterTitle });
+                    if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
                 dqm3Embed
-                    .setAuthor({ name: monsterTitle })
-                    .setDescription(monsterData.description)
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true);
-                    if(monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
-                    if(monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
-                    if(monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
+                    if (monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
+                    if (monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
+                    if (monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
                 if (detailed) {
                     dqm3Embed
                         .addField("Talent Pool:", "Coming soon.", true)
