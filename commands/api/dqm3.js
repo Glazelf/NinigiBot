@@ -31,18 +31,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that monster.` });
                 let monsterTitle = monsterData.name;
                 if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
-                if (!monsterData.description) monsterData.description = "No description available in the demo.";
-                let growthString = "Monster is unscoutable in the demo."; // Redundant check in complete dataset
+                let growthString = ""; // Redundant check in complete dataset
                 if (monsterData.growth) growthString = `HP: ${"⭐".repeat(monsterData.growth.hp)}\nMP: ${"⭐".repeat(monsterData.growth.mp)}\nAtk: ${"⭐".repeat(monsterData.growth.atk)}\nDef: ${"⭐".repeat(monsterData.growth.def)}\nAgi: ${"⭐".repeat(monsterData.growth.agi)}\nWis: ${"⭐".repeat(monsterData.growth.wis)}`;
                 let innateTalentsString = "";
                 if (monsterData.talents) { // Redundant check in complete dataset
                     monsterData.talents.forEach(talent => {
                         if (talentsJSON[talent]) innateTalentsString += `${talentsJSON[talent].name}\n`; // Check will be redundant in complete dataset
                     });
-                } else {
-                    innateTalentsString = "Monster is unscoutable in the demo.";
                 };
-                if (innateTalentsString.length < 1) innateTalentsString = "The talents this monster has have not yet been properly documented."; // Check will be redundant in complete dataset
                 let monsterTraitsString = "";
                 if (monsterData.traits) {
                     if (monsterData.traits.small) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
@@ -56,17 +52,15 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                             if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                         };
                     };
-                } else {
-                    monsterTraitsString = "Monster is unscoutable in the demo.";
                 };
                 dqm3Embed
                     .setAuthor({ name: monsterTitle })
                     .setDescription(monsterData.description)
                     .addField("Rank:", monsterData.rank, true)
-                    .addField("Family:", familiesJSON[monsterData.family].name, true)
-                    .addField("Innate Talents:", innateTalentsString, true)
-                    .addField("Traits: (Lvl)", monsterTraitsString, true)
-                    .addField("Growth:", growthString, false);
+                    .addField("Family:", familiesJSON[monsterData.family].name, true);
+                    if(monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
+                    if(monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
+                    if(monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
                 if (detailed) {
                     dqm3Embed
                         .addField("Talent Pool:", "Coming soon.", true)
