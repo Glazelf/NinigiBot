@@ -274,7 +274,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let previousPokemon = null;
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
-        let allPokemonSorted = allPokemon.sort(compare);
+        let allPokemonSorted = [...allPokemon].sort(compare); // Needs a copy of allPokemon because sort() is destructive
         let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
 
         let previousPokemonID = pokemon.num - 1;
