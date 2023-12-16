@@ -270,18 +270,16 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 footerText = `Unavailable in ${recentGame}`;
                 break;
         };
-        // Buttons
+        // Get relative Pokédex variables
         let previousPokemon = null;
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
         let allPokemonSorted = [...allPokemon].sort(compare); // Needs a copy of allPokemon because sort() is destructive
         let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
-
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
         if (previousPokemonID < 1) previousPokemonID = maxPkmID;
         if (nextPokemonID > maxPkmID) nextPokemonID = 1;
-
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         // Skip placeholders, should clean this sometime but this code might become obsolete later in Showdown's SV support
