@@ -1,11 +1,13 @@
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        await interaction.deferReply({ ephemeral: true });
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
+        await interaction.deferReply({ ephemeral: ephemeral });
         // Split off command
         let textMessage = interaction.options.getString("input");
         let userIDArg = interaction.options.getString("user-id");
@@ -68,5 +70,9 @@ module.exports.config = {
         name: "attachment",
         type: "ATTACHMENT",
         description: "Message attachment."
+    }, {
+        name: "ephemeral",
+        type: "BOOLEAN",
+        description: "Whether the reply will be private."
     }]
 };
