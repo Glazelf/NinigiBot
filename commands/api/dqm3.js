@@ -54,13 +54,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                 };
                 dqm3Embed.setAuthor({ name: monsterTitle });
-                    if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
+                if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
                 dqm3Embed
                     .addField("Rank:", monsterData.rank, true)
                     .addField("Family:", familiesJSON[monsterData.family].name, true);
-                    if (monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
-                    if (monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
-                    if (monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
+                if (monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
+                if (monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
+                if (monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
                 if (detailed) {
                     dqm3Embed
                         .addField("Talent Pool:", "Coming soon.", true)
@@ -148,12 +148,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setAuthor({ name: itemData.name })
                     .setDescription(itemData.description)
                     .addField("Type:", itemData.type, true);
-                break;
-            case "spawn":
-                inputID = interaction.options.getString("area");
-                let areaData = areasJSON[inputID];
-                if (!areaData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that area.` });
-                return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
                 break;
             case "synthesis":
                 let parent1 = interaction.options.getString("parent1");
@@ -303,21 +297,6 @@ module.exports.config = {
             name: "item",
             type: "STRING",
             description: "Specify item by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: "BOOLEAN",
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "spawn",
-        type: "SUB_COMMAND",
-        description: "Get spawns in an area.",
-        options: [{
-            name: "area",
-            type: "STRING",
-            description: "Specify area by name.",
             autocomplete: true,
             required: true
         }, {

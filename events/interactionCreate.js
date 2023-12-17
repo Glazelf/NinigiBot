@@ -394,7 +394,8 @@ module.exports = async (client, interaction) => {
                                     targetJSON = require("../submodules/DQM3-db/objects/monsters.json");
                                     break;
                                 case "area":
-                                    targetJSON = require("../submodules/DQM3-db/objects/areas.json");
+                                    // Currently unused, add spawns under detailed monster info once the db has them
+                                    // targetJSON = require("../submodules/DQM3-db/objects/areas.json");
                                     break;
                                 case "family":
                                     targetJSON = require("../submodules/DQM3-db/objects/families.json");
