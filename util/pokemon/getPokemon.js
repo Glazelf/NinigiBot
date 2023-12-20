@@ -324,7 +324,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             4: new Discord.MessageActionRow()
         };
         let pokemonForms = [];
-        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = pokemon.otherFormes;
+        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Whatever.
         if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
