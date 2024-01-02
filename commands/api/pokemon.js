@@ -274,8 +274,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         month = month - 1;
                     };
                 };
-                if (month == 0) {
-                    month = 12;
+                if (month < 1) {
+                    month += 12;
                     year = year - 1;
                 };
                 let stringMonth = month;
