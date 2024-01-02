@@ -276,7 +276,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 };
                 if (month < 1) {
                     month += 12;
-                    year = year - 1;
+                    year -= 1;
                 };
                 let stringMonth = month;
                 if (stringMonth < 10) stringMonth = "0" + stringMonth;
