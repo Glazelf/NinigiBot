@@ -233,11 +233,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     let prevo = null;
                     if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
                     if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
-                    if (prevo && learnInfo.length == 0) {
+                    if (prevo) {
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
-                            learnInfo += `As ${prevo.name}:\n`;
+                            learnInfo += `**As ${prevo.name}:**\n`;
                             learnInfo += getLearnData(learnData);
                         };
                     };
