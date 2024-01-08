@@ -39,7 +39,11 @@ module.exports = async (exception, client, interaction = null) => {
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
 User: **${user.username}** (${user.id})
-Message link: ${interaction.url}
+Message Link: ${interaction.url}
+Type: ${interaction.type}
+Component Type: ${interaction.componentType}
+Command Name: ${interaction.commandName}
+Custom ID: ${interaction.customId}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
