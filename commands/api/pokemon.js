@@ -379,7 +379,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         learnInfo += `Gen ${learnGen}: Move Tutor\n`;
                         break;
                     case "S":
-                        learnInfo += `Gen ${learnGen}: Special\n`;
+                        let specialMoveString = `Gen ${learnGen}: Special\n`;
+                        if (!learnInfo.includes(specialMoveString)) learnInfo += specialMoveString;
                         break;
                     case "E":
                         learnInfo += `Gen ${learnGen}: Egg move\n`;
