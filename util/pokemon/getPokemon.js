@@ -13,6 +13,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const getTypeEmotes = require('./getTypeEmotes');
+        const checkBaseSpeciesMoves = require('./checkBaseSpeciesMoves.js');
         // Common settings
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -193,17 +194,14 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let tutorMoves = [];
         let specialMoves = [];
         let transferMoves = [];
+        let reminderMoves = [];
         let prevo = null;
         if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
         if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
-        if (learnsetBool && learnsets[pokemon.id]) {
-            let learnset = learnsets[pokemon.id].learnset;
-            // Catch forms without their own learnset
-            if (!learnset && pokemon.baseSpecies) {
-                let baseSpecies = Dex.species.get(pokemon.baseSpecies);
-                learnset = learnsets[baseSpecies.id].learnset;
-            };
-            for (let [moveName, learnData] of Object.entries(learnset)) {
+        let pokemonLearnset = learnsets[pokemon.id];
+        if (learnsetBool && pokemonLearnset) {
+            pokemonLearnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
+            for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
                 moveName = Dex.moves.get(moveName).name;
                 for (let moveLearnData of learnData) {
                     if (!moveLearnData.startsWith("9")) {
@@ -220,6 +218,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                         tutorMoves.push(moveName);
                     } else if (moveLearnData.includes("S")) {
                         specialMoves.push(moveName);
+                    } else if (moveLearnData.includes("R")) {
+                        reminderMoves.push(moveName);
                     };
                 };
             };
@@ -237,6 +237,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             };
         };
         let levelMovesString = "";
+        for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
         for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
         let tmMovesStrings = [];
         let tmMoveIndex = 0;

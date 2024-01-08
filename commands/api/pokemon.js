@@ -7,6 +7,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
         // Command settings
@@ -221,11 +222,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let learnInfo = "";
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
-                    // Catch forms without their own learnset
-                    if (!learnset && pokemon.baseSpecies) {
-                        let baseSpecies = Dex.species.get(pokemon.baseSpecies);
-                        learnset = learnsets[baseSpecies.id].learnset;
-                    };
+                    learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
                     for (let [moveName, learnData] of Object.entries(learnset)) {
                         if (moveName !== move.id) continue;
                         learnInfo += getLearnData(learnData);
@@ -386,6 +383,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         break;
                     case "E":
                         learnInfo += `Gen ${learnGen}: Egg move\n`;
+                        break;
+                    case "R":
+                        learnInfo += `Gen ${learnGen}: Reminder\n`;
                         break;
                 };
             });
