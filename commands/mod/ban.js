@@ -12,6 +12,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
         let userIDArg = interaction.options.getString("user-id");
+        if (user && !userIDArg) userIDArg = user.id;
         let reason = interaction.options.getString("reason");
         if (!reason) reason = `Not specified.`;
         let deleteMessageDays = 0;
@@ -61,15 +62,14 @@ exports.run = async (client, interaction, logger, globalVars) => {
             };
         } else if (userIDArg) {
             // Try to ban by ID ("hackban") instead
-            let memberID = userIDArg;
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(memberID)) return sendMessage({ client: client, interaction: interaction, content: `<@${memberID}> (${memberID}) is already banned.` });
+                if (bansFetch.has(userIDArg)) return sendMessage({ client: client, interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
             };
-            banReturn = `Banned <@${memberID}> (${memberID}) for the following reason: \`${reason}\`.\nNo DM was sent since this ban was by ID.`;
+            banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: \`${reason}\`.\nNo DM was sent since this ban was by ID or the user was not in the server.`;
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
-                await interaction.guild.members.ban(memberID, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageDays * 86400 });
+                await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageDays * 86400 });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
