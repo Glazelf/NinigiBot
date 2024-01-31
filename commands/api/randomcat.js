@@ -27,11 +27,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 // catAAS is a replacement as random.cat has been down for ages!!! Alternate APIs here
                 catAPI = catAAS;
         };
-        if (catAPI.includes(catAAS)) catAPI += "?json=true";
+        if (catAPI.startsWith(catAAS)) catAPI += "?json=true";
         let response = await axios.get(catAPI);
         let catImage = null;
         let catNameSeed = null;
-        if (catAPI.includes(randomCat)) {
+        if (catAPI.startsWith(randomCat)) {
             catImage = response.data.file;
             catNameSeed = catImage;
         } else if (catAPI.startsWith(catAAS)) {
