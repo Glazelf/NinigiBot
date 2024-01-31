@@ -34,7 +34,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (catAPI.includes(randomCat)) {
             catImage = response.data.file;
             catNameSeed = catImage;
-        } else if (catAPI.includes(catAAS)) {
+        } else if (catAPI.startsWith(catAAS)) {
             catImage = `${catAAS}/${response.data._id}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(catText)}`;
             catNameSeed = response.data._id;
