@@ -50,17 +50,70 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
                 return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
                 break;
-            case "togglemod":
-                const { ModEnabledServers } = require('../../database/dbServices/server.api');
-                let automodServerID = await ModEnabledServers.findOne({ where: { server_id: interaction.guild.id } });
-                // Database
-                if (automodServerID) {
-                    await automodServerID.destroy();
-                    return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will no longer be automatically moderated.` });
-                } else {
-                    await ModEnabledServers.upsert({ server_id: interaction.guild.id });
-                    return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will now be automatically moderated.` });
+            case "automod":
+                let scamKeywords = [
+                    "http.?:\/\/(dicsord-nitro|discrod-egifts|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)",// Discord gift links
+                    // "http.?:\/\/.*\.ru", // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done. Currently matches any URL containing "ru" after a period. Can't seem to replicate this on online regex testers though
+                    "http.?:\/\/gidthub.com"
+                ];
+                let advertisementKeywords = [
+                    "discord.gg",
+                    "bit.ly",
+                    "twitch.tv"
+                ];
+                let scamAutoModObject = {
+                    name: `Scam Links (${client.user.username})`,
+                    creator: client.user.id,
+                    enabled: true,
+                    eventType: 1,
+                    triggerType: 1,
+                    triggerMetadata:
+                    {
+                        keyword_filter: scamKeywords
+                    },
+                    actions: [
+                        {
+                            type: 1,
+                            customMessage: `This message has been deleted because it contains a scam link.\nBy ${client.user.username}.`
+                        },
+                        {
+                            type: 2,
+                            channel: interaction.channel.id
+                        },
+                        {
+                            type: 3,
+                            durationSeconds: 3600 // 1 hour
+                        }
+                    ]
                 };
+                let advertisementAutoModObject = {
+                    name: `Advertisement (${client.user.username})`,
+                    creator: client.user.id,
+                    enabled: true,
+                    eventType: 1,
+                    triggerType: 1,
+                    triggerMetadata:
+                    {
+                        keyword_filter: advertisementKeywords
+                    },
+                    actions: [
+                        {
+                            type: 1,
+                            customMessage: `This message has been deleted because it contains advertisement.\nBy ${client.user.username}.`
+                        },
+                        {
+                            type: 2,
+                            channel: interaction.channel.id
+                        },
+                        {
+                            type: 3,
+                            durationSeconds: 3600 // 1 hour
+                        }
+                    ]
+                };
+                await interaction.guild.autoModerationRules.create(scamAutoModObject);
+                if (interaction.options.getBoolean("advertisement")) await interaction.guild.autoModerationRules.create(advertisementAutoModObject);
+                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.` });
                 break;
             case "togglepersonalroles":
                 const { PersonalRoleServers } = require('../../database/dbServices/server.api');
@@ -118,9 +171,14 @@ module.exports.config = {
             description: "Disable logging."
         }]
     }, {
-        name: "togglemod",
+        name: "automod",
         type: "SUB_COMMAND",
-        description: "Toggle automated moderation features."
+        description: "Adds bot's AutoMod rules to this server. Use in AutoMod channel.",
+        options: [{
+            name: "advertisement",
+            type: "BOOLEAN",
+            description: "Enable AutoMod for advertisements."
+        }]
     }, {
         name: "togglepersonalroles",
         type: "SUB_COMMAND",
