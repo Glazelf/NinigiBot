@@ -10,9 +10,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let avatarArg = interaction.options.getAttachment("avatar");
         let iconImg = avatarArg.url;
-        let iconSize = Math.ceil(iconArg.size / 1000);
+        let iconSize = Math.ceil(avatarArg.size / 1000);
         let fileIsImg = false;
-        if (iconArg.contentType.includes('image')) fileIsImg = true;
+        if (avatarArg.contentType.includes('image')) fileIsImg = true;
 
         if (!fileIsImg) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
         try {
