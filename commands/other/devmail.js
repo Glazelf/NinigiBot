@@ -4,6 +4,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const Discord = require("discord.js");
 
         const modal = new Discord.Modal()
+        switch(interaction.options.getString("type")) {
+            case "bugreport":
+            modal
             .setCustomId('bugReportModal')
             .setTitle('Bug Report');
         const titleInput = new Discord.TextInputComponent()
@@ -53,6 +56,10 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const actionRow5 = new Discord.MessageActionRow().addComponents(contextInput);
 
         modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
+            break;
+            case "question":
+                return sendMessage({ client: client, interaction: interaction, content: `WIP, remind me to finish this after work.` });
+                break;
         return interaction.showModal(modal);
 
     } catch (e) {
@@ -62,6 +69,16 @@ exports.run = async (client, interaction, logger, globalVars) => {
 };
 
 module.exports.config = {
-    name: "bugreport",
-    description: "Report bugs in the bot."
+    name: "devmail",
+    description: "Contact the developers.",
+    options: [{
+        name: "type",
+        type: "STRING",
+        description: "Why do you contact the devs?",
+        required: true,
+        choices: [
+            { name: "Bug Report", value: "bugreport" },
+            { name: "Question", value: "question" }
+        ]
+    }]
 };
