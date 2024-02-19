@@ -20,7 +20,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         // Run commands
         if (npmInstall) {
-            await runCommand("npm install");
+            let installResult = await runCommand("npm install");
             await runCommand("git stash");
         };
         if (dbinit) {
@@ -28,7 +28,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         // Return messages then destroy
         let restartString = "Restarting.";
-        if (npmInstall) restartString = `Installed NPM packages. ${restartString}`;
+        if (npmInstall) restartString = `Installed NPM packages. Result:\n\`\`\`${installResult}\`\`\`\n ${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
         // Remove all interactions (will be reinstated on next boot)
