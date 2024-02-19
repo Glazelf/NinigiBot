@@ -7,5 +7,6 @@ module.exports = (command) => {
         const { stdout, stderr } = await exec(command);
         console.log('stdout:', stdout);
         console.error('stderr:', stderr);
+        return { stdout, stderr };
     };
 };

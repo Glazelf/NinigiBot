@@ -23,13 +23,14 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (npmInstall) {
             installResult = await runCommand("npm install");
             await runCommand("git stash");
+            console.log(installResult)
         };
         if (dbinit) {
             await runCommand("node dbInit.js");
         };
         // Return messages then destroy
         let restartString = "Restarting.";
-        if (npmInstall) restartString = `Installed NPM packages. Result:\n\`\`\`${installResult}\`\`\`\n ${restartString}`;
+        if (npmInstall) restartString = `Installed NPM packages. Result:\n\`\`\`${installResult.stdout}\`\`\`\n ${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
         // Remove all interactions (will be reinstated on next boot)
