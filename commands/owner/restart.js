@@ -23,7 +23,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (npmInstall) {
             installResult = await runCommand("npm install");
             await runCommand("git stash");
-            console.log(installResult)
         };
         if (dbinit) {
             await runCommand("node dbInit.js");
