@@ -18,9 +18,10 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (dbinitArg === true) dbinit = dbinitArg;
         let timestamp = await getTime(client);
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
+        let installResult = "";
         // Run commands
         if (npmInstall) {
-            let installResult = await runCommand("npm install");
+            installResult = await runCommand("npm install");
             await runCommand("git stash");
         };
         if (dbinit) {
