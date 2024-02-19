@@ -6,7 +6,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const runCommand = require('../../util/runCommand');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ ephemeral: false });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
