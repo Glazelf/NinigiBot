@@ -14,5 +14,5 @@ exports.run = async (client, interaction, logger) => {
 
 module.exports.config = {
     name: "Userinfo",
-    type: Discord.ApplicationCommandOptionType.User
+    type: Discord.ApplicationCommandType.User
 };

@@ -29,5 +29,5 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: Discord.ApplicationCommandOptionType.User
+    type: Discord.ApplicationCommandType.User
 };
