@@ -21,9 +21,9 @@ module.exports = async (client, interaction, page, user) => {
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
     let profileButtons = new Discord.MessageActionRow()
-        .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${user.id}` }));
-    if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: 'PRIMARY', emoji: '⬅️' }));
-    if (page < NUMBER_OF_PAGES - 1 && member && !user.bot) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: 'PRIMARY', emoji: '➡️' }));
+        .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
+    if (page > 0) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page - 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
+    if (page < NUMBER_OF_PAGES - 1 && member && !user.bot) profileButtons.addComponents(new Discord.MessageButton({ customId: `usf${page + 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
 
     let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {

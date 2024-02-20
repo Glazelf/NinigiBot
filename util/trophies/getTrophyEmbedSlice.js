@@ -10,7 +10,7 @@ module.exports = async (offset) => {
         embed.addField("\u200B", `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`, true);
     });
     const navigation_buttons = new Discord.MessageActionRow();
-    if (trophy_list.buttons.includes('L')) navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'bgd' + (offset - TROPHIES_PER_PAGE), style: 'PRIMARY', emoji: '⬅️' }));
-    if (trophy_list.buttons.includes('R')) navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'bgd' + (offset + TROPHIES_PER_PAGE), style: 'PRIMARY', emoji: '➡️' }));
+    if (trophy_list.buttons.includes('L')) navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'bgd' + (offset - TROPHIES_PER_PAGE), style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
+    if (trophy_list.buttons.includes('R')) navigation_buttons.addComponents(new Discord.MessageButton({ customId: 'bgd' + (offset + TROPHIES_PER_PAGE), style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
     return { embed: embed, components: navigation_buttons };
 };

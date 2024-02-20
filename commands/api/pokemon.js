@@ -172,7 +172,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (format.threads) {
                     format.threads.forEach(thread => {
                         pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: 'LINK', url: thread.split("\"")[1] }));
+                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -282,8 +282,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let response = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
                 let usageButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: searchURL }));
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
+                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: searchURL }));
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
@@ -357,7 +357,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // Bulbapedia button
         if (linkBulbapedia) {
             pokemonButtons
-                .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: linkBulbapedia }));
+                .addComponents(new Discord.MessageButton({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
         };
         // Send function for all except default
         if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });

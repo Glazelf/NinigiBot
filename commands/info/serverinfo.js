@@ -117,10 +117,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let serverButtons = new Discord.MessageActionRow();
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
-        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
+        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
         let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
