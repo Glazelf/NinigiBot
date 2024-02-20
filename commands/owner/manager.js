@@ -1,9 +1,7 @@
-
-
 exports.run = async (client, interaction, logger, globalVars) => {
     const checker = require('../../util/string/checkFormat');
-    const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu
-    const regexpDiscord = /<a*:[a-zA-Z0-9]+:[0-9]+>/
+    const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
+    const regexpDiscord = /<a*:[a-zA-Z0-9]+:[0-9]+>/;
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
@@ -49,10 +47,11 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 if (parsed_emote) trophy_emote = parsed_emote[0];
 
                 const trophy_price = interaction.options.getInteger("price");
-                if (trophy_price < 1) error += 'Price cannot be lower than 1'
+                if (trophy_price < 1) error += 'Price cannot be lower than 1';
 
                 if (error.length > 0) {
-                    returnString = 'Could not add the trophy due to the following issues:```\n' + error + '\n```'
+                    let errorBlock = Discord.Formatters.codeBlock(error);
+                    returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
                 } else {
                     await api_trophy.createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
                     returnString = `${trophy_name} added successfully to the shop!`;
@@ -66,7 +65,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             case "deleteshoptrophy":
                 trophy_name = interaction.options.getString("name").trim();
                 res = await api_trophy.deleteShopTrophy(trophy_name);
-                returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`
+                returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`;
                 return sendMessage({
                     client: client,
                     interaction: interaction,

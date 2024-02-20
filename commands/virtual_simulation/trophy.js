@@ -24,16 +24,17 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
+                let trophyPriceBlock = Discord.Formatters.codeBlock("diff", `[${trophy.price}]`);
                 trophies.forEach(trophy => {
                     let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
-                    let trophy_price = { name: '\u200B', value: '```diff\n' + `[${trophy.price}]` + '\n```', inline: true };
+                    let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
 
                     switch (trophy.temp_bought) {
                         case 'Bought':
-                            trophy_price.value = '```yaml\n+Bought\n```'
+                            trophy_price.value = Discord.Formatters.codeBlock("yaml", `Bought`);
                             break;
                         case 'CantBuy':
-                            trophy_price.value = '```css\n[' + `${trophy.price}` + ']\n```'
+                            trophy_price.value = Discord.Formatters.codeBlock("css", `[${trophy.price}]`);
                             break;
                         case 'CanBuy':
                             break;
