@@ -40,7 +40,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
             case "log":
                 const { LogChannels } = require('../../database/dbServices/server.api');
                 let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-                let channelArg = interaction.options.getChannel("channel");
                 if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
