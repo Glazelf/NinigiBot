@@ -20,7 +20,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
-        let description = "";
+        let description = null;
         // Gender studies
         let pokemonGender = "";
         let genderString = "";
