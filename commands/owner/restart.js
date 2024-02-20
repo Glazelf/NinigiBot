@@ -1,6 +1,7 @@
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         const runCommand = require('../../util/runCommand');
@@ -29,7 +30,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         // Return messages then destroy
         let restartString = "Restarting.";
-        if (npmInstall) restartString = `Installed NPM packages. Result:\n\`\`\`${installResult.stdout}\`\`\`\n ${restartString}`;
+        let installResultString = Discord.Formatters.codeBlock(installResult.stdout);
+        if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
         // Remove all interactions (will be reinstated on next boot)
