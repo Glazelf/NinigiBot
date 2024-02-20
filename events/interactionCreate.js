@@ -20,8 +20,6 @@ module.exports = async (client, interaction) => {
 
         if (!interaction) return;
         if (interaction.user.bot) return;
-        console.log(interaction)
-        console.log(interaction.type)
         switch (interaction.type) {
             case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
@@ -50,9 +48,8 @@ module.exports = async (client, interaction) => {
                     return;
                 };
             case Discord.InteractionType.MessageComponent:
-                console.log(interaction.componentType)
                 switch (interaction.componentType) {
-                    case "BUTTON":
+                    case Discord.ComponentType.Button:
                         let messageObject = null;
                         if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         if (interaction.customId.startsWith("pkm")) {
@@ -119,7 +116,7 @@ module.exports = async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-                    case "SELECT_MENU":
+                    case Discord.ComponentType.SelectMenu:
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
@@ -496,7 +493,6 @@ module.exports = async (client, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ])
                             .setFooter({ text: interaction.user.username });
-
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
                         break;
@@ -507,7 +503,6 @@ module.exports = async (client, interaction) => {
 
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
-
                         const modMailEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Mod Mail 💌` })
