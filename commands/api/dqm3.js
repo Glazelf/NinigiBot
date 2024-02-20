@@ -55,17 +55,19 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 };
                 dqm3Embed.setAuthor({ name: monsterTitle });
                 if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
-                dqm3Embed
-                    .addField("Rank:", monsterData.rank, true)
-                    .addField("Family:", familiesJSON[monsterData.family].name, true);
-                if (monsterData.talents) dqm3Embed.addField("Innate Talents:", innateTalentsString, true);
-                if (monsterData.traits) dqm3Embed.addField("Traits: (Lvl)", monsterTraitsString, true);
-                if (monsterData.growth) dqm3Embed.addField("Growth:", growthString, false);
+                dqm3Embed.addFields([
+                    { name: "Rank", value: monsterData.rank, inline: true },
+                    { name: "Family", value: familiesJSON[monsterData.family].name, inline: true }
+                ]);
+                if (monsterData.talents) dqm3Embed.addFields([{ name: "Innate Talents:", value: innateTalentsString, inline: true }]);
+                if (monsterData.traits) dqm3Embed.addFields([{ name: "Traits: (Lvl)", value: monsterTraitsString, inline: true }]);
+                if (monsterData.growth) dqm3Embed.addFields([{ name: "Growth:", value: growthString, inline: false }]);
                 if (detailed) {
-                    dqm3Embed
-                        .addField("Talent Pool:", "Coming soon.", true)
-                        .addField("Habitat:", "Coming soon.", false)
-                        .addField("Resistances:", "Coming soon.", true);
+                    dqm3Embed.addFields([
+                        { name: "Talent Pool:", value: "Coming soon.", inline: true },
+                        { name: "Habitat:", value: "Coming soon.", inline: true },
+                        { name: "Resistances:", value: "Coming soon.", inline: true }
+                    ]);
                 };
                 break;
             case "talent":
@@ -97,9 +99,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 talentMonstersString = talentMonstersArray.join(", ");
                 dqm3Embed
                     .setAuthor({ name: talentData.name })
-                if (talentSkillsString.length > 0) dqm3Embed.addField("Skills: (Required points)", talentSkillsString, true);
-                if (talentTraitsString.length > 0) dqm3Embed.addField("Traits: (Required points)", talentTraitsString, true);
-                if (talentMonstersString.length > 0) dqm3Embed.addField("Monsters:", talentMonstersString, false);
+                if (talentSkillsString.length > 0) dqm3Embed.addFields([{ name: "Skills: (Required points)", value: talentSkillsString, inline: true }]);
+                if (talentTraitsString.length > 0) dqm3Embed.addFields([{ name: "Traits: (Required points)", value: talentTraitsString, inline: true }]);
+                if (talentMonstersString.length > 0) dqm3Embed.addFields([{ name: "Monsters:", value: talentMonstersString, inline: false }]);
                 break;
             case "skill":
                 inputID = interaction.options.getString("skill");
@@ -115,9 +117,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 dqm3Embed
                     .setAuthor({ name: skillData.name })
                     .setDescription(skillData.description)
-                    .addField("Type:", skillData.type, true)
-                    .addField("MP Cost:", mpCostString, true);
-                if (skillTalents.length > 0) dqm3Embed.addField("Talents:", skillTalents.join("\n"), false);
+                    .addFields([{ name: "Type:", value: skillData.type, inline: true }])
+                    .addFields([{ name: "MP Cost:", value: mpCostString, inline: true }]);
+                if (skillTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: skillTalents.join("\n"), inline: false }]);
                 break;
             case "trait":
                 inputID = interaction.options.getString("trait");
@@ -137,8 +139,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 dqm3Embed
                     .setAuthor({ name: traitData.name })
                     .setDescription(traitData.description);
-                if (traitMonsters.length > 0) dqm3Embed.addField("Monsters:", traitMonsters.join("\n"), false);
-                if (traitTalents.length > 0) dqm3Embed.addField("Talents:", traitTalents.join("\n"), false);
+                if (traitMonsters.length > 0) dqm3Embed.addFields([{ name: "Monsters:", value: traitMonsters.join("\n"), inline: false }]);
+                if (traitTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: traitTalents.join("\n"), inline: false }]);
                 break;
             case "item":
                 inputID = interaction.options.getString("item");
@@ -147,7 +149,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 dqm3Embed
                     .setAuthor({ name: itemData.name })
                     .setDescription(itemData.description)
-                    .addField("Type:", itemData.type, true);
+                    .addFields([{ name: "Type:", value: itemData.type, inline: true }]);
                 break;
             case "synthesis":
                 let parent1 = interaction.options.getString("parent1");
@@ -206,8 +208,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     dqm3Embed
                         .setAuthor({ name: "Synthesis" })
                         .setDescription(`${parent1Name} + ${parent2Name} = ${targetName}`);
-                    if (familySynthesisString.length > 0) dqm3Embed.addField("Family Synthesis:", `${familySynthesisString}\n${familySynthesisNote}`, false);
-                    if (uniqueSynthesisString.length > 0) dqm3Embed.addField("Unique Synthesis:", uniqueSynthesisString, false);
+                    if (familySynthesisString.length > 0) dqm3Embed.addFields([{ name: "Family Synthesis:", value: `${familySynthesisString}\n${familySynthesisNote}`, inline: false }]);
+                    if (uniqueSynthesisString.length > 0) dqm3Embed.addFields([{ name: "Unique Synthesis:", value: uniqueSynthesisString, inline: false }]);
                     dqm3Embed.setFooter({ text: "Note: Monsters can always synthesize into their own species." });
                 } else {
                     return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });

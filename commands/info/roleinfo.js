@@ -32,13 +32,15 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setColor(embedColor)
             .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
-            .addField("Role:", role.toString(), true);
-        if (role.hexColor !== defaultColor) roleEmbed.addField("Color:", role.hexColor, true);
+            .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
+        if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
         roleEmbed
-            .addField("Members:", memberCount.toString(), true)
-            .addField("Position:", role.rawPosition.toString(), true)
-            .addField("Properties:", roleProperties, false)
-            .addField("Permissions:", permissionString, false)
+            .addFields([
+                { name: "Members:", value: memberCount.toString(), inline: true },
+                { name: "Position:", value: role.rawPosition.toString(), inline: true },
+                { name: "Properties:", value: roleProperties, inline: false },
+                { name: "Permissions:", value: permissionString, inline: false }
+            ])
             .setFooter({ text: role.id });
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 

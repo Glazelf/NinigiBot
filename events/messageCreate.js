@@ -28,12 +28,11 @@ module.exports = async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `DM Message` })
                 .setThumbnail(avatar)
-                .addField(`Author:`, message.author.username, false)
-            if (message.content) dmEmbed.addField(`Message content:`, message.content, false);
+                .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);
+            if (message.content) dmEmbed.addFields([{ name: `Message content:`, value: message.content, inline: false }]);
             dmEmbed
                 .setImage(messageImage)
                 .setTimestamp();
-
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
 
             return DMChannel.send(dmLogObject);
@@ -46,7 +45,6 @@ module.exports = async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-
                 api_user.addMoney(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {

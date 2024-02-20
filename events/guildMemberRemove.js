@@ -53,14 +53,14 @@ module.exports = async (client, member) => {
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
-                    .addField(`User: `, `${member} (${member.id})`, false);
-                if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, true);
+                    .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }]);
+                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, inline: true }]);
                 leaveEmbed
-                    .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
+                    .addFields([{ name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }])
                     .setFooter({ text: member.user.username });
                 if (kicked == true) {
-                    leaveEmbed.addField(`Reason:`, reasonText, false);
-                    if (executor) leaveEmbed.addField(`Executor:`, `${executor.username} (${executor.id})`, false);
+                    leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
+                    if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);
                 };
                 memberLeaveObject['components'] = [leaveButtons];
             };
@@ -69,7 +69,7 @@ module.exports = async (client, member) => {
 
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

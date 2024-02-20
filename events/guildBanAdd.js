@@ -40,17 +40,18 @@ module.exports = async (client, guildBan) => {
                 .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
-                .addField(`User:`, `${target} (${target.id})`, false)
-                .addField(`Reason:`, reason, false)
-                .addField(`Executor:`, `${executor.username} (${executor.id})`, false)
+                .addFields([
+                    { name: `User:`, value: `${target} (${target.id})`, inline: false },
+                    { name: `Reason:`, value: reason, inline: false },
+                    { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
+                ])
                 .setFooter({ text: target.username })
                 .setTimestamp();
-
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

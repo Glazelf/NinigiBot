@@ -46,13 +46,15 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         const timestampEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: dateString })
-            .addField("Short Time", `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, false)
-            .addField("Long Time", `\`<t:${unixTime}:T>\` ➡ <t:${unixTime}:T>`, false)
-            .addField("Short Date", `\`<t:${unixTime}:d>\` ➡ <t:${unixTime}:d>`, false)
-            .addField("Long Date", `\`<t:${unixTime}:D>\` ➡ <t:${unixTime}:D>`, false)
-            .addField("Short Date/Time", `\`<t:${unixTime}:f>\` ➡ <t:${unixTime}:f>`, false)
-            .addField("Long Date/Time", `\`<t:${unixTime}:F>\` ➡ <t:${unixTime}:F>`, false)
-            .addField("Relative Time", `\`<t:${unixTime}:R>\` ➡ <t:${unixTime}:R>`, false);
+            .addFields([
+                { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },
+                { name: "Long Time", value: `\`<t:${unixTime}:T>\` ➡ <t:${unixTime}:T>`, inline: false },
+                { name: "Short Date", value: `\`<t:${unixTime}:d>\` ➡ <t:${unixTime}:d>`, inline: false },
+                { name: "Long Date", value: `\`<t:${unixTime}:D>\` ➡ <t:${unixTime}:D>`, inline: false },
+                { name: "Short Date/Time", value: `\`<t:${unixTime}:f>\` ➡ <t:${unixTime}:f>`, inline: false },
+                { name: "Long Date/Time", value: `\`<t:${unixTime}:F>\` ➡ <t:${unixTime}:F>`, inline: false },
+                { name: "Relative Time", value: `\`<t:${unixTime}:R>\` ➡ <t:${unixTime}:R>`, inline: false }
+            ]);
         return sendMessage({ client: client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 
     } catch (e) {

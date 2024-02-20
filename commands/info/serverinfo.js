@@ -137,19 +137,21 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
-        serverEmbed
-            .addField("Links:", serverLinks, false)
-            .addField("Owner:", `${guildOwner} (${guildOwner.user.username})`, true);
+        serverEmbed.addFields([
+            { name: "Links:", value: serverLinks, inline: false },
+            { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
+        ]);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
-            if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
+            if (languages[guild.preferredLocale]) serverEmbed.addFields([{ name: "Language:", value: languages[guild.preferredLocale], inline: true }]);
         };
+        serverEmbed.addFields([
+            { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
+            { name: "Stats:", value: statsString, inline: false },
+            { name: "Assets:", value: assetString, inline: false }
+        ]);
+        if (client.shard) serverEmbed.addFields([{ name: "Shard:", value: `${shardNumber}/${ShardUtil.count}`, inline: true }]);
         serverEmbed
-            .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("Stats:", statsString, false)
-            .addField("Assets:", assetString, false);
-        if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
-        serverEmbed
-            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, true)
+            .addFields([{ name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: true }])
             .setFooter({ text: guild.id });
         if (banner) serverEmbed.setImage(banner);
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });

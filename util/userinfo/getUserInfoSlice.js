@@ -82,14 +82,14 @@ module.exports = async (client, interaction, page, user) => {
             let joinRank = await getJoinRank(user, interaction.guild);
             let joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
             let joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
-            profileEmbed.addField("Account:", `${user} ${badgesString}`, true);
-            if (birthday && birthdayParsed && member) profileEmbed.addField("Birthday:", birthdayParsed, true);
-            if (switchCode && switchCode !== 'None' && member) profileEmbed.addField("Switch FC:", switchCode, true);
-            if (joinRank) profileEmbed.addField("Join Ranking:", joinRankText, true);
-            if (memberRoles) profileEmbed.addField(`Roles: (${roleCount})`, rolesSorted, false);
-            profileEmbed.addField("Created:", `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, true);
-            if (member) profileEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, true);
-            if (member && member.premiumSince > 0) profileEmbed.addField(`Boosting Since:`, `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, true);
+            profileEmbed.addFields([{ name: "Account:", value: `${user} ${badgesString}`, inline: true }]);
+            if (birthday && birthdayParsed && member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
+            if (switchCode && switchCode !== 'None' && member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
+            if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
+            if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
+            profileEmbed.addFields([{ name: "Created:", value: `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, inline: true }]);
+            if (member) profileEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, inline: true }]);
+            if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, inline: true }]);
             if (banner) profileEmbed.setImage(banner);
             profileEmbed
                 .setFooter({ text: user.id });
@@ -100,9 +100,10 @@ module.exports = async (client, interaction, page, user) => {
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
             let userBalance = `${dbBalance}${globalVars.currency}`;
-            profileEmbed
-                .addField("Balance:", userBalance, true)
-                .addField("Food:", user_db.food.toString() + ' :poultry_leg:', true);
+            profileEmbed.addFields([
+                { name: "Balance:", value: userBalance, inline: true },
+                { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }
+            ]);
             trophy_level = 0;
             let trophies = await user_db.getShopTrophies();
             trophy_string = '';
@@ -116,9 +117,10 @@ module.exports = async (client, interaction, page, user) => {
             });
             trophy_level += trophies.length;
             if (trophy_string.length > 0) {
-                profileEmbed
-                    .addField("Trophy Level:", trophy_level + ' :beginner:', true)
-                    .addField("Trophies:", trophy_string, true);
+                profileEmbed.addFields([
+                    { name: "Trophy Level:", value: trophy_level + ' :beginner:', inline: true },
+                    { name: "Trophies:", value: trophy_string, inline: true }
+                ]);
             };
             break;
     };

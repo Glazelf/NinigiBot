@@ -23,14 +23,16 @@ module.exports = async (client, member) => {
                 .setAuthor({ name: `Member Joined ❤️`, iconURL: icon })
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
-                .addField(`User: `, `${member} (${member.id})`, false)
-                .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
+                .addFields([
+                    { name: "User:", value: `${member} (${member.id})`, inline: false },
+                    { name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }
+                ])
                 .setFooter({ text: member.user.username })
                 .setTimestamp();
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

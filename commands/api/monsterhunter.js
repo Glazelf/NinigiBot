@@ -46,11 +46,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 mhEmbed
                     .setAuthor({ name: questTitle })
                     .setDescription(`${questData.description} -${questData.client}`)
-                    .addField("Game:", questData.game, true)
-                    .addField("Type:", questData.questType, true)
-                    .addField("Map:", questData.map, true)
-                    .addField("Objective:", questData.objective, true);
-                if (targets.length > 0) mhEmbed.addField("Targets:", targets, true);
+                    .addFields([
+                        { name: "Game:", value: questData.game, inline: true },
+                        { name: "Type:", value: questData.questType, inline: true },
+                        { name: "Map:", value: questData.map, inline: true },
+                        { name: "Objective:", value: questData.objective, inline: true }
+                    ]);
+                if (targets.length > 0) mhEmbed.addFields([{ name: "Targets:", value: targets, inline: true }]);
                 break;
             // All quests from a game
             case "quests":
@@ -80,7 +82,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 questsPaged[currentPage - 1].forEach(quest => {
                     let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
                     if (quest.isKey) questTitle += ` 🔑`;
-                    mhEmbed.addField(`${questTitle}`, `${quest.objective} in ${quest.map}`, false);
+                    mhEmbed.addFields([{ name: `${questTitle}`, value: `${quest.objective} in ${quest.map}`, inline: false }]);
                 });
 
                 let startIndex = currentPage + pageLength * currentPage;

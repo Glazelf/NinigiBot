@@ -28,7 +28,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     let trophyPriceBlock = Discord.codeBlock("diff", `[${trophy.price}]`);
                     let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
                     let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
-
                     switch (trophy.temp_bought) {
                         case 'Bought':
                             trophy_price.value = Discord.codeBlock("yaml", `Bought`);
@@ -39,10 +38,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         case 'CanBuy':
                             break;
                     };
-                    embed
-                        .addField(trophy_header.name, trophy_header.value, trophy_header.inline)
-                        .addField(trophy_price.name, trophy_price.value, trophy_price.inline)
-                        .addField("\u200B", "\u200B", true);
+                    embed.addFields([
+                        { name: trophy_header.name, value: trophy_header.value, inline: trophy_header.inline },
+                        { name: trophy_price.name, value: trophy_price.value, inline: trophy_price.inline },
+                        { name: "\u200B", value: "\u200B", inline: true }
+                    ]);
                 });
                 return sendMessage({
                     client: client,
@@ -116,11 +116,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     embed = new Discord.EmbedBuilder()
                         .setColor(globalVars.embedColor)
                         .setTitle(`${res.trophy_id}`)
-                        .addField("Icon:", `${res.icon}`, true)
-                        .addField("Description:", `${res.description}`, true)
+                        .addFields([
+                            { name: "Icon:", value: `${res.icon}`, inline: true },
+                            { name: "Description:", value: `${res.description}`, inline: true }
+                        ]);
                     let location = `Sometimes found in the Shop.`;
                     if (!isShop) location = res.origin;
-                    embed.addField("Location:", `${location}`, true);
+                    embed.addFields([{ name: "Location:", value: `${location}`, inline: true }]);
                     return sendMessage({
                         client: client,
                         interaction: interaction,

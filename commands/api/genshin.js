@@ -41,28 +41,33 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setThumbnail(characterThumbnail)
                     .setImage(characterBanner)
                     .setDescription(character.description)
-                    .addField("Rarity:", `${character.rarity}⭐`, true)
-                    .addField("Vision:", character.vision, true)
-                    .addField("Weapon:", character.weapon, true);
-                if (character.birthday) giEmbed.addField("Birthday:", characterBirthday, true);
+                    .addFields([
+                        { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
+                        { name: "Vision:", value: character.vision, inline: true },
+                        { name: "Weapon:", value: character.weapon, inline: true }
+                    ]);
+                if (character.birthday) giEmbed.addFields([{ name: "Birthday:", value: characterBirthday, inline: true }]);
                 if (detailed) {
                     // All three of these functions can probably be combined better but whatever
                     // Every (most) characters have 3 active and 3 passive skills and 6 constellations, making 12 fields
                     await character.skillTalents.forEach(skill => {
                         let skillDesc = skill.description.replace("\n\n", "\n");
-                        if (skillDesc.length <= 1024) {
-                            giEmbed.addField(`${skill.name} (Active)`, skillDesc, false);
+                        let descCharacterLimit = 1024;
+                        if (skillDesc.length <= descCharacterLimit) {
+                            giEmbed.addFields([{ name: `${skill.name} (Active)`, value: skillDesc, inline: false }]);
                         } else {
-                            giEmbed.addField(`${skill.name} (Active)`, `${skillDesc.substring(0, 1024)}...`, false);
-                            giEmbed.addField(`${skill.name} (Active) (cont.)`, `...${skillDesc.substring(1024,)}`, false);
+                            giEmbed.addFields([
+                                { name: `${skill.name} (Active)`, value: `${skillDesc.substring(0, descCharacterLimit)}...`, inline: false },
+                                { name: `${skill.name} (Active) (cont.)`, value: `...${skillDesc.substring(descCharacterLimit,)}`, inline: false }
+                            ]);
                         };
                     });
                     await character.passiveTalents.forEach(passive => {
-                        giEmbed.addField(`${passive.name} (Passive)`, `${passive.unlock}\n${passive.description.replace("\n\n", "\n")}`, false);
+                        giEmbed.addFields([{ name: `${passive.name} (Passive)`, value: `${passive.unlock}\n${passive.description.replace("\n\n", "\n")}`, inline: false }]);
 
                     });
                     await character.constellations.forEach(constellation => {
-                        giEmbed.addField(`${constellation.name} (${constellation.unlock})`, constellation.description.replace("\n\n", "\n"), false);
+                        giEmbed.addFields([{ name: `${constellation.name} (${constellation.unlock})`, value: constellation.description.replace("\n\n", "\n"), inline: false }]);
                     });
                 };
                 break;
@@ -77,11 +82,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 giEmbed
                     .setAuthor({ name: weapon.name })
                     .setThumbnail(weaponThumbnail)
-                    .addField("Type:", `${weapon.rarity}⭐ ${weapon.type}`, true)
-                    .addField("Location:", weapon.location, true)
-                    .addField("Base Attack:", `${weapon.baseAttack}`, true);
-                if (weapon.subStat !== "-") giEmbed.addField("Substat:", weapon.subStat, true);
-                if (weapon.passiveName !== "-") giEmbed.addField(`${weapon.passiveName} (Passive)`, weapon.passiveDesc, false);
+                    .addFields([
+                        { name: "Type:", value: `${weapon.rarity}⭐ ${weapon.type}`, inline: true },
+                        { name: "Location:", value: weapon.location, inline: true },
+                        { name: "Base Attack:", value: weapon.baseAttack, inline: true },
+                    ]);
+                if (weapon.subStat !== "-") giEmbed.addFields([{ name: "Substat:", value: weapon.subStat, inline: true }]);
+                if (weapon.passiveName !== "-") giEmbed.addFields([{ name: `${weapon.passiveName} (Passive)`, value: weapon.passiveDesc, inline: false }]);
                 break;
             case "artifact":
                 giAPI += `artifacts/`;
@@ -90,12 +97,12 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let artifact = response.data;
                 giEmbed
                     .setAuthor({ name: artifact.name })
-                    .addField("Max Rarity:", `${artifact.max_rarity}⭐`, true);
-                if (artifact["1-piece_bonus"]) giEmbed.addField("1-Piece Bonus:", artifact["1-piece_bonus"], false);
-                if (artifact["2-piece_bonus"]) giEmbed.addField("2-Piece Bonus:", artifact["2-piece_bonus"], false);
-                if (artifact["3-piece_bonus"]) giEmbed.addField("3-Piece Bonus:", artifact["3-piece_bonus"], false);
-                if (artifact["4-piece_bonus"]) giEmbed.addField("4-Piece Bonus:", artifact["4-piece_bonus"], false);
-                if (artifact["5-piece_bonus"]) giEmbed.addField("5-Piece Bonus:", artifact["5-piece_bonus"], false);
+                    .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
+                if (artifact["1-piece_bonus"]) giEmbed.addFields([{ name: "1-Piece Bonus:", value: artifact["1-piece_bonus"], inline: false }]);
+                if (artifact["2-piece_bonus"]) giEmbed.addFields([{ name: "2-Piece Bonus:", value: artifact["2-piece_bonus"], inline: false }]);
+                if (artifact["3-piece_bonus"]) giEmbed.addFields([{ name: "3-Piece Bonus:", value: artifact["3-piece_bonus"], inline: false }]);
+                if (artifact["4-piece_bonus"]) giEmbed.addFields([{ name: "4-Piece Bonus:", value: artifact["4-piece_bonus"], inline: false }]);
+                if (artifact["5-piece_bonus"]) giEmbed.addFields([{ name: "5-Piece Bonus:", value: artifact["5-piece_bonus"], inline: false }]);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral, components: buttonArray });

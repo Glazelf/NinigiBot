@@ -19,7 +19,6 @@ module.exports = async (client, message, newMessage) => {
         if (!log) return;
 
         let botMember = message.guild.members.me;
-
         // Check message content
         let adminBool = isAdmin(client, botMember);
 
@@ -46,14 +45,12 @@ module.exports = async (client, message, newMessage) => {
                     isReply = false;
                 };
             };
-
             let avatar;
             if (newMessage.member) {
                 avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
                 avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
-
             let updateButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
@@ -61,18 +58,17 @@ module.exports = async (client, message, newMessage) => {
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Edited ⚒️`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);
-            if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
-            updateEmbed.addField(`After:`, newMessageContent, false);
-            if (isReply && replyMessage) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+            if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
+            updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
+            if (isReply && replyMessage) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author}`, inline: false }]);
             updateEmbed
                 .setImage(messageImage)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
-
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

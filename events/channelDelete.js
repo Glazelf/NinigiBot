@@ -35,14 +35,13 @@ module.exports = async (client, channel) => {
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
-                .addField(`Channel:`, `${channel.name} (${channel.id})`)
+                .addFields([{ name: `Channel:`, value: `${channel.name} (${channel.id})`, inline: true }])
                 .setTimestamp();
-            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);
-
+            if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

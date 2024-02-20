@@ -53,10 +53,12 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: `${personaInput} (${personaObject.arcana})` })
                     .setDescription(elementalMatchup)
-                    .addField("Stats:", `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, true)
-                    .addField("Skills:", personaSkills, true)
-                    .addField("Item:", personaItem, false)
-                    .addField("Item (Fusion Alarm):", personaItemAlarm, false)
+                    .addFields([
+                        { name: "Stats:", value: `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, inline: true },
+                        { name: "Skills:", value: personaSkills, inline: true },
+                        { name: "Item:", value: personaItem, inline: false },
+                        { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
+                    ])
                     .setImage(personaImage);
                 break;
             case "skill":
@@ -70,7 +72,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: `${skillInput} (${capitalizeString(skillObject.element)})` })
                     .setDescription(skillObject.effect)
-                    .addField("Personas:", skillPersonas);
+                    .addFields([{ name: "Personas:", value: skillPersonas, inline: false }]);
                 break;
             case "trait":
                 let traitInput = interaction.options.getString("trait");
@@ -80,16 +82,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: traitInput })
                     .setDescription(traitObject.effect)
-                    .addField("Personas:", traitPersonas);
+                    .addFields([{ name: "Personas:", value: traitPersonas, inline: false }]);
                 break;
             case "item":
                 let itemInput = interaction.options.getString("item");
                 let itemObject = itemMapRoyal[itemInput];
                 if (!itemObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
                 if (itemObject.type && itemObject.description) {
-                    p5Embed.addField(itemObject.type, itemObject.description, false);
+                    p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
                 } else if (itemObject.skillCard) {
-                    p5Embed.addField(`Skill Card:`, `Teaches a Persona ${itemInput}.`, false);
+                    p5Embed.addFields([{ name: `Skill Card:`, value: `Teaches a Persona ${itemInput}.`, inline: false }]);
                 };
                 p5Embed.setAuthor({ name: itemInput });
         };

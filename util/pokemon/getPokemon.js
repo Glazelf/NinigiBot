@@ -348,30 +348,28 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
             .setThumbnail(iconThumbnail)
             .setDescription(description)
-            .addField("Type:", typeString, true)
-            .addField("Metrics:", metricsString, true)
-            .addField("Gender:", genderString, true)
-            .addField("Abilities:", abilityString, false);
-        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
-        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
-        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
+            .addFields([
+                { name: "Type:", value: typeString, inline: true },
+                { name: "Metrics:", value: metricsString, inline: true },
+                { name: "Gender:", value: genderString, inline: true },
+                { name: "Abilities:", value: abilityString, inline: false }
+            ]);
+        if (superEffectives.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectives, inline: false }]);
+        if (resistances.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistances, inline: false }]);
+        if (immunities.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunities, inline: false }]);
         pkmEmbed
-            .addField(`Stats: ${statLevels}`, `HP: **${pokemon.baseStats.hp}** ${HPstats}
-Atk: **${pokemon.baseStats.atk}** ${Atkstats}
-Def: **${pokemon.baseStats.def}** ${Defstats}
-SpA: **${pokemon.baseStats.spa}** ${SpAstats}
-SpD: **${pokemon.baseStats.spd}** ${SpDstats}
-Spe: **${pokemon.baseStats.spe}** ${Spestats}
-BST: ${pokemon.bst}`, false)
+            .addFields([
+                { name: `Stats: ${statLevels}`, value: `HP: **${pokemon.baseStats.hp}** ${HPstats}\nAtk: **${pokemon.baseStats.atk}** ${Atkstats}\nDef: **${pokemon.baseStats.def}** ${Defstats}\nSpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}** ${SpDstats}\nSpe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`, inline: false }
+            ]);
         // .setImage(banner)
         if (learnsetBool) {
-            if (levelMovesString.length > 0) pkmEmbed.addField("Levelup Moves:", levelMovesString, false);
-            tmMovesStrings.forEach(tmMovesString => pkmEmbed.addField("TM Moves:", tmMovesString.join(", "), false));
-            if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
-            if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
-            if (specialMovesString.length > 0) pkmEmbed.addField("Special Moves:", specialMovesString, false);
+            if (levelMovesString.length > 0) pkmEmbed.addFields([{ name: "Levelup Moves:", value: levelMovesString, inline: false }]);
+            tmMovesStrings.forEach(tmMovesString => pkmEmbed.addFields([{ name: "TM Moves:", value: tmMovesString.join(", "), inline: false }]));
+            if (eggMovesString.length > 0) pkmEmbed.addFields([{ name: "Egg Moves:", value: eggMovesString, inline: false }]);
+            if (tutorMovesString.length > 0) pkmEmbed.addFields([{ name: "Tutor Moves:", value: tutorMovesString, inline: false }]);
+            if (specialMovesString.length > 0) pkmEmbed.addFields([{ name: "Special Moves:", value: specialMovesString, inline: false }]);
             // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
-            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
+            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
         };
         pkmEmbed
             .setFooter({ text: footerText, iconURL: iconFooter })

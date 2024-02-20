@@ -35,16 +35,15 @@ module.exports = async (client, channel) => {
             const createEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
-                .addField(`Channel:`, `${channel} (${channel.id})`)
+                .addFields([{ name: `Channel:`, value: `${channel} (${channel.id})`, inline: true }])
                 .setFooter({ text: footer })
                 .setTimestamp();
-            if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
-            if (executor) createEmbed.addField('Created by:', `${executor} (${executor.id})`);
-
+            if (channel.parent) createEmbed.addFields([{ name: 'Parent category:', value: channel.parent.name, inline: true }]);
+            if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

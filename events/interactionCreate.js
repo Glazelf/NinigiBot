@@ -490,9 +490,11 @@ module.exports = async (client, interaction) => {
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescribe)
-                            .addField("Reproduce:", bugReportReproduce, false)
-                            .addField("Expected Behaviour:", bugReportBehaviour, false)
-                            .addField("Device Context:", bugReportContext, false)
+                            .addFields([
+                                { name: "Reproduce:", value: bugReportReproduce, inline: false },
+                                { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
+                                { name: "Device Context:", value: bugReportContext, inline: false }
+                            ])
                             .setFooter({ text: interaction.user.username });
 
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });

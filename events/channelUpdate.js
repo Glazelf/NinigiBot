@@ -39,36 +39,40 @@ module.exports = async (client, oldChannel, newChannel) => {
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${newChannelType} Channel Updated ⚒️`, iconURL: icon })
-                .addField(`Channel:`, `${newChannel} (${newChannel.id})`)
+                .addFields([{ name: `Channel:`, value: `${newChannel} (${newChannel.id})`, inline: true }])
                 .setFooter({ text: footer })
                 .setTimestamp();
-
-            if (executor) updateEmbed.addField('Updated by:', `${executor} (${executor.id})`);
+            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: true }]);
             if (oldChannel.name !== newChannel.name) {
-                updateEmbed
-                    .addField(`Old name:`, oldChannel.name)
-                    .addField(`New name:`, newChannel.name);
+                updateEmbed.addFields([
+                    { name: `Old Name:`, value: oldChannel.name, inline: true },
+                    { name: `New Name:`, value: newChannel.name, inline: true }
+                ]);
             } else {
-                updateEmbed.addField('Channel name: ', newChannel.name);
+                updateEmbed.addFields([{ name: 'Channel Name:', value: newChannel.name, inline: true }]);
             };
             if (oldChannel.type !== newChannel.type) {
-                updateEmbed
-                    .addField(`Old type:`, oldChannelType)
-                    .addField(`New type:`, newChannelType);
+                updateEmbed.addFields([
+                    { name: `Old Type:`, value: oldChannelType, inline: true },
+                    { name: `New Type:`, value: newChannelType, inline: true }
+                ]);
             } else if (oldChannel.parentId !== newChannel.parentId) {
-                updateEmbed
-                    .addField(`Old category:`, oldChannel.parent?.name ?? '(None)')
-                    .addField(`New category:`, newChannel.parent?.name ?? '(None)');
+                updateEmbed.addFields([
+                    { name: `Old Category:`, value: oldChannel.parent?.name || '(None)', inline: true },
+                    { name: `New Category:`, value: newChannel.parent?.name || '(None)', inline: true }
+                ]);
             };
             if (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
-                    updateEmbed
-                        .addField(`Old topic:`, oldChannel.topic || '(None)')
-                        .addField(`New topic:`, newChannel.topic || '(None)');
+                    updateEmbed.addFields([
+                        { name: `Old Topic:`, value: oldChannel.topic || '(None)', inline: true },
+                        { name: `New Topic:`, value: newChannel.topic || '(None)', inline: true }
+                    ]);
                 } else if (oldChannel.nsfw !== newChannel.nsfw) {
-                    updateEmbed
-                        .addField(`Old Is NSFW:`, oldChannel.nsfw.toString())
-                        .addField(`New Is NSFW:`, newChannel.nsfw.toString());
+                    updateEmbed.addFields([
+                        { name: `Old Is NSFW:`, value: oldChannel.nsfw.toString(), inline: true },
+                        { name: `New Is NSFW:`, value: newChannel.nsfw.toString(), inline: true }
+                    ]);
                 } else {
                     return;
                 };
@@ -78,23 +82,27 @@ module.exports = async (client, oldChannel, newChannel) => {
                 if (oldChannel.rateLimitPerUser) oldSlowmode = oldChannel.rateLimitPerUser;
                 if (newChannel.rateLimitPerUser) newSlowmode = newChannel.rateLimitPerUser;
                 if (oldSlowmode !== newSlowmode) {
-                    updateEmbed
-                        .addField(`Old slowmode timer:`, `${oldSlowmode} seconds`)
-                        .addField(`New slowmode timer:`, `${newSlowmode} seconds`);
+                    updateEmbed.addFields([
+                        { name: `Old Slowmode Timer:`, value: `${oldSlowmode} seconds`, inline: true },
+                        { name: `New Slowmode Timer:`, value: `${newSlowmode} seconds`, inline: true }
+                    ]);
                 };
             } else if (['GUILD_VOICE', 'GUILD_STAGE_VOICE'].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
-                    updateEmbed
-                        .addField(`Old bitrate:`, `${(oldChannel.bitrate / 1000)}kbps`)
-                        .addField(`New bitrate:`, `${(newChannel.bitrate / 1000)}kbps`);
+                    updateEmbed.addFields([
+                        { name: `Old Bitrate:`, value: `${(oldChannel.bitrate / 1000)}kbps`, inline: true },
+                        { name: `New Bitrate:`, value: `${(newChannel.bitrate / 1000)}kbps`, inline: true }
+                    ]);
                 } else if (oldChannel.userLimit !== newChannel.userLimit) {
-                    updateEmbed
-                        .addField(`Old user limit:`, `${oldChannel.userLimit || 'No limit'}`)
-                        .addField(`New user limit:`, `${newChannel.userLimit || 'No limit'}`);
+                    updateEmbed.addFields([
+                        { name: `Old User Limit:`, value: oldChannel.userLimit || 'None', inline: true },
+                        { name: `New User Limit:`, value: newChannel.userLimit || 'None', inline: true }
+                    ]);
                 } else if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
-                    updateEmbed
-                        .addField(`Old region:`, oldChannel.rtcRegion || 'automatic')
-                        .addField(`New region:`, newChannel.rtcRegion || 'automatic');
+                    updateEmbed.addFields([
+                        { name: `Old Region:`, value: oldChannel.rtcRegion || 'automatic', inline: true },
+                        { name: `New Region:`, value: newChannel.rtcRegion || 'automatic', inline: true }
+                    ]);
                 } else {
                     return;
                 };
@@ -108,7 +116,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

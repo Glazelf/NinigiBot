@@ -37,12 +37,15 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 embed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
-                    .addField("Balance:", user.money.toString(), true)
-                    .addField("Food:", user.food.toString(), true);
+                    .addFields([
+                        { name: "Balance:", value: user.money.toString(), inline: true },
+                        { name: "Food:", value: user.food.toString(), inline: true }
+                    ]);
                 if (trophy_string.length > 0) {
-                    embed
-                        .addField("Trophy Level:", trophy_level + " :beginner", true)
-                        .addField("Trophies:", trophy_string, true);
+                    embed.addFields([
+                        { name: "Trophy Level:", value: trophy_level + " :beginner", inline: true },
+                        { name: "Trophies:", value: trophy_string, inline: true }
+                    ]);
                 };
                 return sendMessage({ client: client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":

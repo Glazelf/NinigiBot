@@ -31,26 +31,27 @@ module.exports = async (client, role) => {
             const permissions = permissionSerializer(role.permissions);
 
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
-
-            // the roleCreated event fires immediately upon clicking the add role button,
+            // The roleCreated event fires immediately upon clicking the add role button,
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
             const createEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
-                .addField(`Role:`, `${role} (${role.id})`)
-                .addField(`Role name:`, role.name)
+                .addFields([
+                    { name: `Role:`, value: `${role} (${role.id})` },
+                    { name: `Role name:`, value: role.name }
+                ])
                 .setTimestamp();
             if (executor) {
                 createEmbed
-                    .addField('Created by:', `${executor} (${executor.id})`)
+                    .addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
                     .setFooter({ text: executor.username });
             };
-            if (permissions.length > 0) createEmbed.addField(`Permissions:`, permissions.join(', '));
+            if (permissions.length > 0) createEmbed.addFields([{ name: `Permissions:`, value: permissions.join(', '), inline: false }]);
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

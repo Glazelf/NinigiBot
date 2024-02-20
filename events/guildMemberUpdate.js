@@ -100,14 +100,12 @@ module.exports = async (client, member, newMember) => {
                 .setAuthor({ name: topText, iconURL: icon })
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed
-                .addField(`User:`, `${user} (${user.id})`);
-            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`);
+            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             updateEmbed
                 .setImage(image)
                 .setFooter({ text: user.username })
                 .setTimestamp();
-
             return log.send({ embeds: [updateEmbed] });
 
             async function deleteBoosterRole() {
@@ -124,7 +122,7 @@ module.exports = async (client, member, newMember) => {
 
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

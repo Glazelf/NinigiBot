@@ -34,13 +34,11 @@ module.exports = async (client, message) => {
             // console.log(e);
             executor = null;
         };
-
         // Get log
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
-
         // Check message content
         let botMember = message.guild.members.me;
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
@@ -54,7 +52,6 @@ module.exports = async (client, message) => {
             let isReply = false;
             let replyMessage
             if (message.reference) isReply = true;
-
             if (isReply) {
                 try {
                     replyMessage = await message.channel.messages.fetch(message.reference.messageId);
@@ -62,29 +59,26 @@ module.exports = async (client, message) => {
                     isReply = false;
                 };
             };
-
             let avatar;
             if (message.member) {
                 avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
                 avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
-
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Deleted ❌`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
-                .addField(`Content:`, messageContent, false);
-            if (isReply && replyMessage && replyMessage.author) deleteEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`);
-            if (executor) deleteEmbed.addField('Executor:', `${executor} (${executor.id})`, true)
+                .addFields([{ name: `Content:`, value: messageContent, inline: false }]);
+            if (isReply && replyMessage && replyMessage.author) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
+            if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
-
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;
