@@ -54,7 +54,7 @@ module.exports = async (client, member, newMember) => {
             try {
                 fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_UPDATE',
+                    type: Discord.AuditLogEvent.MemberUpdate
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;

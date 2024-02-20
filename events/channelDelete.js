@@ -17,7 +17,7 @@ module.exports = async (client, channel) => {
             const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_DELETE',
+                type: Discord.AuditLogEvent.ChannelDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog && deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;

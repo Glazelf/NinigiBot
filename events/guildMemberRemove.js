@@ -30,13 +30,13 @@ module.exports = async (client, member) => {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_KICK',
+                    type: Discord.AuditLogEvent.MemberKick
                 });
                 let kickLog = fetchedLogs.entries.first();
                 // Return if ban exists
                 const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_BAN_ADD',
+                    type: Discord.AuditLogEvent.MemberBanAdd
                 });
                 if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 let banLog = banLogs.entries.first();

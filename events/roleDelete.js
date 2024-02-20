@@ -16,7 +16,7 @@ module.exports = async (client, role) => {
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'ROLE_DELETE',
+                type: Discord.AuditLogEvent.RoleDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog && deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;

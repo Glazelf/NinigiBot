@@ -16,7 +16,7 @@ module.exports = async (client, role) => {
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'ROLE_CREATE',
+                type: Discord.AuditLogEvent.RoleCreate
             });
             let createLog = fetchedLogs.entries.first();
             if (createLog && createLog.createdTimestamp < (Date.now() - 5000)) createLog = null;

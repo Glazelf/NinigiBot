@@ -17,7 +17,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await newChannel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_UPDATE',
+                type: Discord.AuditLogEvent.ChannelUpdate
             });
             let updateLog = fetchedLogs.entries.first();
             if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
@@ -39,10 +39,10 @@ module.exports = async (client, oldChannel, newChannel) => {
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${newChannelType} Channel Updated ⚒️`, iconURL: icon })
-                .addFields([{ name: `Channel:`, value: `${newChannel} (${newChannel.id})`, inline: true }])
+                .addFields([{ name: `Channel:`, value: `${newChannel} (${newChannel.id})`, inline: false }])
                 .setFooter({ text: footer })
                 .setTimestamp();
-            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: true }]);
+            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             if (oldChannel.name !== newChannel.name) {
                 updateEmbed.addFields([
                     { name: `Old Name:`, value: oldChannel.name, inline: true },
@@ -107,7 +107,8 @@ module.exports = async (client, oldChannel, newChannel) => {
                     return;
                 };
             };
-            if (!updateEmbed.fields.some(field => field.name.startsWith('New'))) {
+            console.log(updateEmbed)
+            if (!updateEmbed.data.fields.some(field => field.name.startsWith('New'))) {
                 // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
                 // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
                 return;

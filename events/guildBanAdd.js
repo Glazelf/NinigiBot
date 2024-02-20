@@ -13,7 +13,7 @@ module.exports = async (client, guildBan) => {
 
         const fetchedLogs = await guildBan.guild.fetchAuditLogs({
             limit: 1,
-            type: 'MEMBER_BAN_ADD',
+            type: Discord.AuditLogEvent.MemberBanAdd
         });
 
         let botMember = guildBan.guild.members.me;

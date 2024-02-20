@@ -16,7 +16,6 @@ module.exports = async (client, guild) => {
             // console.log(e);
             return;
         };
-
         const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Joined ⭐`, iconURL: icon })

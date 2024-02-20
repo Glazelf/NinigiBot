@@ -17,7 +17,7 @@ module.exports = async (client, channel) => {
             const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_CREATE',
+                type: Discord.AuditLogEvent.ChannelCreate
             });
             let createLog = fetchedLogs.entries.first();
             if (createLog && createLog.createdTimestamp < (Date.now() - 5000)) createLog = null;

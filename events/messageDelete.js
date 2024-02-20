@@ -17,12 +17,11 @@ module.exports = async (client, message) => {
                 if (starboardMessage) starboardMessage.delete();
             };
         };
-
         let executor = null;
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'MESSAGE_DELETE',
+                type: Discord.AuditLogEvent.MessageDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) {

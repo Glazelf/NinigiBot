@@ -16,7 +16,6 @@ module.exports = async (client, guild) => {
             // console.log(e);
             return;
         };
-
         const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
@@ -28,7 +27,6 @@ module.exports = async (client, guild) => {
             .addFields([{ name: `Users:`, value: guild.memberCount.toString(), inline: false }])
             .setFooter({ text: guild.id })
             .setTimestamp();
-
         return log.send({ embeds: [guildEmbed] });
 
     } catch (e) {

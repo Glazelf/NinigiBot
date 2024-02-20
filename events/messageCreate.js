@@ -37,7 +37,7 @@ module.exports = async (client, message) => {
 
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type == "GUILD_FORUM" && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
+        if (!message.channel.type == Discord.ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
         if (!message.member) return;
 
         let memberRoles = 0;
