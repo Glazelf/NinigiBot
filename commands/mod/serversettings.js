@@ -90,35 +90,14 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     ],
                     reason: `Requested by ${interaction.user.username}.`
                 };
-                // TESTING
-                const { ModEnabledServers } = require('../../database/dbServices/server.api');
-                const isOwner = require('../../util/isOwner');
-                let ownerBool = await isOwner(client, interaction.user);
-                let allGuilds = await client.guilds.fetch();
-                if (ownerBool) {
-                    await allGuilds.forEach(async (guild) => {
-                        let automodServerID = await ModEnabledServers.findOne({ where: { server_id: guild.id } });
-                        if (automodServerID) {
-                            console.log(guild.name);
-                            try {
-                                await interaction.guild.autoModerationRules.create(autoModObject);
-                                console.log(`Added AutoMod rule to ${guild.name}`);
-                            } catch (e) {
-                                console.log(`Failed to add AutoMod rule to ${guild.name}`);
-                            };
-                        };
-                    })
-                    ////
-                } else {
-                    if (interaction.options.getBoolean("advertisement")) autoModObject.triggerMetadata.keywordFilter = advertisementKeywords;
-                    try {
-                        await interaction.guild.autoModerationRules.create(autoModObject);
-                    } catch (e) {
-                        // console.log(e);
-                        return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
-                    }
-                    return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to <#${interaction.channel.id}>.` });
-                };
+                if (interaction.options.getBoolean("advertisement")) autoModObject.triggerMetadata.keywordFilter = advertisementKeywords;
+                try {
+                    await interaction.guild.autoModerationRules.create(autoModObject);
+                } catch (e) {
+                    // console.log(e);
+                    return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
+                }
+                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to <#${interaction.channel.id}>.` });
                 break;
             case "togglepersonalroles":
                 const { PersonalRoleServers } = require('../../database/dbServices/server.api');
@@ -179,7 +158,7 @@ module.exports.config = {
     }, {
         name: "automod",
         type: "SUB_COMMAND",
-        description: "Adds bot's AutoMod rules to this server.",
+        description: "Adds bot's AutoMod rule to this server.",
         options: [{
             name: "channel",
             type: "CHANNEL",
@@ -188,7 +167,7 @@ module.exports.config = {
         }, {
             name: "advertisement",
             type: "BOOLEAN",
-            description: "Enable AutoMod for advertisements."
+            description: "Enable anti-advertisement keywords."
         }]
     }, {
         name: "togglepersonalroles",
