@@ -13,7 +13,7 @@ module.exports = async (client, member) => {
 
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let joinButtons = new Discord.ActionRowBuilder()
@@ -30,7 +30,7 @@ module.exports = async (client, member) => {
                 .setFooter({ text: member.user.username })
                 .setTimestamp();
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

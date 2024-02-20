@@ -5,7 +5,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.KickMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });

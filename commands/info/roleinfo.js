@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const permissionSerializer = require('../../util/permissionBitfieldSerializer');
         let DefaultEmbedColor = globalVars.embedColor;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -23,9 +22,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (role.managed) roleProperties = `${roleProperties}Managed by integration\n`;
         if (roleProperties.length == 0) roleProperties = "None";
         // Permissions
-        const permissions = permissionSerializer(role.permissions);
         let permissionString = "None";
-        if (permissions.length > 0) permissionString = permissions.join(", ");
+        if (role.permissions.toArray().length > 0) permissionString = role.permissions.toArray().join(", ");
         if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
         let roleEmbed = new Discord.EmbedBuilder()

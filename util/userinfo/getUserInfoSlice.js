@@ -59,7 +59,7 @@ module.exports = async (client, interaction, page, user) => {
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
-            if (interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) {
+            if (interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) {
                 try {
                     if (user.bot) badgesArray.push("🤖");
                     let guildOwner = await interaction.guild.fetchOwner();

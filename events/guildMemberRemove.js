@@ -13,10 +13,10 @@ module.exports = async (client, member) => {
 
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-        if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
+        if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             let memberLeaveObject = {};
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
@@ -67,7 +67,7 @@ module.exports = async (client, member) => {
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);
 
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

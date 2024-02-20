@@ -21,7 +21,7 @@ module.exports = async (client, message, newMessage) => {
         // Check message content
         let adminBool = isAdmin(client, botMember);
 
-        if ((log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) || adminBool) {
+        if ((log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) || adminBool) {
             let messageImage = null;
             if (message.attachments.size > 0) messageImage = message.attachments.first().url;
             if (!messageImage && !newMessage.content) return;
@@ -63,7 +63,7 @@ module.exports = async (client, message, newMessage) => {
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

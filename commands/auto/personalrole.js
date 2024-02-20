@@ -6,7 +6,7 @@ exports.run = async (client, interaction, globalVars, logger, ephemeral) => {
         const colorHexes = require('../../objects/colorHexes.json');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
-        let modBool = interaction.member.permissions.has("MANAGE_ROLES");
+        let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 

@@ -13,7 +13,7 @@ module.exports = async (client, oldChannel, newChannel) => {
 
         let botMember = newChannel.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newChannel.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.ChannelUpdate
@@ -113,7 +113,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             };
 
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

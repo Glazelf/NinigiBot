@@ -13,7 +13,7 @@ module.exports = async (client, role) => {
 
         let botMember = role.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.RoleCreate
@@ -26,9 +26,6 @@ module.exports = async (client, role) => {
                 if (target.id !== role.id) return;
                 executor = createExecutor;
             };
-
-            const permissionSerializer = require('../util/permissionBitfieldSerializer');
-            const permissions = permissionSerializer(role.permissions);
 
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
             // The roleCreated event fires immediately upon clicking the add role button,
@@ -46,10 +43,10 @@ module.exports = async (client, role) => {
                     .addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
                     .setFooter({ text: executor.username });
             };
-            if (permissions.length > 0) createEmbed.addFields([{ name: `Permissions:`, value: permissions.join(', '), inline: false }]);
+            if (permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: permissions.toArray().join(', '), inline: false }]);
 
             return log.send({ embeds: [createEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

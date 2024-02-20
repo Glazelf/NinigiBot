@@ -18,7 +18,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
         let description = null;
         // Gender studies

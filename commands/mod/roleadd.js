@@ -6,7 +6,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const isAdmin = require('../../util/isAdmin');
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });

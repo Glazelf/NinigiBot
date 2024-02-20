@@ -4,7 +4,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });

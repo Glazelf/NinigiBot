@@ -5,7 +5,7 @@ exports.run = async (client, interaction, logger) => {
         let ephemeral = true;
         let res, returnString;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         foodArg = interaction.options.getInteger("food");
         const userApi = require('../../database/dbServices/user.api');

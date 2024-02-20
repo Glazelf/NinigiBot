@@ -18,7 +18,7 @@ module.exports = async (client, guildBan) => {
 
         let botMember = guildBan.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             let banLog = fetchedLogs.entries.first();
             if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
@@ -34,7 +34,6 @@ module.exports = async (client, guildBan) => {
 
             let banButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
-
             const banEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
@@ -49,7 +48,7 @@ module.exports = async (client, guildBan) => {
                 .setTimestamp();
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

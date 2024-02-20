@@ -13,7 +13,7 @@ module.exports = async (client, oldRole, newRole) => {
 
         let botMember = newRole.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.RoleUpdate
@@ -53,13 +53,10 @@ module.exports = async (client, oldRole, newRole) => {
                     { name: `New Color:`, value: newRole.hexColor, inline: true }
                 ]);
             } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
-                const permissionSerializer = require('../util/permissionBitfieldSerializer');
-                const oldPermissions = permissionSerializer(oldRole.permissions);
-                const newPermissions = permissionSerializer(newRole.permissions);
                 if (oldPermissions.length > 0 && newPermissions.length > 0) {
                     updateEmbed.addFields([
-                        { name: `Old Permissions:`, value: oldPermissions.join(', '), inline: false },
-                        { name: `New Permissions:`, value: newPermissions.join(', '), inline: false }
+                        { name: `Old Permissions:`, value: oldRole.permissions.toArray().join(', '), inline: false },
+                        { name: `New Permissions:`, value: newRole.permissions.toArray().join(', '), inline: false }
                     ]);
                 };
             } else {
@@ -74,7 +71,7 @@ module.exports = async (client, oldRole, newRole) => {
                     .setImage(newIcon);
             };
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

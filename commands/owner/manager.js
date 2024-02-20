@@ -14,7 +14,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 
         switch (interaction.options.getSubcommand()) {
             case "addshoptrophy":

@@ -15,7 +15,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         // Bools
         let learnsetBool = false;
         let learnsetArg = interaction.options.getBoolean("learnset");

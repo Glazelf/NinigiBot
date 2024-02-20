@@ -7,7 +7,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let adminBool = isAdmin(client, interaction.member);
         const { StarboardChannels } = require('../../database/dbServices/server.api');
         const { StarboardLimits } = require('../../database/dbServices/server.api');
-        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });

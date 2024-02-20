@@ -40,7 +40,7 @@ module.exports = async (client, message) => {
         if (!log) return;
         // Check message content
         let botMember = message.guild.members.me;
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
@@ -75,7 +75,7 @@ module.exports = async (client, message) => {
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

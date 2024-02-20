@@ -10,7 +10,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 
         let userArg = interaction.options.getUser("user");
         if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });

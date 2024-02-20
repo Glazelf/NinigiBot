@@ -13,7 +13,7 @@ module.exports = async (client, channel) => {
 
         let botMember = channel.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.ChannelCreate
@@ -40,7 +40,7 @@ module.exports = async (client, channel) => {
             if (channel.parent) createEmbed.addFields([{ name: 'Parent category:', value: channel.parent.name, inline: true }]);
             if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [createEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

@@ -88,7 +88,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) boosterString = boosterString + nitroEmote;
+        if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
@@ -109,7 +109,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             if ([Discord.ChannelType.GuildVoice, Discord.ChanenlType.GuildText].has(channel.type)) channelCount += 1;
             if (channel.type == Discord.ChannelType.GuildThread) threadCount += 1;
             // Get archived threads?
-            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has("ADMINISTRATOR")) {
+            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has(Discord.PermissionFlagsBits.Administrator)) {
             //     let archivedThreads = await channel.threads.fetchArchived();
             //     threadCount += archivedThreads.threads.entries().length;
             // };
@@ -120,7 +120,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has(Discord.PermissionFlagsBits.ViewGuildInsights) || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
         let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
