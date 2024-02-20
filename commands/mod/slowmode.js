@@ -7,11 +7,11 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let ephemeral = false;
         let slowmodeSupportedChannelTypes = [
-            "GUILD_TEXT",
-            "GUILD_PUBLIC_THREAD",
-            "GUILD_PRIVATE_THREAD",
-            "GUILD_STAGE_VOICE",
-            "GUILD_VOICE"
+            Discord.ChannelType.GuildText,
+            Discord.ChannelType.GuildPublicThread,
+            Discord.ChannelType.GuildPrivateThread,
+            Discord.ChannelType.GuildStageVoice,
+            Discord.ChannelType.GuildVoice
         ];
 
         if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
