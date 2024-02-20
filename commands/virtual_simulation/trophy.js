@@ -24,8 +24,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
-                let trophyPriceBlock = Discord.Formatters.codeBlock("diff", `[${trophy.price}]`);
                 trophies.forEach(trophy => {
+                    let trophyPriceBlock = Discord.Formatters.codeBlock("diff", `[${trophy.price}]`);
                     let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
                     let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
 
