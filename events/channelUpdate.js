@@ -14,7 +14,6 @@ module.exports = async (client, oldChannel, newChannel) => {
         let botMember = newChannel.guild.members.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await newChannel.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.ChannelUpdate
@@ -29,8 +28,8 @@ module.exports = async (client, oldChannel, newChannel) => {
                 };
             };
 
-            const oldChannelType = getChannelTypeName(oldChannel);
-            const newChannelType = getChannelTypeName(newChannel);
+            const oldChannelType = oldChannel.constructor.name;
+            const newChannelType = newChannel.constructor.name;
 
             let footer = newChannel.id;
             if (executor) footer = executor.username;
@@ -62,7 +61,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                     { name: `New Category:`, value: newChannel.parent?.name || '(None)', inline: true }
                 ]);
             };
-            if (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(newChannel.type)) {
+            if ([Discord.ChannelType.GuildText, Discord.ChannelType.GuildNews, Discord.ChannelType.GuildStore].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     updateEmbed.addFields([
                         { name: `Old Topic:`, value: oldChannel.topic || '(None)', inline: true },
@@ -76,7 +75,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                 } else {
                     return;
                 };
-                // these will both be undefined on a GUILD_NEWS channel, since there is no rate limit there, possibly also for GUILD_STORE channels
+                // these will both be undefined on a GuildNews channel, since there is no rate limit there, possibly also for GuildStore channels
                 let oldSlowmode = 0;
                 let newSlowmode = 0;
                 if (oldChannel.rateLimitPerUser) oldSlowmode = oldChannel.rateLimitPerUser;
@@ -87,7 +86,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                         { name: `New Slowmode Timer:`, value: `${newSlowmode} seconds`, inline: true }
                     ]);
                 };
-            } else if (['GUILD_VOICE', 'GUILD_STAGE_VOICE'].includes(newChannel.type)) {
+            } else if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildStageVoice].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
                     updateEmbed.addFields([
                         { name: `Old Bitrate:`, value: `${(oldChannel.bitrate / 1000)}kbps`, inline: true },
@@ -107,7 +106,6 @@ module.exports = async (client, oldChannel, newChannel) => {
                     return;
                 };
             };
-            console.log(updateEmbed)
             if (!updateEmbed.data.fields.some(field => field.name.startsWith('New'))) {
                 // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
                 // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed

@@ -14,7 +14,6 @@ module.exports = async (client, channel) => {
         let botMember = channel.guild.members.me;
 
         if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelTypeName = require('../util/getChannelType');
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
                 type: Discord.AuditLogEvent.ChannelCreate
@@ -28,7 +27,7 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-            const channelType = getChannelTypeName(channel);
+            const channelType = channel.constructor.name;
             let footer = channel.id;
             if (executor) footer = executor.username;
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
