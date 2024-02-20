@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const owoify = require('owoify-js').default;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

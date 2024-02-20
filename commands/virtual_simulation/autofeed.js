@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const shinxApi = require('../../database/dbServices/shinx.api');
 const autofeed_modes = [
     {

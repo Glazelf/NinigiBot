@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 
 // const { Users } = require('../../database/dbServices/server.api');
 // const ShinxBattle = require('../../util/shinx/shinxBattle');
@@ -9,13 +10,11 @@ const shinxApi = require('../../database/dbServices/shinx.api');
 const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
 const api_history = require('../../database/dbServices/history.api');
-
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const Canvas = require('canvas');
         const hp = require('../../util/battle/getHP');
-        const Discord = require("discord.js");
 
         let author = interaction.user;
         let target = interaction.options.getUser("user");

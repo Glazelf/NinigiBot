@@ -1,9 +1,9 @@
+const Discord = require("discord.js");
 const Canvas = require('canvas');
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         const api_shinx = require('../../database/dbServices/shinx.api');
         const api_user = require('../../database/dbServices/user.api');

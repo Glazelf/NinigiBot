@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         const runCommand = require('../../util/runCommand');

@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
         const capitalizeString = require('../../util/capitalizeString');

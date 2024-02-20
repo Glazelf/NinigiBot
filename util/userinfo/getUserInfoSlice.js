@@ -28,7 +28,6 @@ module.exports = async (client, interaction, page, user) => {
     let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            const Discord = require("discord.js");
             const parseDate = require('../../util/parseDate')
             const isAdmin = require('../../util/isAdmin');
             const badgeEmotes = require('../../objects/discord/badgeEmotes.json');

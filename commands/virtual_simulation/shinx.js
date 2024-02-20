@@ -1,9 +1,8 @@
+const Discord = require("discord.js");
 const Canvas = require('canvas');
-
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const shinxApi = require('../../database/dbServices/shinx.api');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
