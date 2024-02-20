@@ -96,7 +96,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     // console.log(e);
                     return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
                 }
-                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to <#${interaction.channel.id}>.` });
+                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
                 break;
             case "togglepersonalroles":
                 const { PersonalRoleServers } = require('../../database/dbServices/server.api');
