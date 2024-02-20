@@ -4,7 +4,6 @@ module.exports = async (client, message, newMessage) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const autoMod = require('../util/autoMod');
         const isAdmin = require('../util/isAdmin');
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
@@ -31,8 +30,6 @@ module.exports = async (client, message, newMessage) => {
             let newMessageContent = newMessage.content
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1021)}...`;
-
-            await autoMod(client, newMessage);
 
             let isReply = false;
             let replyMessage;
