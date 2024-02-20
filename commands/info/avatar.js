@@ -14,7 +14,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             serverAvatar = avatar;
             avatar = null;
         };
-        const avatarEmbed = new Discord.MessageEmbed()
+        const avatarEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
@@ -29,5 +29,5 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: "USER"
+    type: Discord.ApplicationCommandOptionType.User
 };

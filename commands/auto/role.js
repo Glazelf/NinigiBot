@@ -84,7 +84,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            const rolesHelp = new Discord.MessageEmbed()
+            const rolesHelp = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: icon })
                 .setDescription(roleHelpMessage);
@@ -118,12 +118,12 @@ module.exports.config = {
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify the role to toggle.",
         autocomplete: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

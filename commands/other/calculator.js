@@ -41,10 +41,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // let remainder = evaled % 1;
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
-        let output = Discord.Formatters.codeBlock("js", `${rounded} (${calcInput})`);
+        let output = Discord.codeBlock("js", `${rounded} (${calcInput})`);
         if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently [not supported](<https://github.com/Glazelf/NinigiBot/issues/436>).`;
         let returnString = output;
-        if (output.length > maxMessageLength) returnString = Discord.Formatters.codeBlock("js", rounded.toString());
+        if (output.length > maxMessageLength) returnString = Discord.codeBlock("js", rounded.toString());
 
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
@@ -59,12 +59,12 @@ module.exports.config = {
     description: "Calculate.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Input to calculate.",
         required: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the response should be ephemeral."
     }]
 };

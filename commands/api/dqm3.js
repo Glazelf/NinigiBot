@@ -22,7 +22,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let detailedArg = interaction.options.getBoolean("detailed");
         if (detailedArg === true) detailed = true;
 
-        let dqm3Embed = new Discord.MessageEmbed()
+        let dqm3Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "monster":
@@ -227,105 +227,105 @@ module.exports.config = {
     description: `Shows Dragon Quest Monsters 3: The Dark Prince data.`,
     options: [{
         name: "monster",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a monster.",
         options: [{
             name: "monster",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify monster by name.",
             autocomplete: true,
             required: true
         }, {
             name: "detailed",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Show detailed info."
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "talent",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a talent",
         options: [{
             name: "talent",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify talent by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "skill",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a skill.",
         options: [{
             name: "skill",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify skill by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "trait",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a trait.",
         options: [{
             name: "trait",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify trait by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify item by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "synthesis",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Calculate synthesis.",
         options: [{
             name: "parent1",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify parent by name.",
             autocomplete: true
         }, {
             name: "parent2",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify parent by name.",
             autocomplete: true
         }, {
             name: "target",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify target by name.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

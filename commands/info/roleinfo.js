@@ -28,7 +28,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (permissions.length > 0) permissionString = permissions.join(", ");
         if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
-        let roleEmbed = new Discord.MessageEmbed()
+        let roleEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
@@ -53,12 +53,12 @@ module.exports.config = {
     description: "Displays info about a role.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify role.",
         required: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

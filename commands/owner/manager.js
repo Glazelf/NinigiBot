@@ -50,7 +50,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 if (trophy_price < 1) error += 'Price cannot be lower than 1';
 
                 if (error.length > 0) {
-                    let errorBlock = Discord.Formatters.codeBlock(error);
+                    let errorBlock = Discord.codeBlock(error);
                     returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
                 } else {
                     await api_trophy.createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
@@ -87,36 +87,36 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "addshoptrophy",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Owner only, add a custom trophy to the shop.",
         options: [{
             name: "name",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Name of the trophy. Make sure it's unique with less than 25 characters!",
             required: true
         }, {
             name: "emote",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Icon of the trophy. Make sure it's a valid emote.",
             required: true
         }, {
             name: "description",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Description of the trophy",
             required: true
         }, {
             name: "price",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Amount of money to charge for it",
             required: true,
         },]
     }, {
         name: "deleteshoptrophy",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Owner only, delete a trophy from the shop",
         options: [{
             name: "name",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             autocomplete: true,
             description: "Name of the trophy. Make sure it's valid!",
             required: true

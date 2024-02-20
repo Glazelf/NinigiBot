@@ -17,7 +17,7 @@ module.exports = async (client, guild) => {
             return;
         };
 
-        const guildEmbed = new Discord.MessageEmbed()
+        const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
             .setThumbnail(icon)

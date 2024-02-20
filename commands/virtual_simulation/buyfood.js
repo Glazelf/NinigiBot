@@ -24,7 +24,7 @@ module.exports.config = {
     description: "Buy food for Shinx",
     options: [{
         name: "food",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of food you want to buy.",
         required: true,
         minValue: 1

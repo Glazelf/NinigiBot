@@ -24,7 +24,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let shinyArg = interaction.options.getBoolean("shiny");
         if (shinyArg === true) shinyBool = true;
         // Variables
-        let pokemonEmbed = new Discord.MessageEmbed()
+        let pokemonEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.MessageActionRow();
@@ -303,7 +303,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let usageRank = 0;
                 let genericDataSplitPokemon = null;
                 let pokemonDataSplitLine = null;
-                let usageEmbed = new Discord.MessageEmbed()
+                let usageEmbed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor);
                 if (pokemonName) {
                     let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
@@ -402,162 +402,162 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
-    type: "SUB_COMMAND",
+    type: Discord.ApplicationCommandOptionType.Subcommand,
     options: [{
         name: "ability",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an ability.",
         options: [{
             name: "ability",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Ability to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "move",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "nature",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a nature.",
         options: [{
             name: "nature",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Nature to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "format",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a format.",
         options: [{
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "pokemon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "learnset",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether to show the Pokémon's learnset."
         }, {
             name: "shiny",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether to show the Pokémon's shiny sprite."
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "learn",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Check if a Pokémon can learn a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to check availability.",
             autocomplete: true,
             required: true
         }, {
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to check availability.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "usage",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Shows Smogon usage data.",
         options: [{
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get data from.",
             autocomplete: true,
             required: true
         }, {
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get data on.",
             autocomplete: true
         }, {
             name: "month",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Month (number) to get data from.",
             minValue: 1,
             maxValue: 12
         }, {
             name: "year",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Year to get data from.",
             minValue: 2014,
             maxValue: new Date().getFullYear()
         }, {
             name: "rating",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Minimum rating to get data from.",
             autocomplete: true,
             minValue: 1000
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

@@ -94,21 +94,21 @@ module.exports.config = {
     description: "Bans target user.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "User to ban.",
     }, {
         name: "reason",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for ban."
     }, {
         name: "delete-messages-days",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of days to delete messages for.",
         minValue: 0,
         maxValue: 7
     }, {
         name: "user-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Ban user by ID.",
     }]
 };

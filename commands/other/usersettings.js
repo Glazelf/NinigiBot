@@ -55,18 +55,18 @@ module.exports.config = {
     description: "Change user settings.",
     options: [{
         name: "birthday",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Update your birthday.",
         options: [{
             name: "day",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Birth day of the month.",
             required: true,
             minValue: 1,
             maxValue: 31
         }, {
             name: "month",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Birth month of the year.",
             required: true,
             minValue: 1,
@@ -74,20 +74,20 @@ module.exports.config = {
         }]
     }, {
         name: "switch",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Updates your Switch friend code.",
         options: [{
             name: "switch-fc",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Switch friend code. Example: SW-1234-1234-1234."
         }]
     }, {
         name: "ephemeraldefault",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Change ephemeral default.",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "New ephemeral default.",
             required: true
         }]

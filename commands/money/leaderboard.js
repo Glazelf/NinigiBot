@@ -13,7 +13,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (globalArg === true) global = globalArg;
         let icon = null;
         const money_db = await user_api.getUsersRankedByMoney();
-        const leaderboardEmbed = new Discord.MessageEmbed()
+        const leaderboardEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         if (global) {
@@ -57,7 +57,7 @@ module.exports.config = {
     description: "Displays money leaderboard.",
     options: [{
         name: "global",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether to showcase global leaderboard."
     }]
 };

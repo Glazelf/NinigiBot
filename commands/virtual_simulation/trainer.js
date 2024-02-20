@@ -35,7 +35,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 trophy_level += trophies.length;
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
-                embed = new Discord.MessageEmbed()
+                embed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addField("Balance:", user.money.toString(), true)
@@ -62,16 +62,16 @@ module.exports.config = {
     description: "Check your trainer stats.",
     options: [{
         name: "info",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Check your trainer stats!",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "swapsprite",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Swap your trainer sprite between Dawn and Lucas."
     }]
 };

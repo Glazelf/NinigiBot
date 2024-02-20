@@ -36,7 +36,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
         let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup.
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
-        let splat3Embed = new Discord.MessageEmbed()
+        let splat3Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "clothing":
@@ -581,153 +581,153 @@ module.exports.config = {
     description: `Shows Splatoon 3 data.`,
     options: [{
         name: "clothing",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on clothing.",
         options: [{
             name: "clothing",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a piece of clothing by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "weapon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a weapon.",
         options: [{
             name: "weapon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a weapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "subweapon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a subweapon.",
         options: [{
             name: "subweapon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a subweapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "special",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a special weapon.",
         options: [{
             name: "special",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a special weapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "schedule",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get a mode's schedule.",
         options: [{
             name: "mode",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a mode.",
             autocomplete: true,
             required: true
         }, {
             name: "region",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a region. Default is EU.",
             choices: splatoon3Regions
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splatnet",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get SplatNet3 data.",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splatfests",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get all Splatfests data.",
         options: [{
             name: "region",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a region. Default is EU.",
             choices: splatoon3Regions
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "replay",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get a replay.",
         options: [{
             name: "code",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a replay code.",
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splashtag-random",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Generate a random splashtag.",
         options: [{
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

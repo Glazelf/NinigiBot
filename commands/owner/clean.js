@@ -50,7 +50,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "confirm",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Are you sure? This is an irreversible and expensive command."
     }]
 };

@@ -343,7 +343,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
         // Embed building
-        const pkmEmbed = new Discord.MessageEmbed()
+        const pkmEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
             .setThumbnail(iconThumbnail)

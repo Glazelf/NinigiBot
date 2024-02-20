@@ -43,7 +43,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             dictionaries: [names],
             seed: catNameSeed
         });
-        const catEmbed = new Discord.MessageEmbed()
+        const catEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
@@ -60,12 +60,12 @@ module.exports.config = {
     description: "Get a random cat image.",
     options: [{
         name: "text",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Text to put over the image." // Only works with catAAS
     }, {
         //// random.cat is hidden since the api has been disfunctional for months
         //     name: "api",
-        //     type: "STRING",
+        //     type: Discord.ApplicationCommandOptionType.String,
         //     description: "Choose which API you want to use.",
         //     choices: [
         //         { name: "random.cat", value: "randomcat" },
@@ -73,7 +73,7 @@ module.exports.config = {
         //     ]
         // }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

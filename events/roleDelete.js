@@ -32,7 +32,7 @@ module.exports = async (client, role) => {
 
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const deleteEmbed = new Discord.MessageEmbed()
+            const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Deleted ❌`, iconURL: icon })
                 .addField(`Role:`, `${role.name} (${role.id})`)

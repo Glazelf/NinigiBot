@@ -123,54 +123,54 @@ module.exports.config = {
     description: "Change server settings.",
     options: [{
         name: "starboard",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Choose a starboard channel.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "starlimit",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Required amount of stars on a message.",
             minValue: 1
         }, {
             name: "disable",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Disable starboard."
         }]
     }, {
         name: "log",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Choose a channel to log to.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "disable",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Disable logging."
         }]
     }, {
         name: "automod",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Adds bot's AutoMod rule to this server.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "advertisement",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Enable anti-advertisement keywords."
         }]
     }, {
         name: "togglepersonalroles",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Toggle personal roles in this server."
     }]
 };

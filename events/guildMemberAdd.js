@@ -18,7 +18,7 @@ module.exports = async (client, member) => {
             let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let joinButtons = new Discord.MessageActionRow()
                 .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
-            const joinEmbed = new Discord.MessageEmbed()
+            const joinEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Joined ❤️`, iconURL: icon })
                 .setThumbnail(avatar)

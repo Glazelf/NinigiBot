@@ -43,7 +43,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         let dateString = `${currentDate.getUTCDate()} ${targetDate.toLocaleString('default', { month: 'long' })} ${targetDate.getUTCFullYear()} at ${targetDate.getUTCHours()}:${targetDate.getUTCMinutes()} UTC`;
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
-        const timestampEmbed = new Discord.MessageEmbed()
+        const timestampEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: dateString })
             .addField("Short Time", `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, false)
@@ -66,42 +66,42 @@ module.exports.config = {
     description: `Helps you construct timestamps.`,
     options: [{
         name: "year",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify year. Default is current.",
         minValue: 1970
     }, {
         name: "month",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify month. Default is current.",
         minValue: 1,
         maxValue: 12
     }, {
         name: "day",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify day. Default is current.",
         minValue: 1,
         maxValue: 31
     }, {
         name: "hour",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify hour. Default is current.",
         minValue: 0,
         maxValue: 23
     }, {
         name: "minute",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify minute. Default is current.",
         minValue: 0,
         maxValue: 59
     }, {
         name: "timezone",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify timezone difference from UTC. Default is UTC.",
         minValue: -12,
         maxValue: 12
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

@@ -17,7 +17,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
 
         let buttonArray = [];
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -135,26 +135,26 @@ module.exports.config = {
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a specific quest.",
         options: [{
             name: "quest",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify quest by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "quests",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "List all quests from a game.",
         options: [{
             name: "game",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify game by name or abbreviation.",
             required: true,
             choices: [
@@ -168,22 +168,22 @@ module.exports.config = {
             ]
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "monster",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a monster.",
         options: [{
             name: "monster",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify monster by its English name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

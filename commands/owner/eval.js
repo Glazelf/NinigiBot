@@ -15,7 +15,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             evaled = await eval(`async () => {${input}}`)();
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.Formatters.codeBlock(e.stack)}` });
+            return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.codeBlock(e.stack)}` });
         };
         if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
@@ -23,7 +23,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         for (const [key, value] of Object.entries(client.config)) {
             if (evaled.includes(value) && ephemeral == false) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
-        let returnString = Discord.Formatters.codeBlock("js", clean(evaled));
+        let returnString = Discord.codeBlock("js", clean(evaled));
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {
@@ -46,7 +46,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "JS to execute.",
         required: true
     }]

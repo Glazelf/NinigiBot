@@ -63,7 +63,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // Owner
         let owner = "glazelf (232875725898645504)";
 
-        let botEmbed = new Discord.MessageEmbed()
+        let botEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
@@ -107,7 +107,7 @@ module.exports.config = {
     description: `Displays info about this bot.`,
     options: [{
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

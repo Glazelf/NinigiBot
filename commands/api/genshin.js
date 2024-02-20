@@ -13,7 +13,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
         let response;
         let buttonArray = [];
-        let giEmbed = new Discord.MessageEmbed()
+        let giEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "character":
@@ -111,51 +111,51 @@ module.exports.config = {
     description: `Shows Genshin Impact data.`,
     options: [{
         name: "character",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a character.",
         options: [{
             name: "character",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify character by name.",
             autocomplete: true,
             required: true
         }, {
             name: "detailed",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Show detailed info.",
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "weapon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a weapon.",
         options: [{
             name: "weapon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify weapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "artifact",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an artifact.",
         options: [{
             name: "artifact",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify artifact by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

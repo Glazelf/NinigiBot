@@ -44,7 +44,7 @@ module.exports.config = {
     description: "Automatize the feeding process of Shinx",
     options: [{
         name: "mode",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Mode you want to set",
         required: true,
         choices: autofeed_modes

@@ -132,7 +132,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);
@@ -165,7 +165,7 @@ module.exports.config = {
     description: "Displays info about the server.",
     options: [{
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

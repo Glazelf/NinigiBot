@@ -16,7 +16,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let attachment = null;
         if (attachmentArg) attachment = attachmentArg.url;
         let target;
-        let textMessageBlock = Discord.Formatters.codeBlock(textMessage);
+        let textMessageBlock = Discord.codeBlock(textMessage);
         if (userIDArg || channelIDArg) {
             try {
                 if (channelIDArg) target = await client.channels.fetch(channelIDArg);
@@ -53,24 +53,24 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Message text.",
         required: true
     }, {
         name: "user-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify user by ID."
     }, {
         name: "channel-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify channel by ID."
     }, {
         name: "attachment",
-        type: "ATTACHMENT",
+        type: Discord.ApplicationCommandOptionType.Attachment,
         description: "Message attachment."
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };
