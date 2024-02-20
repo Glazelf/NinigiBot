@@ -68,8 +68,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 };
                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
-                let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
+                let rolesSelects = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.SelectMenuBuilder({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
 
                 let returnString = `Choose roles to toggle:`;
                 if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;

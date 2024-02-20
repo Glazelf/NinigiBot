@@ -45,9 +45,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let buttonIndex = 0;
         let rowIndex = 0;
         matrix.forEach(arr => {
-            let buttonRow = new Discord.MessageActionRow();
+            let buttonRow = new Discord.ActionRowBuilder();
             arr.forEach(element => {
-                buttonRow.addComponents(new Discord.MessageButton({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}`, style: Discord.ButtonStyle.Primary, emoji: spoilerEmote }));
+                buttonRow.addComponents(new Discord.ButtonBuilder({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}`, style: Discord.ButtonStyle.Primary, emoji: spoilerEmote }));
                 buttonIndex += 1;
             });
             rowIndex += 1;

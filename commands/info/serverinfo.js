@@ -106,21 +106,21 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
         if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
         await guild.channels.cache.forEach(async channel => {
-            if (channel.isText() || channel.isVoice()) channelCount += 1;
-            if (channel.isThread()) threadCount += 1;
+            if ([Discord.ChannelType.GuildVoice, Discord.ChanenlType.GuildText].has(channel.type)) channelCount += 1;
+            if (channel.type == Discord.ChannelType.GuildThread) threadCount += 1;
             // Get archived threads?
-            // if (channel.threads && channel.isText() && botMember.permissions.has("ADMINISTRATOR")) {
+            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has("ADMINISTRATOR")) {
             //     let archivedThreads = await channel.threads.fetchArchived();
             //     threadCount += archivedThreads.threads.entries().length;
             // };
         });
-        let serverButtons = new Discord.MessageActionRow();
+        let serverButtons = new Discord.ActionRowBuilder();
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
-        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
+        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
         let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added

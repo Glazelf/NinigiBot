@@ -48,8 +48,8 @@ module.exports = async (client, member) => {
                     if (reason) reasonText = reason;
                     embedAuthor = `Member Kicked 💔`;
                 };
-                let leaveButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
+                let leaveButtons = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)

@@ -10,7 +10,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('modMailModal')
             .setTitle('Mod Mail 📧');
 
-        const titleInput = new Discord.TextInputComponent()
+        const titleInput = new Discord.TextInputBuilder()
             .setCustomId('modMailTitle')
             .setLabel("Title your mail!")
             .setPlaceholder("Someone is harassing me in DMs.")
@@ -18,7 +18,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setMinLength(5)
             .setMaxLength(256)
             .setRequired(true);
-        const descriptionInput = new Discord.TextInputComponent()
+        const descriptionInput = new Discord.TextInputBuilder()
             .setCustomId('modMailDescribe')
             .setLabel("Elaborate on your problem.")
             .setPlaceholder("User BigYoshi27#5918 (748199267725869127) is calling me a stinky nerd!")
@@ -26,8 +26,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
-        const actionRow1 = new Discord.MessageActionRow().addComponents(titleInput);
-        const actionRow2 = new Discord.MessageActionRow().addComponents(descriptionInput);
+        const actionRow1 = new Discord.ActionRowBuilder().addComponents(titleInput);
+        const actionRow2 = new Discord.ActionRowBuilder().addComponents(descriptionInput);
 
         modal.addComponents(actionRow1, actionRow2);
         return interaction.showModal(modal);

@@ -21,8 +21,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
 
         // Button
-        let googleButton = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
+        let googleButton = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 

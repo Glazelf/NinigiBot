@@ -292,16 +292,16 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             nextPokemonID += 1;
             nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         };
-        let pkmButtons = new Discord.MessageActionRow();
-        let pkmButtons2 = new Discord.MessageActionRow();
-        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons = new Discord.ActionRowBuilder();
+        let pkmButtons2 = new Discord.ActionRowBuilder();
+        if (previousPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
 
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
-        if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
+        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
+        if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
@@ -309,20 +309,20 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 };
             };
         };
         let formButtonsComponentsCounter = 0;
         let formButtonsObject = {
-            0: new Discord.MessageActionRow(),
-            1: new Discord.MessageActionRow(),
-            2: new Discord.MessageActionRow(),
-            3: new Discord.MessageActionRow(),
-            4: new Discord.MessageActionRow()
+            0: new Discord.ActionRowBuilder(),
+            1: new Discord.ActionRowBuilder(),
+            2: new Discord.ActionRowBuilder(),
+            3: new Discord.ActionRowBuilder(),
+            4: new Discord.ActionRowBuilder()
         };
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Whatever.
@@ -331,7 +331,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             if (pokemonForms.length > 0) {
                 for (let i = 0; i < pokemonForms.length; i++) {
                     if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
-                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i] }));
+                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.ButtonBuilder({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i] }));
                 };
             };
         };
