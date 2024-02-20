@@ -13,6 +13,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;
+        let channelArg = interaction.options.getChannel("channel");
         switch (interaction.options.getSubcommand()) {
             case "starboard":
                 let oldStarboardChannel = await StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
@@ -23,32 +24,28 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 } else {
                     starlimit = globalVars.starboardLimit;
                 };
-                let targetChannel;
-                let channelArg = interaction.options.getChannel("channel");
-                if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
-                if (channelArg) targetChannel = channelArg;
+                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
                 let starlimitArg = interaction.options.getInteger("starlimit");
                 if (starlimitArg) {
                     starlimit = starlimitArg;
                     if (oldStarLimitDB) await oldStarLimitDB.destroy();
                     await StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
                 };
-                if (!targetChannel && !disableBool) return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
                 // Database
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
-                await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: targetChannel.id });
-                return sendMessage({ client: client, interaction: interaction, content: `${targetChannel} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
+                await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
                 break;
             case "log":
                 const { LogChannels } = require('../../database/dbServices/server.api');
                 let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-                let newLogChannel = interaction.options.getChannel("channel");
-                if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
+                let channelArg = interaction.options.getChannel("channel");
+                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
-                await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
-                return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
+                await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
                 break;
             case "automod":
                 let scamKeywords = [
@@ -61,59 +58,67 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     "bit.ly",
                     "twitch.tv"
                 ];
-                let scamAutoModObject = {
-                    name: `Scam Links (${client.user.username})`,
-                    creator: client.user.id,
+                let autoModObject = {
+                    name: `Ninigi AutoMod`,
                     enabled: true,
                     eventType: 1,
                     triggerType: 1,
                     triggerMetadata:
                     {
-                        keyword_filter: scamKeywords
+                        regexPatterns: scamKeywords
                     },
                     actions: [
                         {
                             type: 1,
-                            customMessage: `This message has been deleted because it contains a scam link.\nBy ${client.user.username}.`
+                            metadata: {
+                                customMessage: `Blocked by ${client.user.username} AutoMod rule.`,
+                                channel: channelArg.id
+                            }
                         },
                         {
                             type: 2,
-                            channel: interaction.channel.id
+                            metadata: {
+                                channel: channelArg.id
+                            }
                         },
                         {
                             type: 3,
-                            durationSeconds: 3600 // 1 hour
+                            metadata: {
+                                durationSeconds: 3600 // 1 hour
+                            }
                         }
-                    ]
+                    ],
+                    reason: `Requested by ${interaction.user.username}.`
                 };
-                let advertisementAutoModObject = {
-                    name: `Advertisement (${client.user.username})`,
-                    creator: client.user.id,
-                    enabled: true,
-                    eventType: 1,
-                    triggerType: 1,
-                    triggerMetadata:
-                    {
-                        keyword_filter: advertisementKeywords
-                    },
-                    actions: [
-                        {
-                            type: 1,
-                            customMessage: `This message has been deleted because it contains advertisement.\nBy ${client.user.username}.`
-                        },
-                        {
-                            type: 2,
-                            channel: interaction.channel.id
-                        },
-                        {
-                            type: 3,
-                            durationSeconds: 3600 // 1 hour
-                        }
-                    ]
+                // TESTING
+                const { ModEnabledServers } = require('../../database/dbServices/server.api');
+                const isOwner = require('../../util/isOwner');
+                let ownerBool = await isOwner(client, interaction.user);
+                let allGuilds = await client.guilds.fetch();
+                if (ownerBool) {
+                    await allGuilds.forEach(async (guild) => {
+                        let automodServerID = await ModEnabledServers.findOne({ where: { server_id: guild.id } });
+                        if (automodServerID) {
+                            console.log(guild.name);
+                            try {
+                                await interaction.guild.autoModerationRules.create(autoModObject);
+                                console.log(`Added AutoMod rule to ${guild.name}`);
+                            } catch (e) {
+                                console.log(`Failed to add AutoMod rule to ${guild.name}`);
+                            };
+                        };
+                    })
+                    ////
+                } else {
+                    if (interaction.options.getBoolean("advertisement")) autoModObject.triggerMetadata.keywordFilter = advertisementKeywords;
+                    try {
+                        await interaction.guild.autoModerationRules.create(autoModObject);
+                    } catch (e) {
+                        // console.log(e);
+                        return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
+                    }
+                    return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to <#${interaction.channel.id}>.` });
                 };
-                await interaction.guild.autoModerationRules.create(scamAutoModObject);
-                if (interaction.options.getBoolean("advertisement")) await interaction.guild.autoModerationRules.create(advertisementAutoModObject);
-                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.` });
                 break;
             case "togglepersonalroles":
                 const { PersonalRoleServers } = require('../../database/dbServices/server.api');
@@ -145,7 +150,8 @@ module.exports.config = {
         options: [{
             name: "channel",
             type: "CHANNEL",
-            description: "Specify channel."
+            description: "Specify channel.",
+            required: true
         }, {
             name: "starlimit",
             type: "INTEGER",
@@ -173,8 +179,13 @@ module.exports.config = {
     }, {
         name: "automod",
         type: "SUB_COMMAND",
-        description: "Adds bot's AutoMod rules to this server. Use in AutoMod channel.",
+        description: "Adds bot's AutoMod rules to this server.",
         options: [{
+            name: "channel",
+            type: "CHANNEL",
+            description: "Specify channel.",
+            required: true
+        }, {
             name: "advertisement",
             type: "BOOLEAN",
             description: "Enable AutoMod for advertisements."
