@@ -13,6 +13,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;
+        let channelArg = interaction.options.getChannel("channel");
         switch (interaction.options.getSubcommand()) {
             case "starboard":
                 let oldStarboardChannel = await StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
@@ -23,43 +24,100 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 } else {
                     starlimit = globalVars.starboardLimit;
                 };
-                let targetChannel;
-                let channelArg = interaction.options.getChannel("channel");
-                if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
-                if (channelArg) targetChannel = channelArg;
+                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
                 let starlimitArg = interaction.options.getInteger("starlimit");
                 if (starlimitArg) {
                     starlimit = starlimitArg;
                     if (oldStarLimitDB) await oldStarLimitDB.destroy();
                     await StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
                 };
-                if (!targetChannel && !disableBool) return sendMessage({ client: client, interaction: interaction, content: `That channel does not exist in this server.` });
                 // Database
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
-                await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: targetChannel.id });
-                return sendMessage({ client: client, interaction: interaction, content: `${targetChannel} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
+                await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
                 break;
             case "log":
                 const { LogChannels } = require('../../database/dbServices/server.api');
                 let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-                let newLogChannel = interaction.options.getChannel("channel");
-                if (!Object.keys(textChannelTypes).includes(newLogChannel.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${newLogChannel}'s type (${newLogChannel.type}) of channel. Please select a text channel.` })
+                let channelArg = interaction.options.getChannel("channel");
+                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
-                await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: newLogChannel.id });
-                return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${newLogChannel}.` });
+                await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
                 break;
-            case "togglemod":
+            case "automod":
+                let scamKeywords = [
+                    "http.?:\/\/(dicsord-nitro|discrod-egifts|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)",// Discord gift links
+                    // "http.?:\/\/.*\.ru", // Russian websites, should fix, re-add and enable this for any servers that aren't russian when language is done. Currently matches any URL containing "ru" after a period. Can't seem to replicate this on online regex testers though
+                    "http.?:\/\/gidthub.com"
+                ];
+                let advertisementKeywords = [
+                    "discord.gg",
+                    "bit.ly",
+                    "twitch.tv"
+                ];
+                let autoModObject = {
+                    name: `Ninigi AutoMod`,
+                    enabled: true,
+                    eventType: 1,
+                    triggerType: 1,
+                    triggerMetadata:
+                    {
+                        regexPatterns: scamKeywords
+                    },
+                    actions: [
+                        {
+                            type: 1,
+                            metadata: {
+                                customMessage: `Blocked by ${client.user.username} AutoMod rule.`,
+                                channel: channelArg.id
+                            }
+                        },
+                        {
+                            type: 2,
+                            metadata: {
+                                channel: channelArg.id
+                            }
+                        },
+                        {
+                            type: 3,
+                            metadata: {
+                                durationSeconds: 3600 // 1 hour
+                            }
+                        }
+                    ],
+                    reason: `Requested by ${interaction.user.username}.`
+                };
+                // TESTING
                 const { ModEnabledServers } = require('../../database/dbServices/server.api');
-                let automodServerID = await ModEnabledServers.findOne({ where: { server_id: interaction.guild.id } });
-                // Database
-                if (automodServerID) {
-                    await automodServerID.destroy();
-                    return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will no longer be automatically moderated.` });
+                const isOwner = require('../../util/isOwner');
+                let ownerBool = await isOwner(client, interaction.user);
+                let allGuilds = await client.guilds.fetch();
+                if (ownerBool) {
+                    await allGuilds.forEach(async (guild) => {
+                        let automodServerID = await ModEnabledServers.findOne({ where: { server_id: guild.id } });
+                        if (automodServerID) {
+                            console.log(guild.name);
+                            try {
+                                await interaction.guild.autoModerationRules.create(autoModObject);
+                                console.log(`Added AutoMod rule to ${guild.name}`);
+                            } catch (e) {
+                                console.log(`Failed to add AutoMod rule to ${guild.name}`);
+                            };
+                        };
+                    })
+                    ////
                 } else {
-                    await ModEnabledServers.upsert({ server_id: interaction.guild.id });
-                    return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild.name}** will now be automatically moderated.` });
+                    if (interaction.options.getBoolean("advertisement")) autoModObject.triggerMetadata.keywordFilter = advertisementKeywords;
+                    try {
+                        await interaction.guild.autoModerationRules.create(autoModObject);
+                    } catch (e) {
+                        // console.log(e);
+                        return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
+                    }
+                    return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to <#${interaction.channel.id}>.` });
                 };
                 break;
             case "togglepersonalroles":
@@ -92,7 +150,8 @@ module.exports.config = {
         options: [{
             name: "channel",
             type: "CHANNEL",
-            description: "Specify channel."
+            description: "Specify channel.",
+            required: true
         }, {
             name: "starlimit",
             type: "INTEGER",
@@ -118,9 +177,19 @@ module.exports.config = {
             description: "Disable logging."
         }]
     }, {
-        name: "togglemod",
+        name: "automod",
         type: "SUB_COMMAND",
-        description: "Toggle automated moderation features."
+        description: "Adds bot's AutoMod rules to this server.",
+        options: [{
+            name: "channel",
+            type: "CHANNEL",
+            description: "Specify channel.",
+            required: true
+        }, {
+            name: "advertisement",
+            type: "BOOLEAN",
+            description: "Enable AutoMod for advertisements."
+        }]
     }, {
         name: "togglepersonalroles",
         type: "SUB_COMMAND",
