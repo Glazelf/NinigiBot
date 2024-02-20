@@ -1,10 +1,10 @@
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const Discord = require("discord.js");
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -15,8 +15,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let attachmentArg = interaction.options.getAttachment("attachment");
         let attachment = null;
         if (attachmentArg) attachment = attachmentArg.url;
-
         let target;
+        let textMessageBlock = Discord.Formatters.codeBlock(textMessage);
         if (userIDArg || channelIDArg) {
             try {
                 if (channelIDArg) target = await client.channels.fetch(channelIDArg);
@@ -27,20 +27,18 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         } else {
             return sendMessage({ client: client, interaction: interaction, content: `Please provide a user ID or channel ID.` });
         };
-
         if (!target) return sendMessage({ client: client, interaction: interaction, content: `I could not find a user or channel with that ID.` });
         let targetFormat = null;
         if (channelIDArg) targetFormat = `${target.name} (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
         if (userIDArg) targetFormat = `${target.username} (${target.id})`;
-
         try {
             let messageObject = { content: textMessage };
             if (attachment) messageObject["files"] = [attachment];
             await target.send(messageObject);
-            return sendMessage({ client: client, interaction: interaction, content: `Message sent to ${targetFormat}.` });
+            return sendMessage({ client: client, interaction: interaction, content: `Message sent to ${targetFormat}:${textMessageBlock}`, files: attachment });
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `Failed to message ${targetFormat}` });
+            return sendMessage({ client: client, interaction: interaction, content: `Failed to message ${targetFormat}:${textMessageBlock}`, files: attachment });
         };
 
     } catch (e) {
