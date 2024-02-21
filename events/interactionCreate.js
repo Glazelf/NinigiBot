@@ -325,7 +325,7 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "genshin":
-                        let giAPI = `https://api.genshin.dev/`;
+                        let giAPI = `https://genshin.jmp.blue/`;
                         let giResponse;
                         switch (focusedOption.name) {
                             case "character":
