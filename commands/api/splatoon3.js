@@ -7,10 +7,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "610";
-        // let version = fs.readFileSync("./submodules/splat3/data/mush/latest", "utf8");
-        // let versionJoined = version.split(".").join("");
-        let versionSplit = version.split("").join(".");
+        let version = "latest";
+        let versionLatest = version;
+        if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
+        let versionSplit = versionLatest.split("").join(".");
         if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
         let versionString = `Splatoon 3 v${versionSplit}`;
         const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`);
