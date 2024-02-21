@@ -43,7 +43,7 @@ module.exports = async (client, role) => {
                     .addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
                     .setFooter({ text: executor.username });
             };
-            if (permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: permissions.toArray().join(', '), inline: false }]);
+            if (role.permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: role.permissions.toArray().join(', '), inline: false }]);
 
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
