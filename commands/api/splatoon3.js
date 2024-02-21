@@ -7,15 +7,17 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "6.1.0";
-        let versionJoined = version.split(".").join("");
-        let versionString = `Splatoon 3 v${version}`;
-        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
-        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoHead.json`);
-        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoShoes.json`);
-        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
+        const version = fs.readFileSync("./submodules/splat3/data/mush/latest").toString();
+        // let versionJoined = version.split(".").join("");
+        let versionSplit = version.split("").join(".");
+        if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
+        let versionString = `Splatoon 3 v${versionSplit}`;
+        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`);
+        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`);
+        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`);
+        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`);
+        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
+        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
