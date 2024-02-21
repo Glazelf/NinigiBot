@@ -70,7 +70,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setDescription(githubRepoResponse.data.description)
             .addFields([
                 { name: "Owner:", value: owner, inline: false },
-                { name: "Discord.JS:", value: DiscordJSVersion, inline: true }
+                { name: "Discord.JS:", value: `v${DiscordJSVersion}`, inline: true }
             ]);
         if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
         if (client.shard) botEmbed.addFields([{ name: "Shards:", value: ShardUtil.count.toString(), inline: true }]);
