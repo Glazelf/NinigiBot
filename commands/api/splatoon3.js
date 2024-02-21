@@ -7,8 +7,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        // const version = fs.readFileSync("./submodules/splat3/data/mush/latest").toString();
-        const version = "610";
+        let version = fs.readFileSync("./submodules/splat3/data/mush/latest", "utf8");
         // let versionJoined = version.split(".").join("");
         let versionSplit = version.split("").join(".");
         if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
