@@ -345,17 +345,86 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
-                let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
+                let pointValues = {
+                    vote: { // Popularity
+                        first: 10
+                    },
+                    horagai: { // Conch Shells
+                        first: 10
+                    },
+                    regular: { // Open
+                        first: 15
+                    },
+                    challenge: { // Pro
+                        first: 10
+                    }
+                };
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
                     if (splatfest.title.length < 1) splatfest.title = "Unknown Splatfest (API error)"; // In case no valid name in API return
                     let currentSplatfestPointValues = pointValues;
                     // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
-                    // JUEA-00003 = Spicy|Sweet|Sour
-                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00003").startTime) currentSplatfestPointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 };
+                    // 00003 = Spicy|Sweet|Sour
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00003").startTime) currentSplatfestPointValues = {
+                        vote: {
+                            first: 10
+                        },
+                        horagai: {
+                            first: 8
+                        },
+                        regular: {
+                            first: 12
+                        },
+                        challenge: {
+                            first: 12
+                        },
+                        tricolor: {
+                            first: 15
+                        }
+                    };
                     // Second check is for a minor points change
-                    // JUEA-00005 = Nessie|Aliens|Bigfoot
-                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00005").startTime) currentSplatfestPointValues = { vote: 8, horagai: 7, regular: 12, challenge: 12, tricolor: 18 };
+                    // 00005 = Nessie|Aliens|Bigfoot
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00005").startTime) currentSplatfestPointValues = {
+                        vote: {
+                            first: 8
+                        },
+                        horagai: {
+                            first: 7
+                        },
+                        regular: {
+                            first: 12
+                        },
+                        challenge: {
+                            first: 12
+                        },
+                        tricolor: {
+                            first: 18
+                        }
+                    };
+                    // Bigger points overhaul
+                    // 00014 = next splatfest
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
+                        vote: {
+                            first: 70,
+                            second: 35
+                        },
+                        horagai: {
+                            first: 90,
+                            second: 45
+                        },
+                        regular: {
+                            first: 120,
+                            second: 60
+                        },
+                        challenge: {
+                            first: 120,
+                            second: 60
+                        },
+                        tricolor: {
+                            first: 180,
+                            second: 90
+                        }
+                    };
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
@@ -406,11 +475,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         if (team.result && team.result.isWinner) {
                             splatfestDescription += `**${team.teamName}**`;
                             splatfestResultsTitleTeams += `**${team.teamName}**`;
-                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote;
-                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai;
-                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular;
-                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge;
-                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor;
+                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote.first;
+                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai.first;
+                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular.first;
+                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge.first;
+                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.first;
                             splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
                         } else {
                             splatfestDescription += team.teamName;
@@ -448,8 +517,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                     if (splatfest.teams[0].result) {
                         splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
-                        splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge}p)`;
-                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor}p)`;
+                        splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote.first}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai.first}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular.first}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge.first}p)`;
+                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor.first}p)`;
                         splatfestResultsDescription += `\n${splatfestResultsWinner}`;
                     };
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
