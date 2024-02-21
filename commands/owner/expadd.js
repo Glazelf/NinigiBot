@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -9,7 +10,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let ephemeral = true;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 
         let userArg = interaction.options.getUser("user");
         if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
@@ -29,12 +30,12 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of experience to add.",
         required: true
     }, {
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }]

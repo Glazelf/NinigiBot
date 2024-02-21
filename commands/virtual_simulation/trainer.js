@@ -1,16 +1,15 @@
-
+const Discord = require("discord.js");
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const userApi = require('../../database/dbServices/user.api');
         const shinxApi = require('../../database/dbServices/shinx.api');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let embed;
         let avatar = null;
         let master = interaction.user;
@@ -35,15 +34,18 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 trophy_level += trophies.length;
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
-                embed = new Discord.MessageEmbed()
+                embed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
-                    .addField("Balance:", user.money.toString(), true)
-                    .addField("Food:", user.food.toString(), true);
+                    .addFields([
+                        { name: "Balance:", value: user.money.toString(), inline: true },
+                        { name: "Food:", value: user.food.toString(), inline: true }
+                    ]);
                 if (trophy_string.length > 0) {
-                    embed
-                        .addField("Trophy Level:", trophy_level + " :beginner", true)
-                        .addField("Trophies:", trophy_string, true);
+                    embed.addFields([
+                        { name: "Trophy Level:", value: trophy_level + " :beginner", inline: true },
+                        { name: "Trophies:", value: trophy_string, inline: true }
+                    ]);
                 };
                 return sendMessage({ client: client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":
@@ -62,16 +64,16 @@ module.exports.config = {
     description: "Check your trainer stats.",
     options: [{
         name: "info",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Check your trainer stats!",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "swapsprite",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Swap your trainer sprite between Dawn and Lucas."
     }]
 };

@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -28,12 +29,12 @@ module.exports.config = {
     description: "Give money to another user.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }, {
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Specify amount.",
         required: true
     }]

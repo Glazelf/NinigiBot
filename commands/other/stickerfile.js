@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         let message = await interaction.channel.messages.fetch(interaction.targetId);
 
@@ -31,5 +31,5 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
 module.exports.config = {
     name: "StickerFile",
-    type: "MESSAGE"
+    type: Discord.ApplicationCommandType.Message
 };

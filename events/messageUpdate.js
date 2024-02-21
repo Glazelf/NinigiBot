@@ -4,7 +4,6 @@ module.exports = async (client, message, newMessage) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const autoMod = require('../util/autoMod');
         const isAdmin = require('../util/isAdmin');
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
@@ -19,11 +18,10 @@ module.exports = async (client, message, newMessage) => {
         if (!log) return;
 
         let botMember = message.guild.members.me;
-
         // Check message content
         let adminBool = isAdmin(client, botMember);
 
-        if ((log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) || adminBool) {
+        if ((log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) || adminBool) {
             let messageImage = null;
             if (message.attachments.size > 0) messageImage = message.attachments.first().url;
             if (!messageImage && !newMessage.content) return;
@@ -32,8 +30,6 @@ module.exports = async (client, message, newMessage) => {
             let newMessageContent = newMessage.content
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1021)}...`;
-
-            await autoMod(client, newMessage);
 
             let isReply = false;
             let replyMessage;
@@ -46,33 +42,30 @@ module.exports = async (client, message, newMessage) => {
                     isReply = false;
                 };
             };
-
             let avatar;
             if (newMessage.member) {
                 avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
                 avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
+            let updateButtons = new Discord.ActionRowBuilder()
+                .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
-            let updateButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
-
-            const updateEmbed = new Discord.MessageEmbed()
+            const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Edited ⚒️`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) edited in ${message.channel}.`);
-            if (messageContent.length > 0) updateEmbed.addField(`Before:`, messageContent, false);
-            updateEmbed.addField(`After:`, newMessageContent, false);
-            if (isReply && replyMessage) updateEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+            if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
+            updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
+            if (isReply && replyMessage) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author}`, inline: false }]);
             updateEmbed
                 .setImage(messageImage)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
-
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

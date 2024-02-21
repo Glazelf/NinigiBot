@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -6,7 +7,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let adminBool = isAdmin(client, interaction.member);
         const { StarboardChannels } = require('../../database/dbServices/server.api');
         const { StarboardLimits } = require('../../database/dbServices/server.api');
-        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -123,54 +124,54 @@ module.exports.config = {
     description: "Change server settings.",
     options: [{
         name: "starboard",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Choose a starboard channel.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "starlimit",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Required amount of stars on a message.",
             minValue: 1
         }, {
             name: "disable",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Disable starboard."
         }]
     }, {
         name: "log",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Choose a channel to log to.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "disable",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Disable logging."
         }]
     }, {
         name: "automod",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Adds bot's AutoMod rule to this server.",
         options: [{
             name: "channel",
-            type: "CHANNEL",
+            type: Discord.ApplicationCommandOptionType.Channel,
             description: "Specify channel.",
             required: true
         }, {
             name: "advertisement",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Enable anti-advertisement keywords."
         }]
     }, {
         name: "togglepersonalroles",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Toggle personal roles in this server."
     }]
 };

@@ -13,11 +13,10 @@ module.exports = async (client, channel) => {
 
         let botMember = channel.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelTypeName = require('../util/getChannelType');
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_DELETE',
+                type: Discord.AuditLogEvent.ChannelDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog && deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;
@@ -28,21 +27,20 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-            const channelType = getChannelTypeName(channel);
+            const channelType = channel.constructor.name;
             let footer = channel.id;
             if (executor) footer = executor.username;
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
-            const deleteEmbed = new Discord.MessageEmbed()
+            const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
-                .addField(`Channel:`, `${channel.name} (${channel.id})`)
+                .addFields([{ name: `Channel:`, value: `${channel.name} (${channel.id})`, inline: true }])
                 .setTimestamp();
-            if (executor) deleteEmbed.addField('Deleted by:', `${executor} (${executor.id})`);
-
+            if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

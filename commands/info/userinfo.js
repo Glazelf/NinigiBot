@@ -1,4 +1,4 @@
-
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -14,5 +14,5 @@ exports.run = async (client, interaction, logger) => {
 
 module.exports.config = {
     name: "Userinfo",
-    type: "USER"
+    type: Discord.ApplicationCommandType.User
 };

@@ -18,7 +18,6 @@ module.exports = async (client, messageReaction) => {
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         if (messageReaction.emoji.name !== "⭐") return;
-
         // Call image
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
@@ -29,11 +28,9 @@ module.exports = async (client, messageReaction) => {
         } else {
             avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
         };
-
         let isReply = false;
         let replyMessage;
         if (targetMessage.reference) isReply = true;
-
         if (isReply) {
             try {
                 replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
@@ -41,21 +38,18 @@ module.exports = async (client, messageReaction) => {
                 isReply = false;
             };
         };
-
-        let starButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
-
-        const starEmbed = new Discord.MessageEmbed()
+        let starButtons = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+        const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)
-            .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
-        if (isReply && replyMessage) starEmbed.addField(`Replying to:`, `"${replyMessage.content}"\n-${replyMessage.author}`);
+            .addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
+        if (isReply && replyMessage) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author}`, inline: true }]);
         starEmbed
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
-
         if (messageReaction.count == 0 && messageDB) {
             // Delete
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
@@ -69,7 +63,6 @@ module.exports = async (client, messageReaction) => {
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
-
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {

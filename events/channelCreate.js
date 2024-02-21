@@ -13,11 +13,10 @@ module.exports = async (client, channel) => {
 
         let botMember = channel.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
-            const getChannelTypeName = require('../util/getChannelType');
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await channel.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'CHANNEL_CREATE',
+                type: Discord.AuditLogEvent.ChannelCreate
             });
             let createLog = fetchedLogs.entries.first();
             if (createLog && createLog.createdTimestamp < (Date.now() - 5000)) createLog = null;
@@ -28,23 +27,22 @@ module.exports = async (client, channel) => {
                     executor = createExecutor;
                 };
             };
-            const channelType = getChannelTypeName(channel);
+            const channelType = channel.constructor.name;
             let footer = channel.id;
             if (executor) footer = executor.username;
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
-            const createEmbed = new Discord.MessageEmbed()
+            const createEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Channel Created ⭐`, iconURL: icon })
-                .addField(`Channel:`, `${channel} (${channel.id})`)
+                .addFields([{ name: `Channel:`, value: `${channel} (${channel.id})`, inline: true }])
                 .setFooter({ text: footer })
                 .setTimestamp();
-            if (channel.parent) createEmbed.addField('Parent category:', channel.parent.name);
-            if (executor) createEmbed.addField('Created by:', `${executor} (${executor.id})`);
-
+            if (channel.parent) createEmbed.addFields([{ name: 'Parent category:', value: channel.parent.name, inline: true }]);
+            if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [createEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

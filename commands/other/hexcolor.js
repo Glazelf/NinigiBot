@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -47,12 +48,12 @@ module.exports.config = {
     description: "Sends image from hexadecimal.",
     options: [{
         name: "hex",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Hexadecimal to convert.",
         required: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the response should be ephemeral."
     }]
 };

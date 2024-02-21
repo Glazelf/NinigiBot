@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, globalVars, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -5,7 +6,7 @@ exports.run = async (client, interaction, globalVars, logger, ephemeral) => {
         const colorHexes = require('../../objects/colorHexes.json');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
-        let modBool = interaction.member.permissions.has("MANAGE_ROLES");
+        let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
@@ -151,15 +152,15 @@ module.exports.config = {
     description: "Update your personal role.",
     options: [{
         name: "color-hex",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify a color."
     }, {
         name: "icon",
-        type: "ATTACHMENT",
+        type: Discord.ApplicationCommandOptionType.Attachment,
         description: "Role icon to use. Requires sufficient boosts."
     }, {
         name: "delete",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Delete your personal role."
     }]
 };

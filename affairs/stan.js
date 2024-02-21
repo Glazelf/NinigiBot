@@ -32,14 +32,13 @@ module.exports = async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
-            const gifEmbed = new Discord.MessageEmbed()
+            const gifEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);
-
             channel.send({
                 content: candidateRandom.toString(), embeds: [gifEmbed],
-                //allowedMentions: { parse: ['users'] }
+                // allowedMentions: { parse: ['users'] }
             });
         }, timeZone = timezone, start = true);
 

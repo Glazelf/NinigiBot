@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         let ephemeral = false;
 
@@ -21,8 +21,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
 
         // Button
-        let googleButton = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Google', style: 'LINK', url: googleLink }));
+        let googleButton = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
@@ -36,5 +36,5 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
 module.exports.config = {
     name: "Google",
-    type: "MESSAGE"
+    type: Discord.ApplicationCommandType.Message
 };

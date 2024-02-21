@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isAdmin = require("../../util/isAdmin");
         const { EligibleRoles } = require('../../database/dbServices/server.api');
 
@@ -68,8 +68,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 };
                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
-                let rolesSelects = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageSelectMenu({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
+                let rolesSelects = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.SelectMenuBuilder({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
 
                 let returnString = `Choose roles to toggle:`;
                 if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
@@ -84,7 +84,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            const rolesHelp = new Discord.MessageEmbed()
+            const rolesHelp = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Available roles: `, iconURL: icon })
                 .setDescription(roleHelpMessage);
@@ -118,12 +118,12 @@ module.exports.config = {
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{
         name: "role",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify the role to toggle.",
         autocomplete: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

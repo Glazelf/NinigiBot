@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         const runCommand = require('../../util/runCommand');
@@ -30,7 +30,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         // Return messages then destroy
         let restartString = "Restarting.";
-        let installResultString = Discord.Formatters.codeBlock(installResult.stdout);
+        let installResultString = Discord.codeBlock(installResult.stdout);
         if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
@@ -66,15 +66,15 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "reset-interactions",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Reset all interactions?"
     }, {
         name: "npm-install",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Run npm install command?"
     }, {
         name: "dbinit",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Initialize database?"
     }]
 };

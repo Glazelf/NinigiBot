@@ -32,9 +32,9 @@ module.exports = async (exception, client, interaction = null) => {
             if (interaction.user) user = interaction.user;
         };
 
-        let exceptionCode = Discord.Formatters.codeBlock(exception.stack);
+        let exceptionCode = Discord.codeBlock(exception.stack);
         let messageContentCode = "";
-        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.Formatters.codeBlock(interaction.content);
+        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!

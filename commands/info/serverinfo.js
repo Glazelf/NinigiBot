@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const isAdmin = require('../../util/isAdmin');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
@@ -88,7 +88,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") || adminBot) boosterString = boosterString + nitroEmote;
+        if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
@@ -106,21 +106,21 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
         if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
         await guild.channels.cache.forEach(async channel => {
-            if (channel.isText() || channel.isVoice()) channelCount += 1;
-            if (channel.isThread()) threadCount += 1;
+            if ([Discord.ChannelType.GuildVoice, Discord.ChanenlType.GuildText].has(channel.type)) channelCount += 1;
+            if (channel.type == Discord.ChannelType.GuildThread) threadCount += 1;
             // Get archived threads?
-            // if (channel.threads && channel.isText() && botMember.permissions.has("ADMINISTRATOR")) {
+            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has(Discord.PermissionFlagsBits.Administrator)) {
             //     let archivedThreads = await channel.threads.fetchArchived();
             //     threadCount += archivedThreads.threads.entries().length;
             // };
         });
-        let serverButtons = new Discord.MessageActionRow();
+        let serverButtons = new Discord.ActionRowBuilder();
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
-        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.MessageButton({ label: 'Server Web Page', style: 'LINK', url: guildwebpage }));
+        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has("VIEW_GUILD_INSIGHTS") || adminBool)) serverButtons.addComponents(new Discord.MessageButton({ label: 'Insights', style: 'LINK', url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has(Discord.PermissionFlagsBits.ViewGuildInsights) || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
         let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
@@ -132,24 +132,26 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${guild.name}`, iconURL: icon })
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
-        serverEmbed
-            .addField("Links:", serverLinks, false)
-            .addField("Owner:", `${guildOwner} (${guildOwner.user.username})`, true);
+        serverEmbed.addFields([
+            { name: "Links:", value: serverLinks, inline: false },
+            { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
+        ]);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
-            if (languages[guild.preferredLocale]) serverEmbed.addField("Language:", languages[guild.preferredLocale], true);
+            if (languages[guild.preferredLocale]) serverEmbed.addFields([{ name: "Language:", value: languages[guild.preferredLocale], inline: true }]);
         };
+        serverEmbed.addFields([
+            { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
+            { name: "Stats:", value: statsString, inline: false },
+            { name: "Assets:", value: assetString, inline: false }
+        ]);
+        if (client.shard) serverEmbed.addFields([{ name: "Shard:", value: `${shardNumber}/${ShardUtil.count}`, inline: true }]);
         serverEmbed
-            .addField("Verification Level:", verifLevels[guild.verificationLevel], true)
-            .addField("Stats:", statsString, false)
-            .addField("Assets:", assetString, false);
-        if (client.shard) serverEmbed.addField("Shard:", `${shardNumber}/${ShardUtil.count}`, true);
-        serverEmbed
-            .addField("Created:", `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, true)
+            .addFields([{ name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: true }])
             .setFooter({ text: guild.id });
         if (banner) serverEmbed.setImage(banner);
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
@@ -165,7 +167,7 @@ module.exports.config = {
     description: "Displays info about the server.",
     options: [{
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

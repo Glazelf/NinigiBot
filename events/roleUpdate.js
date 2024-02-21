@@ -13,10 +13,10 @@ module.exports = async (client, oldRole, newRole) => {
 
         let botMember = newRole.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'ROLE_UPDATE',
+                type: Discord.AuditLogEvent.RoleUpdate
             });
             let updateLog = fetchedLogs.entries.first();
             if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
@@ -26,39 +26,38 @@ module.exports = async (client, oldRole, newRole) => {
                 if (target.id !== newRole.id) return;
                 executor = updateExecutor;
             };
-
             // Role color
             let embedColor = newRole.hexColor;
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
 
             let icon = newRole.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const updateEmbed = new Discord.MessageEmbed()
+            const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
-                .addField(`Role:`, `${newRole} (${newRole.id})`)
+                .addFields([{ name: `Role:`, value: `${newRole} (${newRole.id})`, inline: true }])
                 .setTimestamp();
             if (executor) {
                 updateEmbed
-                    .addField('Updated by:', `${executor} (${executor.id})`)
+                    .addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: true }])
                     .setFooter({ text: executor.username });
             };
             if (oldRole.name !== newRole.name) {
-                updateEmbed
-                    .addField(`Old name:`, oldRole.name)
-                    .addField(`New name:`, newRole.name);
+                updateEmbed.addFields([
+                    { name: `Old Name:`, value: oldRole.name, inline: true },
+                    { name: `New Name:`, value: newRole.name, inline: true }
+                ]);
             } else if (oldRole.color !== newRole.color) {
-                updateEmbed
-                    .addField(`Old color:`, oldRole.hexColor)
-                    .addField(`New color:`, newRole.hexColor);
+                updateEmbed.addFields([
+                    { name: `Old Color:`, value: oldRole.hexColor, inline: true },
+                    { name: `New Color:`, value: newRole.hexColor, inline: true }
+                ]);
             } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
-                const permissionSerializer = require('../util/permissionBitfieldSerializer');
-                const oldPermissions = permissionSerializer(oldRole.permissions);
-                const newPermissions = permissionSerializer(newRole.permissions);
-                if (oldPermissions.length > 0 && newPermissions.length > 0) {
-                    updateEmbed
-                        .addField(`Old permissions:`, oldPermissions.join(', '))
-                        .addField(`New permissions:`, newPermissions.join(', '));
+                if (oldRole.permissions.toArray().length > 0 && newRole.permissions.toArray().length > 0) {
+                    updateEmbed.addFields([
+                        { name: `Old Permissions:`, value: oldRole.permissions.toArray().join(', '), inline: false },
+                        { name: `New Permissions:`, value: newRole.permissions.toArray().join(', '), inline: false }
+                    ]);
                 };
             } else {
                 return;
@@ -67,15 +66,14 @@ module.exports = async (client, oldRole, newRole) => {
                 let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
                 let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
                 updateEmbed
-                    .setDescription(`Icon updated.`)
+                    .setDescription(`Icon Updated.`)
                     .setThumbnail(oldIcon)
                     .setImage(newIcon);
             };
-
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;
