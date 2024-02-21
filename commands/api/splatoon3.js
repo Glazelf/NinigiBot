@@ -403,28 +403,28 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                     // Bigger points overhaul
                     // 00014 = next splatfest
-                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
-                        vote: {
-                            first: 70,
-                            second: 35
-                        },
-                        horagai: {
-                            first: 90,
-                            second: 45
-                        },
-                        regular: {
-                            first: 120,
-                            second: 60
-                        },
-                        challenge: {
-                            first: 120,
-                            second: 60
-                        },
-                        tricolor: {
-                            first: 180,
-                            second: 90
-                        }
-                    };
+                    // if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
+                    //     vote: {
+                    //         first: 70,
+                    //         second: 35
+                    //     },
+                    //     horagai: {
+                    //         first: 90,
+                    //         second: 45
+                    //     },
+                    //     regular: {
+                    //         first: 120,
+                    //         second: 60
+                    //     },
+                    //     challenge: {
+                    //         first: 120,
+                    //         second: 60
+                    //     },
+                    //     tricolor: {
+                    //         first: 180,
+                    //         second: 90
+                    //     }
+                    // };
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
