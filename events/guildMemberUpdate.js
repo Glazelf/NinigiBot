@@ -11,7 +11,7 @@ module.exports = async (client, member, newMember) => {
         if (!log) return;
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
