@@ -7,7 +7,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = fs.readFileSync("./submodules/splat3/data/mush/latest", "utf8");
+        let version = "610";
+        // let version = fs.readFileSync("./submodules/splat3/data/mush/latest", "utf8");
         // let versionJoined = version.split(".").join("");
         let versionSplit = version.split("").join(".");
         if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
@@ -136,7 +137,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let subName = languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID];
                 let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
                     .replace("\\n", " ")
-                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`");
+                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`")
+                    .replace("[group=0003 type=0000 params=00 00 80 3f 00 00 00 00]", "`A`");
                 splat3Embed
                     .setAuthor({ name: subName })
                     .setThumbnail(subThumbnail)
