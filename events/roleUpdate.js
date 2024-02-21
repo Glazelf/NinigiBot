@@ -53,7 +53,7 @@ module.exports = async (client, oldRole, newRole) => {
                     { name: `New Color:`, value: newRole.hexColor, inline: true }
                 ]);
             } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
-                if (oldPermissions.length > 0 && newPermissions.length > 0) {
+                if (oldRole.permissions.toArray().length > 0 && newRole.permissions.toArray().length > 0) {
                     updateEmbed.addFields([
                         { name: `Old Permissions:`, value: oldRole.permissions.toArray().join(', '), inline: false },
                         { name: `New Permissions:`, value: newRole.permissions.toArray().join(', '), inline: false }
