@@ -20,7 +20,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
-        let description = null;
+        let description = "";
         // Gender studies
         let pokemonGender = "";
         let genderString = "";
@@ -346,14 +346,14 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const pkmEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
-            .setThumbnail(iconThumbnail)
-            .setDescription(description)
-            .addFields([
-                { name: "Type:", value: typeString, inline: true },
-                { name: "Metrics:", value: metricsString, inline: true },
-                { name: "Gender:", value: genderString, inline: true },
-                { name: "Abilities:", value: abilityString, inline: false }
-            ]);
+            .setThumbnail(iconThumbnail);
+        if (description.length > 0) pkmEmbed.setDescription(description);
+        pkmEmbed.addFields([
+            { name: "Type:", value: typeString, inline: true },
+            { name: "Metrics:", value: metricsString, inline: true },
+            { name: "Gender:", value: genderString, inline: true },
+            { name: "Abilities:", value: abilityString, inline: false }
+        ]);
         if (superEffectives.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectives, inline: false }]);
         if (resistances.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistances, inline: false }]);
         if (immunities.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunities, inline: false }]);
