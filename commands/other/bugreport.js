@@ -3,14 +3,14 @@ exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 
-        const modal = new Discord.Modal()
+        const modal = new Discord.ModalBuilder()
             .setCustomId('bugReportModal')
             .setTitle('Bug Report');
         const titleInput = new Discord.TextInputBuilder()
             .setCustomId('bugReportTitle')
             .setLabel("Title your bug report!")
             .setPlaceholder("I saw a weird bug :(")
-            .setStyle('SHORT')
+            .setStyle(Discord.TextInputStyle.Short)
             .setMinLength(5)
             .setMaxLength(256)
             .setRequired(true);
@@ -18,7 +18,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('bugReportDescribe')
             .setLabel("Describe what went wrong.")
             .setPlaceholder("I saw a spider with 10 legs, I don't think that's normal!")
-            .setStyle('PARAGRAPH')
+            .setStyle(Discord.TextInputStyle.Paragraph)
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
@@ -26,7 +26,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('bugReportReproduce')
             .setLabel("How to reproduce this bug?")
             .setPlaceholder("Go left at the third tree, you should see cobwebs.")
-            .setStyle('PARAGRAPH')
+            .setStyle(Discord.TextInputStyle.Paragraph)
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
@@ -34,7 +34,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('bugReportBehaviour')
             .setLabel("What behaviour did you expect?")
             .setPlaceholder("Spiders should have 8 legs.")
-            .setStyle('PARAGRAPH')
+            .setStyle(Discord.TextInputStyle.Paragraph)
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
@@ -42,7 +42,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('bugReportContext')
             .setLabel("What platform are you using? Beta?")
             .setPlaceholder("Android (Canary)")
-            .setStyle('SHORT')
+            .setStyle(Discord.TextInputStyle.Short)
             .setMinLength(1)
             .setMaxLength(100)
             .setRequired(true);

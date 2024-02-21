@@ -6,15 +6,14 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ client: client, interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
 
-        const modal = new Discord.Modal()
+        const modal = new Discord.ModalBuilder()
             .setCustomId('modMailModal')
             .setTitle('Mod Mail 📧');
-
         const titleInput = new Discord.TextInputBuilder()
             .setCustomId('modMailTitle')
             .setLabel("Title your mail!")
             .setPlaceholder("Someone is harassing me in DMs.")
-            .setStyle('SHORT')
+            .setStyle(Discord.TextInputStyle.Short)
             .setMinLength(5)
             .setMaxLength(256)
             .setRequired(true);
@@ -22,7 +21,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setCustomId('modMailDescribe')
             .setLabel("Elaborate on your problem.")
             .setPlaceholder("User BigYoshi27#5918 (748199267725869127) is calling me a stinky nerd!")
-            .setStyle('PARAGRAPH')
+            .setStyle(Discord.TextInputStyle.Paragraph)
             .setMinLength(10)
             .setMaxLength(1024)
             .setRequired(true);
