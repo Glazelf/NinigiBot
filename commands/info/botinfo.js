@@ -70,16 +70,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setDescription(githubRepoResponse.data.description)
             .addFields([
                 { name: "Owner:", value: owner, inline: false },
-                { name: "Discord.JS:", value: `v${DiscordJSVersion}`, inline: true }
+                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
             ]);
         if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
         if (client.shard) botEmbed.addFields([{ name: "Shards:", value: ShardUtil.count.toString(), inline: true }]);
         botEmbed.addFields([
             { name: "Servers:", value: totalGuilds.toString(), inline: true },
             { name: "Total Users:", value: totalMembers.toString(), inline: true },
-            { name: "Created:", value: `<t:${createdAt}:f>`, inline: true }
+            { name: "Created:", value: `<t:${createdAt}:f>`, inline: true },
+            { name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }
         ]);
-        if (ownerBool) botEmbed.addFields([{ name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }]);
         if (githubRepoResponse) botEmbed.addFields([{ name: "Github Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
         if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
