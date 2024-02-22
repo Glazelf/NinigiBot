@@ -93,7 +93,6 @@ module.exports = async (client, interaction, page, user) => {
             if (banner) profileEmbed.setImage(banner);
             profileEmbed
                 .setFooter({ text: user.id });
-            profileEmbed.aa = user.id;
             break;
         case 1:
             // Balance check
