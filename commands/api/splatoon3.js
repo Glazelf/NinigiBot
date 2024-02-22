@@ -7,7 +7,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "610";
+        let version = "610"; // Use version number without periods. "latest" for latest version.
         let versionLatest = version;
         if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
         let versionSplit = versionLatest.split("").join(".");
