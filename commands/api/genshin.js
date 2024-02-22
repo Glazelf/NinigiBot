@@ -85,7 +85,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .addFields([
                         { name: "Type:", value: `${weapon.rarity}⭐ ${weapon.type}`, inline: true },
                         { name: "Location:", value: weapon.location, inline: true },
-                        { name: "Base Attack:", value: weapon.baseAttack, inline: true },
+                        { name: "Base Attack:", value: weapon.baseAttack.toString(), inline: true },
                     ]);
                 if (weapon.subStat !== "-") giEmbed.addFields([{ name: "Substat:", value: weapon.subStat, inline: true }]);
                 if (weapon.passiveName !== "-") giEmbed.addFields([{ name: `${weapon.passiveName} (Passive)`, value: weapon.passiveDesc, inline: false }]);
