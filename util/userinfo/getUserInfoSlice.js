@@ -91,8 +91,7 @@ module.exports = async (client, interaction, page, user) => {
             if (member) profileEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, inline: true }]);
             if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, inline: true }]);
             if (banner) profileEmbed.setImage(banner);
-            profileEmbed
-                .setFooter({ text: user.id });
+            profileEmbed.setFooter({ text: user.id });
             break;
         case 1:
             // Balance check
