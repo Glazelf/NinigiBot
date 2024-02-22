@@ -360,13 +360,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
         };
         // Bulbapedia button
-        if (linkBulbapedia) {
-            pokemonButtons
-                .addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
-        };
-        // Send function for all except default
-        if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
-        return;
+        if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
+        return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
 
         function getLearnData(learnData) {
             let learnInfo = "";
