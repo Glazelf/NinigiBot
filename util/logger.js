@@ -40,6 +40,8 @@ module.exports = async (exception, client, interaction = null) => {
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
 User: **${user.username}** (${user.id})
 Message Link: ${interaction.url}
+Channel: **${interaction.channel.name}** (${interaction.channel.id})
+Guild: **${interaction.guild.name}** (${interaction.guild.id})
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}
 Command Name: ${interaction.commandName}
