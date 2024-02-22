@@ -3,12 +3,14 @@ module.exports = async (exception, client, interaction = null) => {
     // Import globals
     let globalVars = require('../events/ready');
     try {
+        const util = require('util');
         const Discord = require("discord.js");
         const getTime = require('./getTime');
         const sendMessage = require('./sendMessage');
         let timestamp = await getTime(client);
 
         let exceptionString = exception.toString();
+        let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
@@ -25,14 +27,12 @@ module.exports = async (exception, client, interaction = null) => {
             console.log(`${timestamp}: Error occurred`);
             console.log(exception);
         };
-
         let user;
         if (interaction) {
             if (interaction.member) user = interaction.author;
             if (interaction.user) user = interaction.user;
         };
-
-        let exceptionCode = Discord.codeBlock(exception.stack);
+        let exceptionCode = Discord.codeBlock(errorInspectResult); // Used to be error.stack
         let messageContentCode = "";
         if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
         // log to dev channel
@@ -40,8 +40,8 @@ module.exports = async (exception, client, interaction = null) => {
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
 User: **${user.username}** (${user.id})
 Message Link: ${interaction.url}
-Channel: **${interaction.channel.name}** (${interaction.channel.id})
 Guild: **${interaction.guild.name}** (${interaction.guild.id})
+Channel: **${interaction.channel.name}** (${interaction.channel.id})
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}
 Command Name: ${interaction.commandName}
@@ -49,7 +49,7 @@ Custom ID: ${interaction.customId}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1997) + `...`;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1994) + `\`\`\`...`;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(client.config.devChannelID);
         if (interaction) {
