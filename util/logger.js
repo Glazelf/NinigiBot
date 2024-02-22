@@ -32,7 +32,7 @@ module.exports = async (exception, client, interaction = null) => {
             if (interaction.member) user = interaction.author;
             if (interaction.user) user = interaction.user;
         };
-        let exceptionCode = Discord.codeBlock(errorInspectResult); // Used to be error.stack
+        let exceptionCode = Discord.codeBlock(errorInspectResult); // Used to be exception.stack
         let messageContentCode = "";
         if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
         // log to dev channel
