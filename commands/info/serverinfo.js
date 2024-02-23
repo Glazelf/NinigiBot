@@ -106,7 +106,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
         if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
         await guild.channels.cache.forEach(async channel => {
-            if ([Discord.ChannelType.GuildVoice, Discord.ChanenlType.GuildText].has(channel.type)) channelCount += 1;
+            if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildText].includes(channel.type)) channelCount += 1;
             if (channel.type == Discord.ChannelType.GuildThread) threadCount += 1;
             // Get archived threads?
             // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has(Discord.PermissionFlagsBits.Administrator)) {
