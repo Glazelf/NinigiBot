@@ -29,7 +29,7 @@ module.exports = async (client, message) => {
                 .setAuthor({ name: `DM Message` })
                 .setThumbnail(avatar)
                 .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);
-            if (message.content) dmEmbed.addFields([{ name: `Message content:`, value: message.content, inline: false }]);
+            if (message.content) dmEmbed.addFields([{ name: `Message Content:`, value: message.content, inline: false }]);
             dmEmbed
                 .setImage(messageImage)
                 .setTimestamp();
