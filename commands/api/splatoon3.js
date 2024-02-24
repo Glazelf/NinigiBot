@@ -607,13 +607,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom3 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
+                let discriminatorRandom = randomNumber(1000, 9999);
 
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${githubRaw}images/badge/${badgeRandom}` })
                     .setTitle(userTitle)
                     .setThumbnail(`${githubRaw}images/badge/${badgeRandom2}`)
                     .setImage(`${githubRaw}images/npl/${bannerRandom}`)
-                    .setFooter({ iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
+                    .setFooter({ text: discriminatorRandom.toString(), iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
