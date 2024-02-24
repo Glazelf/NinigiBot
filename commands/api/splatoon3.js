@@ -104,6 +104,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
                 let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
                 if (levelString.includes("[")) levelString = levelString.split(" ")[0];
+                let weaponUnlockString = `${levelString} ${weaponObject.ShopUnlockRank}+`.replace("-", "");
                 let subImage = `${githubRaw}images/subspe/Wsb_${subID}00.png`;
                 let specialImage = `${githubRaw}images/subspe/Wsp_${specialID}00.png`;
                 let weaponImage = `${githubRaw}images/weapon/Wst_${inputID}.png`;
@@ -113,7 +114,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .addFields([
                         { name: subTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], inline: true },
                         { name: specialTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], inline: true },
-                        { name: shopTitle, value: `${levelString} ${weaponObject.ShopUnlockRank}+`, inline: true },
+                        { name: shopTitle, value: weaponUnlockString, inline: true },
                         { name: infoTitle, value: weaponStats, inline: false }
                     ])
                     .setImage(weaponImage)
