@@ -3,16 +3,14 @@ let botjsFunction = async function botjsFunction() {
     const Enmap = require("enmap");
     const fs = require("fs");
     const path = require("path");
-
     // all except guild presence
-    // privileged: guild_messages, guild_members
-    const intents = [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.GuildBans, Discord.GatewayIntentBits.GuildEmojisAndStickers, Discord.GatewayIntentBits.GuildIntegrations, Discord.GatewayIntentBits.GuildVoiceStates, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMessageReactions, Discord.GatewayIntentBits.DirectMessages];
-    // All intents
-    // intents.add('GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INTEGRATIONS', 'GUILD_WEBHOOKS', 'GUILD_INVITES', 'GUILD_VOICE_STATES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'GUILD_MESSAGE_TYPING', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_TYPING');
+    // privileged: MessageContent, GuildMembers
+    const intents = [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.GuildBans, Discord.GatewayIntentBits.GuildEmojisAndStickers, Discord.GatewayIntentBits.GuildIntegrations, Discord.GatewayIntentBits.GuildVoiceStates, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMessageReactions, Discord.GatewayIntentBits.DirectMessages, Discord.GatewayIntentBits.MessageContent];
+    const partials = [Discord.Partials.Channel, Discord.Partials.GuildMember, Discord.Partials.Message, Discord.Partials.Reaction, Discord.Partials.User];
 
     const client = new Discord.Client({
         intents: intents,
-        partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'],
+        partials: partials,
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
     });
     const config = require("./config.json");
@@ -45,7 +43,6 @@ let botjsFunction = async function botjsFunction() {
     async function walk(dir, callback) {
         fs.readdir(dir, function (err, files) {
             if (err) throw err;
-
             files.forEach(function (file) {
                 let filepath = path.join(dir, file);
                 fs.stat(filepath, function (err, stats) {
