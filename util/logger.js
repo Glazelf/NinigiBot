@@ -35,6 +35,16 @@ module.exports = async (exception, client, interaction = null) => {
         let exceptionCode = Discord.codeBlock(errorInspectResult); // Used to be exception.stack
         let messageContentCode = "";
         if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
+        let interactionOptions = "\n";
+        let subCommand = "";
+        if (interaction.options) {
+            subCommand = interaction.options._subcommand; // Using .getSubcommand() fails on user/message commands
+            if (interaction.options._hoistedOptions) { // Doesn't seem to be a cleaner way to access all options at once
+                interaction.options._hoistedOptions.forEach(option => {
+                    interactionOptions += `- \`${option.name}\`: ${option.value}\n`;
+                });
+            };
+        };
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
@@ -44,8 +54,9 @@ Guild: **${interaction.guild.name}** (${interaction.guild.id})
 Channel: **${interaction.channel.name}** (${interaction.channel.id})
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}
-Command Name: ${interaction.commandName}
-Custom ID: ${interaction.customId}
+Command: ${interaction.commandName} (${interaction.customId})
+Subcommand: ${subCommand}
+Options: ${interactionOptions}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
