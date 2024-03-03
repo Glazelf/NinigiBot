@@ -241,9 +241,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                     if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
-                pokemonEmbed
-                    .setAuthor({ name: learnAuthor })
-                    .setDescription(learnInfo);
+                pokemonEmbed.setAuthor({ name: learnAuthor });
+                    if(learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
                 return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: ephemeral });
                 break;
             case "usage":
