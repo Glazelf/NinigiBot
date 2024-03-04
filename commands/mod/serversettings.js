@@ -15,6 +15,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;
         let channelArg = interaction.options.getChannel("channel");
+        let textChannelInvalid = `No text can be sent to ${channelArg}'s type (${Discord.ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
         switch (interaction.options.getSubcommand()) {
             case "starboard":
                 let oldStarboardChannel = await StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
@@ -25,7 +26,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 } else {
                     starlimit = globalVars.starboardLimit;
                 };
-                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
+                if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 let starlimitArg = interaction.options.getInteger("starlimit");
                 if (starlimitArg) {
                     starlimit = starlimitArg;
@@ -41,7 +42,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             case "log":
                 const { LogChannels } = require('../../database/dbServices/server.api');
                 let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-                if (!Object.keys(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: `No text can be sent to ${channelArg}'s type (${channelArg.type}) of channel. Please select a text channel.` })
+                if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
                 await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
