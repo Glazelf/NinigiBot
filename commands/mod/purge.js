@@ -51,6 +51,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     });
                 return;
             } catch (e) {
+                // Required permissions: ManageMessages, ManageGuild
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
