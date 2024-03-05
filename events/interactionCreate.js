@@ -290,20 +290,23 @@ module.exports = async (client, interaction) => {
                                 let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
                                 let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
                                 for await (const [key, value] of Object.entries(allClothesHead)) {
-                                    if (!key.endsWith("-Head")) {
-                                        allClothesHead[`${key}-Head`] = allClothesHead[key];
+                                    let clothesHeadEndString = "-Head";
+                                    if (!key.endsWith(clothesHeadEndString)) {
+                                        allClothesHead[`${key}${clothesHeadEndString}`] = allClothesHead[key];
                                         delete allClothesHead[key];
                                     };
                                 };
                                 for await (const [key, value] of Object.entries(allClothesBody)) {
-                                    if (!key.endsWith("-Body")) {
-                                        allClothesBody[`${key}-Body`] = allClothesBody[key];
+                                    let clothesBodyEndString = "-Body";
+                                    if (!key.endsWith(clothesBodyEndString)) {
+                                        allClothesBody[`${key}${clothesBodyEndString}`] = allClothesBody[key];
                                         delete allClothesHead[key];
                                     };
                                 };
                                 for await (const [key, value] of Object.entries(allClothesShoes)) {
-                                    if (!key.endsWith("-Shoes")) {
-                                        allClothesShoes[`${key}-Shoes`] = allClothesShoes[key];
+                                    let clothesShoesEndString = "-Shoes";
+                                    if (!key.endsWith(clothesShoesEndString)) {
+                                        allClothesShoes[`${key}${clothesShoesEndString}`] = allClothesShoes[key];
                                         delete allClothesShoes[key];
                                     };
                                 };
