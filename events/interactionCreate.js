@@ -312,7 +312,6 @@ module.exports = async (client, interaction) => {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         !key.startsWith("COP00")) choices.push({ name: value, value: key });
                                 };
-                                console.log(choices)
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
