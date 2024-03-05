@@ -37,7 +37,7 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `${newChannelType} Channel Updated ⚒️`, iconURL: icon })
+                .setAuthor({ name: `${newChannelType} Updated ⚒️`, iconURL: icon })
                 .addFields([{ name: `Channel:`, value: `${newChannel} (${newChannel.id})`, inline: false }])
                 .setFooter({ text: footer })
                 .setTimestamp();

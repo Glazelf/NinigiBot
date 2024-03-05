@@ -33,7 +33,7 @@ module.exports = async (client, channel) => {
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `${channelType} Channel Deleted ❌`, iconURL: icon })
+                .setAuthor({ name: `${channelType} Deleted ❌`, iconURL: icon })
                 .addFields([{ name: `Channel:`, value: `${channel.name} (${channel.id})`, inline: true }])
                 .setTimestamp();
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
