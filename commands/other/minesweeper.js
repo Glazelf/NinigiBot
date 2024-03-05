@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const Minesweeper = require('discord.js-minesweeper');
 
         let correctionString = "";
@@ -45,9 +45,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let buttonIndex = 0;
         let rowIndex = 0;
         matrix.forEach(arr => {
-            let buttonRow = new Discord.MessageActionRow();
+            let buttonRow = new Discord.ActionRowBuilder();
             arr.forEach(element => {
-                buttonRow.addComponents(new Discord.MessageButton({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}`, style: 'PRIMARY', emoji: spoilerEmote }));
+                buttonRow.addComponents(new Discord.ButtonBuilder({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}`, style: Discord.ButtonStyle.Primary, emoji: spoilerEmote }));
                 buttonIndex += 1;
             });
             rowIndex += 1;
@@ -70,18 +70,18 @@ module.exports.config = {
     description: "Play minesweeper.",
     options: [{
         name: "mines",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of mines.",
         minValue: 1
     }, {
         name: "rows",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of rows.",
         minValue: 2,
         maxValue: 5
     }, {
         name: "columns",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of columns.",
         minValue: 2,
         maxValue: 5

@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -53,7 +54,7 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "remove-interactions",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Remove all interactions?"
     }]
 };

@@ -1,21 +1,24 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const fs = require("fs");
         const path = require("path");
         const axios = require("axios");
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "6.1.0";
-        let versionJoined = version.split(".").join("");
-        let versionString = `Splatoon 3 v${version}`;
-        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoClothes.json`);
-        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoHead.json`);
-        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/GearInfoShoes.json`);
-        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${versionJoined}/WeaponInfoSub.json`);
+        let version = "latest"; // Use version number without periods. "latest" for latest version.
+        let versionLatest = version;
+        if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
+        let versionSplit = versionLatest.split("").join(".");
+        if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
+        let versionString = `Splatoon 3 v${versionSplit}`;
+        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`);
+        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`);
+        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`);
+        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`);
+        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
+        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -36,7 +39,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
         let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup.
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
-        let splat3Embed = new Discord.MessageEmbed()
+        let splat3Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "clothing":
@@ -66,10 +69,12 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
                     .setThumbnail(abilityImage)
-                    .addField(abilityTitle, `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, true)
-                    .addField(slotsTitle, (clothingObject.Rarity + 1).toString(), true)
-                    .addField(brandTitle, languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], true)
-                    .addField("Obtain Method:", ObtainMethod, true)
+                    .addFields([
+                        { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
+                        { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
+                        { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
+                        { name: "Obtain Method:", value: ObtainMethod, inline: true }
+                    ])
                     .setImage(clothingImage)
                     .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
                 break;
@@ -99,16 +104,19 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let infoTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["L_GuideBtn_01-T_Info_00"]}:`;
                 let levelString = `${languageJSON["CommonMsg/UnitName"]["WeaponUnlockRank"]}`;
                 if (levelString.includes("[")) levelString = levelString.split(" ")[0];
+                let weaponUnlockString = `${levelString} ${weaponObject.ShopUnlockRank}+`.replace("-", "");
                 let subImage = `${githubRaw}images/subspe/Wsb_${subID}00.png`;
                 let specialImage = `${githubRaw}images/subspe/Wsp_${specialID}00.png`;
                 let weaponImage = `${githubRaw}images/weapon/Wst_${inputID}.png`;
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
-                    .addField(subTitle, languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], true)
-                    .addField(specialTitle, languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], true)
-                    .addField(shopTitle, `${levelString} ${weaponObject.ShopUnlockRank}+`, true)
-                    .addField(infoTitle, weaponStats, false)
+                    .addFields([
+                        { name: subTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], inline: true },
+                        { name: specialTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], inline: true },
+                        { name: shopTitle, value: weaponUnlockString, inline: true },
+                        { name: infoTitle, value: weaponStats, inline: false }
+                    ])
                     .setImage(weaponImage)
                     .setFooter({ text: versionString });
                 break;
@@ -130,12 +138,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let subName = languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID];
                 let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
                     .replace("\\n", " ")
-                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`");
+                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`")
+                    .replace("[group=0003 type=0000 params=00 00 80 3f 00 00 00 00]", "`A`");
                 splat3Embed
                     .setAuthor({ name: subName })
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
-                    .addField(weaponListTitle, allSubweaponMatchesNames, false)
+                    .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }])
                     .setFooter({ text: versionString });
                 break;
             case "special":
@@ -161,7 +170,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setAuthor({ name: specialName })
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
-                    .addField(weaponListTitle, allSpecialWeaponMatchesNames, false)
+                    .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
                     .setFooter({ text: versionString });
                 break;
             case "schedule":
@@ -247,7 +256,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         await entry.setting.weapons.forEach(weapon => {
                             weaponString += `- ${weapon.name}\n`;
                         });
-                        splat3Embed.addField(`${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, weaponString, true);
+                        splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, value: weaponString, inline: true }]);
                     });
                     if (currentSalmonRunEvent && Date.now() >= Date.parse(currentSalmonRunEvent.startTime)) {
                         splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
@@ -274,7 +283,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                     splat3Embed
                         .setDescription(splatfestScheduleDescription)
-                        .addField("Tricolor Battle:", tricolorSchedule, false)
+                        .addFields([{ name: "Tricolor Battle:", value: tricolorSchedule, inline: false }])
                         .setImage(splatfestData.image.url);
                 };
                 if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
@@ -289,7 +298,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         };
                         if (!entrySettings) return;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
-                        splat3Embed.addField(mapEntryTitle, `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, true);
+                        splat3Embed.addFields([{ name: mapEntryTitle, value: `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, inline: true }]);
                     });
                     if ([turfWarID, anarchyID, xBattleID].includes(inputMode)) {
                         splat3Embed
@@ -307,7 +316,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         await entry.timePeriods.forEach(challengeTimePeriod => {
                             challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
                         });
-                        splat3Embed.addField(entry.leagueMatchSetting.leagueMatchEvent.name, `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, false);
+                        splat3Embed.addFields([{ name: entry.leagueMatchSetting.leagueMatchEvent.name, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
                     })
                 );
                 break;
@@ -316,16 +325,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
                 let splatnetData = responseSplatnet.data.data.gesotown;
                 // Limited time brand
-                splat3Embed.addField(`Daily Drop (${splatnetData.pickupBrand.brand.name})`, `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, false);
+                splat3Embed.addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
                 await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                     let brandGearString = getGearString(brandGear, "brand");
-                    splat3Embed.addField(brandGear.gear.name, brandGearString, true);
+                    splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
                 });
                 // Individual gear pieces
-                splat3Embed.addField("Gear On Sale Now", `New item <t:${Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000}:R>.`, false);
+                splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item <t:${Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000}:R>.`, inline: false }]);
                 await splatnetData.limitedGears.forEach(limitedGear => {
                     let limitedGearString = getGearString(limitedGear, "limited");
-                    splat3Embed.addField(limitedGear.gear.name, limitedGearString, true);
+                    splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
                 });
 
                 splat3Embed
@@ -341,17 +350,86 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
-                let pointValues = { vote: 10, horagai: 10, regular: 15, challenge: 10 }; // popularity, conch shells, open, pro
+                let pointValues = {
+                    vote: { // Popularity
+                        first: 10
+                    },
+                    horagai: { // Conch Shells
+                        first: 10
+                    },
+                    regular: { // Open
+                        first: 15
+                    },
+                    challenge: { // Pro
+                        first: 10
+                    }
+                };
                 splatfestData = await splatfestData.sort((a, b) => Date.parse(b.endTime) - Date.parse(a.endTime));
                 await splatfestData.forEach(async (splatfest) => {
                     if (splatfest.title.length < 1) splatfest.title = "Unknown Splatfest (API error)"; // In case no valid name in API return
                     let currentSplatfestPointValues = pointValues;
                     // First check is for the first Splatfest system revamp, teams from here on out don't have the splatfest.teams.role (midterm winner) property
-                    // JUEA-00003 = Spicy|Sweet|Sour
-                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00003").startTime) currentSplatfestPointValues = { vote: 10, horagai: 8, regular: 12, challenge: 12, tricolor: 15 };
+                    // 00003 = Spicy|Sweet|Sour
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00003").startTime) currentSplatfestPointValues = {
+                        vote: {
+                            first: 10
+                        },
+                        horagai: {
+                            first: 8
+                        },
+                        regular: {
+                            first: 12
+                        },
+                        challenge: {
+                            first: 12
+                        },
+                        tricolor: {
+                            first: 15
+                        }
+                    };
                     // Second check is for a minor points change
-                    // JUEA-00005 = Nessie|Aliens|Bigfoot
-                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id == "JUEA-00005").startTime) currentSplatfestPointValues = { vote: 8, horagai: 7, regular: 12, challenge: 12, tricolor: 18 };
+                    // 00005 = Nessie|Aliens|Bigfoot
+                    if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00005").startTime) currentSplatfestPointValues = {
+                        vote: {
+                            first: 8
+                        },
+                        horagai: {
+                            first: 7
+                        },
+                        regular: {
+                            first: 12
+                        },
+                        challenge: {
+                            first: 12
+                        },
+                        tricolor: {
+                            first: 18
+                        }
+                    };
+                    // Bigger points overhaul
+                    // 00014 = next splatfest
+                    // if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
+                    //     vote: {
+                    //         first: 70,
+                    //         second: 35
+                    //     },
+                    //     horagai: {
+                    //         first: 90,
+                    //         second: 45
+                    //     },
+                    //     regular: {
+                    //         first: 120,
+                    //         second: 60
+                    //     },
+                    //     challenge: {
+                    //         first: 120,
+                    //         second: 60
+                    //     },
+                    //     tricolor: {
+                    //         first: 180,
+                    //         second: 90
+                    //     }
+                    // };
                     let splatfestTitle = splatfest.title;
                     let splatfestDescription = "";
                     if (!splatfestBanner) splatfestBanner = splatfest.image.url;
@@ -402,11 +480,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         if (team.result && team.result.isWinner) {
                             splatfestDescription += `**${team.teamName}**`;
                             splatfestResultsTitleTeams += `**${team.teamName}**`;
-                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote;
-                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai;
-                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular;
-                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge;
-                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor;
+                            if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote.first;
+                            if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai.first;
+                            if (team.result.isRegularContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.regular.first;
+                            if (team.result.isChallengeContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.challenge.first;
+                            if (team.result.isTricolorContributionRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.first;
                             splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
                         } else {
                             splatfestDescription += team.teamName;
@@ -444,14 +522,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                     if (splatfest.teams[0].result) {
                         splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
-                        splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge}p)`;
-                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor}p)`;
+                        splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote.first}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai.first}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular.first}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge.first}p)`;
+                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor.first}p)`;
                         splatfestResultsDescription += `\n${splatfestResultsWinner}`;
                     };
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
-                    splat3Embed.addField(splatfestTitle, splatfestDescription, false);
+                    splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
                 });
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
@@ -501,11 +579,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setAuthor({ name: replayMode })
                     .setThumbnail(replayData.player.weapon.image.url)
                     .setDescription(matchData)
-                    .addField("Player Data:", playerData.join("\n"), false)
-                    .addField(`${replayData.player.headGear.name} Skills:`, headSkills.join("\n"), false)
-                    .addField(`${replayData.player.clothingGear.name} Skills:`, clothingSkills.join("\n"), false)
-                    .addField(`${replayData.player.shoesGear.name} Skills:`, shoesSkills.join("\n"), false);
-                if (replayAwards.length > 0) splat3Embed.addField("Awards:", replayAwards.join("\n"), false);
+                    .addFields([
+                        { name: "Player Data:", value: playerData.join("\n"), inline: false },
+                        { name: `${replayData.player.headGear.name} Skills:`, value: headSkills.join("\n"), inline: true },
+                        { name: `${replayData.player.clothingGear.name} Skills:`, value: clothingSkills.join("\n"), inline: true },
+                        { name: `${replayData.player.shoesGear.name} Skills:`, value: shoesSkills.join("\n"), inline: true }
+                    ]);
+                if (replayAwards.length > 0) splat3Embed.addFields([{ name: "Awards:", value: replayAwards.join("\n"), inline: false }]);
                 splat3Embed.setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` });
                 break;
             case "splashtag-random":
@@ -527,13 +607,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let badgeRandom = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom3 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
+                let discriminatorRandom = randomNumber(1000, 9999);
 
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${githubRaw}images/badge/${badgeRandom}` })
                     .setTitle(userTitle)
                     .setThumbnail(`${githubRaw}images/badge/${badgeRandom2}`)
                     .setImage(`${githubRaw}images/npl/${bannerRandom}`)
-                    .setFooter({ iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
+                    .setFooter({ text: discriminatorRandom.toString(), iconURL: `${githubRaw}images/badge/${badgeRandom3}` });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
@@ -581,153 +662,153 @@ module.exports.config = {
     description: `Shows Splatoon 3 data.`,
     options: [{
         name: "clothing",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on clothing.",
         options: [{
             name: "clothing",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a piece of clothing by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "weapon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a weapon.",
         options: [{
             name: "weapon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a weapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             autocomplete: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "subweapon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a subweapon.",
         options: [{
             name: "subweapon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a subweapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "special",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a special weapon.",
         options: [{
             name: "special",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a special weapon by name.",
             autocomplete: true,
             required: true
         }, {
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "schedule",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get a mode's schedule.",
         options: [{
             name: "mode",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a mode.",
             autocomplete: true,
             required: true
         }, {
             name: "region",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a region. Default is EU.",
             choices: splatoon3Regions
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splatnet",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get SplatNet3 data.",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splatfests",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get all Splatfests data.",
         options: [{
             name: "region",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a region. Default is EU.",
             choices: splatoon3Regions
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "replay",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get a replay.",
         options: [{
             name: "code",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a replay code.",
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "splashtag-random",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Generate a random splashtag.",
         options: [{
             name: "language",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
             choices: splatoon3Languages
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

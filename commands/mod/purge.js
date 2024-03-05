@@ -1,9 +1,10 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("MANAGE_MESSAGES") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -50,6 +51,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     });
                 return;
             } catch (e) {
+                // Required permissions: ManageMessages, ManageGuild
                 if (e.toString().includes("Missing Permissions")) {
                     return logger(e, client, interaction);
                 } else {
@@ -74,14 +76,14 @@ module.exports.config = {
     description: "Bulk delete messages.",
     options: [{
         name: "amount",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "The amount of messages to delete.",
         required: true,
         minValue: 0,
         maxValue: 100
     }, {
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "The user to delete messages from."
     }]
 };

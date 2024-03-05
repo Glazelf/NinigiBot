@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -17,7 +18,7 @@ module.exports.config = {
     description: "Ask the magic 8ball for knowledge.",
     options: [{
         name: "input",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Your burning question.",
         required: true
     }]

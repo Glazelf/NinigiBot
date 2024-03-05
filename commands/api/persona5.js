@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const fs = require("fs");
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
@@ -25,7 +25,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
         eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
-        let p5Embed = new Discord.MessageEmbed()
+        let p5Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -53,10 +53,12 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: `${personaInput} (${personaObject.arcana})` })
                     .setDescription(elementalMatchup)
-                    .addField("Stats:", `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, true)
-                    .addField("Skills:", personaSkills, true)
-                    .addField("Item:", personaItem, false)
-                    .addField("Item (Fusion Alarm):", personaItemAlarm, false)
+                    .addFields([
+                        { name: "Stats:", value: `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, inline: true },
+                        { name: "Skills:", value: personaSkills, inline: true },
+                        { name: "Item:", value: personaItem, inline: false },
+                        { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
+                    ])
                     .setImage(personaImage);
                 break;
             case "skill":
@@ -70,7 +72,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: `${skillInput} (${capitalizeString(skillObject.element)})` })
                     .setDescription(skillObject.effect)
-                    .addField("Personas:", skillPersonas);
+                    .addFields([{ name: "Personas:", value: skillPersonas, inline: false }]);
                 break;
             case "trait":
                 let traitInput = interaction.options.getString("trait");
@@ -80,16 +82,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 p5Embed
                     .setAuthor({ name: traitInput })
                     .setDescription(traitObject.effect)
-                    .addField("Personas:", traitPersonas);
+                    .addFields([{ name: "Personas:", value: traitPersonas, inline: false }]);
                 break;
             case "item":
                 let itemInput = interaction.options.getString("item");
                 let itemObject = itemMapRoyal[itemInput];
                 if (!itemObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
                 if (itemObject.type && itemObject.description) {
-                    p5Embed.addField(itemObject.type, itemObject.description, false);
+                    p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
                 } else if (itemObject.skillCard) {
-                    p5Embed.addField(`Skill Card:`, `Teaches a Persona ${itemInput}.`, false);
+                    p5Embed.addFields([{ name: `Skill Card:`, value: `Teaches a Persona ${itemInput}.`, inline: false }]);
                 };
                 p5Embed.setAuthor({ name: itemInput });
         };
@@ -121,62 +123,62 @@ module.exports.config = {
     description: "Shows Persona 5 data.",
     options: [{
         name: "persona",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a specific Persona.",
         options: [{
             name: "persona",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify Persona by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "skill",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a skill.",
         options: [{
             name: "skill",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify skill by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "trait",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a trait.",
         options: [{
             name: "trait",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify trait by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify item by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

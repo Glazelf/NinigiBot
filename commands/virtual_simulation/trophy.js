@@ -1,9 +1,9 @@
+const Discord = require("discord.js");
 const Canvas = require('canvas');
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
 
         const api_shinx = require('../../database/dbServices/shinx.api');
         const api_user = require('../../database/dbServices/user.api');
@@ -15,34 +15,34 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let trophies;
         switch (interaction.options.getSubcommand()) {
             case "stock":
-                embed = new Discord.MessageEmbed()
+                embed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
-                let trophyPriceBlock = Discord.Formatters.codeBlock("diff", `[${trophy.price}]`);
                 trophies.forEach(trophy => {
+                    let trophyPriceBlock = Discord.codeBlock("diff", `[${trophy.price}]`);
                     let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
                     let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
-
                     switch (trophy.temp_bought) {
                         case 'Bought':
-                            trophy_price.value = Discord.Formatters.codeBlock("yaml", `Bought`);
+                            trophy_price.value = Discord.codeBlock("yaml", `Bought`);
                             break;
                         case 'CantBuy':
-                            trophy_price.value = Discord.Formatters.codeBlock("css", `[${trophy.price}]`);
+                            trophy_price.value = Discord.codeBlock("css", `[${trophy.price}]`);
                             break;
                         case 'CanBuy':
                             break;
                     };
-                    embed
-                        .addField(trophy_header.name, trophy_header.value, trophy_header.inline)
-                        .addField(trophy_price.name, trophy_price.value, trophy_price.inline)
-                        .addField("\u200B", "\u200B", true);
+                    embed.addFields([
+                        { name: trophy_header.name, value: trophy_header.value, inline: trophy_header.inline },
+                        { name: trophy_price.name, value: trophy_price.value, inline: trophy_price.inline },
+                        { name: "\u200B", value: "\u200B", inline: true }
+                    ]);
                 });
                 return sendMessage({
                     client: client,
@@ -113,14 +113,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                 } else {
                     if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
-                    embed = new Discord.MessageEmbed()
+                    embed = new Discord.EmbedBuilder()
                         .setColor(globalVars.embedColor)
                         .setTitle(`${res.trophy_id}`)
-                        .addField("Icon:", `${res.icon}`, true)
-                        .addField("Description:", `${res.description}`, true)
+                        .addFields([
+                            { name: "Icon:", value: `${res.icon}`, inline: true },
+                            { name: "Description:", value: `${res.description}`, inline: true }
+                        ]);
                     let location = `Sometimes found in the Shop.`;
                     if (!isShop) location = res.origin;
-                    embed.addField("Location:", `${location}`, true);
+                    embed.addFields([{ name: "Location:", value: `${location}`, inline: true }]);
                     return sendMessage({
                         client: client,
                         interaction: interaction,
@@ -143,46 +145,46 @@ module.exports.config = {
     description: "Handles all interactions with trophies",
     options: [{
         name: "stock",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: `Check today's available trophies`,
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "buy",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: `Buy a trophy from today's stock`,
         options: [{
             name: "shoptrophy",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to buy",
             autocomplete: true,
             required: true
         }]
     }, {
         name: "list",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "See a list of all trophies!",
         options: [{
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }, {
         name: "ask",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info about a trophy",
         options: [{
             name: "trophy",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Trophy or it's icon",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether this command is only visible to you."
         }]
     }]

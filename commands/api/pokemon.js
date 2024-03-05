@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
@@ -15,7 +15,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         // Bools
         let learnsetBool = false;
         let learnsetArg = interaction.options.getBoolean("learnset");
@@ -24,10 +24,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let shinyArg = interaction.options.getBoolean("shiny");
         if (shinyArg === true) shinyBool = true;
         // Variables
-        let pokemonEmbed = new Discord.MessageEmbed()
+        let pokemonEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
-        let pokemonButtons = new Discord.MessageActionRow();
+        let pokemonButtons = new Discord.ActionRowBuilder();
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         let currentGeneration = 9; // Set current generation
@@ -63,8 +63,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setAuthor({ name: ability.name })
                     .setDescription(ability.desc);
-                if (abilityMatchesString.length > 0) pokemonEmbed.addField("Pokémon:", abilityMatchesString, false);
-                pokemonEmbed.addField("Introduced:", `Gen ${ability.gen}`, true);
+                if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
+                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${ability.gen}`, inline: true }]);
                 break;
             // Items
             case "item":
@@ -80,8 +80,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setAuthor({ name: item.name })
                     .setThumbnail(itemImage)
                     .setDescription(item.desc);
-                if (item.fling) pokemonEmbed.addField("Fling Power:", item.fling.basePower.toString(), true);
-                pokemonEmbed.addField("Introduced:", `Gen ${item.gen}`, true);
+                if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
+                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${item.gen}`, inline: true }]);
                 break;
             // Moves
             case "move":
@@ -123,20 +123,21 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setAuthor({ name: moveTitle })
                     .setDescription(description);
-                if (move.basePower > 1 && !move.isMax) pokemonEmbed.addField("Power:", move.basePower.toString(), true);
-                if (target !== "Self") pokemonEmbed.addField("Accuracy:", accuracy, true);
-                pokemonEmbed
-                    .addField("Type:", type, true)
-                    .addField("Category:", category, true)
-                    .addField("Target:", target, true);
-                if (move.critRatio !== 1) pokemonEmbed.addField("Crit Rate:", move.critRatio.toString(), true);
-                if (!move.isMax) pokemonEmbed.addField("PP:", ppString, true);
-                if (move.priority !== 0) pokemonEmbed.addField("Priority:", move.priority.toString(), true);
-                // if (move.contestType) pokemonEmbed.addField("Contest Type:", move.contestType, true);
-                // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addField("Z-Power:", move.zMove.basePower.toString(), true);
-                // if (move.maxMove && move.maxMove.basePower && move.gen < 9 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addField("Max Move Power:", move.maxMove.basePower.toString(), true);
-                pokemonEmbed.addField("Introduced:", `Gen ${move.gen}`, true);
-                if (moveLearnPool.length > 0) pokemonEmbed.addField(`Learned By (Gen ${currentGeneration}):`, moveLearnPoolString, false);
+                if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
+                if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
+                pokemonEmbed.addFields([
+                    { name: "Type:", value: type, inline: true },
+                    { name: "Category:", value: category, inline: true },
+                    { name: "Target:", value: target, inline: true }
+                ]);
+                if (move.critRatio !== 1) pokemonEmbed.addFields([{ name: "Crit Rate:", value: move.critRatio.toString(), inline: true }]);
+                if (!move.isMax) pokemonEmbed.addFields([{ name: "PP:", value: ppString, inline: true }]);
+                if (move.priority !== 0) pokemonEmbed.addFields([{ name: "Priority:", value: move.priority.toString(), inline: true }]);
+                // if (move.contestType) pokemonEmbed.addFields([{ name: "Contest Type:", value: move.contestType, inline: true }]);
+                // if (move.zMove && move.zMove.basePower && move.gen < 8) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
+                // if (move.maxMove && move.maxMove.basePower && move.gen < 9 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
+                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${move.gen}`, inline: true }]);
+                if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By (Gen ${currentGeneration}):`, value: moveLearnPoolString, inline: false }]);
                 break;
             // Natures
             case "nature":
@@ -172,7 +173,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (format.threads) {
                     format.threads.forEach(thread => {
                         pokemonButtons
-                            .addComponents(new Discord.MessageButton({ label: thread.split(">")[1].split("<")[0], style: 'LINK', url: thread.split("\"")[1] }));
+                            .addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -204,10 +205,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setAuthor({ name: `${format.name} (${format.section})` })
                     .setDescription(formatDescription)
-                if (ruleset) pokemonEmbed.addField("Ruleset:", ruleset, false);
-                if (banlist) pokemonEmbed.addField("Banlist:", banlist, false);
-                if (unbanlist) pokemonEmbed.addField("Unbanlist:", unbanlist, false);
-                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addField("Restricted type:", format.restricted.join(", "), false);
+                if (ruleset) pokemonEmbed.addFields([{ name: "Ruleset:", value: ruleset, inline: false }]);
+                if (banlist) pokemonEmbed.addFields([{ name: "Banlist:", value: banlist, inline: false }]);
+                if (unbanlist) pokemonEmbed.addFields([{ name: "Unbanlist:", value: unbanlist, inline: false }]);
+                if (format.restricted && format.restricted.length > 0) pokemonEmbed.addFields([{ name: "Restricted type:", value: format.restricted.join(", "), inline: false }]);
                 break;
             // Pokémon
             case "pokemon":
@@ -240,9 +241,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                     if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
-                pokemonEmbed
-                    .setAuthor({ name: learnAuthor })
-                    .setDescription(learnInfo);
+                pokemonEmbed.setAuthor({ name: learnAuthor });
+                if (learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
                 return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: ephemeral });
                 break;
             case "usage":
@@ -281,9 +281,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
                 let response = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
-                let usageButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage', style: 'LINK', url: `https://www.smogon.com/stats/` }))
-                    .addComponents(new Discord.MessageButton({ label: 'Showdown Usage (Detailed)', style: 'LINK', url: searchURL }));
+                let usageButtons = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
+                    .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: searchURL }));
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
@@ -303,7 +303,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let usageRank = 0;
                 let genericDataSplitPokemon = null;
                 let pokemonDataSplitLine = null;
-                let usageEmbed = new Discord.MessageEmbed()
+                let usageEmbed = new Discord.EmbedBuilder()
                     .setColor(globalVars.embedColor);
                 if (pokemonName) {
                     let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
@@ -325,12 +325,14 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     usageEmbed
                         .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
-                        .addField("Moves:", movesString, true)
-                        .addField("Items:", itemsString, true)
-                        .addField("Abilities:", abilitiesString, true)
-                        .addField("Spreads:", spreadsString, true)
-                        .addField("Teammates:", teammatesString, true);
-                    if (countersString.length > 0) usageEmbed.addField("Checks and Counters:", countersString, true);
+                        .addFields([
+                            { name: "Moves:", value: movesString, inline: true },
+                            { name: "Items:", value: itemsString, inline: true },
+                            { name: "Abilities:", value: abilitiesString, inline: true },
+                            { name: "Spreads:", value: spreadsString, inline: true },
+                            { name: "Teammates:", value: teammatesString, inline: true }
+                        ]);
+                    if (countersString.length > 0) usageEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: true }]);
                 } else {
                     // Format generic data display
                     let usageList = [];
@@ -349,19 +351,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     await usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                     usageEmbed
                         .setAuthor({ name: `Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})` })
-                        .addField("1-50", usageListPart1.join("\n"), true)
-                        .addField("51-100", usageListPart2.join("\n"), true)
+                        .addFields([
+                            { name: "1-50", value: usageListPart1.join("\n"), inline: true },
+                            { name: "51-100", value: usageListPart2.join("\n"), inline: true }
+                        ]);
                 };
                 return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
         };
         // Bulbapedia button
-        if (linkBulbapedia) {
-            pokemonButtons
-                .addComponents(new Discord.MessageButton({ label: 'More info', style: 'LINK', url: linkBulbapedia }));
-        };
-        // Send function for all except default
-        if (pokemonEmbed.author) sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
-        return;
+        if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
+        return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
 
         function getLearnData(learnData) {
             let learnInfo = "";
@@ -402,162 +401,162 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 module.exports.config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
-    type: "SUB_COMMAND",
+    type: Discord.ApplicationCommandOptionType.Subcommand,
     options: [{
         name: "ability",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an ability.",
         options: [{
             name: "ability",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Ability to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "item",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on an item.",
         options: [{
             name: "item",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Item to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "move",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "nature",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a nature.",
         options: [{
             name: "nature",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Nature to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "format",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a format.",
         options: [{
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "pokemon",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a Pokémon.",
         options: [{
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get info on.",
             autocomplete: true,
             required: true
         }, {
             name: "learnset",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether to show the Pokémon's learnset."
         }, {
             name: "shiny",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether to show the Pokémon's shiny sprite."
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "learn",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Check if a Pokémon can learn a move.",
         options: [{
             name: "move",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Move to check availability.",
             autocomplete: true,
             required: true
         }, {
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to check availability.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "usage",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Shows Smogon usage data.",
         options: [{
             name: "format",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Format to get data from.",
             autocomplete: true,
             required: true
         }, {
             name: "pokemon",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Pokémon to get data on.",
             autocomplete: true
         }, {
             name: "month",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Month (number) to get data from.",
             minValue: 1,
             maxValue: 12
         }, {
             name: "year",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Year to get data from.",
             minValue: 2014,
             maxValue: new Date().getFullYear()
         }, {
             name: "rating",
-            type: "INTEGER",
+            type: Discord.ApplicationCommandOptionType.Integer,
             description: "Minimum rating to get data from.",
             autocomplete: true,
             minValue: 1000
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

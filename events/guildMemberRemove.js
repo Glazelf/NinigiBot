@@ -13,16 +13,16 @@ module.exports = async (client, member) => {
 
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
         let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-        if (serverID && roleDB && !member.permissions.has("MANAGE_ROLES")) await deleteBoosterRole();
+        if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             let memberLeaveObject = {};
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
-            let leaveEmbed = new Discord.MessageEmbed()
+            let leaveEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
@@ -30,13 +30,13 @@ module.exports = async (client, member) => {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_KICK',
+                    type: Discord.AuditLogEvent.MemberKick
                 });
                 let kickLog = fetchedLogs.entries.first();
                 // Return if ban exists
                 const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_BAN_ADD',
+                    type: Discord.AuditLogEvent.MemberBanAdd
                 });
                 if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 let banLog = banLogs.entries.first();
@@ -48,28 +48,28 @@ module.exports = async (client, member) => {
                     if (reason) reasonText = reason;
                     embedAuthor = `Member Kicked 💔`;
                 };
-                let leaveButtons = new Discord.MessageActionRow()
-                    .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${member.id}` }));
+                let leaveButtons = new Discord.ActionRowBuilder()
+                    .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
                 leaveEmbed
                     .setAuthor({ name: embedAuthor, iconURL: icon })
                     .setThumbnail(avatar)
-                    .addField(`User: `, `${member} (${member.id})`, false);
-                if (member.joinedAt) leaveEmbed.addField("Joined:", `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, true);
+                    .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }]);
+                if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, inline: true }]);
                 leaveEmbed
-                    .addField("Created:", `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, true)
+                    .addFields([{ name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }])
                     .setFooter({ text: member.user.username });
                 if (kicked == true) {
-                    leaveEmbed.addField(`Reason:`, reasonText, false);
-                    if (executor) leaveEmbed.addField(`Executor:`, `${executor.username} (${executor.id})`, false);
+                    leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
+                    if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);
                 };
                 memberLeaveObject['components'] = [leaveButtons];
             };
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);
 
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

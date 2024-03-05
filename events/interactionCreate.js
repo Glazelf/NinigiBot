@@ -21,7 +21,7 @@ module.exports = async (client, interaction) => {
         if (!interaction) return;
         if (interaction.user.bot) return;
         switch (interaction.type) {
-            case "APPLICATION_COMMAND":
+            case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
                 // Grab the command data from the client.commands Enmap
                 let cmd;
@@ -47,9 +47,9 @@ module.exports = async (client, interaction) => {
                 } else {
                     return;
                 };
-            case "MESSAGE_COMPONENT":
+            case Discord.InteractionType.MessageComponent:
                 switch (interaction.componentType) {
-                    case "BUTTON":
+                    case Discord.ComponentType.Button:
                         let messageObject = null;
                         if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         if (interaction.customId.startsWith("pkm")) {
@@ -116,7 +116,7 @@ module.exports = async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-                    case "SELECT_MENU":
+                    case Discord.ComponentType.SelectMenu:
                         if (interaction.customId == 'role-select') {
                             try {
                                 // Toggle selected role
@@ -159,7 +159,7 @@ module.exports = async (client, interaction) => {
                         // Other component types
                         return;
                 };
-            case "APPLICATION_COMMAND_AUTOCOMPLETE":
+            case Discord.InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
                 // Common arguments 
@@ -218,25 +218,32 @@ module.exports = async (client, interaction) => {
                             case "ability":
                                 let abilities = Dex.abilities.all();
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && ability.exists && ability.name !== "No Ability" && ability.isNonstandard !== "CAP") choices.push({ name: ability.name, value: ability.name });
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        ability.exists &&
+                                        ability.name !== "No Ability" &&
+                                        ability.isNonstandard !== "CAP") choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
                                 let moves = Dex.moves.all();
                                 await moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && move.exists && move.isNonstandard !== "CAP") choices.push({ name: move.name, value: move.name });
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        move.exists &&
+                                        move.isNonstandard !== "CAP") choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
                                 let items = Dex.items.all();
                                 await items.forEach(item => {
-                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && item.exists) choices.push({ name: item.name, value: item.name });
+                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        item.exists) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
                             case "nature":
                                 let natures = Dex.natures.all();
                                 await natures.forEach(nature => {
-                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) && nature.exists) choices.push({ name: nature.name, value: nature.name });
+                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        nature.exists) choices.push({ name: nature.name, value: nature.name });
                                 });
                                 break;
                             case "format":
@@ -302,24 +309,44 @@ module.exports = async (client, interaction) => {
                                 };
                                 let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
                                 for await (const [key, value] of Object.entries(allClothesNames)) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.startsWith("COP00")) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        !key.startsWith("COP00")) choices.push({ name: value, value: key });
                                 };
                                 console.log(choices)
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Msn") && !key.includes("_Rival") && !key.includes("_AMB_") && key !== "Free") choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        !key.endsWith("_Coop") &&
+                                        !key.endsWith("_Msn") &&
+                                        !key.endsWith("_Rival") &&
+                                        !key.endsWith("_Sdodr") &&
+                                        !key.includes("_AMB_") &&
+                                        key !== "Free" &&
+                                        value !== "-") choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "subweapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.includes("_Rival") && !key.includes("_Coop") && value !== "-" && !key.includes("SalmonBuddy")) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        !key.endsWith("_Rival") &&
+                                        !key.endsWith("_Coop") &&
+                                        !key.endsWith("_Sdodr") &&
+                                        value !== "-" &&
+                                        !key.includes("SalmonBuddy")) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "special":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
                                     // Gachihoko = Rainmaker, Splashdown is only available in singleplayer missions but is for some reason still properly included here. To avoid importing more JSONs and reading whole objects, it's excluded this way.
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.endsWith("_Coop") && !key.endsWith("_Mission") && !key.includes("_Rival") && value !== "-" && !value.includes("Gachihoko") && !key.includes("SpSuperLanding")) choices.push({ name: value, value: key });
+                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        !key.endsWith("_Coop") &&
+                                        !key.endsWith("_Mission") &&
+                                        !key.endsWith("Sdodr") &&
+                                        !key.includes("_Rival") &&
+                                        value !== "-" &&
+                                        !key.includes("Gachihoko") &&
+                                        !key.includes("SpSuperLanding")) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "mode":
@@ -343,7 +370,7 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "genshin":
-                        let giAPI = `https://api.genshin.dev/`;
+                        let giAPI = `https://genshin.jmp.blue/`;
                         let giResponse;
                         switch (focusedOption.name) {
                             case "character":
@@ -384,18 +411,21 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "skill":
                                 for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element !== "trait") choices.push({ name: key, value: key });
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        value.element !== "trait") choices.push({ name: key, value: key });
                                 };
                                 break;
                             case "trait":
                                 for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && value.element == "trait") choices.push({ name: key, value: key });
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        value.element == "trait") choices.push({ name: key, value: key });
                                 };
                                 break;
                             case "item":
                                 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
                                 for await (const [key, value] of Object.entries(itemMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) && !value.skillCard) choices.push({ name: key, value: key });
+                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                        !value.skillCard) choices.push({ name: key, value: key });
                                 };
                         };
                         break;
@@ -487,7 +517,7 @@ module.exports = async (client, interaction) => {
                     // console.log(e);
                 });
                 break;
-            case "MODAL_SUBMIT":
+            case Discord.InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
@@ -499,17 +529,18 @@ module.exports = async (client, interaction) => {
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
-                        const bugReportEmbed = new Discord.MessageEmbed()
+                        const bugReportEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescribe)
-                            .addField("Reproduce:", bugReportReproduce, false)
-                            .addField("Expected Behaviour:", bugReportBehaviour, false)
-                            .addField("Device Context:", bugReportContext, false)
+                            .addFields([
+                                { name: "Reproduce:", value: bugReportReproduce, inline: false },
+                                { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
+                                { name: "Device Context:", value: bugReportContext, inline: false }
+                            ])
                             .setFooter({ text: interaction.user.username });
-
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
                         break;
@@ -518,10 +549,9 @@ module.exports = async (client, interaction) => {
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
 
-                        let profileButtons = new Discord.MessageActionRow()
-                            .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${interaction.user.id}` }));
-
-                        const modMailEmbed = new Discord.MessageEmbed()
+                        let profileButtons = new Discord.ActionRowBuilder()
+                            .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
+                        const modMailEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setAuthor({ name: `Mod Mail 💌` })
                             .setThumbnail(userAvatar)
@@ -533,8 +563,6 @@ module.exports = async (client, interaction) => {
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                         break;
                 };
-                return;
-            case "PING":
                 return;
             default:
                 return;

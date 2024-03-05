@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');
@@ -14,10 +14,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
 
         let buttonArray = [];
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -46,11 +46,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 mhEmbed
                     .setAuthor({ name: questTitle })
                     .setDescription(`${questData.description} -${questData.client}`)
-                    .addField("Game:", questData.game, true)
-                    .addField("Type:", questData.questType, true)
-                    .addField("Map:", questData.map, true)
-                    .addField("Objective:", questData.objective, true);
-                if (targets.length > 0) mhEmbed.addField("Targets:", targets, true);
+                    .addFields([
+                        { name: "Game:", value: questData.game, inline: true },
+                        { name: "Type:", value: questData.questType, inline: true },
+                        { name: "Map:", value: questData.map, inline: true },
+                        { name: "Objective:", value: questData.objective, inline: true }
+                    ]);
+                if (targets.length > 0) mhEmbed.addFields([{ name: "Targets:", value: targets, inline: true }]);
                 break;
             // All quests from a game
             case "quests":
@@ -80,7 +82,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 questsPaged[currentPage - 1].forEach(quest => {
                     let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
                     if (quest.isKey) questTitle += ` 🔑`;
-                    mhEmbed.addField(`${questTitle}`, `${quest.objective} in ${quest.map}`, false);
+                    mhEmbed.addFields([{ name: `${questTitle}`, value: `${quest.objective} in ${quest.map}`, inline: false }]);
                 });
 
                 let startIndex = currentPage + pageLength * currentPage;
@@ -135,26 +137,26 @@ module.exports.config = {
     description: "Shows Monster Hunter data.",
     options: [{
         name: "quest",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a specific quest.",
         options: [{
             name: "quest",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify quest by name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "quests",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "List all quests from a game.",
         options: [{
             name: "game",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify game by name or abbreviation.",
             required: true,
             choices: [
@@ -168,22 +170,22 @@ module.exports.config = {
             ]
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }, {
         name: "monster",
-        type: "SUB_COMMAND",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info on a monster.",
         options: [{
             name: "monster",
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             description: "Specify monster by its English name.",
             autocomplete: true,
             required: true
         }, {
             name: "ephemeral",
-            type: "BOOLEAN",
+            type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
         }]
     }]

@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const shinxApi = require('../../database/dbServices/shinx.api');
 const autofeed_modes = [
     {
@@ -20,7 +21,7 @@ exports.run = async (client, interaction, logger) => {
         let ephemeral = true;
         let returnString;
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has("USE_EXTERNAL_EMOJIS")) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");
         let res = await shinxApi.changeAutoFeed(master.id, mode_num);
@@ -44,7 +45,7 @@ module.exports.config = {
     description: "Automatize the feeding process of Shinx",
     options: [{
         name: "mode",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Mode you want to set",
         required: true,
         choices: autofeed_modes

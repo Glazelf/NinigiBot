@@ -12,14 +12,11 @@ module.exports = async (client) => {
         const Discord = require("discord.js");
         const api_user = require('../database/dbServices/user.api');
         const gifTags = ["birthday"];
-
         if (client.user.id != globalVars.NinigiID) return;
-
         // Create cron job
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
-
             let birthdayRoleID = "744719808058228796";
             const birthdayRole = guild.roles.cache.find(role => role.id === birthdayRoleID);
             if (!birthdayRole) return;
@@ -45,7 +42,7 @@ module.exports = async (client) => {
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             // Create embed
-            const gifEmbed = new Discord.MessageEmbed()
+            const gifEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today is ${cuties.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);

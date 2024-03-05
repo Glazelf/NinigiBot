@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -5,7 +6,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const isAdmin = require('../../util/isAdmin');
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("MANAGE_ROLES") && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -50,12 +51,12 @@ module.exports.config = {
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify role to toggle.",
         required: true
     }, {
         name: "description",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Specify a description for the role."
     }]
 };

@@ -1,8 +1,8 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
-        const Discord = require("discord.js");
         const axios = require("axios");
         let ownerBool = await isOwner(client, interaction.user);
 
@@ -63,28 +63,31 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // Owner
         let owner = "glazelf (232875725898645504)";
 
-        let botEmbed = new Discord.MessageEmbed()
+        let botEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: client.user.username })
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
-            .addField("Owner:", owner, false)
-            .addField("Discord.JS:", DiscordJSVersion, true);
-        if (ownerBool) botEmbed.addField("Memory Usage:", memoryUsage, true);
-        if (client.shard) botEmbed.addField("Shards:", ShardUtil.count.toString(), true);
-        botEmbed
-            .addField("Servers:", totalGuilds.toString(), true)
-            .addField("Total Users:", totalMembers.toString(), true)
-            .addField("Created:", `<t:${createdAt}:f>`, true);
-        if (ownerBool) botEmbed.addField("Online Since:", `<t:${onlineSince}:R>`, true);
-        if (githubRepoResponse) botEmbed.addField("Github Stars:", `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, true);
-        if (githubMasterResponse) botEmbed.addField("Latest Commit:", lastCommitString, true);
+            .addFields([
+                { name: "Owner:", value: owner, inline: false },
+                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
+            ]);
+        if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
+        if (client.shard) botEmbed.addFields([{ name: "Shards:", value: ShardUtil.count.toString(), inline: true }]);
+        botEmbed.addFields([
+            { name: "Servers:", value: totalGuilds.toString(), inline: true },
+            { name: "Total Users:", value: totalMembers.toString(), inline: true },
+            { name: "Created:", value: `<t:${createdAt}:f>`, inline: true },
+            { name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }
+        ]);
+        if (githubRepoResponse) botEmbed.addFields([{ name: "Github Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
+        if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
-        let botButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Invite Bot', style: 'LINK', url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
-            .addComponents(new Discord.MessageButton({ label: 'App Directory', style: 'LINK', url: `https://discord.com/application-directory/${client.user.id}` }))
-            .addComponents(new Discord.MessageButton({ label: 'Github', style: 'LINK', url: `https://github.com/${githubURLVars}` }))
-            .addComponents(new Discord.MessageButton({ label: 'Support Server', style: 'LINK', url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
+        let botButtons = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'App Directory', style: Discord.ButtonStyle.Link, url: `https://discord.com/application-directory/${client.user.id}` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'Github', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
         async function getUsers() {
@@ -107,7 +110,7 @@ module.exports.config = {
     description: `Displays info about this bot.`,
     options: [{
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

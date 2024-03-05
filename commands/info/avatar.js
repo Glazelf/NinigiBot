@@ -1,7 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require('discord.js');
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
         // Get avatars
@@ -14,7 +14,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             serverAvatar = avatar;
             avatar = null;
         };
-        const avatarEmbed = new Discord.MessageEmbed()
+        const avatarEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setAuthor({ name: `${user.username}'s avatar(s):` })
@@ -29,5 +29,5 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
 module.exports.config = {
     name: "Avatar",
-    type: "USER"
+    type: Discord.ApplicationCommandType.User
 };

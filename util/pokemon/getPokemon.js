@@ -18,7 +18,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
         let description = "";
         // Gender studies
@@ -292,16 +292,16 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             nextPokemonID += 1;
             nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         };
-        let pkmButtons = new Discord.MessageActionRow();
-        let pkmButtons2 = new Discord.MessageActionRow();
-        if (previousPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons = new Discord.ActionRowBuilder();
+        let pkmButtons2 = new Discord.ActionRowBuilder();
+        if (previousPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmleft|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
 
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⬇️', label: pokemon.baseSpecies }));
-        if (nextPokemon) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '➡️', label: nextPokemon.name }));
+        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
+        if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏬', label: pokemon.prevo }));
+            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
@@ -309,20 +309,20 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new Discord.MessageButton({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: 'PRIMARY', emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 };
             };
         };
         let formButtonsComponentsCounter = 0;
         let formButtonsObject = {
-            0: new Discord.MessageActionRow(),
-            1: new Discord.MessageActionRow(),
-            2: new Discord.MessageActionRow(),
-            3: new Discord.MessageActionRow(),
-            4: new Discord.MessageActionRow()
+            0: new Discord.ActionRowBuilder(),
+            1: new Discord.ActionRowBuilder(),
+            2: new Discord.ActionRowBuilder(),
+            3: new Discord.ActionRowBuilder(),
+            4: new Discord.ActionRowBuilder()
         };
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Whatever.
@@ -331,7 +331,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             if (pokemonForms.length > 0) {
                 for (let i = 0; i < pokemonForms.length; i++) {
                     if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
-                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.MessageButton({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: 'SECONDARY', label: pokemonForms[i] }));
+                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.ButtonBuilder({ customId: `pkmForm${i}|${learnsetBool}|${shinyBool}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i] }));
                 };
             };
         };
@@ -343,35 +343,33 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
         // Embed building
-        const pkmEmbed = new Discord.MessageEmbed()
+        const pkmEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
-            .setThumbnail(iconThumbnail)
-            .setDescription(description)
-            .addField("Type:", typeString, true)
-            .addField("Metrics:", metricsString, true)
-            .addField("Gender:", genderString, true)
-            .addField("Abilities:", abilityString, false);
-        if (superEffectives.length > 0) pkmEmbed.addField("Weaknesses:", superEffectives, false);
-        if (resistances.length > 0) pkmEmbed.addField("Resistances:", resistances, false);
-        if (immunities.length > 0) pkmEmbed.addField("Immunities:", immunities, false);
+            .setThumbnail(iconThumbnail);
+        if (description.length > 0) pkmEmbed.setDescription(description);
+        pkmEmbed.addFields([
+            { name: "Type:", value: typeString, inline: true },
+            { name: "Metrics:", value: metricsString, inline: true },
+            { name: "Gender:", value: genderString, inline: true },
+            { name: "Abilities:", value: abilityString, inline: false }
+        ]);
+        if (superEffectives.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectives, inline: false }]);
+        if (resistances.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistances, inline: false }]);
+        if (immunities.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunities, inline: false }]);
         pkmEmbed
-            .addField(`Stats: ${statLevels}`, `HP: **${pokemon.baseStats.hp}** ${HPstats}
-Atk: **${pokemon.baseStats.atk}** ${Atkstats}
-Def: **${pokemon.baseStats.def}** ${Defstats}
-SpA: **${pokemon.baseStats.spa}** ${SpAstats}
-SpD: **${pokemon.baseStats.spd}** ${SpDstats}
-Spe: **${pokemon.baseStats.spe}** ${Spestats}
-BST: ${pokemon.bst}`, false)
+            .addFields([
+                { name: `Stats: ${statLevels}`, value: `HP: **${pokemon.baseStats.hp}** ${HPstats}\nAtk: **${pokemon.baseStats.atk}** ${Atkstats}\nDef: **${pokemon.baseStats.def}** ${Defstats}\nSpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}** ${SpDstats}\nSpe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`, inline: false }
+            ]);
         // .setImage(banner)
         if (learnsetBool) {
-            if (levelMovesString.length > 0) pkmEmbed.addField("Levelup Moves:", levelMovesString, false);
-            tmMovesStrings.forEach(tmMovesString => pkmEmbed.addField("TM Moves:", tmMovesString.join(", "), false));
-            if (eggMovesString.length > 0) pkmEmbed.addField("Egg Moves:", eggMovesString, false);
-            if (tutorMovesString.length > 0) pkmEmbed.addField("Tutor Moves:", tutorMovesString, false);
-            if (specialMovesString.length > 0) pkmEmbed.addField("Special Moves:", specialMovesString, false);
+            if (levelMovesString.length > 0) pkmEmbed.addFields([{ name: "Levelup Moves:", value: levelMovesString, inline: false }]);
+            tmMovesStrings.forEach(tmMovesString => pkmEmbed.addFields([{ name: "TM Moves:", value: tmMovesString.join(", "), inline: false }]));
+            if (eggMovesString.length > 0) pkmEmbed.addFields([{ name: "Egg Moves:", value: eggMovesString, inline: false }]);
+            if (tutorMovesString.length > 0) pkmEmbed.addFields([{ name: "Tutor Moves:", value: tutorMovesString, inline: false }]);
+            if (specialMovesString.length > 0) pkmEmbed.addFields([{ name: "Special Moves:", value: specialMovesString, inline: false }]);
             // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
-            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addField("Transfer Moves:", transferMovesString.join(", "), false));
+            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
         };
         pkmEmbed
             .setFooter({ text: footerText, iconURL: iconFooter })

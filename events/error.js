@@ -3,7 +3,6 @@ module.exports = async (client, info) => {
     try {
         // Log error
         console.log(info);
-
         // Reboot bot
         let botjs = require('../bot.js');
         botjs();

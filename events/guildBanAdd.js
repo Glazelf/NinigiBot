@@ -13,12 +13,12 @@ module.exports = async (client, guildBan) => {
 
         const fetchedLogs = await guildBan.guild.fetchAuditLogs({
             limit: 1,
-            type: 'MEMBER_BAN_ADD',
+            type: Discord.AuditLogEvent.MemberBanAdd
         });
 
         let botMember = guildBan.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             let banLog = fetchedLogs.entries.first();
             if (banLog && banLog.createdTimestamp < (Date.now() - 5000)) banLog = null;
             if (!banLog) return;
@@ -32,25 +32,25 @@ module.exports = async (client, guildBan) => {
             let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            let banButtons = new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Profile', style: 'LINK', url: `discord://-/users/${target.id}` }));
-
-            const banEmbed = new Discord.MessageEmbed()
+            let banButtons = new Discord.ActionRowBuilder()
+                .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
+            const banEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Member Banned 💔`, iconURL: avatarExecutor })
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
-                .addField(`User:`, `${target} (${target.id})`, false)
-                .addField(`Reason:`, reason, false)
-                .addField(`Executor:`, `${executor.username} (${executor.id})`, false)
+                .addFields([
+                    { name: `User:`, value: `${target} (${target.id})`, inline: false },
+                    { name: `Reason:`, value: reason, inline: false },
+                    { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
+                ])
                 .setFooter({ text: target.username })
                 .setTimestamp();
-
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

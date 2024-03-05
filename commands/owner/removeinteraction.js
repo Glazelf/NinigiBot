@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -34,12 +35,12 @@ module.exports.config = {
     serverID: ["759344085420605471"],
     options: [{
         name: "interaction-name",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Interaction to remove.",
         required: true
     }, {
         name: "guild-id",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "ID of guild."
     }]
 };

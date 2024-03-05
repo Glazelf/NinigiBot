@@ -16,19 +16,17 @@ module.exports = async (client, guild) => {
             // console.log(e);
             return;
         };
-
-        const guildEmbed = new Discord.MessageEmbed()
+        const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
             .setThumbnail(icon)
             .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)
-            .addField(`Name:`, guild.name, true);
-        if (guildOwner) guildEmbed.addField(`Owner:`, `${guildOwner.user.username} (${guildOwner.id})`, false);
+            .addFields([{ name: `Name:`, value: guild.name, inline: true }]);
+        if (guildOwner) guildEmbed.addFields([{ name: `Owner:`, value: `${guildOwner.user.username} (${guildOwner.id})`, inline: false }]);
         guildEmbed
-            .addField(`Users:`, guild.memberCount.toString(), false)
+            .addFields([{ name: `Users:`, value: guild.memberCount.toString(), inline: false }])
             .setFooter({ text: guild.id })
             .setTimestamp();
-
         return log.send({ embeds: [guildEmbed] });
 
     } catch (e) {

@@ -11,7 +11,7 @@ module.exports = async (client, member, newMember) => {
         if (!log) return;
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has("SEND_MESSAGES") && log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
             let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
@@ -54,7 +54,7 @@ module.exports = async (client, member, newMember) => {
             try {
                 fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: 'MEMBER_UPDATE',
+                    type: Discord.AuditLogEvent.MemberUpdate
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
@@ -95,19 +95,17 @@ module.exports = async (client, member, newMember) => {
                 default:
                     return;
             };
-            const updateEmbed = new Discord.MessageEmbed()
+            const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: topText, iconURL: icon })
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed
-                .addField(`User:`, `${user} (${user.id})`);
-            if (executor) updateEmbed.addField(`Executor:`, `${executor} (${executor.id})`);
+            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             updateEmbed
                 .setImage(image)
                 .setFooter({ text: user.username })
                 .setTimestamp();
-
             return log.send({ embeds: [updateEmbed] });
 
             async function deleteBoosterRole() {
@@ -122,9 +120,9 @@ module.exports = async (client, member, newMember) => {
                 await roleDB.destroy();
             };
 
-        } else if (log.permissionsFor(botMember).has("SEND_MESSAGES") && !log.permissionsFor(botMember).has("EMBED_LINKS")) {
+        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {
-                return log.send({ content: `I lack permissions to send embeds in your log channel.` });
+                return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
                 // console.log(e);
                 return;

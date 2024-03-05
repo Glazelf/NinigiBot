@@ -1,10 +1,11 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("KICK_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.KickMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -54,12 +55,12 @@ module.exports.config = {
     description: "Kick a target user from the server.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "User to kick.",
         required: true
     }, {
         name: "reason",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for kick."
     }]
 };

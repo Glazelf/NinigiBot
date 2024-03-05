@@ -1,8 +1,7 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const Discord = require("discord.js");
-        const permissionSerializer = require('../../util/permissionBitfieldSerializer');
         let DefaultEmbedColor = globalVars.embedColor;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -23,22 +22,23 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (role.managed) roleProperties = `${roleProperties}Managed by integration\n`;
         if (roleProperties.length == 0) roleProperties = "None";
         // Permissions
-        const permissions = permissionSerializer(role.permissions);
         let permissionString = "None";
-        if (permissions.length > 0) permissionString = permissions.join(", ");
+        if (role.permissions.toArray().length > 0) permissionString = role.permissions.toArray().join(", ");
         if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
-        let roleEmbed = new Discord.MessageEmbed()
+        let roleEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: `${role.name}` })
             .setThumbnail(icon)
-            .addField("Role:", role.toString(), true);
-        if (role.hexColor !== defaultColor) roleEmbed.addField("Color:", role.hexColor, true);
+            .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
+        if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
         roleEmbed
-            .addField("Members:", memberCount.toString(), true)
-            .addField("Position:", role.rawPosition.toString(), true)
-            .addField("Properties:", roleProperties, false)
-            .addField("Permissions:", permissionString, false)
+            .addFields([
+                { name: "Members:", value: memberCount.toString(), inline: true },
+                { name: "Position:", value: role.rawPosition.toString(), inline: true },
+                { name: "Properties:", value: roleProperties, inline: false },
+                { name: "Permissions:", value: permissionString, inline: false }
+            ])
             .setFooter({ text: role.id });
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
@@ -53,12 +53,12 @@ module.exports.config = {
     description: "Displays info about a role.",
     options: [{
         name: "role",
-        type: "ROLE",
+        type: Discord.ApplicationCommandOptionType.Role,
         description: "Specify role.",
         required: true
     }, {
         name: "ephemeral",
-        type: "BOOLEAN",
+        type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
     }]
 };

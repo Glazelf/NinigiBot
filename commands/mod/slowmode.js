@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
@@ -6,14 +7,13 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let ephemeral = false;
         let slowmodeSupportedChannelTypes = [
-            "GUILD_TEXT",
-            "GUILD_PUBLIC_THREAD",
-            "GUILD_PRIVATE_THREAD",
-            "GUILD_STAGE_VOICE",
-            "GUILD_VOICE"
+            Discord.ChannelType.GuildText,
+            Discord.ChannelType.GuildPublicThread,
+            Discord.ChannelType.GuildPrivateThread,
+            Discord.ChannelType.GuildStageVoice,
+            Discord.ChannelType.GuildVoice
         ];
-
-        if (!interaction.member.permissions.has("MANAGE_CHANNELS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
@@ -31,7 +31,7 @@ module.exports.config = {
     description: "Set slowmode in the current channel.",
     options: [{
         name: "time",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Time in seconds. 0 to disable.",
         required: true,
         minValue: 0,

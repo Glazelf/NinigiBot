@@ -19,7 +19,6 @@ module.exports = async (client, messageReaction) => {
         } else {
             starLimit = globalVars.starboardLimit;
         };
-
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
@@ -37,7 +36,6 @@ module.exports = async (client, messageReaction) => {
         } else {
             avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
         };
-
         let isReply = false;
         let replyMessage = null;
         let replyString = "";
@@ -51,21 +49,18 @@ module.exports = async (client, messageReaction) => {
                 isReply = false;
             };
         };
-
-        let starButtons = new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Context', style: 'LINK', url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
-
-        const starEmbed = new Discord.MessageEmbed()
+        let starButtons = new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
+        const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
             .setDescription(targetMessage.content)
-            .addField(`Sent:`, `By ${targetMessage.author} in ${targetMessage.channel}`, false);
-        if (isReply && replyString.length > 0) starEmbed.addField(`Replying to:`, replyString);
+            .addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
+        if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
         starEmbed
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
-
         if (messageReaction.count >= starLimit && !messageDB) {
             // Create
             await starboard.send({ embeds: [starEmbed], components: [starButtons] }).then(async (m) => await StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));

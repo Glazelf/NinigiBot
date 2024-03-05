@@ -1,10 +1,11 @@
+const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, globalVars) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         const getTime = require('../../util/getTime');
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has("MODERATE_MEMBERS") && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ModerateMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -75,19 +76,19 @@ module.exports.config = {
     description: "Times the target out.",
     options: [{
         name: "user",
-        type: "USER",
+        type: Discord.ApplicationCommandOptionType.User,
         description: "Specify user.",
         required: true
     }, {
         name: "time",
-        type: "INTEGER",
+        type: Discord.ApplicationCommandOptionType.Integer,
         description: "Amount of minutes to mute.",
         autocomplete: true,
         minValue: 1,
         maxValue: 43800
     }, {
         name: "reason",
-        type: "STRING",
+        type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for mute."
     }]
 }; 

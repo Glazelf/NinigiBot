@@ -10,7 +10,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         const isAdmin = require('../isAdmin');
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has("USE_EXTERNAL_EMOJIS") && !adminBot) emotesAllowed = false;
+        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         // Game names
         let MHRise = "Monster Hunter Rise";
         let MHW = "Monster Hunter World";
@@ -93,7 +93,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
             monsterBanner = monsterRender;
             monsterRender = null;
         };
-
         // Format size
         let monsterSize = "Small";
         if (monsterData.isLarge) monsterSize = "Large";
@@ -133,11 +132,11 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
             });
         };
         let buttonArray = [];
-        let subSpeciesButtons = new Discord.MessageActionRow();
+        let subSpeciesButtons = new Discord.ActionRowBuilder();
         if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
             if (monsterData.subSpecies.length < 6) {
                 for (let i = 0; i < monsterData.subSpecies.length; i++) {
-                    subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSub${i}`, style: 'SECONDARY', label: monsterData.subSpecies[i] }));
+                    subSpeciesButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhSub${i}`, style: Discord.ButtonStyle.Secondary, label: monsterData.subSpecies[i] }));
                 };
             } else {
                 // How many subspecies do you need??
@@ -146,33 +145,31 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (!monsterData.subSpecies) {
             monstersJSON.monsters.forEach(monster => {
                 if (!monster.subSpecies) return;
-                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.MessageButton({ customId: `mhSubOrigin`, style: 'SECONDARY', label: monster.name }));
+                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhSubOrigin`, style: Discord.ButtonStyle.Secondary, label: monster.name }));
             });
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
-        let mhEmbed = new Discord.MessageEmbed()
+        let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender);
         if (monsterDescription) mhEmbed.setDescription(monsterDescription);
-        if (!monsterData.isLarge) mhEmbed.addField("Size:", monsterSize, true);
-        if (monsterDanger) mhEmbed.addField("Danger:", `${monsterDanger}⭐`, true);
-        if (monsterElements.length > 0) mhEmbed.addField("Element:", monsterElements, true);
-        if (monsterWeaknesses.length > 0) mhEmbed.addField("Weakness:", monsterWeaknesses, true);
-        if (monsterAilments.length > 0) mhEmbed.addField("Ailment:", monsterAilments, true);
+        if (!monsterData.isLarge) mhEmbed.addFields([{ name: "Size:", value: monsterSize, inline: true }]);
+        if (monsterDanger) mhEmbed.addFields([{ name: "Danger:", value: `${monsterDanger}⭐`, inline: true }]);
+        if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
+        if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
+        if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
         mhEmbed
-            .addField("Games:", gameAppearances, false)
+            .addFields([{ name: "Games:", value: gameAppearances, inline: false }])
             .setImage(monsterBanner)
             .setTimestamp();
-
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
 
     } catch (e) {
         // Log error
         const logger = require('../logger');
-
         logger(e, client);
     };
 };
