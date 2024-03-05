@@ -286,25 +286,26 @@ module.exports = async (client, interaction) => {
                         if (!languageJSON) languageJSON = require(`../submodules/splat3/data/language/${languageDefault}_full.json`);
                         switch (focusedOption.name) {
                             case "clothing":
-                                let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
-                                let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
-                                let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
+                                // structuredClone() makes sure the original object stays intact
+                                let allClothesHead = structuredClone(languageJSON["CommonMsg/Gear/GearName_Head"]);
+                                let allClothesBody = structuredClone(languageJSON["CommonMsg/Gear/GearName_Clothes"]);
+                                let allClothesShoes = structuredClone(languageJSON["CommonMsg/Gear/GearName_Shoes"]);
                                 for await (const [key, value] of Object.entries(allClothesHead)) {
-                                    let clothesHeadEndString = "-Head";
+                                    let clothesHeadEndString = "_Head";
                                     if (!key.endsWith(clothesHeadEndString)) {
                                         allClothesHead[`${key}${clothesHeadEndString}`] = allClothesHead[key];
                                         delete allClothesHead[key];
                                     };
                                 };
                                 for await (const [key, value] of Object.entries(allClothesBody)) {
-                                    let clothesBodyEndString = "-Body";
+                                    let clothesBodyEndString = "_Clothes";
                                     if (!key.endsWith(clothesBodyEndString)) {
                                         allClothesBody[`${key}${clothesBodyEndString}`] = allClothesBody[key];
-                                        delete allClothesHead[key];
+                                        delete allClothesBody[key];
                                     };
                                 };
                                 for await (const [key, value] of Object.entries(allClothesShoes)) {
-                                    let clothesShoesEndString = "-Shoes";
+                                    let clothesShoesEndString = "_Shoes";
                                     if (!key.endsWith(clothesShoesEndString)) {
                                         allClothesShoes[`${key}${clothesShoesEndString}`] = allClothesShoes[key];
                                         delete allClothesShoes[key];
@@ -313,7 +314,8 @@ module.exports = async (client, interaction) => {
                                 let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
                                 for await (const [key, value] of Object.entries(allClothesNames)) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !key.startsWith("COP00")) choices.push({ name: value, value: key });
+                                        !key.startsWith("COP00") &&
+                                        !key.startsWith("Msn00")) choices.push({ name: value, value: key });
                                 };
                                 break;
                             case "weapon":

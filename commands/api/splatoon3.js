@@ -44,14 +44,32 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
-                let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
-                // Doesn't always find the correct item despite its existence
-                let clothingObject = await Object.values(allClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
-                if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: `Couldn't find that piece of clothing. Make sure you select an autocomplete option.` });
-                let clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Clothes"][inputID];
-                if (clothingObject.__RowId.startsWith("Shs")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Shoes"][inputID];
-                if (clothingObject.__RowId.startsWith("Hed")) clothingAuthor = languageJSON["CommonMsg/Gear/GearName_Head"][inputID];
+                // Get clothing type as added in events/interactionCreate.js
+                let inputIDSplit = inputID.split("_");
+                let clothingType = inputIDSplit[inputIDSplit.length - 1];
+                inputIDSplit.pop(); // Remove added clothing type
+                inputID = inputIDSplit.join("_"); // Restore original ID
+                // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
+                let clothingFailedString = `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`;
+                let selectedClothesJSON = null;
+                switch (clothingType) {
+                    case "Head":
+                        selectedClothesJSON = GearInfoHeadJSON;
+                        break;
+                    case "Clothes":
+                        selectedClothesJSON = GearInfoClothesJSON;
+                        break;
+                    case "Shoes":
+                        selectedClothesJSON = GearInfoShoesJSON;
+                        break;
+                    default:
+                        return sendMessage({ client: client, interaction: interaction, content: clothingFailedString });
+                };
+                let clothingObject = await Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
+                if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: clothingFailedString });
+                let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][inputID]; // Possible to read .__RowId property instead of using clothingType
                 if (!clothingAuthor) clothingAuthor = inputID;
+
                 let starRating = star.repeat(clothingObject.Rarity);
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
@@ -65,7 +83,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let brandImage = `${githubRaw}images/brand/${clothingObject.Brand}.png`;
                 let abilityImage = `${githubRaw}images/skill/${clothingObject.Skill}.png`;
                 let clothingImage = `${githubRaw}images/gear/${clothingObject.__RowId}.png`;
-
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
                     .setThumbnail(abilityImage)
