@@ -279,14 +279,32 @@ module.exports = async (client, interaction) => {
                         if (!languageJSON) languageJSON = require(`../submodules/splat3/data/language/${languageDefault}_full.json`);
                         switch (focusedOption.name) {
                             case "clothing":
-                                let allClothesNames = {
-                                    ...languageJSON["CommonMsg/Gear/GearName_Head"],
-                                    ...languageJSON["CommonMsg/Gear/GearName_Clothes"],
-                                    ...languageJSON["CommonMsg/Gear/GearName_Shoes"]
+                                let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
+                                let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
+                                let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
+                                for await (const [key, value] of Object.entries(allClothesHead)) {
+                                    if (!key.endsWith("-Head")) {
+                                        allClothesHead[`${key}-Head`] = allClothesHead[key];
+                                        delete allClothesHead[key];
+                                    };
                                 };
+                                for await (const [key, value] of Object.entries(allClothesBody)) {
+                                    if (!key.endsWith("-Body")) {
+                                        allClothesBody[`${key}-Body`] = allClothesBody[key];
+                                        delete allClothesHead[key];
+                                    };
+                                };
+                                for await (const [key, value] of Object.entries(allClothesShoes)) {
+                                    if (!key.endsWith("-Shoes")) {
+                                        allClothesShoes[`${key}-Shoes`] = allClothesShoes[key];
+                                        delete allClothesShoes[key];
+                                    };
+                                };
+                                let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
                                 for await (const [key, value] of Object.entries(allClothesNames)) {
                                     if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) && !key.startsWith("COP00")) choices.push({ name: value, value: key });
                                 };
+                                console.log(choices)
                                 break;
                             case "weapon":
                                 for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
