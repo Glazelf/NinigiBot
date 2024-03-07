@@ -53,9 +53,9 @@ module.exports = async (client, messageReaction) => {
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar })
-            .setDescription(targetMessage.content)
-            .addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
+            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar });
+        if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
+        starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
         if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
         starEmbed
             .setImage(messageImage)
