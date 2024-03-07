@@ -37,7 +37,7 @@ module.exports = async (exception, client, interaction = null) => {
         if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
         let interactionOptions = "\n";
         let subCommand = "";
-        if (interaction.options) {
+        if (interaction && interaction.options) {
             subCommand = interaction.options._subcommand; // Using .getSubcommand() fails on user/message commands
             if (interaction.options._hoistedOptions) { // Doesn't seem to be a cleaner way to access all options at once
                 interaction.options._hoistedOptions.forEach(option => {
@@ -63,16 +63,14 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1994) + `\`\`\`...`;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(client.config.devChannelID);
-        if (interaction) {
-            if (baseMessage.includes("Missing Permissions")) {
-                try {
-                    return interaction.reply(`I lack permissions to perform the requested action.`);
-                } catch (e) {
-                    return;
-                };
-            } else {
-                return devChannel.send({ content: baseMessage });
+        if (baseMessage.includes("Missing Permissions")) {
+            try {
+                return interaction.reply(`I lack permissions to perform the requested action.`);
+            } catch (e) {
+                return;
             };
+        } else {
+            return devChannel.send({ content: baseMessage });
         };
 
     } catch (e) {
