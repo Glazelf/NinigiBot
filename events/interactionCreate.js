@@ -527,7 +527,7 @@ module.exports = async (client, interaction) => {
                     case "bugReportModal":
                         // Bug report
                         const bugReportTitle = interaction.fields.getTextInputValue('bugReportTitle');
-                        const bugReportDescribe = interaction.fields.getTextInputValue('bugReportDescribe');
+                        const bugReportDescription = interaction.fields.getTextInputValue('bugReportDescription');
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
                         const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
@@ -538,7 +538,7 @@ module.exports = async (client, interaction) => {
                             .setAuthor({ name: `Bug Report 🐛` })
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
-                            .setDescription(bugReportDescribe)
+                            .setDescription(bugReportDescription)
                             .addFields([
                                 { name: "Reproduce:", value: bugReportReproduce, inline: false },
                                 { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
@@ -551,7 +551,7 @@ module.exports = async (client, interaction) => {
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
-                        const modMailDescribe = interaction.fields.getTextInputValue('modMailDescribe');
+                        const modMailDescription = interaction.fields.getTextInputValue('modMailDescription');
 
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
@@ -560,7 +560,7 @@ module.exports = async (client, interaction) => {
                             .setAuthor({ name: `Mod Mail 💌` })
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
-                            .setDescription(modMailDescribe)
+                            .setDescription(modMailDescription)
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });

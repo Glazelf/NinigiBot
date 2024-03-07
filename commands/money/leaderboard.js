@@ -15,7 +15,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const money_db = await user_api.getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
-
         if (global) {
             // Global leaderboard
             icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -24,7 +23,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 .slice(0, 10)
                 .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
-
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
                 .setAuthor({ name: `Global Leaderboard:`, iconURL: icon });
@@ -36,9 +34,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 .slice(0, 10)
                 .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
-
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });
-
             leaderboardEmbed
                 .setDescription(leaderboardString)
                 .setAuthor({ name: `Leaderboard:`, iconURL: icon });

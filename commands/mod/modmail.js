@@ -18,7 +18,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setMaxLength(256)
             .setRequired(true);
         const descriptionInput = new Discord.TextInputBuilder()
-            .setCustomId('modMailDescribe')
+            .setCustomId('modMailDescription')
             .setLabel("Elaborate on your problem.")
             .setPlaceholder("User BigYoshi27#5918 (748199267725869127) is calling me a stinky nerd!")
             .setStyle(Discord.TextInputStyle.Paragraph)

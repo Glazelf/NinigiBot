@@ -15,7 +15,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             .setMaxLength(256)
             .setRequired(true);
         const descriptionInput = new Discord.TextInputBuilder()
-            .setCustomId('bugReportDescribe')
+            .setCustomId('bugReportDescription')
             .setLabel("Describe what went wrong.")
             .setPlaceholder("I saw a spider with 10 legs, I don't think that's normal!")
             .setStyle(Discord.TextInputStyle.Paragraph)
