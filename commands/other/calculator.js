@@ -31,8 +31,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             calcInput = calcInput.replace(value, "");
         });
         if (!calcInput) return sendMessage({ client: client, interaction: interaction, content: noInputString });
+        let evaled = null;
         try {
-            var evaled = eval(calcInput);
+            evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: noInputString });

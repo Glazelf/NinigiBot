@@ -88,7 +88,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         resistances = resistances.join(", ");
         immunities = immunities.join(", ");
 
-        var pokemonID = leadingZeros(pokemon.num.toString());
+        var pokemonID = leadingZeros(pokemon.num.toString()); // Do a rewrite sometime to avoid using var
         // Forms
         const primalString = "-Primal";
         const totemString = "-Totem";
@@ -430,13 +430,13 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             return StatText;
         };
         function leadingZeros(str) {
-            for (var i = str.length; i < 4; i++) {
+            for (let i = str.length; i < 4; i++) {
                 str = "0" + str;
             };
             return str;
         };
         async function correctValue(object, pokemonName, input) {
-            var uncorrectedNames = Object.keys(object);
+            let uncorrectedNames = Object.keys(object);
             uncorrectedNames.forEach(function (key) {
                 pokemonName = pokemonName.toLowerCase();
                 if (pokemonName == key) {

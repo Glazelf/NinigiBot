@@ -30,7 +30,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         return sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream, ephemeral: ephemeral });
 
         function hexToRgb(hex) {
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
                 r: parseInt(result[1], 16),
                 g: parseInt(result[2], 16),
