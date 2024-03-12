@@ -22,6 +22,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (deleteMessageDays < 0) deleteMessageDays = 0;
         if (deleteMessageDays > 7) deleteMessageDays = 7;
         let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
+        let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
@@ -51,9 +52,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
             await user.send({ content: dmString })
                 .then(message => banReturn += `Succeeded in sending a DM to ${user.username} with the reason.`)
                 .catch(e => banReturn += `Failed to send a DM to ${user.username} with the reason.`);
-            if (deleteMessageDays > 0) banReturn += deletedMessagesString;
+            if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
             try {
-                await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
+                await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
@@ -66,9 +67,9 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 if (bansFetch.has(userIDArg)) return sendMessage({ client: client, interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
             };
             banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${Discord.codeBlock(reason)}No DM was sent to ${user.username} since this ban was by ID or the user was not in the server.`;
-            if (deleteMessageDays > 0) banReturn += deletedMessagesString;
+            if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
             try {
-                await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
+                await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
                 return sendMessage({ client: client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
