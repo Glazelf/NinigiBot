@@ -25,8 +25,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let banReturn = null;
         let banFailString = `Ban failed. Either the specified user isn't in the server or I lack banning permissions.`;
-
-        let dmString = `You've been banned from **${interaction.guild.name}** for the following reason: \`${reason}\``;
+        let dmString = `You've been banned from **${interaction.guild.name}** by ${interaction.user.username} for the following reason: ${Discord.codeBlock(reason)}`;
 
         let bansFetch;
         try {
@@ -48,10 +47,10 @@ exports.run = async (client, interaction, logger, globalVars) => {
             if (bansFetch) {
                 if (bansFetch.has(member.id)) return sendMessage({ client: client, interaction: interaction, content: `${member.user.username} (${member.id}) is already banned.` });
             };
-            banReturn = `Banned ${member.user} (${member.id}) for the following reason: \`${reason}\`.`;
+            banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${Discord.codeBlock(reason)}`;
             await user.send({ content: dmString })
-                .then(message => banReturn += `\nSucceeded in sending a DM with the reason to ${user.username}.`)
-                .catch(e => banReturn += `\nFailed to send a DM with the reason to ${user.username}.`);
+                .then(message => banReturn += `Succeeded in sending a DM to ${user.username} with the reason.`)
+                .catch(e => banReturn += `Failed to send a DM to ${user.username} with the reason.`);
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });
@@ -66,7 +65,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             if (bansFetch) {
                 if (bansFetch.has(userIDArg)) return sendMessage({ client: client, interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
             };
-            banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: \`${reason}\`.\nNo DM was sent since this ban was by ID or the user was not in the server.`;
+            banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${Discord.codeBlock(reason)}No DM was sent to ${user.username} since this ban was by ID or the user was not in the server.`;
             if (deleteMessageDays > 0) banReturn += deletedMessagesString;
             try {
                 await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageDays: deleteMessageDays });

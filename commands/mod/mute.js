@@ -41,7 +41,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
 
-        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}with reason: \`${reason}\`.`;
+        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${Discord.codeBlock(reason)}`;
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
@@ -50,13 +50,13 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.username} (${time})`;
-        let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} with reason: \`${reason}\`.`;
+        let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} for the following reason: ${Discord.codeBlock(reason)}`;
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
             await user.send({ content: dmString })
-                .then(message => muteReturnString += `\nSucceeded in sending a DM with the reason to ${user.username}.`)
-                .catch(e => muteReturnString += `\nFailed to send a DM with the reason to ${user.username}.`);
+                .then(message => muteReturnString += `Succeeded in sending a DM to ${user.username} with the reason.`)
+                .catch(e => muteReturnString += `Failed to send a DM to ${user.username} with the reason.`);
             return sendMessage({ client: client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
