@@ -45,7 +45,7 @@ module.exports = async (client, messageReaction) => {
             .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar });
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
         starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
-        if (isReply && replyMessage) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author}`, inline: true }]);
+        if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: true }]);
         starEmbed
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
