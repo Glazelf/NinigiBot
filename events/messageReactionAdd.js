@@ -43,7 +43,7 @@ module.exports = async (client, messageReaction) => {
         if (isReply) {
             try {
                 replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
-                if (replyMessage.content) replyString += `"${replyMessage.content.slice(0, 950)}"`;
+                if (replyMessage.content.length > 0) replyString += `"${replyMessage.content.slice(0, 950)}"`;
                 if (replyMessage.author) replyString += `\n-${replyMessage.author}`;
             } catch (e) {
                 isReply = false;
