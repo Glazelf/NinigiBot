@@ -69,7 +69,7 @@ module.exports = async (client, message) => {
                 .setAuthor({ name: `Message Deleted ❌`, iconURL: avatar })
                 .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
                 .addFields([{ name: `Content:`, value: messageContent, inline: false }]);
-            if (isReply && replyMessage && replyMessage.author) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
+            if (isReply && replyMessage && replyMessage.author && replyMessage.author.id) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
                 .setFooter({ text: message.author.username })
