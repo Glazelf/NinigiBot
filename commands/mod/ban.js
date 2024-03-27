@@ -37,7 +37,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.username} (${time})`;
-        // If user is found
+        // If member is found
         if (member) {
             // Check permissions
             let userRole = interaction.member.roles.highest;
@@ -66,7 +66,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             if (bansFetch) {
                 if (bansFetch.has(userIDArg)) return sendMessage({ client: client, interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
             };
-            banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${Discord.codeBlock(reason)}No DM was sent to ${user.username} since this ban was by ID or the user was not in the server.`;
+            banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${Discord.codeBlock(reason)}No DM was sent since this ban was by ID or the user was not in the server.`;
             if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
             try {
                 await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
