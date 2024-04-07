@@ -80,13 +80,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             { name: "Created:", value: `<t:${createdAt}:f>`, inline: true },
             { name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }
         ]);
-        if (githubRepoResponse) botEmbed.addFields([{ name: "Github Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
+        if (githubRepoResponse) botEmbed.addFields([{ name: "GitHub Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
         if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
         let botButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
             .addComponents(new Discord.ButtonBuilder({ label: 'App Directory', style: Discord.ButtonStyle.Link, url: `https://discord.com/application-directory/${client.user.id}` }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'Github', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'GitHub', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
             .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
