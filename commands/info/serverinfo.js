@@ -67,17 +67,17 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             boosterString = guild.premiumSubscriptionCount;
         } else {
             switch (guild.premiumTier) {
-                case "TIER_1":
+                case 1:
                     emoteMax = emoteCapTier1;
                     stickerMax = stickerCapTier1;
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier2}`;
                     break;
-                case "TIER_2":
+                case 2:
                     emoteMax = emoteCapTier2;
                     stickerMax = stickerCapTier2;
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier3}`;
                     break;
-                case "TIER_3":
+                case 3:
                     emoteMax = emoteCapTier3;
                     stickerMax = stickerCapTier3;
                     boosterString = guild.premiumSubscriptionCount;
