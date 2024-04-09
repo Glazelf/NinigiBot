@@ -101,7 +101,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let threadCount = 0;
         let archivedThreadCount = 0;
         let serverLinks = "";
-        if (guild.features.includes("COMMUNITY")) serverLinks += `<id:home>\n<id:customize>\n`;
+        if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
         serverLinks += `<id:browse>\n`;
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
         if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
