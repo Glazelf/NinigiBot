@@ -1,6 +1,5 @@
 let botjsFunction = async function botjsFunction() {
     const Discord = require('discord.js');
-    const Enmap = require("enmap");
     const fs = require("fs");
     const path = require("path");
     // all except guild presence
@@ -31,10 +30,8 @@ let botjsFunction = async function botjsFunction() {
             delete require.cache[require.resolve(`./events/${file}`)];
         });
     });
-
-    client.commands = new Enmap();
+    client.commands = new Discord.Collection();
     client.aliases = new Discord.Collection();
-
     await walk(`./commands/`);
     console.log("Loaded commands!");
 
