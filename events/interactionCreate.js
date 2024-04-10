@@ -67,8 +67,7 @@ module.exports = async (client, interaction) => {
                             if (!pokemon || !pokemon.exists) return;
                             messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool });
                             if (!messageObject) return;
-                            await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
-                            return;
+                            return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
                             monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
                             // Monster Hunter forms
@@ -86,7 +85,7 @@ module.exports = async (client, interaction) => {
                             if (!monsterData) return;
                             messageObject = await getMonster(client, interaction, monsterData);
                             if (!messageObject) return;
-                            await interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
+                            return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
                             let componentsCopy = interaction.message.components;
@@ -98,20 +97,19 @@ module.exports = async (client, interaction) => {
                                     };
                                 }, this[index].toJSON().components);
                             }, componentsCopy);
-                            await interaction.update({ components: componentsCopy });
-                            return;
+                            return interaction.update({ components: componentsCopy });
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
-                            await interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
+                            return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
                             let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, { id: user });
-                            await interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
+                            return interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
                             return;
