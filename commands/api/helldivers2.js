@@ -7,6 +7,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
+        let campaignStatus = null;
+        let liberationString = "Liberation";
+        let defenseString = "Defense";
         await interaction.deferReply({ ephemeral: ephemeral });
         let helldiversEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
@@ -20,16 +23,16 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (!planetObject) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified planet." });
                 let planetIndex = planetObject[0];
                 planetObject = planetObject[1];
-                let planetDescription = `${planetObject.sector} Sector.`;
+                let planetSector = `${planetObject.sector} Sector`;
                 // Campaign status data is of all planets, so always requested and then checked if requested planet is in the data
-                let campaignStatus = await axios.get(`${api}war/campaign`);
+                campaignStatus = await axios.get(`${api}war/campaign`);
                 let campaignStatusPlanet = campaignStatus.data.find(planet => planet.planetIndex == planetIndex);
                 let campaignStatusString = "";
                 if (campaignStatusPlanet) {
-                    campaignStatusString = `Being liberated from the ${campaignStatusPlanet.faction}.`;
-                    if (campaignStatusPlanet.defense == true) campaignStatusString = campaignStatusString.replace("liberated", "defended");
+                    campaignStatusString = `${liberationString} vs. ${campaignStatusPlanet.faction}`;
+                    if (campaignStatusPlanet.defense == true) campaignStatusString = campaignStatusString.replace(liberationString, defenseString);
                     campaignStatusString += `\nProgress: ${Math.round(campaignStatusPlanet.percentage * 100) / 100}%\nHelldivers: ${campaignStatusPlanet.players}`;
-                    if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal <t:${Math.floor(campaignStatusPlanet.expireDateTime)}:R>.`;
+                    if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal <t:${Math.floor(campaignStatusPlanet.expireDateTime)}:R>`;
                 };
                 let planetBiome = null;
                 if (planetObject.biome) {
@@ -45,10 +48,23 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                 };
                 helldiversEmbed
-                    .setAuthor({ name: planetObject.name })
-                    .setDescription(planetDescription)
+                    .setAuthor({ name: `${planetObject.name} - ${planetSector}` })
                     .addFields([{ name: "Environmentals:", value: environmentals, inline: true }]);
                 if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
+                break;
+            case "campaign":
+                campaignStatus = await axios.get(`${api}war/campaign`);
+                campaignStatus = campaignStatus.data;
+                await campaignStatus.forEach(async planet => {
+                    let planetStatusTitle = planet.name;
+                    if (planet.majorOrder) planetStatusTitle += ` (Major Order)`;
+                    let planetStatusString = `${liberationString} vs. ${planet.faction}`;
+                    if (planet.defense == true) planetStatusString = planetStatusString.replace(liberationString, defenseString);
+                    planetStatusString += `\nProgress: ${Math.round(planet.percentage * 100) / 100}%\nHelldivers: ${planet.players}`;
+                    if (planet.expireDateTime) planetStatusString += `\nWithdrawal <t:${Math.floor(planet.expireDateTime)}:R>`;
+                    helldiversEmbed.addFields([{ name: `${planet.name}`, value: planetStatusString, inline: true }]);
+                });
+                helldiversEmbed.setAuthor({ name: "Campaign Status" });
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
@@ -73,6 +89,15 @@ module.exports.config = {
             autocomplete: true,
             required: true
         }, {
+            name: "ephemeral",
+            type: Discord.ApplicationCommandOptionType.Boolean,
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "campaign",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
+        description: "Get info on current campaigns.",
+        options: [{
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
