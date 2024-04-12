@@ -467,6 +467,18 @@ module.exports = async (client, interaction) => {
                             };
                         };
                         break;
+                    case "helldivers2":
+                        let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
+                        switch (focusedOption.name) {
+                            case "planet":
+                                let planetsResponse = await axios.get(`${apiHelldivers}planets`);
+                                let planetsData = planetsResponse.data;
+                                for await (const [key, value] of Object.entries(planetsData)) {
+                                    if (value.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: value.name, value: value.name });
+                                };
+                                break;
+                        };
+                        break;
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
