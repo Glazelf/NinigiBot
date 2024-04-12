@@ -18,24 +18,37 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let planetsData = planetsResponse.data;
                 let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
                 if (!planetObject) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified planet." });
-                planetObject = planetObject[1]; // 0 is key, 1 is value
+                let planetIndex = planetObject[0];
+                planetObject = planetObject[1];
+                let planetDescription = `${planetObject.sector} Sector.`;
+                // Campaign status data is of all planets, so always requested and then checked if requested planet is in the data
+                let campaignStatus = await axios.get(`${api}war/campaign`);
+                let campaignStatusPlanet = campaignStatus.data.find(planet => planet.planetIndex == planetIndex);
+                let campaignStatusString = "";
+                if (campaignStatusPlanet) {
+                    campaignStatusString = `Being liberated from the ${campaignStatusPlanet.faction}.`;
+                    if (campaignStatusPlanet.defense == true) campaignStatusString = campaignStatusString.replace("liberated", "defended");
+                    campaignStatusString += `\nProgress: ${Math.round(campaignStatusPlanet.percentage * 100) / 100}%\nHelldivers: ${campaignStatusPlanet.players}`;
+                    if (campaignStatusPlanet.expireDateTime) campaignStatusString += `\nWithdrawal <t:${Math.floor(campaignStatusPlanet.expireDateTime)}:R>.`;
+                };
                 let planetBiome = null;
                 if (planetObject.biome) {
                     planetBiome = planetObject.biome.slug.charAt(0).toUpperCase() + planetObject.biome.slug.slice(1); // Capitalize first letter
                     helldiversEmbed.addFields([{ name: `${planetBiome} Biome:`, value: planetObject.biome.description, inline: false }]);
                 };
+                // Environmental effects like earthquakes, extreme weather effects etc.
                 let environmentals = "None.";
                 if (planetObject.environmentals && planetObject.environmentals.length > 0) {
                     environmentals = "";
                     planetObject.environmentals.forEach(environmental => {
                         environmentals += `**${environmental.name}**: ${environmental.description}\n`;
                     });
-
                 };
                 helldiversEmbed
                     .setAuthor({ name: planetObject.name })
-                    .setDescription(`${planetObject.sector} Sector`)
+                    .setDescription(planetDescription)
                     .addFields([{ name: "Environmentals:", value: environmentals, inline: true }]);
+                if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
