@@ -77,7 +77,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         img = await Canvas.loadImage('./assets/reactions.png');
                         ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
 
-                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
 
@@ -97,9 +97,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     components: trophy_slice.components,
                     ephemeral: ephemeral,
                 });
-
             case "ask":
-
                 trophy_name = interaction.options.getString("trophy");
                 res = await api_trophy.getShopTrophyWithName(trophy_name);
                 let isShop = true;
@@ -129,8 +127,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         embeds: [embed],
                         ephemeral: ephemeral
                     });
-
-                }
+                };
         };
 
     } catch (e) {

@@ -49,7 +49,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
         };
 
-        let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+        let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
         const answer_buttons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ customId: 'yes_battle', style: Discord.ButtonStyle.Succes, label: 'Accept' }))
             .addComponents(new Discord.ButtonBuilder({ customId: 'no_battle', style: Discord.ButtonStyle.Danger, label: 'Reject' }))
@@ -140,7 +140,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     };
                     for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
-                    let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                    let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
@@ -177,7 +177,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                     ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
                 };
             };
-            let messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+            let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
             await sendMessage({ client: client, interaction: interaction, content: text, files: [messageFile] });
             await wait();
         };

@@ -75,7 +75,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     ctx.fillStyle = '#00d4a8'
                     ctx.fillRect(467, 413, 245 * exp_struct.curr_percent, 14);
                 };
-                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "feed":
                 foodArg = interaction.options.getInteger("food");
@@ -122,7 +122,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                             img = await Canvas.loadImage('./assets/dinNight.png');
                             ctx.drawImage(img, 199, 0);
                         };
-                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
                 return sendMessage({
@@ -172,7 +172,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 img = await Canvas.loadImage('./assets/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
                 shinx.addExperienceAndUnfeed(100 * reaction[2], 1);
-                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({
                     client: client,
                     interaction: interaction,
@@ -201,7 +201,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let conversation = await shinxApi.getRandomReaction();
                 ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
-                messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 shinx.addExperienceAndUnfeed(50, 1);
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
                 break;
@@ -233,7 +233,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         img = await Canvas.loadImage('./assets/reactions.png');
                         ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
                         returnString = `Nickname changed to **${new_nick}**!`;
-                        messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
 
@@ -256,7 +256,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         img = await Canvas.loadImage('./assets/sparkle.png');
                         ctx.drawImage(img, 49, 10);
                     };
-                    messageFile = new Discord.MessageAttachment(canvas.toBuffer());
+                    messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 } else {
                     returnString = 'You need that your shinx arrives to level 50 for that.';
                     messageFile = null;
