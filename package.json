@@ -18,7 +18,7 @@
     "path": "^0.12.7",
     "pokemon-showdown": "github:smogon/pokemon-showdown",
     "pureimage": "^0.4.13",
-    "sequelize": "^6.37.2",
+    "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7",
     "unique-names-generator": "^4.7.1",
     "xmlhttprequest": "^1.8.0"
