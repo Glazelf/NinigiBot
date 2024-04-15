@@ -8,7 +8,7 @@
     "@sapphire/async-queue": "^1.5.2",
     "axios": "^1.6.8",
     "canvas": "^2.11.2",
-    "cron": "^3.1.6",
+    "cron": "^3.1.7",
     "discord.js": "^14.14.1",
     "discord.js-minesweeper": "^1.1.0",
     "forever": "^4.0.3",
