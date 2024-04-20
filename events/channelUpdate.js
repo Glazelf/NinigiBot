@@ -38,7 +38,7 @@ module.exports = async (client, oldChannel, newChannel) => {
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${newChannelType} Updated ⚒️`, iconURL: icon })
-                .addFields([{ name: `Channel:`, value: `${newChannel} (${newChannel.id})`, inline: false }])
+                .addFields([{ name: `Channel:`, value: `${newChannel.name}\n${newChannel} (${newChannel.id})`, inline: false }])
                 .setFooter({ text: footer })
                 .setTimestamp();
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
@@ -48,7 +48,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                     { name: `New Name:`, value: newChannel.name, inline: true }
                 ]);
             } else {
-                updateEmbed.addFields([{ name: 'Channel Name:', value: newChannel.name, inline: true }]);
+                // updateEmbed.addFields([{ name: 'Channel Name:', value: newChannel.name, inline: true }]);
             };
             if (oldChannel.type !== newChannel.type) {
                 updateEmbed.addFields([
@@ -94,13 +94,13 @@ module.exports = async (client, oldChannel, newChannel) => {
                     ]);
                 } else if (oldChannel.userLimit !== newChannel.userLimit) {
                     updateEmbed.addFields([
-                        { name: `Old User Limit:`, value: oldChannel.userLimit || 'None', inline: true },
-                        { name: `New User Limit:`, value: newChannel.userLimit || 'None', inline: true }
+                        { name: `Old User Limit:`, value: oldChannel.userLimit.toString() || 'None', inline: true },
+                        { name: `New User Limit:`, value: newChannel.userLimit.toString() || 'None', inline: true }
                     ]);
                 } else if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
                     updateEmbed.addFields([
-                        { name: `Old Region:`, value: oldChannel.rtcRegion || 'automatic', inline: true },
-                        { name: `New Region:`, value: newChannel.rtcRegion || 'automatic', inline: true }
+                        { name: `Old Region:`, value: oldChannel.rtcRegion || 'Automatic', inline: true },
+                        { name: `New Region:`, value: newChannel.rtcRegion || 'Automatic', inline: true }
                     ]);
                 } else {
                     return;
