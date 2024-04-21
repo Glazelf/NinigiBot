@@ -29,47 +29,43 @@ module.exports = async (client, oldRole, newRole) => {
             // Role color
             let embedColor = newRole.hexColor;
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
-
             let icon = newRole.guild.iconURL(globalVars.displayAvatarSettings);
+            let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)
                 .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
-                .addFields([{ name: `Role:`, value: `${newRole} (${newRole.id})`, inline: true }])
+                .setFooter({ text: newRole.id })
                 .setTimestamp();
-            if (executor) {
-                updateEmbed
-                    .addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: true }])
-                    .setFooter({ text: executor.username });
-            };
             if (oldRole.name !== newRole.name) {
                 updateEmbed.addFields([
-                    { name: `Old Name:`, value: oldRole.name, inline: true },
-                    { name: `New Name:`, value: newRole.name, inline: true }
+                    { name: `Name:`, value: `Old: ${oldRole.name}\nNew: ${newRole.name}`, inline: true }
                 ]);
-            } else if (oldRole.color !== newRole.color) {
+            };
+            if (oldRole.color !== newRole.color) {
                 updateEmbed.addFields([
-                    { name: `Old Color:`, value: oldRole.hexColor, inline: true },
-                    { name: `New Color:`, value: newRole.hexColor, inline: true }
+                    { name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }
                 ]);
-            } else if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
+            };
+            if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
+                // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field
                 if (oldRole.permissions.toArray().length > 0 && newRole.permissions.toArray().length > 0) {
                     updateEmbed.addFields([
                         { name: `Old Permissions:`, value: oldRole.permissions.toArray().join(', '), inline: false },
                         { name: `New Permissions:`, value: newRole.permissions.toArray().join(', '), inline: false }
                     ]);
                 };
-            } else {
-                return;
             };
             if (oldRole.icon !== newRole.icon) {
                 let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
                 let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
+                updateDescription += "\nIcon updated.";
                 updateEmbed
-                    .setDescription(`Icon Updated.`)
                     .setThumbnail(oldIcon)
                     .setImage(newIcon);
             };
+            updateEmbed.setDescription(updateDescription);
+            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {

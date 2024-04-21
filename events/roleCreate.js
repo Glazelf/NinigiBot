@@ -33,18 +33,11 @@ module.exports = async (client, role) => {
             const createEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
-                .addFields([
-                    { name: `Role:`, value: `${role} (${role.id})` },
-                    { name: `Role name:`, value: role.name }
-                ])
+                .setDescription(role.toString())
+                .setFooter({ text: role.id })
                 .setTimestamp();
-            if (executor) {
-                createEmbed
-                    .addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
-                    .setFooter({ text: executor.username });
-            };
             if (role.permissions.toArray().length > 0) createEmbed.addFields([{ name: `Permissions:`, value: role.permissions.toArray().join(', '), inline: false }]);
-
+            if (executor) createEmbed.addFields([{ name: 'Created By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [createEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {

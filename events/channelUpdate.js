@@ -38,42 +38,38 @@ module.exports = async (client, oldChannel, newChannel) => {
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${newChannelType} Updated ⚒️`, iconURL: icon })
-                .addFields([{ name: `Channel:`, value: `${newChannel.name}\n${newChannel} (${newChannel.id})`, inline: false }])
+                .setDescription(`${newChannel} (${newChannel.id})`)
                 .setFooter({ text: footer })
                 .setTimestamp();
-            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             if (oldChannel.name !== newChannel.name) {
                 updateEmbed.addFields([
-                    { name: `Old Name:`, value: oldChannel.name, inline: true },
-                    { name: `New Name:`, value: newChannel.name, inline: true }
+                    { name: `Name:`, value: `Old: ${oldChannel.name}\nNew: ${newChannel.name}`, inline: true }
                 ]);
-            } else {
-                // updateEmbed.addFields([{ name: 'Channel Name:', value: newChannel.name, inline: true }]);
             };
             if (oldChannel.type !== newChannel.type) {
                 updateEmbed.addFields([
-                    { name: `Old Type:`, value: oldChannelType, inline: true },
-                    { name: `New Type:`, value: newChannelType, inline: true }
+                    { name: `Type:`, value: `Old: ${oldChannelType}\nNew: ${newChannelType}`, inline: true }
                 ]);
-            } else if (oldChannel.parentId !== newChannel.parentId) {
+            };
+            if (oldChannel.parentId !== newChannel.parentId) { // Does not seem to fire correctly. Channel events are so buggy lol
+                let categoryOld = oldChannel.parent?.name || "None";
+                let categoryNew = newChannel.parent?.name || "None";
                 updateEmbed.addFields([
-                    { name: `Old Category:`, value: oldChannel.parent?.name || '(None)', inline: true },
-                    { name: `New Category:`, value: newChannel.parent?.name || '(None)', inline: true }
+                    { name: `Category:`, value: `Old: ${categoryOld}\nNew: ${categoryNew}`, inline: true }
                 ]);
             };
             if ([Discord.ChannelType.GuildText, Discord.ChannelType.GuildNews, Discord.ChannelType.GuildStore].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
+                    let topicOld = oldChannel.topic || 'None';
+                    let topicNew = newChannel.topic || 'None';
                     updateEmbed.addFields([
-                        { name: `Old Topic:`, value: oldChannel.topic || '(None)', inline: true },
-                        { name: `New Topic:`, value: newChannel.topic || '(None)', inline: true }
+                        { name: `Topic:`, value: `Old: ${topicOld}\nNew: ${topicNew}`, inline: true }
                     ]);
-                } else if (oldChannel.nsfw !== newChannel.nsfw) {
+                };
+                if (oldChannel.nsfw !== newChannel.nsfw) {
                     updateEmbed.addFields([
-                        { name: `Old Is NSFW:`, value: oldChannel.nsfw.toString(), inline: true },
-                        { name: `New Is NSFW:`, value: newChannel.nsfw.toString(), inline: true }
+                        { name: `NSFW:`, value: `Old: ${oldChannel.nsfw}\nNew: ${newChannel.nsfw}`, inline: true }
                     ]);
-                } else {
-                    return;
                 };
                 // these will both be undefined on a GuildNews channel, since there is no rate limit there, possibly also for GuildStore channels
                 let oldSlowmode = 0;
@@ -82,28 +78,31 @@ module.exports = async (client, oldChannel, newChannel) => {
                 if (newChannel.rateLimitPerUser) newSlowmode = newChannel.rateLimitPerUser;
                 if (oldSlowmode !== newSlowmode) {
                     updateEmbed.addFields([
-                        { name: `Old Slowmode Timer:`, value: `${oldSlowmode} seconds`, inline: true },
-                        { name: `New Slowmode Timer:`, value: `${newSlowmode} seconds`, inline: true }
+                        { name: `Slowmode:`, value: `Old: ${oldSlowmode} seconds\nNew: ${newSlowmode} seconds`, inline: true }
                     ]);
                 };
-            } else if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildStageVoice].includes(newChannel.type)) {
+            };
+            if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildStageVoice].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
                     updateEmbed.addFields([
-                        { name: `Old Bitrate:`, value: `${(oldChannel.bitrate / 1000)}kbps`, inline: true },
-                        { name: `New Bitrate:`, value: `${(newChannel.bitrate / 1000)}kbps`, inline: true }
+                        { name: `Bitrate:`, value: `Old: ${(oldChannel.bitrate / 1000)}kbps\nNew: ${(newChannel.bitrate / 1000)}kbps`, inline: true }
                     ]);
-                } else if (oldChannel.userLimit !== newChannel.userLimit) {
+                };
+                if (oldChannel.userLimit !== newChannel.userLimit) {
+                    let userLimitOld = "None";
+                    let userLimitNew = userLimitOld;
+                    if (oldChannel.userLimit) userLimitOld = oldChannel.userLimit;
+                    if (newChannel.userLimit) userLimitNew = newChannel.userLimit;
                     updateEmbed.addFields([
-                        { name: `Old User Limit:`, value: oldChannel.userLimit.toString() || 'None', inline: true },
-                        { name: `New User Limit:`, value: newChannel.userLimit.toString() || 'None', inline: true }
+                        { name: `User Limit:`, value: `Old: ${userLimitOld} users\nNew: ${userLimitNew} users`, inline: true }
                     ]);
-                } else if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
+                };
+                if (oldChannel.rtcRegion !== newChannel.rtcRegion) {
+                    let regionOld = oldChannel.rtcRegion || "Automatic";
+                    let regionNew = newChannel.rtcRegion || "Automatic";
                     updateEmbed.addFields([
-                        { name: `Old Region:`, value: oldChannel.rtcRegion || 'Automatic', inline: true },
-                        { name: `New Region:`, value: newChannel.rtcRegion || 'Automatic', inline: true }
+                        { name: `Region:`, value: `Old: ${regionOld}\nNew: ${regionNew}`, inline: true }
                     ]);
-                } else {
-                    return;
                 };
             };
             if (!updateEmbed.data.fields.some(field => field.name.startsWith('New'))) {
@@ -111,7 +110,7 @@ module.exports = async (client, oldChannel, newChannel) => {
                 // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
                 return;
             };
-
+            if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {

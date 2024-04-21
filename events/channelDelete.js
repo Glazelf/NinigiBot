@@ -28,13 +28,12 @@ module.exports = async (client, channel) => {
                 };
             };
             const channelType = channel.constructor.name;
-            let footer = channel.id;
-            if (executor) footer = executor.username;
             let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `${channelType} Deleted ❌`, iconURL: icon })
-                .addFields([{ name: `Channel:`, value: `${channel.name} (${channel.id})`, inline: true }])
+                .setDescription(`${channel.name} (${channel.id})`)
+                .setFooter({ text: channel.id })
                 .setTimestamp();
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [deleteEmbed] });
