@@ -8,7 +8,6 @@ module.exports = async (client, id) => {
         let timestamp = await getTime(client);
 
         client.user.setPresence(globalVars.presence);
-
         // Console log status
         return console.log(`Launched shard ${id}. (${timestamp})`);
 
