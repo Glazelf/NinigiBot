@@ -44,7 +44,6 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
     } catch (e) {
         // Log error
         const logger = require('./logger');
-
         logger(e, client);
     };
 };
