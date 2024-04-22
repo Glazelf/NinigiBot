@@ -546,9 +546,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
-                    // There seems to be an issue where I don't receive all Splatfest. Gear vs. Grub vs. Fun and older seem to be missing? I get them on my browser but not through axios.
-                    // First check is in case data.fields is empty, second is to control max size
-                    if (!splat3Embed.data.fields || splat3Embed.data.fields.length < 14) splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
+                    // Character limit per embed is 6000. Paginate this sometime. For now show 10 most recent Splatfests.
+                    if (!splat3Embed.data.fields || splat3Embed.data.fields.length <= 10) splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
                 });
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
