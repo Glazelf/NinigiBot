@@ -482,7 +482,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         1: "Frye",
                         2: "Big Man"
                     };
+                    let maxSplatfestFields = 25;
+                    let splatfestFields = 0;
                     await splatfest.teams.forEach(async (team) => {
+                        if (splatfestFields => maxSplatfestFields) return;
                         if (team.teamName.length < 1) team.teamName = splatfestIdols[splatfestTeamIndex]; // In case no valid name in API return
                         if (splatfestTeamIndex !== 0) {
                             splatfestDescription += " vs. ";
@@ -547,6 +550,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
                     splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
+                    splatfestFields++;
                 });
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
