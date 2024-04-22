@@ -546,9 +546,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
-                    splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
+                    // There seems to be an issue where I don't receive all Splatfest. Gear vs. Grub vs. Fun and older seem to be missing? I get them on my browser but not through axios.
+                    // First check is in case data.fields is empty, second is to control max size
+                    if (!splat3Embed.data.fields || splat3Embed.data.fields.length < 14) splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
                 });
-                if (!splat3Embed.data.fields || splat3Embed.data.fields.length < 25) { }
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
@@ -669,11 +670,11 @@ let splatoon3Languages = [
     { name: "Chinese (Simplified)|中文（简体)", value: "CNzh" },
     { name: "Chinese (Traditional)|中文（繁體)", value: "TWzh" }
 ];
-// There's also an AP region but I'm not sure what it is or how to name it. Seems to be for Oceania/Australia-ish territories.
 let splatoon3Regions = [
     { value: "EU", name: "Europe" },
     { value: "US", name: "United States" },
-    { value: "JP", name: "Japan" }
+    { value: "JP", name: "Japan" },
+    { value: "AP", name: "Asia/Pacific" }
 ];
 module.exports.config = {
     name: "splatoon3",
@@ -790,7 +791,7 @@ module.exports.config = {
     }, {
         name: "splatfests",
         type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get all Splatfests data.",
+        description: "Get Splatfest data.",
         options: [{
             name: "region",
             type: Discord.ApplicationCommandOptionType.String,
