@@ -105,11 +105,9 @@ module.exports = async (client, oldChannel, newChannel) => {
                     ]);
                 };
             };
-            if (!updateEmbed.data.fields.some(field => field.name.startsWith('New'))) {
-                // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
-                // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
-                return;
-            };
+            // if a property on the channel changed, but there wont be anything new shown, dont sent the embed at all
+            // sometimes, moving a channel between categories creates 2 channelUpdate events, one of which has no difference that is displayed
+            if (!updateEmbed.data.fields) return;
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
