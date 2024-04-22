@@ -364,7 +364,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 // Command needs a rework once there is 1 finished Splatfest to show results, and then again when there's a second scheduled Splatfest to make sure ordering and comparisons work properly
                 responseSplatfest = await axios.get(splatfestAPI);
                 if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
-                splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes; // Usage is under the assumption that splatfests are identical between regions now. If not, a region argument should be added.
+                splatfestData = responseSplatfest.data[inputRegion].data.festRecords.nodes;
                 let splatfestBanner = null;
                 let isUpcomingOrOngoingSplatfest = false;
                 let pointValues = {
@@ -482,10 +482,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         1: "Frye",
                         2: "Big Man"
                     };
-                    let maxSplatfestFields = 25;
-                    let splatfestFields = 0;
                     await splatfest.teams.forEach(async (team) => {
-                        if (splatfestFields => maxSplatfestFields) return;
                         if (team.teamName.length < 1) team.teamName = splatfestIdols[splatfestTeamIndex]; // In case no valid name in API return
                         if (splatfestTeamIndex !== 0) {
                             splatfestDescription += " vs. ";
@@ -543,15 +540,15 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (splatfest.teams[0].result) {
                         splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
                         splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote.first}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai.first}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular.first}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge.first}p)`;
-                        if (!midTermWinner) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor.first}p)`;
+                        if (!midTermWinner && currentSplatfestPointValues.tricolor) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor.first}p)`;
                         splatfestResultsDescription += `\n${splatfestResultsWinner}`;
                     };
                     splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
                     if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
                     if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
                     splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
-                    splatfestFields++;
                 });
+                if (!splat3Embed.data.fields || splat3Embed.data.fields.length < 25) { }
                 splat3Embed
                     .setAuthor({ name: "Splatfests" })
                     .setImage(splatfestBanner)
