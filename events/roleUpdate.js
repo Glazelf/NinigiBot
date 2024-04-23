@@ -42,6 +42,11 @@ module.exports = async (client, oldRole, newRole) => {
                     { name: `Name:`, value: `Old: ${oldRole.name}\nNew: ${newRole.name}`, inline: true }
                 ]);
             };
+            if (oldRole.rawPosition !== newRole.rawPosition) {
+                updateEmbed.addFields([
+                    { name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }
+                ]);
+            };
             if (oldRole.color !== newRole.color) {
                 updateEmbed.addFields([
                     { name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }
