@@ -67,7 +67,7 @@ module.exports = async (client, message) => {
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setAuthor({ name: `Message Deleted ❌`, iconURL: avatar })
-                .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel}.`)
+                .setDescription(`Message sent by ${message.author} (${message.author.id}) deleted from ${message.channel} (${message.channel.id}).`)
                 .addFields([{ name: `Content:`, value: messageContent, inline: false }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
