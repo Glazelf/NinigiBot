@@ -1,4 +1,4 @@
-module.exports = async (client, messageReaction) => {
+module.exports = async (client, messageReaction) => { //glaze gay
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
