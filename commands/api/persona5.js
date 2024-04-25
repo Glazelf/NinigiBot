@@ -66,8 +66,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 let skillObject = skillMapRoyal[skillInput];
                 if (!skillObject || skillObject.element == "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that skill.` });
                 let skillPersonas = "";
-                for await (const [key, value] of Object.entries(skillObject.personas)) {
-                    skillPersonas += `${key}: Level ${value}\n`;
+                if (skillObject.unique) {
+                    skillPersonas += `${skillObject.unique}: Unique\n`;
+                };
+                if (skillObject.personas) {
+                    for await (const [key, value] of Object.entries(skillObject.personas)) {
+                        skillPersonas += `${key}: Level ${value}\n`;
+                    };
                 };
                 p5Embed
                     .setAuthor({ name: `${skillInput} (${capitalizeString(skillObject.element)})` })
