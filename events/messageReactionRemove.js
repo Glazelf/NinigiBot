@@ -4,40 +4,46 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
-
+        // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
-
+        if (messageReaction.emoji.name !== "⭐") return;
+        // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
+        // // Get channels, starboard messages and star requirements from database
+        const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
+        // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         if (!starboardChannel) return;
+        // Try to find the starred message in database
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
-
+        // Try to find the starboard channel
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
-        if (messageReaction.emoji.name !== "⭐") return;
-        // Call image
+        // Get attachment, don't need to check videos since those are in seperate message anyways
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
-
+        // Get user's avatar, try to use server avatar, otherwise default to global avatar
         let avatar;
         if (targetMessage.member) {
             avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         } else {
             avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
         };
+        // Check if the starred message is replying to another message
         let isReply = false;
         let replyMessage;
         if (targetMessage.reference) isReply = true;
         if (isReply) {
+            // Format message the starred message is replying to
             try {
                 replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
             } catch (e) {
                 isReply = false;
             };
         };
+        // Format starred message embed
         let starButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
@@ -51,22 +57,21 @@ module.exports = async (client, messageReaction) => {
             .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
         if (messageReaction.count == 0 && messageDB) {
-            // Delete
+            // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             await starChannel.messages.fetch(messageDB.starboard_message_id).then(m => {
-                m.delete()
+                m.delete();
             });
             await messageDB.destroy();
             return;
         } else if (messageDB) {
-            // Update
+            // Update existing entry otherwise
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {
-            // Ignore
             return;
         };
 

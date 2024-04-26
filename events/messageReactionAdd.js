@@ -1,47 +1,56 @@
-module.exports = async (client, messageReaction) => { //glaze gay
+module.exports = async (client, messageReaction) => {
     const logger = require('../util/logger');
     // Import globals
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbServices/server.api');
-
+        // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) return;
-
+        if (messageReaction.emoji.name !== "⭐") return;
+        // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
+        // Get channels, starboard messages and star requirements from database
+        const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbServices/server.api');
+        // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         if (!starboardChannel) return;
+        // Try to find the starred message in database
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+        // Try to find the star requirement. If it doesn't exist, use the default
         let starLimit = await StarboardLimits.findOne({ where: { server_id: messageReaction.message.guild.id } });
         if (starLimit) {
             starLimit = starLimit.star_limit;
         } else {
             starLimit = globalVars.starboardLimit;
         };
+        // Try to find the starboard channel
         let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
-        if (messageReaction.emoji.name !== "⭐") return;
-        // Attachments, messages don't send for some reason when attaching seperate files?
+        // Check for atached files
         let messageImage = null;
         let seperateFiles = null;
         if (targetMessage.attachments.size > 0) {
             messageImage = await targetMessage.attachments.first().url;
+            // Videos can't be embedded unless you're X (formerly Twitter) or YouTube, so they are sent as seperate mesages
             if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
         };
+        // Get user's avatar, try to use server avatar, otherwise default to global avatar
         let avatar;
         if (targetMessage.member) {
             avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         } else {
             avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
         };
+        // Check if the starred message is replying to another message
         let isReply = false;
         let replyMessage = null;
         let replyString = "";
         if (targetMessage.reference) isReply = true;
         if (isReply) {
             try {
+                // Format message the starred message is replying to
                 replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
                 if (replyMessage.content.length > 0) replyString += `"${replyMessage.content.slice(0, 950)}"`;
                 if (replyMessage.author) replyString += `\n-${replyMessage.author}`;
@@ -49,6 +58,7 @@ module.exports = async (client, messageReaction) => { //glaze gay
                 isReply = false;
             };
         };
+        // Format the starboard embed message
         let starButtons = new Discord.ActionRowBuilder()
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
@@ -61,20 +71,19 @@ module.exports = async (client, messageReaction) => { //glaze gay
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
+        // Check if message already existed in database (was posted to starboard) or if star amount simply changed
         if (messageReaction.count >= starLimit && !messageDB) {
-            // Create
+            // Send message then push data to database
             await starboard.send({ embeds: [starEmbed], components: [starButtons] }).then(async (m) => await StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
             return;
         } else if (messageDB) {
-            // Update
+            // Update existing starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
-
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {
-            // Ignore
             return;
         };
 
