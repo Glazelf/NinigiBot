@@ -92,6 +92,10 @@ module.exports = async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
+            // Try to pin messages with double stars
+            if (messageReaction.count >= starLimit * 2) starMessage.pin().catch(e => {
+                // console.log(e); 
+            });
             return;
         } else {
             return;
