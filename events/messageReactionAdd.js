@@ -4,16 +4,27 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
+        // Altboard WIP constants - Change Board Channel ID to actual ID
+        const altboard_channel_id = "922972585992532022";
+        const altboard_reaction_emoji = "nostar";
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) return;
-        if (messageReaction.emoji.name !== "⭐") return;
+        if (!["⭐", altboard_reaction_emoji].includes(messageReaction.emoji.name)) return;
+
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
         // Get channels, starboard messages and star requirements from database
         const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbServices/server.api');
+        // Check if message is reacting to nostar
+        const isNostar = messageReaction.emoji.name === altboard_reaction_emoji;
         // Try to find the starboard channel, won't exist if server hasn't set one
-        let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+        let starboardChannel;
+        if (isNostar) { // find altboard channel
+        starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id, channel_id: altboard_channel_id } });
+        } else { // find starboard channel
+            starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+        }
         if (!starboardChannel) return;
         // Try to find the starred message in database
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
