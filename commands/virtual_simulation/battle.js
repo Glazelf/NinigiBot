@@ -43,7 +43,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
         for (let i = 0; i < 2; i++) ctx.arc(47 + 147 * i, 36, 29, 0, Math.PI * 2, false);
         ctx.closePath();
         ctx.clip();
-
         for (let i = 0; i < 2; i++) {
             const avatar = await Canvas.loadImage(avatars[i]);
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
@@ -51,7 +50,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
         const answer_buttons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ customId: 'yes_battle', style: Discord.ButtonStyle.Succes, label: 'Accept' }))
+            .addComponents(new Discord.ButtonBuilder({ customId: 'yes_battle', style: Discord.ButtonStyle.Success, label: 'Accept' }))
             .addComponents(new Discord.ButtonBuilder({ customId: 'no_battle', style: Discord.ButtonStyle.Danger, label: 'Reject' }))
         const sent_message = await sendMessage({ client: client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
