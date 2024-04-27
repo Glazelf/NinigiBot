@@ -4,14 +4,19 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
+        // Altboard constants - Glaze update this with proper channel ID
+        const altboardChannelID = "922972585992532022"; // dont know if this is needed or not, delete if unnecessary
+        const altboardEmote = "nostar";
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
-        if (messageReaction.emoji.name !== "⭐") return;
+        if (!["⭐", altboardEmote].includes(messageReaction.emoji.name)) return;
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
         // // Get channels, starboard messages and star requirements from database
         const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
+        // Check if reaction is nostar
+        const isNostar = messageReaction.emoji.name === altboardEmote;
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
         if (!starboardChannel) return;
