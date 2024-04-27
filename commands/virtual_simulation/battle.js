@@ -50,11 +50,11 @@ exports.run = async (client, interaction, logger, globalVars) => {
 
         let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
         const answer_buttons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ customId: 'yes_battle', style: Discord.ButtonStyle.Success, label: 'Accept' }))
-            .addComponents(new Discord.ButtonBuilder({ customId: 'no_battle', style: Discord.ButtonStyle.Danger, label: 'Reject' }))
+            .addComponents(new Discord.ButtonBuilder({ customId: 'battleYes', style: Discord.ButtonStyle.Success, label: 'Accept' }))
+            .addComponents(new Discord.ButtonBuilder({ customId: 'battleNo', style: Discord.ButtonStyle.Danger, label: 'Reject' }))
         const sent_message = await sendMessage({ client: client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
-        const filter = (interaction) => (interaction.customId === 'yes_battle' || interaction.customId === 'no_battle') && interaction.user.id === trainers[1].id;
+        const filter = (interaction) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
         let trainer_answer;
         try {
             trainer_answer = await sent_message.awaitMessageComponent({ filter, time: 25_000 });
@@ -63,7 +63,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         };
         if (!trainer_answer) {
             return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] });
-        } else if (trainer_answer.customId === 'no_battle') {
+        } else if (trainer_answer.customId === 'battleNo') {
             return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
         };
         if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
