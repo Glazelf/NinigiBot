@@ -21,14 +21,18 @@ module.exports = async (client, messageReaction) => {
         // Check if reaction is nostar
         const isNostar = messageReaction.emoji.name === altboardEmote;
         // Try to find the starboard channel, won't exist if server hasn't set one
-        let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
-        if (!starboardChannel) return;
-        // Try to find the starred message in database
-        let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
-        // Try to find the starboard channel
-        let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
+        let starboardChannel;
+        let starboard;
+        if (isNoStar) { // Find altboard channel
+            starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
+        } else { // Find starboard channel
+            starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
+        }
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
+        // Try to find the starred message in database
+        let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         // Get attachment, don't need to check videos since those are in seperate message anyways
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
