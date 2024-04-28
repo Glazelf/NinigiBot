@@ -28,7 +28,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 await shinxApi.autoFeedShinx2(master.id);
             };
         };
-
         switch (interaction.options.getSubcommand()) {
             case "info":
                 shinx = await shinxApi.getShinx(master.id);
@@ -77,6 +76,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 };
                 messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
+                break;
             case "feed":
                 foodArg = interaction.options.getInteger("food");
                 res = await shinxApi.feedShinx(master.id);
@@ -128,6 +128,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 return sendMessage({
                     client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok')
                 });
+                break;
             case "play":
                 shinx = await shinxApi.getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
@@ -236,11 +237,10 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
-
                 return sendMessage({
                     client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok')
                 });
-
+                break;
             case "shiny":
                 res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
                 if (res) {
@@ -258,22 +258,23 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                     messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 } else {
-                    returnString = 'You need that your shinx arrives to level 50 for that.';
+                    returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                     messageFile = null;
                 };
                 return sendMessage({
                     client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != true)
                 });
-
+                break;
             case "release":
                 let confirm = false
                 let confirmArg = interaction.options.getBoolean("confirm");
                 if (confirmArg === true) confirm = confirmArg;
                 if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
                 shinx = await shinxApi.getShinx(master.id);
+                let shinxNickname = shinx.nickname;
                 await shinx.destroy();
-
-                return sendMessage({ client: client, interaction: interaction, content: `Released Shinx and reset all it's values.` });
+                return sendMessage({ client: client, interaction: interaction, content: `Released your Shinx.\nBye-bye, ${shinxNickname}!` });
+                break;
         };
 
     } catch (e) {
