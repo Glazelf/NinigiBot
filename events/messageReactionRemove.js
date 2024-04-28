@@ -4,12 +4,15 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        // Altboard constants - Glaze update this with proper channel ID
-        const altboardChannelID = "922972585992532022"; // dont know if this is needed or not, delete if unnecessary
-        const altboardEmote = "nostar";
+        // const altboardChannelID = "593014621095329812";
+        const altboardChannelID = "922972585992532022"; // Swap to value above this for final release
+        const altboardEmote = "780198211913646130";
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
-        if (!["⭐", altboardEmote].includes(messageReaction.emoji.name)) return;
+        // Check if message is reacting to nostar in Shinx server
+        // const isNoStar = (messageReaction.emoji.id === altboardEmote && messageReaction.message.guildId == globalVars.ShinxServerID);
+        const isNoStar = (messageReaction.emoji.id === altboardEmote && messageReaction.message.guildId == "759344085420605471"); // Swap to value above this for final release
+        if (messageReaction.emoji.name !== "⭐" && !isNoStar) return;
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
