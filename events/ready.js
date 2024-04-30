@@ -1,6 +1,6 @@
+const Discord = require("discord.js");
 module.exports = async (client) => {
     try {
-        const Discord = require("discord.js");
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
         // const { bank } = require('../database/bank');
@@ -44,6 +44,11 @@ Connected as ${client.user.username}. (${timestamp})`);
     };
 };
 
+function initPresence() {
+    let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'idle' };
+    return presence;
+};
+
 module.exports.NinigiID = "592760951103684618";
 module.exports.ShinxServerID = "549214833858576395";
 module.exports.ShinxServerInvite = "2gkybyu";
@@ -56,3 +61,4 @@ module.exports.eventChannelID = "752626723345924157"; // General2
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
 module.exports.displayAvatarSettings = { size: 512, extension: "png", dynamic: true };
+module.exports.presence = initPresence();
