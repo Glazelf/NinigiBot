@@ -10,8 +10,7 @@ let botjsFunction = async function botjsFunction() {
     const client = new Discord.Client({
         intents: intents,
         partials: partials,
-        allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
-        ws: { properties: { browser: "Discord Android" }} 
+        allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
     });
     const config = require("./config.json");
     client.config = config;
