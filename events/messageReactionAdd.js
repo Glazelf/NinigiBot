@@ -4,15 +4,15 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        // const altboardChannelID = "593014621095329812";
-        const altboardChannelID = "922972585992532022" // Swap to value above this for final release
-        const altboardEmote = "780198211913646130";
+        let starboardEmote = "⭐";
+        const altboardChannelID = "1234922298255872092"; // Evil starboard
+        const altboardEmoteID = "780198211913646130";
+        const altboardEmote = `<:nostar:${altboardEmoteID}>`;
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) return;
         // Check if message is reacting to nostar in Shinx server
-        // const isNoStar = (messageReaction.emoji.id === altboardEmote && messageReaction.message.guildId == globalVars.ShinxServerID);
-        const isNoStar = (messageReaction.emoji.id === altboardEmote && messageReaction.message.guildId == "759344085420605471"); // Swap to value above this for final release
-        if (messageReaction.emoji.name !== "⭐" && !isNoStar) return;
+        const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
+        if (messageReaction.emoji.name !== starboardEmote && !isNoStar) return;
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
@@ -22,11 +22,12 @@ module.exports = async (client, messageReaction) => {
         let starboardChannel;
         let starboard;
         if (isNoStar) { // Find altboard channel
+            starboardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
             starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
-        }
+        };
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
@@ -73,7 +74,8 @@ module.exports = async (client, messageReaction) => {
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar });
+            .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setThumbnail(avatar);
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
         starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
         if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
