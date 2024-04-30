@@ -1,5 +1,6 @@
 module.exports = async (client) => {
     try {
+        const Discord = require("discord.js");
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
         // const { bank } = require('../database/bank');
@@ -22,7 +23,7 @@ module.exports = async (client) => {
 
         await client.guilds.fetch();
         // Set bot status
-        let presence = initPresence();
+        let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'idle' };
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
         // List and fetch servers the bot is connected to
@@ -41,11 +42,6 @@ Connected as ${client.user.username}. (${timestamp})`);
         // Log error
         console.log(e);
     };
-};
-
-function initPresence() {
-    let presence = { activities: [{ name: 'the lake theme', type: 2 }], status: 'idle' };
-    return presence;
 };
 
 module.exports.NinigiID = "592760951103684618";
