@@ -53,7 +53,8 @@ module.exports = async (client, message, newMessage) => {
 
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `Message Edited ⚒️`, iconURL: avatar })
+                .setTitle(`Message Edited ⚒️`)
+                .setThumbnail(avatar)
                 .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);

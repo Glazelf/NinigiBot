@@ -371,9 +371,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
             // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
         };
-        pkmEmbed
-            .setFooter({ text: footerText, iconURL: iconFooter })
-            .setTimestamp();
+        pkmEmbed.setFooter({ text: footerText, iconURL: iconFooter });
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 

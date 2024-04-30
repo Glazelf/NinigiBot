@@ -61,7 +61,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 abilityMatchesString = abilityMatchesString.slice(0, -2);
 
                 pokemonEmbed
-                    .setAuthor({ name: ability.name })
+                    .setTitle(ability.name)
                     .setDescription(ability.desc);
                 if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
                 pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${ability.gen}`, inline: true }]);
@@ -77,7 +77,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
                 pokemonEmbed
-                    .setAuthor({ name: item.name })
+                    .setTitle(item.name)
                     .setThumbnail(itemImage)
                     .setDescription(item.desc);
                 if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
@@ -121,7 +121,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (move.isZ) moveTitle = `${move.name} (Z-Move)`;
 
                 pokemonEmbed
-                    .setAuthor({ name: moveTitle })
+                    .setTitle(moveTitle)
                     .setDescription(description);
                 if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
                 if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
@@ -161,7 +161,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     resultString = `${boosted}\n${lowered}`;
                 };
                 pokemonEmbed
-                    .setAuthor({ name: nature.name })
+                    .setTitle(nature.name)
                     .setDescription(resultString);
                 break;
             // Format
@@ -203,7 +203,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (format.unbanlist && format.unbanlist.length > 0) unbanlist = format.unbanlist.join(", ");
 
                 pokemonEmbed
-                    .setAuthor({ name: `${format.name} (${format.section})` })
+                    .setTitle(`${format.name} (${format.section})`)
                     .setDescription(formatDescription)
                 if (ruleset) pokemonEmbed.addFields([{ name: "Ruleset:", value: ruleset, inline: false }]);
                 if (banlist) pokemonEmbed.addFields([{ name: "Banlist:", value: banlist, inline: false }]);
@@ -241,7 +241,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     };
                     if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
-                pokemonEmbed.setAuthor({ name: learnAuthor });
+                pokemonEmbed.setTitle(learnAuthor);
                 if (learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
                 return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: ephemeral });
                 break;
@@ -323,7 +323,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
                     let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replaceAll("   ", "");
                     usageEmbed
-                        .setAuthor({ name: `${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})` })
+                        .setTitle(`${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
                         .addFields([
                             { name: "Moves:", value: movesString, inline: true },
@@ -350,7 +350,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     let usageListPart2 = [];
                     await usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                     usageEmbed
-                        .setAuthor({ name: `Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})` })
+                        .setTitle(`Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .addFields([
                             { name: "1-50", value: usageListPart1.join("\n"), inline: true },
                             { name: "51-100", value: usageListPart2.join("\n"), inline: true }

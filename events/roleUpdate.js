@@ -29,12 +29,11 @@ module.exports = async (client, oldRole, newRole) => {
             // Role color
             let embedColor = newRole.hexColor;
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
-            let icon = newRole.guild.iconURL(globalVars.displayAvatarSettings);
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)
-                .setAuthor({ name: `Role Updated ⚒️`, iconURL: icon })
+                .setTitle(`Role Updated ⚒️`)
                 .setFooter({ text: newRole.id })
                 .setTimestamp();
             if (oldRole.name !== newRole.name) {

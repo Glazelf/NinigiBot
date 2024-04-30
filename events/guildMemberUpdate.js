@@ -14,7 +14,6 @@ module.exports = async (client, member, newMember) => {
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
-            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -97,7 +96,7 @@ module.exports = async (client, member, newMember) => {
             };
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: topText, iconURL: icon })
+                .setTitle(topText)
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);
             updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);

@@ -53,7 +53,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         };
                     };
                 };
-                dqm3Embed.setAuthor({ name: monsterTitle });
+                dqm3Embed.setTitle(monsterTitle);
                 if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
                 dqm3Embed.addFields([
                     { name: "Rank", value: monsterData.rank, inline: true },
@@ -97,8 +97,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     talentMonstersArray.push(monstersJSON[monster[0]].name);
                 });
                 talentMonstersString = talentMonstersArray.join(", ");
-                dqm3Embed
-                    .setAuthor({ name: talentData.name })
+                dqm3Embed.setTitle(talentData.name);
                 if (talentSkillsString.length > 0) dqm3Embed.addFields([{ name: "Skills: (Required points)", value: talentSkillsString, inline: true }]);
                 if (talentTraitsString.length > 0) dqm3Embed.addFields([{ name: "Traits: (Required points)", value: talentTraitsString, inline: true }]);
                 if (talentMonstersString.length > 0) dqm3Embed.addFields([{ name: "Monsters:", value: talentMonstersString, inline: false }]);
@@ -115,7 +114,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (Object.keys(talentObject.skills).includes(inputID)) skillTalents.push(`${talentObject.name} (${talentObject.skills[inputID]})`);
                 };
                 dqm3Embed
-                    .setAuthor({ name: skillData.name })
+                    .setTitle(skillData.name)
                     .setDescription(skillData.description)
                     .addFields([{ name: "Type:", value: skillData.type, inline: true }])
                     .addFields([{ name: "MP Cost:", value: mpCostString, inline: true }]);
@@ -137,7 +136,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (Object.keys(talentObject.traits).includes(inputID)) traitTalents.push(`${talentObject.name} (${talentObject.traits[inputID]})`);
                 };
                 dqm3Embed
-                    .setAuthor({ name: traitData.name })
+                    .setTitle(traitData.name)
                     .setDescription(traitData.description);
                 if (traitMonsters.length > 0) dqm3Embed.addFields([{ name: "Monsters:", value: traitMonsters.join("\n"), inline: false }]);
                 if (traitTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: traitTalents.join("\n"), inline: false }]);
@@ -147,7 +146,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let itemData = itemsJSON[inputID];
                 if (!itemData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
                 dqm3Embed
-                    .setAuthor({ name: itemData.name })
+                    .setTitle(itemData.name)
                     .setDescription(itemData.description)
                     .addFields([{ name: "Type:", value: itemData.type, inline: true }]);
                 break;
@@ -206,7 +205,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         });
                     };
                     dqm3Embed
-                        .setAuthor({ name: "Synthesis" })
+                        .setTitle("Synthesis")
                         .setDescription(`${parent1Name} + ${parent2Name} = ${targetName}`);
                     if (familySynthesisString.length > 0) dqm3Embed.addFields([{ name: "Family Synthesis:", value: `${familySynthesisString}\n${familySynthesisNote}`, inline: false }]);
                     if (uniqueSynthesisString.length > 0) dqm3Embed.addFields([{ name: "Unique Synthesis:", value: uniqueSynthesisString, inline: false }]);

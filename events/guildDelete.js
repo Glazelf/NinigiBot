@@ -18,7 +18,7 @@ module.exports = async (client, guild) => {
         };
         const guildEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `Guild Left ❌`, iconURL: icon })
+            .setTitle(`Guild Left ❌`)
             .setThumbnail(icon)
             .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)
             .addFields([{ name: `Name:`, value: guild.name, inline: true }]);

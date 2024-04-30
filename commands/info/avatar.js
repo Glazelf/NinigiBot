@@ -17,7 +17,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         const avatarEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
-            .setAuthor({ name: `${user.username}'s avatar(s):` })
+            .setTitle(`${user.username}'s avatar(s):`)
             .setImage(serverAvatar);
         return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });
 
