@@ -83,6 +83,7 @@ module.exports = async (client, messageReaction) => {
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
+            if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {
