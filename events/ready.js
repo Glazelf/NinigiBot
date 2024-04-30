@@ -45,7 +45,7 @@ Connected as ${client.user.username}. (${timestamp})`);
 };
 
 function initPresence() {
-    let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'online' };
+    let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }] };
     return presence;
 };
 
