@@ -55,5 +55,4 @@ module.exports.eventChannelID = "752626723345924157"; // General2
 // module.exports.eventChannelID = "922972585992532022"; // Testing
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
-module.exports.presence = initPresence();
 module.exports.displayAvatarSettings = { size: 512, extension: "png", dynamic: true };
