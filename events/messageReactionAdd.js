@@ -4,17 +4,32 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
+        let starboardEmote = "⭐";
+        const altboardChannelID = "1234922298255872092"; // Evil starboard
+        const altboardEmoteID = "780198211913646130";
+        const altboardEmote = `<:nostar:${altboardEmoteID}>`;
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) return;
-        if (messageReaction.emoji.name !== "⭐") return;
+        // Check if message is reacting to nostar in Shinx server
+        const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
+        if (messageReaction.emoji.name !== starboardEmote && !isNoStar) return;
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
         // Get channels, starboard messages and star requirements from database
         const { StarboardChannels, StarboardMessages, StarboardLimits } = require('../database/dbServices/server.api');
         // Try to find the starboard channel, won't exist if server hasn't set one
-        let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
-        if (!starboardChannel) return;
+        let starboardChannel;
+        let starboard;
+        if (isNoStar) { // Find altboard channel
+            starboardEmote = altboardEmote;
+            starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
+        } else { // Find starboard channel
+            starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
+        };
+        if (!starboard) return;
+        if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         // Try to find the star requirement. If it doesn't exist, use the default
@@ -24,10 +39,6 @@ module.exports = async (client, messageReaction) => {
         } else {
             starLimit = globalVars.starboardLimit;
         };
-        // Try to find the starboard channel
-        let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
-        if (!starboard) return;
-        if (targetMessage.channel == starboard) return;
         // Check for atached files
         let messageImage = null;
         let seperateFiles = null;
@@ -63,7 +74,8 @@ module.exports = async (client, messageReaction) => {
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar });
+            .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setThumbnail(avatar);
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
         starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
         if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
