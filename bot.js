@@ -11,7 +11,7 @@ let botjsFunction = async function botjsFunction() {
         intents: intents,
         partials: partials,
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
-        ws: { properties: { browser: "Discord iOS" }} 
+        ws: { properties: { browser: "Discord Android" }} 
     });
     const config = require("./config.json");
     client.config = config;
