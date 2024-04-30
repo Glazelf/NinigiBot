@@ -23,7 +23,7 @@ module.exports = async (client) => {
 
         await client.guilds.fetch();
         // Set bot status
-        let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'idle' };
+        let presence = initPresence();
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
         // List and fetch servers the bot is connected to
