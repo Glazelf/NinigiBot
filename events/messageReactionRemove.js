@@ -4,28 +4,36 @@ module.exports = async (client, messageReaction) => {
     let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
-        // Altboard constants - Glaze update this with proper channel ID
-        const altboardChannelID = "922972585992532022"; // dont know if this is needed or not, delete if unnecessary
-        const altboardEmote = "nostar";
+        let starboardEmote = "⭐";
+        const altboardChannelID = "1234922298255872092"; // Evil starboard
+        const altboardEmoteID = "780198211913646130";
+        const altboardEmote = `<:nostar:${altboardEmoteID}>`;
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
-        if (!["⭐", altboardEmote].includes(messageReaction.emoji.name)) return;
+        // Check if message is reacting to nostar in Shinx server
+        const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
+        if (messageReaction.emoji.name !== starboardEmote && !isNoStar) return;
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
         // // Get channels, starboard messages and star requirements from database
         const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
         // Check if reaction is nostar
-        const isNostar = messageReaction.emoji.name === altboardEmote;
+        const isNostar = messageReaction.emoji.name === altboardEmoteID;
         // Try to find the starboard channel, won't exist if server hasn't set one
-        let starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
-        if (!starboardChannel) return;
-        // Try to find the starred message in database
-        let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
-        // Try to find the starboard channel
-        let starboard = await targetMessage.guild.channels.cache.find(channel => channel.id == starboardChannel.channel_id);
+        let starboardChannel;
+        let starboard;
+        if (isNoStar) { // Find altboard channel
+            starboardEmote = altboardEmote;
+            starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
+        } else { // Find starboard channel
+            starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
+        };
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
+        // Try to find the starred message in database
+        let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         // Get attachment, don't need to check videos since those are in seperate message anyways
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
@@ -53,7 +61,8 @@ module.exports = async (client, messageReaction) => {
             .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
         const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: `⭐${messageReaction.count}`, iconURL: avatar });
+            .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setThumbnail(avatar);
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
         starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
         if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: true }]);

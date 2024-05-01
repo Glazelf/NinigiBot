@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 module.exports = async (client) => {
     try {
         const stan = require('../affairs/stan')(client);
@@ -44,7 +45,7 @@ Connected as ${client.user.username}. (${timestamp})`);
 };
 
 function initPresence() {
-    let presence = { activities: [{ name: 'the lake theme', type: 2 }], status: 'idle' };
+    let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'idle' };
     return presence;
 };
 
@@ -59,5 +60,5 @@ module.exports.eventChannelID = "752626723345924157"; // General2
 // module.exports.eventChannelID = "922972585992532022"; // Testing
 module.exports.starboardLimit = 3;
 module.exports.battling = { yes: false };
-module.exports.presence = initPresence();
 module.exports.displayAvatarSettings = { size: 512, extension: "png", dynamic: true };
+module.exports.presence = initPresence();
