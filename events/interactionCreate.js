@@ -20,6 +20,8 @@ module.exports = async (client, interaction) => {
 
         if (!interaction) return;
         if (interaction.user.bot) return;
+        let inCommandInteractions = ["battleYes", "battleNo"]; // Interactions that are handled in the command file
+        if (inCommandInteractions.includes(interaction.customId)) return;
         switch (interaction.type) {
             case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
@@ -51,6 +53,7 @@ module.exports = async (client, interaction) => {
                 switch (interaction.componentType) {
                     case Discord.ComponentType.Button:
                         let messageObject = null;
+                        if (!interaction.customId) return;
                         if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
