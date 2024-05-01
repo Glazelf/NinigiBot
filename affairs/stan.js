@@ -55,8 +55,8 @@ module.exports = async (client) => {
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
             let candidateRandom = candidates[randomPick];
 
-            await api_history.incrementScapegoatAmount(candidateRandom.id); // this will probably require work in different areas to work, left it in as it MIGHT work?
-            await api_history.checkEvents(); // this will probably require work in different areas to work, left it in as it MIGHT work?
+            await api_history.incrementScapegoatAmount(candidateRandom.id); // this will probably require work in different areas to work, left it in as it MIGHT work (?!)
+            await api_history.checkEvents(); // this will probably require work in different areas to work, left it in as it MIGHT work (?!)
             // Random gif
             const randomGif = await getRandomGif(scapegoatGifTags);
             if (!randomGif) return;
