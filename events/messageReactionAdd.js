@@ -26,6 +26,7 @@ module.exports = async (client, messageReaction) => {
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
             starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
         if (!starboard) return;
