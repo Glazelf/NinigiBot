@@ -97,7 +97,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     components: trophy_slice.components,
                     ephemeral: ephemeral,
                 });
-            case "ask":
+            case "info":
                 trophy_name = interaction.options.getString("trophy");
                 res = await api_trophy.getShopTrophyWithName(trophy_name);
                 let isShop = true;
@@ -170,7 +170,7 @@ module.exports.config = {
             description: "Whether this command is only visible to you."
         }]
     }, {
-        name: "ask",
+        name: "info",
         type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Get info about a trophy",
         options: [{
