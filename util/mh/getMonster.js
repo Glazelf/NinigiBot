@@ -162,8 +162,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
         mhEmbed
             .addFields([{ name: "Games:", value: gameAppearances, inline: false }])
-            .setImage(monsterBanner)
-            .setTimestamp();
+            .setImage(monsterBanner);
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
 

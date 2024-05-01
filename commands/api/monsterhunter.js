@@ -44,7 +44,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                 };
                 mhEmbed
-                    .setAuthor({ name: questTitle })
+                    .setTitle(questTitle)
                     .setDescription(`${questData.description} -${questData.client}`)
                     .addFields([
                         { name: "Game:", value: questData.game, inline: true },
@@ -64,8 +64,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 questsTotal = questsTotal.sort(compare);
                 mhEmbed
                     .setColor(globalVars.embedColor)
-                    .setAuthor({ name: `${gameName} Quests` });
-
+                    .setTitle(`${gameName} Quests`);
                 let totalQuests = questsTotal.length;
                 let pageLength = 25;
                 let currentPage = 1; // Load page 1 on command use
@@ -84,7 +83,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (quest.isKey) questTitle += ` 🔑`;
                     mhEmbed.addFields([{ name: `${questTitle}`, value: `${quest.objective} in ${quest.map}`, inline: false }]);
                 });
-
                 let startIndex = currentPage + pageLength * currentPage;
                 let endIndex = startIndex + pageLength - 1;
                 mhEmbed.setFooter({ text: `Page ${currentPage}/${totalPages}` });

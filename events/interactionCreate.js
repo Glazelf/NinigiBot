@@ -548,7 +548,7 @@ module.exports = async (client, interaction) => {
 
                         const bugReportEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `Bug Report 🐛` })
+                            .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescription)
@@ -570,7 +570,7 @@ module.exports = async (client, interaction) => {
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
                         const modMailEmbed = new Discord.EmbedBuilder()
                             .setColor(globalVars.embedColor)
-                            .setAuthor({ name: `Mod Mail 💌` })
+                            .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
                             .setDescription(modMailDescription)

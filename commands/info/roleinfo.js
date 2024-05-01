@@ -28,7 +28,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // Embed
         let roleEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor)
-            .setAuthor({ name: `${role.name}` })
+            .setTitle(role.name)
             .setThumbnail(icon)
             .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
         if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);

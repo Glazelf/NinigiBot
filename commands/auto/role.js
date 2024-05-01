@@ -83,10 +83,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
-            let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             const rolesHelp = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `Available roles: `, iconURL: icon })
+                .setTitle(`Available roles:`)
                 .setDescription(roleHelpMessage);
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
         } else {

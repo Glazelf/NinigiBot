@@ -32,7 +32,7 @@ module.exports = async (client, role) => {
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
             const createEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setAuthor({ name: `Role Created ⭐`, iconURL: icon })
+                .setTitle(`Role Created ⭐`)
                 .setDescription(role.toString())
                 .setFooter({ text: role.id })
                 .setTimestamp();

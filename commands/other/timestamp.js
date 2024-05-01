@@ -45,7 +45,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: dateString })
+            .setTitle(dateString)
             .addFields([
                 { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },
                 { name: "Long Time", value: `\`<t:${unixTime}:T>\` ➡ <t:${unixTime}:T>`, inline: false },

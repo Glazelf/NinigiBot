@@ -37,7 +37,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
                 };
                 giEmbed
-                    .setAuthor({ name: `${character.name} - ${character.affiliation}` })
+                    .setTitle(`${character.name} - ${character.affiliation}`)
                     .setThumbnail(characterThumbnail)
                     .setImage(characterBanner)
                     .setDescription(character.description)
@@ -80,7 +80,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let weaponThumbnailFile = `Weapon_${weapon.name}.png`;
                 let weaponThumbnail = getWikiURL(weaponThumbnailFile, giWiki);
                 giEmbed
-                    .setAuthor({ name: weapon.name })
+                    .setTitle(weapon.name)
                     .setThumbnail(weaponThumbnail)
                     .addFields([
                         { name: "Type:", value: `${weapon.rarity}⭐ ${weapon.type}`, inline: true },
@@ -96,7 +96,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 response = await axios.get(giAPI + artifactName);
                 let artifact = response.data;
                 giEmbed
-                    .setAuthor({ name: artifact.name })
+                    .setTitle(artifact.name)
                     .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
                 if (artifact["1-piece_bonus"]) giEmbed.addFields([{ name: "1-Piece Bonus:", value: artifact["1-piece_bonus"], inline: false }]);
                 if (artifact["2-piece_bonus"]) giEmbed.addFields([{ name: "2-Piece Bonus:", value: artifact["2-piece_bonus"], inline: false }]);

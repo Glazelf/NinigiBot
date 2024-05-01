@@ -21,7 +21,6 @@ module.exports = async (client, member) => {
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
-            let icon = member.guild.iconURL(globalVars.displayAvatarSettings);
             let leaveEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
@@ -51,7 +50,7 @@ module.exports = async (client, member) => {
                 let leaveButtons = new Discord.ActionRowBuilder()
                     .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
                 leaveEmbed
-                    .setAuthor({ name: embedAuthor, iconURL: icon })
+                    .setTitle(embedAuthor)
                     .setThumbnail(avatar)
                     .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }]);
                 if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, inline: true }]);

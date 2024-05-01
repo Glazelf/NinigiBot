@@ -65,7 +65,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 
         let botEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setAuthor({ name: client.user.username })
+            .setTitle(client.user.username)
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addFields([

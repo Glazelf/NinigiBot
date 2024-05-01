@@ -158,7 +158,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`")
                     .replace("[group=0003 type=0000 params=00 00 80 3f 00 00 00 00]", "`A`");
                 splat3Embed
-                    .setAuthor({ name: subName })
+                    .setTitle(subName)
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
                     .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }])
@@ -184,7 +184,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .replace("\\n", " ")
                     .replaceAll("[group=0003 type=000c params=00 00 80 3f 00 00 00 00]", "`ZR`").replaceAll("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`").replaceAll("[group=0003 type=000b params=00 00 80 3f 00 00 00 00]", "`ZL`").replaceAll("[group=0003 type=0001 params=00 00 80 3f 00 00 00 00]", "`B`");
                 splat3Embed
-                    .setAuthor({ name: specialName })
+                    .setTitle(specialName)
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
                     .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
@@ -251,7 +251,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (inputMode == anarchyID) entrySettings = entrySettings[modeIndex];
                 let currentMapsSettings = entrySettings;
 
-                splat3Embed.setAuthor({ name: modeName });
+                splat3Embed.setTitle(modeName);
                 if (inputMode == salmonRunID) {
                     // Salmon Run
                     let responseSalmonRunGear = await axios.get(salmonRunGearAPI);
@@ -355,7 +355,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 });
 
                 splat3Embed
-                    .setAuthor({ name: "SplatNet3 Shop" })
+                    .setTitle("SplatNet3 Shop")
                     .setImage(splatnetData.pickupBrand.image.url)
                     .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` });
                 break;
@@ -550,7 +550,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (!splat3Embed.data.fields || splat3Embed.data.fields.length <= 10) splat3Embed.addFields([{ name: splatfestTitle, value: splatfestDescription, inline: false }]);
                 });
                 splat3Embed
-                    .setAuthor({ name: "Splatfests" })
+                    .setTitle("Splatfests")
                     .setImage(splatfestBanner)
                     .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
                 if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.");
@@ -594,7 +594,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 replayData.awards.forEach(award => { replayAwards.push(award.name) });
 
                 splat3Embed
-                    .setAuthor({ name: replayMode })
+                    .setTitle(replayMode)
                     .setThumbnail(replayData.player.weapon.image.url)
                     .setDescription(matchData)
                     .addFields([
@@ -626,7 +626,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let badgeRandom2 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let badgeRandom3 = badgeOptions[randomNumber(0, badgeOptions.length - 1)];
                 let discriminatorRandom = randomNumber(1000, 9999);
-
                 splat3Embed
                     .setAuthor({ name: randomTitle, iconURL: `${githubRaw}images/badge/${badgeRandom}` })
                     .setTitle(userTitle)

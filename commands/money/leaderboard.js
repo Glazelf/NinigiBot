@@ -11,13 +11,11 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let global = false;
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
-        let icon = null;
         const money_db = await user_api.getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
         if (global) {
             // Global leaderboard
-            icon = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
@@ -25,10 +23,10 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 .join('\n');
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
-                .setAuthor({ name: `Global Leaderboard:`, iconURL: icon });
+                .setTitle(`Global Leaderboard:`);
         } else {
             // Server leaderboard
-            icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
@@ -37,7 +35,8 @@ exports.run = async (client, interaction, logger, globalVars) => {
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });
             leaderboardEmbed
                 .setDescription(leaderboardString)
-                .setAuthor({ name: `Leaderboard:`, iconURL: icon });
+                .setTitle(`Leaderboard:`)
+                .setThumbnail(icon);
         };
 
         return sendMessage({ client: client, interaction: interaction, embeds: leaderboardEmbed });

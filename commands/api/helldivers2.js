@@ -48,7 +48,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     });
                 };
                 helldiversEmbed
-                    .setAuthor({ name: `${planetObject.name} - ${planetSector}` })
+                    .setTitle(`${planetObject.name} - ${planetSector}`)
                     .addFields([{ name: "Environmentals:", value: environmentals, inline: true }]);
                 if (campaignStatusPlanet) helldiversEmbed.addFields([{ name: "Campaign Status:", value: campaignStatusString, inline: false }]);
                 break;
@@ -64,7 +64,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     if (planet.expireDateTime) planetStatusString += `\nWithdrawal <t:${Math.floor(planet.expireDateTime)}:R>`;
                     helldiversEmbed.addFields([{ name: `${planet.name}`, value: planetStatusString, inline: true }]);
                 });
-                helldiversEmbed.setAuthor({ name: "Campaign Status" });
+                helldiversEmbed.setTitle("Campaign Status");
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });

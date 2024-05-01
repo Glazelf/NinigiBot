@@ -28,6 +28,7 @@ module.exports = async (client, messageReaction) => {
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
             starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
         if (!starboard) return;
@@ -83,6 +84,7 @@ module.exports = async (client, messageReaction) => {
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
+            if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
             await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
             return;
         } else {

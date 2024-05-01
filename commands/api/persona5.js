@@ -51,7 +51,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 let personaItem = getItemString(personaObject.item);
                 let personaItemAlarm = getItemString(personaObject.itemr);
                 p5Embed
-                    .setAuthor({ name: `${personaInput} (${personaObject.arcana})` })
+                    .setTitle(`${personaInput} (${personaObject.arcana})`)
                     .setDescription(elementalMatchup)
                     .addFields([
                         { name: "Stats:", value: `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, inline: true },
@@ -75,7 +75,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                     };
                 };
                 p5Embed
-                    .setAuthor({ name: `${skillInput} (${capitalizeString(skillObject.element)})` })
+                    .setTitle(`${skillInput} (${capitalizeString(skillObject.element)})`)
                     .setDescription(skillObject.effect)
                     .addFields([{ name: "Personas:", value: skillPersonas, inline: false }]);
                 break;
@@ -85,7 +85,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 if (!traitObject || traitObject.element !== "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
                 let traitPersonas = Object.keys(traitObject.personas).join("\n");
                 p5Embed
-                    .setAuthor({ name: traitInput })
+                    .setTitle(traitInput)
                     .setDescription(traitObject.effect)
                     .addFields([{ name: "Personas:", value: traitPersonas, inline: false }]);
                 break;
@@ -98,7 +98,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
                 } else if (itemObject.skillCard) {
                     p5Embed.addFields([{ name: `Skill Card:`, value: `Teaches a Persona ${itemInput}.`, inline: false }]);
                 };
-                p5Embed.setAuthor({ name: itemInput });
+                p5Embed.setTitle(itemInput);
         };
         return sendMessage({ client: client, interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 
