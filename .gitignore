@@ -16,7 +16,6 @@ init
 *.db
 *sqlite
 ffmpeg.exe
-README.md
 config.json
 launch.json
 *.dev.js
