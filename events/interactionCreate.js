@@ -63,12 +63,14 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
-                            let learnsetBool = (interaction.customId.split("|")[1] == "true");
-                            let shinyBool = (interaction.customId.split("|")[2] == "true");
+                            let customIdSplit = interaction.customId.split("|")
+                            let learnsetBool = (customIdSplit[1] == "true");
+                            let shinyBool = (customIdSplit[2] == "true");
+                            let generationButton = customIdSplit[3];
                             newPokemonName = newPokemonName.label;
-                            let pokemon = Dex.species.get(newPokemonName);
+                            let pokemon = Dex.mod(`gen${generationButton}`).species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
@@ -204,9 +206,11 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
+                        let currentGeneration = 9
+                        let generationInput = interaction.options.getInteger("generation") || currentGeneration;
                         switch (focusedOption.name) {
                             case "pokemon":
-                                let pokemonSpecies = Dex.species.all();
+                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all();
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
@@ -217,7 +221,7 @@ module.exports = async (client, interaction) => {
                                 });
                                 break;
                             case "ability":
-                                let abilities = Dex.abilities.all();
+                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all();
                                 await abilities.forEach(ability => {
                                     if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         ability.exists &&
@@ -226,7 +230,7 @@ module.exports = async (client, interaction) => {
                                 });
                                 break;
                             case "move":
-                                let moves = Dex.moves.all();
+                                let moves = Dex.mod(`gen${generationInput}`).moves.all();
                                 await moves.forEach(move => {
                                     if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         move.exists &&
@@ -234,7 +238,7 @@ module.exports = async (client, interaction) => {
                                 });
                                 break;
                             case "item":
-                                let items = Dex.items.all();
+                                let items = Dex.mod(`gen${generationInput}`).items.all();
                                 await items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         item.exists) choices.push({ name: item.name, value: item.name });
@@ -246,6 +250,8 @@ module.exports = async (client, interaction) => {
                                     if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         nature.exists) choices.push({ name: nature.name, value: nature.name });
                                 });
+                                break;
+                            case "generationInput":
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
