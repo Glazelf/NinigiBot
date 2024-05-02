@@ -11,6 +11,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
+        const imageExists = require('../../util/imageExists');
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -34,7 +35,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         // Set generation
         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
         let JSONresponse;
-        let allPokemon = Dex.mod(`gen${generationInput}`).species.all();
+        let allPokemon = Dex.mod(`gen${generationInput}`).species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = Dex.mod(`gen${generationInput}`).species.get(pokemonName);
@@ -58,6 +59,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
                 let abilityMatches = Object.values(allPokemon).filter(pokemon => Object.values(pokemon.abilities).includes(ability.name) && pokemon.exists && pokemon.num > 0);
+                abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
                 let abilityMatchesString = "";
                 abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
                 abilityMatchesString = abilityMatchesString.slice(0, -2);
@@ -65,7 +67,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setTitle(ability.name)
                     .setDescription(ability.desc)
-                    .setFooter({ text: `Generation ${generationInput}` });
+                    .setFooter({ text: `Generation ${generationInput} Data` });
                 if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
                 pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${ability.gen}`, inline: true }]);
                 break;
@@ -73,9 +75,11 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             case "item":
                 let itemSearch = interaction.options.getString("item");
                 let item = Dex.mod(`gen${generationInput}`).items.get(itemSearch);
-                if (!item || !item.exists || ["Past", "Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generation}.` });
+                if (!item || !item.exists || ["Past", "Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
+                let hasPGLImage = await imageExists(itemImage);
+                if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
@@ -83,7 +87,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setTitle(item.name)
                     .setThumbnail(itemImage)
                     .setDescription(item.desc)
-                    .setFooter({ text: `Generation ${generationInput}` });
+                    .setFooter({ text: `Generation ${generationInput} Data` });
                 if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
                 pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${item.gen}`, inline: true }]);
                 break;
@@ -125,7 +129,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setTitle(moveTitle)
                     .setDescription(description)
-                    .setFooter({ text: `Generation ${generationInput}` });
+                    .setFooter({ text: `Generation ${generationInput} Data` });
                 if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
                 if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
                 pokemonEmbed.addFields([
