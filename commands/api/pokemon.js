@@ -93,13 +93,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 break;
             // Moves
             case "move":
-                if (!move || !move.exists || move.isNonstandard == "CAP" || ["Past", "Future"].includes(move.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name in generation ${generationInput}.` });
+                if (!move || !move.exists || move.isNonstandard == "CAP" || ["Future"].includes(move.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name in generation ${generationInput}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsets)) {
                     let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
-                    if (!pokemonMatch || !pokemonMatch.exists || pokemonMatch.num <= 0 || !value.learnset) continue;
+                    if (!pokemonMatch || !pokemonMatch.exists || pokemonMatch.num <= 0 || !value.learnset || ["CAP", "Future"].includes(pokemonMatch.isNonstandard)) continue;
                     if (!Object.keys(value.learnset).includes(move.id)) continue;
-                    if (value.learnset[move.id].some(learnstring => learnstring.startsWith(currentGeneration))) moveLearnPool.push(pokemonMatch.name);
+                    if (value.learnset[move.id].some(learnstring => learnstring.startsWith(generationInput))) moveLearnPool.push(pokemonMatch.name);
                 };
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
@@ -111,6 +111,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let description = move.desc;
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
+                if (move.isNonstandard == "Past") description += `\nThis move is not usable in generation ${generationInput}.`;
 
                 let type = getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
                 let category = move.category;
@@ -144,7 +145,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (move.zMove && move.zMove.basePower && generationInput == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
                 if (move.maxMove && move.maxMove.basePower && generationInput == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
                 pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${move.gen}`, inline: true }]);
-                if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By (Gen ${currentGeneration}):`, value: moveLearnPoolString, inline: false }]);
+                if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
                 break;
             // Natures
             case "nature":
