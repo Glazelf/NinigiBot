@@ -361,10 +361,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (description.length > 0) pkmEmbed.setDescription(description);
         pkmEmbed.addFields([
             { name: "Type:", value: typeString, inline: true },
-            { name: "Metrics:", value: metricsString, inline: true },
-            { name: "Gender:", value: genderString, inline: true },
-            { name: "Abilities:", value: abilityString, inline: false }
+            { name: "Metrics:", value: metricsString, inline: true }
         ]);
+        if (generation >= 2) pkmEmbed.addFields([{ name: "Gender:", value: genderString, inline: true }]); // Genders are gen 2+
+        if (generation >= 3) pkmEmbed.addFields([{ name: "Abilities:", value: abilityString, inline: false }]); // Abilities are gen 3+
         if (superEffectives.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectives, inline: false }]);
         if (resistances.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistances, inline: false }]);
         if (immunities.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunities, inline: false }]);
