@@ -210,38 +210,30 @@ module.exports = async (client, interaction) => {
                         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
                         switch (focusedOption.name) {
                             case "pokemon":
-                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all();
+                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard));
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
-                                        && species.exists
-                                        && species.num > 0
                                         && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
                             case "ability":
-                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all();
+                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard));
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        ability.exists &&
-                                        ability.name !== "No Ability" &&
-                                        ability.isNonstandard !== "CAP") choices.push({ name: ability.name, value: ability.name });
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
-                                let moves = Dex.mod(`gen${generationInput}`).moves.all();
+                                let moves = Dex.mod(`gen${generationInput}`).moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard));
                                 await moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        move.exists &&
-                                        move.isNonstandard !== "CAP") choices.push({ name: move.name, value: move.name });
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
-                                let items = Dex.mod(`gen${generationInput}`).items.all();
+                                let items = Dex.mod(`gen${generationInput}`).items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard));
                                 await items.forEach(item => {
-                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        item.exists) choices.push({ name: item.name, value: item.name });
+                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
                             case "nature":
@@ -250,8 +242,6 @@ module.exports = async (client, interaction) => {
                                     if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         nature.exists) choices.push({ name: nature.name, value: nature.name });
                                 });
-                                break;
-                            case "generationInput":
                                 break;
                             case "format":
                                 let formats = Dex.formats.all();
