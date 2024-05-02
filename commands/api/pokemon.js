@@ -75,7 +75,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             case "item":
                 let itemSearch = interaction.options.getString("item");
                 let item = Dex.mod(`gen${generationInput}`).items.get(itemSearch);
-                if (!item || !item.exists || ["Past", "Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
+                if (!item || !item.exists || ["Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 let hasPGLImage = await imageExists(itemImage);
@@ -83,10 +83,13 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 nameBulbapedia = item.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
+                let itemDescription = item.desc;
+                if (item.isNonstandard == "Past") itemDescription += `\nThis item is not available in generation ${generationInput}.`;
+
                 pokemonEmbed
                     .setTitle(item.name)
                     .setThumbnail(itemImage)
-                    .setDescription(item.desc)
+                    .setDescription(itemDescription)
                     .setFooter({ text: `Generation ${generationInput} Data` });
                 if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
                 pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${item.gen}`, inline: true }]);
