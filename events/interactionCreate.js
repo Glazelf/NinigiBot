@@ -210,7 +210,7 @@ module.exports = async (client, interaction) => {
                         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
                         switch (focusedOption.name) {
                             case "pokemon":
-                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard));
+                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
@@ -219,19 +219,19 @@ module.exports = async (client, interaction) => {
                                 });
                                 break;
                             case "ability":
-                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard));
+                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await abilities.forEach(ability => {
                                     if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
-                                let moves = Dex.mod(`gen${generationInput}`).moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard));
+                                let moves = Dex.mod(`gen${generationInput}`).moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await moves.forEach(move => {
                                     if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
-                                let items = Dex.mod(`gen${generationInput}`).items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard));
+                                let items = Dex.mod(`gen${generationInput}`).items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });
