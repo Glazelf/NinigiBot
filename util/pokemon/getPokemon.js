@@ -217,7 +217,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                         levelMovesNames.push(moveName);
                     } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                         tmMoves.push(moveName);
-                    } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName)) {
+                    } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName) && generation >= 2) { // Breeding is gen 2+
                         eggMoves.push(moveName);
                     } else if (moveLearnData.includes("T") && !tutorMoves.includes(moveName)) {
                         tutorMoves.push(moveName);
