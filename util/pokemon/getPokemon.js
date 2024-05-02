@@ -204,21 +204,26 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
                 moveName = Dex.mod(`gen${generation}`).moves.get(moveName).name;
                 for (let moveLearnData of learnData) {
-                    if (!moveLearnData.startsWith("9")) {
+                    let moveLearnGen = moveLearnData[0];
+                    if (moveLearnGen > generation) {
+                        continue;
+                    } else if (moveLearnGen < generation && generation < 8 && generation > 2) { // Transfer moves are deprecated in gen 8
                         transferMoves.push(moveName);
                         continue;
-                    } else if (moveLearnData.includes("L")) {
-                        levelMoves[moveName] = parseInt(moveLearnData.replace("9L", ""));
+                    } else if (moveLearnGen < generation) {
+                        continue;
+                    } else if (moveLearnData.includes("L")) { // Levelup moves can be repeated
+                        levelMoves[moveName] = parseInt(moveLearnData.split("L")[1]);
                         levelMovesNames.push(moveName);
-                    } else if (moveLearnData.includes("M")) {
+                    } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                         tmMoves.push(moveName);
-                    } else if (moveLearnData.includes("E")) {
+                    } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName)) {
                         eggMoves.push(moveName);
-                    } else if (moveLearnData.includes("T")) {
+                    } else if (moveLearnData.includes("T") && !tutorMoves.includes(moveName)) {
                         tutorMoves.push(moveName);
-                    } else if (moveLearnData.includes("S")) {
+                    } else if (moveLearnData.includes("S") && !specialMoves.includes(moveName)) {
                         specialMoves.push(moveName);
-                    } else if (moveLearnData.includes("R")) {
+                    } else if (moveLearnData.includes("R") && !reminderMoves.includes(moveName)) {
                         reminderMoves.push(moveName);
                     };
                 };
