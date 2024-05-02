@@ -67,9 +67,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setTitle(ability.name)
                     .setDescription(ability.desc)
-                    .setFooter({ text: `Generation ${generationInput} Data` });
+                    .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generationInput} data` });
                 if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
-                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${ability.gen}`, inline: true }]);
                 break;
             // Items
             case "item":
@@ -90,9 +89,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                     .setTitle(item.name)
                     .setThumbnail(itemImage)
                     .setDescription(itemDescription)
-                    .setFooter({ text: `Generation ${generationInput} Data` });
+                    .setFooter({ text: `Introduced in generation ${item.gen} | Generation ${generationInput} data` });
                 if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
-                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${item.gen}`, inline: true }]);
                 break;
             // Moves
             case "move":
@@ -133,7 +131,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 pokemonEmbed
                     .setTitle(moveTitle)
                     .setDescription(description)
-                    .setFooter({ text: `Generation ${generationInput} Data` });
+                    .setFooter({ text: `Introduced in generation ${move.gen} | Generation ${generationInput} data` });
                 if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
                 if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
                 pokemonEmbed.addFields([
@@ -147,7 +145,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (move.contestType && [3, 4, 6].includes(generationInput)) pokemonEmbed.addFields([{ name: "Contest Type:", value: move.contestType, inline: true }]); // Gen 3, 4, 6 have contests. I think.
                 if (move.zMove && move.zMove.basePower && generationInput == 7) pokemonEmbed.addFields([{ name: "Z-Power:", value: move.zMove.basePower.toString(), inline: true }]);
                 if (move.maxMove && move.maxMove.basePower && generationInput == 8 && move.maxMove.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Max Move Power:", value: move.maxMove.basePower.toString(), inline: true }]);
-                pokemonEmbed.addFields([{ name: "Introduced:", value: `Gen ${move.gen}`, inline: true }]);
                 if (moveLearnPool.length > 0) pokemonEmbed.addFields([{ name: `Learned By:`, value: moveLearnPoolString, inline: false }]);
                 break;
             // Natures
