@@ -88,7 +88,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         resistances = resistances.join(", ");
         immunities = immunities.join(", ");
 
-        var pokemonID = leadingZeros(pokemon.num.toString()); // Do a rewrite sometime to avoid using var
+        var pokemonID = leadingZeros(pokemon.num.toString(), 4); // Do a rewrite sometime to avoid using var
         // Forms
         const primalString = "-Primal";
         const totemString = "-Totem";
@@ -310,14 +310,17 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
+            let prevoData = Dex.mod(`gen${generation}`).species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
+            if (["Future"].includes(prevoData.isNonstandard)) description += ` (Generation ${prevoData.gen}+)`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
             let pokemonData = Dex.mod(`gen${generation}`).species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
+            if (["Future"].includes(pokemonData.isNonstandard)) description += ` (Generation ${pokemonData.gen}+)`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
@@ -438,8 +441,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };
-        function leadingZeros(str) {
-            for (let i = str.length; i < 4; i++) {
+        function leadingZeros(str, characters) {
+            for (let i = str.length; i < characters; i++) {
                 str = "0" + str;
             };
             return str;
