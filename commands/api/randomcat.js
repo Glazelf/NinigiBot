@@ -11,34 +11,18 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let catText = interaction.options.getString("text");
         let standardCatText = "Meow";
         if (!catText) catText = standardCatText;
-        let catAPIInput = interaction.options.getString("api");
 
-        let randomCat = "https://aws.random.cat/meow";
         let catAAS = "https://cataas.com/cat";
-        let catAPI = null;
-        switch (catAPIInput) {
-            case "randomcat":
-                catAPI = randomCat;
-                break;
-            case "catAAS":
-                catAPI = catAAS;
-                break;
-            default:
-                // catAAS is a replacement as random.cat has been down for ages!!! Alternate APIs here
-                catAPI = catAAS;
-        };
-        if (catAPI.startsWith(catAAS)) catAPI += "?json=true";
+        let catAPI = `${catAAS}?json=true`;
         let response = await axios.get(catAPI);
         let catImage = null;
         let catNameSeed = null;
-        if (catAPI.startsWith(randomCat)) {
-            catImage = response.data.file;
-            catNameSeed = catImage;
-        } else if (catAPI.startsWith(catAAS)) {
-            catImage = `${catAAS}/${response.data._id}`;
-            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
-            catNameSeed = response.data._id;
-        };
+        //// There used to be multiple APIs here, but https://aws.random.cat/meow seems to be entirely down now.
+        // if (catAPI.startsWith(catAAS)) {
+        catImage = `${catAAS}/${response.data._id}`;
+        if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
+        catNameSeed = response.data._id;
+        // };
         let catName = uniqueNamesGenerator({
             dictionaries: [names],
             seed: catNameSeed
@@ -63,15 +47,6 @@ module.exports.config = {
         type: Discord.ApplicationCommandOptionType.String,
         description: "Text to put over the image." // Only works with catAAS
     }, {
-        //// random.cat is hidden since the api has been disfunctional for months
-        //     name: "api",
-        //     type: Discord.ApplicationCommandOptionType.String,
-        //     description: "Choose which API you want to use.",
-        //     choices: [
-        //         { name: "random.cat", value: "randomcat" },
-        //         { name: "catAAS", value: "catAAS" }
-        //     ]
-        // }, {
         name: "ephemeral",
         type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the reply will be private."
