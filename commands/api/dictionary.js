@@ -12,18 +12,30 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setColor(globalVars.embedColor);
 
         let inputWord = interaction.options.getString("word");
-        wordStatus = await axios.get(`${api}entries/en/${inputWord}`);
-        wordStatus = wordStatus.data;
-
         let inputWordType = interaction.options.getString("wordtype");
 
+        try {
+            wordStatus = await Promise.race([
+                axios.get(`${api}entries/en/${inputWord}`),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+            ]);
+            wordStatus = wordStatus.data;
+        } catch (error) {
+            let errorEmbed = new Discord.EmbedBuilder()
+                .setColor('#FF0000');
+                errorEmbed.setTitle("Error")
+                errorEmbed.setDescription("Word not found.");
+                return sendMessage({ client: client, interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
+        }
+
         let wordMeaning;
-        for (let i; i < wordStatus.length; i++) {
+        outerLoop:
+        for (let i = 0; i < wordStatus.length; i++) {
         if (inputWordType) {
             for (let meaning of wordStatus[i].meanings) {
                 if (meaning.partOfSpeech.toLowerCase() === inputWordType.toLowerCase()) {
                     wordMeaning = meaning;
-                    break;
+                    break outerLoop;
                 }
             }
         }
@@ -35,16 +47,33 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let wordStatusTitle = wordStatus[0].word;
         let wordPhonetic = wordStatus[0].phonetic;
         let wordDefinition = wordMeaning.definitions[0].definition;
+        let wordExample = wordMeaning.definitions[0].example;
         let wordSynonyms = wordMeaning.definitions[0].synonyms;
+        let wordAntonyms = wordMeaning.definitions[0].antonyms;
+        let wordType = wordMeaning.partOfSpeech;
+        let wordSourceUrls = wordStatus[0].sourceUrls;
 
         dictionaryEmbed.setAuthor({ name: 'DictionaryAPI', url: 'https://dictionaryapi.dev' });
-        dictionaryEmbed.setTitle(`${wordStatusTitle} - ${wordPhonetic}`);
-        dictionaryEmbed.setURL(`https://www.oxfordlearnersdictionaries.com/definition/english/${wordStatusTitle}_1`);
-        dictionaryEmbed.setDescription(`${wordDefinition}`);
-        if (wordSynonyms.length > 0) {
-            dictionaryEmbed.addFields([{ name: "Synonyms:", value: wordSynonyms.join(', '), inline: false }])
+        dictionaryEmbed.setTitle(`${wordStatusTitle}, ${wordType}`);
+        dictionaryEmbed.setURL(`${wordSourceUrls}`);
+        dictionaryEmbed.setDescription(`${wordPhonetic}`);
+        dictionaryEmbed.addFields([{ name: "Definition:", value: wordDefinition, inline: false }])
+        if (wordExample && wordExample.length > 0) {
+            dictionaryEmbed.addFields([{ name: "Example:", value: wordExample, inline: false }])
+        }
+        
+        if ((wordSynonyms && wordSynonyms.length > 0) || (wordAntonyms && wordAntonyms.length > 0)) {
+            dictionaryEmbed.addFields([{ name: '\n', value: '\n' }])
         }
 
+        if (wordSynonyms && wordSynonyms.length > 0) {
+            dictionaryEmbed.addFields([{ name: "Synonyms:", value: wordSynonyms.join(', '), inline: false }])
+        }
+        
+        if (wordAntonyms && wordAntonyms.length > 0) {
+            dictionaryEmbed.addFields([{ name: "Antonyms:", value: wordAntonyms.join(', '), inline: false }])
+        }
+        dictionaryEmbed.setFooter({ text: `Source: ${wordSourceUrls}`});
         return sendMessage({ client: client, interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 
     } catch (e) {
