@@ -88,7 +88,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         resistances = resistances.join(", ");
         immunities = immunities.join(", ");
 
-        var pokemonID = leadingZeros(pokemon.num.toString(), 4); // Do a rewrite sometime to avoid using var
+        let pokemonID = leadingZeros(pokemon.num.toString(), 4);
         // Forms
         const primalString = "-Primal";
         const totemString = "-Totem";
@@ -110,9 +110,9 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             // Catches all forms where the form extension on Serebii is just the first letter of the form name
             if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
         };
-        // edgecase ID corrections
+        // Edgecase ID corrections
         // TODO: add a bunch of meaningless forms like Unown and Vivillon
-        await correctValue(correctionID, pokemon.name, pokemonID);
+        pokemonID = correctValue(correctionID, pokemon.name, pokemonID);
         if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID.split("-")[0]}-${pokemon.types[0].toLowerCase()}`;
         // 3 digit IDs for now
         pokemonIDPMD = pokemonID;
@@ -447,15 +447,10 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             };
             return str;
         };
-        async function correctValue(object, pokemonName, input) {
-            let uncorrectedNames = Object.keys(object);
-            uncorrectedNames.forEach(function (key) {
-                pokemonName = pokemonName.toLowerCase();
-                if (pokemonName == key) {
-                    if (input == pokemonID) pokemonID = object[key];
-
-                };
-            });
+        function correctValue(object, key, input) {
+            key = key.toLowerCase();
+            if (object[key]) return object[key];
+            return input;
         };
         function getEvoMethod(pokemon) {
             let evoMethod;
