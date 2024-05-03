@@ -17,12 +17,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let response = await axios.get(catAPI);
         let catImage = null;
         let catNameSeed = null;
-        //// There used to be multiple APIs here, but https://aws.random.cat/meow seems to be entirely down now.
-        // if (catAPI.startsWith(catAAS)) {
         catImage = `${catAAS}/${response.data._id}`;
         if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
         catNameSeed = response.data._id;
-        // };
         let catName = uniqueNamesGenerator({
             dictionaries: [names],
             seed: catNameSeed
@@ -45,7 +42,7 @@ module.exports.config = {
     options: [{
         name: "text",
         type: Discord.ApplicationCommandOptionType.String,
-        description: "Text to put over the image." // Only works with catAAS
+        description: "Text to put over the image."
     }, {
         name: "ephemeral",
         type: Discord.ApplicationCommandOptionType.Boolean,
