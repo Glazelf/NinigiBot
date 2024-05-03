@@ -36,7 +36,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             catNameSeed = catImage;
         } else if (catAPI.startsWith(catAAS)) {
             catImage = `${catAAS}/${response.data._id}`;
-            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(catText)}`;
+            if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`;
             catNameSeed = response.data._id;
         };
         let catName = uniqueNamesGenerator({
