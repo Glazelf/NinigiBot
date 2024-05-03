@@ -38,7 +38,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 .setTitle(`Leaderboard:`)
                 .setThumbnail(icon);
         };
-
         return sendMessage({ client: client, interaction: interaction, embeds: leaderboardEmbed });
 
     } catch (e) {

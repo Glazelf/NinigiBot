@@ -8,8 +8,7 @@ module.exports = async (gifTags = []) => {
         rating: "g"
     };
     if (gifTags.length > 0) giphyParams.tag = randomTag;
-
-    //// Uglier replacement function for the one below
+    // Uglier replacement function for the one below
     let giphyURL = `${giphyAPI}?`;
     await Object.entries(giphyParams).forEach(([key, value]) => {
         giphyURL += `${key}=${value}&`;
@@ -18,7 +17,6 @@ module.exports = async (gifTags = []) => {
         console.log(e);
         return null;
     });
-
     //// Ideally would use this, but for some reason this method returns a 401 error. The above works the same, but is slightly slower and uglier :)
     // let giphyResponse = await axios.get(giphyAPI, {
     //     giphyParams
