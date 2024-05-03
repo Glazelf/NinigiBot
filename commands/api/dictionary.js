@@ -22,58 +22,48 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             wordStatus = wordStatus.data;
         } catch (error) {
             let errorEmbed = new Discord.EmbedBuilder()
-                .setColor('#FF0000');
-                errorEmbed.setTitle("Error")
-                errorEmbed.setDescription("Word not found.");
-                return sendMessage({ client: client, interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
-        }
+                .setColor('#FF0000')
+                .setTitle("Error")
+                .setDescription("Word not found.");
+            return sendMessage({ client: client, interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
+        };
 
         let wordMeaning;
         outerLoop:
         for (let i = 0; i < wordStatus.length; i++) {
-        if (inputWordType) {
-            for (let meaning of wordStatus[i].meanings) {
-                if (meaning.partOfSpeech.toLowerCase() === inputWordType.toLowerCase()) {
-                    wordMeaning = meaning;
-                    break outerLoop;
-                }
-            }
-        }
-    }
-        if (!wordMeaning) {
-            wordMeaning = wordStatus[0].meanings[0];
-        }
+            if (inputWordType) {
+                for (let meaning of wordStatus[i].meanings) {
+                    if (meaning.partOfSpeech.toLowerCase() === inputWordType.toLowerCase()) {
+                        wordMeaning = meaning;
+                        break outerLoop;
+                    };
+                };
+            };
+        };
+        if (!wordMeaning) wordMeaning = wordStatus[0].meanings[0];
 
         let wordStatusTitle = wordStatus[0].word;
         let wordPhonetic = wordStatus[0].phonetic;
-        let wordDefinition = wordMeaning.definitions[0].definition;
-        let wordExample = wordMeaning.definitions[0].example;
-        let wordSynonyms = wordMeaning.definitions[0].synonyms;
-        let wordAntonyms = wordMeaning.definitions[0].antonyms;
+        await wordMeaning.definitions.forEach(definition => {
+            let wordDefinition = definition.definition;
+            let wordExample = definition.example;
+            let wordSynonyms = definition.synonyms;
+            let wordAntonyms = definition.antonyms;
+            let wordDefinitionString = "";
+            if (wordExample) wordDefinitionString += `Example: ${wordExample}\n`;
+            if (wordSynonyms.length > 0) wordDefinitionString += `Synonyms: ${wordSynonyms.join(', ')}\n`;
+            if (wordAntonyms.length > 0) wordDefinitionString += `Antonyms: ${wordAntonyms.join(', ')}\n`;
+            if (wordDefinitionString.length == 0) wordDefinitionString = "No example, synonyms or antonyms found.";
+            dictionaryEmbed.addFields([{ name: definition.definition, value: wordDefinitionString, inline: false }]);
+        });
         let wordType = wordMeaning.partOfSpeech;
         let wordSourceUrls = wordStatus[0].sourceUrls;
 
-        dictionaryEmbed.setAuthor({ name: 'DictionaryAPI', url: 'https://dictionaryapi.dev' });
-        dictionaryEmbed.setTitle(`${wordStatusTitle}, ${wordType}`);
-        dictionaryEmbed.setURL(`${wordSourceUrls}`);
-        dictionaryEmbed.setDescription(`${wordPhonetic}`);
-        dictionaryEmbed.addFields([{ name: "Definition:", value: wordDefinition, inline: false }])
-        if (wordExample && wordExample.length > 0) {
-            dictionaryEmbed.addFields([{ name: "Example:", value: wordExample, inline: false }])
-        }
-        
-        if ((wordSynonyms && wordSynonyms.length > 0) || (wordAntonyms && wordAntonyms.length > 0)) {
-            dictionaryEmbed.addFields([{ name: '\n', value: '\n' }])
-        }
+        dictionaryEmbed
+            .setTitle(`${wordStatusTitle}, ${wordType}`)
+            .setURL(wordSourceUrls[0])
+            .setDescription(wordPhonetic);
 
-        if (wordSynonyms && wordSynonyms.length > 0) {
-            dictionaryEmbed.addFields([{ name: "Synonyms:", value: wordSynonyms.join(', '), inline: false }])
-        }
-        
-        if (wordAntonyms && wordAntonyms.length > 0) {
-            dictionaryEmbed.addFields([{ name: "Antonyms:", value: wordAntonyms.join(', '), inline: false }])
-        }
-        dictionaryEmbed.setFooter({ text: `Source: ${wordSourceUrls}`});
         return sendMessage({ client: client, interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 
     } catch (e) {
@@ -84,7 +74,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 
 module.exports.config = {
     name: "dictionary",
-    description: `Checks the dictionary`,
+    description: `Get definition of a word.`,
     options: [{
         name: "word",
         type: Discord.ApplicationCommandOptionType.String,
@@ -93,7 +83,7 @@ module.exports.config = {
     }, {
         name: "wordtype",
         type: Discord.ApplicationCommandOptionType.String,
-        description: "noun, verb, adjective, etc.",
+        description: "Select type of word",
         choices: [
             { name: "noun", value: "noun" },
             { name: "verb", value: "verb" },
