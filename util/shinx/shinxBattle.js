@@ -1,19 +1,18 @@
-const battleMoves =
-    [
-        //[chance, [name, attack, knockout]],
-        [0, ['Judgement Storm', 2, 2]],
-        [3, ['Light Thunder', 1, 0.4]],
-        [5, ['Dark Thunder', 0.6, 0.4]],
-        [10, ['Bolt Strike', 0.3, 0.5]],
-        [20, ['Volt Tackle', 0.6, 0.15]],
-        [30, ['Thunder', 0.4, 0.25]],
-        [40, ['Wild charge', 0.5, 0.1]],
-        [50, ['Crunch', 0.2, 0.25]],
-        [60, ['Spark', 0.30, 0.1]],
-        [80, ['Bite', 0.24, 0.12]],
-        [90, ['Thunder shock', 0.24, 0.1]],
-        [100, ['Tackle', 0.2, 0.1]]
-    ];
+const battleMoves = [
+    // [chance, [name, attack, knockout]],
+    [0, ['Judgement Storm', 2, 2]],
+    [3, ['Light Thunder', 1, 0.4]],
+    [5, ['Dark Thunder', 0.6, 0.4]],
+    [10, ['Bolt Strike', 0.3, 0.5]],
+    [20, ['Volt Tackle', 0.6, 0.15]],
+    [30, ['Thunder', 0.4, 0.25]],
+    [40, ['Wild charge', 0.5, 0.1]],
+    [50, ['Crunch', 0.2, 0.25]],
+    [60, ['Spark', 0.30, 0.1]],
+    [80, ['Bite', 0.24, 0.12]],
+    [90, ['Thunder shock', 0.24, 0.1]],
+    [100, ['Tackle', 0.2, 0.1]]
+];
 
 const getLevelFromExp = require('./getLevelFromExp');
 

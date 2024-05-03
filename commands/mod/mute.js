@@ -91,4 +91,4 @@ module.exports.config = {
         type: Discord.ApplicationCommandOptionType.String,
         description: "Reason for mute."
     }]
-}; 
+};
