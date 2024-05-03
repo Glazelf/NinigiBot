@@ -15,6 +15,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let inputWordType = interaction.options.getString("wordtype");
 
         try {
+            // Sometimes API doesn't respond when a word doesn't exist, sometimes it errors properly. Timeout is to catch both.
             wordStatus = await Promise.race([
                 axios.get(`${api}entries/en/${inputWord}`),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
@@ -63,7 +64,6 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .setTitle(`${wordStatusTitle}, ${wordType}`)
             .setURL(wordSourceUrls[0])
             .setDescription(wordPhonetic);
-
         return sendMessage({ client: client, interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 
     } catch (e) {
@@ -83,7 +83,7 @@ module.exports.config = {
     }, {
         name: "wordtype",
         type: Discord.ApplicationCommandOptionType.String,
-        description: "Select type of word",
+        description: "Select type of word.",
         choices: [
             { name: "noun", value: "noun" },
             { name: "verb", value: "verb" },
