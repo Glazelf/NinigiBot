@@ -61,11 +61,13 @@ module.exports = async (client, interaction, page, user) => {
             let badgesString = "";
             if (interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) {
                 try {
+                    console.log(client.application.entitlements.valueOf(user.id))
+                    console.log(client.application.entitlements.valueOf(user.id).size)
+                    if (client.application.entitlements.valueOf(user.id).size > 0) badgesArray.push("⭐"); // Currently just checks if user has any premium entitlements, not specifically for subscription. But since everything is donation-based, this just makes it so that regular donators are also included. Only issue is that expired subscriptions stop showing up? So maybe exclude one-time donators sometime? For now it's fine.
                     if (user.bot) badgesArray.push("🤖");
                     let guildOwner = await interaction.guild.fetchOwner();
                     if (guildOwner.id === user.id) badgesArray.push("👑");
                     if (member && member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
-                    if (client.application.entitlements.valueOf(user.id).size > 0) badgesArray.push("⭐"); // Currently just checks if user has any premium entitlements, not specifically for subscription. But since everything is donation-based, this just makes it so that regular donators are also included. Only issue is that expired subscriptions stop showing up? So maybe exclude one-time donators sometime? For now it's fine.
                     if (user.flags) {
                         let userFlagsAll = user.flags.serialize();
                         let flagsArray = Object.entries(userFlagsAll);
