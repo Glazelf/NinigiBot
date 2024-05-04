@@ -21,6 +21,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
         let description = "";
+        let dexModified = Dex.mod(`gen${generation}`);
         // Gender studies
         let pokemonGender = "";
         let genderString = "";
@@ -46,7 +47,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let type1 = pokemon.types[0];
         let type2 = pokemon.types[1];
         let typeString = getTypeEmotes({ type1: type1, type2: type2, emotes: emotesAllowed });
-        // Check type matchups, maybe use Dex.mod(`gen${generation}`).types sometime
+        // Check type matchups, maybe use dexModified.types sometime
         let typeEffectString = "";
         let superEffectives = [];
         let resistances = [];
@@ -163,12 +164,12 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             iconAuthor = partyIcon;
             iconFooter = null;
         };
-        let ability0Desc = Dex.mod(`gen${generation}`).abilities.get(pokemon.abilities[0]).shortDesc;
-        let ability1Desc = Dex.mod(`gen${generation}`).abilities.get(pokemon.abilities[1]).shortDesc;
+        let ability0Desc = dexModified.abilities.get(pokemon.abilities[0]).shortDesc;
+        let ability1Desc = dexModified.abilities.get(pokemon.abilities[1]).shortDesc;
         let abilityString = `**${pokemon.abilities['0']}**: ${ability0Desc}`;
         if (pokemon.abilities['1']) abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
         if (pokemon.abilities['H']) {
-            let abilityHDesc = Dex.mod(`gen${generation}`).abilities.get(pokemon.abilities['H']).shortDesc;
+            let abilityHDesc = dexModified.abilities.get(pokemon.abilities['H']).shortDesc;
             if (pokemon.unreleasedHidden) {
                 abilityString += `\n**${pokemon.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
             } else {
@@ -176,16 +177,27 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             };
         };
         if (pokemon.abilities['S']) {
-            let abilitySDesc = Dex.mod(`gen${generation}`).abilities.get(pokemon.abilities['S']).shortDesc;
+            let abilitySDesc = dexModified.abilities.get(pokemon.abilities['S']).shortDesc;
             abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
         };
         let statLevels = `(lvl50) (lvl100)`;
-        let HPstats = calcHP(pokemon.baseStats.hp);
-        let Atkstats = calcStat(pokemon.baseStats.atk);
-        let Defstats = calcStat(pokemon.baseStats.def);
-        let SpAstats = calcStat(pokemon.baseStats.spa);
-        let SpDstats = calcStat(pokemon.baseStats.spd);
-        let Spestats = calcStat(pokemon.baseStats.spe);
+        let HPstats = calcHP(pokemon.baseStats.hp, generation);
+        let Atkstats = calcStat(pokemon.baseStats.atk, generation);
+        let Defstats = calcStat(pokemon.baseStats.def, generation);
+        let SpAstats = calcStat(pokemon.baseStats.spa, generation);
+        let SpDstats = calcStat(pokemon.baseStats.spd, generation);
+        let Spestats = calcStat(pokemon.baseStats.spe, generation);
+        let statsString = `HP: **${pokemon.baseStats.hp}** ${HPstats}\nAtk: **${pokemon.baseStats.atk}** ${Atkstats}\nDef: **${pokemon.baseStats.def}** ${Defstats}\n`;
+        // Account for gen 1 Special stat
+        switch (generation) {
+            case 1:
+                statsString += `Spc: **${pokemon.baseStats.spa}** ${SpAstats}\n`;
+                break;
+            default:
+                statsString += `SpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}**\n`;
+                break;
+        };
+        statsString += `Spe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`;
 
         let levelMoves = [];
         let levelMovesNames = [];
@@ -196,13 +208,13 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let transferMoves = [];
         let reminderMoves = [];
         let prevo = null;
-        if (pokemon.prevo) prevo = Dex.mod(`gen${generation}`).species.get(pokemon.prevo);
-        if (prevo && prevo.prevo) prevo = Dex.mod(`gen${generation}`).species.get(prevo.prevo);
+        if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
+        if (prevo && prevo.prevo) prevo = dexModified.species.get(prevo.prevo);
         let pokemonLearnset = learnsets[pokemon.id];
         if (learnsetBool && pokemonLearnset) {
             pokemonLearnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
-                moveName = Dex.mod(`gen${generation}`).moves.get(moveName).name;
+                moveName = dexModified.moves.get(moveName).name;
                 for (let moveLearnData of learnData) {
                     let moveLearnGen = moveLearnData[0];
                     if (moveLearnGen > generation) {
@@ -232,7 +244,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             // Prevo egg moves
             if (prevo) {
                 for (let [moveName, learnData] of Object.entries(learnsets[prevo.id].learnset)) {
-                    moveName = Dex.mod(`gen${generation}`).moves.get(moveName).name;
+                    moveName = dexModified.moves.get(moveName).name;
                     for (let moveLearnData of learnData) {
                         if (moveLearnData.startsWith("9E")) {
                             eggMoves.push(moveName);
@@ -284,7 +296,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         // Get relative Pokédex variables
         let previousPokemon = null;
         let nextPokemon = null;
-        let allPokemon = Dex.mod(`gen${generation}`).species.all();
+        let allPokemon = dexModified.species.all();
         let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
         let allPokemonSorted = [...allPokemon].sort(compare); // Needs a copy of allPokemon because sort() is destructive
         let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
@@ -310,14 +322,14 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
-            let prevoData = Dex.mod(`gen${generation}`).species.get(pokemon.prevo);
+            let prevoData = dexModified.species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
             if (["Future"].includes(prevoData.isNonstandard)) description += ` (Generation ${prevoData.gen}+)`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
         for (let i = 0; i < pokemon.evos.length; i++) {
-            let pokemonData = Dex.mod(`gen${generation}`).species.get(pokemon.evos[i]);
+            let pokemonData = dexModified.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
             if (["Future"].includes(pokemonData.isNonstandard)) description += ` (Generation ${pokemonData.gen}+)`;
@@ -373,7 +385,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (immunities.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunities, inline: false }]);
         pkmEmbed
             .addFields([
-                { name: `Stats: ${statLevels}`, value: `HP: **${pokemon.baseStats.hp}** ${HPstats}\nAtk: **${pokemon.baseStats.atk}** ${Atkstats}\nDef: **${pokemon.baseStats.def}** ${Defstats}\nSpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}** ${SpDstats}\nSpe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`, inline: false }
+                { name: `Stats: ${statLevels}`, value: statsString, inline: false }
             ]);
         // .setImage(banner)
         if (learnsetBool) {
@@ -389,17 +401,22 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 
-        function calcHP(base) {
-            //// Gen 1-2
-            // let min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
-            // let max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
-            // let min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
-            // let max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 100 + 10);
-            //// Gen 3+
-            let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
-            let max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
-            let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
-            let max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+        function calcHP(base, generation) {
+            let min50;
+            let max50;
+            let min100;
+            let max100;
+            if (generation <= 2) {
+                min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
+                max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
+                min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
+                max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 100 + 10);
+            } else if (generation >= 3) {
+                min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+                max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
+                min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+                max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+            };
             //// Let's Go
             // let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
             // let max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
@@ -416,17 +433,23 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
             return StatText;
         };
-        function calcStat(base) {
-            //// Gen 1-2
-            // let min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
-            // let max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
-            // let min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
-            // let max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 5);
-            //// Gen 3+
-            let min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
-            let max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
-            let min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
-            let max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+        function calcStat(base, generation) {
+            let min50;
+            let max50;
+            let min100;
+            let max100;
+            if (generation <= 2) {
+                min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
+                max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
+                min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
+                max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 5);
+            } else if (generation >= 3) {
+                //// Gen 3+
+                min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
+                max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+                min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
+                max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+            };
             //// Let's Go
             // let min50 = Math.floor((((2 * base) * 50) / 100) + 5);
             // let max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
