@@ -208,10 +208,11 @@ module.exports = async (client, interaction) => {
                     case "pokemon":
                         let currentGeneration = 9
                         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
+                        let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
                                 // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                let pokemonSpecies = Dex.mod(`gen${generationInput}`).species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
+                                let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
@@ -221,21 +222,21 @@ module.exports = async (client, interaction) => {
                                 break;
                             case "ability":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let abilities = Dex.mod(`gen${generationInput}`).abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await abilities.forEach(ability => {
                                     if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let moves = Dex.mod(`gen${generationInput}`).moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await moves.forEach(move => {
                                     if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let items = Dex.mod(`gen${generationInput}`).items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });

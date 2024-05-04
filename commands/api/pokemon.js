@@ -34,24 +34,25 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let linkBulbapedia = null;
         // Set generation
         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
+        let dexModified = Dex.mod(`gen${generationInput}`);
         let JSONresponse;
-        let allPokemon = Dex.mod(`gen${generationInput}`).species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+        let allPokemon = dexModified.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
-        let pokemon = Dex.mod(`gen${generationInput}`).species.get(pokemonName);
+        let pokemon = dexModified.species.get(pokemonName);
         if (pokemonName && pokemonName.toLowerCase() == "random") {
             let allKeys = Object.keys(allPokemon);
             pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
         };
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
-        let move = Dex.mod(`gen${generationInput}`).moves.get(moveSearch);
+        let move = dexModified.moves.get(moveSearch);
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
                 let abilitySearch = interaction.options.getString("ability");
-                let ability = Dex.mod(`gen${generationInput}`).abilities.get(abilitySearch);
+                let ability = dexModified.abilities.get(abilitySearch);
                 if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
                 nameBulbapedia = ability.name.replaceAll(" ", "_");
@@ -73,7 +74,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             // Items
             case "item":
                 let itemSearch = interaction.options.getString("item");
-                let item = Dex.mod(`gen${generationInput}`).items.get(itemSearch);
+                let item = dexModified.items.get(itemSearch);
                 if (!item || !item.exists || ["Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
@@ -237,8 +238,8 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                         learnInfo += getLearnData(learnData);
                     };
                     let prevo = null;
-                    if (pokemon.prevo) prevo = Dex.mod(`gen${generationInput}`).species.get(pokemon.prevo);
-                    if (prevo && prevo.prevo) prevo = Dex.mod(`gen${generationInput}`).species.get(prevo.prevo);
+                    if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
+                    if (prevo && prevo.prevo) prevo = dexModified.species.get(prevo.prevo);
                     if (prevo) {
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
