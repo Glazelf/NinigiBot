@@ -11,7 +11,8 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
         const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
-        const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        if (generation <= 2) learnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
         const getTypeEmotes = require('./getTypeEmotes');
         const checkBaseSpeciesMoves = require('./checkBaseSpeciesMoves.js');
         // Common settings
@@ -219,7 +220,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                     let moveLearnGen = moveLearnData[0];
                     if (moveLearnGen > generation) {
                         continue;
-                    } else if (moveLearnGen < generation && generation < 8 && generation > 2) { // Transfer moves are deprecated in gen 8
+                    } else if (moveLearnGen < generation && generation < 8) { // Transfer moves are deprecated in gen 8
                         transferMoves.push(moveName);
                         continue;
                     } else if (moveLearnGen < generation) {
@@ -229,7 +230,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                         levelMovesNames.push(moveName);
                     } else if (moveLearnData.includes("M") && !tmMoves.includes(moveName)) {
                         tmMoves.push(moveName);
-                    } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName) && generation >= 2) { // Breeding is gen 2+
+                    } else if (moveLearnData.includes("E") && !eggMoves.includes(moveName) && generation >= 2) { // Breeding is gen 2+, check might be redundant
                         eggMoves.push(moveName);
                     } else if (moveLearnData.includes("T") && !tutorMoves.includes(moveName)) {
                         tutorMoves.push(moveName);
@@ -394,8 +395,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             if (eggMovesString.length > 0) pkmEmbed.addFields([{ name: "Egg Moves:", value: eggMovesString, inline: false }]);
             if (tutorMovesString.length > 0) pkmEmbed.addFields([{ name: "Tutor Moves:", value: tutorMovesString, inline: false }]);
             if (specialMovesString.length > 0) pkmEmbed.addFields([{ name: "Special Moves:", value: specialMovesString, inline: false }]);
-            // Hide transfer moves untill transfer is added and it's confirmed movesets aren't reset on transfer
-            // transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
+            if (generation < 8 && transferMovesStrings.length > 0) transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
         };
         pkmEmbed.setFooter({ text: footerText, iconURL: iconFooter });
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
