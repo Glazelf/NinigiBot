@@ -8,13 +8,14 @@ module.exports = async (client, interaction) => {
         let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
         const getMonster = require('../util/mh/getMonster');
-        const getSplatfests = require('../util/splat/getSplatfests');
         const randomNumber = require('../util/randomNumber');
         const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
         const fs = require("fs");
-        let monstersJSON;
+        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
+        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
+
         const { EligibleRoles } = require('../database/dbServices/server.api');
         const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
@@ -75,7 +76,6 @@ module.exports = async (client, interaction) => {
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
-                            monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
                             // Monster Hunter forms
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
@@ -92,8 +92,25 @@ module.exports = async (client, interaction) => {
                             messageObject = await getMonster(client, interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
-                        } else if (interaction.customId.includes("splatfest")) {
+                        } else if (interaction.customId.startsWith("mhquests")) {
+                            // Monster Hunter quests
+                            const getQuests = require('../util/mh/getQuests');
+                            let mhQuestsDirection = interaction.customId.split("|")[1];
+                            let mhQuestsGameName = interaction.customId.split("|")[2];
+                            let mhQuestsPage = interaction.customId.split("|")[3];
+                            switch (mhQuestsDirection) {
+                                case "left":
+                                    mhQuestsPage = parseInt(mhQuestsPage) - 1;
+                                    break;
+                                case "right":
+                                    mhQuestsPage = parseInt(mhQuestsPage) + 1;
+                                    break;
+                            };
+                            let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
+                        } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
+                            const getSplatfests = require('../util/splat/getSplatfests');
                             let splatfestDirection = interaction.customId.split("|")[1];
                             let splatfestPage = interaction.customId.split("|")[2];
                             let splatfestRegion = interaction.customId.split("|")[3];
@@ -281,8 +298,6 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "monsterhunter":
-                        monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-                        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
                         switch (focusedOption.name) {
                             case "monster":
                                 await monstersJSON.monsters.forEach(monster => {
