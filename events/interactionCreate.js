@@ -98,12 +98,19 @@ module.exports = async (client, interaction) => {
                             let mhQuestsDirection = interaction.customId.split("|")[1];
                             let mhQuestsGameName = interaction.customId.split("|")[2];
                             let mhQuestsPage = interaction.customId.split("|")[3];
+                            let mhQuestsPagesTotal = interaction.customId.split("|")[4];
                             switch (mhQuestsDirection) {
                                 case "left":
                                     mhQuestsPage = parseInt(mhQuestsPage) - 1;
                                     break;
                                 case "right":
                                     mhQuestsPage = parseInt(mhQuestsPage) + 1;
+                                    break;
+                                case "first":
+                                    mhQuestsPage = 1;
+                                    break;
+                                case "last":
+                                    mhQuestsPage = mhQuestsPagesTotal;
                                     break;
                             };
                             let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });

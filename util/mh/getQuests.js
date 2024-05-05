@@ -27,9 +27,11 @@ module.exports = async ({ client, interaction, gameName, page }) => {
             if (questsTotal[i].isKey) questTitle += ` 🔑`;
             mhEmbed.addFields([{ name: `${questTitle}`, value: `${questsTotal[i].objective} in ${questsTotal[i].map}`, inline: false }]);
         };
-        let mhQuestsButtonAppend = `${gameName}|${page}`;
+        let mhQuestsButtonAppend = `${gameName}|${page}|${totalPages}`;
+        if (page > 2) questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|first|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '◀️' }));
         if (page > 1) questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|left|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
         if (questsTotal[endIndex + 1]) questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|right|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
+        if (page < totalPages - 1) questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|last|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '▶️' }));
 
         mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
         let messageObject = { embeds: mhEmbed, components: [questsButtons] };
