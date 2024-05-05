@@ -202,7 +202,7 @@ module.exports = async ({ client, interaction, page, region }) => {
             splat3EmbedFields.push({ name: splatfestTitle, value: splatfestDescription, inline: false });
         });
         let splatfestButtonAppend = `${page}|${region}`;
-        // Current page
+        // Probably cleaner to just add the fields to the embed in the loop above but this is fine for now. 
         for (i = pageStartIndex; i <= pageEndIndex; i++) {
             if (splat3EmbedFields[i]) splat3Embed.addFields([splat3EmbedFields[i]]);
         };
