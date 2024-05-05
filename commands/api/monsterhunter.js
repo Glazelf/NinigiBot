@@ -58,7 +58,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             case "quests":
                 let gameName = interaction.options.getString("game").toLowerCase();
                 // Add quests matching game title to an array
-                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
+                let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName);
                 if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
                 // Sort by difficulty
                 questsTotal = questsTotal.sort(compare);
