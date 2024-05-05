@@ -113,6 +113,8 @@ module.exports = async (client, interaction) => {
                                     mhQuestsPage = mhQuestsPagesTotal;
                                     break;
                             };
+                            if (mhQuestsPage < 1) mhQuestsPage = 1;
+                            if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
                             let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
                             return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
                         } else if (interaction.customId.startsWith("splatfest")) {
