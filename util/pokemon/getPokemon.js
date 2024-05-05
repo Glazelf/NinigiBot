@@ -195,7 +195,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
                 statsString += `Spc: **${pokemon.baseStats.spa}** ${SpAstats}\n`;
                 break;
             default:
-                statsString += `SpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}**\n`;
+                statsString += `SpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}** ${SpDstats}\n`;
                 break;
         };
         statsString += `Spe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`;
