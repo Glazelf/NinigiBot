@@ -8,6 +8,7 @@ module.exports = async (client, interaction) => {
         let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
         const getMonster = require('../util/mh/getMonster');
+        const getSplatfests = require('../util/splat/getSplatfests');
         const randomNumber = require('../util/randomNumber');
         const capitalizeString = require('../util/capitalizeString');
         const { Dex } = require('pokemon-showdown');
@@ -91,6 +92,21 @@ module.exports = async (client, interaction) => {
                             messageObject = await getMonster(client, interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
+                        } else if (interaction.customId.includes("splatfest")) {
+                            // Splatfest
+                            let splatfestDirection = interaction.customId.split("|")[1];
+                            let splatfestPage = interaction.customId.split("|")[2];
+                            let splatfestRegion = interaction.customId.split("|")[3];
+                            switch (splatfestDirection) {
+                                case "left":
+                                    splatfestPage = parseInt(splatfestPage) + 1;
+                                    break;
+                                case "right":
+                                    splatfestPage = parseInt(splatfestPage) - 1;
+                                    break;
+                            };
+                            let splatfestMessageObject = await getSplatfests({ client: client, interaction: interaction, page: splatfestPage, region: splatfestRegion });
+                            return interaction.update({ embeds: [splatfestMessageObject.embeds], components: splatfestMessageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
                             let componentsCopy = interaction.message.components;
