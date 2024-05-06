@@ -18,11 +18,12 @@ module.exports = async (client) => {
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
             let birthdayRoleID = "744719808058228796";
-            const birthdayRole = guild.roles.cache.find(role => role.id === birthdayRoleID);
+            const birthdayRole = await guild.roles.fetch(birthdayRoleID, { force: true });
             if (!birthdayRole) return;
             let yesterdayCuties = birthdayRole.members;
             yesterdayCuties.forEach(cutie => cutie.roles.remove(birthdayRole));
-            const cuties = [];
+            let cuties = [];
+            let cutiesUsernames = [];
             await guild.members.fetch();
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
@@ -32,7 +33,8 @@ module.exports = async (client) => {
                     let now = new Date();
                     // Birthdays are stored as string DDMM instead of being seperated by a -
                     if (now.getDate() === parseInt(birthday.substring(0, 2)) && (now.getMonth() + 1) === parseInt(birthday.substring(2))) {
-                        cuties.push(member.user.username);
+                        cuties.push(member.user);
+                        cutiesUsernames.push(member.user.username);
                         await member.roles.add(birthdayRole);
                     };
                 };
@@ -44,9 +46,9 @@ module.exports = async (client) => {
             // Create embed
             const gifEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setDescription(`Today is ${cuties.join(' and ')}'s birthday, everyone!`)
+                .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
-            channel.send({ embeds: [gifEmbed] });
+            channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });
         }, timeZone = timezone, start = true);
 
     } catch (e) {
