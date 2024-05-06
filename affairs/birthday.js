@@ -33,7 +33,7 @@ module.exports = async (client) => {
                     let now = new Date();
                     // Birthdays are stored as string DDMM instead of being seperated by a -
                     if (now.getDate() === parseInt(birthday.substring(0, 2)) && (now.getMonth() + 1) === parseInt(birthday.substring(2))) {
-                        cuties.push(member.user);
+                        cuties.push(member.user.toString());
                         cutiesUsernames.push(member.user.username);
                         await member.roles.add(birthdayRole);
                     };
