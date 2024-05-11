@@ -1,7 +1,5 @@
 module.exports = async (client, message, newMessage) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const isAdmin = require('../util/isAdmin');
@@ -44,15 +42,15 @@ module.exports = async (client, message, newMessage) => {
             };
             let avatar;
             if (newMessage.member) {
-                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
+                avatar = newMessage.member.displayAvatarURL(client.globalVars.displayAvatarSettings);
             } else {
-                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+                avatar = newMessage.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
             };
             let updateButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
                 .setThumbnail(avatar)
                 .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);

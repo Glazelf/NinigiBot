@@ -1,12 +1,12 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         const runCommand = require('../../util/runCommand');
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
         await interaction.deferReply({ ephemeral: false });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");

@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
@@ -19,7 +19,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             // Specific quest

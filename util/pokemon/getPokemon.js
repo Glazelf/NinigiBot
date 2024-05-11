@@ -1,6 +1,4 @@
 module.exports = async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
@@ -276,7 +274,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-        let embedColor = globalVars.embedColor;
+        let embedColor = client.globalVars.embedColor;
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };

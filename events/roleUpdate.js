@@ -1,7 +1,5 @@
 module.exports = async (client, oldRole, newRole) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -28,7 +26,7 @@ module.exports = async (client, oldRole, newRole) => {
             };
             // Role color
             let embedColor = newRole.hexColor;
-            if (embedColor == "#000000") embedColor = globalVars.embedColor;
+            if (embedColor == "#000000") embedColor = client.globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new Discord.EmbedBuilder()
@@ -61,8 +59,8 @@ module.exports = async (client, oldRole, newRole) => {
                 };
             };
             if (oldRole.icon !== newRole.icon) {
-                let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
-                let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
+                let oldIcon = oldRole.iconURL(client.globalVars.displayAvatarSettings);
+                let newIcon = newRole.iconURL(client.globalVars.displayAvatarSettings);
                 updateDescription += "\nIcon updated.";
                 updateEmbed
                     .setThumbnail(oldIcon)

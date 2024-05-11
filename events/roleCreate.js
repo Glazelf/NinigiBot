@@ -1,7 +1,5 @@
 module.exports = async (client, role) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -27,11 +25,11 @@ module.exports = async (client, role) => {
                 executor = createExecutor;
             };
 
-            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = role.guild.iconURL(client.globalVars.displayAvatarSettings);
             // The roleCreated event fires immediately upon clicking the add role button,
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
             const createEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`Role Created ⭐`)
                 .setDescription(role.toString())
                 .setFooter({ text: role.id })

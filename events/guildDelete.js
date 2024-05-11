@@ -1,14 +1,12 @@
 module.exports = async (client, guild) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
 
         let log = await client.channels.fetch(client.config.devChannelID);
         if (!log) return;
 
-        let icon = guild.iconURL(globalVars.displayAvatarSettings);
+        let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
         let guildOwner = null;
         try {
             guildOwner = await guild.fetchOwner();
@@ -17,7 +15,7 @@ module.exports = async (client, guild) => {
             return;
         };
         const guildEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setTitle(`Guild Left ❌`)
             .setThumbnail(icon)
             .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)

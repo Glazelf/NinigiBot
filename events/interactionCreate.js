@@ -1,7 +1,5 @@
 module.exports = async (client, interaction) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         let sendMessage = require('../util/sendMessage');
@@ -42,7 +40,7 @@ module.exports = async (client, interaction) => {
                     try {
                         let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.run(client, interaction, logger, globalVars, ephemeralDefault);
+                        await cmd.run(client, interaction, logger, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -148,7 +146,7 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
-                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
+                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(client, offset);
                             return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
@@ -576,7 +574,7 @@ module.exports = async (client, interaction) => {
                 });
                 break;
             case Discord.InteractionType.ModalSubmit:
-                let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                let userAvatar = interaction.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report
@@ -588,7 +586,7 @@ module.exports = async (client, interaction) => {
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
                         const bugReportEmbed = new Discord.EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(client.globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
@@ -610,7 +608,7 @@ module.exports = async (client, interaction) => {
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
                         const modMailEmbed = new Discord.EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(client.globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)

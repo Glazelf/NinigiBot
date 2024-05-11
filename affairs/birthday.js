@@ -1,18 +1,17 @@
 module.exports = async (client) => {
     const logger = require('../util/logger');
     // Import globals
-    let globalVars = require('../events/ready');
     try {
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'utc';
         const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
-        const guildID = globalVars.ShinxServerID;
-        const channelID = globalVars.eventChannelID;
+        const guildID = client.globalVars.ShinxServerID;
+        const channelID = client.globalVars.eventChannelID;
         const Discord = require("discord.js");
         const api_user = require('../database/dbServices/user.api');
         const gifTags = ["birthday"];
-        if (client.user.id != globalVars.NinigiID) return;
+        if (client.user.id != client.globalVars.NinigiID) return;
         // Create cron job
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
@@ -45,7 +44,7 @@ module.exports = async (client) => {
             const randomGif = await getRandomGif(gifTags);
             // Create embed
             const gifEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
             channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });

@@ -1,8 +1,6 @@
 const api_history = require('../database/dbServices/history.api');
 module.exports = async (client) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('../events/ready');
     try {
         const Discord = require("discord.js");
         const getRandomGif = require("../util/getRandomGif");
@@ -10,9 +8,9 @@ module.exports = async (client) => {
         const timezone = 'utc';
         const time = '00 00 18 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
-        const guildID = globalVars.ShinxServerID;
+        const guildID = client.globalVars.ShinxServerID;
 
-        if (client.user.id != globalVars.NinigiID) return;
+        if (client.user.id != client.globalVars.NinigiID) return;
         // Create cronjob
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
@@ -30,10 +28,10 @@ module.exports = async (client) => {
             const randomGif = await getRandomGif(gifTags);
             if (!randomGif) return;
 
-            let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
+            let channel = guild.channels.cache.find(channel => channel.id === client.globalVars.eventChannelID);
 
             const gifEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);
             channel.send({

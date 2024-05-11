@@ -1,7 +1,5 @@
 module.exports = async (client, channel) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -31,7 +29,7 @@ module.exports = async (client, channel) => {
             let footer = channel.id;
             if (executor) footer = executor.username;
             const createEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`${channelType} Created ⭐`)
                 .setDescription(`${channel} (${channel.id})`)
                 .setFooter({ text: footer })

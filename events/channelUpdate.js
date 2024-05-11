@@ -1,7 +1,5 @@
 module.exports = async (client, oldChannel, newChannel) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -33,10 +31,10 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             let footer = newChannel.id;
             if (executor) footer = executor.username;
-            let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = newChannel.guild.iconURL(client.globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`${newChannelType} Updated ⚒️`)
                 .setDescription(`${newChannel} (${newChannel.id})`)
                 .setFooter({ text: footer })

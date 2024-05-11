@@ -1,6 +1,4 @@
 module.exports = async ({ client, interaction, gameName, page }) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
@@ -11,7 +9,7 @@ module.exports = async ({ client, interaction, gameName, page }) => {
         // Sort by difficulty
         questsTotal = questsTotal.sort(compare);
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setTitle(`${gameName} Quests`);
         let questsButtons = new Discord.ActionRowBuilder();
         let questsEmbedFields = [];

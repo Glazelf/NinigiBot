@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const axios = require("axios");
@@ -25,7 +25,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             seed: catNameSeed
         });
         const catEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
         return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });

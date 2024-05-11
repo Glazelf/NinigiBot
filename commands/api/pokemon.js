@@ -1,6 +1,6 @@
 let currentGeneration = 9; // Set current generation
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
@@ -27,7 +27,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (shinyArg === true) shinyBool = true;
         // Variables
         let pokemonEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.ActionRowBuilder();
         let nameBulbapedia = null;
@@ -313,7 +313,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 let genericDataSplitPokemon = null;
                 let pokemonDataSplitLine = null;
                 let usageEmbed = new Discord.EmbedBuilder()
-                    .setColor(globalVars.embedColor);
+                    .setColor(client.globalVars.embedColor);
                 if (pokemonName) {
                     let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
                     if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });

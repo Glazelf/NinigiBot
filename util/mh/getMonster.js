@@ -1,6 +1,4 @@
 module.exports = async (client, interaction, monsterData, ephemeral) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const Discord = require("discord.js");
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
@@ -151,7 +149,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender);
         if (monsterDescription) mhEmbed.setDescription(monsterDescription);

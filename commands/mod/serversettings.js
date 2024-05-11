@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
@@ -7,7 +7,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
         let adminBool = isAdmin(client, interaction.member);
         const { StarboardChannels } = require('../../database/dbServices/server.api');
         const { StarboardLimits } = require('../../database/dbServices/server.api');
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -24,7 +24,7 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 if (oldStarLimitDB) {
                     starlimit = oldStarLimitDB.star_limit;
                 } else {
-                    starlimit = globalVars.starboardLimit;
+                    starlimit = client.globalVars.starboardLimit;
                 };
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 let starlimitArg = interaction.options.getInteger("starlimit");

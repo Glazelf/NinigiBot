@@ -1,8 +1,6 @@
 const talkedRecently = new Set();
 module.exports = async (client, message) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const sendMessage = require('../util/sendMessage');
         const Discord = require("discord.js");
@@ -19,13 +17,13 @@ module.exports = async (client, message) => {
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
-            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = message.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
 
             let profileButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
 
             const dmEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`DM Message`)
                 .setThumbnail(avatar)
                 .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);

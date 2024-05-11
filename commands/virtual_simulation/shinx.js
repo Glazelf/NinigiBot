@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const Canvas = require('canvas');
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const shinxApi = require('../../database/dbServices/shinx.api');
@@ -33,7 +33,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 shinx = await shinxApi.getShinx(master.id);
                 const is_user_male = shinx.user_male;
 
-                avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                avatar = client.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
 
                 canvas = Canvas.createCanvas(791, 441);
                 ctx = canvas.getContext('2d');

@@ -1,13 +1,11 @@
 module.exports = async ({ client, interaction, page, region }) => {
-    // Import globals
-    let globalVars = require('../../events/ready');
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
         const axios = require("axios");
         let splat3Embed = new Discord.EmbedBuilder()
             .setTitle("Splatfests")
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
         let splatfestButtons = new Discord.ActionRowBuilder();
         let splat3EmbedFields = [];

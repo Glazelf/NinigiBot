@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const Canvas = require('canvas');
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 
@@ -21,7 +21,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         switch (interaction.options.getSubcommand()) {
             case "stock":
                 embed = new Discord.EmbedBuilder()
-                    .setColor(globalVars.embedColor)
+                    .setColor(client.globalVars.embedColor)
                 trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
                 trophies.forEach(trophy => {
@@ -112,7 +112,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 } else {
                     if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                     embed = new Discord.EmbedBuilder()
-                        .setColor(globalVars.embedColor)
+                        .setColor(client.globalVars.embedColor)
                         .setTitle(`${res.trophy_id}`)
                         .addFields([
                             { name: "Icon:", value: `${res.icon}`, inline: true },
