@@ -2,7 +2,7 @@
   "name": "ninigibot",
   "version": "1.0.0",
   "description": "NinigiBot for Discord",
-  "main": "forever.js",
+  "main": "index.js",
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@sapphire/async-queue": "^1.5.2",
