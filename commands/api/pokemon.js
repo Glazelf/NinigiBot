@@ -4,7 +4,9 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
+        const Canvas = require('canvas');
         const getPokemon = require('../../util/pokemon/getPokemon');
+        const getCleanPokemonID = require('../../util/pokemon/getCleanPokemonID');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
         const leadingZeros = require('../../util/leadingZeros');
@@ -31,6 +33,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             .setColor(client.globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.ActionRowBuilder();
+        let returnString = "";
+        let pokemonFiles = null;
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         // Set generation
@@ -41,10 +45,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         // Used for pokemon and learn
         let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = dexModified.species.get(pokemonName);
-        if (pokemonName && pokemonName.toLowerCase() == "random") {
-            let allKeys = Object.keys(allPokemon);
-            pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
-        };
+        if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomPokemon(allPokemon);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = dexModified.moves.get(moveSearch);
@@ -364,10 +365,28 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                         ]);
                 };
                 break;
+            case "whosthat":
+                pokemonEmbed = null;
+                await interaction.deferReply({ ephemeral: ephemeral });
+                pokemon = getRandomPokemon(allPokemon);
+                let pokemonID = getCleanPokemonID(pokemon);
+                let serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
+                // Initiate image context
+                let img = await Canvas.loadImage(serebiiRender);
+                let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                // Make render black
+                ctx.globalCompositeOperation = "source-in";
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, img.width, img.height);
+                pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
+                returnString = `# Who's that Pokémon?`;
+                break;
         };
         // Bulbapedia button
         if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
-        return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
         function getLearnData(learnData) {
             let learnInfo = "";
@@ -397,6 +416,10 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 };
             });
             return learnInfo;
+        };
+        function getRandomPokemon(pokemonList) {
+            let listKeys = Object.keys(pokemonList);
+            return pokemonList[listKeys[listKeys.length * Math.random() << 0]];
         };
 
     } catch (e) {
@@ -586,6 +609,15 @@ module.exports.config = {
             autocomplete: true,
             minValue: 1000
         }, {
+            name: "ephemeral",
+            type: Discord.ApplicationCommandOptionType.Boolean,
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "whosthat",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
+        description: "Who's that Pokémon?",
+        options: [{
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."
