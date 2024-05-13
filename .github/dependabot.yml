@@ -5,8 +5,10 @@ updates:
     assignees: ["glazelf"]
     schedule:
       interval: "weekly"
+      day: "tuesday"
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     assignees: ["glazelf"]
     schedule:
       interval: "daily"
+      day: "tuesday"
