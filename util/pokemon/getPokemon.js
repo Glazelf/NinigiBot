@@ -7,7 +7,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const isAdmin = require('../isAdmin');
         const convertMeterFeet = require('../convertMeterFeet');
         const leadingZeros = require('../leadingZeros');
-        const correctionID = require('../../objects/pokemon/correctionID.json');
+        const getCleanPokemonID = require('./getCleanPokemonID.js');
         const colorHexes = require('../../objects/colorHexes.json');
         const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
         let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
@@ -89,47 +89,19 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         resistances = resistances.join(", ");
         immunities = immunities.join(", ");
 
-        let pokemonID = leadingZeros(pokemon.num.toString(), 4);
-        // Forms
-        const primalString = "-Primal";
-        const totemString = "-Totem";
-        const gmaxString = "-Gmax";
-        const eternamaxString = "-Eternamax";
-        const primalBool = pokemon.name.endsWith(primalString);
-        const totemBool = pokemon.name.endsWith(totemString);
-        const gmaxBool = pokemon.name.endsWith(gmaxString);
-        const eternamaxBool = pokemon.name.endsWith(eternamaxString);
-        const dynamaxBool = Boolean(gmaxBool || eternamaxBool);
-        const totemAlolaBool = totemBool && pokemon.name.split("-")[1] == "Alola";
-        let formChar;
-
-        if (primalBool || gmaxBool) {
-            if (primalBool) formChar = "-m";
-            if (gmaxBool) formChar = "-gi";
-            pokemonID = `${pokemonID}${formChar}`;
-        } else if (!totemBool || totemAlolaBool) {
-            // Catches all forms where the form extension on Serebii is just the first letter of the form name
-            if (pokemon.name.split("-")[1]) pokemonID = `${pokemonID}-${pokemon.name.split("-")[1].split("", 1)[0].toLowerCase()}`;
-        };
-        // Edgecase ID corrections
-        // TODO: add a bunch of meaningless forms like Unown and Vivillon
-        pokemonID = correctValue(correctionID, pokemon.name, pokemonID);
-        if (pokemon.name.startsWith("Arceus-") || pokemon.name.startsWith("Silvally-")) pokemonID = `${pokemonID.split("-")[0]}-${pokemon.types[0].toLowerCase()}`;
-        // 3 digit IDs for now
-        pokemonIDPMD = pokemonID;
-        if (pokemonID[0] == "0") pokemonID = pokemonID.substring(1); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently
+        let pokemonID = getCleanPokemonID(pokemon);
+        pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
         // Metrics
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
         let heightAmerican = convertMeterFeet(pokemon.heightm);
-        if (pokemon.weightkg) {
+        if (pokemon.weightkg && pokemon.weightkg > 0) {
             metricsString += `**Weight:**\n${pokemon.weightkg}kg | ${weightAmerican}lbs`;
-        } else if (dynamaxBool) {
+        } else {
             metricsString += `**Weight:**\n???`;
         };
         if (pokemon.heightm) {
             metricsString += `\n**Height:**\n${pokemon.heightm}m | ${heightAmerican}ft`;
-            if (dynamaxBool) metricsString = metricsString.replace("m", "m+").replace("ft", "ft+");
         };
         let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
         // Official art
@@ -463,11 +435,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
         };
-        function correctValue(object, key, input) {
-            key = key.toLowerCase();
-            if (object[key]) return object[key];
-            return input;
-        };
+
         function getEvoMethod(pokemon) {
             let evoMethod;
             switch (pokemon.evoType) {
