@@ -5,7 +5,6 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const isAdmin = require('../../util/isAdmin');
         let languages = require("../../objects/discord/languages.json");
         let verifLevels = require("../../objects/discord/verificationLevels.json");
-        let ShardUtil;
 
         let adminBool = isAdmin(client, interaction.member);
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -21,22 +20,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         let humanMemberCount = guild.members.cache.size - botMembers.size;
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
-        let guildsByShard = client.guilds.cache;
 
         let nitroEmote = "<:nitro_boost:753268592081895605>";
-        // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
-        let shardNumber = 1;
-        if (client.shard) {
-            ShardUtil = new Discord.ShardClientUtil(client, "process");
-            guildsByShard = await client.shard.fetchClientValues('guilds.cache');
-            guildsByShard.forEach(function (guildShard, i) {
-                guildShard.forEach(function (shardGuild) {
-                    if (shardGuild.id == guild.id) {
-                        shardNumber = i + 1;
-                    };
-                });
-            });
-        };
         // Bans
         let banCount = 0;
         try {
@@ -135,7 +120,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const serverEmbed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor)
             .setTitle(`${guild.name}`)
-            .setThumbnail(icon);
+            .setThumbnail(icon)
+            .setFooter({ text: guild.id });
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed.addFields([
             { name: "Links:", value: serverLinks, inline: false },
@@ -146,13 +132,12 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         };
         serverEmbed.addFields([
             { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-            { name: "Stats:", value: statsString, inline: false },
-            { name: "Assets:", value: assetString, inline: false }
+            { name: "Stats:", value: statsString, inline: true }, // Keep in row with max 2 fields, otherwise change inline to false
+            { name: "Assets:", value: assetString, inline: true },
+            { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
         ]);
-        if (client.shard) serverEmbed.addFields([{ name: "Shard:", value: `${shardNumber}/${ShardUtil.count}`, inline: true }]);
-        serverEmbed
-            .addFields([{ name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: true }])
-            .setFooter({ text: guild.id });
+        //// Doesn't add much value with 1 shard and autosharding
+        // if (client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${client.options.shardCount}`, inline: true }]);
         if (banner) serverEmbed.setImage(banner);
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
 

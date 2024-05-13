@@ -48,11 +48,6 @@ exports.run = async (client, interaction, logger) => {
         // Destroy, will reboot thanks to forever package
         await client.destroy();
         return process.exit();
-        // Restarts a shard
-        // await sendMessage({client: client, interaction: interaction, content: `Restarting...`);
-        // await client.destroy();
-        // await client.login(client.config.token);
-        // return sendMessage({client: client, interaction: interaction, content: `Restarted!`);
 
     } catch (e) {
         // Log error

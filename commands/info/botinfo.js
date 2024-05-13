@@ -13,30 +13,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
         await client.guilds.fetch();
-
-        const ShardUtil = new Discord.ShardClientUtil(client, "process");
-        // let userCount = await client.users.fetch();
-        // let memberFetch = await interaction.guild.members.fetch();
-        // console.log(userCount);
-        // console.log(Object.keys(userCount));
-        let totalGuilds = 0;
-        let totalMembers = 0;
-        // Get shards (Currently not properly functional)
-        if (client.shard) {
-            const promises = [
-                client.shard.fetchClientValues('guilds.cache.size'),
-                client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
-            ];
-            await Promise.all(promises)
-                .then(results => {
-                    totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-                    totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-                })
-                .catch(console.error);
-        } else {
-            totalGuilds = client.guilds.cache.size;
-            totalMembers = await getUsers();
-        };
+        let totalGuilds = client.guilds.cache.size;
+        let totalMembers = await getUsers();
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
         let githubRepoResponse = null;
@@ -73,7 +51,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
             ]);
         if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
-        if (client.shard) botEmbed.addFields([{ name: "Shards:", value: ShardUtil.count.toString(), inline: true }]);
+        if (client.options.shardCount) botEmbed.addFields([{ name: "Shards:", value: client.options.shardCount.toString(), inline: true }]);
         botEmbed.addFields([
             { name: "Servers:", value: totalGuilds.toString(), inline: true },
             { name: "Total Users:", value: totalMembers.toString(), inline: true },
