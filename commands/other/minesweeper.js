@@ -19,7 +19,7 @@ exports.run = async (client, interaction, logger) => {
         if (minesArg) {
             let minesCap = Math.ceil((rows * columns) / 2 - 1); // Cap at 50% mine ratio (otherwise board generation fails idk why)
             if (minesArg > minesCap || minesArg < minesFloor) {
-                correctionString += `\nAmount of mines has to be between ${minesFloor} mine and ${minesCapPercentage}% (${minesCap} in this scenario) of the board.`;
+                correctionString += `\nAmount of mines has to be between ${minesFloor} mine and ${minesCapPercentage}% of the board. Mine count has been adjusted to ${minesCap}.`;
                 if (minesArg > minesCap) mines = minesCap;
                 if (minesArg < minesFloor) mines = minesFloor;
             } else {
@@ -55,7 +55,12 @@ exports.run = async (client, interaction, logger) => {
         });
 
         let returnString = `Here is your minesweeper grid!`;
-        if (correctionString.length > 0) returnString += `\n${correctionString}`;
+        if (correctionString.length > 0) {
+            returnString += `\n${correctionString}`;
+        } else {
+            returnString += `\nMines: ${mines}`;
+        };
+        
         return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray });
 
     } catch (e) {
