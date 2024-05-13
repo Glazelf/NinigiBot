@@ -40,14 +40,20 @@ module.exports = {
     },
     async switchShininessAndGet(id) {
         let shinx = await this.getShinx(id, ['user_id', 'shiny']);
-        return shinx.switchShininessAndGet();
+        let user = await this.getUser(id, ['user_id']);
+        let hasShinyCharm = await this.hasEventTrophy(user.user_id, 'Shiny Charm');
+        if (hasShinyCharm) {
+            return shinx.switchShininessAndGet();
+        } else {
+            throw new Error('User does not have the Shiny Charm');
+        }
     },
     async changeAutoFeed(id, mode) {
         let shinx = await this.getShinx(id, ['user_id', 'auto_feed']);
         return shinx.setAutoFeed(mode);
     },
     async addExperience(id, experience) {
-        let shinx = await this.getShinx(id, ['user_id', 'experience']);
+        let shinx = await this.getShinx(id, ['user_id', 'experience', 'level']);
         const res = await shinx.addExperienceAndLevelUp(experience);
         if (res.pre != res.post) {
             if (hasPassedLevel(res.pre, res.post, 5)) await this.addEventTrophy(id, 'Bronze Trophy');
