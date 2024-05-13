@@ -7,6 +7,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
+        const leadingZeros = require('../../util/leadingZeros');
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
@@ -252,7 +253,6 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
                 pokemonEmbed.setTitle(learnAuthor);
                 if (learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
-                return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: ephemeral });
                 break;
             case "usage":
                 let formatInput = "gen9vgc2023series1";
@@ -275,7 +275,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 if (!month) {
                     month = date.getMonth();
                     try {
-                        let testMonth = await axios.get(`https://www.smogon.com/stats/${year}-${month}/`);
+                        let testStringMonth = leadingZeros(month, 2);
+                        let testMonth = await axios.get(`https://www.smogon.com/stats/${year}-${testStringMonth}/`);
                     } catch (e) {
                         month = month - 1;
                     };
@@ -284,8 +285,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     month += 12;
                     year -= 1;
                 };
-                let stringMonth = month;
-                if (stringMonth < 10) stringMonth = "0" + stringMonth;
+                let stringMonth = leadingZeros(month, 2);
                 // Format URL and other variables
                 let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
                 let response = null;
@@ -312,8 +312,6 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 let usageRank = 0;
                 let genericDataSplitPokemon = null;
                 let pokemonDataSplitLine = null;
-                let usageEmbed = new Discord.EmbedBuilder()
-                    .setColor(client.globalVars.embedColor);
                 if (pokemonName) {
                     let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
                     if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
@@ -331,7 +329,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
                     let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
                     let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replaceAll("   ", "");
-                    usageEmbed
+                    pokemonEmbed
                         .setTitle(`${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
                         .addFields([
@@ -341,7 +339,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                             { name: "Spreads:", value: spreadsString, inline: true },
                             { name: "Teammates:", value: teammatesString, inline: true }
                         ]);
-                    if (countersString.length > 0) usageEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: true }]);
+                    if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: true }]);
                 } else {
                     // Format generic data display
                     let usageList = [];
@@ -358,14 +356,14 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     let usageListPart1 = [];
                     let usageListPart2 = [];
                     await usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
-                    usageEmbed
+                    pokemonEmbed
                         .setTitle(`Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .addFields([
                             { name: "1-50", value: usageListPart1.join("\n"), inline: true },
                             { name: "51-100", value: usageListPart2.join("\n"), inline: true }
                         ]);
                 };
-                return sendMessage({ client: client, interaction: interaction, embeds: usageEmbed, ephemeral: ephemeral });
+                break;
         };
         // Bulbapedia button
         if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));

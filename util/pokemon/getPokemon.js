@@ -6,6 +6,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');
         const convertMeterFeet = require('../convertMeterFeet');
+        const leadingZeros = require('../leadingZeros');
         const correctionID = require('../../objects/pokemon/correctionID.json');
         const colorHexes = require('../../objects/colorHexes.json');
         const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
@@ -461,12 +462,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
 
             let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
             return StatText;
-        };
-        function leadingZeros(str, characters) {
-            for (let i = str.length; i < characters; i++) {
-                str = "0" + str;
-            };
-            return str;
         };
         function correctValue(object, key, input) {
             key = key.toLowerCase();
