@@ -26,6 +26,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         let nitroEmote = "<:nitro_boost:753268592081895605>";
         // ShardUtil.shardIDForGuildID() doesn't work so instead I wrote this monstrosity to get the shard ID
         let shardNumber = 1;
+        // This only applies to non-auto sharding
         if (client.shard) {
             ShardUtil = new Discord.ShardClientUtil(client, "process");
             guildsByShard = await client.shard.fetchClientValues('guilds.cache');
