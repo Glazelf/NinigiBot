@@ -1,27 +1,30 @@
-const { ShardingManager } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const Discord = require('discord.js');
-const forever = require('forever');
-
 // Configuration
 const config = require('./config.json');
-const runWithSharding = true; // set to true to run with sharding, false otherwise
-const runWithForever = true; // set to true to run with forever, false otherwise
+const runWithSharding = true; // Set to true to run with sharding, false otherwise
+const shardCount = null; // Amount of shards to use, only auto-sharding is supported for now
+//// Enforce non-auto sharding in the future
+// const manager = new Discord.ShardingManager(startBot(), { token: config.token });
+// manager.on('shardCreate', shard => console.log(`Launching shard ${shard.id}`));
+// manager.spawn(shardCount);
+startBot();
 
 // Bot initialization function
 async function startBot() {
     const intents = [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.GuildBans, Discord.GatewayIntentBits.GuildEmojisAndStickers, Discord.GatewayIntentBits.GuildIntegrations, Discord.GatewayIntentBits.GuildVoiceStates, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMessageReactions, Discord.GatewayIntentBits.DirectMessages, Discord.GatewayIntentBits.MessageContent];
     const partials = [Discord.Partials.Channel, Discord.Partials.GuildMember, Discord.Partials.Message, Discord.Partials.Reaction, Discord.Partials.User];
 
-    const client = new Discord.Client({
+    let clientObject = {
         intents: intents,
         partials: partials,
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
-    });
+    };
+    if (runWithSharding && !shardCount) clientObject.shards = "auto";
+    const client = new Discord.Client(clientObject);
 
     client.config = config;
-
     // Load events
     fs.readdir("./events/", (err, files) => {
         if (err) return console.error(err);
@@ -33,25 +36,23 @@ async function startBot() {
             delete require.cache[require.resolve(`./events/${file}`)];
         });
     });
-
     client.commands = new Discord.Collection();
     client.aliases = new Discord.Collection();
 
-    await walk(`./commands/`);
+    await walk(client, `./commands/`);
     console.log("Loaded commands!");
 
     client.login(config.token);
-}
-
+};
 // Load commands
-async function walk(dir) {
+async function walk(client, dir) {
     fs.readdir(dir, function (err, files) {
         if (err) throw err;
         files.forEach(function (file) {
             let filepath = path.join(dir, file);
             fs.stat(filepath, function (err, stats) {
                 if (stats.isDirectory()) {
-                    walk(filepath);
+                    walk(client, filepath);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = require(`./${filepath}`);
                     if (!props.config.type) props.config.type = Discord.ApplicationCommandType.ChatInput;
@@ -67,19 +68,4 @@ async function walk(dir) {
             });
         });
     });
-}
-
-// Start bot based on configuration
-if (runWithSharding) {
-    const manager = new ShardingManager('./bot.js', { token: config.token });
-    manager.on('shardCreate', shard => console.log(`Launching shard ${shard.id}`));
-    manager.spawn(2); // Change 2 to 1 to run on a singular shard
-} else {
-    startBot();
-}
-
-if (runWithForever) {
-    let foreverOptions = [{ "uid": "Ninigi" }];
-    let child = forever.start('./bot.js', foreverOptions);
-    forever.startServer(child);
 }
