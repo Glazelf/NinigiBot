@@ -1,6 +1,4 @@
 module.exports = async (client) => {
-    // Import globals
-    let globalVars = require('../events/ready');
     try {
         let currentdate = new Date();
         let datetime = currentdate.getDate() + "/"

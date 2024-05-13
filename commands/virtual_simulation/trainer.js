@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const userApi = require('../../database/dbServices/user.api');
@@ -18,7 +18,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             case "info":
                 user = await userApi.getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
-                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+                if (member) avatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
                 trophy_level = 0;
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
@@ -35,7 +35,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
                 embed = new Discord.EmbedBuilder()
-                    .setColor(globalVars.embedColor)
+                    .setColor(client.globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addFields([
                         { name: "Balance:", value: user.money.toString(), inline: true },

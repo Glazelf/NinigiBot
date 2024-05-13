@@ -1,7 +1,5 @@
 module.exports = async (client, member) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -14,11 +12,11 @@ module.exports = async (client, member) => {
         let botMember = member.guild.members.me;
 
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
-            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = member.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
             let joinButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
             const joinEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)

@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const user_api = require('../../database/dbServices/user.api');
@@ -13,24 +13,24 @@ exports.run = async (client, interaction, logger, globalVars) => {
         if (globalArg === true) global = globalArg;
         const money_db = await user_api.getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
         if (global) {
             // Global leaderboard
             let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${client.globalVars.currency}`)
                 .join('\n');
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
                 .setTitle(`Global Leaderboard:`);
         } else {
             // Server leaderboard
-            let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = interaction.guild.iconURL(client.globalVars.displayAvatarSettings);
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${client.globalVars.currency}`)
                 .join('\n');
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });
             leaderboardEmbed
@@ -38,7 +38,6 @@ exports.run = async (client, interaction, logger, globalVars) => {
                 .setTitle(`Leaderboard:`)
                 .setThumbnail(icon);
         };
-
         return sendMessage({ client: client, interaction: interaction, embeds: leaderboardEmbed });
 
     } catch (e) {

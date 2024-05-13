@@ -1,7 +1,5 @@
 module.exports = async (exception, client, interaction = null) => {
     // Note: interaction may be a message
-    // Import globals
-    let globalVars = require('../events/ready');
     try {
         const util = require('util');
         const Discord = require("discord.js");

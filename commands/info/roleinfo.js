@@ -1,17 +1,17 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        let DefaultEmbedColor = globalVars.embedColor;
+        let DefaultEmbedColor = client.globalVars.embedColor;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let role = interaction.options.getRole("role");
         // Role visuals
-        let icon = role.iconURL(globalVars.displayAvatarSettings);
+        let icon = role.iconURL(client.globalVars.displayAvatarSettings);
         let defaultColor = "#000000";
         let embedColor = role.hexColor;
-        if (embedColor == defaultColor) embedColor = globalVars.embedColor;
+        if (embedColor == defaultColor) embedColor = client.globalVars.embedColor;
 
         let guildMembers = await interaction.guild.members.fetch();
         let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;

@@ -1,7 +1,5 @@
 module.exports = async (client, channel) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -28,9 +26,9 @@ module.exports = async (client, channel) => {
                 };
             };
             const channelType = channel.constructor.name;
-            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = channel.guild.iconURL(client.globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`${channelType} Deleted ❌`)
                 .setDescription(`${channel.name} (${channel.id})`)
                 .setFooter({ text: channel.id })

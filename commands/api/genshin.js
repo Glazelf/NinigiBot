@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const axios = require("axios");
@@ -14,7 +14,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let response;
         let buttonArray = [];
         let giEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "character":
                 giAPI += `characters/`;

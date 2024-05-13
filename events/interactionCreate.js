@@ -1,7 +1,5 @@
 module.exports = async (client, interaction) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         let sendMessage = require('../util/sendMessage');
@@ -13,7 +11,9 @@ module.exports = async (client, interaction) => {
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
         const fs = require("fs");
-        let monstersJSON;
+        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
+        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
+
         const { EligibleRoles } = require('../database/dbServices/server.api');
         const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
@@ -40,7 +40,7 @@ module.exports = async (client, interaction) => {
                     try {
                         let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.run(client, interaction, logger, globalVars, ephemeralDefault);
+                        await cmd.run(client, interaction, logger, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -63,16 +63,17 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
-                            let learnsetBool = (interaction.customId.split("|")[1] == "true");
-                            let shinyBool = (interaction.customId.split("|")[2] == "true");
+                            let customIdSplit = interaction.customId.split("|")
+                            let learnsetBool = (customIdSplit[1] == "true");
+                            let shinyBool = (customIdSplit[2] == "true");
+                            let generationButton = customIdSplit[3];
                             newPokemonName = newPokemonName.label;
-                            let pokemon = Dex.species.get(newPokemonName);
+                            let pokemon = Dex.mod(`gen${generationButton}`).species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
-                            monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
                             // Monster Hunter forms
                             let newMonsterName = null;
                             for (let componentRow of interaction.message.components) {
@@ -89,6 +90,47 @@ module.exports = async (client, interaction) => {
                             messageObject = await getMonster(client, interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
+                        } else if (interaction.customId.startsWith("mhquests")) {
+                            // Monster Hunter quests
+                            const getQuests = require('../util/mh/getQuests');
+                            let mhQuestsDirection = interaction.customId.split("|")[1];
+                            let mhQuestsGameName = interaction.customId.split("|")[2];
+                            let mhQuestsPage = interaction.customId.split("|")[3];
+                            let mhQuestsPagesTotal = interaction.customId.split("|")[4];
+                            switch (mhQuestsDirection) {
+                                case "left":
+                                    mhQuestsPage = parseInt(mhQuestsPage) - 1;
+                                    break;
+                                case "right":
+                                    mhQuestsPage = parseInt(mhQuestsPage) + 1;
+                                    break;
+                                case "first":
+                                    mhQuestsPage = 1;
+                                    break;
+                                case "last":
+                                    mhQuestsPage = mhQuestsPagesTotal;
+                                    break;
+                            };
+                            if (mhQuestsPage < 1) mhQuestsPage = 1;
+                            if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
+                            let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
+                        } else if (interaction.customId.startsWith("splatfest")) {
+                            // Splatfest
+                            const getSplatfests = require('../util/splat/getSplatfests');
+                            let splatfestDirection = interaction.customId.split("|")[1];
+                            let splatfestPage = interaction.customId.split("|")[2];
+                            let splatfestRegion = interaction.customId.split("|")[3];
+                            switch (splatfestDirection) {
+                                case "left":
+                                    splatfestPage = parseInt(splatfestPage) + 1;
+                                    break;
+                                case "right":
+                                    splatfestPage = parseInt(splatfestPage) - 1;
+                                    break;
+                            };
+                            let splatfestMessageObject = await getSplatfests({ client: client, interaction: interaction, page: splatfestPage, region: splatfestRegion });
+                            return interaction.update({ embeds: [splatfestMessageObject.embeds], components: splatfestMessageObject.components });
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
                             let componentsCopy = interaction.message.components;
@@ -104,7 +146,7 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
-                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(offset);
+                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(client, offset);
                             return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
@@ -204,40 +246,39 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
+                        let currentGeneration = 9
+                        let generationInput = interaction.options.getInteger("generation") || currentGeneration;
+                        let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
-                                let pokemonSpecies = Dex.species.all();
+                                // For some reason filtering breaks the original sorted order, sort by number to restore it
+                                let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
                                 await pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
-                                        && species.exists
-                                        && species.num > 0
                                         && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                 });
                                 break;
                             case "ability":
-                                let abilities = Dex.abilities.all();
+                                // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        ability.exists &&
-                                        ability.name !== "No Ability" &&
-                                        ability.isNonstandard !== "CAP") choices.push({ name: ability.name, value: ability.name });
+                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
                             case "move":
-                                let moves = Dex.moves.all();
+                                // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        move.exists &&
-                                        move.isNonstandard !== "CAP") choices.push({ name: move.name, value: move.name });
+                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
-                                let items = Dex.items.all();
+                                // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
                                 await items.forEach(item => {
-                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        item.exists) choices.push({ name: item.name, value: item.name });
+                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
                             case "nature":
@@ -264,8 +305,6 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "monsterhunter":
-                        monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-                        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
                         switch (focusedOption.name) {
                             case "monster":
                                 await monstersJSON.monsters.forEach(monster => {
@@ -535,7 +574,7 @@ module.exports = async (client, interaction) => {
                 });
                 break;
             case Discord.InteractionType.ModalSubmit:
-                let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                let userAvatar = interaction.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report
@@ -547,7 +586,7 @@ module.exports = async (client, interaction) => {
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
                         const bugReportEmbed = new Discord.EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(client.globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
@@ -569,7 +608,7 @@ module.exports = async (client, interaction) => {
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
                         const modMailEmbed = new Discord.EmbedBuilder()
-                            .setColor(globalVars.embedColor)
+                            .setColor(client.globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)

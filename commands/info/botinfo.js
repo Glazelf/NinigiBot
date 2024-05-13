@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
@@ -59,12 +59,12 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
-        let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+        let avatar = client.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
         // Owner
         let owner = "glazelf (232875725898645504)";
 
         let botEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setTitle(client.user.username)
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
@@ -87,7 +87,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
             .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
             .addComponents(new Discord.ButtonBuilder({ label: 'App Directory', style: Discord.ButtonStyle.Link, url: `https://discord.com/application-directory/${client.user.id}` }))
             .addComponents(new Discord.ButtonBuilder({ label: 'GitHub', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${client.globalVars.ShinxServerInvite}` }))
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
         async function getUsers() {

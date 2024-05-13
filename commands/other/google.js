@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 

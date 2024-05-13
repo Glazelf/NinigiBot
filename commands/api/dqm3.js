@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const getWikiURL = require('../../util/getWikiURL');
@@ -23,7 +23,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         if (detailedArg === true) detailed = true;
 
         let dqm3Embed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "monster":
                 inputID = interaction.options.getString("monster");

@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const api_trophy = require('../../database/dbServices/trophy.api');
-let globalVars = require('../../events/ready');
 const api_user = require('../../database/dbServices/user.api');
 // Amount of userinfo pages
 const NUMBER_OF_PAGES = 2;
@@ -9,12 +8,12 @@ module.exports = async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
-    let embedColor = globalVars.embedColor;
+    let embedColor = client.globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-    let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
+    if (member) serverAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
+    let avatar = user.displayAvatarURL(client.globalVars.displayAvatarSettings);
 
     const profileEmbed = new Discord.EmbedBuilder()
         .setColor(embedColor)
@@ -55,7 +54,7 @@ module.exports = async (client, interaction, page, user) => {
             if (memberRoles) roleCount = memberRoles.size;
             // Banner
             let banner = null;
-            if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
+            if (user.banner) banner = user.bannerURL(client.globalVars.displayAvatarSettings);
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
@@ -97,7 +96,7 @@ module.exports = async (client, interaction, page, user) => {
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
-            let userBalance = `${dbBalance}${globalVars.currency}`;
+            let userBalance = `${dbBalance}${client.globalVars.currency}`;
             profileEmbed.addFields([
                 { name: "Balance:", value: userBalance, inline: true },
                 { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }

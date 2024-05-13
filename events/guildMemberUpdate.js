@@ -1,7 +1,5 @@
 module.exports = async (client, member, newMember) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -14,8 +12,8 @@ module.exports = async (client, member, newMember) => {
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
-            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
+            let oldAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let avatar = newMember.displayAvatarURL(client.globalVars.displayAvatarSettings);
 
             let updateCase = null;
             let topText = null;
@@ -95,7 +93,7 @@ module.exports = async (client, member, newMember) => {
                     return;
             };
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(topText)
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);

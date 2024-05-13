@@ -1,7 +1,5 @@
 module.exports = async (client, guildBan) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -29,13 +27,13 @@ module.exports = async (client, guildBan) => {
             if (reason == null) reason = "Not specified.";
             if (target.id !== guildBan.user.id) return;
 
-            // let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings); // Unused
-            let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
+            // let avatarExecutor = executor.displayAvatarURL(client.globalVars.displayAvatarSettings); // Unused
+            let avatarTarget = target.displayAvatarURL(client.globalVars.displayAvatarSettings);
 
             let banButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
             const banEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)

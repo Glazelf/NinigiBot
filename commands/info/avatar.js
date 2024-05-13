@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let user = interaction.options.getUser("user");
@@ -7,15 +7,15 @@ exports.run = async (client, interaction, logger, globalVars) => {
         // Get avatars
         let avatar = null;
         let serverAvatar = null;
-        if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
-        if (member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+        if (user.avatarURL()) avatar = await user.avatarURL(client.globalVars.displayAvatarSettings);
+        if (member && member.avatarURL()) serverAvatar = await member.avatarURL(client.globalVars.displayAvatarSettings);
         if (!avatar && !serverAvatar) return sendMessage({ client: client, interaction: interaction, content: `${user.username} doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
         };
         const avatarEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setThumbnail(avatar)
             .setTitle(`${user.username}'s avatar(s):`)
             .setImage(serverAvatar);

@@ -1,7 +1,5 @@
 module.exports = async (client, member) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbServices/server.api');
@@ -22,11 +20,11 @@ module.exports = async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
             let leaveEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
-                let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                let avatar = member.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: Discord.AuditLogEvent.MemberKick

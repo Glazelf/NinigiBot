@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const fs = require("fs");
@@ -26,7 +26,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
         eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
         let p5Embed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "persona":

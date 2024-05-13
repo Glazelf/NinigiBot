@@ -1,12 +1,7 @@
 module.exports = async (client, info) => {
-    const logger = require('../../util/logger');
+    const logger = require('../util/logger');
     try {
-        // Log error
-        console.log(info);
-        // Reboot bot
-        let botjs = require('../bot.js');
-        botjs();
-
+        logger(info, client);
     } catch (e) {
         // Log error
         logger(e, client);

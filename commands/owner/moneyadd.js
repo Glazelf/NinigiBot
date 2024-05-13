@@ -1,13 +1,13 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars) => {
+exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
         const api_user = require('../../database/dbServices/user.api');
-        let currency = globalVars.currency;
+        let currency = client.globalVars.currency;
 
         let transferTargetID = interaction.options.getString("user");
         let transferAmount = interaction.options.getInteger("amount");

@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         // Date manipulation
@@ -44,7 +44,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral) => {
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setTitle(dateString)
             .addFields([
                 { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },

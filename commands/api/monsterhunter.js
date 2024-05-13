@@ -1,11 +1,12 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');
         const getMonster = require('../../util/mh/getMonster');
+        const getQuests = require('../../util/mh/getQuests');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
@@ -18,7 +19,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
+            .setColor(client.globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             // Specific quest
@@ -56,42 +57,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
                 break;
             // All quests from a game
             case "quests":
-                let gameName = interaction.options.getString("game").toLowerCase();
-                // Add quests matching game title to an array
-                let questsTotal = questsJSON.quests.filter(quest => quest.game == gameName);
-                if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
-                // Sort by difficulty
-                questsTotal = questsTotal.sort(compare);
-                mhEmbed
-                    .setColor(globalVars.embedColor)
-                    .setTitle(`${gameName} Quests`);
-                let totalQuests = questsTotal.length;
-                let pageLength = 25;
-                let currentPage = 1; // Load page 1 on command use
-                let questsPaged = questsTotal.reduce((questsTotal, item, index) => {
-                    const chunkIndex = Math.floor(index / pageLength);
-                    // start a new chunk
-                    if (!questsTotal[chunkIndex]) questsTotal[chunkIndex] = [];
-
-                    questsTotal[chunkIndex].push(item);
-                    return questsTotal;
-                }, []);
-                let totalPages = questsPaged.length;
-
-                questsPaged[currentPage - 1].forEach(quest => {
-                    let questTitle = `${quest.difficulty}⭐ ${quest.name}`;
-                    if (quest.isKey) questTitle += ` 🔑`;
-                    mhEmbed.addFields([{ name: `${questTitle}`, value: `${quest.objective} in ${quest.map}`, inline: false }]);
-                });
-                let startIndex = currentPage + pageLength * currentPage;
-                let endIndex = startIndex + pageLength - 1;
-                mhEmbed.setFooter({ text: `Page ${currentPage}/${totalPages}` });
-                // Function to sort by difficulty
-                function compare(a, b) {
-                    if (a.difficulty > b.difficulty) return -1;
-                    if (a.difficulty < b.difficulty) return 1;
-                    return 0;
-                };
+                let gameName = interaction.options.getString("game");
+                let questsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: gameName, page: 1 });
+                return sendMessage({ client: client, interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
                 break;
             // Monsters
             case "monster":

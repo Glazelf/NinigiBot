@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, globalVars, logger, ephemeral) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbServices/server.api')

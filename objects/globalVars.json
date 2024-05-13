@@ -1,0 +1,18 @@
+{
+    "NinigiID": "592760951103684618",
+    "ShinxServerID": "549214833858576395",
+    "ShinxServerInvite": "2gkybyu",
+    "currency": "💰",
+    "embedColor": "#219DCD",
+    "lackPerms": "You do not have the required permissions to do this.",
+    "eventChannelID": "752626723345924157",
+    "starboardLimit": 3,
+    "battling": {
+        "yes": false
+    },
+    "displayAvatarSettings": {
+        "size": 512,
+        "extension": "png",
+        "dynamic": true
+    }
+}

@@ -1,7 +1,5 @@
 module.exports = async (client, message) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
 
@@ -60,12 +58,12 @@ module.exports = async (client, message) => {
             };
             let avatar;
             if (message.member) {
-                avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+                avatar = message.member.displayAvatarURL(client.globalVars.displayAvatarSettings);
             } else {
-                avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+                avatar = message.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
             };
             const deleteEmbed = new Discord.EmbedBuilder()
-                .setColor(globalVars.embedColor)
+                .setColor(client.globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)

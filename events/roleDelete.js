@@ -1,7 +1,5 @@
 module.exports = async (client, role) => {
     const logger = require('../util/logger');
-    // Import globals
-    let globalVars = require('./ready');
     try {
         const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
@@ -28,9 +26,9 @@ module.exports = async (client, role) => {
             };
             // Role color
             let embedColor = role.hexColor;
-            if (!embedColor || embedColor == "#000000") embedColor = globalVars.embedColor;
+            if (!embedColor || embedColor == "#000000") embedColor = client.globalVars.embedColor;
 
-            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
+            let icon = role.guild.iconURL(client.globalVars.displayAvatarSettings);
 
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)

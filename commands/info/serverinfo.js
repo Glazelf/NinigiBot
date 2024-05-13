@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, globalVars, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
@@ -90,9 +90,9 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         };
         if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
-        let icon = guild.iconURL(globalVars.displayAvatarSettings);
+        let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL(globalVars.displayAvatarSettings);
+        if (guild.bannerURL()) banner = guild.bannerURL(client.globalVars.displayAvatarSettings);
         // Rules
         let rules = null;
         if (guild.rulesChannel) rules = guild.rulesChannel;
@@ -133,7 +133,7 @@ exports.run = async (client, interaction, logger, globalVars, ephemeral = true) 
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
         const serverEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+            .setColor(client.globalVars.embedColor)
             .setTitle(`${guild.name}`)
             .setThumbnail(icon);
         if (guild.description) serverEmbed.setDescription(guild.description);
