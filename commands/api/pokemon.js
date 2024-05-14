@@ -5,9 +5,11 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
+        const getWhosThatPokemon = require('../../util/pokemon/getWhosThatPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
         const leadingZeros = require('../../util/leadingZeros');
+        const getRandomObjectItem = require('../../util/getRandomObjectItem');
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
@@ -31,6 +33,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             .setColor(client.globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.ActionRowBuilder();
+        let returnString = "";
+        let pokemonFiles = null;
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         // Set generation
@@ -41,10 +45,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         // Used for pokemon and learn
         let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = dexModified.species.get(pokemonName);
-        if (pokemonName && pokemonName.toLowerCase() == "random") {
-            let allKeys = Object.keys(allPokemon);
-            pokemon = allPokemon[allKeys[allKeys.length * Math.random() << 0]];
-        };
+        if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = dexModified.moves.get(moveSearch);
@@ -224,7 +225,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "pokemon":
                 if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, generation: generationInput, ephemeral: ephemeral });
-                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
+                pokemonEmbed = messageObject.embeds;
+                pokemonButtons = messageObject.components;
                 break;
             case "learn":
                 if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
@@ -364,10 +366,28 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                         ]);
                 };
                 break;
+            case "whosthat":
+                pokemonEmbed = null;
+                await interaction.deferReply({ ephemeral: ephemeral });
+                allPokemon = allPokemon.filter(pokemon =>
+                    pokemon.num > 0 &&
+                    !["CAP"].includes(pokemon.isNonstandard) &&
+                    !pokemon.name.endsWith("-Totem") &&
+                    !pokemon.name.startsWith("Arceus-") &&
+                    !pokemon.name.startsWith("Silvally-") &&
+                    !pokemon.name.startsWith("Gourgeist-") &&
+                    !pokemon.name.startsWith("Pumpkaboo-") &&
+                    !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
+                );
+                let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
+                returnString = whosThatPokemonMessageObject.content;
+                pokemonFiles = whosThatPokemonMessageObject.files;
+                pokemonButtons = whosThatPokemonMessageObject.components;
+                break;
         };
         // Bulbapedia button
         if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
-        return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
         function getLearnData(learnData) {
             let learnInfo = "";
@@ -586,6 +606,15 @@ module.exports.config = {
             autocomplete: true,
             minValue: 1000
         }, {
+            name: "ephemeral",
+            type: Discord.ApplicationCommandOptionType.Boolean,
+            description: "Whether the reply will be private."
+        }]
+    }, {
+        name: "whosthat",
+        type: Discord.ApplicationCommandOptionType.Subcommand,
+        description: "Who's that Pokémon?",
+        options: [{
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
             description: "Whether the reply will be private."

@@ -8,20 +8,25 @@ module.exports = async (client, interaction) => {
         const getMonster = require('../util/mh/getMonster');
         const randomNumber = require('../util/randomNumber');
         const capitalizeString = require('../util/capitalizeString');
+        const getWhosThatPokemon = require('../util/pokemon/getWhosThatPokemon');
         const { Dex } = require('pokemon-showdown');
         const axios = require("axios");
         const fs = require("fs");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-
         const { EligibleRoles } = require('../database/dbServices/server.api');
         const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
-
         if (!interaction) return;
         if (interaction.user.bot) return;
+        // ID split
+        let customIdSplit = null;
+        if (interaction.customId) customIdSplit = interaction.customId.split("|");
+        // Shinx battle state
         let inCommandInteractions = ["battleYes", "battleNo"]; // Interactions that are handled in the command file
         if (inCommandInteractions.includes(interaction.customId)) return;
+        // Common variables
+        let pkmQuizModalId = 'pkmQuizModal';
         switch (interaction.type) {
             case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
@@ -54,8 +59,32 @@ module.exports = async (client, interaction) => {
                     case Discord.ComponentType.Button:
                         let messageObject = null;
                         if (!interaction.customId) return;
-                        if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
-                        if (interaction.customId.startsWith("pkm")) {
+                        let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
+                        if (interaction.user.id !== interaction.message.interaction.user.id &&
+                            !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)
+                        ) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                        let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
+                        if (interaction.customId.startsWith("pkmQuizReveal")) {
+                            // Response in case of forfeit/reveal
+                            let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
+                        } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
+                            // Who's That Pokémon? modal
+                            const pkmQuizModal = new Discord.ModalBuilder()
+                                .setCustomId(pkmQuizModalId)
+                                .setTitle("Who's That Pokémon?");
+                            const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
+                                .setCustomId(pkmQuizModalGuessId)
+                                .setLabel("Put in your guess!")
+                                .setPlaceholder("Pikachu")
+                                .setStyle(Discord.TextInputStyle.Short)
+                                .setMaxLength(64)
+                                .setRequired(true);
+                            const pkmQuizActionRow = new Discord.ActionRowBuilder().addComponents(pkmQuizModalGuessInput);
+                            pkmQuizModal.addComponents(pkmQuizActionRow);
+                            return interaction.showModal(pkmQuizModal);
+                        } else if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
                             let newPokemonName = null;
                             for (let componentRow of interaction.message.components) {
@@ -63,7 +92,7 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
-                            let customIdSplit = interaction.customId.split("|")
+
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
                             let generationButton = customIdSplit[3];
@@ -93,10 +122,10 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("mhquests")) {
                             // Monster Hunter quests
                             const getQuests = require('../util/mh/getQuests');
-                            let mhQuestsDirection = interaction.customId.split("|")[1];
-                            let mhQuestsGameName = interaction.customId.split("|")[2];
-                            let mhQuestsPage = interaction.customId.split("|")[3];
-                            let mhQuestsPagesTotal = interaction.customId.split("|")[4];
+                            let mhQuestsDirection = customIdSplit[1];
+                            let mhQuestsGameName = interaction.customId.split("|");[2];
+                            let mhQuestsPage = interaction.customId.split("|");[3];
+                            let mhQuestsPagesTotal = interaction.customId.split("|");[4];
                             switch (mhQuestsDirection) {
                                 case "left":
                                     mhQuestsPage = parseInt(mhQuestsPage) - 1;
@@ -118,9 +147,9 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
                             const getSplatfests = require('../util/splat/getSplatfests');
-                            let splatfestDirection = interaction.customId.split("|")[1];
-                            let splatfestPage = interaction.customId.split("|")[2];
-                            let splatfestRegion = interaction.customId.split("|")[3];
+                            let splatfestDirection = interaction.customId.split("|");[1];
+                            let splatfestPage = interaction.customId.split("|");[2];
+                            let splatfestRegion = interaction.customId.split("|");[3];
                             switch (splatfestDirection) {
                                 case "left":
                                     splatfestPage = parseInt(splatfestPage) + 1;
@@ -617,6 +646,21 @@ module.exports = async (client, interaction) => {
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        break;
+                    case pkmQuizModalId:
+                        let pkmQuizGuessResultEphemeral = false;
+                        if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
+                        // Who's That Pokémon? modal response
+                        let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
+                        let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
+                        const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+
+                        if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                            interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
+                        } else {
+                            return sendMessage({ client: client, interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
+                        };
                         break;
                 };
                 return;
