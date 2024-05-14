@@ -225,7 +225,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "pokemon":
                 if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, generation: generationInput, ephemeral: ephemeral });
-                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral });
+                pokemonEmbed = messageObject.embeds;
+                pokemonButtons = messageObject.components;
                 break;
             case "learn":
                 if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
