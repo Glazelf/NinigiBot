@@ -77,7 +77,7 @@ module.exports = async (client, interaction) => {
                             const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
                                 .setCustomId(pkmQuizModalGuessId)
                                 .setLabel("Put in your guess!")
-                                .setPlaceholder("Pikachu")
+                                .setPlaceholder("Azelf-Mega-Y")
                                 .setStyle(Discord.TextInputStyle.Short)
                                 .setMaxLength(64)
                                 .setRequired(true);
