@@ -67,7 +67,7 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             // Response in case of forfeit/reveal
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
                             return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
@@ -656,7 +656,7 @@ module.exports = async (client, interaction) => {
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
 
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
-                            let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
                         } else {
                             return sendMessage({ client: client, interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });

@@ -1,10 +1,11 @@
-module.exports = async ({ pokemonList, winner, pokemon, reveal }) => {
+module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
     const Discord = require("discord.js");
     const Canvas = require('canvas');
     const { Dex } = require('pokemon-showdown');
     const imageExists = require('../imageExists');
     const getCleanPokemonID = require('./getCleanPokemonID');
     const getRandomObjectItem = require('../getRandomObjectItem');
+    const api_user = require('../../database/dbServices/user.api');
     let pokemonButtons = new Discord.ActionRowBuilder();
     let doesRenderExist = false;
     returnString = `# Who's That Pokémon?`;
@@ -26,7 +27,9 @@ module.exports = async ({ pokemonList, winner, pokemon, reveal }) => {
             returnString += `\n${winner} chose to reveal the answer.`;
         } else {
             // Format winning message update
-            returnString += `\n${winner} guessed correctly!`;
+            let pkmQuizPrize = 10;
+            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${client.globalVars.currency}!`;
+            api_user.addMoney(winner.id, pkmQuizPrize);
         };
         returnString += `\nThe answer was **${pokemon.name}**!`;
     } else {

@@ -379,7 +379,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     !pokemon.name.startsWith("Pumpkaboo-") &&
                     !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
-                let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
+                let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
                 returnString = whosThatPokemonMessageObject.content;
                 pokemonFiles = whosThatPokemonMessageObject.files;
                 pokemonButtons = whosThatPokemonMessageObject.components;
