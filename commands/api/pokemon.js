@@ -4,12 +4,12 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
-        const Canvas = require('canvas');
         const getPokemon = require('../../util/pokemon/getPokemon');
-        const getCleanPokemonID = require('../../util/pokemon/getCleanPokemonID');
+        const getWhosThatPokemon = require('../../util/pokemon/getWhosThatPokemon');
         const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
         const capitalizeString = require('../../util/capitalizeString');
         const leadingZeros = require('../../util/leadingZeros');
+        const getRandomObjectItem = require('../../util/getRandomObjectItem');
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
@@ -45,7 +45,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         // Used for pokemon and learn
         let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = dexModified.species.get(pokemonName);
-        if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomPokemon(allPokemon);
+        if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = dexModified.moves.get(moveSearch);
@@ -369,21 +369,10 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "whosthat":
                 pokemonEmbed = null;
                 await interaction.deferReply({ ephemeral: ephemeral });
-                pokemon = getRandomPokemon(allPokemon);
-                let pokemonID = getCleanPokemonID(pokemon);
-                let serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
-                // Initiate image context
-                let img = await Canvas.loadImage(serebiiRender);
-                let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
-                let ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                // Make render black
-                ctx.globalCompositeOperation = "source-in";
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(0, 0, img.width, img.height);
-                pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
-                returnString = `# Who's That Pokémon?`;
-                pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
+                let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon, censor: true });
+                returnString = whosThatPokemonMessageObject.content;
+                pokemonFiles = whosThatPokemonMessageObject.files;
+                pokemonButtons = whosThatPokemonMessageObject.components;
                 break;
         };
         // Bulbapedia button
@@ -418,10 +407,6 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 };
             });
             return learnInfo;
-        };
-        function getRandomPokemon(pokemonList) {
-            let listKeys = Object.keys(pokemonList);
-            return pokemonList[listKeys[listKeys.length * Math.random() << 0]];
         };
 
     } catch (e) {
