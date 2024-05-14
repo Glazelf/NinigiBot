@@ -1,10 +1,11 @@
 module.exports = (pokemon) => {
-    let pokemonID = pokemon.num;
+    let pokemonID = pokemon.num.toString();
     let pokemonName = pokemon.name;
     let pokemonTypes = pokemon.types;
     const leadingZeros = require('../leadingZeros');
     const correctionID = require('../../objects/pokemon/correctionID.json');
-    pokemonID = leadingZeros(pokemonID.toString(), 3); // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently
+    // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently. This approach doesn't change 4-digit IDs.
+    pokemonID = leadingZeros(pokemonID, 3);
     // Forms
     const primalString = "-Primal";
     const totemString = "-Totem";
