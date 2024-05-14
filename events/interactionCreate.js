@@ -55,7 +55,23 @@ module.exports = async (client, interaction) => {
                         let messageObject = null;
                         if (!interaction.customId) return;
                         if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
-                        if (interaction.customId.startsWith("pkm")) {
+                        let customIdSplit = interaction.customId.split("|");
+                        if (interaction.customId.startsWith("pkmQuiz")) {
+                            // Who's That Pokémon? modal
+                            const pkmQuizModal = new Discord.ModalBuilder()
+                                .setCustomId('pkmQuizModal')
+                                .setTitle("Who's That Pokémon?");
+                            const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
+                                .setCustomId('pkmQuizModalGuess')
+                                .setLabel("Put in your guess!")
+                                .setPlaceholder("Pikachu")
+                                .setStyle(Discord.TextInputStyle.Short)
+                                .setMaxLength(64)
+                                .setRequired(true);
+                            const pkmQuizActionRow = new Discord.ActionRowBuilder().addComponents(pkmQuizModalGuessInput);
+                            pkmQuizModal.addComponents(pkmQuizActionRow);
+                            return interaction.showModal(pkmQuizModal);
+                        } else if (interaction.customId.startsWith("pkm")) {
                             // Pokémon command
                             let newPokemonName = null;
                             for (let componentRow of interaction.message.components) {
@@ -63,7 +79,7 @@ module.exports = async (client, interaction) => {
                                 newPokemonName = componentRow.components.find(component => component.customId == interaction.customId);
                             };
                             if (!newPokemonName) return;
-                            let customIdSplit = interaction.customId.split("|")
+
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
                             let generationButton = customIdSplit[3];
@@ -93,10 +109,10 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("mhquests")) {
                             // Monster Hunter quests
                             const getQuests = require('../util/mh/getQuests');
-                            let mhQuestsDirection = interaction.customId.split("|")[1];
-                            let mhQuestsGameName = interaction.customId.split("|")[2];
-                            let mhQuestsPage = interaction.customId.split("|")[3];
-                            let mhQuestsPagesTotal = interaction.customId.split("|")[4];
+                            let mhQuestsDirection = customIdSplit[1];
+                            let mhQuestsGameName = interaction.customId.split("|");[2];
+                            let mhQuestsPage = interaction.customId.split("|");[3];
+                            let mhQuestsPagesTotal = interaction.customId.split("|");[4];
                             switch (mhQuestsDirection) {
                                 case "left":
                                     mhQuestsPage = parseInt(mhQuestsPage) - 1;
@@ -118,9 +134,9 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
                             const getSplatfests = require('../util/splat/getSplatfests');
-                            let splatfestDirection = interaction.customId.split("|")[1];
-                            let splatfestPage = interaction.customId.split("|")[2];
-                            let splatfestRegion = interaction.customId.split("|")[3];
+                            let splatfestDirection = interaction.customId.split("|");[1];
+                            let splatfestPage = interaction.customId.split("|");[2];
+                            let splatfestRegion = interaction.customId.split("|");[3];
                             switch (splatfestDirection) {
                                 case "left":
                                     splatfestPage = parseInt(splatfestPage) + 1;
