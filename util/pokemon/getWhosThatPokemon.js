@@ -1,4 +1,4 @@
-module.exports = async ({ pokemonList, winner, pokemon }) => {
+module.exports = async ({ pokemonList, winner, pokemon, reveal }) => {
     const Discord = require("discord.js");
     const Canvas = require('canvas');
     const { Dex } = require('pokemon-showdown');
@@ -22,8 +22,13 @@ module.exports = async ({ pokemonList, winner, pokemon }) => {
     let ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
     if (winner) {
-        // Format winning message update
-        returnString += `\n${winner} guessed correctly!\nThe answer was **${pokemon.name}**!`;
+        if (reveal == true) {
+            returnString += `\n${winner} chose to reveal the answer.`;
+        } else {
+            // Format winning message update
+            returnString += `\n${winner} guessed correctly!`;
+        };
+        returnString += `\nThe answer was **${pokemon.name}**!`;
     } else {
         // Make render black
         ctx.globalCompositeOperation = "source-in";
@@ -32,6 +37,7 @@ module.exports = async ({ pokemonList, winner, pokemon }) => {
     };
     pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
 
-    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
+    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess", style: Discord.ButtonStyle.Primary }));
+    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|reveal`, label: "Reveal", style: Discord.ButtonStyle.Secondary }));
     return { content: returnString, files: [pokemonFiles], components: [pokemonButtons] };
 };
