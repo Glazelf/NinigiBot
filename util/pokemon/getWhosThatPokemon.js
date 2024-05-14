@@ -14,9 +14,11 @@ module.exports = async ({ pokemonList, censor }) => {
         serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         doesRenderExist = await imageExists(serebiiRender);
     };
+    // Catch identical forms
     let correctAnswer = pokemon.name;
     let totemFormString = "-Totem";
     if (correctAnswer.endsWith(totemFormString)) correctAnswer = correctAnswer.replace(totemFormString, "");
+    if (correctAnswer.startsWith("Arceus") || correctAnswer.startsWith("Silvally")) correctAnswer = correctAnswer.split("-")[0];
     // Initiate image context
     let img = await Canvas.loadImage(serebiiRender);
     let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
@@ -30,6 +32,6 @@ module.exports = async ({ pokemonList, censor }) => {
     };
     pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
     returnString = `# Who's That Pokémon?`;
-    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
+    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${correctAnswer}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
     return { content: returnString, files: [pokemonFiles], components: [pokemonButtons] };
 };
