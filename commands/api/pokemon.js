@@ -375,7 +375,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     !pokemon.name.endsWith("-Totem") &&
                     !pokemon.name.startsWith("Arceus-") &&
                     !pokemon.name.startsWith("Silvally-") &&
-                    !["Flapple-Gmax", "Appletun-Gmax"].includes(pokemon.name)
+                    !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
                 returnString = whosThatPokemonMessageObject.content;
