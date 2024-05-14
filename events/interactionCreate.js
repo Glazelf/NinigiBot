@@ -644,10 +644,12 @@ module.exports = async (client, interaction) => {
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
-                            return sendMessage({ client: client, interaction: interaction, content: "Correct!" });
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                            interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
                         } else {
-                            return sendMessage({ client: client, interaction: interaction, content: "Incorrect!" });
+                            return sendMessage({ client: client, interaction: interaction, content: `Sorry, the Pokémon is not \`${pkmQuizModalGuess}\`.` });
                         };
                         break;
                 };
