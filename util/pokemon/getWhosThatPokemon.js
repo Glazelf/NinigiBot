@@ -37,7 +37,7 @@ module.exports = async ({ pokemonList, winner, pokemon, reveal }) => {
     };
     pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
 
-    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess", style: Discord.ButtonStyle.Primary }));
-    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|reveal`, label: "Reveal", style: Discord.ButtonStyle.Secondary }));
+    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizGuess|${pokemon.name}`, label: "Guess", style: Discord.ButtonStyle.Primary }));
+    pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizReveal`, label: "Reveal", style: Discord.ButtonStyle.Secondary }));
     return { content: returnString, files: [pokemonFiles], components: [pokemonButtons] };
 };

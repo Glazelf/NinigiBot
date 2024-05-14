@@ -59,15 +59,17 @@ module.exports = async (client, interaction) => {
                     case Discord.ComponentType.Button:
                         let messageObject = null;
                         if (!interaction.customId) return;
-                        if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                        let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
+                        if (interaction.user.id !== interaction.message.interaction.user.id &&
+                            !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)
+                        ) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
-                        if (interaction.customId.startsWith("pkmQuiz")) {
+                        if (interaction.customId.startsWith("pkmQuizReveal")) {
                             // Response in case of forfeit/reveal
-                            if (customIdSplit[1] == "reveal") {
-                                let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                                let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
-                                return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
-                            }
+                            let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
+                        } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
                             const pkmQuizModal = new Discord.ModalBuilder()
                                 .setCustomId(pkmQuizModalId)
@@ -646,6 +648,8 @@ module.exports = async (client, interaction) => {
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                         break;
                     case pkmQuizModalId:
+                        let pkmQuizGuessResultEphemeral = false;
+                        if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
                         // Who's That Pokémon? modal response
                         let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
                         let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
@@ -655,7 +659,7 @@ module.exports = async (client, interaction) => {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
                         } else {
-                            return sendMessage({ client: client, interaction: interaction, content: `Sorry, the Pokémon is not \`${pkmQuizModalGuess}\`.` });
+                            return sendMessage({ client: client, interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
                         break;
                 };
