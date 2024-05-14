@@ -377,6 +377,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     !pokemon.name.startsWith("Silvally-") &&
                     !pokemon.name.startsWith("Gourgeist-") &&
                     !pokemon.name.startsWith("Pumpkaboo-") &&
+                    !pokemon.name.startsWith("Squawkabilly-") &&
+                    !pokemon.name.endsWith("-Tera") && // Ogerpon Tera forms
                     !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
