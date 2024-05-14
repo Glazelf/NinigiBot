@@ -13,15 +13,19 @@ module.exports = async (client, interaction) => {
         const fs = require("fs");
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-
         const { EligibleRoles } = require('../database/dbServices/server.api');
         const api_trophy = require('../database/dbServices/trophy.api');
         const api_user = require('../database/dbServices/user.api');
-
         if (!interaction) return;
         if (interaction.user.bot) return;
+        // ID split
+        let customIdSplit = null;
+        if (interaction.customId) customIdSplit = interaction.customId.split("|");
+        // Shinx battle state
         let inCommandInteractions = ["battleYes", "battleNo"]; // Interactions that are handled in the command file
         if (inCommandInteractions.includes(interaction.customId)) return;
+        // Common variables
+        let pkmQuizModalId = 'pkmQuizModal';
         switch (interaction.type) {
             case Discord.InteractionType.ApplicationCommand:
                 if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
@@ -55,14 +59,14 @@ module.exports = async (client, interaction) => {
                         let messageObject = null;
                         if (!interaction.customId) return;
                         if (interaction.user.id !== interaction.message.interaction.user.id) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
-                        let customIdSplit = interaction.customId.split("|");
+                        let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         if (interaction.customId.startsWith("pkmQuiz")) {
                             // Who's That Pokémon? modal
                             const pkmQuizModal = new Discord.ModalBuilder()
-                                .setCustomId('pkmQuizModal')
+                                .setCustomId(pkmQuizModalId)
                                 .setTitle("Who's That Pokémon?");
                             const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
-                                .setCustomId('pkmQuizModalGuess')
+                                .setCustomId(pkmQuizModalGuessId)
                                 .setLabel("Put in your guess!")
                                 .setPlaceholder("Pikachu")
                                 .setStyle(Discord.TextInputStyle.Short)
@@ -633,6 +637,18 @@ module.exports = async (client, interaction) => {
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        break;
+                    case pkmQuizModalId:
+                        // Who's That Pokémon? modal response
+                        const getWhosThatPokemon = require('../util/pokemon/getWhosThatPokemon');
+                        let pkmQuizButtonID = Array.from(interaction.fields.fields.keys())[0];
+                        let pkmQuizCorrectAnswer = pkmQuizButtonID.split("|")[1];
+                        const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
+                        if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
+                            return sendMessage({ client: client, interaction: interaction, content: "Correct!" });
+                        } else {
+                            return sendMessage({ client: client, interaction: interaction, content: "Incorrect!" });
+                        };
                         break;
                 };
                 return;
