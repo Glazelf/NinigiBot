@@ -374,9 +374,10 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     !["CAP"].includes(pokemon.isNonstandard) &&
                     !pokemon.name.endsWith("-Totem") &&
                     !pokemon.name.startsWith("Arceus-") &&
-                    !pokemon.name.startsWith("Silvally-")
+                    !pokemon.name.startsWith("Silvally-") &&
+                    !["Flapple-Gmax", "Appletun-Gmax"].includes(pokemon.name)
                 );
-                let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon, censor: true });
+                let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
                 returnString = whosThatPokemonMessageObject.content;
                 pokemonFiles = whosThatPokemonMessageObject.files;
                 pokemonButtons = whosThatPokemonMessageObject.components;
