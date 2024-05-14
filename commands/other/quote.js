@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 exports.run = async (client, interaction, logger, ephemeral = false) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        let input = interaction.options.getString("input");
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         const answers = [
@@ -102,7 +101,7 @@ exports.run = async (client, interaction, logger, ephemeral = false) => {
             "https://discord.com/channels/549214833858576395/549217627365441566/832384880738172938 mari noone",    
         ];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-        return sendMessage({ client: client, interaction: interaction, content: `The 8ball says: "${randomAnswer}.".`, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: `${randomAnswer}`, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
@@ -114,11 +113,6 @@ module.exports.config = {
     name: "quote",
     description: "Let someones wisdom guide you.",
     options: [{
-        name: "input",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Your burning question.",
-        required: true
-    }, {
         name: "ephemeral",
         type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether the response should be ephemeral.",
