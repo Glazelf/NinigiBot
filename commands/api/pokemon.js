@@ -382,7 +382,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 ctx.fillRect(0, 0, img.width, img.height);
                 pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
                 returnString = `# Who's That Pokémon?`;
-                pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmquiz|${pokemon.name.toLowerCase()}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
+                pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuiz|${pokemon.name}`, label: "Guess!", style: Discord.ButtonStyle.Primary }));
                 break;
         };
         // Bulbapedia button
