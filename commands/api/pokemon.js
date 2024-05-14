@@ -369,6 +369,13 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "whosthat":
                 pokemonEmbed = null;
                 await interaction.deferReply({ ephemeral: ephemeral });
+                allPokemon = allPokemon.filter(pokemon =>
+                    pokemon.num > 0 &&
+                    !["CAP"].includes(pokemon.isNonstandard) &&
+                    !pokemon.name.endsWith("-Totem") &&
+                    !pokemon.name.startsWith("Arceus-") &&
+                    !pokemon.name.startsWith("Silvally-")
+                );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon, censor: true });
                 returnString = whosThatPokemonMessageObject.content;
                 pokemonFiles = whosThatPokemonMessageObject.files;
