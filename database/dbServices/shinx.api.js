@@ -46,15 +46,11 @@ module.exports = {
         let shinx = await this.getShinx(id, ['user_id', 'auto_feed']);
         return shinx.setAutoFeed(mode);
     },
-    async addExperience(id, experience) {
-        let shinx = await this.getShinx(id, ['user_id', 'experience']);
-        const res = await shinx.addExperienceAndLevelUp(experience);
-        if (res.pre != res.post) {
-            if (hasPassedLevel(res.pre, res.post, 5)) await this.addEventTrophy(id, 'Bronze Trophy');
-            if (hasPassedLevel(res.pre, res.post, 15)) await this.addEventTrophy(id, 'Silver Trophy');
-            if (hasPassedLevel(res.pre, res.post, 30)) await this.addEventTrophy(id, 'Gold Trophy');
-            if (hasPassedLevel(res.pre, res.post, 50)) await this.addEventTrophy(id, 'Shiny Charm');
-        };
+    async addBattleRewards(id, level) {
+        if (level > 5) await this.addEventTrophy(id, 'Bronze Trophy');
+        if (level > 15) await this.addEventTrophy(id, 'Silver Trophy');
+        if (level > 30) await this.addEventTrophy(id, 'Gold Trophy');
+        if (level > 50) await this.addEventTrophy(id, 'Shiny Charm');
     },
     async hasEventTrophy(user_id, trophy_id) {
         let user = await this.getUser(user_id, ['user_id']);
