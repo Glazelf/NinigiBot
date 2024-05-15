@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const Canvas = require('canvas');
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
 

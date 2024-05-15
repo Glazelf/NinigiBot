@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const Canvas = require('canvas');
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const shinxApi = require('../../database/dbServices/shinx.api');

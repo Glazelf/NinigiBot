@@ -1,6 +1,6 @@
 let currentGeneration = 9; // Set current generation
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
