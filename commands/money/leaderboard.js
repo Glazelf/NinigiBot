@@ -1,10 +1,11 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const user_api = require('../../database/dbServices/user.api');
 
-        let ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let memberFetch = await interaction.guild.members.fetch();
@@ -38,7 +39,7 @@ exports.run = async (client, interaction, logger) => {
                 .setTitle(`Leaderboard:`)
                 .setThumbnail(icon);
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: leaderboardEmbed });
+        return sendMessage({ client: client, interaction: interaction, embeds: leaderboardEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error
@@ -53,5 +54,9 @@ module.exports.config = {
         name: "global",
         type: Discord.ApplicationCommandOptionType.Boolean,
         description: "Whether to showcase global leaderboard."
+    }, {
+        name: "ephemeral",
+        type: Discord.ApplicationCommandOptionType.Boolean,
+        description: "Whether the reply will be private."
     }]
 };
