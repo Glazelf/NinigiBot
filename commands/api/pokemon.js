@@ -99,7 +99,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 break;
             // Moves
             case "move":
-                console.log(move)
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generationInput}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsets)) {
@@ -234,7 +233,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "learn":
                 if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
-                console.log(move)
                 let learnOptions = [];
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
