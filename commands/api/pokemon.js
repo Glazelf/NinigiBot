@@ -43,12 +43,14 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let JSONresponse;
         let allPokemon = dexModified.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
-        let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = dexModified.species.get(pokemonName);
+        let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generationInput}.`;
         if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
+        let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = dexModified.moves.get(moveSearch);
+        let moveExists = (move && move.exists && !["CAP", "Future"].includes(move.isNonstandard));
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
@@ -77,7 +79,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "item":
                 let itemSearch = interaction.options.getString("item");
                 let item = dexModified.items.get(itemSearch);
-                if (!item || !item.exists || ["Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
+                if (!item || !item.exists || ["Future", "CAP"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item called \`${itemSearch}\` in generation ${generationInput}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 let hasPGLImage = await imageExists(itemImage);
@@ -97,7 +99,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 break;
             // Moves
             case "move":
-                if (!move || !move.exists || move.isNonstandard == "CAP" || ["Future"].includes(move.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name in generation ${generationInput}.` });
+                console.log(move)
+                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generationInput}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsets)) {
                     let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
@@ -154,7 +157,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "nature":
                 let natureSearch = interaction.options.getString("nature");
                 let nature = Dex.natures.get(natureSearch);
-                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature by that name.` });
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature called \`${natureSerach}\`.` });
 
                 let boosted = Dex.stats.names[nature.plus];
                 let lowered = Dex.stats.names[nature.minus];
@@ -223,13 +226,15 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 break;
             // Pokémon
             case "pokemon":
-                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, generation: generationInput, ephemeral: ephemeral });
                 pokemonEmbed = messageObject.embeds;
                 pokemonButtons = messageObject.components;
                 break;
             case "learn":
-                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+                console.log(move)
                 let learnOptions = [];
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
