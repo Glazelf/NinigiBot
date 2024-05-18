@@ -376,12 +376,13 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     pokemon.num > 0 &&
                     !["CAP"].includes(pokemon.isNonstandard) &&
                     !pokemon.name.endsWith("-Totem") &&
+                    !pokemon.name.endsWith("-Tera") && // Ogerpon Tera forms
                     !pokemon.name.startsWith("Arceus-") &&
                     !pokemon.name.startsWith("Silvally-") &&
+                    !pokemon.name.startsWith("Genesect-") &&
                     !pokemon.name.startsWith("Gourgeist-") &&
                     !pokemon.name.startsWith("Pumpkaboo-") &&
                     !pokemon.name.startsWith("Squawkabilly-") &&
-                    !pokemon.name.endsWith("-Tera") && // Ogerpon Tera forms
                     !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
