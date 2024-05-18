@@ -40,12 +40,12 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     .setTitle(`${character.name} - ${character.affiliation}`)
                     .setThumbnail(characterThumbnail)
                     .setImage(characterBanner)
-                    .setDescription(character.description)
                     .addFields([
                         { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
                         { name: "Vision:", value: character.vision, inline: true },
                         { name: "Weapon:", value: character.weapon, inline: true }
                     ]);
+                if (character.description) giEmbed.setDescription(character.description);
                 if (character.birthday) giEmbed.addFields([{ name: "Birthday:", value: characterBirthday, inline: true }]);
                 if (detailed) {
                     // All three of these functions can probably be combined better but whatever
