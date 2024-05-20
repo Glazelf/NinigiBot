@@ -107,7 +107,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has(Discord.PermissionFlagsBits.ViewGuildInsights) || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
-        let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
+        let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size}🤖\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
         if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
         if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
@@ -125,6 +125,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed.addFields([
             { name: "Links:", value: serverLinks, inline: false },
+            { name: "Stats:", value: statsString, inline: true },
+            { name: "Assets:", value: assetString, inline: true },
             { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
         ]);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
@@ -132,8 +134,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
         serverEmbed.addFields([
             { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-            { name: "Stats:", value: statsString, inline: true }, // Keep in row with max 2 fields, otherwise change inline to false
-            { name: "Assets:", value: assetString, inline: true },
             { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
         ]);
         //// Doesn't add much value with 1 shard and autosharding
