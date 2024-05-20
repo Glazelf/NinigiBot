@@ -119,7 +119,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
 
         const serverEmbed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor)
-            .setTitle(`${guild.name}`)
+            .setTitle(guild.name)
             .setThumbnail(icon)
             .setFooter({ text: guild.id });
         if (guild.description) serverEmbed.setDescription(guild.description);
