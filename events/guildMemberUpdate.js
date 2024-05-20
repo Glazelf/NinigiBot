@@ -103,7 +103,6 @@ module.exports = async (client, member, newMember) => {
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
-                    console.log(newMember.communicationDisabledUntilTimestamp)
                     changeText = `Timed out untill <t:${Math.floor(newMember.communicationDisabledUntilTimestamp / 1000)}:F>.`;
                     break;
                 case "timeoutEnd":
