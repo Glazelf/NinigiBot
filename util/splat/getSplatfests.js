@@ -76,13 +76,13 @@ module.exports = async ({ client, interaction, page, region }) => {
             // Bigger points overhaul
             // 00014 = next splatfest
             if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
-                vote: {
-                    first: 70,
-                    second: 35
-                },
                 horagai: {
                     first: 90,
                     second: 45
+                },
+                vote: {
+                    first: 70,
+                    second: 35
                 },
                 regular: {
                     first: 120,
@@ -120,7 +120,7 @@ module.exports = async ({ client, interaction, page, region }) => {
             let splatfestResultsTitleTeams = "";
             let splatfestResultsDescription = "";
             let splatfestWinnerPoints = 0;
-            let splatfestResultsHoragai = "- Conch Shells: ";
+            let splatfestResultsHoragai = "- Sneak Peek: ";
             let splatfestResultsVote = "- Popularity: ";
             let splatfestResultsRegular = "- Open Battles: ";
             let splatfestResultsChallenge = "- Pro Battles: ";
