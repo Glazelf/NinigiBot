@@ -27,12 +27,13 @@ module.exports = async (client, member, newMember) => {
                 updateCase = "nitroEnd";
             } else if (member.roles.cache.size !== newMember.roles.cache.size) {
                 // Roles updated
-                updateCase = null; // TODO
+                updateCase = "rolesUpdate"; // TODO
             } else if (member.pending !== newMember.pending) {
                 // Pending?
+                updateCase = null;
+            } else if (!member.communicationDisabledUntilTimestamp && newMember.communicationDisabledUntilTimestamp) {
                 updateCase = null; // TODO
-            } else if (member.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
-                // Timeout, check if there's a difference in the timestamps for other actions, might have to add a minimum gap
+            } else if (member.communicationDisabledUntilTimestamp && !newMember.communicationDisabledUntilTimestamp) {
                 updateCase = null; // TODO
             } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
                 // I assume this does nothing but I want to be sure because of the weird nickname updates firing
@@ -89,9 +90,21 @@ module.exports = async (client, member, newMember) => {
                     topText = "Updated Server Avatar ⚒️";
                     image = avatar;
                     break;
+                case "rolesUpdate":
+                    // Sometimes old member roles show 0. Not sure why? Might just be shortly after bot boots?
+                    let rolesSorted = [...member.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
+                    let newRolesSorted = [...newMember.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
+                    let rolesString = rolesSorted.join(", ");
+                    let newRolesString = newRolesSorted.join(", ");
+                    if (rolesString.length == 0) rolesString = "None";
+                    if (newRolesString.length == 0) newRolesString = "None";
+                    topText = "Roles Updated ⚒️";
+                    changeText = `Roles for ${member} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    break;
                 default:
                     return;
             };
+            if (changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(client.globalVars.embedColor)
                 .setTitle(topText)
