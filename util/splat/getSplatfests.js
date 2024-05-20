@@ -74,7 +74,7 @@ module.exports = async ({ client, interaction, page, region }) => {
                 }
             };
             // Bigger points overhaul
-            // 00014 = next splatfest
+            // 00014 = Drums|Guitar|Keyboard
             if (splatfest.endTime > splatfestData.find(s => s.__splatoon3ink_id.split("-")[1] == "00014").startTime) currentSplatfestPointValues = {
                 horagai: {
                     first: 90,
