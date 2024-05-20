@@ -120,8 +120,8 @@ module.exports = async ({ client, interaction, page, region }) => {
             let splatfestResultsTitleTeams = "";
             let splatfestResultsDescription = "";
             let splatfestWinnerPoints = 0;
-            let splatfestResultsVote = "- Popularity: ";
             let splatfestResultsHoragai = "- Conch Shells: ";
+            let splatfestResultsVote = "- Popularity: ";
             let splatfestResultsRegular = "- Open Battles: ";
             let splatfestResultsChallenge = "- Pro Battles: ";
             let splatfestResultsTricolor = "- Tricolor Battles: ";
@@ -189,7 +189,7 @@ module.exports = async ({ client, interaction, page, region }) => {
             });
             if (splatfest.teams[0].result) {
                 splatfestResultsTitle = splatfestResultsTitle.replace("{1}", splatfestResultsTitleTeams);
-                splatfestResultsDescription += `${splatfestResultsVote} (${currentSplatfestPointValues.vote.first}p)\n${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai.first}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular.first}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge.first}p)`;
+                splatfestResultsDescription += `${splatfestResultsHoragai} (${currentSplatfestPointValues.horagai.first}p)\n${splatfestResultsVote} (${currentSplatfestPointValues.vote.first}p)\n${splatfestResultsRegular} (${currentSplatfestPointValues.regular.first}p)\n${splatfestResultsChallenge} (${currentSplatfestPointValues.challenge.first}p)`;
                 if (!midTermWinner && currentSplatfestPointValues.tricolor) splatfestResultsDescription += `\n${splatfestResultsTricolor} (${currentSplatfestPointValues.tricolor.first}p)`;
                 splatfestResultsDescription += `\n${splatfestResultsWinner}`;
             };
