@@ -31,11 +31,9 @@ module.exports = async (client, messages) => {
             if (messagesContent.length > 1024) messagesContent = `...${messagesContent.substring(messagesContent.length - 1021, messagesContent.length)}`;
             if (messagesContent.length < 1) return;
 
-            let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
             const purgeEmbed = new Discord.EmbedBuilder()
                 .setColor(client.globalVars.embedColor)
                 .setTitle(`Messages Purged ❌`)
-                .setThumbnail(icon)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
             return log.send({ embeds: [purgeEmbed] });
