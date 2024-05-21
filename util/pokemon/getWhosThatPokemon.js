@@ -11,7 +11,6 @@ module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
     returnString = `# Who's That Pokémon?`;
     let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
-    console.log(pokemon)
     while (!doesRenderExist) {
         if (!pokemon && pokemonList) pokemon = getRandomObjectItem(pokemonList);
         pokemonID = getCleanPokemonID(pokemon);
@@ -19,7 +18,6 @@ module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
         doesRenderExist = await imageExists(serebiiRender);
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
-    
     // Initiate image context
     let img = await Canvas.loadImage(serebiiRender);
     let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
