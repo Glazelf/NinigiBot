@@ -7,7 +7,7 @@ module.exports = async (client, messages) => {
         // Find a good way to check executor for this sometime
         let messagesContent = "";
         let guild = null;
-        messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and reverse to get chronological order
+        messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and order it chronologically
         for await (const message of messages) {
             if (!guild) guild = message.guildId;
             // Currently starboarded messages that get purged aren't removed from starboard as this would require a silly amount of database calls
