@@ -38,7 +38,7 @@ module.exports = async (client, member, newMember) => {
             } else if (oldAvatar !== avatar) {
                 // Update server avatar
                 updateCase = "guildAvatar";
-            } else if (member.roles.cache.size !== newMember.roles.cache.size && member.roles.cache.size > 0) {
+            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
                 // Roles updated
                 // Sometimes old member roles show 0. Not sure why? Might just be shortly after bot boots?
                 updateCase = "rolesUpdate";
