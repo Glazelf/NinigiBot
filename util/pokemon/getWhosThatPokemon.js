@@ -16,6 +16,7 @@ module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
         pokemonID = getCleanPokemonID(pokemon);
         serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         doesRenderExist = await imageExists(serebiiRender);
+        if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
     // Initiate image context
     let img = await Canvas.loadImage(serebiiRender);

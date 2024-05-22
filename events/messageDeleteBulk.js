@@ -7,7 +7,7 @@ module.exports = async (client, messages) => {
         // Find a good way to check executor for this sometime
         let messagesContent = "";
         let guild = null;
-        messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and reverse to get chronological order
+        messages = [...messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp); // Convert collection to array and order it chronologically
         for await (const message of messages) {
             if (!guild) guild = message.guildId;
             // Currently starboarded messages that get purged aren't removed from starboard as this would require a silly amount of database calls
@@ -31,11 +31,9 @@ module.exports = async (client, messages) => {
             if (messagesContent.length > 1024) messagesContent = `...${messagesContent.substring(messagesContent.length - 1021, messagesContent.length)}`;
             if (messagesContent.length < 1) return;
 
-            let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
             const purgeEmbed = new Discord.EmbedBuilder()
                 .setColor(client.globalVars.embedColor)
                 .setTitle(`Messages Purged ❌`)
-                .setThumbnail(icon)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
             return log.send({ embeds: [purgeEmbed] });
