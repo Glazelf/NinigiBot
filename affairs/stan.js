@@ -6,7 +6,7 @@ module.exports = async (client) => {
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'utc';
-        const time = '00 10 19 * * *'; // Sec Min Hour
+        const time = '00 00 18 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = client.globalVars.ShinxServerID;
 
