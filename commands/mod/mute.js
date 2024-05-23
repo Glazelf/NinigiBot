@@ -40,8 +40,9 @@ exports.run = async (client, interaction, logger) => {
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
+        let reasonCodeBlock = Discord.codeBlock("fix", reason);
 
-        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${Discord.codeBlock(reason)}`;
+        let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${reasonCodeBlock}`;
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
             if (member.communicationDisabledUntil > Date.now()) { // Only attempt to unmute if said timestamp is in the future, if not we can just override it
                 muteTime = null;
@@ -50,7 +51,7 @@ exports.run = async (client, interaction, logger) => {
         };
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.username} (${time})`;
-        let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} for the following reason: ${Discord.codeBlock(reason)}`;
+        let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} for the following reason: ${reasonCodeBlock}`;
         // Timeout logic
         try {
             await member.timeout(muteTime, `${reason} ${reasonInfo}`);
