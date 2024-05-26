@@ -237,6 +237,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 let learnOptions = [];
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
+                let learnsMove = false;
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
                     learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
@@ -246,19 +247,20 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     };
                     let prevo = dexModified.species.get(pokemon.prevo);
                     while (prevo.num > 0) {
-                        console.log(prevo)
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
                             learnInfo += `**As ${prevo.name}:**\n`;
-                            learnInfo += getLearnData(learnData);
+                            learnDataToAdd = getLearnData(learnData);
+                            if (learnDataToAdd.length > 0) learnsMove = true;
+                            learnInfo += learnDataToAdd;
                         };
                         prevo = dexModified.species.get(prevo.prevo);
                     };
-                    if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                    if (!learnsMove) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
                 pokemonEmbed.setTitle(learnAuthor);
-                if (learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
+                if (learnsMove) pokemonEmbed.setDescription(learnInfo);
                 break;
             case "usage":
                 let formatInput = "gen9vgc2023series1";
