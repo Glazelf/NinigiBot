@@ -247,18 +247,18 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
                 evoTreeLearnsets[pokemon.id] = { ...retroLearnsets[pokemon.id], ...learnsets[pokemon.id] };
                 // Merge these if statements into a singular function
-                if (pokemon.gen < 3) {
+                if (retroLearnsets[pokemon.id]) {
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
                         evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
                     };
                 };
-                if (prevo && prevo.gen < 3) {
+                if (prevo && retroLearnsets[prevo.id]) {
                     evoTreeLearnsets[prevo.id] = { ...retroLearnsets[prevo.id], ...learnsets[prevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
                         evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
                     };
                 };
-                if (prevoprevo && prevoprevo.gen < 3) {
+                if (prevoprevo && retroLearnsets[prevoprevo.id]) {
                     evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsets[prevoprevo.id], ...learnsets[prevoprevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
                         evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
