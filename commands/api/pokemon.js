@@ -10,7 +10,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const capitalizeString = require('../../util/capitalizeString');
         const leadingZeros = require('../../util/leadingZeros');
         const getRandomObjectItem = require('../../util/getRandomObjectItem');
-        const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const retroLearnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
@@ -234,10 +234,37 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "learn":
                 if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+
                 let learnOptions = [];
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
                 let learnsMove = false;
+                let prevo = null;
+                let prevoprevo = null;
+                let evoTreeLearnsets = {}; // Merge, first object's properties get overwritten by second object's properties
+                if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
+                if (prevo && prevo.prevo) prevoprevo = dexModified.species.get(prevo.prevo);
+                // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
+                evoTreeLearnsets[pokemon.id] = { ...retroLearnsets[pokemon.id], ...learnsets[pokemon.id] };
+                // Merge these if statements into a singular function
+                if (pokemon.gen < 3) {
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
+                        evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
+                    };
+                };
+                if (prevo && prevo.gen < 3) {
+                    evoTreeLearnsets[prevo.id] = { ...retroLearnsets[prevo.id], ...learnsets[prevo.id] };
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
+                        evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
+                    };
+                };
+                if (prevoprevo && prevoprevo.gen < 3) {
+                    evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsets[prevoprevo.id], ...learnsets[prevoprevo.id] };
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
+                        evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
+                    };
+                };
+                learnsets = { ...learnsets, ...evoTreeLearnsets };
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
                     learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
@@ -245,8 +272,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         if (moveName !== move.id) continue;
                         learnInfo += getLearnData(learnData);
                     };
-                    let prevo = dexModified.species.get(pokemon.prevo);
-                    while (prevo.num > 0) {
+                    while (prevo && prevo.num > 0) {
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
