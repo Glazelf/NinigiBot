@@ -11,6 +11,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const leadingZeros = require('../../util/leadingZeros');
         const getRandomObjectItem = require('../../util/getRandomObjectItem');
         const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        const retroLearnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
@@ -243,16 +244,16 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         if (moveName !== move.id) continue;
                         learnInfo += getLearnData(learnData);
                     };
-                    let prevo = null;
-                    if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
-                    if (prevo && prevo.prevo) prevo = dexModified.species.get(prevo.prevo);
-                    if (prevo) {
+                    let prevo = dexModified.species.get(pokemon.prevo);
+                    while (prevo.num > 0) {
+                        console.log(prevo)
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
                             learnInfo += `**As ${prevo.name}:**\n`;
                             learnInfo += getLearnData(learnData);
                         };
+                        prevo = dexModified.species.get(prevo.prevo);
                     };
                     if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
@@ -400,25 +401,26 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             learnData.forEach(learnMethod => {
                 let learnGen = learnMethod.charAt(0);
                 let learnType = learnMethod.charAt(1);
+                let learnGenString = `Gen ${learnGen}:`;
                 switch (learnType) {
                     case "L":
-                        learnInfo += `Gen ${learnGen}: Level ${learnMethod.split("L")[1]}\n`;
+                        learnInfo += `${learnGenString} Level ${learnMethod.split("L")[1]}\n`;
                         break;
                     case "M":
-                        learnInfo += `Gen ${learnGen}: TM\n`;
+                        learnInfo += `${learnGenString} TM\n`;
                         break;
                     case "T":
-                        learnInfo += `Gen ${learnGen}: Move Tutor\n`;
-                        break;
-                    case "S":
-                        let specialMoveString = `Gen ${learnGen}: Special\n`;
-                        if (!learnInfo.includes(specialMoveString)) learnInfo += specialMoveString;
+                        learnInfo += `${learnGenString} Move Tutor\n`;
                         break;
                     case "E":
-                        learnInfo += `Gen ${learnGen}: Egg move\n`;
+                        learnInfo += `${learnGenString} Egg move\n`;
                         break;
                     case "R":
-                        learnInfo += `Gen ${learnGen}: Reminder\n`;
+                        learnInfo += `${learnGenString} Reminder\n`;
+                        break;
+                    case "S":
+                        let specialMoveString = `${learnGenString} Special\n`;
+                        if (!learnInfo.includes(specialMoveString) && !learnInfo.includes(learnGenString)) learnInfo += specialMoveString;
                         break;
                 };
             });
