@@ -2,10 +2,15 @@
     "NinigiID": "592760951103684618",
     "ShinxServerID": "549214833858576395",
     "ShinxServerInvite": "2gkybyu",
+    "eventChannelID": "752626723345924157",
+    "sysbotChannelIDs": [
+        "797885250667282444",
+        "614979959156375567"
+    ],
+    "sysbotLogChannelID": "771363190780854293",
     "currency": "💰",
     "embedColor": "#219DCD",
     "lackPerms": "You do not have the required permissions to do this.",
-    "eventChannelID": "752626723345924157",
     "starboardLimit": 3,
     "battling": {
         "yes": false

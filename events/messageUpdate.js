@@ -13,6 +13,7 @@ module.exports = async (client, message, newMessage) => {
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        if (client.globalVars.sysbotLogChannelID && client.globalVars.sysbotLogChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == client.globalVars.sysbotLogChannelID);
         if (!log) return;
 
         let botMember = message.guild.members.me;
