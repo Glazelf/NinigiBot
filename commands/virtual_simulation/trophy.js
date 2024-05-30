@@ -4,9 +4,8 @@ const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes')
 exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-
         const api_shinx = require('../../database/dbServices/shinx.api');
-        const api_user = require('../../database/dbServices/user.api');
+        // const api_user = require('../../database/dbServices/user.api');
         const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
         let embed, trophy_name, res;

@@ -41,7 +41,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         // Set generation
         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
         let dexModified = Dex.mod(`gen${generationInput}`);
-        let JSONresponse;
         let allPokemon = dexModified.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let pokemon = dexModified.species.get(pokemonName);

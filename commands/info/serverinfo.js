@@ -15,9 +15,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         await guild.members.fetch();
         await guild.channels.fetch();
         let guildOwner = await guild.fetchOwner();
-        let botMember = guild.members.me;
         let botMembers = guild.members.cache.filter(member => member.user.bot);
-        let humanMemberCount = guild.members.cache.size - botMembers.size;
+        // let humanMemberCount = guild.members.cache.size - botMembers.size;
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
 
@@ -84,7 +83,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         // Text channels
         let channelCount = 0;
         let threadCount = 0;
-        let archivedThreadCount = 0;
+        // let archivedThreadCount = 0;
         let serverLinks = "";
         if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
         serverLinks += `<id:browse>\n`;

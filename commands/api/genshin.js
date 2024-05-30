@@ -5,7 +5,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const axios = require("axios");
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
-        const capitalizeString = require('../../util/capitalizeString');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;

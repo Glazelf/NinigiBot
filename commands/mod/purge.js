@@ -14,7 +14,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let amount = interaction.options.getInteger("amount");
         // Get users
         let user = null;
-        let author = interaction.user;
         let userArg = interaction.options.getUser("user");
         if (userArg) user = userArg;
 

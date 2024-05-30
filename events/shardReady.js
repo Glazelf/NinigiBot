@@ -12,7 +12,7 @@ module.exports = async (client, id) => {
         // Set bot status
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
-        // Start affairs
+        // Start affairs, these flag as unused variables but are used !!!!!!!
         const stan = require('../affairs/stan')(client);
         const birthday = require('../affairs/birthday')(client);
         // const { bank } = require('../database/bank');
