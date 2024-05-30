@@ -269,6 +269,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
                     for (let [moveName, learnData] of Object.entries(learnset)) {
                         if (moveName !== move.id) continue;
+                        learnsMove = true;
                         learnInfo += getLearnData(learnData);
                     };
                     while (prevo && prevo.num > 0) {
