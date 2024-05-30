@@ -1,4 +1,4 @@
-module.exports = async (client, info) => {
+export default async (client, info) => {
     const logger = require('../util/logger');
     try {
         logger(info, client);

@@ -5,7 +5,7 @@ const { Shinx, EventTrophy, User } = require('../dbObjects/userdata.model')(user
 const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
 
-module.exports = {
+export default {
     async getShinx(id, attributes = null) {
         let shinx = await Shinx.findByPk(param = id, options = {
             attributes: attributes

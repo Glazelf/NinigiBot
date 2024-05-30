@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
     const getExpFromLevel = require('../../../../util/shinx/getExpFromLevel');
     const parseMeetDate = require('../../../../util/shinx/parseMeetDate');

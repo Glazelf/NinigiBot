@@ -1,4 +1,4 @@
-module.exports = (client, member) => {
+export default (client, member) => {
     try {
         const Discord = require("discord.js");
         if (!member || !member.guild || !member.permissions) return false;

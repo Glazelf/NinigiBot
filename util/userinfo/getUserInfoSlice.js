@@ -4,7 +4,7 @@ const api_user = require('../../database/dbServices/user.api');
 // Amount of userinfo pages
 const NUMBER_OF_PAGES = 2;
 
-module.exports = async (client, interaction, page, user) => {
+export default async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color

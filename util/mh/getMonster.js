@@ -1,4 +1,4 @@
-module.exports = async (client, interaction, monsterData, ephemeral) => {
+export default async (client, interaction, monsterData, ephemeral) => {
     try {
         const Discord = require("discord.js");
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");

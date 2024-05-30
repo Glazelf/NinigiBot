@@ -1,4 +1,4 @@
-module.exports = async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
+export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');

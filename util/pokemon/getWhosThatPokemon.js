@@ -1,4 +1,4 @@
-module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
+export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
     const Discord = require("discord.js");
     const Canvas = require('canvas');
     const { Dex } = require('pokemon-showdown');

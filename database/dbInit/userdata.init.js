@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { userdata } = require('../dbConnection/dbConnection');
 const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 
-module.exports = async (reset_db) => {
+export default async (reset_db) => {
     try {
         if (reset_db) {
             await userdata.drop();

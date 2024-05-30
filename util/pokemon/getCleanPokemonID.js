@@ -1,4 +1,4 @@
-module.exports = (pokemon) => {
+export default (pokemon) => {
     let pokemonID = pokemon.num.toString();
     let pokemonName = pokemon.name;
     let pokemonTypes = pokemon.types;

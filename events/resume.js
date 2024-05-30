@@ -1,4 +1,4 @@
-module.exports = async (client) => {
+export default async (client) => {
     try {
         const Discord = require("discord.js");
         const getTime = require('../util/getTime');

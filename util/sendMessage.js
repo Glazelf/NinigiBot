@@ -1,4 +1,4 @@
-module.exports = async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
+export default async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command

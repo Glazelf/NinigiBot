@@ -1,4 +1,4 @@
-module.exports = async (client, guild) => {
+export default async (client, guild) => {
     const logger = require('../util/logger');
     try {
         const Discord = require("discord.js");

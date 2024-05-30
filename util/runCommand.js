@@ -1,4 +1,4 @@
-module.exports = (command) => {
+export default (command) => {
     const util = require('node:util');
     const exec = util.promisify(require('node:child_process').exec);
     return lsExample(command);

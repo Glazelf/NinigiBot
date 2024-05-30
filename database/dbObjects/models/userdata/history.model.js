@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     const History = sequelize.define('History', {
         user_id: {
             type: DataTypes.STRING,

@@ -1,7 +1,7 @@
 const TROPHIES_PER_PAGE = 10;
 const Discord = require("discord.js");
 const api_trophy = require('../../database/dbServices/trophy.api');
-module.exports = async (client, offset) => {
+export default async (client, offset) => {
     const trophies_per_page = 10;
     let trophy_list = await api_trophy.getTrophieslice(offset, trophies_per_page);
     const embed = new Discord.EmbedBuilder().setColor(client.globalVars.embedColor);

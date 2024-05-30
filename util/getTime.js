@@ -1,4 +1,4 @@
-module.exports = async (client) => {
+export default async (client) => {
     try {
         let currentdate = new Date();
         let datetime = currentdate.getDate() + "/"

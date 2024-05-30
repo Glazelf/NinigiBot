@@ -1,4 +1,4 @@
-module.exports = (imageURL) => {
+export default (imageURL) => {
     const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
     let http = new XMLHttpRequest();
     http.open('HEAD', imageURL, false);

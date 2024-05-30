@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     const Shinx = require('./models/userdata/shinx.model')(sequelize, DataTypes);
     const User = require('./models/userdata/user.model')(sequelize, DataTypes);
     const History = require('./models/userdata/history.model')(sequelize, DataTypes);

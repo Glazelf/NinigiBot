@@ -1,4 +1,4 @@
-module.exports = async (client, message) => {
+export default async (client, message) => {
     const logger = require('../util/logger');
     try {
         const Discord = require("discord.js");

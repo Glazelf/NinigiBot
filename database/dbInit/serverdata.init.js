@@ -3,7 +3,7 @@ const { serverdata } = require('../dbConnection/dbConnection');
 
 const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 
-module.exports = async (reset_db) => {
+export default async (reset_db) => {
     try {
         if (reset_db) {
             await serverdata.drop();

@@ -1,4 +1,4 @@
-module.exports = async ({ client, interaction, page, region }) => {
+export default async ({ client, interaction, page, region }) => {
     try {
         const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");

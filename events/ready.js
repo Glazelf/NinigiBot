@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-module.exports = async (client) => {
+export default async (client) => {
     try {
         const getTime = require('../util/getTime');
         // Set interactions

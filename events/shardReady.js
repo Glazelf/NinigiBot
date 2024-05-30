@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-module.exports = async (client, id) => {
+export default async (client, id) => {
     try {
         const globalVars = require('../objects/globalVars.json');
         const getTime = require('../util/getTime');

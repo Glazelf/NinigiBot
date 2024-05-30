@@ -1,4 +1,4 @@
-module.exports = (fileName, baseURL) => {
+export default (fileName, baseURL) => {
     fileName = fileName.replace(" ", "_");
     const crypto = require('crypto');
     let md5 = crypto.createHash("md5").update(fileName).digest("hex");

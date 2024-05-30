@@ -1,4 +1,4 @@
-module.exports = async (gifTags = []) => {
+export default async (gifTags = []) => {
     const axios = require("axios");
     const config = require("../config.json");
     let giphyAPI = "https://api.giphy.com/v1/gifs/random";

@@ -1,5 +1,5 @@
 const talkedRecently = new Set();
-module.exports = async (client, message) => {
+export default async (client, message) => {
     const logger = require('../util/logger');
     try {
         const sendMessage = require('../util/sendMessage');

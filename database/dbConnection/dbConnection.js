@@ -15,4 +15,4 @@ const serverdata = new Sequelize('serverdata', config.dbUsername, config.dbPassw
     storage: 'database/dbConnection/serverdata.sqlite',
 });
 
-module.exports = {userdata, serverdata};
+export default { userdata, serverdata };

@@ -1,4 +1,4 @@
-module.exports = async (client, messages) => {
+export default async (client, messages) => {
     const logger = require('../util/logger');
     try {
         if (!messages) return;

@@ -24,7 +24,7 @@ const gainedExp = (lvl) => {
     return (1.5 * 60 * lvl) / 7;
 };
 
-module.exports = class ShinxBattle {
+export default class ShinxBattle {
     constructor(owner, shinxData) {
         this.owner = owner;
         this.nick = shinxData.nickname;

@@ -1,4 +1,4 @@
-module.exports = async (Dex, learnsets, pokemon) => {
+export default async (Dex, learnsets, pokemon) => {
     let pokemonLearnset = learnsets[pokemon.id];
     if (!pokemonLearnset.learnset && pokemon.baseSpecies) {
         // Catch Pokémon with no learnset

@@ -1,4 +1,4 @@
-module.exports = async (exception, client, interaction = null) => {
+export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
     try {
         const util = require('util');

@@ -4,7 +4,7 @@ const { userdata } = require('../dbConnection/dbConnection');
 const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 const DAILY_TROPHIES = 5;
 
-module.exports = {
+export default {
     async getUser(id, attributes = null) {
         let user = await User.findByPk(param = id, options = {
             attributes: attributes
