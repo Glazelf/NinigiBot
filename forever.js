@@ -1,4 +1,4 @@
-const forever = require('forever');
+import forever from 'forever';
 // const forevermonitor = require('forever-monitor');
 
 // let foreverConfig = {
