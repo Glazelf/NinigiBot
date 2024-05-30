@@ -1,5 +1,5 @@
 let botjsFunction = async function botjsFunction() {
-    const Discord = ('discord.js');
+    import Discord from 'discord.js';
     const fs = require("fs");
     const path = require("path");
     // all except guild presence
