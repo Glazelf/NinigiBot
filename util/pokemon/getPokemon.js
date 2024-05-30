@@ -1,6 +1,5 @@
 module.exports = async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
-        const sendMessage = require('../sendMessage');
         const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
         const imageExists = require('../imageExists');
@@ -103,11 +102,11 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         if (pokemon.heightm) {
             metricsString += `\n**Height:**\n${pokemon.heightm}m | ${heightAmerican}ft`;
         };
-        let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
+        // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
         // Official art
         let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         // Game render
-        let renderGame = `https://www.serebii.net/swordshield/pokemon/${pokemonID}.png`;
+        // let renderGame = `https://www.serebii.net/swordshield/pokemon/${pokemonID}.png`;
         // Shiny
         // PMD portraits
         let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDPMD}/Normal.png`;

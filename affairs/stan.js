@@ -1,8 +1,8 @@
-const api_history = require('../database/dbServices/history.api');
 module.exports = async (client) => {
     const logger = require('../util/logger');
     try {
         const Discord = require("discord.js");
+        const api_history = require('../database/dbServices/history.api');
         const getRandomGif = require("../util/getRandomGif");
         const cron = require("cron");
         const timezone = 'utc';
@@ -16,7 +16,8 @@ module.exports = async (client) => {
             let guild = await client.guilds.fetch(guildID);
             if (!guild) return;
             let stanRoleID = "743144948328562729";
-            let candidates = guild.roles.cache.find(role => role.id == stanRoleID).members.map(m => m.user);
+            let stanRole = await guild.roles.fetch(stanRoleID, { force: true });
+            let candidates = stanRole.members.map(m => m.user);
             if (candidates.length < 1) return;
 
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));

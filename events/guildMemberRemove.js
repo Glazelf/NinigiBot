@@ -45,8 +45,6 @@ module.exports = async (client, member) => {
                     if (reason) reasonText = reason;
                     embedAuthor = `Member Kicked 💔`;
                 };
-                let leaveButtons = new Discord.ActionRowBuilder()
-                    .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
                 leaveEmbed
                     .setTitle(embedAuthor)
                     .setThumbnail(avatar)
@@ -59,7 +57,6 @@ module.exports = async (client, member) => {
                     leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
                     if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);
                 };
-                memberLeaveObject['components'] = [leaveButtons];
             };
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);

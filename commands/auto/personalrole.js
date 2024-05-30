@@ -68,7 +68,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             personalRole.edit({
                 name: interaction.user.username,
                 color: roleColor,
-                position: personalRolePosition
+                position: personalRolePosition,
+                permissions: []
             }).catch(e => {
                 // console.log(e);
                 return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
@@ -110,6 +111,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     color: roleColor,
                     position: personalRolePosition,
                     reason: `Personal role for ${interaction.user.username} (${interaction.user.id}).`,
+                    permissions: []
                 });
             } catch (e) {
                 // console.log(e);

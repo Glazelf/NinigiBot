@@ -26,7 +26,6 @@ exports.run = async (client, interaction, logger) => {
 
         let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });
         if (roleIDs.length > 0) {
-            let roleTag = role.name;
             for await (const roleID of roleIDs) {
                 roleID.destroy();
             };

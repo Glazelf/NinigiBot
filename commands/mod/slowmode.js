@@ -1,11 +1,11 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
 
-        let ephemeral = false;
+        ephemeral = false;
         let slowmodeSupportedChannelTypes = [
             Discord.ChannelType.GuildText,
             Discord.ChannelType.GuildPublicThread,
@@ -18,7 +18,7 @@ exports.run = async (client, interaction, logger) => {
 
         let time = interaction.options.getInteger("time");
         await interaction.channel.setRateLimitPerUser(time);
-        return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.` });
+        return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

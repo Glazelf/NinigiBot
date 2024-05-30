@@ -3,7 +3,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const fs = require("fs");
-        const path = require("path");
         const axios = require("axios");
         const getSplatfests = require('../../util/splat/getSplatfests');
         const randomNumber = require('../../util/randomNumber');
@@ -18,8 +17,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`);
         const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`);
         const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
+        // const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
+        // const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -212,7 +211,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 if (currentFest) {
                     allowedModes.push(splatfestBattleID);
                 } else {
-                    allowedModes.push(turfWarID, anarchyID, xBattleID); // leagueBattleID when it becomes available
+                    allowedModes.push(turfWarID, anarchyID, xBattleID, leagueBattleID);
                 };
                 if (responseSchedules.data.data.eventSchedules.nodes.length > 0) allowedModes.push(challengesID);
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
@@ -314,7 +313,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         };
                         if (!entrySettings) return;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
-                        splat3Embed.addFields([{ name: mapEntryTitle, value: `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, inline: true }]);
+                        splat3Embed.addFields([{ name: mapEntryTitle, value: entryMaps, inline: true }]);
                     });
                     if ([turfWarID, anarchyID, xBattleID].includes(inputMode)) {
                         splat3Embed
@@ -332,7 +331,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         await entry.timePeriods.forEach(challengeTimePeriod => {
                             challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
                         });
-                        splat3Embed.addFields([{ name: entry.leagueMatchSetting.leagueMatchEvent.name, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
+                        splat3Embed.addFields([{ name: challengeName, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
                     })
                 );
                 break;

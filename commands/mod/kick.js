@@ -24,12 +24,13 @@ exports.run = async (client, interaction, logger) => {
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
+        let reasonCodeBlock = Discord.codeBlock("fix", reason);
 
         let time = await getTime(client);
         let reasonInfo = `-${interaction.user.username} (${time})`;
         // Kick
-        let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${Discord.codeBlock(reason)}`;
-        await user.send({ content: `You've been kicked from **${interaction.guild.name}** by ${interaction.user.username} for the following reason: ${Discord.codeBlock(reason)}` })
+        let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
+        await user.send({ content: `You've been kicked from **${interaction.guild.name}** by ${interaction.user.username} for the following reason: ${reasonCodeBlock}` })
             .then(message => kickReturn += `Succeeded in sending a DM to ${user.username} with the reason.`)
             .catch(e => kickReturn += `Failed to send a DM to ${user.username} with the reason.`);
         try {

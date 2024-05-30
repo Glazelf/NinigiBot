@@ -15,7 +15,7 @@ module.exports = (pokemon) => {
     const totemBool = pokemonName.endsWith(totemString);
     const gmaxBool = pokemonName.endsWith(gmaxString);
     const eternamaxBool = pokemonName.endsWith(eternamaxString);
-    const dynamaxBool = Boolean(gmaxBool || eternamaxBool);
+    // const dynamaxBool = Boolean(gmaxBool || eternamaxBool);
     const totemAlolaBool = totemBool && pokemonName.split("-")[1] == "Alola";
     let formChar;
 
