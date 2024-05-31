@@ -10,7 +10,6 @@ module.exports = async (client, role) => {
         if (!log) return;
 
         let botMember = role.guild.members.me;
-
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
@@ -24,12 +23,12 @@ module.exports = async (client, role) => {
                 if (target.id !== role.id) return;
                 executor = createExecutor;
             };
-
             let icon = role.guild.iconURL(client.globalVars.displayAvatarSettings);
             // The roleCreated event fires immediately upon clicking the add role button,
             // so the role name will always be the discord default "new role" and the color/permissions will always be the default
             const createEmbed = new Discord.EmbedBuilder()
                 .setColor(client.globalVars.embedColor)
+                .setThumbnail(icon)
                 .setTitle(`Role Created ⭐`)
                 .setDescription(role.toString())
                 .setFooter({ text: role.id })
