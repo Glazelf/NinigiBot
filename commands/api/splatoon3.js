@@ -7,7 +7,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const getSplatfests = require('../../util/splat/getSplatfests');
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "latest"; // Use version number without periods. "latest" for latest version.
+        let version = "latest"; // Use version number without periods or "latest"
         let versionLatest = version;
         if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
         let versionSplit = versionLatest.split("").join(".");
@@ -30,11 +30,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
         let star = "⭐";
         let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
-        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
-        let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
-        let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
-        let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
-        let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup.
+        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
+        let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
+        let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
+        let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
+        let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor);
@@ -46,7 +46,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 let clothingType = inputIDSplit[inputIDSplit.length - 1];
                 inputIDSplit.pop(); // Remove added clothing type
                 inputID = inputIDSplit.join("_"); // Restore original ID
-                // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
+                // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it
                 let clothingFailedString = `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`;
                 let selectedClothesJSON = null;
                 switch (clothingType) {
