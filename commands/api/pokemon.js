@@ -185,8 +185,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons
-                            .addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
+                        pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
