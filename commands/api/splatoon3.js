@@ -71,8 +71,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
                 let shopsTitle = languageJSON["LayoutMsg/Cmn_Menu_00"]["T_Shop_00"];
-                let ObtainMethod = clothingObject.HowToGet;
-                if (ObtainMethod == "Shop") ObtainMethod = `${shopsTitle} (${clothingObject.Price})`;
+                let obtainMethod = clothingObject.HowToGet;
+                if (obtainMethod == "Shop") obtainMethod = `${shopsTitle} (${clothingObject.Price})`;
 
                 let abilityTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["001"]}:`;
                 let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
@@ -87,7 +87,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
                         { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
                         { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
-                        { name: "Obtain Method:", value: ObtainMethod, inline: true }
+                        { name: "Obtain Method:", value: obtainMethod, inline: true }
                     ])
                     .setImage(clothingImage)
                     .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
