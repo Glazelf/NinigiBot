@@ -233,8 +233,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "learn":
                 if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
-
-                let learnOptions = [];
+                // Set variables
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
                 let learnsMove = false;
@@ -248,19 +247,20 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 // Merge these if statements into a singular function
                 if (retroLearnsets[pokemon.id]) {
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
-                        evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
+                        // Moves not learned in gen 1-2 are null, so should be avoided concatenating
+                        if (retroLearnsets[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
                     };
                 };
                 if (prevo && retroLearnsets[prevo.id]) {
                     evoTreeLearnsets[prevo.id] = { ...retroLearnsets[prevo.id], ...learnsets[prevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
-                        evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
+                        if (retroLearnsets[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
                     };
                 };
                 if (prevoprevo && retroLearnsets[prevoprevo.id]) {
                     evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsets[prevoprevo.id], ...learnsets[prevoprevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
-                        evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
+                        if (retroLearnsets[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
                     };
                 };
                 learnsets = { ...learnsets, ...evoTreeLearnsets };
