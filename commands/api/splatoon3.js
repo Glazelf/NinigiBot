@@ -1,14 +1,13 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const fs = require("fs");
-        const path = require("path");
         const axios = require("axios");
         const getSplatfests = require('../../util/splat/getSplatfests');
         const randomNumber = require('../../util/randomNumber');
         // Game data
-        let version = "latest"; // Use version number without periods. "latest" for latest version.
+        let version = "latest"; // Use version number without periods or "latest"
         let versionLatest = version;
         if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
         let versionSplit = versionLatest.split("").join(".");
@@ -18,8 +17,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`);
         const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`);
         const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`);
-        const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
-        const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
+        // const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
+        // const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -31,11 +30,11 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
         let star = "⭐";
         let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
-        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
-        let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data.
-        let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward.
-        let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
-        let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup.
+        let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
+        let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
+        let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
+        let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
+        let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor);
@@ -47,7 +46,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 let clothingType = inputIDSplit[inputIDSplit.length - 1];
                 inputIDSplit.pop(); // Remove added clothing type
                 inputID = inputIDSplit.join("_"); // Restore original ID
-                // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it.
+                // let allClothesJSON = GearInfoHeadJSON.concat(GearInfoClothesJSON, GearInfoShoesJSON); // Using concat on objects because the JSON files are actually an array of unnamed objects despite being typed as object. Don't worry about it
                 let clothingFailedString = `Couldn't find that piece of clothing. Make sure you select an autocomplete option.`;
                 let selectedClothesJSON = null;
                 switch (clothingType) {
@@ -72,8 +71,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 if (starRating.length > 0) clothingAuthor = `${clothingAuthor} (${starRating})`;
                 // Obtainability
                 let shopsTitle = languageJSON["LayoutMsg/Cmn_Menu_00"]["T_Shop_00"];
-                let ObtainMethod = clothingObject.HowToGet;
-                if (ObtainMethod == "Shop") ObtainMethod = `${shopsTitle} (${clothingObject.Price})`;
+                let obtainMethod = clothingObject.HowToGet;
+                if (obtainMethod == "Shop") obtainMethod = `${shopsTitle} (${clothingObject.Price})`;
 
                 let abilityTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["001"]}:`;
                 let brandTitle = `${languageJSON["LayoutMsg/Cmn_CstBase_00"]["002"]}:`;
@@ -88,7 +87,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                         { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
                         { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
                         { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
-                        { name: "Obtain Method:", value: ObtainMethod, inline: true }
+                        { name: "Obtain Method:", value: obtainMethod, inline: true }
                     ])
                     .setImage(clothingImage)
                     .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
@@ -212,7 +211,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 if (currentFest) {
                     allowedModes.push(splatfestBattleID);
                 } else {
-                    allowedModes.push(turfWarID, anarchyID, xBattleID); // leagueBattleID when it becomes available
+                    allowedModes.push(turfWarID, anarchyID, xBattleID, leagueBattleID);
                 };
                 if (responseSchedules.data.data.eventSchedules.nodes.length > 0) allowedModes.push(challengesID);
                 if (!allowedModes.includes(inputMode)) return sendMessage({ client: client, interaction: interaction, content: `That mode either does not exist or is not currently available ingame.` });
@@ -314,7 +313,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                         };
                         if (!entrySettings) return;
                         let entryMaps = `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`;
-                        splat3Embed.addFields([{ name: mapEntryTitle, value: `${entrySettings.vsStages[0].name}\n${entrySettings.vsStages[1].name}`, inline: true }]);
+                        splat3Embed.addFields([{ name: mapEntryTitle, value: entryMaps, inline: true }]);
                     });
                     if ([turfWarID, anarchyID, xBattleID].includes(inputMode)) {
                         splat3Embed
@@ -332,7 +331,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                         await entry.timePeriods.forEach(challengeTimePeriod => {
                             challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
                         });
-                        splat3Embed.addFields([{ name: entry.leagueMatchSetting.leagueMatchEvent.name, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
+                        splat3Embed.addFields([{ name: challengeName, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
                     })
                 );
                 break;

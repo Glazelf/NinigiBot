@@ -1,15 +1,12 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const getWikiURL = require('../../util/getWikiURL');
-        const parseDate = require('../../util/parseDate');
-        const capitalizeString = require('../../util/capitalizeString');
-        const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
+        // const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
         const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
-        const largeDifferencesJSON = require("../../submodules/DQM3-db/objects/largeDifferences.json");
+        // const largeDifferencesJSON = require("../../submodules/DQM3-db/objects/largeDifferences.json");
         const monstersJSON = require("../../submodules/DQM3-db/objects/monsters.json");
-        const resistancesJSON = require("../../submodules/DQM3-db/objects/resistances.json");
+        // const resistancesJSON = require("../../submodules/DQM3-db/objects/resistances.json");
         const skillsJSON = require("../../submodules/DQM3-db/objects/skills.json");
         const talentsJSON = require("../../submodules/DQM3-db/objects/talents.json");
         const traitsJSON = require("../../submodules/DQM3-db/objects/traits.json");

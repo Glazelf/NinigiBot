@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { PassThrough } = require('stream');
@@ -27,7 +27,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for \`${formattingHash}${hex}\`:`, files: stream, ephemeral: ephemeral });
 
         function hexToRgb(hex) {
             let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

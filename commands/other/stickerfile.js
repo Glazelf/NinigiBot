@@ -4,11 +4,7 @@ exports.run = async (client, interaction, logger) => {
         const sendMessage = require('../../util/sendMessage');
 
         let message = await interaction.channel.messages.fetch(interaction.targetId);
-
         let returnString = `Here's the link(s) to the assets you requested:`;
-        let replyMessage = null;
-        let stickerLink = null;
-
         let noStickerString = `This only works for messages with stickers attached.`;
         if (!message.stickers || !message.stickers.first()) return sendMessage({ client: client, interaction: interaction, content: noStickerString });
 

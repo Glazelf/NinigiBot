@@ -1,6 +1,6 @@
 let currentGeneration = 9; // Set current generation
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
@@ -10,7 +10,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         const capitalizeString = require('../../util/capitalizeString');
         const leadingZeros = require('../../util/leadingZeros');
         const getRandomObjectItem = require('../../util/getRandomObjectItem');
-        const learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
+        const retroLearnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
         const isAdmin = require('../../util/isAdmin');
         const axios = require("axios");
@@ -40,15 +41,16 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         // Set generation
         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
         let dexModified = Dex.mod(`gen${generationInput}`);
-        let JSONresponse;
         let allPokemon = dexModified.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
-        let noPokemonString = `Sorry, I could not find a Pokémon by that name in generation ${generationInput}.`;
         let pokemon = dexModified.species.get(pokemonName);
+        let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generationInput}.`;
         if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
+        let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = dexModified.moves.get(moveSearch);
+        let moveExists = (move && move.exists && !["CAP", "Future"].includes(move.isNonstandard));
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
@@ -77,7 +79,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "item":
                 let itemSearch = interaction.options.getString("item");
                 let item = dexModified.items.get(itemSearch);
-                if (!item || !item.exists || ["Future"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item by that name in generation ${generationInput}.` });
+                if (!item || !item.exists || ["Future", "CAP"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item called \`${itemSearch}\` in generation ${generationInput}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 let hasPGLImage = await imageExists(itemImage);
@@ -97,7 +99,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 break;
             // Moves
             case "move":
-                if (!move || !move.exists || move.isNonstandard == "CAP" || ["Future"].includes(move.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move by that name in generation ${generationInput}.` });
+                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generationInput}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsets)) {
                     let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
@@ -154,7 +156,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             case "nature":
                 let natureSearch = interaction.options.getString("nature");
                 let nature = Dex.natures.get(natureSearch);
-                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature by that name.` });
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature called \`${natureSerach}\`.` });
 
                 let boosted = Dex.stats.names[nature.plus];
                 let lowered = Dex.stats.names[nature.minus];
@@ -183,8 +185,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons
-                            .addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
+                        pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -223,38 +224,68 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                 break;
             // Pokémon
             case "pokemon":
-                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, generation: generationInput, ephemeral: ephemeral });
                 pokemonEmbed = messageObject.embeds;
                 pokemonButtons = messageObject.components;
                 break;
             case "learn":
-                if (!pokemon || !pokemon.exists || pokemon.num <= 0) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
-                let learnOptions = [];
+                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
+                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+                // Set variables
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
+                let learnsMove = false;
+                let prevo = null;
+                let prevoprevo = null;
+                let evoTreeLearnsets = {}; // Merge, first object's properties get overwritten by second object's properties
+                if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
+                if (prevo && prevo.prevo) prevoprevo = dexModified.species.get(prevo.prevo);
+                // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
+                evoTreeLearnsets[pokemon.id] = { ...retroLearnsets[pokemon.id], ...learnsets[pokemon.id] };
+                // Merge these if statements into a singular function
+                if (retroLearnsets[pokemon.id]) {
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
+                        // Moves not learned in gen 1-2 are null, so should be avoided concatenating
+                        if (retroLearnsets[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
+                    };
+                };
+                if (prevo && retroLearnsets[prevo.id]) {
+                    evoTreeLearnsets[prevo.id] = { ...retroLearnsets[prevo.id], ...learnsets[prevo.id] };
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
+                        if (retroLearnsets[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
+                    };
+                };
+                if (prevoprevo && retroLearnsets[prevoprevo.id]) {
+                    evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsets[prevoprevo.id], ...learnsets[prevoprevo.id] };
+                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
+                        if (retroLearnsets[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
+                    };
+                };
+                learnsets = { ...learnsets, ...evoTreeLearnsets };
                 if (learnsets[pokemon.id]) {
                     let learnset = learnsets[pokemon.id].learnset;
                     learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
                     for (let [moveName, learnData] of Object.entries(learnset)) {
                         if (moveName !== move.id) continue;
+                        learnsMove = true;
                         learnInfo += getLearnData(learnData);
                     };
-                    let prevo = null;
-                    if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
-                    if (prevo && prevo.prevo) prevo = dexModified.species.get(prevo.prevo);
-                    if (prevo) {
+                    while (prevo && prevo.num > 0) {
                         let prevoLearnset = learnsets[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
                             learnInfo += `**As ${prevo.name}:**\n`;
-                            learnInfo += getLearnData(learnData);
+                            learnDataToAdd = getLearnData(learnData);
+                            if (learnDataToAdd.length > 0) learnsMove = true;
+                            learnInfo += learnDataToAdd;
                         };
+                        prevo = dexModified.species.get(prevo.prevo);
                     };
-                    if (learnInfo.length == 0) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                    if (!learnsMove) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
                 pokemonEmbed.setTitle(learnAuthor);
-                if (learnInfo.length > 0) pokemonEmbed.setDescription(learnInfo);
+                if (learnsMove) pokemonEmbed.setDescription(learnInfo);
                 break;
             case "usage":
                 let formatInput = "gen9vgc2023series1";
@@ -373,10 +404,13 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     pokemon.num > 0 &&
                     !["CAP"].includes(pokemon.isNonstandard) &&
                     !pokemon.name.endsWith("-Totem") &&
+                    !pokemon.name.endsWith("-Tera") && // Ogerpon Tera forms
                     !pokemon.name.startsWith("Arceus-") &&
                     !pokemon.name.startsWith("Silvally-") &&
+                    !pokemon.name.startsWith("Genesect-") &&
                     !pokemon.name.startsWith("Gourgeist-") &&
                     !pokemon.name.startsWith("Pumpkaboo-") &&
+                    !pokemon.name.startsWith("Squawkabilly-") &&
                     !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
@@ -394,25 +428,26 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             learnData.forEach(learnMethod => {
                 let learnGen = learnMethod.charAt(0);
                 let learnType = learnMethod.charAt(1);
+                let learnGenString = `Gen ${learnGen}:`;
                 switch (learnType) {
                     case "L":
-                        learnInfo += `Gen ${learnGen}: Level ${learnMethod.split("L")[1]}\n`;
+                        learnInfo += `${learnGenString} Level ${learnMethod.split("L")[1]}\n`;
                         break;
                     case "M":
-                        learnInfo += `Gen ${learnGen}: TM\n`;
+                        learnInfo += `${learnGenString} TM\n`;
                         break;
                     case "T":
-                        learnInfo += `Gen ${learnGen}: Move Tutor\n`;
-                        break;
-                    case "S":
-                        let specialMoveString = `Gen ${learnGen}: Special\n`;
-                        if (!learnInfo.includes(specialMoveString)) learnInfo += specialMoveString;
+                        learnInfo += `${learnGenString} Move Tutor\n`;
                         break;
                     case "E":
-                        learnInfo += `Gen ${learnGen}: Egg move\n`;
+                        learnInfo += `${learnGenString} Egg move\n`;
                         break;
                     case "R":
-                        learnInfo += `Gen ${learnGen}: Reminder\n`;
+                        learnInfo += `${learnGenString} Reminder\n`;
+                        break;
+                    case "S":
+                        let specialMoveString = `${learnGenString} Special\n`;
+                        if (!learnInfo.includes(specialMoveString) && !learnInfo.includes(learnGenString)) learnInfo += specialMoveString;
                         break;
                 };
             });

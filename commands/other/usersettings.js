@@ -38,7 +38,7 @@ exports.run = async (client, interaction, logger) => {
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
                 break;
             case "ephemeraldefault":
-                let ephemeralDefaultGet = await api_user.getEphemeralDefault(interaction.user.id);
+                // let ephemeralDefaultGet = await api_user.getEphemeralDefault(interaction.user.id);
                 let ephemeralDefault = interaction.options.getBoolean('ephemeral');
                 api_user.setEphemeralDefault(interaction.user.id, ephemeralDefault);
                 return sendMessage({ client: client, interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });

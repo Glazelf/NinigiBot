@@ -25,21 +25,23 @@ module.exports = async (client, member, newMember) => {
             } else if (member.premiumSince && !newMember.premiumSince) {
                 // Nitro boost end
                 updateCase = "nitroEnd";
-            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
-                // Roles updated
-                updateCase = null; // TODO
             } else if (member.pending !== newMember.pending) {
                 // Pending?
-                updateCase = null; // TODO
-            } else if (member.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
-                // Timeout, check if there's a difference in the timestamps for other actions, might have to add a minimum gap
-                updateCase = null; // TODO
+                updateCase = null;
+            } else if (!member.communicationDisabledUntilTimestamp && newMember.communicationDisabledUntilTimestamp) {
+                updateCase = "timeoutStart";
+            } else if (member.communicationDisabledUntilTimestamp && !newMember.communicationDisabledUntilTimestamp) {
+                updateCase = "timeoutEnd";
             } else if (member.guild !== newMember.guild || member.user !== newMember.user) {
                 // I assume this does nothing but I want to be sure because of the weird nickname updates firing
                 updateCase = null;
             } else if (oldAvatar !== avatar) {
                 // Update server avatar
                 updateCase = "guildAvatar";
+            } else if (member.roles.cache.size !== newMember.roles.cache.size) {
+                // Roles updated
+                // Sometimes old member roles show 0. Not sure why? Might just be shortly after bot boots?
+                updateCase = "rolesUpdate";
             } else if (member.nickname !== newMember.nickname) {
                 // Nickname change
                 updateCase = "nickname";
@@ -89,9 +91,27 @@ module.exports = async (client, member, newMember) => {
                     topText = "Updated Server Avatar ⚒️";
                     image = avatar;
                     break;
+                case "rolesUpdate":
+                    let rolesSorted = [...member.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
+                    let newRolesSorted = [...newMember.roles.cache.values()].filter(element => element.name !== "@everyone").sort((r, r2) => r2.position - r.position);
+                    let rolesString = rolesSorted.join(", ");
+                    let newRolesString = newRolesSorted.join(", ");
+                    if (rolesString.length == 0) rolesString = "None";
+                    if (newRolesString.length == 0) newRolesString = "None";
+                    topText = "Roles Updated ⚒️";
+                    changeText = `Roles for ${user.username} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    break;
+                case "timeoutStart":
+                    topText = "Timed Out ⏸";
+                    changeText = `Timed out untill <t:${Math.floor(newMember.communicationDisabledUntilTimestamp / 1000)}:F>.`;
+                    break;
+                case "timeoutEnd":
+                    topText = "Timeout Ended ▶️";
+                    break;
                 default:
                     return;
             };
+            if (changeText && changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(client.globalVars.embedColor)
                 .setTitle(topText)

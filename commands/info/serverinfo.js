@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
@@ -15,9 +15,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         await guild.members.fetch();
         await guild.channels.fetch();
         let guildOwner = await guild.fetchOwner();
-        let botMember = guild.members.me;
         let botMembers = guild.members.cache.filter(member => member.user.bot);
-        let humanMemberCount = guild.members.cache.size - botMembers.size;
+        // let humanMemberCount = guild.members.cache.size - botMembers.size;
         let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
         let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
 
@@ -84,7 +83,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         // Text channels
         let channelCount = 0;
         let threadCount = 0;
-        let archivedThreadCount = 0;
+        // let archivedThreadCount = 0;
         let serverLinks = "";
         if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
         serverLinks += `<id:browse>\n`;
@@ -107,7 +106,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
         if (guild.rulesChannel && (interaction.member.permissions.has(Discord.PermissionFlagsBits.ViewGuildInsights) || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
 
-        let statsString = `Members: ${guild.memberCount} (incl. ${botMembers.size}🤖)\nChannels: ${channelCount}`;
+        let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size}🤖\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
         if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
         if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
@@ -119,12 +118,14 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
 
         const serverEmbed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor)
-            .setTitle(`${guild.name}`)
+            .setTitle(guild.name)
             .setThumbnail(icon)
             .setFooter({ text: guild.id });
         if (guild.description) serverEmbed.setDescription(guild.description);
         serverEmbed.addFields([
             { name: "Links:", value: serverLinks, inline: false },
+            { name: "Stats:", value: statsString, inline: true },
+            { name: "Assets:", value: assetString, inline: true },
             { name: "Owner:", value: `${guildOwner} (${guildOwner.user.username})`, inline: true }
         ]);
         if (guild.features.includes('COMMUNITY') && guild.preferredLocale) {
@@ -132,8 +133,6 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         };
         serverEmbed.addFields([
             { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-            { name: "Stats:", value: statsString, inline: true }, // Keep in row with max 2 fields, otherwise change inline to false
-            { name: "Assets:", value: assetString, inline: true },
             { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
         ]);
         //// Doesn't add much value with 1 shard and autosharding

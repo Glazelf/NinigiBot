@@ -2,9 +2,7 @@ const Discord = require("discord.js");
 exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
         const isOwner = require('../../util/isOwner');
-        const getTime = require('../../util/getTime');
         const user_api = require('../../database/dbServices/user.api');
         let confirm = false;
         let confirmArg = interaction.options.getBoolean("confirm");

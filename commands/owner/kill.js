@@ -3,7 +3,6 @@ exports.run = async (client, interaction, logger) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const forever = require('forever');
-        const isAdmin = require('../../util/isAdmin');
         const isOwner = require('../../util/isOwner');
         const getTime = require('../../util/getTime');
         let ownerBool = await isOwner(client, interaction.user);
