@@ -1,11 +1,10 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-
-        let ephemeral = false;
-
+        ephemeral = false;
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let input = message.content;
         let questionAskUser = message.author;

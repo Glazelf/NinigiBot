@@ -1,9 +1,10 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import axios from "axios";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import axios from "axios";
         let api = "https://helldiverstrainingmanual.com/api/v1/";
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

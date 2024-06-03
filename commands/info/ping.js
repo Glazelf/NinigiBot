@@ -1,8 +1,9 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
         let commandPing = Math.abs(Date.now() - interaction.createdTimestamp);
         let websocketPing = Math.abs(client.ws.ping);
         let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;

@@ -1,10 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import axios from "axios";
+import isOwner from "../../util/isOwner";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
-        import axios from "axios";
         let ownerBool = await isOwner(client, interaction.user);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

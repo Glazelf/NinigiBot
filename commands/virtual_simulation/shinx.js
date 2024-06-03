@@ -1,11 +1,11 @@
 import Discord from "discord.js";
-const Canvas = require('canvas');
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import Canvas from "canvas";
+import shinxApi from "../../database/dbServices/shinx.api";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const shinxApi = require('../../database/dbServices/shinx.api');
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;

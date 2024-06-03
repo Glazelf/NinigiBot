@@ -1,16 +1,17 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
-// import familiesJSON from "../../submodules/DQM3-db/objects/families.json";
-import itemsJSON from "../../submodules/DQM3-db/objects/items.json";
-// import largeDifferencesJSON from "../../submodules/DQM3-db/objects/largeDifferences.json";
-import monstersJSON from "../../submodules/DQM3-db/objects/monsters.json";
-// import resistancesJSON from "../../submodules/DQM3-db/objects/resistances.json";
-import skillsJSON from "../../submodules/DQM3-db/objects/skills.json";
-import talentsJSON from "../../submodules/DQM3-db/objects/talents.json";
-import traitsJSON from "../../submodules/DQM3-db/objects/traits.json";
-import synthesis from "../../submodules/DQM3-db/util/synthesis";
+// import familiesJSON from "../../submodules/DQM3-db/objects/families.json" with { type: "json" };
+import itemsJSON from "../../submodules/DQM3-db/objects/items.json" with { type: "json" };
+// import largeDifferencesJSON from "../../submodules/DQM3-db/objects/largeDifferences.json" with { type: "json" };
+import monstersJSON from "../../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
+// import resistancesJSON from "../../submodules/DQM3-db/objects/resistances.json" with { type: "json" };
+import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { type: "json" };
+import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
+import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
+import synthesis from "../../submodules/DQM3-db/util/synthesis" with { type: "json" };
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;

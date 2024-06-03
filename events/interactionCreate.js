@@ -1,23 +1,40 @@
+// Global
+import Discord from "discord.js";
+import logger from "../util/logger";
+import axios from "axios";
+import fs from "fs";
+import sendMessage from "../util/sendMessage";
+// Pokémon
+import { Dex } from "pokemon-showdown";
+import getPokemon from "../util/pokemon/getPokemon";
+import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon";
+// Monster Hunter
+import getMHMonster from "../util/mh/getMonster";
+import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
+import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
+import getMHQuests from "../util/mh/getQuests";
+// Splatoon
+import getSplatfests from "../util/splat/getSplatfests";
+// DQM3
+import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json"};
+import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json"};
+// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json"};
+import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json"};
+import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json"};
+import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
+import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
+// Database
+import api_user from "../database/dbServices/user.api";
+import api_trophy from "../database/dbServices/trophy.api";
+import { EligibleRoles } from "../database/dbServices/server.api";
+// Other util
+import isAdmin from "../util/isAdmin";
+import capitalizeString from "../util/capitalizeString";
+import getUserInfoSlice from "../util/userinfo/getUserInfoSlice";
+import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice";
+
 export default async (client, interaction) => {
-    import logger from "../util/logger";
     try {
-        import Discord from "discord.js";
-        let sendMessage = require('../util/sendMessage');
-        let isAdmin = require('../util/isAdmin');
-        const getPokemon = require('../util/pokemon/getPokemon');
-        const getMonster = require('../util/mh/getMonster');
-        const randomNumber = require('../util/randomNumber');
-        const capitalizeString = require('../util/capitalizeString');
-        const getWhosThatPokemon = require('../util/pokemon/getWhosThatPokemon');
-        const { Dex } = require('pokemon-showdown');
-        import axios from "axios";
-        import fs from "fs";
-        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbServices/server.api');
-        const api_trophy = require('../database/dbServices/trophy.api');
-        const api_user = require('../database/dbServices/user.api');
-        if (!interaction) return;
         if (interaction.user.bot) return;
         // ID split
         let customIdSplit = null;
@@ -45,7 +62,7 @@ export default async (client, interaction) => {
                     try {
                         let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.run(client, interaction, logger, ephemeralDefault);
+                        await cmd.run(client, interaction, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -112,16 +129,15 @@ export default async (client, interaction) => {
                             if (!newMonsterName) return;
                             newMonsterName = newMonsterName.label;
                             let monsterData = null;
-                            monstersJSON.monsters.forEach(monster => {
+                            MHMonstersJSON.monsters.forEach(monster => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMonster(client, interaction, monsterData);
+                            messageObject = await getMHMonster(client, interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhquests")) {
                             // Monster Hunter quests
-                            const getQuests = require('../util/mh/getQuests');
                             let mhQuestsDirection = customIdSplit[1];
                             let mhQuestsGameName = customIdSplit[2];
                             let mhQuestsPage = customIdSplit[3];
@@ -142,11 +158,10 @@ export default async (client, interaction) => {
                             };
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
-                            let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            let mhQuestsMessageObject = await getMHQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
                             return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
-                            const getSplatfests = require('../util/splat/getSplatfests');
                             let splatfestDirection = customIdSplit[1];
                             let splatfestPage = customIdSplit[2];
                             let splatfestRegion = customIdSplit[3];
@@ -175,14 +190,14 @@ export default async (client, interaction) => {
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
-                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(client, offset);
+                            let trophy_slice = await getTrophyEmbedSlice(client, offset);
                             return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
-                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, { id: user });
+                            let userinfo_page = await getUserInfoSlice(client, interaction, page, { id: user });
                             return interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
@@ -336,12 +351,12 @@ export default async (client, interaction) => {
                     case "monsterhunter":
                         switch (focusedOption.name) {
                             case "monster":
-                                await monstersJSON.monsters.forEach(monster => {
+                                MHMonstersJSON.monsters.forEach(monster => {
                                     if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
                                 });
                                 break;
                             case "quest":
-                                await questsJSON.quests.forEach(quest => {
+                                MHQuestsJSON.quests.forEach(quest => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
@@ -351,8 +366,8 @@ export default async (client, interaction) => {
                         let languageDefault = "EUen";
                         let languageJSON = null;
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput) languageJSON = require(`../submodules/splat3/data/language/${languageInput}_full.json`);
-                        if (!languageJSON) languageJSON = require(`../submodules/splat3/data/language/${languageDefault}_full.json`);
+                        if (languageInput) languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`).default;
+                        if (!languageJSON) languageJSON = await import(`../submodules/splat3/data/language/${languageDefault}_full.json`).default;
                         switch (focusedOption.name) {
                             case "clothing":
                                 // structuredClone() makes sure the original object stays intact
@@ -503,32 +518,32 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "dqm3":
-                        let targetJSON = null
+                        let targetJSON = null;
                         if (focusedOption.name.startsWith("trait")) {
-                            targetJSON = require("../submodules/DQM3-db/objects/traits.json");
+                            targetJSON = DQMTraitsJSON;
                         } else {
                             switch (focusedOption.name) {
                                 case "parent1":
                                 case "parent2":
                                 case "target":
                                 case "monster":
-                                    targetJSON = require("../submodules/DQM3-db/objects/monsters.json");
+                                    targetJSON = DQMMonstersJSON;
                                     break;
                                 case "area":
                                     // Currently unused, add spawns under detailed monster info once the db has them
-                                    // targetJSON = require("../submodules/DQM3-db/objects/areas.json");
+                                    // targetJSON = DQMAreasJSON;
                                     break;
                                 case "family":
-                                    targetJSON = require("../submodules/DQM3-db/objects/families.json");
+                                    targetJSON = DQMFamiliesJSON;
                                     break;
                                 case "item":
-                                    targetJSON = require("../submodules/DQM3-db/objects/items.json");
+                                    targetJSON = DQMItemsJSON;
                                     break;
                                 case "skill":
-                                    targetJSON = require("../submodules/DQM3-db/objects/skills.json");
+                                    targetJSON = DQMSkillsJSON;
                                     break;
                                 case "talent":
-                                    targetJSON = require("../submodules/DQM3-db/objects/talents.json");
+                                    targetJSON = DQMTalentsJSON;
                                     break;
                             };
                         };

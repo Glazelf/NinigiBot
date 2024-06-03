@@ -1,9 +1,9 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-
         if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ client: client, interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
 
         const modal = new Discord.ModalBuilder()

@@ -1,10 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
+import Minesweeper from "discord.js-minesweeper";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        const Minesweeper = require('discord.js-minesweeper');
-
+        ephemeral = true;
         let correctionString = "";
         let rows = 5;
         let columns = 5;
@@ -62,7 +63,7 @@ export default async (client, interaction, logger) => {
             returnString += `\nMines: ${mines}`;
         };
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

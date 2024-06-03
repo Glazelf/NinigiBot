@@ -1,10 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import axios from "axios";
 import getWikiURL from "../../util/getWikiURL";
 import parseDate from "../../util/parseDate";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;

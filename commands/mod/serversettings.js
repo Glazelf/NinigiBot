@@ -1,13 +1,16 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin";
+import { StarboardChannels } from "../../database/dbServices/server.api";
+import { StarboardLimits } from "../../database/dbServices/server.api";
+import { LogChannels } from "../../database/dbServices/server.api";
+import { PersonalRoleServers } from "../../database/dbServices/server.api";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
-        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
-        const { StarboardChannels } = require('../../database/dbServices/server.api');
-        const { StarboardLimits } = require('../../database/dbServices/server.api');
         if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
         let ephemeral = true;
@@ -41,7 +44,6 @@ export default async (client, interaction, logger) => {
                 return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
                 break;
             case "log":
-                const { LogChannels } = require('../../database/dbServices/server.api');
                 let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 if (oldLogChannel) await oldLogChannel.destroy();
@@ -102,7 +104,6 @@ export default async (client, interaction, logger) => {
                 return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
                 break;
             case "togglepersonalroles":
-                const { PersonalRoleServers } = require('../../database/dbServices/server.api');
                 let personalRolesServerID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
                 // Database
                 if (personalRolesServerID) {

@@ -1,9 +1,10 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
+import api_user from "../../database/dbServices/user.api";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        const api_user = require('../../database/dbServices/user.api');
         switch (interaction.options.getSubcommand()) {
             case "birthday":
                 let day = interaction.options.getInteger("day");

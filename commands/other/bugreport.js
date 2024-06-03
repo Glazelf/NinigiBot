@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
         const modal = new Discord.ModalBuilder()
             .setCustomId('bugReportModal')

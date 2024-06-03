@@ -1,18 +1,19 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isOwner from "../../util/isOwner";
+import user_api from "../../database/dbServices/user.api";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
-        const user_api = require('../../database/dbServices/user.api');
+        ephemeral = true;
         let confirm = false;
         let confirmArg = interaction.options.getBoolean("confirm");
         if (confirmArg === true) confirm = confirmArg;
-        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
         const users = await user_api.getAllUsers();

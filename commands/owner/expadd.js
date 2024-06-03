@@ -1,15 +1,15 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isOwner from "../../util/isOwner";
+import shinxApi from "../../database/dbServices/shinx.api";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
+        ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        const shinxApi = require('../../database/dbServices/shinx.api');
-
-        let ephemeral = true;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 

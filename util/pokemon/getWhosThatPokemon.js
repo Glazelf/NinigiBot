@@ -1,11 +1,11 @@
 export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
     import Discord from "discord.js";
-    const Canvas = require('canvas');
+    import Canvas from "canvas";
     const { Dex } = require('pokemon-showdown');
     const imageExists = require('../imageExists');
     const getCleanPokemonID = require('./getCleanPokemonID');
     const getRandomObjectItem = require('../getRandomObjectItem');
-    const api_user = require('../../database/dbServices/user.api');
+    import api_user from "../../database/dbServices/user.api";
     let pokemonButtons = new Discord.ActionRowBuilder();
     let doesRenderExist = false;
     returnString = `# Who's That Pokémon?`;

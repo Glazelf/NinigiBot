@@ -1,13 +1,14 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import isAdmin from "../../util/isAdmin";
 import randomNumber from "../../util/randomNumber";
 import getMonster from "../../util/mh/getMonster";
 import getQuests from "../../util/mh/getQuests";
-import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json";
-import questsJSON from "../../submodules/monster-hunter-DB/quests.json";
+import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

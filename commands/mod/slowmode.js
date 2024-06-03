@@ -1,11 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
-
         ephemeral = false;
         let slowmodeSupportedChannelTypes = [
             Discord.ChannelType.GuildText,

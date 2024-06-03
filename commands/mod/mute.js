@@ -1,14 +1,15 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import getTime from "../../util/getTime";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import isAdmin from "../../util/isAdmin";
-        import getTime from "../../util/getTime";
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ModerateMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        let ephemeral = false;
+        ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);

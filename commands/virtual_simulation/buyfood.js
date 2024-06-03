@@ -1,8 +1,9 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
         let ephemeral = true;
         let res, returnString;
         let emotesAllowed = true;

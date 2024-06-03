@@ -1,11 +1,12 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+import { PersonalRoles, PersonalRoleServers } from "../../database/dbServices/server.api";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const { PersonalRoles, PersonalRoleServers } = require('../../database/dbServices/server.api')
-        const colorHexes = require('../../objects/colorHexes.json');
-        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
@@ -13,7 +14,7 @@ export default async (client, interaction, logger, ephemeral) => {
 
         let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
-        let ephemeral = true;
+        ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let colorArg = interaction.options.getString('color-hex');

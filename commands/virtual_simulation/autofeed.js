@@ -1,5 +1,8 @@
 import Discord from "discord.js";
-const shinxApi = require('../../database/dbServices/shinx.api');
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import shinxApi from "../../database/dbServices/shinx.api";
+
 const autofeed_modes = [
     {
         "name": "No auto mode",
@@ -15,10 +18,9 @@ const autofeed_modes = [
     }
 ];
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        let ephemeral = true;
+        ephemeral = true;
         let returnString;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;

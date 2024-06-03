@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import globalVars from '../objects/globalVars.json' with {type: "json"};
+import globalVars from '../objects/globalVars.json' with { type: "json" };
 import getTime from '../util/getTime';
 import stan from '../affairs/stan';
 import birthday from '../affairs/birthday';

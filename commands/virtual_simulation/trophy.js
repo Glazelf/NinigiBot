@@ -1,12 +1,13 @@
 import Discord from "discord.js";
-const Canvas = require('canvas');
-const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import Canvas from "canvas";
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
         const api_shinx = require('../../database/dbServices/shinx.api');
-        // const api_user = require('../../database/dbServices/user.api');
+        // import api_user from "../../database/dbServices/user.api";
         const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
         let embed, trophy_name, res;

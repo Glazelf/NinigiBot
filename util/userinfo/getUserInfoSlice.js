@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 const api_trophy = require('../../database/dbServices/trophy.api');
-const api_user = require('../../database/dbServices/user.api');
+import api_user from "../../database/dbServices/user.api";
 // Amount of userinfo pages
 const NUMBER_OF_PAGES = 2;
 

@@ -1,7 +1,8 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let returnString = `Here's the link(s) to the assets you requested:`;

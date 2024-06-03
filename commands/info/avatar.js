@@ -1,8 +1,9 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
         // Get avatars

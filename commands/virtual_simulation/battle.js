@@ -1,4 +1,7 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import Canvas from "canvas";
 
 // const { Users } = require('../../database/dbServices/server.api');
 // const ShinxBattle = require('../../util/shinx/shinxBattle');
@@ -11,17 +14,12 @@ const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
 const api_history = require('../../database/dbServices/history.api');
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const Canvas = require('canvas');
         const hp = require('../../util/battle/getHP');
-
         let author = interaction.user;
         let target = interaction.options.getUser("user");
-
         if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
-
         const trainers = [author, target];
         if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
         if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, interaction: interaction, content: `You cannot battle yourself!` });

@@ -1,7 +1,8 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         let input = interaction.options.getString("input");
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

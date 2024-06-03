@@ -1,12 +1,12 @@
 import Discord from "discord.js";
-const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
+import userApi from "../../database/dbServices/user.api";
+import shinxApi from "../../database/dbServices/shinx.api";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const userApi = require('../../database/dbServices/user.api');
-        const shinxApi = require('../../database/dbServices/shinx.api');
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;

@@ -1,13 +1,14 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import api_user from "../../database/dbServices/user.api";
+import isOwner from "../../util/isOwner";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        const api_user = require('../../database/dbServices/user.api');
         let currency = client.globalVars.currency;
 
         let transferTargetID = interaction.options.getString("user");

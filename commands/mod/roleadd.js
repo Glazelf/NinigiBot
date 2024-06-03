@@ -1,10 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import { EligibleRoles } from "../../database/dbServices/server.api";
+import isAdmin from "../../util/isAdmin";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const { EligibleRoles } = require('../../database/dbServices/server.api');
-        import isAdmin from "../../util/isAdmin";
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });

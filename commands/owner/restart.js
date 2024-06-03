@@ -1,14 +1,16 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isOwner from "../../util/isOwner";
+import getTime from "../../util/getTime";
+import runCommand from "../../util/runCommand";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
-        import getTime from "../../util/getTime";
-        const runCommand = require('../../util/runCommand');
+        ephemeral = false;
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
-        await interaction.deferReply({ ephemeral: false });
+        await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;

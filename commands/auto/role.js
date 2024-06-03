@@ -1,11 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import { EligibleRoles } from "../../database/dbServices/server.api";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isAdmin = require("../../util/isAdmin");
-        const { EligibleRoles } = require('../../database/dbServices/server.api');
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });

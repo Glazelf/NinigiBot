@@ -1,11 +1,12 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import fs from "fs";
 import axios from "axios";
 import getSplatfests from "../../util/splat/getSplatfests";
 import randomNumber from "../../util/randomNumber";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         // Game data
         let version = "latest"; // Use version number without periods or "latest"

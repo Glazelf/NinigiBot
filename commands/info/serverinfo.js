@@ -1,12 +1,12 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import languages from "../../objects/discord/languages.json" with { type: "json" };
+import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import isAdmin from "../../util/isAdmin";
-        let languages = require("../../objects/discord/languages.json");
-        let verifLevels = require("../../objects/discord/verificationLevels.json");
-
         let adminBool = isAdmin(client, interaction.member);
         let adminBot = isAdmin(client, interaction.guild.members.me);
 

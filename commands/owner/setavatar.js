@@ -1,13 +1,14 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import isOwner from "../../util/isOwner";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const isOwner = require('../../util/isOwner');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        let ephemeral = true;
+        ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let avatarArg = interaction.options.getAttachment("avatar");

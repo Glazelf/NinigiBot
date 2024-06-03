@@ -1,10 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import forever from "forever";
 import isOwner from "../../util/isOwner";
 import getTime from "../../util/getTime";
 
-export default async (client, interaction, logger) => {
+export default async (client, interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });

@@ -1,10 +1,10 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import api_user from "../../database/dbServices/user.api";
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const api_user = require('../../database/dbServices/user.api');
-
         ephemeral = false;
         const currentBalance = await api_user.getMoney(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");

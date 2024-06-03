@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import isAdmin from "../../util/isAdmin";
 import axios from "axios";
@@ -16,7 +17,7 @@ import imageExists from "../../util/imageExists";
 
 let currentGeneration = 9; // Set current generation
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
         let learnsetsObject = learnsets.Learnsets;
         let retroLearnsetsObject = retroLearnsets.Learnsets;

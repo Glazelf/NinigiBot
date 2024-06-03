@@ -1,11 +1,11 @@
 import Discord from "discord.js";
+import logger from "../../util/logger";
+import sendMessage from "../../util/sendMessage";
+import axios from "axios";
+import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
 
-export default async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import axios from "axios";
-        const { uniqueNamesGenerator, names } = require('unique-names-generator'); // Random name generator that can be seeded
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
