@@ -1,5 +1,5 @@
+import logger from "../util/logger";
 export default async (client, info) => {
-    const logger = require('../util/logger');
     try {
         logger(info, client);
     } catch (e) {

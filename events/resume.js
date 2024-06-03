@@ -1,6 +1,6 @@
 export default async (client) => {
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const getTime = require('../util/getTime');
 
         // Set bot status

@@ -1,8 +1,8 @@
 export default async ({ client, interaction, page, region }) => {
     try {
         const sendMessage = require('../sendMessage');
-        const Discord = require("discord.js");
-        const axios = require("axios");
+        import Discord from "discord.js";
+        import axios from "axios";
         let splat3Embed = new Discord.EmbedBuilder()
             .setTitle("Splatfests")
             .setColor(client.globalVars.embedColor)

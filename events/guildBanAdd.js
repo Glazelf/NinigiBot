@@ -1,7 +1,7 @@
+import Discord from "discord.js";
+import logger from "../util/logger";
 export default async (client, guildBan) => {
-    const logger = require('../util/logger');
     try {
-        const Discord = require("discord.js");
         const { LogChannels } = require('../database/dbServices/server.api');
 
         let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });

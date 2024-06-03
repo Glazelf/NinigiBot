@@ -1,7 +1,7 @@
 export default async (client, messageReaction) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         let starboardEmote = "⭐";
         const altboardChannelID = "1234922298255872092"; // Evil starboard
         const altboardEmoteID = "780198211913646130";

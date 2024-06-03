@@ -22,14 +22,13 @@ fs.readdir("./events/", (err, files) => {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
         // Load the event file itself
-        const event = await import(`./events/${file}`).default;
-        console.log(event)
+        let event = await import(`./events/${file}`);
+        event = Object.values(event)[0]; // Navigate import results
         // Get just the event name from the file name
         let eventName = file.split(".")[0];
         // Each event will be called with the client argument,
         // followed by its "normal" arguments, like message, member, etc.
         client.on(eventName, event.bind(null, client));
-        delete require.cache[require.resolve(`./events/${file}`)];
     });
 });
 client.commands = new Discord.Collection();

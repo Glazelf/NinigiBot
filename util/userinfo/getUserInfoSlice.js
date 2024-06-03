@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+import Discord from "discord.js";
 const api_trophy = require('../../database/dbServices/trophy.api');
 const api_user = require('../../database/dbServices/user.api');
 // Amount of userinfo pages
@@ -28,7 +28,7 @@ export default async (client, interaction, page, user) => {
     switch (page) {
         case 0:
             const parseDate = require('../../util/parseDate')
-            const isAdmin = require('../../util/isAdmin');
+            import isAdmin from "../../util/isAdmin";
             const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
             let adminBot = isAdmin(client, interaction.guild.members.me);
             let switchCode = user_db.swcode;

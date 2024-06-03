@@ -1,5 +1,5 @@
 export default async (gifTags = []) => {
-    const axios = require("axios");
+    import axios from "axios";
     const config = require("../config.json");
     let giphyAPI = "https://api.giphy.com/v1/gifs/random";
     const randomTag = gifTags[Math.floor(Math.random() * gifTags.length)];

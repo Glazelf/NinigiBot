@@ -1,10 +1,10 @@
+import Discord from "discord.js";
+import logger from '../util/logger';
+import getRandomGif from "../util/getRandomGif";
+import cron from "cron";
+import api_history from '../database/dbServices/history.api';
 export default async (client) => {
-    const logger = require('../util/logger');
     try {
-        const Discord = require("discord.js");
-        const api_history = require('../database/dbServices/history.api');
-        const getRandomGif = require("../util/getRandomGif");
-        const cron = require("cron");
         const timezone = 'utc';
         const time = '00 00 18 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];

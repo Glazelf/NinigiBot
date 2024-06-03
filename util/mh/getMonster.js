@@ -1,6 +1,6 @@
 export default async (client, interaction, monsterData, ephemeral) => {
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
         const getWikiURL = require('../getWikiURL');

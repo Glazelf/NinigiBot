@@ -1,7 +1,7 @@
 export default async (client, message, newMessage) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const isAdmin = require('../util/isAdmin');
 
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;

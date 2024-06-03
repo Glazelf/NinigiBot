@@ -1,10 +1,13 @@
-const Discord = require("discord.js");
+import Discord from "discord.js";
+import globalVars from '../objects/globalVars.json' with {type: "json"};
+import getTime from '../util/getTime';
+import stan from '../affairs/stan';
+import birthday from '../affairs/birthday';
+// import {bank} from '../database/bank';
+// import {Users} from '../database/dbServices/server.api';
 export default async (client, id) => {
     try {
-        const globalVars = require('../objects/globalVars.json');
-        const getTime = require('../util/getTime');
         let timestamp = await getTime(client);
-
         let presence = initPresence();
         // Set global variables
         client.globalVars = globalVars;
@@ -13,12 +16,8 @@ export default async (client, id) => {
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
         // Start affairs
-        const stan = require('../affairs/stan');
-        const birthday = require('../affairs/birthday');
         stan(client);
         birthday(client);
-        // const { bank } = require('../database/bank');
-        // const { Users } = require('../database/dbServices/server.api');
         // const storedBalances = await Users.findAll();
         // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
 

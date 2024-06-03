@@ -1,5 +1,5 @@
 export default async (client, oldMember, newMember) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
         // Was used for vc text channel functionality, is now unused
         return;

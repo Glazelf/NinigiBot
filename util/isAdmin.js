@@ -1,6 +1,6 @@
 export default (client, member) => {
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         if (!member || !member.guild || !member.permissions) return false;
         if (member.guild.ownerID == member.id) {
             return true

@@ -1,7 +1,7 @@
 export default async (client, guild) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
 
         let log = await client.channels.fetch(client.config.devChannelID);
         if (!log) return;

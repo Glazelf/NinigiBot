@@ -1,9 +1,9 @@
 const talkedRecently = new Set();
 export default async (client, message) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
         const sendMessage = require('../util/sendMessage');
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const api_user = require('../database/dbServices/user.api');
 
         if (!message || !message.author) return;

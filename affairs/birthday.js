@@ -1,15 +1,14 @@
+import Discord from "discord.js";
+import logger from '../util/logger';
+import getRandomGif from "../util/getRandomGif";
+import cron from "cron";
+import api_user from '../database/dbServices/user.api';
 export default async (client) => {
-    const logger = require('../util/logger');
-    // Import globals
     try {
-        const getRandomGif = require("../util/getRandomGif");
-        const cron = require("cron");
         const timezone = 'utc';
         const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
         const guildID = client.globalVars.ShinxServerID;
         const channelID = client.globalVars.eventChannelID;
-        const Discord = require("discord.js");
-        const api_user = require('../database/dbServices/user.api');
         const gifTags = ["birthday"];
         if (client.user.id != client.globalVars.NinigiID) return;
         // Create cron job

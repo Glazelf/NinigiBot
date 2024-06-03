@@ -1,6 +1,6 @@
+import Discord from "discord.js";
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
-        const Discord = require("discord.js");
         const { Dex } = require('pokemon-showdown');
         const imageExists = require('../imageExists');
         const isAdmin = require('../isAdmin');

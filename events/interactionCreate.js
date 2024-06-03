@@ -1,7 +1,7 @@
 export default async (client, interaction) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         let sendMessage = require('../util/sendMessage');
         let isAdmin = require('../util/isAdmin');
         const getPokemon = require('../util/pokemon/getPokemon');
@@ -10,8 +10,8 @@ export default async (client, interaction) => {
         const capitalizeString = require('../util/capitalizeString');
         const getWhosThatPokemon = require('../util/pokemon/getWhosThatPokemon');
         const { Dex } = require('pokemon-showdown');
-        const axios = require("axios");
-        const fs = require("fs");
+        import axios from "axios";
+        import fs from "fs";
         const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
         const { EligibleRoles } = require('../database/dbServices/server.api');

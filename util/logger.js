@@ -2,7 +2,7 @@ export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
     try {
         const util = require('util');
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const getTime = require('./getTime');
         const sendMessage = require('./sendMessage');
         let timestamp = await getTime(client);

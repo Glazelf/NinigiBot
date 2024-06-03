@@ -1,5 +1,5 @@
 import forever from 'forever';
-// const forevermonitor = require('forever-monitor');
+// import forevermonitor from 'forever-monitor';
 
 // let foreverConfig = {
 //     "root": "./forever/log"

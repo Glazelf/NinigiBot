@@ -1,8 +1,8 @@
 export default async (client, messages) => {
-    const logger = require('../util/logger');
+    import logger from "../util/logger";
     try {
         if (!messages) return;
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const { LogChannels } = require('../database/dbServices/server.api');
         // Find a good way to check executor for this sometime
         let messagesContent = "";

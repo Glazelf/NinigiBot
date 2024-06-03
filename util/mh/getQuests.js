@@ -1,7 +1,7 @@
 export default async ({ client, interaction, gameName, page }) => {
     try {
         const sendMessage = require('../sendMessage');
-        const Discord = require("discord.js");
+        import Discord from "discord.js";
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         // Add quests matching game title to an array
         let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());

@@ -1,5 +1,5 @@
 export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
-    const Discord = require("discord.js");
+    import Discord from "discord.js";
     const Canvas = require('canvas');
     const { Dex } = require('pokemon-showdown');
     const imageExists = require('../imageExists');

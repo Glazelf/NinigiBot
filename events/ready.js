@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
+import Discord from "discord.js";
+import getTime from '../util/getTime';
 export default async (client) => {
     try {
-        const getTime = require('../util/getTime');
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
