@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const axios = require("axios");
@@ -67,7 +67,7 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
             if (wordSynonyms.length > 0) wordDefinitionString += `Synonyms: ${wordSynonyms.join(', ')}\n`;
             if (wordAntonyms.length > 0) wordDefinitionString += `Antonyms: ${wordAntonyms.join(', ')}\n`;
             if (wordDefinitionString.length == 0) wordDefinitionString = "No example, synonyms or antonyms found.";
-            dictionaryEmbed.addFields([{ name: definition.definition, value: wordDefinitionString, inline: false }]);
+            dictionaryEmbed.addFields([{ name: wordDefinition, value: wordDefinitionString, inline: false }]);
         });
         let wordType = wordMeaning.partOfSpeech;
         let wordSourceUrls = wordStatus[0].sourceUrls;

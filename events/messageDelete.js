@@ -15,6 +15,13 @@ module.exports = async (client, message) => {
                 if (starboardMessage) starboardMessage.delete();
             };
         };
+        // Get log
+        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        if (!logChannel) return;
+        let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
+        // Log sysbot channel events in a seperate channel
+        if (client.globalVars.sysbotLogChannelID && client.globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == client.globalVars.sysbotLogChannelID);
+        if (!log) return;
         let executor = null;
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
@@ -31,11 +38,6 @@ module.exports = async (client, message) => {
             // console.log(e);
             executor = null;
         };
-        // Get log
-        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
-        if (!logChannel) return;
-        let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
-        if (!log) return;
         // Check message content
         let botMember = message.guild.members.me;
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {

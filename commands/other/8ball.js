@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         let input = interaction.options.getString("input");
@@ -7,7 +7,8 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-        return sendMessage({ client: client, interaction: interaction, content: `The 8ball says: "${randomAnswer}.".`, ephemeral: ephemeral });
+        let returnString = `Your question was:${Discord.codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
+        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
         // Log error

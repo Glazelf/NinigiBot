@@ -1,19 +1,19 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const isAdmin = require('../../util/isAdmin');
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 
-        let ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
 
         let returnString = "";
         let amount = interaction.options.getInteger("amount");
         // Get users
         let user = null;
-        let author = interaction.user;
         let userArg = interaction.options.getUser("user");
         if (userArg) user = userArg;
 
@@ -84,5 +84,9 @@ module.exports.config = {
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,
         description: "The user to delete messages from."
+    }, {
+        name: "ephemeral",
+        type: Discord.ApplicationCommandOptionType.Boolean,
+        description: "Whether the response should be ephemeral."
     }]
 };

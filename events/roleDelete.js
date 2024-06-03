@@ -10,7 +10,6 @@ module.exports = async (client, role) => {
         if (!log) return;
 
         let botMember = role.guild.members.me;
-
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
@@ -26,16 +25,21 @@ module.exports = async (client, role) => {
             };
             // Role color
             let embedColor = role.hexColor;
-            if (!embedColor || embedColor == "#000000") embedColor = client.globalVars.embedColor;
-
+            let roleColorText = role.hexColor;
+            if (!embedColor || embedColor == "#000000") {
+                embedColor = client.globalVars.embedColor;
+                roleColorText = null;
+            };
             let icon = role.guild.iconURL(client.globalVars.displayAvatarSettings);
 
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)
+                .setThumbnail(icon)
                 .setTitle(`Role Deleted ❌`)
                 .setDescription(role.name)
                 .setFooter({ text: role.id })
                 .setTimestamp();
+            if (roleColorText) deleteEmbed.addFields([{ name: 'Color:', value: role.hexColor, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [deleteEmbed] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {

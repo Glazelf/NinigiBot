@@ -77,7 +77,7 @@ module.exports = async (client, interaction) => {
                             const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
                                 .setCustomId(pkmQuizModalGuessId)
                                 .setLabel("Put in your guess!")
-                                .setPlaceholder("Pikachu")
+                                .setPlaceholder("Azelf-Mega-Y")
                                 .setStyle(Discord.TextInputStyle.Short)
                                 .setMaxLength(64)
                                 .setRequired(true);
@@ -123,9 +123,9 @@ module.exports = async (client, interaction) => {
                             // Monster Hunter quests
                             const getQuests = require('../util/mh/getQuests');
                             let mhQuestsDirection = customIdSplit[1];
-                            let mhQuestsGameName = interaction.customId.split("|");[2];
-                            let mhQuestsPage = interaction.customId.split("|");[3];
-                            let mhQuestsPagesTotal = interaction.customId.split("|");[4];
+                            let mhQuestsGameName = customIdSplit[2];
+                            let mhQuestsPage = customIdSplit[3];
+                            let mhQuestsPagesTotal = customIdSplit[4];
                             switch (mhQuestsDirection) {
                                 case "left":
                                     mhQuestsPage = parseInt(mhQuestsPage) - 1;
@@ -147,9 +147,9 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
                             const getSplatfests = require('../util/splat/getSplatfests');
-                            let splatfestDirection = interaction.customId.split("|");[1];
-                            let splatfestPage = interaction.customId.split("|");[2];
-                            let splatfestRegion = interaction.customId.split("|");[3];
+                            let splatfestDirection = customIdSplit[1];
+                            let splatfestPage = customIdSplit[2];
+                            let splatfestRegion = customIdSplit[3];
                             switch (splatfestDirection) {
                                 case "left":
                                     splatfestPage = parseInt(splatfestPage) + 1;

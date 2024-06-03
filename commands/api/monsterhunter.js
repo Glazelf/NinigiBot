@@ -1,15 +1,13 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const randomNumber = require('../../util/randomNumber');
-        const capitalizeString = require('../../util/capitalizeString');
         const isAdmin = require('../../util/isAdmin');
         const getMonster = require('../../util/mh/getMonster');
         const getQuests = require('../../util/mh/getQuests');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
         const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
-        const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
 
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

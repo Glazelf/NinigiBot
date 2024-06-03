@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const api_user = require('../../database/dbServices/user.api');
 
-        let ephemeral = false;
+        ephemeral = false;
         const currentBalance = await api_user.getMoney(interaction.user.id);
         let transferAmount = interaction.options.getInteger("amount");
         let transferTarget = interaction.options.getUser("user");

@@ -1,11 +1,10 @@
 const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral = true) => {
+exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const axios = require("axios");
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
-        const capitalizeString = require('../../util/capitalizeString');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -40,12 +39,12 @@ exports.run = async (client, interaction, logger, ephemeral = true) => {
                     .setTitle(`${character.name} - ${character.affiliation}`)
                     .setThumbnail(characterThumbnail)
                     .setImage(characterBanner)
-                    .setDescription(character.description)
                     .addFields([
                         { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
                         { name: "Vision:", value: character.vision, inline: true },
                         { name: "Weapon:", value: character.weapon, inline: true }
                     ]);
+                if (character.description) giEmbed.setDescription(character.description);
                 if (character.birthday) giEmbed.addFields([{ name: "Birthday:", value: characterBirthday, inline: true }]);
                 if (detailed) {
                     // All three of these functions can probably be combined better but whatever

@@ -3,9 +3,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
         const fs = require("fs");
-        const randomNumber = require('../../util/randomNumber');
         const capitalizeString = require('../../util/capitalizeString');
-        const isAdmin = require('../../util/isAdmin');
         const getWikiURL = require('../../util/getWikiURL');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

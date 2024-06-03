@@ -16,8 +16,8 @@ module.exports = async (exception, client, interaction = null) => {
             return sendMessage({ client: client, interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
         } else if (exceptionString.includes("Unknown interaction")) {
             return; // Expired interaction, can't reply to said interaction
-        } else if (exceptionString.includes("connect ETIMEDOUT") || exceptionString.includes("connect ECONNREFUSED")) {
-            return;
+        } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
+            return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
         } else if (exceptionString.includes("AxiosError")) {
             return console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
         } else if (!exceptionString.includes("Missing Permissions")) {
