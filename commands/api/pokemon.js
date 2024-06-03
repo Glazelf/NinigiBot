@@ -1,4 +1,3 @@
-let currentGeneration = 9; // Set current generation
 import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage";
 import isAdmin from "../../util/isAdmin";
@@ -14,6 +13,8 @@ import learnsets from "../../node_modules/pokemon-showdown/dist/data/learnsets.j
 import retroLearnsets from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves";
 import imageExists from "../../util/imageExists";
+
+let currentGeneration = 9; // Set current generation
 
 export default async (client, interaction, logger, ephemeral) => {
     try {
