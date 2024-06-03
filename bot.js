@@ -64,5 +64,4 @@ let botjsFunction = async function botjsFunction() {
         });
     };
 };
-let botjs = botjsFunction;
 botjsFunction();

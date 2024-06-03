@@ -10,7 +10,6 @@ export default async (client, oldRole, newRole) => {
         if (!log) return;
 
         let botMember = newRole.guild.members.me;
-
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
