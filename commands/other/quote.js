@@ -3,6 +3,7 @@ let lastQuote = null;
 exports.run = async (client, interaction, logger, ephemeral) => {
     try {
         const sendMessage = require('../../util/sendMessage');
+        const randomNumber = require('../../util/randomNumber');
         ephemeral = false;
 
         const now = Date.now();
@@ -11,10 +12,10 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         if (lastQuote) {
             const expirationTime = lastQuote + cooldownAmount;
             if (now < expirationTime) {
-                const timeLeft = (expirationTime - now) / 1000 / 60; // time left in min
-                return sendMessage({ client: client, interaction: interaction, content: `Please wait ${timeLeft.toFixed(1)} more minutes before trying to achieve even more wisdom.`});
-            }
-        }
+                const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
+                return sendMessage({ client: client, interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
+            };
+        };
 
         lastQuote = now;
         setTimeout(() => lastQuote = null, cooldownAmount);
@@ -124,7 +125,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             "https://discord.com/channels/549214833858576395/549217627365441566/730380749139607572",
             "https://discord.com/channels/549214833858576395/549217627365441566/775558626244558848",
         ];
-        const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+        const randomAnswer = answers[randomNumber(0, answers.length)];
         return sendMessage({ client: client, interaction: interaction, content: `${randomAnswer}`, ephemeral: ephemeral });
 
     } catch (e) {
