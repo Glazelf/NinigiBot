@@ -1,9 +1,10 @@
+import Discord from "discord.js";
+import logger from "../util/logger";
+import { LogChannels } from "../database/dbServices/server.api";
+
 export default async (client, messages) => {
-    import logger from "../util/logger";
     try {
         if (!messages) return;
-        import Discord from "discord.js";
-        const { LogChannels } = require('../database/dbServices/server.api');
         // Find a good way to check executor for this sometime
         let messagesContent = "";
         let guild = null;

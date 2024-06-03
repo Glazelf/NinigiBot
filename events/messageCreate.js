@@ -1,12 +1,12 @@
+import Discord from "discord.js";
+import logger from "../util/logger";
+// import sendMessage from "../util/sendMessage";
+import api_user from "../database/dbServices/user.api";
+
 const talkedRecently = new Set();
 
 export default async (client, message) => {
-    import logger from "../util/logger";
     try {
-        const sendMessage = require('../util/sendMessage');
-        import Discord from "discord.js";
-        const api_user = require('../database/dbServices/user.api');
-
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
 

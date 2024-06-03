@@ -1,15 +1,14 @@
-export default async (client, message, newMessage) => {
-    import logger from "../util/logger";
-    try {
-        import Discord from "discord.js";
-        const isAdmin = require('../util/isAdmin');
+import Discord from "discord.js";
+import logger from "../util/logger";
+import isAdmin from "../util/isAdmin";
+import { LogChannels } from "../database/dbServices/server.api";
 
+export default async (client, message, newMessage) => {
+    try {
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-        // Get log
-        const { LogChannels } = require('../database/dbServices/server.api');
         let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);

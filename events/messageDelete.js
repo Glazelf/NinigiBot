@@ -1,12 +1,10 @@
+import Discord from "discord.js";
+import logger from "../util/logger";
+import { LogChannels, StarboardMessages } from "../database/dbServices/server.api";
+
 export default async (client, message) => {
-    import logger from "../util/logger";
     try {
-        import Discord from "discord.js";
-
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
-
-        const { LogChannels, StarboardMessages } = require('../database/dbServices/server.api');
-
         let messageDB = await StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);

@@ -1,7 +1,9 @@
+import Discord from "discord.js";
+import logger from "../util/logger";
+import { StarboardChannels, StarboardMessages } from "../database/dbServices/server.api";
+
 export default async (client, messageReaction) => {
-    import logger from "../util/logger";
     try {
-        import Discord from "discord.js";
         let starboardEmote = "⭐";
         const altboardChannelID = "1234922298255872092"; // Evil starboard
         const altboardEmoteID = "780198211913646130";
@@ -14,14 +16,10 @@ export default async (client, messageReaction) => {
         // Try to fetch message
         let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
         if (!targetMessage) return;
-        // // Get channels, starboard messages and star requirements from database
-        const { StarboardChannels, StarboardMessages } = require('../database/dbServices/server.api');
-        // Check if reaction is nostar
-        const isNostar = messageReaction.emoji.name === altboardEmoteID;
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel;
         let starboard;
-        if (isNoStar) { // Find altboard channel
+        if (isNoStar == true) { // Find altboard channel
             starboardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
