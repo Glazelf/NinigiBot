@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
         import sendMessage from "../../util/sendMessage";

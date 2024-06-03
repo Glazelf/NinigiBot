@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage";
 import fs from "fs";
 import axios from "axios";
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
         const getSplatfests = require('../../util/splat/getSplatfests');

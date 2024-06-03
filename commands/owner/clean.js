@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+
 export default async (client, interaction, logger) => {
     try {
         import sendMessage from "../../util/sendMessage";

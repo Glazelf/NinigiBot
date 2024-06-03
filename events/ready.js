@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import getTime from '../util/getTime';
+
 export default async (client) => {
     try {
         // Set interactions

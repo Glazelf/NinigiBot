@@ -3,6 +3,7 @@ import logger from '../util/logger';
 import getRandomGif from "../util/getRandomGif";
 import cron from "cron";
 import api_history from '../database/dbServices/history.api';
+
 export default async (client) => {
     try {
         const timezone = 'utc';

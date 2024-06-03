@@ -1,11 +1,11 @@
 import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import fs from "fs";
+import capitalizeString from "../../util/capitalizeString";
+import getWikiURL from "../../util/getWikiURL";
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import fs from "fs";
-        const capitalizeString = require('../../util/capitalizeString');
-        const getWikiURL = require('../../util/getWikiURL');
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];

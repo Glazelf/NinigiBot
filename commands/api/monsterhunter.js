@@ -1,14 +1,14 @@
 import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import randomNumber from "../../util/randomNumber";
+import getMonster from "../../util/mh/getMonster";
+import getQuests from "../../util/mh/getQuests";
+import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json";
+import questsJSON from "../../submodules/monster-hunter-DB/quests.json";
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        const randomNumber = require('../../util/randomNumber');
-        import isAdmin from "../../util/isAdmin";
-        const getMonster = require('../../util/mh/getMonster');
-        const getQuests = require('../../util/mh/getQuests');
-        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
-
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;

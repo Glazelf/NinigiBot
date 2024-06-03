@@ -3,6 +3,7 @@ import sendMessage from "../../util/sendMessage";
 import forever from "forever";
 import isOwner from "../../util/isOwner";
 import getTime from "../../util/getTime";
+
 export default async (client, interaction, logger) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);

@@ -1,11 +1,11 @@
 import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import axios from "axios";
+import getWikiURL from "../../util/getWikiURL";
+import parseDate from "../../util/parseDate";
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
-        import sendMessage from "../../util/sendMessage";
-        import axios from "axios";
-        const getWikiURL = require('../../util/getWikiURL');
-        const parseDate = require('../../util/parseDate');
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let giAPI = `https://genshin.jmp.blue/`;

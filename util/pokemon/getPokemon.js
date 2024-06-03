@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
         const { Dex } = require('pokemon-showdown');

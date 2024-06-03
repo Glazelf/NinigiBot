@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage";
 import isOwner from "../../util/isOwner";
+
 export default async (client, interaction, logger) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);

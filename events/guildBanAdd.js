@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger";
+
 export default async (client, guildBan) => {
     try {
         const { LogChannels } = require('../database/dbServices/server.api');

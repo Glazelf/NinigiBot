@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage";
 import axios from "axios";
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
         let api = "https://api.dictionaryapi.dev/api/v2/";

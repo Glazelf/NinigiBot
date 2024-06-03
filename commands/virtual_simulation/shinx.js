@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 const Canvas = require('canvas');
+
 export default async (client, interaction, logger, ephemeral) => {
     try {
         import sendMessage from "../../util/sendMessage";

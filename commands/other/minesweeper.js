@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage";
+
 export default async (client, interaction, logger) => {
     try {
         const Minesweeper = require('discord.js-minesweeper');

@@ -10,6 +10,7 @@ const shinxApi = require('../../database/dbServices/shinx.api');
 const addLine = require('../../util/battle/addLine');
 const wait = require('../../util/battle/waitTurn');
 const api_history = require('../../database/dbServices/history.api');
+
 export default async (client, interaction, logger) => {
     try {
         import sendMessage from "../../util/sendMessage";

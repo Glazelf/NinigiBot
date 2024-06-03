@@ -1,6 +1,7 @@
 const TROPHIES_PER_PAGE = 10;
 import Discord from "discord.js";
 const api_trophy = require('../../database/dbServices/trophy.api');
+
 export default async (client, offset) => {
     const trophies_per_page = 10;
     let trophy_list = await api_trophy.getTrophieslice(offset, trophies_per_page);

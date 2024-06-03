@@ -1,4 +1,5 @@
 const talkedRecently = new Set();
+
 export default async (client, message) => {
     import logger from "../util/logger";
     try {
