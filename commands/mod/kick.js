@@ -1,9 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
-        const getTime = require('../../util/getTime');
+        import sendMessage from "../../util/sendMessage";
+        import isAdmin from "../../util/isAdmin";
+        import getTime from "../../util/getTime";
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.KickMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 

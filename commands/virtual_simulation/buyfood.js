@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         let ephemeral = true;
         let res, returnString;
         let emotesAllowed = true;

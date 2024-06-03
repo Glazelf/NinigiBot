@@ -1,9 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import fs from "fs";
+import axios from "axios";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const fs = require("fs");
-        const axios = require("axios");
         const getSplatfests = require('../../util/splat/getSplatfests');
         const randomNumber = require('../../util/randomNumber');
         // Game data

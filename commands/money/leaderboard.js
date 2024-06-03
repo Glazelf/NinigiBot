@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         const user_api = require('../../database/dbServices/user.api');
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

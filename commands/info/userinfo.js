@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         const getUserInfoSlice = require('../../util/userinfo/getUserInfoSlice');
         const user = interaction.options.getUser("user");
         const msg = await getUserInfoSlice(client, interaction, 0, user);

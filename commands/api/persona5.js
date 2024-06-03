@@ -1,8 +1,8 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const fs = require("fs");
+        import sendMessage from "../../util/sendMessage";
+        import fs from "fs";
         const capitalizeString = require('../../util/capitalizeString');
         const getWikiURL = require('../../util/getWikiURL');
 

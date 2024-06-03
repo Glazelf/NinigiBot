@@ -1,8 +1,8 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const axios = require("axios");
+        import sendMessage from "../../util/sendMessage";
+        import axios from "axios";
         const getWikiURL = require('../../util/getWikiURL');
         const parseDate = require('../../util/parseDate');
 

@@ -1,10 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import forever from "forever";
+import isOwner from "../../util/isOwner";
+import getTime from "../../util/getTime";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const forever = require('forever');
-        const isOwner = require('../../util/isOwner');
-        const getTime = require('../../util/getTime');
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
 

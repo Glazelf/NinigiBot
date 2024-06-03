@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+import Discord from "discord.js";
 const shinxApi = require('../../database/dbServices/shinx.api');
 const autofeed_modes = [
     {
@@ -15,9 +15,9 @@ const autofeed_modes = [
     }
 ];
 
-exports.run = async (client, interaction, logger) => {
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         let ephemeral = true;
         let returnString;
         let emotesAllowed = true;

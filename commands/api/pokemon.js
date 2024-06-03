@@ -1,8 +1,10 @@
 let currentGeneration = 9; // Set current generation
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+import isAdmin from "../../util/isAdmin";
+import axios from "axios";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
         const { Dex } = require('pokemon-showdown');
         const getPokemon = require('../../util/pokemon/getPokemon');
         const getWhosThatPokemon = require('../../util/pokemon/getWhosThatPokemon');
@@ -13,8 +15,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
         const retroLearnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
         const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
-        const isAdmin = require('../../util/isAdmin');
-        const axios = require("axios");
         const imageExists = require('../../util/imageExists');
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);

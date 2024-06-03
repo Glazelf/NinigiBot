@@ -1,8 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let returnString = `Here's the link(s) to the assets you requested:`;
         let noStickerString = `This only works for messages with stickers attached.`;

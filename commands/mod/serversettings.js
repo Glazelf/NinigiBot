@@ -1,9 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
-        const isAdmin = require('../../util/isAdmin');
+        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
         const { StarboardChannels } = require('../../database/dbServices/server.api');
         const { StarboardLimits } = require('../../database/dbServices/server.api');

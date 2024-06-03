@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+export default async (client, interaction, logger) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
         const api_user = require('../../database/dbServices/user.api');
         switch (interaction.options.getSubcommand()) {
             case "birthday":

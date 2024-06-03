@@ -1,8 +1,8 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
+        import sendMessage from "../../util/sendMessage";
+        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
 
         ephemeral = false;

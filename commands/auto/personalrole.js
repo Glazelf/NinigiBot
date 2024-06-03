@@ -1,10 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         const { PersonalRoles, PersonalRoleServers } = require('../../database/dbServices/server.api')
         const colorHexes = require('../../objects/colorHexes.json');
-        const isAdmin = require('../../util/isAdmin');
+        import isAdmin from "../../util/isAdmin";
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
         let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });

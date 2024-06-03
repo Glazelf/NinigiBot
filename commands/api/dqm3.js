@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
         // const familiesJSON = require("../../submodules/DQM3-db/objects/families.json");
         const itemsJSON = require("../../submodules/DQM3-db/objects/items.json");
         // const largeDifferencesJSON = require("../../submodules/DQM3-db/objects/largeDifferences.json");

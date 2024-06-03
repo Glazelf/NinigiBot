@@ -1,9 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+export default async (client, interaction, logger, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
+        import sendMessage from "../../util/sendMessage";
         const randomNumber = require('../../util/randomNumber');
-        const isAdmin = require('../../util/isAdmin');
+        import isAdmin from "../../util/isAdmin";
         const getMonster = require('../../util/mh/getMonster');
         const getQuests = require('../../util/mh/getQuests');
         const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
