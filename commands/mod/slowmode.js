@@ -22,7 +22,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

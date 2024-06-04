@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 export default async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
@@ -42,8 +44,6 @@ export default async ({ client, interaction, content = null, embeds = null, file
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('./logger');
         logger(e, client);
     };
 };

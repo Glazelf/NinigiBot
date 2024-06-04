@@ -1,4 +1,4 @@
-import Discord from 'discord.js';
+import Discord from "discord.js";
 import fs from 'fs';
 import path from 'path';
 import config from './config.json' with { type: "json" };

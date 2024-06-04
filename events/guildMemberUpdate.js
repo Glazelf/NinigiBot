@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../util/logger";
 import { LogChannels } from "../database/dbServices/server.api";
+import { PersonalRoles, PersonalRoleServers } from "../database/dbServices/server.api";
 
 export default async (client, member, newMember) => {
     try {
@@ -64,7 +65,6 @@ export default async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            const { PersonalRoles, PersonalRoleServers } = require('../database/dbServices/server.api');
             let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(Discord.PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
@@ -150,7 +150,6 @@ export default async (client, member, newMember) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

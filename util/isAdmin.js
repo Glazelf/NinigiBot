@@ -1,6 +1,8 @@
+import Discord from "discord.js";
+import logger from "./logger";
+
 export default (client, member) => {
     try {
-        import Discord from "discord.js";
         if (!member || !member.guild || !member.permissions) return false;
         if (member.guild.ownerID == member.id) {
             return true
@@ -11,9 +13,6 @@ export default (client, member) => {
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('./logger');
-
         logger(e, client);
     };
 };

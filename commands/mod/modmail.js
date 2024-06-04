@@ -32,7 +32,6 @@ export default async (client, interaction) => {
         return interaction.showModal(modal);
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

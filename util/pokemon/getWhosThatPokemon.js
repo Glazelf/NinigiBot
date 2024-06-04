@@ -1,11 +1,12 @@
+import Discord from "discord.js";
+import Canvas from "canvas";
+import api_user from "../../database/dbServices/user.api";
+import { Dex } from "pokemon-showdown";
+import imageExists from "../imageExists";
+import getCleanPokemonID from "./getCleanPokemonID";
+import getRandomObjectItem from "../getRandomObjectItem";
+
 export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
-    import Discord from "discord.js";
-    import Canvas from "canvas";
-    const { Dex } = require('pokemon-showdown');
-    const imageExists = require('../imageExists');
-    const getCleanPokemonID = require('./getCleanPokemonID');
-    const getRandomObjectItem = require('../getRandomObjectItem');
-    import api_user from "../../database/dbServices/user.api";
     let pokemonButtons = new Discord.ActionRowBuilder();
     let doesRenderExist = false;
     returnString = `# Who's That Pokémon?`;

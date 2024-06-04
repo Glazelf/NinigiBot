@@ -24,7 +24,6 @@ export default async (client, interaction) => {
         return sendMessage({ client: client, interaction: interaction, embeds: avatarEmbed });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

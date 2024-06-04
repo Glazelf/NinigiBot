@@ -25,7 +25,6 @@ export default async (client, interaction) => {
         return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

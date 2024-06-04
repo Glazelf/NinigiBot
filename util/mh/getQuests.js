@@ -1,8 +1,10 @@
+import Discord from "discord.js";
+import logger from "../logger";
+import sendMessage from "../sendMessage";
+import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+
 export default async ({ client, interaction, gameName, page }) => {
     try {
-        const sendMessage = require('../sendMessage');
-        import Discord from "discord.js";
-        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         // Add quests matching game title to an array
         let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());
         if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
@@ -13,7 +15,6 @@ export default async ({ client, interaction, gameName, page }) => {
             .setTitle(`${gameName} Quests`);
         let questsButtons = new Discord.ActionRowBuilder();
         let questsEmbedFields = [];
-        let totalQuests = questsTotal.length;
         let pageLength = 25;
         let startIndex = pageLength * page - pageLength + 1; // 1, 26, 53, etc.
         let endIndex = startIndex + pageLength - 1; // 25, 50, 75, etc.
@@ -48,8 +49,6 @@ export default async ({ client, interaction, gameName, page }) => {
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
         logger(e, client);
     };
 };

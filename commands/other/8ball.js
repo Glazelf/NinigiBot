@@ -13,7 +13,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

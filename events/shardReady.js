@@ -26,7 +26,6 @@ export default async (client, id) => {
         return console.log(`Launched shard ${id}. (${timestamp})`);
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

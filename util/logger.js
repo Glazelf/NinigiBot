@@ -1,12 +1,12 @@
+import Discord from "discord.js";
+import getTime from "./getTime";
+import sendMessage from "./sendMessage";
+import util from "util";
+
 export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
     try {
-        const util = require('util');
-        import Discord from "discord.js";
-        const getTime = require('./getTime');
-        const sendMessage = require('./sendMessage');
         let timestamp = await getTime(client);
-
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (exceptionString.includes("Missing Access")) {

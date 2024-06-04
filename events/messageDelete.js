@@ -86,7 +86,6 @@ export default async (client, message) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, message);
     };
 };

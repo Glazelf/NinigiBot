@@ -1,3 +1,5 @@
+import getLevelFromExp from "./getLevelFromExp";
+
 const battleMoves = [
     // [chance, [name, attack, knockout]],
     [0, ['Judgement Storm', 2, 2]],
@@ -13,8 +15,6 @@ const battleMoves = [
     [90, ['Thunder shock', 0.24, 0.1]],
     [100, ['Tackle', 0.2, 0.1]]
 ];
-
-const getLevelFromExp = require('./getLevelFromExp');
 
 const getMove = (number) => {
     for (let i = 0; i < battleMoves.length; i++) if (number * 100 <= battleMoves[i][0]) return battleMoves[i][1];

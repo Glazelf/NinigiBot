@@ -15,7 +15,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: `Your random number between \`${lowNumber}\` and \`${highNumber}\` is \`${randomValue}\`.`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

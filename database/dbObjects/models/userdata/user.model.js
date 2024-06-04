@@ -1,7 +1,7 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
 export default () => {
-    const User = Sequelize.define('User', {
+    const User = Sequelize.define("User", {
         user_id: {
             type: Sequelize.DataTypes.STRING,
             primaryKey: true,
@@ -38,7 +38,7 @@ export default () => {
     };
     User.prototype.addMoney = function (money) {
         this.addMoneyGeneric(money);
-        this.save({ fields: ['money'] });
+        this.save({ fields: ["money"] });
     };
     User.prototype.getMoney = function () {
         return this.money;
@@ -49,17 +49,17 @@ export default () => {
     // Birthday
     User.prototype.setBirthday = function (birthday) {
         this.birthday = birthday;
-        this.save({ fields: ['birthday'] });
+        this.save({ fields: ["birthday"] });
     };
     // Switch Code
     User.prototype.setSwitchCode = function (swcode) {
         this.swcode = swcode;
-        this.save({ fields: ['swcode'] });
+        this.save({ fields: ["swcode"] });
     };
     // Ephemeral default
     User.prototype.setEphemeralDefault = function (ephemeral_default) {
         this.ephemeral_default = ephemeral_default;
-        this.save({ fields: ['ephemeral_default'] });
+        this.save({ fields: ["ephemeral_default"] });
     };
     // Food
     User.prototype.hasFood = function (food) {
@@ -70,18 +70,18 @@ export default () => {
     };
     User.prototype.addFood = function (food) {
         this.addFoodGeneric(food);
-        this.save({ fields: ['food'] });
+        this.save({ fields: ["food"] });
     };
     User.prototype.buyFood = function (food) {
         this.addMoneyGeneric(-food);
         this.addFoodGeneric(food);
-        this.save({ fields: ['money', 'food'] });
+        this.save({ fields: ["money", "food"] });
     };
     User.prototype.reduceFoodMoney = function (food, money) {
         if (food != 0 && money != 0) {
             this.addMoneyGeneric(-money);
             this.addFoodGeneric(-food);
-            this.save({ fields: ['money', 'food'] });
+            this.save({ fields: ["money", "food"] });
         } else if (food == 0) {
             this.addMoney(-money);
         } else {

@@ -44,7 +44,6 @@ export default async (client, interaction) => {
         return process.exit();
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

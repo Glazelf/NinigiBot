@@ -1,7 +1,6 @@
-import Sequelize from "sequelize";
-const { userdata } = require('../dbConnection/dbConnection');
-const { User } = require('../dbObjects/userdata.model')(userdata);
-const { Op } = require('sequelize');
+import userdata from "../dbConnection/dbConnection";
+import userdataModel from "../dbObjects/userdata.model";
+const { User } = userdataModel(userdata);
 
 export default {
     async getUser(id, attributes = null) {

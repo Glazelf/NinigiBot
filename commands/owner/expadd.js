@@ -20,7 +20,6 @@ export default async (client, interaction) => {
         returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

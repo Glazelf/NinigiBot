@@ -37,7 +37,6 @@ export default async (client, interaction, ephemeral) => {
         });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

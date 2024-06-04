@@ -1,9 +1,12 @@
 import Sequelize from "sequelize";
-const { userdata, serverdata } = require('../dbConnection/dbConnection');
-const { Op, fn, where, col } = require('sequelize');
-const { Shinx, EventTrophy, User } = require('../dbObjects/userdata.model')(userdata);
-const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata);
-const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
+import { userdata, serverdata } from "../dbConnection/dbConnection";
+import userdataModel from "../dbObjects/userdata.model";
+import serverdataModel from "../dbObjects/serverdata.model";
+import hasPassedLevel from "../../util/shinx/hasPassedLevel";
+import checkFormat from "../../util/string/checkFormat";
+
+const { Shinx, EventTrophy, User } = userdataModel(userdata);
+const { shinxQuotes } = serverdataModel(serverdata);
 
 export default {
     async getShinx(id, attributes = null) {
@@ -17,7 +20,6 @@ export default {
         await shinx.checkup()
         return shinx;
     },
-
     async getUser(id, attributes = null) {
         let user = await User.findByPk(param = id, options = {
             attributes: attributes
@@ -26,7 +28,7 @@ export default {
         return user;
     },
     async getRandomShinx(amount, exclude, guild) {
-        const results = await Shinx.findAll({ attributes: ['user_id', 'shiny', 'user_male'], where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
+        const results = await Shinx.findAll({ attributes: ['user_id', 'shiny', 'user_male'], where: { user_id: { [Sequelize.Op.ne]: exclude, [Sequelize.Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
         return results.map(res => res.dataValues);
     },
     async getShinxShininess(id) {
@@ -60,7 +62,7 @@ export default {
         let user = await this.getUser(user_id, ['user_id']);
         let trophy_id_t = trophy_id.toLowerCase();
         const trophy = await EventTrophy.findOne(
-            { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
+            { attributes: ['trophy_id'], where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('trophy_id')), trophy_id_t) }
         );
         return (await user.hasEventTrophy(trophy))
     },
@@ -68,7 +70,7 @@ export default {
         let user = await this.getUser(user_id, ['user_id']);
         let trophy_id_t = trophy_id.toLowerCase();
         const trophy = await EventTrophy.findOne(
-            { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
+            { attributes: ['trophy_id'], where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('trophy_id')), trophy_id_t) }
         );
         if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
     },
@@ -88,7 +90,6 @@ export default {
         let shinx = await this.getShinx(id, ['auto_feed'])
         return shinx.auto_feed;
     },
-
     async autoFeedShinx1(id) {
         let shinx = await this.getShinx(id, ['user_id', 'belly', 'experience']);
         let shinx_hunger = shinx.getHunger();
@@ -100,7 +101,6 @@ export default {
         await user.addFood(-feed_amount);
         await shinx.feedAndExp(feed_amount);
     },
-
     async autoFeedShinx2(id) {
         let shinx = await this.getShinx(id, ['user_id', 'belly', 'experience']);
         let shinx_hunger = shinx.getHunger();
@@ -126,9 +126,8 @@ export default {
         await user.reduceFoodMoney(used_food, used_money);
         await shinx.feedAndExp(used_food + used_money);
     },
-
     async nameShinx(id, nick) {
-        const check = require('../../util/string/checkFormat')(nick, 12);
+        const check = checkFormat(nick, 12);
         if (check == 'Ok') {
             let shinx = await this.getShinx(id, ['user_id', 'nickname']);
             shinx.changeNick(nick.trim());

@@ -30,7 +30,6 @@ Users: ${client.users.cache.size} (cached)
 Connected as ${client.user.username}. (${timestamp})`);
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

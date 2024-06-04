@@ -1,19 +1,23 @@
 import Discord from "discord.js";
+import logger from "../logger";
+import { Dex } from "pokemon-showdown";
+import imageExists from "../imageExists";
+import isAdmin from "../isAdmin";
+import convertMeterFeet from "../convertMeterFeet";
+import leadingZeros from "../leadingZeros";
+import getCleanPokemonID from "./getCleanPokemonID";
+import colorHexes from "../../objects/colorHexes.json";
+import typechartData from "../../node_modules/pokemon-showdown/dist/data/typechart.js";
+import learnsetsData from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
+import learnsetsRetroData from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
+import getTypeEmotes from "./getTypeEmotes";
+import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves";
 
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
-        const { Dex } = require('pokemon-showdown');
-        const imageExists = require('../imageExists');
-        const isAdmin = require('../isAdmin');
-        const convertMeterFeet = require('../convertMeterFeet');
-        const leadingZeros = require('../leadingZeros');
-        const getCleanPokemonID = require('./getCleanPokemonID.js');
-        const colorHexes = require('../../objects/colorHexes.json');
-        const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
-        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
-        if (generation <= 2) learnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
-        const getTypeEmotes = require('./getTypeEmotes');
-        const checkBaseSpeciesMoves = require('./checkBaseSpeciesMoves.js');
+        const typechart = typechartData.TypeChart;
+        let learnsets = learnsetsData.Learnsets;
+        if (generation <= 2) learnsets = learnsetsRetroData.Learnsets;
         // Common settings
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -473,9 +477,6 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
-
         logger(e, client);
     };
 };

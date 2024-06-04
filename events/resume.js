@@ -9,7 +9,6 @@ export default async (client) => {
         return;
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

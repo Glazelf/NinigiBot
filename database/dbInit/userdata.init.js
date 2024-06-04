@@ -1,9 +1,9 @@
-import Sequelize from "sequelize";
-const { userdata } = require('../dbConnection/dbConnection');
-const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata);
+import { userdata } from "../dbConnection/dbConnection";
+import userdataModel from "../dbObjects/userdata.model";
 
 export default async (reset_db) => {
     try {
+        const { User, Shinx, EventTrophy, ShopTrophy } = userdataModel(userdata);
         if (reset_db) {
             await userdata.drop();
             console.log(`Deleted Database: User Data ✔`);

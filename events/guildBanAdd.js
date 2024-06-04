@@ -58,7 +58,6 @@ export default async (client, guildBan) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

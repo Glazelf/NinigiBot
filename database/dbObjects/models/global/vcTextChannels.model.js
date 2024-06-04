@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
 export default () => {
     return Sequelize.define('vc_text_channels', {

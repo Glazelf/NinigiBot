@@ -11,7 +11,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: `You have ${Math.floor(dbBalance)}${client.globalVars.currency}.`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

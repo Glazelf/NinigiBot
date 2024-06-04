@@ -39,7 +39,6 @@ export default async (client, member) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

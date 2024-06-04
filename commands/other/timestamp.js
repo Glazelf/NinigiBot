@@ -60,7 +60,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

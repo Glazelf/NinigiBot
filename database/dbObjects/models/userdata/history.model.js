@@ -1,7 +1,7 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
 export default () => {
-    const History = Sequelize.define('History', {
+    const History = Sequelize.define("History", {
         user_id: {
             type: Sequelize.DataTypes.STRING,
             primaryKey: true,

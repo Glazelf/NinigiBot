@@ -1,8 +1,10 @@
+import Discord from "discord.js";
+import logger from "../logger";
+import sendMessage from "../sendMessage";
+import axios from "axios";
+
 export default async ({ client, interaction, page, region }) => {
     try {
-        const sendMessage = require('../sendMessage');
-        import Discord from "discord.js";
-        import axios from "axios";
         let splat3Embed = new Discord.EmbedBuilder()
             .setTitle("Splatfests")
             .setColor(client.globalVars.embedColor)
@@ -240,9 +242,6 @@ export default async ({ client, interaction, page, region }) => {
         return splatfestMessageObject;
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
-
         logger(e, client);
     };
 };

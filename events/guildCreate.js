@@ -28,7 +28,6 @@ export default async (client, guild) => {
         return log.send({ embeds: [guildEmbed] });
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

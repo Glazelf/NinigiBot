@@ -11,7 +11,6 @@ export default async (client, interaction) => {
         return sendMessage({ client: client, interaction: interaction, content: replyString });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

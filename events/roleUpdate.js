@@ -80,7 +80,6 @@ export default async (client, oldRole, newRole) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

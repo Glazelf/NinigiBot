@@ -120,7 +120,6 @@ export default async (client, oldChannel, newChannel) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

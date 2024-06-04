@@ -1,11 +1,13 @@
+import Discord from "discord.js";
+import logger from "../logger";
+import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
+import getWikiURL from "../getWikiURL";
+import imageExists from "../imageExists";
+import isAdmin from "../isAdmin";
+
 export default async (client, interaction, monsterData, ephemeral) => {
     try {
-        import Discord from "discord.js";
-        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
-        const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
-        const getWikiURL = require('../getWikiURL');
-        const imageExists = require('../imageExists');
-        const isAdmin = require('../isAdmin');
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
@@ -165,8 +167,6 @@ export default async (client, interaction, monsterData, ephemeral) => {
         return messageObject;
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
         logger(e, client);
     };
 };

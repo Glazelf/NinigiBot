@@ -108,7 +108,6 @@ export default async (client, interaction, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

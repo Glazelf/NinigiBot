@@ -1,12 +1,9 @@
-import Sequelize from "sequelize";
-const { serverdata } = require('../dbConnection/dbConnection');
 import { serverdata } from '../dbConnection/dbConnection';
-import { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } from '../dbObjects/serverdata.model';
-
-const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = require('../dbObjects/serverdata.model')(serverdata);
+import serverdataModel from '../dbObjects/serverdata.model';
 
 export default async (reset_db) => {
     try {
+        const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = serverdataModel(serverdata);
         if (reset_db) {
             await serverdata.drop();
             console.log(`Deleted Database: Server Data ✔`);
@@ -49,8 +46,7 @@ export default async (reset_db) => {
             shinxQuotes.upsert({ quote: "watched Code Geass and is crying about the ending. Again.", reaction: 7 }),
             shinxQuotes.upsert({ quote: "is singing something? ...? What was that? Dango?", reaction: 14 }),
             shinxQuotes.upsert({ quote: "lost on VGC so he\'s rage quitting like a real japanese player!", reaction: 12 }),
-            shinxQuotes.upsert({ quote: "got voted off even though they did a medbay scan!", reaction: 12 }),
-            // shinxQuotes.upsert({ quote: "", reaction: }),
+            shinxQuotes.upsert({ quote: "got voted off even though they did a medbay scan!", reaction: 12 })
         ];
         await Promise.all(quotes);
         console.log(`Initialized Database: Server ✔`);

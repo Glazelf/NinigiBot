@@ -54,7 +54,6 @@ export default async (client, message) => {
         return;
 
     } catch (e) {
-        // Log error
         logger(e, client, message);
     };
 };

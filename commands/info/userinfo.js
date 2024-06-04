@@ -9,7 +9,6 @@ export default async (client, interaction) => {
         const msg = await getUserInfoSlice(client, interaction, 0, user);
         return sendMessage(msg);
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

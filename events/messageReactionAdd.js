@@ -104,7 +104,6 @@ export default async (client, messageReaction) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };
