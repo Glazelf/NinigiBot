@@ -4,7 +4,7 @@ import sendMessage from "../../util/sendMessage.js";
 import fs from "fs";
 import axios from "axios";
 import getSplatfests from "../../util/splat/getSplatfests.js";
-import randomNumber from "../../util/randomNumber";
+import randomNumber from "../../util/randomNumber.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

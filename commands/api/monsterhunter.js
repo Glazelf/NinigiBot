@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/isAdmin.js";
-import randomNumber from "../../util/randomNumber";
+import randomNumber from "../../util/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };

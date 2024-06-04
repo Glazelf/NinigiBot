@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import randomNumber from "../../util/randomNumber";
+import randomNumber from "../../util/randomNumber.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

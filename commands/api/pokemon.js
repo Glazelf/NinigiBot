@@ -6,7 +6,7 @@ import axios from "axios";
 import { Dex } from "pokemon-showdown";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
-import getTypeEmotes from "../../util/pokemon/getTypeEmotes";
+import getTypeEmotes from "../../util/pokemon/getTypeEmotes.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/getRandomObjectItem.js";

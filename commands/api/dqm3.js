@@ -9,7 +9,7 @@ import monstersJSON from "../../submodules/DQM3-db/objects/monsters.json" with {
 import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
-import synthesis from "../../submodules/DQM3-db/util/synthesis" with { type: "json" };
+import synthesis from "../../submodules/DQM3-db/util/synthesis.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
