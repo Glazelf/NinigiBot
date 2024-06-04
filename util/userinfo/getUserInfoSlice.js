@@ -42,7 +42,7 @@ export default async (client, interaction, page, user) => {
             if (memberRoles && memberRoles.size !== 0) {
                 rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
                 rolesSorted = [...rolesSorted.values()].join(", ");
-                for (i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
+                for (let i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
                     rolesSorted = rolesSorted.split(", ");
                     await rolesSorted.pop();
                     rolesSorted = rolesSorted.join(", ");

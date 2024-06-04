@@ -20,7 +20,7 @@ export default async ({ client, interaction, gameName, page }) => {
         let endIndex = startIndex + pageLength - 1; // 25, 50, 75, etc.
         let totalPages = Math.ceil(questsTotal.length / pageLength);
 
-        for (i = startIndex; i <= endIndex; i++) {
+        for (let i = startIndex; i <= endIndex; i++) {
             if (!questsTotal[i]) break;
             let questTitle = `${questsTotal[i].name}\n${questsTotal[i].difficulty}⭐`;
             if (questsTotal[i].isKey) questTitle += ` 🔑`;
