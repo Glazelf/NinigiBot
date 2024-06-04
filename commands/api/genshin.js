@@ -112,7 +112,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "genshin",
     description: `Shows Genshin Impact data.`,
     options: [{

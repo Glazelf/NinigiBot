@@ -121,7 +121,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "persona5",
     description: "Shows Persona 5 data.",
     options: [{

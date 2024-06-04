@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import { Sequelize } from "sequelize";
 import config from "../../config.json" with { type: "json" };
 
 const userdata = new Sequelize('userdata', config.dbUsername, config.dbPassword, {

@@ -64,7 +64,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "timestamp",
     description: `Helps you construct timestamps.`,
     options: [{

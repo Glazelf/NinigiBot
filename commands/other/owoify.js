@@ -29,7 +29,7 @@ let severityChoices = [
     { name: "3. uvu", value: "uvu" }
 ];
 
-module.exports.config = {
+export const config = {
     name: "owoify",
     description: "OwOifies text.",
     options: [{

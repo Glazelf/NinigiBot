@@ -2,9 +2,9 @@ import Discord from "discord.js";
 import Canvas from "canvas";
 import api_user from "../../database/dbServices/user.api.js";
 import { Dex } from "pokemon-showdown";
-import imageExists from "../imageExists";
-import getCleanPokemonID from "./getCleanPokemonID";
-import getRandomObjectItem from "../getRandomObjectItem";
+import imageExists from "../imageExists.js";
+import getCleanPokemonID from "./getCleanPokemonID.js";
+import getRandomObjectItem from "../getRandomObjectItem.js";
 
 export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new Discord.ActionRowBuilder();

@@ -26,7 +26,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "slowmode",
     description: "Set slowmode in the current channel.",
     options: [{

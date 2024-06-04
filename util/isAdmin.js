@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import logger from "./logger";
+import logger from "./logger.js";
 
 export default (client, member) => {
     try {

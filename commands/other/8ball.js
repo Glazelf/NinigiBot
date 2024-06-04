@@ -17,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "8ball",
     description: "Ask the magic 8ball for knowledge.",
     options: [{

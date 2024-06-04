@@ -1,13 +1,11 @@
-import Sequelize from "sequelize";
-
-export default () => {
-    return Sequelize.define('log_channels', {
+export default (sequelize, DataTypes) => {
+    return sequelize.define('log_channels', {
         server_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         channel_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
     }, {

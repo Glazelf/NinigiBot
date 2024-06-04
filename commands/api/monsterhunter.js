@@ -96,7 +96,7 @@ let mh3uString = "Monster Hunter 3 Ultimate";
 let mhStories2String = "Monster Hunter Stories 2";
 let mhStoriesString = "Monster Hunter Stories";
 
-module.exports.config = {
+export const config = {
     name: "monsterhunter",
     description: "Shows Monster Hunter data.",
     options: [{

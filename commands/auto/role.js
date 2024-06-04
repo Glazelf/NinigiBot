@@ -112,7 +112,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "role",
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{

@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import checker from "../../util/string/checkFormat";
+import checker from "../../util/string/checkFormat.js";
 import api_trophy from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/isOwner.js";
 
@@ -82,7 +82,7 @@ export default async (client, interaction, ephemeral) => {
 };
 
 // Level and Shiny subcommands are missing on purpose
-module.exports.config = {
+export const config = {
     name: "manager",
     description: "Owner only, manage multiple aspects about Ninigi Virtual Simulation Core",
     serverID: ["759344085420605471"],

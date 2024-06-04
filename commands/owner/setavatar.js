@@ -31,7 +31,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "setavatar",
     aliases: [],
     description: "Set Ninigi's avatar.",

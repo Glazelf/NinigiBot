@@ -42,7 +42,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "eval",
     description: "Execute JS.",
     serverID: ["759344085420605471"],

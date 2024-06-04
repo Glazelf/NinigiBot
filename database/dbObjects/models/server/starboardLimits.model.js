@@ -1,13 +1,11 @@
-import Sequelize from "sequelize";
-
-export default () => {
-    return Sequelize.define('starboard_limits', {
+export default (sequelize, DataTypes) => {
+    return sequelize.define('starboard_limits', {
         server_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         star_limit: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false
         }
     }, {

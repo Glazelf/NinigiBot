@@ -1,9 +1,9 @@
-import Sequelize from "sequelize";
-import { userdata, serverdata } from "../dbConnection/dbConnection";
+import { Op, fn, where, col } from "sequelize";
+import { userdata, serverdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 import serverdataModel from "../dbObjects/serverdata.model.js";
-import hasPassedLevel from "../../util/shinx/hasPassedLevel";
-import checkFormat from "../../util/string/checkFormat";
+import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";
+import checkFormat from "../../util/string/checkFormat.js";
 
 const { Shinx, EventTrophy, User } = userdataModel(userdata);
 const { shinxQuotes } = serverdataModel(serverdata);
@@ -28,7 +28,7 @@ export default {
         return user;
     },
     async getRandomShinx(amount, exclude, guild) {
-        const results = await Shinx.findAll({ attributes: ['user_id', 'shiny', 'user_male'], where: { user_id: { [Sequelize.Op.ne]: exclude, [Sequelize.Op.in]: [...guild.members.cache.keys()] } }, order: Sequelize.fn('RANDOM'), limit: amount });
+        const results = await Shinx.findAll({ attributes: ['user_id', 'shiny', 'user_male'], where: { user_id: { [Op.ne]: exclude, [Op.in]: [...guild.members.cache.keys()] } }, order: fn('RANDOM'), limit: amount });
         return results.map(res => res.dataValues);
     },
     async getShinxShininess(id) {
@@ -36,7 +36,7 @@ export default {
         return shinx.shiny;
     },
     async getRandomReaction() {
-        const result = await shinxQuotes.findOne({ order: Sequelize.fn('RANDOM') });
+        const result = await shinxQuotes.findOne({ order: fn('RANDOM') });
         // console.log(result);
         return result;
     },
@@ -62,7 +62,7 @@ export default {
         let user = await this.getUser(user_id, ['user_id']);
         let trophy_id_t = trophy_id.toLowerCase();
         const trophy = await EventTrophy.findOne(
-            { attributes: ['trophy_id'], where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('trophy_id')), trophy_id_t) }
+            { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
         );
         return (await user.hasEventTrophy(trophy))
     },
@@ -70,7 +70,7 @@ export default {
         let user = await this.getUser(user_id, ['user_id']);
         let trophy_id_t = trophy_id.toLowerCase();
         const trophy = await EventTrophy.findOne(
-            { attributes: ['trophy_id'], where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('trophy_id')), trophy_id_t) }
+            { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
         );
         if (!(await user.hasEventTrophy(trophy))) await user.addEventTrophy(trophy);
     },

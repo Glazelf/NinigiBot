@@ -25,7 +25,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "StickerFile",
     type: Discord.ApplicationCommandType.Message
 };

@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import getTime from "./getTime";
+import getTime from "./getTime.js";
 import sendMessage from "./sendMessage.js";
 import util from "util";
 

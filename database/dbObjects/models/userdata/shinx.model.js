@@ -1,9 +1,8 @@
-import Sequelize from "sequelize";
-import getExpFromLevel from "../../../../util/shinx/getExpFromLevel";
-import parseMeetDate from "../../../../util/shinx/parseMeetDate";
-import getLevelFromExp from "../../../../util/shinx/getLevelFromExp";
+import getExpFromLevel from "../../../../util/shinx/getExpFromLevel.js";
+import parseMeetDate from "../../../../util/shinx/parseMeetDate.js";
+import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";
 
-export default () => {
+export default (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
     const parseMeetDateNow = () => {
         const now = new Date()
@@ -12,48 +11,48 @@ export default () => {
     const getDay = () => {
         return Math.floor(Date.now() / 86400000)
     };
-    const Shinx = Sequelize.define("Shinx", {
+    const Shinx = sequelize.define("Shinx", {
         user_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             primaryKey: true
         },
         nickname: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             defaultValue: "Shinx",
         },
         belly: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         experience: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1,
         },
         shiny: {
-            type: Sequelize.DataTypes.BOOLEAN,
+            type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
         },
         lastmeet: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: Math.floor(Date.now() / 86400000),
         },
         meetup: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             defaultValue: parseMeetDateNow()
         },
         user_male: {
-            type: Sequelize.DataTypes.BOOLEAN,
+            type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
         },
         auto_feed: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },

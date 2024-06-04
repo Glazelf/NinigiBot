@@ -19,7 +19,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "rng",
     description: "Generate a random number.",
     options: [{

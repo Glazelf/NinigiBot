@@ -1,21 +1,19 @@
-import Sequelize from "sequelize";
-
-export default () => {
-    const Trophy = Sequelize.define('EventTrophy', {
+export default (sequelize, DataTypes) => {
+    const Trophy = sequelize.define('EventTrophy', {
         trophy_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
         icon: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         description: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         origin: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         }
     }, {

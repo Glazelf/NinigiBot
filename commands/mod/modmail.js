@@ -36,7 +36,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "modmail",
     description: "Send a message to the mods."
 };

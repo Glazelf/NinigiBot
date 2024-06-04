@@ -85,7 +85,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "dictionary",
     description: `Get definition of a word.`,
     options: [{

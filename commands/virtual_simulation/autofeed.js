@@ -41,7 +41,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "autofeed",
     description: "Automatize the feeding process of Shinx",
     options: [{

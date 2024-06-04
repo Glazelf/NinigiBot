@@ -1,17 +1,17 @@
 import Discord from "discord.js";
-import logger from "../logger";
+import logger from "../logger.js";
 import { Dex } from "pokemon-showdown";
-import imageExists from "../imageExists";
+import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
-import convertMeterFeet from "../convertMeterFeet";
-import leadingZeros from "../leadingZeros";
-import getCleanPokemonID from "./getCleanPokemonID";
-import colorHexes from "../../objects/colorHexes.json";
+import convertMeterFeet from "../convertMeterFeet.js";
+import leadingZeros from "../leadingZeros.js";
+import getCleanPokemonID from "./getCleanPokemonID.js";
+import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import typechartData from "../../node_modules/pokemon-showdown/dist/data/typechart.js";
 import learnsetsData from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
 import learnsetsRetroData from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
-import getTypeEmotes from "./getTypeEmotes";
-import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves";
+import getTypeEmotes from "./getTypeEmotes.js";
+import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {

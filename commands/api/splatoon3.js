@@ -482,7 +482,7 @@ let splatoon3Regions = [
     { value: "JP", name: "Japan" },
     { value: "AP", name: "Asia/Pacific" }
 ];
-module.exports.config = {
+export const config = {
     name: "splatoon3",
     description: `Shows Splatoon 3 data.`,
     options: [{

@@ -72,7 +72,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "purge",
     description: "Bulk delete messages.",
     options: [{

@@ -1,4 +1,4 @@
-import logger from "./logger";
+import logger from "./logger.js";
 
 export default async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {

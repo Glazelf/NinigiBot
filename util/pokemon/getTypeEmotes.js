@@ -1,5 +1,5 @@
 import typeEmoteList from "../../objects/pokemon/typeEmotes.json" with { type: "json" };
-import capitalizeString from "../capitalizeString";
+import capitalizeString from "../capitalizeString.js";
 
 export default ({ type1, type2 = null, bold = false, emotes = true }) => {
     let type1Emote = typeEmoteList[type1];

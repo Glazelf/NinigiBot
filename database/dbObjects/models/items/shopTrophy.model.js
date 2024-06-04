@@ -1,21 +1,19 @@
-import Sequelize from "sequelize";
-
-export default () => {
-    const Trophy = Sequelize.define('shopTrophy', {
+export default (sequelize, DataTypes) => {
+    const Trophy = sequelize.define('shopTrophy', {
         trophy_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
         icon: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         description: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         price: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
 

@@ -181,7 +181,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "battle",
     description: "Battle someone's Shinx.",
     options: [{

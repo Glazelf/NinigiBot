@@ -1,5 +1,6 @@
-import userdata from "../dbConnection/dbConnection";
+import userdata from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
+
 const { User } = userdataModel(userdata);
 
 export default {

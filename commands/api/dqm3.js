@@ -220,7 +220,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "dqm3",
     description: `Shows Dragon Quest Monsters 3: The Dark Prince data.`,
     options: [{

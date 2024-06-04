@@ -3,7 +3,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/isOwner.js";
 import getTime from "../../util/getTime.js";
-import runCommand from "../../util/runCommand";
+import runCommand from "../../util/runCommand.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -57,7 +57,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "restart",
     description: "Restart bot and reload all files.",
     serverID: ["759344085420605471"],

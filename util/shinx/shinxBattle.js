@@ -1,4 +1,4 @@
-import getLevelFromExp from "./getLevelFromExp";
+import getLevelFromExp from "./getLevelFromExp.js";
 
 const battleMoves = [
     // [chance, [name, attack, knockout]],

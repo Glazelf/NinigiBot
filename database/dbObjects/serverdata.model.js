@@ -1,4 +1,3 @@
-import Sequelize from "sequelize";
 import shinxQuoteModel from "./models/server/shinxQuote.model.js";
 import eligibleRolesModel from "./models/server/eligibleRoles.model.js";
 import personalRolesModel from "./models/server/personalRoles.model.js";
@@ -9,16 +8,16 @@ import starboardChannelsModel from "./models/global/starboardChannels.model.js";
 import starboardMessagesModel from "./models/global/starboardMessages.model.js";
 import starboardLimitsModel from "./models/server/starboardLimits.model.js";
 
-export default () => {
-    const shinxQuotes = shinxQuoteModel();
-    const EligibleRoles = eligibleRolesModel();
-    const PersonalRoles = personalRolesModel();
-    const PersonalRoleServers = personalRoleServersModel();
-    const ModEnabledServers = modEnabledServersModel();
-    const LogChannels = logChannelsModel();
-    const StarboardChannels = starboardChannelsModel();
-    const StarboardMessages = starboardMessagesModel();
-    const StarboardLimits = starboardLimitsModel();
-    Sequelize.sync();
+export default (sequelize, DataTypes) => {
+    const shinxQuotes = shinxQuoteModel(sequelize, DataTypes);
+    const EligibleRoles = eligibleRolesModel(sequelize, DataTypes);
+    const PersonalRoles = personalRolesModel(sequelize, DataTypes);
+    const PersonalRoleServers = personalRoleServersModel(sequelize, DataTypes);
+    const ModEnabledServers = modEnabledServersModel(sequelize, DataTypes);
+    const LogChannels = logChannelsModel(sequelize, DataTypes);
+    const StarboardChannels = starboardChannelsModel(sequelize, DataTypes);
+    const StarboardMessages = starboardMessagesModel(sequelize, DataTypes);
+    const StarboardLimits = starboardLimitsModel(sequelize, DataTypes);
+    sequelize.sync();
     return { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, ModEnabledServers };
 };

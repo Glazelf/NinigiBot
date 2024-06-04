@@ -13,7 +13,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "Userinfo",
     type: Discord.ApplicationCommandType.User
 };

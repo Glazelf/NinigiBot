@@ -84,7 +84,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "botinfo",
     description: `Displays info about this bot.`,
     options: [{

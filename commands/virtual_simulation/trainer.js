@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import userApi from "../../database/dbServices/user.api.js";
 import shinxApi from "../../database/dbServices/shinx.api.js";
 
@@ -59,7 +59,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "trainer",
     description: "Check your trainer stats.",
     options: [{

@@ -36,7 +36,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "randomcat",
     description: "Get a random cat image.",
     options: [{

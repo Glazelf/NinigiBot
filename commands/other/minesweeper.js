@@ -70,7 +70,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "minesweeper",
     aliases: [],
     description: "Play minesweeper.",

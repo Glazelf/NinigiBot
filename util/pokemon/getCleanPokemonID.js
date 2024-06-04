@@ -1,4 +1,4 @@
-import leadingZeros from "../leadingZeros";
+import leadingZeros from "../leadingZeros.js";
 import correctionID from "../../objects/pokemon/correctionID.json" with { type: "json"};
 
 export default (pokemon) => {

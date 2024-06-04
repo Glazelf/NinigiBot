@@ -33,7 +33,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "Google",
     type: Discord.ApplicationCommandType.Message
 };

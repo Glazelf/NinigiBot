@@ -1,23 +1,21 @@
-import Sequelize from "sequelize";
-
-export default () => {
-    const History = Sequelize.define("History", {
+export default (sequelize, DataTypes) => {
+    const History = sequelize.define("History", {
         user_id: {
-            type: Sequelize.DataTypes.STRING,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
         stan_amount: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         combat_amount: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         win_amount: {
-            type: Sequelize.DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },

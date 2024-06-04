@@ -30,7 +30,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "removeinteraction",
     description: "Remove an interaction.",
     serverID: ["759344085420605471"],

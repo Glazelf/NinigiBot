@@ -42,7 +42,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "hexcolor",
     description: "Sends image from hexadecimal.",
     options: [{

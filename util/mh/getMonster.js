@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../logger";
+import logger from "../logger.js";
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
-import getWikiURL from "../getWikiURL";
-import imageExists from "../imageExists";
+import getWikiURL from "../getWikiURL.js";
+import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
 
 export default async (client, interaction, monsterData, ephemeral) => {

@@ -146,7 +146,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "serverinfo",
     description: "Displays info about the server.",
     options: [{

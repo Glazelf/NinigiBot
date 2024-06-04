@@ -4,11 +4,8 @@ import forever from 'forever';
 // let foreverConfig = {
 //     "root": "./forever/log"
 // };
-
 let foreverOptions = [{
     "uid": "Ninigi",
 }];
-
 let child = forever.start('./bot.js', foreverOptions);
-
 forever.startServer(child);

@@ -121,7 +121,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "serversettings",
     description: "Change server settings.",
     options: [{

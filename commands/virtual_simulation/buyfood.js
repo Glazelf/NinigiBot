@@ -20,7 +20,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "buyfood",
     description: "Buy food for Shinx",
     options: [{

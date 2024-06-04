@@ -73,7 +73,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "mute",
     description: "Times the target out.",
     options: [{

@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
-import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import api_shinx from "../../database/dbServices/shinx.api.js";
 // import api_user from "../../database/dbServices/user.api.js";
 import api_trophy from "../../database/dbServices/trophy.api.js";
@@ -138,7 +138,7 @@ export default async (client, interaction, ephemeral) => {
 };
 
 // Level and Shiny subcommands are missing on purpose
-module.exports.config = {
+export const config = {
     name: "trophy",
     description: "Handles all interactions with trophies",
     options: [{

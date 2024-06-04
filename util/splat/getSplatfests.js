@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import logger from "../logger";
+import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
 import axios from "axios";
 

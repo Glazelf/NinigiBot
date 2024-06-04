@@ -150,7 +150,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "personalrole",
     description: "Update your personal role.",
     options: [{

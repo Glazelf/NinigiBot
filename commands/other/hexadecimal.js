@@ -38,7 +38,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "hexadecimal",
     description: "Convert a number to hexadecimal.",
     options: [{

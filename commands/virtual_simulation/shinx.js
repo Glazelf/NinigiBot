@@ -3,11 +3,11 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
 import shinxApi from "../../database/dbServices/shinx.api.js";
-import applyText from "../../util/shinx/applyCanvasText";
-import getBelly from "../../util/shinx/getBelly";
-import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction";
-import getRandomVisitorPosition from "../../util/shinx/getRandomVisitorPosition";
-import playing_reaction from "../../util/shinx/getPlayingReaction";
+import applyText from "../../util/shinx/applyCanvasText.js";
+import getBelly from "../../util/shinx/getBelly.js";
+import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction.js";
+import getRandomVisitorPosition from "../../util/shinx/getRandomVisitorPosition.js";
+import playing_reaction from "../../util/shinx/getPlayingReaction.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -286,7 +286,7 @@ export default async (client, interaction, ephemeral) => {
 };
 
 // Level and Shiny subcommands are missing on purpose
-module.exports.config = {
+export const config = {
     name: "shinx",
     description: "Interact with your Shinx.",
     options: [{

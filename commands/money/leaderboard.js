@@ -47,7 +47,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "leaderboard",
     description: "Displays money leaderboard.",
     options: [{

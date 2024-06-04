@@ -25,7 +25,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "transfer",
     description: "Give money to another user.",
     options: [{

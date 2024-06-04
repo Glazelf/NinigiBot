@@ -1,5 +1,5 @@
-import { serverdata } from '../dbConnection/dbConnection';
-import serverdataModel from '../dbObjects/serverdata.model';
+import { serverdata } from "../dbConnection/dbConnection.js";
+import serverdataModel from "../dbObjects/serverdata.model.js";
 
 export default async (reset_db) => {
     try {

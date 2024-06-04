@@ -1,5 +1,5 @@
-import { serverdata } from "../../database/dbConnection/dbConnection";
-import serverdataModel from "../../database/dbObjects/serverdata.model"
+import { serverdata } from "../../database/dbConnection/dbConnection.js";
+import serverdataModel from "../../database/dbObjects/serverdata.model.js"
 
 const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, ModEnabledServers } = serverdataModel(serverdata);
 

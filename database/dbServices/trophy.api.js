@@ -1,6 +1,6 @@
 import { Op, fn, where, col } from "sequelize";
-import { userdata } from "../dbConnection/dbConnection";
-import userdataModel from "../dbObjects/userdata.model"
+import { userdata } from "../dbConnection/dbConnection.js";
+import userdataModel from "../dbObjects/userdata.model.js"
 
 const { User, ShopTrophy, EventTrophy } = userdataModel(userdata);
 const DAILY_TROPHIES = 5;

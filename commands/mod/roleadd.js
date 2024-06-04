@@ -46,7 +46,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "roleadd",
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{

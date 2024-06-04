@@ -76,7 +76,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "helldivers2",
     description: `Shows Helldivers 2 data.`,
     options: [{

@@ -48,7 +48,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "kill",
     description: "Shuts down bot.",
     serverID: ["759344085420605471"],

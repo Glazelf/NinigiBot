@@ -52,7 +52,7 @@ export default async (client, interaction) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "usersettings",
     description: "Change user settings.",
     options: [{

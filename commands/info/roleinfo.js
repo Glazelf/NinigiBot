@@ -47,7 +47,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "roleinfo",
     description: "Displays info about a role.",
     options: [{

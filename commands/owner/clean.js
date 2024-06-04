@@ -44,7 +44,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "clean",
     description: "Runs clean up routine of the database files",
     serverID: ["759344085420605471"],

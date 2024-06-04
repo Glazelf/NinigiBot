@@ -464,7 +464,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
     type: Discord.ApplicationCommandOptionType.Subcommand,
