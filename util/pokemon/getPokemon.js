@@ -95,7 +95,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         immunities = immunities.join(", ");
 
         let pokemonID = getCleanPokemonID(pokemon);
-        pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
+        let pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
         // Metrics
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;

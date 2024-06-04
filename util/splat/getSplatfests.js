@@ -127,7 +127,7 @@ export default async ({ client, interaction, page, region }) => {
             let splatfestResultsChallenge = "- Pro Battles: ";
             let splatfestResultsTricolor = "- Tricolor Battles: ";
             let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
-            splatfestTeamIndex = 0;
+            let splatfestTeamIndex = 0;
             let splatfestIdols = {
                 0: "Shiver",
                 1: "Frye",
@@ -226,7 +226,7 @@ export default async ({ client, interaction, page, region }) => {
         });
         let splatfestButtonAppend = `${page}|${region}`;
         // Probably cleaner to just add the fields to the embed in the loop above but this is fine for now. 
-        for (i = pageStartIndex; i <= pageEndIndex; i++) {
+        for (let i = pageStartIndex; i <= pageEndIndex; i++) {
             if (splat3EmbedFields[i]) splat3Embed.addFields([splat3EmbedFields[i]]);
         };
         // "Previous" page button
