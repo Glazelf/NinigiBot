@@ -3,8 +3,10 @@ import logger from "../util/logger.js";
 
 export default async (client, message) => {
     try {
-        const serverApi = await import("../database/dbServices/server.api.js");
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
+        console.log
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);

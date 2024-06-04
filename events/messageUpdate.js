@@ -8,7 +8,8 @@ export default async (client, message, newMessage) => {
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-        const serverApi = await import("../database/dbServices/server.api.js");
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);

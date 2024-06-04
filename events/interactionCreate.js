@@ -206,7 +206,8 @@ export default async (client, interaction) => {
                     case Discord.ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             try {
-                                const serverApi = await import("../database/dbServices/server.api.js");
+                                let serverApi = await import("../database/dbServices/server.api.js");
+                                serverApi = await serverApi.default();
                                 // Toggle selected role
                                 const rolesArray = [];
                                 for await (const value of interaction.values) {
@@ -269,7 +270,8 @@ export default async (client, interaction) => {
                     case "role":
                         switch (focusedOption.name) {
                             case "role":
-                                const serverApi = await import("../database/dbServices/server.api.js");
+                                let serverApi = await import("../database/dbServices/server.api.js");
+                                serverApi = await serverApi.default();
                                 let dbRoles = await serverApi.EligibleRoles.findAll();
                                 let roleIDs = [];
                                 let roleObject = [];

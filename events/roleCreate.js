@@ -3,7 +3,8 @@ import logger from "../util/logger.js";
 
 export default async (client, role) => {
     try {
-        const serverApi = await import("../database/dbServices/server.api.js");
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: role.guild.id } });
         if (!logChannel) return;
         let log = role.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
