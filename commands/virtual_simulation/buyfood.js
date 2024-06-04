@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
+import userApi from "../../database/dbServices/user.api";
 
 export default async (client, interaction) => {
     try {
@@ -10,7 +11,6 @@ export default async (client, interaction) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         foodArg = interaction.options.getInteger("food");
-        const userApi = require('../../database/dbServices/user.api');
         res = await userApi.buyFood(master.id, foodArg);
         returnString = res ? `Added ${foodArg}🍗 to your account!` : `Not enough money!`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
