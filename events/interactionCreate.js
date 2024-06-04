@@ -1,20 +1,20 @@
 // Global
 import Discord from "discord.js";
-import logger from "../util/logger";
+import logger from "../util/logger.js";
 import axios from "axios";
 import fs from "fs";
-import sendMessage from "../util/sendMessage";
+import sendMessage from "../util/sendMessage.js";
 // Pokémon
 import { Dex } from "pokemon-showdown";
-import getPokemon from "../util/pokemon/getPokemon";
-import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon";
+import getPokemon from "../util/pokemon/getPokemon.js";
+import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 // Monster Hunter
-import getMHMonster from "../util/mh/getMonster";
+import getMHMonster from "../util/mh/getMonster.js";
 import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
 import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
-import getMHQuests from "../util/mh/getQuests";
+import getMHQuests from "../util/mh/getQuests.js";
 // Splatoon
-import getSplatfests from "../util/splat/getSplatfests";
+import getSplatfests from "../util/splat/getSplatfests.js";
 // DQM3
 import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json"};
 import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json"};
@@ -24,14 +24,14 @@ import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type:
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
 // Database
-import api_user from "../database/dbServices/user.api";
-import api_trophy from "../database/dbServices/trophy.api";
-import { EligibleRoles } from "../database/dbServices/server.api";
+import api_user from "../database/dbServices/user.api.js";
+import api_trophy from "../database/dbServices/trophy.api.js";
+import { EligibleRoles } from "../database/dbServices/server.api.js";
 // Other util
-import isAdmin from "../util/isAdmin";
-import capitalizeString from "../util/capitalizeString";
-import getUserInfoSlice from "../util/userinfo/getUserInfoSlice";
-import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice";
+import isAdmin from "../util/isAdmin.js";
+import capitalizeString from "../util/capitalizeString.js";
+import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
+import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 
 export default async (client, interaction) => {
     try {

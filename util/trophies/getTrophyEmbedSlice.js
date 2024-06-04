@@ -1,6 +1,6 @@
 
 import Discord from "discord.js";
-import api_trophy from "../../database/dbServices/trophy.api";
+import api_trophy from "../../database/dbServices/trophy.api.js";
 
 export default async (client, offset) => {
     const trophies_per_page = 10;

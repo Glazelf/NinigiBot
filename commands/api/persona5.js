@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import fs from "fs";
-import capitalizeString from "../../util/capitalizeString";
-import getWikiURL from "../../util/getWikiURL";
+import capitalizeString from "../../util/capitalizeString.js";
+import getWikiURL from "../../util/getWikiURL.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

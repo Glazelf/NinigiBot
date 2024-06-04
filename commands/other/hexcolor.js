@@ -1,6 +1,6 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import { PassThrough } from "stream";
 import PImage from "pureimage";
 

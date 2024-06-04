@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import Canvas from "canvas";
-import api_user from "../../database/dbServices/user.api";
+import api_user from "../../database/dbServices/user.api.js";
 import { Dex } from "pokemon-showdown";
 import imageExists from "../imageExists";
 import getCleanPokemonID from "./getCleanPokemonID";

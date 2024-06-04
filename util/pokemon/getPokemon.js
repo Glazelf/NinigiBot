@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../logger";
 import { Dex } from "pokemon-showdown";
 import imageExists from "../imageExists";
-import isAdmin from "../isAdmin";
+import isAdmin from "../isAdmin.js";
 import convertMeterFeet from "../convertMeterFeet";
 import leadingZeros from "../leadingZeros";
 import getCleanPokemonID from "./getCleanPokemonID";

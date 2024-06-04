@@ -1,6 +1,6 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 // import familiesJSON from "../../submodules/DQM3-db/objects/families.json" with { type: "json" };
 import itemsJSON from "../../submodules/DQM3-db/objects/items.json" with { type: "json" };
 // import largeDifferencesJSON from "../../submodules/DQM3-db/objects/largeDifferences.json" with { type: "json" };

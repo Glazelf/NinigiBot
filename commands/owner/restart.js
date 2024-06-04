@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import isOwner from "../../util/isOwner";
-import getTime from "../../util/getTime";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import isOwner from "../../util/isOwner.js";
+import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand";
 
 export default async (client, interaction, ephemeral) => {

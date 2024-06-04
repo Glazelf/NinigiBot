@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import sendMessage from "../../util/sendMessage";
-import logger from "../../util/logger";
-import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice";
+import sendMessage from "../../util/sendMessage.js";
+import logger from "../../util/logger.js";
+import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
 
 export default async (client, interaction) => {
     try {

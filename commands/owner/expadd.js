@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import isOwner from "../../util/isOwner";
-import shinxApi from "../../database/dbServices/shinx.api";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import isOwner from "../../util/isOwner.js";
+import shinxApi from "../../database/dbServices/shinx.api.js";
 
 export default async (client, interaction) => {
     try {

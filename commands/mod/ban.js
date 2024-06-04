@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import isAdmin from "../../util/isAdmin";
-import getTime from "../../util/getTime";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import isAdmin from "../../util/isAdmin.js";
+import getTime from "../../util/getTime.js";
 
 export default async (client, interaction) => {
     try {

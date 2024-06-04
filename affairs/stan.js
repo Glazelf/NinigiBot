@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import logger from '../util/logger';
+import logger from '../util/logger.js';
 import getRandomGif from "../util/getRandomGif";
 import cron from "cron";
 import api_history from '../database/dbServices/history.api';

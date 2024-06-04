@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import logger from "../logger";
-import sendMessage from "../sendMessage";
+import sendMessage from "../sendMessage.js";
 import axios from "axios";
 
 export default async ({ client, interaction, page, region }) => {

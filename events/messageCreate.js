@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import logger from "../util/logger";
-// import sendMessage from "../util/sendMessage";
-import api_user from "../database/dbServices/user.api";
+import logger from "../util/logger.js";
+// import sendMessage from "../util/sendMessage.js";
+import api_user from "../database/dbServices/user.api.js";
 
 const talkedRecently = new Set();
 

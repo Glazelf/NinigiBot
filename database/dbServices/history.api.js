@@ -1,5 +1,5 @@
 import { userdata } from "../dbConnection/dbConnection";
-import userdataModel from "../dbObjects/userdata.model";
+import userdataModel from "../dbObjects/userdata.model.js";
 
 const { User, Shinx, ShopTrophy, EventTrophy, History } = userdataModel(userdata);
 const DAILY_TROPHIES = 5;

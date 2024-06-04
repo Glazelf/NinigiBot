@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import fs from "fs";
 import axios from "axios";
-import getSplatfests from "../../util/splat/getSplatfests";
+import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/randomNumber";
 
 export default async (client, interaction, ephemeral) => {

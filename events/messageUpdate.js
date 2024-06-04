@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import logger from "../util/logger";
-import isAdmin from "../util/isAdmin";
-import { LogChannels } from "../database/dbServices/server.api";
+import logger from "../util/logger.js";
+import isAdmin from "../util/isAdmin.js";
+import { LogChannels } from "../database/dbServices/server.api.js";
 
 export default async (client, message, newMessage) => {
     try {

@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import axios from "axios";
-import isOwner from "../../util/isOwner";
+import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import { userdata, serverdata } from "../dbConnection/dbConnection";
-import userdataModel from "../dbObjects/userdata.model";
-import serverdataModel from "../dbObjects/serverdata.model";
+import userdataModel from "../dbObjects/userdata.model.js";
+import serverdataModel from "../dbObjects/serverdata.model.js";
 import hasPassedLevel from "../../util/shinx/hasPassedLevel";
 import checkFormat from "../../util/string/checkFormat";
 

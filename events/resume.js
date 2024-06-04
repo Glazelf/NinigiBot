@@ -1,4 +1,4 @@
-import getTime from '../util/getTime';
+import getTime from '../util/getTime.js';
 
 export default async (client) => {
     try {

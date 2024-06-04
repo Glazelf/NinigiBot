@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import checker from "../../util/string/checkFormat";
-import api_trophy from "../../database/dbServices/trophy.api";
-import isOwner from "../../util/isOwner";
+import api_trophy from "../../database/dbServices/trophy.api.js";
+import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

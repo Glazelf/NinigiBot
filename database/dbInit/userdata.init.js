@@ -1,5 +1,5 @@
 import { userdata } from "../dbConnection/dbConnection";
-import userdataModel from "../dbObjects/userdata.model";
+import userdataModel from "../dbObjects/userdata.model.js";
 
 export default async (reset_db) => {
     try {

@@ -1,6 +1,6 @@
 import Discord from "discord.js";
-import logger from "../util/logger";
-import { LogChannels, PersonalRoles, PersonalRoleServers } from "../database/dbServices/server.api";
+import logger from "../util/logger.js";
+import { LogChannels, PersonalRoles, PersonalRoleServers } from "../database/dbServices/server.api.js";
 
 export default async (client, member) => {
     try {

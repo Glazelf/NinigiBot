@@ -1,19 +1,19 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import isAdmin from "../../util/isAdmin";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import isAdmin from "../../util/isAdmin.js";
 import axios from "axios";
 import { Dex } from "pokemon-showdown";
-import getPokemon from "../../util/pokemon/getPokemon";
-import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon";
+import getPokemon from "../../util/pokemon/getPokemon.js";
+import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
 import getTypeEmotes from "../../util/pokemon/getTypeEmotes";
-import capitalizeString from "../../util/capitalizeString";
-import leadingZeros from "../../util/leadingZeros";
-import getRandomObjectItem from "../../util/getRandomObjectItem";
+import capitalizeString from "../../util/capitalizeString.js";
+import leadingZeros from "../../util/leadingZeros.js";
+import getRandomObjectItem from "../../util/getRandomObjectItem.js";
 import learnsets from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
 import retroLearnsets from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
-import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves";
-import imageExists from "../../util/imageExists";
+import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
+import imageExists from "../../util/imageExists.js";
 
 let currentGeneration = 9; // Set current generation
 

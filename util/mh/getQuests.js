@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import logger from "../logger";
-import sendMessage from "../sendMessage";
+import sendMessage from "../sendMessage.js";
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ client, interaction, gameName, page }) => {

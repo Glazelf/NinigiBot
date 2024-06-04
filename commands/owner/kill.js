@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import forever from "forever";
-import isOwner from "../../util/isOwner";
-import getTime from "../../util/getTime";
+import isOwner from "../../util/isOwner.js";
+import getTime from "../../util/getTime.js";
 
 export default async (client, interaction) => {
     try {

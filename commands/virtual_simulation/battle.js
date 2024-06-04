@@ -1,13 +1,13 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
 import ShinxBattle from "../../util/shinx/shinxBattle";
-import shinxApi from "../../database/dbServices/shinx.api";
+import shinxApi from "../../database/dbServices/shinx.api.js";
 import addLine from "../../util/battle/addLine";
 import wait from "../../util/battle/waitTurn";
-import api_history from "../../database/dbServices/history.api";
-// import { Users } from "../../database/dbServices/server.api";
+import api_history from "../../database/dbServices/history.api.js";
+// import { Users } from "../../database/dbServices/server.api.js";
 import hp from "../../util/battle/getHP";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];

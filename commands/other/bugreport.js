@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
+import logger from "../../util/logger.js";
 
 export default async (client, interaction) => {
     try {

@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
-import shinxQuoteModel from "./models/server/shinxQuote.model";
-import eligibleRolesModel from "./models/server/eligibleRoles.model";
-import personalRolesModel from "./models/server/personalRoles.model";
-import personalRoleServersModel from "./models/global/personalRoleServers.model";
-import modEnabledServersModel from "./models/global/modEnabledServers.model";
-import logChannelsModel from "./models/global/logChannels.model";
-import starboardChannelsModel from "./models/global/starboardChannels.model";
-import starboardMessagesModel from "./models/global/starboardMessages.model";
-import starboardLimitsModel from "./models/server/starboardLimits.model";
+import shinxQuoteModel from "./models/server/shinxQuote.model.js";
+import eligibleRolesModel from "./models/server/eligibleRoles.model.js";
+import personalRolesModel from "./models/server/personalRoles.model.js";
+import personalRoleServersModel from "./models/global/personalRoleServers.model.js";
+import modEnabledServersModel from "./models/global/modEnabledServers.model.js";
+import logChannelsModel from "./models/global/logChannels.model.js";
+import starboardChannelsModel from "./models/global/starboardChannels.model.js";
+import starboardMessagesModel from "./models/global/starboardMessages.model.js";
+import starboardLimitsModel from "./models/server/starboardLimits.model.js";
 
 export default () => {
     const shinxQuotes = shinxQuoteModel();

@@ -1,7 +1,7 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import shinxApi from "../../database/dbServices/shinx.api";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import shinxApi from "../../database/dbServices/shinx.api.js";
 
 const autofeed_modes = [
     {

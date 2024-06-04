@@ -1,9 +1,9 @@
 import Sequelize from "sequelize";
-import shinxModel from "./models/userdata/shinx.model";
-import userModel from "./models/userdata/user.model";
-import historyModel from "./models/userdata/history.model";
-import eventTrophyModel from "./models/items/eventTrophy.model";
-import shopTrophyModel from "./models/items/shopTrophy.model";
+import shinxModel from "./models/userdata/shinx.model.js";
+import userModel from "./models/userdata/user.model.js";
+import historyModel from "./models/userdata/history.model.js";
+import eventTrophyModel from "./models/items/eventTrophy.model.js";
+import shopTrophyModel from "./models/items/shopTrophy.model.js";
 
 export default async () => {
     const Shinx = shinxModel();

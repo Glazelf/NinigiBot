@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import api_user from "../../database/dbServices/user.api";
-import isOwner from "../../util/isOwner";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import api_user from "../../database/dbServices/user.api.js";
+import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction) => {
     try {

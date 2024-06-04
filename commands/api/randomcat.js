@@ -1,6 +1,6 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import axios from "axios";
 import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
 

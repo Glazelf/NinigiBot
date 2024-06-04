@@ -1,8 +1,8 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import { EligibleRoles } from "../../database/dbServices/server.api";
-import isAdmin from "../../util/isAdmin";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import { EligibleRoles } from "../../database/dbServices/server.api.js";
+import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction) => {
     try {

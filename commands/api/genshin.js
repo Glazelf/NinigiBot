@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import axios from "axios";
-import getWikiURL from "../../util/getWikiURL";
-import parseDate from "../../util/parseDate";
+import getWikiURL from "../../util/getWikiURL.js";
+import parseDate from "../../util/parseDate.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

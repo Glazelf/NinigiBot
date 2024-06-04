@@ -1,10 +1,10 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
-import isAdmin from "../../util/isAdmin";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import isAdmin from "../../util/isAdmin.js";
 import randomNumber from "../../util/randomNumber";
-import getMonster from "../../util/mh/getMonster";
-import getQuests from "../../util/mh/getQuests";
+import getMonster from "../../util/mh/getMonster.js";
+import getQuests from "../../util/mh/getQuests.js";
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 

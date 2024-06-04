@@ -1,10 +1,10 @@
 import Discord from "discord.js";
-import globalVars from '../objects/globalVars.json' with { type: "json" };
-import getTime from '../util/getTime';
-import stan from '../affairs/stan';
-import birthday from '../affairs/birthday';
-// import {bank} from '../database/bank';
-// import {Users} from '../database/dbServices/server.api';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import getTime from "../util/getTime.js";
+import stan from "../affairs/stan.js";
+import birthday from "../affairs/birthday.js";
+// import {bank} from "../database/bank.js";
+// import {Users} from "../database/dbServices/server.api.js";
 
 export default async (client, id) => {
     try {

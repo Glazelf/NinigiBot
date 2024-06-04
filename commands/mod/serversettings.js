@@ -1,12 +1,12 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
-import isAdmin from "../../util/isAdmin";
-import { StarboardChannels } from "../../database/dbServices/server.api";
-import { StarboardLimits } from "../../database/dbServices/server.api";
-import { LogChannels } from "../../database/dbServices/server.api";
-import { PersonalRoleServers } from "../../database/dbServices/server.api";
+import isAdmin from "../../util/isAdmin.js";
+import { StarboardChannels } from "../../database/dbServices/server.api.js";
+import { StarboardLimits } from "../../database/dbServices/server.api.js";
+import { LogChannels } from "../../database/dbServices/server.api.js";
+import { PersonalRoleServers } from "../../database/dbServices/server.api.js";
 
 export default async (client, interaction) => {
     try {

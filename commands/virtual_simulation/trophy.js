@@ -1,12 +1,12 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
-import api_shinx from "../../database/dbServices/shinx.api";
-// import api_user from "../../database/dbServices/user.api";
-import api_trophy from "../../database/dbServices/trophy.api";
-import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice";
+import api_shinx from "../../database/dbServices/shinx.api.js";
+// import api_user from "../../database/dbServices/user.api.js";
+import api_trophy from "../../database/dbServices/trophy.api.js";
+import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

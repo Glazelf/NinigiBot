@@ -1,9 +1,9 @@
 import Discord from "discord.js";
-import logger from "../../util/logger";
-import sendMessage from "../../util/sendMessage";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
-import userApi from "../../database/dbServices/user.api";
-import shinxApi from "../../database/dbServices/shinx.api";
+import userApi from "../../database/dbServices/user.api.js";
+import shinxApi from "../../database/dbServices/shinx.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {

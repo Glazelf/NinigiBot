@@ -4,7 +4,7 @@ import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with
 import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
 import getWikiURL from "../getWikiURL";
 import imageExists from "../imageExists";
-import isAdmin from "../isAdmin";
+import isAdmin from "../isAdmin.js";
 
 export default async (client, interaction, monsterData, ephemeral) => {
     try {
