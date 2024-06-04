@@ -1,4 +1,6 @@
-export default (sequelize, DataTypes) => {
+import Sequelize from 'sequelize';
+
+export default () => {
     const MAX_RANGE = 10;
     const getExpFromLevel = require('../../../../util/shinx/getExpFromLevel');
     const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
@@ -10,48 +12,48 @@ export default (sequelize, DataTypes) => {
     const getDay = () => {
         return Math.floor(Date.now() / 86400000)
     };
-    const Shinx = sequelize.define('Shinx', {
+    const Shinx = Sequelize.define('Shinx', {
         user_id: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             primaryKey: true
         },
         nickname: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false,
             defaultValue: 'Shinx',
         },
         belly: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         experience: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1,
         },
         shiny: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
         },
         lastmeet: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: Math.floor(Date.now() / 86400000),
         },
         meetup: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false,
             defaultValue: parseMeetDateNow()
         },
         user_male: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
         },
         auto_feed: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },

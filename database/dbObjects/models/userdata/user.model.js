@@ -1,29 +1,31 @@
-export default (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
+import Sequelize from 'sequelize';
+
+export default () => {
+    const User = Sequelize.define('User', {
         user_id: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             primaryKey: true,
         },
         money: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         swcode: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: true,
         },
         birthday: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: true,
         },
         ephemeral_default: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true
         },
         food: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },

@@ -1,4 +1,6 @@
-export default (sequelize, DataTypes) => {
+import Sequelize from "sequelize";
+
+export default () => {
     const shinxQuotes = require('./models/server/shinxQuote.model')();
     const EligibleRoles = require('./models/server/eligibleRoles.model')();
     const PersonalRoles = require('./models/server/personalRoles.model')();
@@ -8,6 +10,6 @@ export default (sequelize, DataTypes) => {
     const StarboardChannels = require('./models/global/starboardChannels.model')();
     const StarboardMessages = require('./models/global/starboardMessages.model')();
     const StarboardLimits = require('./models/server/starboardLimits.model')();
-    sequelize.sync();
+    Sequelize.sync();
     return { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, ModEnabledServers };
 };

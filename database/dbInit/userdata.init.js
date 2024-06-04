@@ -1,6 +1,6 @@
 import Sequelize from "sequelize";
 const { userdata } = require('../dbConnection/dbConnection');
-const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata);
 
 export default async (reset_db) => {
     try {
