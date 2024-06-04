@@ -1,4 +1,3 @@
-import Discord from "discord.js";
 import getTime from '../util/getTime.js';
 
 export default async (client) => {

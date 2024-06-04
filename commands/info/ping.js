@@ -1,4 +1,3 @@
-import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
