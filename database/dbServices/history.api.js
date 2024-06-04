@@ -20,21 +20,21 @@ export async function getHistory(id, attributes = null) {
         attributes: attributes
     });
     if (!history) {
-        await this.getUser(id);
+        await getUser(id);
         history = await History.create({ user_id: id });
     };
     return history;
 };
 
 export async function incrementStanAmount(id) {
-    let history = await this.getHistory(id, ['user_id']);
+    let history = await getHistory(id, ['user_id']);
     await history.increment('stan_amount');
 };
 
 export async function incrementCombatAmount(id, won = false) {
     let attributes = ['combat_amount'];
     if (won) attributes = attributes.concat(['win_amount']);
-    history = await this.getHistory(id, ['user_id']);
+    history = await getHistory(id, ['user_id']);
     await history.increment(attributes);
 };
 export async function checkEvent(Model, trophy_id, attribute) {
@@ -58,11 +58,11 @@ export async function checkEvent(Model, trophy_id, attribute) {
 
 export async function checkEvents() {
     const events = [
-        this.checkEvent(User, 'Capitalism Addict', 'money'),
-        this.checkEvent(Shinx, 'Unbreakable Bond', 'experience'),
-        this.checkEvent(History, 'Fighter Trophy', 'combat_amount'),
-        this.checkEvent(History, 'Frontier Brain Trophy', 'win_amount'),
-        this.checkEvent(History, 'Stanned Being', 'stan_amount'),
+        checkEvent(User, 'Capitalism Addict', 'money'),
+        checkEvent(Shinx, 'Unbreakable Bond', 'experience'),
+        checkEvent(History, 'Fighter Trophy', 'combat_amount'),
+        checkEvent(History, 'Frontier Brain Trophy', 'win_amount'),
+        checkEvent(History, 'Stanned Being', 'stan_amount'),
     ]
     await Promise.all(events);
 };

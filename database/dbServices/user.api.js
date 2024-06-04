@@ -34,12 +34,12 @@ export async function bulkDeleteUsers(id_arr) {
 
 // Money
 export async function addMoney(id, money) {
-    let user = await this.getUser(id, ['user_id', 'money']);
+    let user = await getUser(id, ['user_id', 'money']);
     await user.addMoney(money);
 };
 
 export async function getMoney(id) {
-    let user = await this.getUser(id, ['money']);
+    let user = await getUser(id, ['money']);
     return user.money;
 };
 
@@ -56,37 +56,37 @@ export async function getUsersRankedByMoney() {
 };
 // Birthday
 export async function getBirthday(id) {
-    let user = await this.getUser(id, ['birthday']);
+    let user = await getUser(id, ['birthday']);
     return user.birthday;
 };
 
 export async function setBirthday(id, birthday) {
-    let user = await this.getUser(id, ['user_id', 'birthday']);
+    let user = await getUser(id, ['user_id', 'birthday']);
     user.setBirthday(birthday);
 };
 // Switch Code
 export async function getSwitchCode(id) {
-    let user = await this.getUser(id, ['swcode']);
+    let user = await getUser(id, ['swcode']);
     return user.swcode;
 };
 
 export async function setSwitchCode(id, swcode) {
-    let user = await this.getUser(id, ['user_id', 'swcode']);
+    let user = await getUser(id, ['user_id', 'swcode']);
     user.setSwitchCode(swcode);
 };
 // Ephemeral default
 export async function getEphemeralDefault(id) {
-    let user = await this.getUser(id, ['ephemeral_default']);
+    let user = await getUser(id, ['ephemeral_default']);
     return user.ephemeral_default;
 };
 
 export async function setEphemeralDefault(id, ephemeral_default) {
-    let user = await this.getUser(id, ['user_id', 'ephemeral_default']);
+    let user = await getUser(id, ['user_id', 'ephemeral_default']);
     user.setEphemeralDefault(ephemeral_default);
 };
 // Buying food
 export async function buyFood(id, amount) {
-    let user = await this.getUser(id, ['user_id', 'food', 'money']);
+    let user = await getUser(id, ['user_id', 'food', 'money']);
 
     let res = await user.hasMoney(amount);
     if (res) {

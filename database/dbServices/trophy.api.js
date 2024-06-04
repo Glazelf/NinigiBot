@@ -15,7 +15,7 @@ export async function getUser(id, attributes = null) {
 };
 
 export async function addMoney(id, money) {
-    let user = await this.getUser(id, ['user_id', 'money']);
+    let user = await getUser(id, ['user_id', 'money']);
     await user.addMoney(money);
 };
 
@@ -72,7 +72,7 @@ export async function deleteShopTrophy(trophy_id) {
         where: where(fn('lower', col('trophy_id')), trophy_id_t)
     });
     affected_users.forEach(async user_id => {
-        await this.addMoney(user_id, trophy.price);
+        await addMoney(user_id, trophy.price);
     });
     return true;
 };
@@ -136,21 +136,21 @@ export async function checkTrophyExistance(name, only_shop = false) {
 };
 
 export async function getBuyableShopTrophies(user_id) {
-    let user = await this.getUser(user_id);
+    let user = await getUser(user_id);
     const user_trophies = await user.getShopTrophies();
     const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
 
-    let today_trophies = await this.getTodayShopTrophiesToBuy(user.money);
+    let today_trophies = await getTodayShopTrophiesToBuy(user.money);
     today_trophies = today_trophies.filter(trophy => !(trophy in user_trophies_list));
     return today_trophies;
 };
 
 export async function getFullBuyableShopTrophies(user_id) {
-    let user = await this.getUser(user_id);
+    let user = await getUser(user_id);
     const user_trophies = await user.getShopTrophies();
     const user_trophies_list = user_trophies.map(trophy => trophy.trophy_id);
 
-    let today_trophies = await this.getTodayShopTrophies();
+    let today_trophies = await getTodayShopTrophies();
     today_trophies.forEach(trophy => {
         // can't buy, can buy, bought
         if (user_trophies_list.includes(trophy.trophy_id)) {
@@ -164,10 +164,10 @@ export async function getFullBuyableShopTrophies(user_id) {
 
 export async function buyShopTrophy(user_id, trophy_id) {
     const trophy_id_t = trophy_id.toLowerCase()
-    const trophies = await this.getTodayShopTrophies();
+    const trophies = await getTodayShopTrophies();
     let trophy = trophies.find(elem => elem.trophy_id.toLowerCase() == trophy_id_t);
     if (!trophy) return 'NoTrophy';
-    let user = await this.getUser(user_id, ['user_id', 'money']);
+    let user = await getUser(user_id, ['user_id', 'money']);
     if (await user.hasShopTrophy(trophy)) return 'HasTrophy';
     if (user.money < trophy.price) return 'NoMoney';
 
@@ -178,7 +178,7 @@ export async function buyShopTrophy(user_id, trophy_id) {
 
 export async function addEventTrophy(user_id, trophy_id) {
 
-    let user = await this.getUser(user_id, ['user_id']);
+    let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
@@ -188,7 +188,7 @@ export async function addEventTrophy(user_id, trophy_id) {
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
-    let user = await this.getUser(user_id, ['user_id']);
+    let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
@@ -198,7 +198,7 @@ export async function hasEventTrophy(user_id, trophy_id) {
 };
 
 export async function addEventTrophyUnchecked(user_id, trophy_id) {
-    let user = await this.getUser(user_id, ['user_id']);
+    let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }

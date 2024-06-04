@@ -13,7 +13,7 @@ export async function getShinx(id, attributes = null) {
         attributes: attributes
     });
     if (!shinx) {
-        await this.getUser(id);
+        await getUser(id);
         shinx = await Shinx.create({ user_id: id });
     };
     await shinx.checkup()
@@ -34,7 +34,7 @@ export async function getRandomShinx(amount, exclude, guild) {
 };
 
 export async function getShinxShininess(id) {
-    let shinx = await this.getShinx(id, ['shiny'])
+    let shinx = await getShinx(id, ['shiny'])
     return shinx.shiny;
 };
 
@@ -45,28 +45,28 @@ export async function getRandomReaction() {
 };
 
 export async function switchShininessAndGet(id) {
-    let shinx = await this.getShinx(id, ['user_id', 'shiny']);
+    let shinx = await getShinx(id, ['user_id', 'shiny']);
     return shinx.switchShininessAndGet();
 };
 
 export async function changeAutoFeed(id, mode) {
-    let shinx = await this.getShinx(id, ['user_id', 'auto_feed']);
+    let shinx = await getShinx(id, ['user_id', 'auto_feed']);
     return shinx.setAutoFeed(mode);
 };
 
 export async function addExperience(id, experience) {
-    let shinx = await this.getShinx(id, ['user_id', 'experience']);
+    let shinx = await getShinx(id, ['user_id', 'experience']);
     const res = await shinx.addExperienceAndLevelUp(experience);
     if (res.pre != res.post) {
-        if (hasPassedLevel(res.pre, res.post, 5)) await this.addEventTrophy(id, 'Bronze Trophy');
-        if (hasPassedLevel(res.pre, res.post, 15)) await this.addEventTrophy(id, 'Silver Trophy');
-        if (hasPassedLevel(res.pre, res.post, 30)) await this.addEventTrophy(id, 'Gold Trophy');
-        if (hasPassedLevel(res.pre, res.post, 50)) await this.addEventTrophy(id, 'Shiny Charm');
+        if (hasPassedLevel(res.pre, res.post, 5)) await addEventTrophy(id, 'Bronze Trophy');
+        if (hasPassedLevel(res.pre, res.post, 15)) await addEventTrophy(id, 'Silver Trophy');
+        if (hasPassedLevel(res.pre, res.post, 30)) await addEventTrophy(id, 'Gold Trophy');
+        if (hasPassedLevel(res.pre, res.post, 50)) await addEventTrophy(id, 'Shiny Charm');
     };
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
-    let user = await this.getUser(user_id, ['user_id']);
+    let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
@@ -75,7 +75,7 @@ export async function hasEventTrophy(user_id, trophy_id) {
 };
 
 export async function addEventTrophy(user_id, trophy_id) {
-    let user = await this.getUser(user_id, ['user_id']);
+    let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
@@ -84,10 +84,10 @@ export async function addEventTrophy(user_id, trophy_id) {
 };
 
 export async function feedShinx(id) {
-    let shinx = await this.getShinx(id, ['user_id', 'belly', 'experience']);
+    let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger()
     if (shinx_hunger == 0) return 'NoHungry';
-    let user = await this.getUser(id, ['user_id', 'food']);
+    let user = await getUser(id, ['user_id', 'food']);
 
     let feed_amount = Math.min(shinx_hunger, user.getFood())
     if (feed_amount == 0) return 'NoFood';
@@ -97,15 +97,15 @@ export async function feedShinx(id) {
 };
 
 export async function getShinxAutofeed(id) {
-    let shinx = await this.getShinx(id, ['auto_feed'])
+    let shinx = await getShinx(id, ['auto_feed'])
     return shinx.auto_feed;
 };
 
 export async function autoFeedShinx1(id) {
-    let shinx = await this.getShinx(id, ['user_id', 'belly', 'experience']);
+    let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
-    let user = await this.getUser(id, ['user_id', 'food']);
+    let user = await getUser(id, ['user_id', 'food']);
 
     let feed_amount = Math.min(shinx_hunger, user.getFood())
     if (feed_amount == 0) return;
@@ -114,10 +114,10 @@ export async function autoFeedShinx1(id) {
 };
 
 export async function autoFeedShinx2(id) {
-    let shinx = await this.getShinx(id, ['user_id', 'belly', 'experience']);
+    let shinx = await getShinx(id, ['user_id', 'belly', 'experience']);
     let shinx_hunger = shinx.getHunger();
     if (shinx_hunger == 0) return;
-    let user = await this.getUser(id, ['user_id', 'food', 'money']);
+    let user = await getUser(id, ['user_id', 'food', 'money']);
     let used_food = 0;
     let used_money = 0;
 
@@ -142,18 +142,18 @@ export async function autoFeedShinx2(id) {
 export async function nameShinx(id, nick) {
     const check = checkFormat(nick, 12);
     if (check == 'Ok') {
-        let shinx = await this.getShinx(id, ['user_id', 'nickname']);
+        let shinx = await getShinx(id, ['user_id', 'nickname']);
         shinx.changeNick(nick.trim());
     };
     return check;
 };
 
 export async function isTrainerMale(id) {
-    let shinx = await this.getShinx(id, ['user_male']);
+    let shinx = await getShinx(id, ['user_male']);
     return shinx.user_male
 };
 
 export async function saveBattle(shinxBattleData, wins) {
-    let shinx = await this.getShinx(shinxBattleData.owner.id);
+    let shinx = await getShinx(shinxBattleData.owner.id);
     await shinx.saveBattle(shinxBattleData, wins);
 };
