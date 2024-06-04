@@ -1,7 +1,9 @@
-export default (sequelize, DataTypes) => {
-    return sequelize.define('personal_role_servers', {
+import Sequelize from "sequelize";
+
+export default () => {
+    return Sequelize.define('personal_role_servers', {
         server_id: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false
         },
     }, {

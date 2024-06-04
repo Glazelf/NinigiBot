@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 const { userdata } = require('../dbConnection/dbConnection');
 const { User, Shinx, EventTrophy, ShopTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
 

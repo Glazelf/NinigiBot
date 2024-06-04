@@ -1,6 +1,6 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 const { userdata } = require('../dbConnection/dbConnection');
-const { User } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User } = require('../dbObjects/userdata.model')(userdata);
 const { Op } = require('sequelize');
 
 export default {

@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 const { Op, fn, where, col } = require('sequelize');
 const { userdata } = require('../dbConnection/dbConnection');
-const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
+const { User, ShopTrophy, EventTrophy } = require('../dbObjects/userdata.model')(userdata);
 const DAILY_TROPHIES = 5;
 
 export default {

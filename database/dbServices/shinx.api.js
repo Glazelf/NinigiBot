@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 const { userdata, serverdata } = require('../dbConnection/dbConnection');
 const { Op, fn, where, col } = require('sequelize');
-const { Shinx, EventTrophy, User } = require('../dbObjects/userdata.model')(userdata, Sequelize.DataTypes);
-const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
+const { Shinx, EventTrophy, User } = require('../dbObjects/userdata.model')(userdata);
+const { shinxQuotes } = require('../dbObjects/serverdata.model')(serverdata);
 const hasPassedLevel = require('../../util/shinx/hasPassedLevel');
 
 export default {

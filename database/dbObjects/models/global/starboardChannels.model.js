@@ -1,11 +1,13 @@
-export default (sequelize, DataTypes) => {
-    return sequelize.define('starboard_channels', {
+import Sequelize from "sequelize";
+
+export default () => {
+    return Sequelize.define('starboard_channels', {
         server_id: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false
         },
         channel_id: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false
         },
     }, {

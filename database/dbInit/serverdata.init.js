@@ -1,5 +1,7 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 const { serverdata } = require('../dbConnection/dbConnection');
+import { serverdata } from '../dbConnection/dbConnection';
+import { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } from '../dbObjects/serverdata.model';
 
 const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = require('../dbObjects/serverdata.model')(serverdata, Sequelize.DataTypes);
 

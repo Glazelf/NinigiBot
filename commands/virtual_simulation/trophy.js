@@ -3,15 +3,16 @@ import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import Canvas from "canvas";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes";
+import api_shinx from "../../database/dbServices/shinx.api";
+// import api_user from "../../database/dbServices/user.api";
+import api_trophy from "../../database/dbServices/trophy.api";
+import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice";
 
 export default async (client, interaction, ephemeral) => {
     try {
-        const api_shinx = require('../../database/dbServices/shinx.api');
-        // import api_user from "../../database/dbServices/user.api";
-        const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
         let embed, trophy_name, res;
-        let returnString = ''
+        let returnString = '';
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -90,7 +91,7 @@ export default async (client, interaction, ephemeral) => {
                     ephemeral: ephemeral || (res != 'Ok')
                 });
             case "list":
-                let trophy_slice = await require('../../util/trophies/getTrophyEmbedSlice')(0);
+                let trophy_slice = await getTrophyEmbedSlice(0);
                 return sendMessage({
                     client: client,
                     interaction: interaction,

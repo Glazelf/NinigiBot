@@ -1,11 +1,13 @@
-export default (sequelize, DataTypes) => {
-    return sequelize.define('shinx_quote', {
+import Sequelize from "sequelize";
+
+export default () => {
+    return Sequelize.define('shinx_quote', {
         quote: {
-            type: DataTypes.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false
         },
         reaction: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false
         }
     }, {

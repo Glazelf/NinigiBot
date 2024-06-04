@@ -3,6 +3,11 @@ import logger from "../../util/logger";
 import sendMessage from "../../util/sendMessage";
 import Canvas from "canvas";
 import shinxApi from "../../database/dbServices/shinx.api";
+import applyText from "../../util/shinx/applyCanvasText";
+import getBelly from "../../util/shinx/getBelly";
+import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction";
+import getRandomVisitorPosition from "../../util/shinx/getRandomVisitorPosition";
+import playing_reaction from "../../util/shinx/getPlayingReaction";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -17,7 +22,7 @@ export default async (client, interaction, ephemeral) => {
         let userFinder = await interaction.guild.members.fetch();
         let messageFile = null;
         let time;
-        const applyText = require('../../util/shinx/applyCanvasText');
+
         const now = new Date();
         let master = interaction.user;
         // Auto feed
@@ -68,7 +73,7 @@ export default async (client, interaction, ephemeral) => {
                 ctx.fillText(shinx.meetup, 490, 218);
                 const belly_prop = shinx.getBellyProportion();
                 if (belly_prop > 0) {
-                    ctx.fillStyle = require('../../util/shinx/getBelly')(shinx.getBellyProportion());
+                    ctx.fillStyle = getBelly(shinx.getBellyProportion());
                     ctx.fillRect(467, 308, 245 * belly_prop, 14);
                 };
                 if (exp_struct.curr_percent > 0) {
@@ -89,9 +94,9 @@ export default async (client, interaction, ephemeral) => {
                         returnString = `Not enough food\nTip: you can buy more using \`/buyfood\``;
                         break;
                     case 'Ok':
-                        reaction = require('../../util/shinx/getRandomEatingReaction')();
+                        let reactionFeed = getRandomEatingReaction();
                         shinx = await shinxApi.getShinx(master.id);
-                        returnString = `**${shinx.nickname}** ${reaction[0]}`;
+                        returnString = `**${shinx.nickname}** ${reactionFeed[0]}`;
                         canvas = Canvas.createCanvas(393, 299);
                         ctx = canvas.getContext('2d');
                         img = await Canvas.loadImage('./assets/dining.png');
@@ -117,7 +122,7 @@ export default async (client, interaction, ephemeral) => {
                             ctx.drawImage(img, 57 * (5 + 2 * i), 48 * guests[i].shiny, 57, 48, 234, 49 + 100 * i, 57, 48);
                         };
                         img = await Canvas.loadImage('./assets/reactions.png');
-                        ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 202, 115, 30, 32);
+                        ctx.drawImage(img, 10 + 30 * reactionFeed[1], 8, 30, 32, 202, 115, 30, 32);
 
                         if (now.getHours() > 20 || now.getHours() < 6) {
                             img = await Canvas.loadImage('./assets/dinNight.png');
@@ -144,7 +149,7 @@ export default async (client, interaction, ephemeral) => {
                     time = 1;
                 };
                 ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
-                const layout = require('../../util/shinx/getRandomVisitorPosition')();
+                const layout = getRandomVisitorPosition();
                 guests = await shinxApi.getRandomShinx(layout.length, shinx.user_id, interaction.guild);
                 img = await Canvas.loadImage('./assets/mc.png');
                 ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
@@ -165,20 +170,17 @@ export default async (client, interaction, ephemeral) => {
                 for (let i = 0; i < guests.length; i++) {
                     ctx.drawImage(img, 57 * layout[i][1][0], 48 * guests[i].shiny, 57, 48, layout[i][1][1], layout[i][1][2], 57, 48);
                 };
-                const playing_reaction = require('../../util/shinx/getPlayingReaction')
-                if (shinx.belly < 0.2) {
-                    reaction = playing_reaction(0);
-                } else {
-                    reaction = playing_reaction();
-                };
+                let reactionPlay = playing_reaction();
+                if (shinx.belly < 0.2) reactionPlay = playing_reaction(0);
+
                 img = await Canvas.loadImage('./assets/reactions.png');
-                ctx.drawImage(img, 10 + 30 * reaction[1], 8, 30, 32, 120, 212, 30, 32);
-                shinx.addExperienceAndUnfeed(100 * reaction[2], 1);
+                ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
+                shinx.addExperienceAndUnfeed(100 * reactionPlay[2], 1);
                 messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({
                     client: client,
                     interaction: interaction,
-                    content: `**${shinx.nickname}** ${reaction[0]}`,
+                    content: `**${shinx.nickname}** ${reactionPlay[0]}`,
                     files: messageFile,
                     ephemeral: ephemeral
                 });
