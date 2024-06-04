@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
-import shinxApi from "../../database/dbServices/shinx.api.js";
+import { getShinx, getRandomShinx, feedShinx, getShinxAutofeed, autoFeedShinx1, autoFeedShinx2, getRandomReaction, nameShinx, getShinxShininess, isTrainerMale, hasEventTrophy, switchShininessAndGet } from "../../database/dbServices/shinx.api.js";
 import applyText from "../../util/shinx/applyCanvasText.js";
 import getBelly from "../../util/shinx/getBelly.js";
 import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction.js";
@@ -26,17 +26,17 @@ export default async (client, interaction, ephemeral) => {
         const now = new Date();
         let master = interaction.user;
         // Auto feed
-        let auto_feed = await shinxApi.getShinxAutofeed(master.id);
+        let auto_feed = await getShinxAutofeed(master.id);
         if (auto_feed > 0) {
             if (auto_feed == 1) {
-                await shinxApi.autoFeedShinx1(master.id);
+                await autoFeedShinx1(master.id);
             } else {
-                await shinxApi.autoFeedShinx2(master.id);
+                await autoFeedShinx2(master.id);
             };
         };
         switch (interaction.options.getSubcommand()) {
             case "info":
-                shinx = await shinxApi.getShinx(master.id);
+                shinx = await getShinx(master.id);
                 const is_user_male = shinx.user_male;
 
                 avatar = client.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
@@ -85,7 +85,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "feed":
                 foodArg = interaction.options.getInteger("food");
-                res = await shinxApi.feedShinx(master.id);
+                res = await feedShinx(master.id);
                 switch (res) {
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
@@ -95,14 +95,14 @@ export default async (client, interaction, ephemeral) => {
                         break;
                     case 'Ok':
                         let reactionFeed = getRandomEatingReaction();
-                        shinx = await shinxApi.getShinx(master.id);
+                        shinx = await getShinx(master.id);
                         returnString = `**${shinx.nickname}** ${reactionFeed[0]}`;
                         canvas = Canvas.createCanvas(393, 299);
                         ctx = canvas.getContext('2d');
                         img = await Canvas.loadImage('./assets/dining.png');
                         ctx.drawImage(img, 0, 0);
                         img = await Canvas.loadImage('./assets/mc.png');
-                        guests = await shinxApi.getRandomShinx(2, shinx.user_id, interaction.guild);
+                        guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
                         ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                         ctx.font = 'normal bold 16px Arial';
                         ctx.fillStyle = '#ffffff';
@@ -136,7 +136,7 @@ export default async (client, interaction, ephemeral) => {
                 });
                 break;
             case "play":
-                shinx = await shinxApi.getShinx(master.id);
+                shinx = await getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/landscapes.png');
@@ -150,7 +150,7 @@ export default async (client, interaction, ephemeral) => {
                 };
                 ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
                 const layout = getRandomVisitorPosition();
-                guests = await shinxApi.getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+                guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
                 img = await Canvas.loadImage('./assets/mc.png');
                 ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
                 ctx.font = 'normal bolder 18px Arial';
@@ -186,7 +186,7 @@ export default async (client, interaction, ephemeral) => {
                 });
                 break;
             case "talk":
-                shinx = await shinxApi.getShinx(master.id);
+                shinx = await getShinx(master.id);
                 canvas = Canvas.createCanvas(256, 160);
                 ctx = canvas.getContext('2d');
                 img = await Canvas.loadImage('./assets/park.png');
@@ -202,7 +202,7 @@ export default async (client, interaction, ephemeral) => {
                 img = await Canvas.loadImage('./assets/trainer.png');
                 ctx.drawImage(img, 172 * !shinx.user_male, 0, 129 + 42 * shinx.user_male, 108, 2, 52, 129 + 42 * shinx.user_male, 108);
                 img = await Canvas.loadImage('./assets/portraits.png');
-                let conversation = await shinxApi.getRandomReaction();
+                let conversation = await getRandomReaction();
                 ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
                 messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
@@ -211,7 +211,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "nick":
                 let new_nick = interaction.options.getString("nickname");
-                res = await shinxApi.nameShinx(master.id, new_nick);
+                res = await nameShinx(master.id, new_nick);
                 messageFile = null;
                 switch (res) {
                     case 'TooShort':
@@ -224,13 +224,13 @@ export default async (client, interaction, ephemeral) => {
                         returnString = `Could not rename because provided nickname was not alphanumeric`;
                         break;
                     case 'Ok':
-                        is_shiny = await shinxApi.getShinxShininess(master.id);
+                        is_shiny = await getShinxShininess(master.id);
                         canvas = Canvas.createCanvas(471, 355);
                         ctx = canvas.getContext('2d');
                         img = await Canvas.loadImage('./assets/nicks.png');
                         ctx.drawImage(img, 0, 0);
                         img = await Canvas.loadImage('./assets/mc.png');
-                        const is_user_male = await shinxApi.isTrainerMale(master.id);
+                        const is_user_male = await isTrainerMale(master.id);
                         ctx.drawImage(img, 51 * !is_user_male, 72 * 0, 51, 72, 270, 200, 51, 72);
                         img = await Canvas.loadImage('./assets/fieldShinx.png');
                         ctx.drawImage(img, 57 * 8, 48 * is_shiny, 57, 48, 324, 223, 57, 48);
@@ -245,9 +245,9 @@ export default async (client, interaction, ephemeral) => {
                 });
                 break;
             case "shiny":
-                res = await shinxApi.hasEventTrophy(master.id, 'shiny charm');
+                res = await hasEventTrophy(master.id, 'shiny charm');
                 if (res) {
-                    const is_shiny = await shinxApi.switchShininessAndGet(master.id);
+                    const is_shiny = await switchShininessAndGet(master.id);
                     returnString = is_shiny ? `Your shinx is shiny now` : `Your shinx is no longer shiny`;
                     canvas = Canvas.createCanvas(255, 192);
                     ctx = canvas.getContext('2d');
@@ -273,7 +273,7 @@ export default async (client, interaction, ephemeral) => {
                 let confirmArg = interaction.options.getBoolean("confirm");
                 if (confirmArg === true) confirm = confirmArg;
                 if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
-                shinx = await shinxApi.getShinx(master.id);
+                shinx = await getShinx(master.id);
                 let shinxNickname = shinx.nickname;
                 await shinx.destroy();
                 return sendMessage({ client: client, interaction: interaction, content: `Released your Shinx.\nBye-bye, ${shinxNickname}!` });

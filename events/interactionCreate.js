@@ -5,7 +5,8 @@ import axios from "axios";
 import fs from "fs";
 import sendMessage from "../util/sendMessage.js";
 // Pokémon
-import { Dex } from "pokemon-showdown";
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 // Monster Hunter
@@ -24,8 +25,8 @@ import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type:
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
 // Database
-import api_user from "../database/dbServices/user.api.js";
-import api_trophy from "../database/dbServices/trophy.api.js";
+import { getEphemeralDefault } from "../database/dbServices/user.api.js";
+import { getShopTrophies, getEventTrophies, getBuyableShopTrophies } from "../database/dbServices/trophy.api.js";
 import { EligibleRoles } from "../database/dbServices/server.api.js";
 // Other util
 import isAdmin from "../util/isAdmin.js";
@@ -60,7 +61,7 @@ export default async (client, interaction) => {
                 // Run the command
                 if (cmd) {
                     try {
-                        let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
+                        let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
                         await cmd.run(client, interaction, ephemeralDefault);
                     } catch (e) {
@@ -568,7 +569,7 @@ export default async (client, interaction) => {
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
-                                let trophies = await api_trophy.getShopTrophies();
+                                let trophies = await getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
@@ -579,20 +580,20 @@ export default async (client, interaction) => {
                     case "trophy":
                         switch (focusedOption.name) {
                             case "shoptrophy":
-                                const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
+                                const buyable_items = await getBuyableShopTrophies(interaction.user.id);
                                 buyable_items.forEach(trophy => {
                                     choices.push({ name: trophy, value: trophy });
                                 });
                                 // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 break;
                             case "trophy":
-                                let trophies = await api_trophy.getShopTrophies();
+                                let trophies = await getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
                                 });
-                                trophies = await api_trophy.getEventTrophies();
+                                trophies = await getEventTrophies();
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });

@@ -9,7 +9,7 @@ export default async (client) => {
                 let commandServerID = null;
                 if (command.config.serverID) commandServerID = command.config.serverID;
                 // if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
-                slashCommand = await client.application.commands.create(command.config, commandServerID);
+                await client.application.commands.create(command.config, commandServerID);
             } catch (e) {
                 console.log(e);
             };

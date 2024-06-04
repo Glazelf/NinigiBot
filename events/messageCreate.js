@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
 // import sendMessage from "../util/sendMessage.js";
-import api_user from "../database/dbServices/user.api.js";
+import { addMoney } from "../database/dbServices/user.api.js";
 
 const talkedRecently = new Set();
 
@@ -44,7 +44,7 @@ export default async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-                api_user.addMoney(message.member.id, 1);
+                addMoney(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {
                     if (message.member) talkedRecently.delete(message.member.id);

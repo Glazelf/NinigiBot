@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/getRandomGif.js";
 import cron from "cron";
-import api_history from "../database/dbServices/history.api.js";
+import { incrementStanAmount, checkEvents } from "../database/dbServices/history.api.js";
 
 export default async (client) => {
     try {
@@ -24,8 +24,8 @@ export default async (client) => {
             let randomPick = Math.floor((Math.random() * (candidates.length - 0.1)));
             let candidateRandom = candidates[randomPick];
 
-            await api_history.incrementStanAmount(candidateRandom.id);
-            await api_history.checkEvents();
+            await incrementStanAmount(candidateRandom.id);
+            await checkEvents();
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             if (!randomGif) return;

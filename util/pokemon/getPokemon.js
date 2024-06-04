@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../logger.js";
-import { Dex } from "pokemon-showdown";
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
 import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
 import convertMeterFeet from "../convertMeterFeet.js";

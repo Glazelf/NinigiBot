@@ -7,8 +7,9 @@ import logChannelsModel from "./models/global/logChannels.model.js";
 import starboardChannelsModel from "./models/global/starboardChannels.model.js";
 import starboardMessagesModel from "./models/global/starboardMessages.model.js";
 import starboardLimitsModel from "./models/server/starboardLimits.model.js";
+import { DataTypes } from "sequelize";
 
-export default (sequelize, DataTypes) => {
+export default (sequelize) => {
     const shinxQuotes = shinxQuoteModel(sequelize, DataTypes);
     const EligibleRoles = eligibleRolesModel(sequelize, DataTypes);
     const PersonalRoles = personalRolesModel(sequelize, DataTypes);

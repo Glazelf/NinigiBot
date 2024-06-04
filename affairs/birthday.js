@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from '../util/logger.js';
 import getRandomGif from "../util/getRandomGif.js";
 import cron from "cron";
-import api_user from "../database/dbServices/user.api.js";
+import { getBirthday } from "../database/dbServices/user.api.js";
 
 export default async (client) => {
     try {
@@ -27,7 +27,7 @@ export default async (client) => {
             // For every member check 
             for (m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
-                const birthday = await api_user.getBirthday(member.id);
+                const birthday = await getBirthday(member.id);
                 if (birthday) {
                     let now = new Date();
                     // Birthdays are stored as string DDMM instead of being seperated by a -

@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import api_user from "../../database/dbServices/user.api.js";
+import { getMoney, addMoney } from "../../database/dbServices/user.api.js";
 import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction) => {
@@ -16,10 +16,10 @@ export default async (client, interaction) => {
 
         if (!transferTargetID) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
 
-        let dbBalance = await api_user.getMoney(transferTargetID);
+        let dbBalance = await getMoney(transferTargetID);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await api_user.addMoney(transferTargetID, +transferAmount);
+        await addMoney(transferTargetID, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
         return sendMessage({ client: client, interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });

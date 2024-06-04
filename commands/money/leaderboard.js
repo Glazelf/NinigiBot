@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import user_api from "../../database/dbServices/user.api.js";
+import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -13,7 +13,7 @@ export default async (client, interaction, ephemeral) => {
         let global = false;
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
-        const money_db = await user_api.getUsersRankedByMoney();
+        const money_db = await getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.EmbedBuilder()
             .setColor(client.globalVars.embedColor);
         if (global) {

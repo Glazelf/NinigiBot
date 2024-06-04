@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import shinxApi from "../../database/dbServices/shinx.api.js";
+import { changeAutoFeed } from "../../database/dbServices/shinx.api.js";
 
 const autofeed_modes = [
     {
@@ -26,7 +26,7 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");
-        let res = await shinxApi.changeAutoFeed(master.id, mode_num);
+        let res = await changeAutoFeed(master.id, mode_num);
         let mode_str = autofeed_modes[mode_num].name;
         returnString = res ? `Changed autofeed to: ${mode_str}` : `Autofeed already set to: ${mode_str}`;
         return sendMessage({

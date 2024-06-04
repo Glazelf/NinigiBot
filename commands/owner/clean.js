@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/isOwner.js";
-import user_api from "../../database/dbServices/user.api.js";
+import { getAllUsers } from "../../database/dbServices/user.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -16,7 +16,7 @@ export default async (client, interaction, ephemeral) => {
 
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
-        const users = await user_api.getAllUsers();
+        const users = await getAllUsers();
         if (users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' });
         let server_users = await interaction.guild.members.fetch();
         server_users = server_users.map(user => user.id);

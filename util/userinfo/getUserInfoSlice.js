@@ -1,6 +1,5 @@
 import Discord from "discord.js";
-// import api_trophy from "../../database/dbServices/trophy.api.js";
-import api_user from "../../database/dbServices/user.api.js";
+import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import isAdmin from "../../util/isAdmin.js";
 import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
@@ -27,7 +26,7 @@ export default async (client, interaction, page, user) => {
     if (page > 0) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page - 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
     if (page < number_of_pages - 1 && member && !user.bot) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page + 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
 
-    let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
+    let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
 

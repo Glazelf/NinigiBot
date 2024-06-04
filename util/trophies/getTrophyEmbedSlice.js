@@ -1,10 +1,10 @@
 
 import Discord from "discord.js";
-import api_trophy from "../../database/dbServices/trophy.api.js";
+import { getTrophieslice } from "../../database/dbServices/trophy.api.js";
 
 export default async (client, offset) => {
     const trophies_per_page = 10;
-    let trophy_list = await api_trophy.getTrophieslice(offset, trophies_per_page);
+    let trophy_list = await getTrophieslice(offset, trophies_per_page);
     const embed = new Discord.EmbedBuilder().setColor(client.globalVars.embedColor);
     trophy_list.slice.forEach(trophy => {
         embed.addFields([{ name: "\u200B", value: `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`, inline: true }]);

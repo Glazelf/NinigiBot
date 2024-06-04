@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/isOwner.js";
-import shinxApi from "../../database/dbServices/shinx.api.js";
+import { addExperience } from "../../database/dbServices/shinx.api.js";
 
 export default async (client, interaction) => {
     try {
@@ -16,7 +16,7 @@ export default async (client, interaction) => {
         let userArg = interaction.options.getUser("user");
         if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
         let expArg = interaction.options.getInteger("amount");
-        await shinxApi.addExperience(userArg.id, expArg);
+        await addExperience(userArg.id, expArg);
         returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
     } catch (e) {

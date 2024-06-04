@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import checker from "../../util/string/checkFormat.js";
-import api_trophy from "../../database/dbServices/trophy.api.js";
+import { checkTrophyExistance, createShopTrophy, deleteShopTrophy } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction, ephemeral) => {
@@ -29,7 +29,7 @@ export default async (client, interaction, ephemeral) => {
                     case "InvalidChars":
                         error += 'Name has invalid characters\n';
                 };
-                res = await api_trophy.checkTrophyExistance(trophy_name);
+                res = await checkTrophyExistance(trophy_name);
                 if (res == true) error += 'Name already used\n';
                 const trophy_desc = interaction.options.getString("description").trim();
                 switch (checker(trophy_desc, 1024, false)) {
@@ -55,7 +55,7 @@ export default async (client, interaction, ephemeral) => {
                     let errorBlock = Discord.codeBlock(error);
                     returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
                 } else {
-                    await api_trophy.createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
+                    await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
                     returnString = `${trophy_name} added successfully to the shop!`;
                 };
                 return sendMessage({
@@ -66,7 +66,7 @@ export default async (client, interaction, ephemeral) => {
                 });
             case "deleteshoptrophy":
                 trophy_name = interaction.options.getString("name").trim();
-                res = await api_trophy.deleteShopTrophy(trophy_name);
+                res = await deleteShopTrophy(trophy_name);
                 returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`;
                 return sendMessage({
                     client: client,

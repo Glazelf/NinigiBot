@@ -3,11 +3,11 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Canvas from "canvas";
 import ShinxBattle from "../../util/shinx/shinxBattle.js";
-import shinxApi from "../../database/dbServices/shinx.api.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
-import api_history from "../../database/dbServices/history.api.js";
+import { getShinx, saveBattle } from "../../database/dbServices/shinx.api.js";
+import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
 // import { Users } from "../../database/dbServices/server.api.js";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
@@ -23,7 +23,7 @@ export default async (client, interaction) => {
         let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
-            const shinx = await shinxApi.getShinx(trainers[i].id);
+            const shinx = await getShinx(trainers[i].id);
             shinxes.push(new ShinxBattle(trainers[i], shinx));
         };
         let ephemeral = false;
@@ -125,14 +125,14 @@ export default async (client, interaction) => {
                     };
                     text += addLine(`**${nicks[(i + 1) % 2]}** fainted!`);
                     for (let h = 0; h < 2; h++) {
-                        await api_history.incrementCombatAmount(trainers[h].id, i == h);
+                        await incrementCombatAmount(trainers[h].id, i == h);
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);
                         if (exp[1] > 0) {
                             text += addLine(`**${nicks[h]}** grew to level **${shinxes[h].level}**!`);
                         };
                     };
-                    for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
+                    for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
                     client.globalVars.battling.yes = false;
                     let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
