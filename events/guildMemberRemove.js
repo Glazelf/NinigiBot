@@ -1,16 +1,16 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-import { LogChannels, PersonalRoles, PersonalRoleServers } from "../database/dbServices/server.api.js";
 
 export default async (client, member) => {
     try {
-        let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
+        const serverApi = await import("../database/dbServices/server.api.js");
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+        let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+        let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 

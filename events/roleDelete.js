@@ -1,10 +1,10 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-import { LogChannels } from "../database/dbServices/server.api.js";
 
 export default async (client, role) => {
     try {
-        let logChannel = await LogChannels.findOne({ where: { server_id: role.guild.id } });
+        const serverApi = await import("../database/dbServices/server.api.js");
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: role.guild.id } });
         if (!logChannel) return;
         let log = role.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;

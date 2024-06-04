@@ -2,10 +2,10 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/isAdmin.js";
-import { EligibleRoles } from "../../database/dbServices/server.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
+        const serverApi = await import("../../database/dbServices/server.api.js");
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -19,7 +19,7 @@ export default async (client, interaction, ephemeral) => {
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        let db = await EligibleRoles.findAll();
+        let db = await serverApi.EligibleRoles.findAll();
         let roles = [];
         let roleIDs = [];
         let roleText = [];

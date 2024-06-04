@@ -8,7 +8,6 @@ import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
 import { getShinx, saveBattle } from "../../database/dbServices/shinx.api.js";
 import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
-// import { Users } from "../../database/dbServices/server.api.js";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
 

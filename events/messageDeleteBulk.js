@@ -1,6 +1,5 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-import { LogChannels } from "../database/dbServices/server.api.js";
 
 export default async (client, messages) => {
     try {
@@ -22,7 +21,8 @@ export default async (client, messages) => {
         guild = await client.guilds.fetch(guild);
         if (!guild) return;
         // Get log
-        let logChannel = await LogChannels.findOne({ where: { server_id: guild.id } });
+        const serverApi = await import("../database/dbServices/server.api.js");
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: guild.id } });
         if (!logChannel) return;
         let log = guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;

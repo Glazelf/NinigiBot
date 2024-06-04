@@ -3,8 +3,6 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getTime from "../util/getTime.js";
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
-// import { bank } from "../database/bank.js";
-// import { Users } from "../database/dbServices/server.api.js";
 
 export default async (client, id) => {
     try {
@@ -21,7 +19,6 @@ export default async (client, id) => {
         birthday(client);
         // const storedBalances = await Users.findAll();
         // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
-
         // Console log status
         return console.log(`Launched shard ${id}. (${timestamp})`);
 

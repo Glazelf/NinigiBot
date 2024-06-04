@@ -1,10 +1,9 @@
 import { userdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 
-const { User } = userdataModel(userdata);
-
 export async function getUser(id, attributes = null) {
-    let user = await User.findByPk(param = id, options = {
+    const { User } = await userdataModel(userdata);
+    let user = await User.findByPk(id, {
         attributes: attributes
     });
 
@@ -13,11 +12,13 @@ export async function getUser(id, attributes = null) {
 };
 
 export async function getAllUsers() {
+    const { User } = await userdataModel(userdata);
     const users = await User.findAll();
     return users;
 };
 
 export async function bulkDeleteUsers(id_arr) {
+    const { User } = await userdataModel(userdata);
     await userdata.models.Shinx.destroy({
         where: { user_id: id_arr },
     });
@@ -31,7 +32,6 @@ export async function bulkDeleteUsers(id_arr) {
         where: { user_id: id_arr },
     });
 };
-
 // Money
 export async function addMoney(id, money) {
     let user = await getUser(id, ['user_id', 'money']);
@@ -44,6 +44,7 @@ export async function getMoney(id) {
 };
 
 export async function getUsersRankedByMoney() {
+    const { User } = await userdataModel(userdata);
     let users_money = await User.findAll({
         attributes: [
             'user_id', 'money'

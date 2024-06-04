@@ -27,7 +27,6 @@ import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { t
 // Database
 import { getEphemeralDefault } from "../database/dbServices/user.api.js";
 import { getShopTrophies, getEventTrophies, getBuyableShopTrophies } from "../database/dbServices/trophy.api.js";
-import { EligibleRoles } from "../database/dbServices/server.api.js";
 // Other util
 import isAdmin from "../util/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";
@@ -204,9 +203,10 @@ export default async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-                    case Discord.ComponentType.SelectMenu:
+                    case Discord.ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             try {
+                                const serverApi = await import("../database/dbServices/server.api.js");
                                 // Toggle selected role
                                 const rolesArray = [];
                                 for await (const value of interaction.values) {
@@ -218,7 +218,7 @@ export default async (client, interaction) => {
 
                                 let roleSelectReturnString = "Role toggling results:\n";
                                 for await (const role of rolesArray) {
-                                    let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
+                                    let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
                                     if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
                                     if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
                                     if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
@@ -269,7 +269,8 @@ export default async (client, interaction) => {
                     case "role":
                         switch (focusedOption.name) {
                             case "role":
-                                let dbRoles = await EligibleRoles.findAll();
+                                const serverApi = await import("../database/dbServices/server.api.js");
+                                let dbRoles = await serverApi.EligibleRoles.findAll();
                                 let roleIDs = [];
                                 let roleObject = [];
                                 await dbRoles.forEach(eligibleRole => {

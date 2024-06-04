@@ -1,6 +1,5 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-import { StarboardChannels, StarboardMessages } from "../database/dbServices/server.api.js";
 
 export default async (client, messageReaction) => {
     try {
@@ -19,18 +18,19 @@ export default async (client, messageReaction) => {
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel;
         let starboard;
+        const serverApi = await import("../database/dbServices/server.api.js");
         if (isNoStar == true) { // Find altboard channel
             starboardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
-            starboardChannel = await StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
+            starboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
             if (!starboardChannel) return;
             starboard = await targetMessage.guild.channels.fetch(starboardChannel.channel_id);
         };
         if (!starboard) return;
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
-        let messageDB = await StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
+        let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
         // Get attachment, don't need to check videos since those are in seperate message anyways
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;

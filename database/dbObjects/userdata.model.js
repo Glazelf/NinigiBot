@@ -1,16 +1,17 @@
-import shinxModel from "./models/userdata/shinx.model.js";
-import userModel from "./models/userdata/user.model.js";
-import historyModel from "./models/userdata/history.model.js";
-import eventTrophyModel from "./models/items/eventTrophy.model.js";
-import shopTrophyModel from "./models/items/shopTrophy.model.js";
+
 import { DataTypes } from "sequelize";
 
 export default async (sequelize) => {
-    const Shinx = shinxModel(sequelize, DataTypes);
-    const User = userModel(sequelize, DataTypes);
-    const History = historyModel(sequelize, DataTypes);
-    const EventTrophy = eventTrophyModel(sequelize, DataTypes);
-    const ShopTrophy = shopTrophyModel(sequelize, DataTypes);
+    const shinxModel = await import("./models/userdata/shinx.model.js");
+    const userModel = await import("./models/userdata/user.model.js");
+    const historyModel = await import("./models/userdata/history.model.js");
+    const eventTrophyModel = await import("./models/items/eventTrophy.model.js");
+    const shopTrophyModel = await import("./models/items/shopTrophy.model.js");
+    const Shinx = shinxModel.default(sequelize, DataTypes);
+    const User = userModel.default(sequelize, DataTypes);
+    const History = historyModel.default(sequelize, DataTypes);
+    const EventTrophy = eventTrophyModel.default(sequelize, DataTypes);
+    const ShopTrophy = shopTrophyModel.default(sequelize, DataTypes);
     // https://sequelize.org/docs/v7/core-concepts/assocs/#foobelongstomanybar--through-baz-
     User.belongsToMany(EventTrophy, { through: "EventTrophyUser", timestamps: false });
     EventTrophy.belongsToMany(User, { through: "EventTrophyUser", timestamps: false });

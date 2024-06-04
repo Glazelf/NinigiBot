@@ -1,7 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
 import isAdmin from "../util/isAdmin.js";
-import { LogChannels } from "../database/dbServices/server.api.js";
 
 export default async (client, message, newMessage) => {
     try {
@@ -9,7 +8,8 @@ export default async (client, message, newMessage) => {
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        const serverApi = await import("../database/dbServices/server.api.js");
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         // Log sysbot channel events in a seperate channel

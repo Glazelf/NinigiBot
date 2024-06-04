@@ -1,11 +1,10 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-import { LogChannels } from "../database/dbServices/server.api.js";
-import { PersonalRoles, PersonalRoleServers } from "../database/dbServices/server.api.js";
 
 export default async (client, member, newMember) => {
     try {
-        let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
+        const serverApi = await import("../database/dbServices/server.api.js");
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -65,8 +64,8 @@ export default async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-            let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+            let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+            let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(Discord.PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
 
             switch (updateCase) {

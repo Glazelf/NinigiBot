@@ -1,11 +1,10 @@
 import { userdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../dbObjects/userdata.model.js";
 
-const { User, Shinx, ShopTrophy, EventTrophy, History } = userdataModel(userdata);
 const DAILY_TROPHIES = 5;
 
-
 export async function getUser(id, attributes = null) {
+    const { User } = await userdataModel(userdata);
     let user = await User.findByPk(param = id, options = {
         attributes: attributes
     });
@@ -16,6 +15,7 @@ export async function getUser(id, attributes = null) {
 };
 
 export async function getHistory(id, attributes = null) {
+    const { History } = await userdataModel(userdata);
     let history = await History.findByPk(param = id, options = {
         attributes: attributes
     });
@@ -57,6 +57,7 @@ export async function checkEvent(Model, trophy_id, attribute) {
 };
 
 export async function checkEvents() {
+    const { User, Shinx, History } = await userdataModel(userdata);
     const events = [
         checkEvent(User, 'Capitalism Addict', 'money'),
         checkEvent(Shinx, 'Unbreakable Bond', 'experience'),

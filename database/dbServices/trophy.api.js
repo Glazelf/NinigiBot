@@ -1,11 +1,10 @@
 import { Op, fn, where, col } from "sequelize";
 import { userdata } from "../dbConnection/dbConnection.js";
-import userdataModel from "../dbObjects/userdata.model.js"
-
-const { User, ShopTrophy, EventTrophy } = userdataModel(userdata);
+import userdataModel from "../dbObjects/userdata.model.js";
 const DAILY_TROPHIES = 5;
 
 export async function getUser(id, attributes = null) {
+    const { User } = await userdataModel(userdata);
     let user = await User.findByPk(param = id, options = {
         attributes: attributes
     });
@@ -20,6 +19,7 @@ export async function addMoney(id, money) {
 };
 
 export async function getTrophieslice(offset, trophies_per_page) {
+    const { ShopTrophy, EventTrophy } = await userdataModel(userdata);
     let EventTrophies = await EventTrophy.findAll({ attributes: ['trophy_id', 'icon'] });
     let shoptrophies = await ShopTrophy.findAll({ attributes: ['trophy_id', 'icon'] });
     let trophies = EventTrophies.concat(shoptrophies);
@@ -34,11 +34,13 @@ export async function getTrophieslice(offset, trophies_per_page) {
 };
 
 export async function getShopTrophies() {
+    const { ShopTrophy } = await userdataModel(userdata);
     const trophies = await ShopTrophy.findAll();
     return trophies;
 };
 
 export async function getTodayShopTrophies() {
+    const { ShopTrophy } = await userdataModel(userdata);
     const d = new Date();
 
     const trophies = await ShopTrophy.findAll();
@@ -57,10 +59,12 @@ export async function getTodayShopTrophies() {
 };
 
 export async function createShopTrophy(name, emote, description, price) {
+    const { ShopTrophy } = await userdataModel(userdata);
     await ShopTrophy.create({ trophy_id: name, icon: emote, description: description, price: price });
 };
 
 export async function deleteShopTrophy(trophy_id) {
+    const { User, ShopTrophy, EventTrophy } = await userdataModel(userdata);
     const trophy_id_t = trophy_id.toLowerCase()
     const trophy = await ShopTrophy.findOne({ attributes: ['price'], where: where(fn('lower', col('trophy_id')), trophy_id_t) })
     if (!trophy) return false;
@@ -78,6 +82,7 @@ export async function deleteShopTrophy(trophy_id) {
 };
 
 export async function getTodayShopTrophiesToBuy(money) {
+    const { ShopTrophy } = await userdataModel(userdata);
     const d = new Date();
 
     const trophies = await ShopTrophy.findAll({
@@ -102,6 +107,7 @@ export async function getTodayShopTrophiesToBuy(money) {
 };
 
 export async function getShopTrophyWithName(name) {
+    const { ShopTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
     const trophy = await ShopTrophy.findOne(
         {
@@ -117,6 +123,7 @@ export async function getShopTrophyWithName(name) {
 };
 
 export async function checkTrophyExistance(name, only_shop = false) {
+    const { ShopTrophy, EventTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
     let trophy = await ShopTrophy.findOne(
         {
@@ -177,7 +184,7 @@ export async function buyShopTrophy(user_id, trophy_id) {
 };
 
 export async function addEventTrophy(user_id, trophy_id) {
-
+    const { EventTrophy } = await userdataModel(userdata);
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -188,6 +195,8 @@ export async function addEventTrophy(user_id, trophy_id) {
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
+
+    const { EventTrophy } = await userdataModel(userdata);
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -198,6 +207,7 @@ export async function hasEventTrophy(user_id, trophy_id) {
 };
 
 export async function addEventTrophyUnchecked(user_id, trophy_id) {
+    const { EventTrophy } = await userdataModel(userdata);
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();
     const trophy = await EventTrophy.findOne(
@@ -207,11 +217,14 @@ export async function addEventTrophyUnchecked(user_id, trophy_id) {
 };
 
 export async function getEventTrophies() {
+    const { EventTrophy } = await userdataModel(userdata);
     const trophies = await EventTrophy.findAll();
     return trophies;
 };
 
 export async function getEventTrophyWithName(name) {
+
+    const { EventTrophy } = await userdataModel(userdata);
     let name_t = name.toLowerCase();
     const trophy = await EventTrophy.findOne(
         {

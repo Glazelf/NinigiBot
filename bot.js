@@ -23,7 +23,7 @@ fs.readdir("./events/", (err, files) => {
         if (!file.endsWith(".js")) return;
         // Load the event file itself
         let event = await import(`./events/${file}`);
-        event = Object.values(event)[0]; // Navigate import results
+        event = event.default;
         // Get just the event name from the file name
         let eventName = file.split(".")[0];
         // Each event will be called with the client argument,

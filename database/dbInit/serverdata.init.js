@@ -1,9 +1,9 @@
 import { serverdata } from "../dbConnection/dbConnection.js";
-import serverdataModel from "../dbObjects/serverdata.model.js";
 
 export default async (reset_db) => {
     try {
-        const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = serverdataModel(serverdata);
+        const serverdataModel = await import("../dbObjects/serverdata.model.js");
+        const { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, ModEnabledServers, LogChannels, StarboardChannels, StarboardLimits, StarboardMessages } = await serverdataModel(serverdata);
         if (reset_db) {
             await serverdata.drop();
             console.log(`Deleted Database: Server Data ✔`);

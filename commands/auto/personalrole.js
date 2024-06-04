@@ -3,16 +3,16 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/isAdmin.js";
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import { PersonalRoles, PersonalRoleServers } from "../../database/dbServices/server.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
+        const serverApi = await import("../../database/dbServices/server.api.js");
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
-        let serverID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
+        let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
+        let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
         ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -103,7 +103,7 @@ export default async (client, interaction, ephemeral) => {
 
         async function createRole() {
             // Clean up possible old entry
-            let oldEntry = await PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
+            let oldEntry = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
             if (oldEntry) await oldEntry.destroy();
             if (!colorArg) roleColor = 0;
             // Create role
@@ -130,7 +130,7 @@ export default async (client, interaction, ephemeral) => {
                 // console.log(e);
             };
             interaction.member.roles.add(createdRole.id);
-            await PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
+            await serverApi.PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
             return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
         };
 

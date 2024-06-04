@@ -1,9 +1,9 @@
 import { userdata } from "../dbConnection/dbConnection.js";
-import userdataModel from "../dbObjects/userdata.model.js";
 
 export default async (reset_db) => {
     try {
-        const { User, Shinx, EventTrophy, ShopTrophy } = userdataModel(userdata);
+        const userdataModel = await import("../dbObjects/userdata.model.js");
+        const { User, Shinx, EventTrophy, ShopTrophy } = await userdataModel.default(userdata);
         if (reset_db) {
             await userdata.drop();
             console.log(`Deleted Database: User Data ✔`);
