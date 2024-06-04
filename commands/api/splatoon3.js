@@ -15,18 +15,25 @@ export default async (client, interaction, ephemeral) => {
         let versionSplit = versionLatest.split("").join(".");
         if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
         let versionString = `Splatoon 3 v${versionSplit}`;
-        const GearInfoClothesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`).default;
-        const GearInfoHeadJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`).default;
-        const GearInfoShoesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`).default;
-        const WeaponInfoMainJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`).default;
-        // const WeaponInfoSpecialJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`).default;
-        // const WeaponInfoSubJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`).default;
+        let GearInfoClothesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`, { assert: { type: "json" } });
+        GearInfoClothesJSON = GearInfoClothesJSON.default;
+        let GearInfoHeadJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`, { assert: { type: "json" } });
+        GearInfoHeadJSON = GearInfoHeadJSON.default;
+        let GearInfoShoesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`, { assert: { type: "json" } });
+        GearInfoShoesJSON = GearInfoShoesJSON.default;
+        let WeaponInfoMainJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`, { assert: { type: "json" } });
+        WeaponInfoMainJSON = WeaponInfoMainJSON.default;
+        // const WeaponInfoSpecialJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`, { assert: { type: "json" } });
+        // WeaponInfoSpecialJSON = WeaponInfoSpecialJSON.default;
+        // const WeaponInfoSubJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`, { assert: { type: "json" } });
+        // WeaponInfoSubJSON = WeaponInfoSubJSON.default;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
-        let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`).default;
+        let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`, { assert: { type: "json" } });
+        languageJSON = languageJSON.default;
         let inputID;
         let inputRegion = interaction.options.getString("region");
         if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API

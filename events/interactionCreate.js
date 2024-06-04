@@ -370,8 +370,9 @@ export default async (client, interaction) => {
                         let languageDefault = "EUen";
                         let languageJSON = null;
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput) languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`).default;
-                        if (!languageJSON) languageJSON = await import(`../submodules/splat3/data/language/${languageDefault}_full.json`).default;
+                        if (languageInput) languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } }).then(json => languageJSON = json).catch(e => { });
+                        if (!languageJSON) languageJSON = await import(`../submodules/splat3/data/language/${languageDefault}_full.json`, { assert: { type: "json" } });
+                        languageJSON = languageJSON.default;
                         switch (focusedOption.name) {
                             case "clothing":
                                 // structuredClone() makes sure the original object stays intact
