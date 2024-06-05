@@ -368,7 +368,6 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        console.log("start")
                         let languageInput = interaction.options.getString("language");
                         if (!languageInput) languageInput = "EUen";
                         let languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } });
@@ -493,10 +492,10 @@ export default async (client, interaction) => {
                         break;
                     case "persona5":
                         // Submodule is documented in persona5 command
-                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
                         switch (focusedOption.name) {
                             case "persona":
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
                                 for await (const [key, value] of Object.entries(personaMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
                                 };
@@ -514,7 +513,7 @@ export default async (client, interaction) => {
                                 };
                                 break;
                             case "item":
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
                                 for await (const [key, value] of Object.entries(itemMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         !value.skillCard) choices.push({ name: key, value: key });

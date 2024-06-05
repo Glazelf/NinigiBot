@@ -12,13 +12,15 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
+        // In strict mode eval isn't allowed to create variables anymore, but the current code works and does the same anyways.
+        // Old usage: eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // Imports:
         // rarePersonaeRoyal; list of treasure Persona
         // rareCombosRoyal; ??
         // arcana2CombosRoyal; arcana fusion combos
         // specialCombosRoyal; special fusions
         // dlcPersonaRoyal; list of DLC Persona names
-        eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
         // Imports personaMapRoyal; object including all persona data (incl. DLC)
         eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
         // Imports skillMapRoyal; object including all skill AND trait data
