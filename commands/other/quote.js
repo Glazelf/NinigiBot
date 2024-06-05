@@ -1,9 +1,10 @@
-const Discord = require("discord.js");
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage.js";
+import logger from "../../util/logger.js";
+import randomNumber from "../../util/randomNumber.js";
 let lastQuote = null;
-exports.run = async (client, interaction, logger, ephemeral) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const randomNumber = require('../../util/randomNumber');
         ephemeral = false;
 
         const now = Date.now();
@@ -129,13 +130,12 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: `${randomAnswer}`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "quote",
     description: "Let someones wisdom guide you.",
-    serverID: ["549214833858576395"],
+    serverID: ["759344085420605471"],
 };
