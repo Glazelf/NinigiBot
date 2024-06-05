@@ -17,9 +17,9 @@ export default async (client, interaction, ephemeral) => {
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 
-        let shinx, foodArg, res, avatar;
-
+        let shinx, res;
         let canvas, ctx, img;
+        let returnString = "";
         let userFinder = await interaction.guild.members.fetch();
         let messageFile = null;
         let time;
@@ -39,8 +39,7 @@ export default async (client, interaction, ephemeral) => {
             case "info":
                 shinx = await getShinx(master.id);
                 const is_user_male = shinx.user_male;
-
-                avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+                const avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 canvas = Canvas.createCanvas(791, 441);
                 ctx = canvas.getContext('2d');
@@ -85,7 +84,7 @@ export default async (client, interaction, ephemeral) => {
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
                 break;
             case "feed":
-                foodArg = interaction.options.getInteger("food");
+                // let foodArg = interaction.options.getInteger("food");
                 res = await feedShinx(master.id);
                 switch (res) {
                     case 'NoHungry':
@@ -103,7 +102,7 @@ export default async (client, interaction, ephemeral) => {
                         img = await Canvas.loadImage('./assets/dining.png');
                         ctx.drawImage(img, 0, 0);
                         img = await Canvas.loadImage('./assets/mc.png');
-                        guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
+                        let guests = await getRandomShinx(2, shinx.user_id, interaction.guild);
                         ctx.drawImage(img, 51 * !shinx.user_male, 0, 51, 72, 120, 126, 51, 72);
                         ctx.font = 'normal bold 16px Arial';
                         ctx.fillStyle = '#ffffff';
@@ -210,7 +209,7 @@ export default async (client, interaction, ephemeral) => {
                 shinx.addExperienceAndUnfeed(50, 1);
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
                 break;
-            case "nick":
+            case "nickname":
                 let new_nick = interaction.options.getString("nickname");
                 res = await nameShinx(master.id, new_nick);
                 messageFile = null;
@@ -225,7 +224,7 @@ export default async (client, interaction, ephemeral) => {
                         returnString = `Could not rename because provided nickname was not alphanumeric`;
                         break;
                     case 'Ok':
-                        is_shiny = await getShinxShininess(master.id);
+                        const is_shiny = await getShinxShininess(master.id);
                         canvas = Canvas.createCanvas(471, 355);
                         ctx = canvas.getContext('2d');
                         img = await Canvas.loadImage('./assets/nicks.png');
@@ -322,7 +321,7 @@ export const config = {
             description: "Whether this command is only visible to you."
         }]
     }, {
-        name: "nick",
+        name: "nickname",
         type: Discord.ApplicationCommandOptionType.Subcommand,
         description: "Change your Shinx nickname!",
         options: [{

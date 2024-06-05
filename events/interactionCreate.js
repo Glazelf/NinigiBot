@@ -347,7 +347,7 @@ export default async (client, interaction) => {
                                 let ratings = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options.getString("format");
                                 if (formatInput && formatInput.match(/gen.{1,2}(ou)$/g)) ratings = [0, 1500, 1695, 1825];
-                                await ratings.forEach(rating => {
+                                ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
                                 break;
@@ -368,18 +368,16 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "splatoon3":
-                        let languageDefault = "EUen";
-                        let languageJSON = null;
+                        console.log("start")
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput) languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } }).then(json => languageJSON = json).catch(e => { });
-                        if (!languageJSON) languageJSON = await import(`../submodules/splat3/data/language/${languageDefault}_full.json`, { assert: { type: "json" } });
+                        if (!languageInput) languageInput = "EUen";
+                        let languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } });
                         languageJSON = languageJSON.default;
                         switch (focusedOption.name) {
                             case "clothing":
-                                // structuredClone() makes sure the original object stays intact
-                                let allClothesHead = structuredClone(languageJSON["CommonMsg/Gear/GearName_Head"]);
-                                let allClothesBody = structuredClone(languageJSON["CommonMsg/Gear/GearName_Clothes"]);
-                                let allClothesShoes = structuredClone(languageJSON["CommonMsg/Gear/GearName_Shoes"]);
+                                let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
+                                let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
+                                let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
                                 for await (const [key, value] of Object.entries(allClothesHead)) {
                                     let clothesHeadEndString = "_Head";
                                     if (!key.endsWith(clothesHeadEndString)) {

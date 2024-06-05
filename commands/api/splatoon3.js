@@ -31,6 +31,7 @@ export default async (client, interaction, ephemeral) => {
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
+        // Check language
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
         let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`, { assert: { type: "json" } });
@@ -473,16 +474,16 @@ export default async (client, interaction, ephemeral) => {
 
 let splatoon3Languages = [
     { name: "English", value: "EUen" },
-    { name: "French|Français", value: "EUfr" },
-    { name: "German|Deutsch", value: "EUde" },
-    { name: "Spanish|Español", value: "EUes" },
-    { name: "Dutch|Nederlands", value: "EUnl" },
-    { name: "Italian|Italiano", value: "EUit" },
-    { name: "Russian|Русский", value: "EUru" },
-    { name: "Japanese|日本語", value: "JPja" },
-    { name: "Korean|한국어", value: "KRko" },
-    { name: "Chinese (Simplified)|中文（简体)", value: "CNzh" },
-    { name: "Chinese (Traditional)|中文（繁體)", value: "TWzh" }
+    { name: "French | Français", value: "EUfr" },
+    { name: "German | Deutsch", value: "EUde" },
+    { name: "Spanish | Español", value: "EUes" },
+    { name: "Dutch | Nederlands", value: "EUnl" },
+    { name: "Italian | Italiano", value: "EUit" },
+    { name: "Russian | Русский", value: "EUru" },
+    { name: "Japanese | 日本語", value: "JPja" },
+    { name: "Korean | 한국어", value: "KRko" },
+    { name: "Chinese (Simplified) | 中文（简体)", value: "CNzh" },
+    { name: "Chinese (Traditional) | 中文（繁體)", value: "TWzh" }
 ];
 let splatoon3Regions = [
     { value: "EU", name: "Europe" },
@@ -490,6 +491,7 @@ let splatoon3Regions = [
     { value: "JP", name: "Japan" },
     { value: "AP", name: "Asia/Pacific" }
 ];
+
 export const config = {
     name: "splatoon3",
     description: `Shows Splatoon 3 data.`,
@@ -507,7 +509,7 @@ export const config = {
             name: "language",
             type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
@@ -527,7 +529,7 @@ export const config = {
             name: "language",
             type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
