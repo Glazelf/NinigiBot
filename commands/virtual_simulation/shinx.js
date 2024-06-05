@@ -248,7 +248,7 @@ export default async (client, interaction, ephemeral) => {
                 res = await hasEventTrophy(master.id, 'shiny charm');
                 if (res) {
                     const is_shiny = await switchShininessAndGet(master.id);
-                    returnString = is_shiny ? `Your shinx is shiny now` : `Your shinx is no longer shiny`;
+                    returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
                     canvas = Canvas.createCanvas(255, 192);
                     ctx = canvas.getContext('2d');
                     img = await Canvas.loadImage('./assets/sky.png');
