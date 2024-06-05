@@ -6,7 +6,7 @@ import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction) => {
     try {
-        const serverApi = await import("../../database/dbServices/server.api.js");
+        let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
