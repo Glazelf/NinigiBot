@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -25,7 +26,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             "&",
             "$"
         ];
-        calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
+        let calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
@@ -50,12 +51,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "calculator",
     description: "Calculate.",
     options: [{

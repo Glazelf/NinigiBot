@@ -1,16 +1,19 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const textChannelTypes = require('../../objects/discord/textChannelTypes.json');
-        const isAdmin = require('../../util/isAdmin');
-        let adminBool = isAdmin(client, interaction.member);
-        const { StarboardChannels } = require('../../database/dbServices/server.api');
-        const { StarboardLimits } = require('../../database/dbServices/server.api');
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
 
+export default async (client, interaction) => {
+    try {
+        let adminBool = isAdmin(client, interaction.member);
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
+
+        const serverApi = await import("../../database/dbServices/server.api.js");
+
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
         if (disableArg === true) disableBool = disableArg;
@@ -18,34 +21,33 @@ exports.run = async (client, interaction, logger) => {
         let textChannelInvalid = `No text can be sent to ${channelArg}'s type (${Discord.ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
         switch (interaction.options.getSubcommand()) {
             case "starboard":
-                let oldStarboardChannel = await StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
-                let oldStarLimitDB = await StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
+                let oldStarboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
+                let oldStarLimitDB = await serverApi.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
                 let starlimit = null;
                 if (oldStarLimitDB) {
                     starlimit = oldStarLimitDB.star_limit;
                 } else {
-                    starlimit = client.globalVars.starboardLimit;
+                    starlimit = globalVars.starboardLimit;
                 };
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 let starlimitArg = interaction.options.getInteger("starlimit");
                 if (starlimitArg) {
                     starlimit = starlimitArg;
                     if (oldStarLimitDB) await oldStarLimitDB.destroy();
-                    await StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
+                    await serverApi.StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
                 };
                 // Database
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
-                await StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
                 break;
             case "log":
-                const { LogChannels } = require('../../database/dbServices/server.api');
-                let oldLogChannel = await LogChannels.findOne({ where: { server_id: interaction.guild.id } });
+                let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
-                await LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                await serverApi.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
                 break;
             case "automod":
@@ -101,26 +103,24 @@ exports.run = async (client, interaction, logger) => {
                 return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
                 break;
             case "togglepersonalroles":
-                const { PersonalRoleServers } = require('../../database/dbServices/server.api');
-                let personalRolesServerID = await PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
+                let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
                 // Database
                 if (personalRolesServerID) {
                     await personalRolesServerID.destroy();
                     return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can no longer be managed by users in **${interaction.guild.name}**.` });
                 } else {
-                    await PersonalRoleServers.upsert({ server_id: interaction.guild.id });
+                    await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
                     return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can now be managed by users in **${interaction.guild.name}**.` });
                 };
                 break;
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "serversettings",
     description: "Change server settings.",
     options: [{

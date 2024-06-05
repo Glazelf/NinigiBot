@@ -1,9 +1,12 @@
-module.exports = async (client, member, newMember) => {
-    const logger = require('../util/logger');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+export default async (client, member, newMember) => {
     try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
-        let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -12,8 +15,8 @@ module.exports = async (client, member, newMember) => {
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
-            let oldAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let updateCase = null;
             let topText = null;
@@ -63,9 +66,8 @@ module.exports = async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            const { PersonalRoles, PersonalRoleServers } = require('../database/dbServices/server.api');
-            let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-            let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+            let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+            let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(Discord.PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
 
             switch (updateCase) {
@@ -113,7 +115,7 @@ module.exports = async (client, member, newMember) => {
             };
             if (changeText && changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(topText)
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);
@@ -149,7 +151,6 @@ module.exports = async (client, member, newMember) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

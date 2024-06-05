@@ -1,11 +1,14 @@
-module.exports = async (client, interaction, monsterData, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../logger.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
+import getWikiURL from "../getWikiURL.js";
+import imageExists from "../imageExists.js";
+import isAdmin from "../isAdmin.js";
+
+export default async (client, interaction, monsterData, ephemeral) => {
     try {
-        const Discord = require("discord.js");
-        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
-        const elementEmotes = require('../../objects/monsterhunter/elementEmotes.json');
-        const getWikiURL = require('../getWikiURL');
-        const imageExists = require('../imageExists');
-        const isAdmin = require('../isAdmin');
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
@@ -149,7 +152,7 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender);
         if (monsterDescription) mhEmbed.setDescription(monsterDescription);
@@ -165,8 +168,6 @@ module.exports = async (client, interaction, monsterData, ephemeral) => {
         return messageObject;
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
         logger(e, client);
     };
 };

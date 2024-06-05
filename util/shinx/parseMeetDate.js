@@ -1,4 +1,4 @@
-module.exports = (day, month, year) => {
+export default (day, month, year) => {
     return `${parseMonth(month)} ${day}, ${year}`;
 };
 

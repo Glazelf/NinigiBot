@@ -1,8 +1,11 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import axios from "axios";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const axios = require("axios");
         let api = "https://helldiverstrainingmanual.com/api/v1/";
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -12,7 +15,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let defenseString = "Defense";
         await interaction.deferReply({ ephemeral: ephemeral });
         let helldiversEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "planet":
@@ -70,12 +73,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "helldivers2",
     description: `Shows Helldivers 2 data.`,
     options: [{

@@ -1,16 +1,18 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let role = interaction.options.getRole("role");
         // Role visuals
-        let icon = role.iconURL(client.globalVars.displayAvatarSettings);
+        let icon = role.iconURL(globalVars.displayAvatarSettings);
         let defaultColor = "#000000";
         let embedColor = role.hexColor;
-        if (embedColor == defaultColor) embedColor = client.globalVars.embedColor;
+        if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
         let guildMembers = await interaction.guild.members.fetch();
         let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;
@@ -42,12 +44,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "roleinfo",
     description: "Displays info about a role.",
     options: [{

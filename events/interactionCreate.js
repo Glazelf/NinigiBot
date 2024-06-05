@@ -1,23 +1,41 @@
-module.exports = async (client, interaction) => {
-    const logger = require('../util/logger');
+// Global
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import sendMessage from "../util/sendMessage.js";
+import axios from "axios";
+import fs from "fs";
+// Pokémon
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
+import getPokemon from "../util/pokemon/getPokemon.js";
+import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
+// Monster Hunter
+import getMHMonster from "../util/mh/getMonster.js";
+import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
+import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
+import getMHQuests from "../util/mh/getQuests.js";
+// Splatoon
+import getSplatfests from "../util/splat/getSplatfests.js";
+// DQM3
+import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json"};
+import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json"};
+// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json"};
+import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json"};
+import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json"};
+import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
+import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
+// Database
+import { getEphemeralDefault } from "../database/dbServices/user.api.js";
+import { getShopTrophies, getEventTrophies, getBuyableShopTrophies } from "../database/dbServices/trophy.api.js";
+// Other util
+import isAdmin from "../util/isAdmin.js";
+import capitalizeString from "../util/capitalizeString.js";
+import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
+import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
+
+export default async (client, interaction) => {
     try {
-        const Discord = require("discord.js");
-        let sendMessage = require('../util/sendMessage');
-        let isAdmin = require('../util/isAdmin');
-        const getPokemon = require('../util/pokemon/getPokemon');
-        const getMonster = require('../util/mh/getMonster');
-        const randomNumber = require('../util/randomNumber');
-        const capitalizeString = require('../util/capitalizeString');
-        const getWhosThatPokemon = require('../util/pokemon/getWhosThatPokemon');
-        const { Dex } = require('pokemon-showdown');
-        const axios = require("axios");
-        const fs = require("fs");
-        const monstersJSON = require("../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../submodules/monster-hunter-DB/quests.json");
-        const { EligibleRoles } = require('../database/dbServices/server.api');
-        const api_trophy = require('../database/dbServices/trophy.api');
-        const api_user = require('../database/dbServices/user.api');
-        if (!interaction) return;
         if (interaction.user.bot) return;
         // ID split
         let customIdSplit = null;
@@ -43,9 +61,9 @@ module.exports = async (client, interaction) => {
                 // Run the command
                 if (cmd) {
                     try {
-                        let ephemeralDefault = await api_user.getEphemeralDefault(interaction.user.id);
+                        let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.run(client, interaction, logger, ephemeralDefault);
+                        await cmd.default(client, interaction, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -67,7 +85,7 @@ module.exports = async (client, interaction) => {
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             // Response in case of forfeit/reveal
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
-                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
+                            let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
                             return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
@@ -112,16 +130,15 @@ module.exports = async (client, interaction) => {
                             if (!newMonsterName) return;
                             newMonsterName = newMonsterName.label;
                             let monsterData = null;
-                            monstersJSON.monsters.forEach(monster => {
+                            MHMonstersJSON.monsters.forEach(monster => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMonster(client, interaction, monsterData);
+                            messageObject = await getMHMonster(client, interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhquests")) {
                             // Monster Hunter quests
-                            const getQuests = require('../util/mh/getQuests');
                             let mhQuestsDirection = customIdSplit[1];
                             let mhQuestsGameName = customIdSplit[2];
                             let mhQuestsPage = customIdSplit[3];
@@ -142,11 +159,10 @@ module.exports = async (client, interaction) => {
                             };
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
-                            let mhQuestsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            let mhQuestsMessageObject = await getMHQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
                             return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
-                            const getSplatfests = require('../util/splat/getSplatfests');
                             let splatfestDirection = customIdSplit[1];
                             let splatfestPage = customIdSplit[2];
                             let splatfestRegion = customIdSplit[3];
@@ -175,22 +191,24 @@ module.exports = async (client, interaction) => {
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
-                            let trophy_slice = await require('../util/trophies/getTrophyEmbedSlice')(client, offset);
+                            let trophy_slice = await getTrophyEmbedSlice(client, offset);
                             return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
-                            let userinfo_page = await require('../util/userinfo/getUserInfoSlice')(client, interaction, page, { id: user });
+                            let userinfo_page = await getUserInfoSlice(client, interaction, page, { id: user });
                             return interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
                             return;
                         };
-                    case Discord.ComponentType.SelectMenu:
+                    case Discord.ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             try {
+                                let serverApi = await import("../database/dbServices/server.api.js");
+                                serverApi = await serverApi.default();
                                 // Toggle selected role
                                 const rolesArray = [];
                                 for await (const value of interaction.values) {
@@ -202,7 +220,7 @@ module.exports = async (client, interaction) => {
 
                                 let roleSelectReturnString = "Role toggling results:\n";
                                 for await (const role of rolesArray) {
-                                    let checkRoleEligibility = await EligibleRoles.findOne({ where: { role_id: role.id } });
+                                    let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
                                     if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
                                     if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
                                     if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
@@ -253,7 +271,9 @@ module.exports = async (client, interaction) => {
                     case "role":
                         switch (focusedOption.name) {
                             case "role":
-                                let dbRoles = await EligibleRoles.findAll();
+                                let serverApi = await import("../database/dbServices/server.api.js");
+                                serverApi = await serverApi.default();
+                                let dbRoles = await serverApi.EligibleRoles.findAll();
                                 let roleIDs = [];
                                 let roleObject = [];
                                 await dbRoles.forEach(eligibleRole => {
@@ -327,7 +347,7 @@ module.exports = async (client, interaction) => {
                                 let ratings = [0, 1500, 1630, 1760];
                                 let formatInput = interaction.options.getString("format");
                                 if (formatInput && formatInput.match(/gen.{1,2}(ou)$/g)) ratings = [0, 1500, 1695, 1825];
-                                await ratings.forEach(rating => {
+                                ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
                                 break;
@@ -336,29 +356,27 @@ module.exports = async (client, interaction) => {
                     case "monsterhunter":
                         switch (focusedOption.name) {
                             case "monster":
-                                await monstersJSON.monsters.forEach(monster => {
+                                MHMonstersJSON.monsters.forEach(monster => {
                                     if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
                                 });
                                 break;
                             case "quest":
-                                await questsJSON.quests.forEach(quest => {
+                                MHQuestsJSON.quests.forEach(quest => {
                                     if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
                                 });
                                 break;
                         };
                         break;
                     case "splatoon3":
-                        let languageDefault = "EUen";
-                        let languageJSON = null;
                         let languageInput = interaction.options.getString("language");
-                        if (languageInput) languageJSON = require(`../submodules/splat3/data/language/${languageInput}_full.json`);
-                        if (!languageJSON) languageJSON = require(`../submodules/splat3/data/language/${languageDefault}_full.json`);
+                        if (!languageInput) languageInput = "EUen";
+                        let languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } });
+                        languageJSON = languageJSON.default;
                         switch (focusedOption.name) {
                             case "clothing":
-                                // structuredClone() makes sure the original object stays intact
-                                let allClothesHead = structuredClone(languageJSON["CommonMsg/Gear/GearName_Head"]);
-                                let allClothesBody = structuredClone(languageJSON["CommonMsg/Gear/GearName_Clothes"]);
-                                let allClothesShoes = structuredClone(languageJSON["CommonMsg/Gear/GearName_Shoes"]);
+                                let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
+                                let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
+                                let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
                                 for await (const [key, value] of Object.entries(allClothesHead)) {
                                     let clothesHeadEndString = "_Head";
                                     if (!key.endsWith(clothesHeadEndString)) {
@@ -474,10 +492,10 @@ module.exports = async (client, interaction) => {
                         break;
                     case "persona5":
                         // Submodule is documented in persona5 command
-                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
                         switch (focusedOption.name) {
                             case "persona":
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
                                 for await (const [key, value] of Object.entries(personaMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
                                 };
@@ -495,7 +513,7 @@ module.exports = async (client, interaction) => {
                                 };
                                 break;
                             case "item":
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
                                 for await (const [key, value] of Object.entries(itemMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         !value.skillCard) choices.push({ name: key, value: key });
@@ -503,32 +521,32 @@ module.exports = async (client, interaction) => {
                         };
                         break;
                     case "dqm3":
-                        let targetJSON = null
+                        let targetJSON = null;
                         if (focusedOption.name.startsWith("trait")) {
-                            targetJSON = require("../submodules/DQM3-db/objects/traits.json");
+                            targetJSON = DQMTraitsJSON;
                         } else {
                             switch (focusedOption.name) {
                                 case "parent1":
                                 case "parent2":
                                 case "target":
                                 case "monster":
-                                    targetJSON = require("../submodules/DQM3-db/objects/monsters.json");
+                                    targetJSON = DQMMonstersJSON;
                                     break;
                                 case "area":
                                     // Currently unused, add spawns under detailed monster info once the db has them
-                                    // targetJSON = require("../submodules/DQM3-db/objects/areas.json");
+                                    // targetJSON = DQMAreasJSON;
                                     break;
                                 case "family":
-                                    targetJSON = require("../submodules/DQM3-db/objects/families.json");
+                                    targetJSON = DQMFamiliesJSON;
                                     break;
                                 case "item":
-                                    targetJSON = require("../submodules/DQM3-db/objects/items.json");
+                                    targetJSON = DQMItemsJSON;
                                     break;
                                 case "skill":
-                                    targetJSON = require("../submodules/DQM3-db/objects/skills.json");
+                                    targetJSON = DQMSkillsJSON;
                                     break;
                                 case "talent":
-                                    targetJSON = require("../submodules/DQM3-db/objects/talents.json");
+                                    targetJSON = DQMTalentsJSON;
                                     break;
                             };
                         };
@@ -553,7 +571,7 @@ module.exports = async (client, interaction) => {
                     case "manager":
                         switch (focusedOption.name) {
                             case "name":
-                                let trophies = await api_trophy.getShopTrophies();
+                                let trophies = await getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
@@ -564,20 +582,20 @@ module.exports = async (client, interaction) => {
                     case "trophy":
                         switch (focusedOption.name) {
                             case "shoptrophy":
-                                const buyable_items = await api_trophy.getBuyableShopTrophies(interaction.user.id);
+                                const buyable_items = await getBuyableShopTrophies(interaction.user.id);
                                 buyable_items.forEach(trophy => {
                                     choices.push({ name: trophy, value: trophy });
                                 });
                                 // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                 break;
                             case "trophy":
-                                let trophies = await api_trophy.getShopTrophies();
+                                let trophies = await getShopTrophies();
                                 let temp = ''
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
                                 });
-                                trophies = await api_trophy.getEventTrophies();
+                                trophies = await getEventTrophies();
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
@@ -603,7 +621,7 @@ module.exports = async (client, interaction) => {
                 });
                 break;
             case Discord.InteractionType.ModalSubmit:
-                let userAvatar = interaction.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report
@@ -615,7 +633,7 @@ module.exports = async (client, interaction) => {
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
                         const bugReportEmbed = new Discord.EmbedBuilder()
-                            .setColor(client.globalVars.embedColor)
+                            .setColor(globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
@@ -637,7 +655,7 @@ module.exports = async (client, interaction) => {
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
                         const modMailEmbed = new Discord.EmbedBuilder()
-                            .setColor(client.globalVars.embedColor)
+                            .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)
@@ -656,7 +674,7 @@ module.exports = async (client, interaction) => {
                         const pkmQuizModalGuess = interaction.fields.getTextInputValue(pkmQuizButtonID);
 
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
-                            let pkmQuizMessageObject = await getWhosThatPokemon({ client: client, pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
+                            let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
                         } else {
                             return sendMessage({ client: client, interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
@@ -669,7 +687,6 @@ module.exports = async (client, interaction) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };

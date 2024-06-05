@@ -1,19 +1,22 @@
-const Discord = require("discord.js");
-const api_trophy = require('../../database/dbServices/trophy.api');
-const api_user = require('../../database/dbServices/user.api');
-// Amount of userinfo pages
-const NUMBER_OF_PAGES = 2;
+import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import { getUser } from "../../database/dbServices/user.api.js";
+import parseDate from "../../util/parseDate.js";
+import isAdmin from "../../util/isAdmin.js";
+import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
 
-module.exports = async (client, interaction, page, user) => {
+const number_of_pages = 2;
+
+export default async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
-    let embedColor = client.globalVars.embedColor;
+    let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (member) serverAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
-    let avatar = user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+    let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new Discord.EmbedBuilder()
         .setColor(embedColor)
@@ -22,14 +25,12 @@ module.exports = async (client, interaction, page, user) => {
     let profileButtons = new Discord.ActionRowBuilder()
         .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
     if (page > 0) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page - 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
-    if (page < NUMBER_OF_PAGES - 1 && member && !user.bot) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page + 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
+    if (page < number_of_pages - 1 && member && !user.bot) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page + 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
 
-    let user_db = await api_user.getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
+    let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            const parseDate = require('../../util/parseDate')
-            const isAdmin = require('../../util/isAdmin');
-            const badgeEmotes = require('../../objects/discord/badgeEmotes.json');
+
             let adminBot = isAdmin(client, interaction.guild.members.me);
             let switchCode = user_db.swcode;
             let birthday = user_db.birthday;
@@ -42,7 +43,7 @@ module.exports = async (client, interaction, page, user) => {
             if (memberRoles && memberRoles.size !== 0) {
                 rolesSorted = await memberRoles.sort((r, r2) => r2.position - r.position);
                 rolesSorted = [...rolesSorted.values()].join(", ");
-                for (i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
+                for (let i = rolesSorted.length; i > 1024; i = rolesSorted.length) {
                     rolesSorted = rolesSorted.split(", ");
                     await rolesSorted.pop();
                     rolesSorted = rolesSorted.join(", ");
@@ -54,7 +55,7 @@ module.exports = async (client, interaction, page, user) => {
             if (memberRoles) roleCount = memberRoles.size;
             // Banner
             let banner = null;
-            if (user.banner) banner = user.bannerURL(client.globalVars.displayAvatarSettings);
+            if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
@@ -96,14 +97,14 @@ module.exports = async (client, interaction, page, user) => {
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
-            let userBalance = `${dbBalance}${client.globalVars.currency}`;
+            let userBalance = `${dbBalance}${globalVars.currency}`;
             profileEmbed.addFields([
                 { name: "Balance:", value: userBalance, inline: true },
                 { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }
             ]);
-            trophy_level = 0;
+            let trophy_level = 0;
+            let trophy_string = '';
             let trophies = await user_db.getShopTrophies();
-            trophy_string = '';
             trophies.forEach(trophy => {
                 trophy_string += (trophy.icon + ' ');
             });

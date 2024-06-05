@@ -1,9 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const owoify = require('owoify-js').default;
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import owoify from "owoify-js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -12,13 +13,12 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let severity = interaction.options.getString("severity");
         if (!severity) severity = "owo";
 
-        let inputOwOified = owoify(input, severity);
+        let inputOwOified = owoify.default(input, severity);
         let returnString = Discord.codeBlock("fix", inputOwOified);
 
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
@@ -29,7 +29,7 @@ let severityChoices = [
     { name: "3. uvu", value: "uvu" }
 ];
 
-module.exports.config = {
+export const config = {
     name: "owoify",
     description: "OwOifies text.",
     options: [{

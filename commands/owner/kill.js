@@ -1,12 +1,15 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import forever from "forever";
+import isOwner from "../../util/isOwner.js";
+import getTime from "../../util/getTime.js";
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const forever = require('forever');
-        const isOwner = require('../../util/isOwner');
-        const getTime = require('../../util/getTime');
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");
@@ -42,12 +45,11 @@ exports.run = async (client, interaction, logger) => {
         return process.exit();
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "kill",
     description: "Shuts down bot.",
     serverID: ["759344085420605471"],

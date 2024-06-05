@@ -1,25 +1,27 @@
-module.exports = async ({ client, interaction, gameName, page }) => {
+import Discord from "discord.js";
+import logger from "../logger.js";
+import sendMessage from "../sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
+
+export default async ({ client, interaction, gameName, page }) => {
     try {
-        const sendMessage = require('../sendMessage');
-        const Discord = require("discord.js");
-        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
         // Add quests matching game title to an array
         let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());
         if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
         // Sort by difficulty
         questsTotal = questsTotal.sort(compare);
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(`${gameName} Quests`);
         let questsButtons = new Discord.ActionRowBuilder();
         let questsEmbedFields = [];
-        let totalQuests = questsTotal.length;
         let pageLength = 25;
         let startIndex = pageLength * page - pageLength + 1; // 1, 26, 53, etc.
         let endIndex = startIndex + pageLength - 1; // 25, 50, 75, etc.
         let totalPages = Math.ceil(questsTotal.length / pageLength);
 
-        for (i = startIndex; i <= endIndex; i++) {
+        for (let i = startIndex; i <= endIndex; i++) {
             if (!questsTotal[i]) break;
             let questTitle = `${questsTotal[i].name}\n${questsTotal[i].difficulty}⭐`;
             if (questsTotal[i].isKey) questTitle += ` 🔑`;
@@ -48,8 +50,6 @@ module.exports = async ({ client, interaction, gameName, page }) => {
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
         logger(e, client);
     };
 };

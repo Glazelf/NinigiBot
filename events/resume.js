@@ -1,19 +1,15 @@
-module.exports = async (client) => {
+import getTime from '../util/getTime.js';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+export default async (client) => {
     try {
-        const Discord = require("discord.js");
-        const getTime = require('../util/getTime');
-
         // Set bot status
-        client.user.setPresence(client.globalVars.presence);
-
+        client.user.setPresence(globalVars.presence);
         let timestamp = await getTime(client);
-
-        // Console log status
         // console.log(`Resumed. (${timestamp})`);
         return;
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

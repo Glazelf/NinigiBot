@@ -1,10 +1,12 @@
-module.exports = async (client, channel) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: channel.guild.id } });
+export default async (client, channel) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;
         let log = channel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -26,9 +28,9 @@ module.exports = async (client, channel) => {
                 };
             };
             const channelType = channel.constructor.name;
-            let icon = channel.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${channelType} Deleted ❌`)
                 .setDescription(`${channel.name} (${channel.id})`)
                 .setFooter({ text: channel.id })
@@ -47,7 +49,6 @@ module.exports = async (client, channel) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

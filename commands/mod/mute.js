@@ -1,13 +1,16 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
-        const getTime = require('../../util/getTime');
-        let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ModerateMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+import getTime from "../../util/getTime.js";
 
-        let ephemeral = false;
+export default async (client, interaction, ephemeral) => {
+    try {
+        let adminBool = isAdmin(client, interaction.member);
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ModerateMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+
+        ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
@@ -67,12 +70,11 @@ exports.run = async (client, interaction, logger) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "mute",
     description: "Times the target out.",
     options: [{

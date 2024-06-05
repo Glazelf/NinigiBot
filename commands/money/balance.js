@@ -1,20 +1,22 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import { getMoney } from "../../database/dbServices/user.api.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const api_user = require('../../database/dbServices/user.api');
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let dbBalance = await api_user.getMoney(interaction.user.id);
-        return sendMessage({ client: client, interaction: interaction, content: `You have ${Math.floor(dbBalance)}${client.globalVars.currency}.`, ephemeral: ephemeral });
+        let dbBalance = await getMoney(interaction.user.id);
+        return sendMessage({ client: client, interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "balance",
     description: "Sends how much money you have.",
     options: [{

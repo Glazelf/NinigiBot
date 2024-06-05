@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     return sequelize.define('mod_enabled_servers', {
         server_id: {
             type: DataTypes.STRING,

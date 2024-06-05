@@ -1,10 +1,14 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
+
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -65,12 +69,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "purge",
     description: "Bulk delete messages.",
     options: [{

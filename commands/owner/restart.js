@@ -1,13 +1,17 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isOwner from "../../util/isOwner.js";
+import getTime from "../../util/getTime.js";
+import runCommand from "../../util/runCommand.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isOwner = require('../../util/isOwner');
-        const getTime = require('../../util/getTime');
-        const runCommand = require('../../util/runCommand');
+        ephemeral = false;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
-        await interaction.deferReply({ ephemeral: false });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
@@ -50,12 +54,11 @@ exports.run = async (client, interaction, logger) => {
         return process.exit();
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "restart",
     description: "Restart bot and reload all files.",
     serverID: ["759344085420605471"],

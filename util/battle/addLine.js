@@ -1,3 +1,3 @@
-module.exports = (line) => {
+export default (line) => {
     return (line + '\n');
 };

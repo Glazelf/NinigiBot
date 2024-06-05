@@ -1,11 +1,14 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import fs from "fs";
+import axios from "axios";
+import getSplatfests from "../../util/splat/getSplatfests.js";
+import randomNumber from "../../util/randomNumber.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const fs = require("fs");
-        const axios = require("axios");
-        const getSplatfests = require('../../util/splat/getSplatfests');
-        const randomNumber = require('../../util/randomNumber');
         // Game data
         let version = "latest"; // Use version number without periods or "latest"
         let versionLatest = version;
@@ -13,18 +16,26 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let versionSplit = versionLatest.split("").join(".");
         if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
         let versionString = `Splatoon 3 v${versionSplit}`;
-        const GearInfoClothesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`);
-        const GearInfoHeadJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`);
-        const GearInfoShoesJSON = require(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`);
-        const WeaponInfoMainJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`);
-        // const WeaponInfoSpecialJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`);
-        // const WeaponInfoSubJSON = require(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`);
+        let GearInfoClothesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`, { assert: { type: "json" } });
+        GearInfoClothesJSON = GearInfoClothesJSON.default;
+        let GearInfoHeadJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`, { assert: { type: "json" } });
+        GearInfoHeadJSON = GearInfoHeadJSON.default;
+        let GearInfoShoesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`, { assert: { type: "json" } });
+        GearInfoShoesJSON = GearInfoShoesJSON.default;
+        let WeaponInfoMainJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`, { assert: { type: "json" } });
+        WeaponInfoMainJSON = WeaponInfoMainJSON.default;
+        // const WeaponInfoSpecialJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`, { assert: { type: "json" } });
+        // WeaponInfoSpecialJSON = WeaponInfoSpecialJSON.default;
+        // const WeaponInfoSubJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`, { assert: { type: "json" } });
+        // WeaponInfoSubJSON = WeaponInfoSubJSON.default;
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
+        // Check language
         let languageKey = interaction.options.getString("language");
         if (!languageKey) languageKey = "EUen";
-        let languageJSON = require(`../../submodules/splat3/data/language/${languageKey}_full.json`);
+        let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`, { assert: { type: "json" } });
+        languageJSON = languageJSON.default;
         let inputID;
         let inputRegion = interaction.options.getString("region");
         if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
@@ -37,7 +48,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");
@@ -457,23 +468,22 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
 let splatoon3Languages = [
     { name: "English", value: "EUen" },
-    { name: "French|Français", value: "EUfr" },
-    { name: "German|Deutsch", value: "EUde" },
-    { name: "Spanish|Español", value: "EUes" },
-    { name: "Dutch|Nederlands", value: "EUnl" },
-    { name: "Italian|Italiano", value: "EUit" },
-    { name: "Russian|Русский", value: "EUru" },
-    { name: "Japanese|日本語", value: "JPja" },
-    { name: "Korean|한국어", value: "KRko" },
-    { name: "Chinese (Simplified)|中文（简体)", value: "CNzh" },
-    { name: "Chinese (Traditional)|中文（繁體)", value: "TWzh" }
+    { name: "French | Français", value: "EUfr" },
+    { name: "German | Deutsch", value: "EUde" },
+    { name: "Spanish | Español", value: "EUes" },
+    { name: "Dutch | Nederlands", value: "EUnl" },
+    { name: "Italian | Italiano", value: "EUit" },
+    { name: "Russian | Русский", value: "EUru" },
+    { name: "Japanese | 日本語", value: "JPja" },
+    { name: "Korean | 한국어", value: "KRko" },
+    { name: "Chinese (Simplified) | 中文（简体)", value: "CNzh" },
+    { name: "Chinese (Traditional) | 中文（繁體)", value: "TWzh" }
 ];
 let splatoon3Regions = [
     { value: "EU", name: "Europe" },
@@ -481,7 +491,8 @@ let splatoon3Regions = [
     { value: "JP", name: "Japan" },
     { value: "AP", name: "Asia/Pacific" }
 ];
-module.exports.config = {
+
+export const config = {
     name: "splatoon3",
     description: `Shows Splatoon 3 data.`,
     options: [{
@@ -498,7 +509,7 @@ module.exports.config = {
             name: "language",
             type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
@@ -518,7 +529,7 @@ module.exports.config = {
             name: "language",
             type: Discord.ApplicationCommandOptionType.String,
             description: "Specify a language.",
-            autocomplete: true
+            choices: splatoon3Languages
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,

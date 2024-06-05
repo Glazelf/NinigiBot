@@ -1,17 +1,18 @@
-module.exports = async (client) => {
-    const logger = require('../util/logger');
-    // Import globals
+import Discord from "discord.js";
+import logger from '../util/logger.js';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import getRandomGif from "../util/getRandomGif.js";
+import cron from "cron";
+import { getBirthday } from "../database/dbServices/user.api.js";
+
+export default async (client) => {
     try {
-        const getRandomGif = require("../util/getRandomGif");
-        const cron = require("cron");
         const timezone = 'utc';
         const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
-        const guildID = client.globalVars.ShinxServerID;
-        const channelID = client.globalVars.eventChannelID;
-        const Discord = require("discord.js");
-        const api_user = require('../database/dbServices/user.api');
+        const guildID = globalVars.ShinxServerID;
+        const channelID = globalVars.eventChannelID;
         const gifTags = ["birthday"];
-        if (client.user.id != client.globalVars.NinigiID) return;
+        if (client.user.id != globalVars.NinigiID) return;
         // Create cron job
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
@@ -25,9 +26,9 @@ module.exports = async (client) => {
             let cutiesUsernames = [];
             await guild.members.fetch();
             // For every member check 
-            for (m in [...guild.members.cache.values()]) {
+            for (const m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
-                const birthday = await api_user.getBirthday(member.id);
+                const birthday = await getBirthday(member.id);
                 if (birthday) {
                     let now = new Date();
                     // Birthdays are stored as string DDMM instead of being seperated by a -
@@ -44,14 +45,13 @@ module.exports = async (client) => {
             const randomGif = await getRandomGif(gifTags);
             // Create embed
             const gifEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
             channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });
         }, timeZone = timezone, start = true);
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

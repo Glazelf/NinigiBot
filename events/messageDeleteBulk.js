@@ -1,9 +1,10 @@
-module.exports = async (client, messages) => {
-    const logger = require('../util/logger');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+
+export default async (client, messages) => {
     try {
         if (!messages) return;
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
         // Find a good way to check executor for this sometime
         let messagesContent = "";
         let guild = null;
@@ -21,7 +22,9 @@ module.exports = async (client, messages) => {
         guild = await client.guilds.fetch(guild);
         if (!guild) return;
         // Get log
-        let logChannel = await LogChannels.findOne({ where: { server_id: guild.id } });
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: guild.id } });
         if (!logChannel) return;
         let log = guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -32,7 +35,7 @@ module.exports = async (client, messages) => {
             if (messagesContent.length < 1) return;
 
             const purgeEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Messages Purged ❌`)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
@@ -49,7 +52,6 @@ module.exports = async (client, messages) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

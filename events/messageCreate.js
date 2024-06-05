@@ -1,11 +1,12 @@
-const talkedRecently = new Set();
-module.exports = async (client, message) => {
-    const logger = require('../util/logger');
-    try {
-        const sendMessage = require('../util/sendMessage');
-        const Discord = require("discord.js");
-        const api_user = require('../database/dbServices/user.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import { addMoney } from "../database/dbServices/user.api.js";
 
+const talkedRecently = new Set();
+
+export default async (client, message) => {
+    try {
         if (!message || !message.author) return;
         if (message.author.bot || message.author.system) return;
 
@@ -17,13 +18,13 @@ module.exports = async (client, message) => {
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
-            let avatar = message.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let profileButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
 
             const dmEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`DM Message`)
                 .setThumbnail(avatar)
                 .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);
@@ -43,7 +44,7 @@ module.exports = async (client, message) => {
         // Add currency
         if (message.content && message.member) {
             if (!talkedRecently.has(message.member.id) && memberRoles > 0) {
-                api_user.addMoney(message.member.id, 1);
+                addMoney(message.member.id, 1);
                 talkedRecently.add(message.member.id);
                 setTimeout(() => {
                     if (message.member) talkedRecently.delete(message.member.id);
@@ -53,7 +54,6 @@ module.exports = async (client, message) => {
         return;
 
     } catch (e) {
-        // Log error
         logger(e, client, message);
     };
 };

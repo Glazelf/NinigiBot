@@ -1,8 +1,8 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
 
+export default async (client, interaction) => {
+    try {
         const modal = new Discord.ModalBuilder()
             .setCustomId('bugReportModal')
             .setTitle('Bug Report');
@@ -56,12 +56,11 @@ exports.run = async (client, interaction, logger) => {
         return interaction.showModal(modal);
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "bugreport",
     description: "Report bugs in the bot."
 };

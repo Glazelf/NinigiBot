@@ -1,4 +1,4 @@
-module.exports = (string, length, regex_check = true) => {
+export default (string, length, regex_check = true) => {
     let tstring = string.trim();
     if (tstring.length < 1) {
         return 'TooShort';

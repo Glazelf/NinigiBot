@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        
         if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ client: client, interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
 
         const modal = new Discord.ModalBuilder()
@@ -31,12 +32,11 @@ exports.run = async (client, interaction, logger) => {
         return interaction.showModal(modal);
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "modmail",
     description: "Send a message to the mods."
 };

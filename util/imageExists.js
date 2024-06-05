@@ -1,6 +1,8 @@
-module.exports = (imageURL) => {
-    const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-    let http = new XMLHttpRequest();
+import XMLHttpRequest from "xmlhttprequest";
+
+export default (imageURL) => {
+    const XMLHttpRequestConstructor = XMLHttpRequest.XMLHttpRequest;
+    let http = new XMLHttpRequestConstructor();
     http.open('HEAD', imageURL, false);
     http.send();
     return http.status != 404;

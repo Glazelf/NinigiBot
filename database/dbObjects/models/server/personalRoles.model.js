@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     return sequelize.define('personal_roles', {
         server_id: {
             type: DataTypes.STRING,

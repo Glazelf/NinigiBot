@@ -1,4 +1,4 @@
-module.exports = async (Dex, learnsets, pokemon) => {
+export default async (Dex, learnsets, pokemon) => {
     let pokemonLearnset = learnsets[pokemon.id];
     if (!pokemonLearnset.learnset && pokemon.baseSpecies) {
         // Catch Pokémon with no learnset
@@ -8,7 +8,7 @@ module.exports = async (Dex, learnsets, pokemon) => {
         // Catch Pokémon that inherit a base species moveset, like Zacian-Crowned, who only learns Behemoth Blade itself
         let baseSpeciesMoves = pokemonLearnset.learnset;
         pokemonLearnset = learnsets[Dex.species.get(pokemon.baseSpecies).id];
-        await Object.keys(baseSpeciesMoves).forEach(key =>
+        Object.keys(baseSpeciesMoves).forEach(key =>
             pokemonLearnset.learnset[key] = baseSpeciesMoves[key]);
     };
     return pokemonLearnset.learnset;

@@ -1,10 +1,12 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const axios = require("axios");
-        const { uniqueNamesGenerator, names } = require('unique-names-generator'); // Random name generator that can be seeded
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import axios from "axios";
+import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
@@ -25,18 +27,17 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             seed: catNameSeed
         });
         const catEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
         return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "randomcat",
     description: "Get a random cat image.",
     options: [{

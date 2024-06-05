@@ -1,30 +1,34 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const fs = require("fs");
-        const capitalizeString = require('../../util/capitalizeString');
-        const getWikiURL = require('../../util/getWikiURL');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import fs from "fs";
+import capitalizeString from "../../util/capitalizeString.js";
+import getWikiURL from "../../util/getWikiURL.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
+        // In strict mode eval isn't allowed to create variables anymore, but the current code works and does the same anyways.
+        // Old usage: eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // Imports:
         // rarePersonaeRoyal; list of treasure Persona
         // rareCombosRoyal; ??
         // arcana2CombosRoyal; arcana fusion combos
         // specialCombosRoyal; special fusions
         // dlcPersonaRoyal; list of DLC Persona names
-        eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
         // Imports personaMapRoyal; object including all persona data (incl. DLC)
-        eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
         // Imports skillMapRoyal; object including all skill AND trait data
-        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
-        eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
         let p5Embed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "persona":
@@ -116,12 +120,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "persona5",
     description: "Shows Persona 5 data.",
     options: [{
