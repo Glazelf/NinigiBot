@@ -1,4 +1,4 @@
-module.exports = async (client, info) => {
+export default async (client, info) => {
     // log info
     // console.log(info);
 };

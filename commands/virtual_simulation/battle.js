@@ -1,40 +1,35 @@
-const Discord = require("discord.js");
-
-// const { Users } = require('../../database/dbServices/server.api');
-// const ShinxBattle = require('../../util/shinx/shinxBattle');
-// const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import Canvas from "canvas";
+import ShinxBattle from "../../util/shinx/shinxBattle.js";
+import addLine from "../../util/battle/addLine.js";
+import wait from "../../util/battle/waitTurn.js";
+import hp from "../../util/battle/getHP.js";
+import { getShinx, saveBattle } from "../../database/dbServices/shinx.api.js";
+import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
-const ShinxBattle = require('../../util/shinx/shinxBattle');
-const shinxApi = require('../../database/dbServices/shinx.api');
-const addLine = require('../../util/battle/addLine');
-const wait = require('../../util/battle/waitTurn');
-const api_history = require('../../database/dbServices/history.api');
-exports.run = async (client, interaction, logger) => {
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const Canvas = require('canvas');
-        const hp = require('../../util/battle/getHP');
-
-        let author = interaction.user;
         let target = interaction.options.getUser("user");
-
         if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
-
-        const trainers = [author, target];
+        const trainers = [interaction.user, target];
         if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
         if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, interaction: interaction, content: `You cannot battle yourself!` });
-        if (client.globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
         let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
-            const shinx = await shinxApi.getShinx(trainers[i].id);
+            const shinx = await getShinx(trainers[i].id);
             shinxes.push(new ShinxBattle(trainers[i], shinx));
         };
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        const avatars = [trainers[0].displayAvatarURL(client.globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(client.globalVars.displayAvatarSettings)];
+        const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');
         let background = await Canvas.loadImage('./assets/vs.png');
@@ -66,8 +61,8 @@ exports.run = async (client, interaction, logger) => {
         } else if (trainer_answer.customId === 'battleNo') {
             return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
         };
-        if (client.globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
-        client.globalVars.battling.yes = true;
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
+        globalVars.battling.yes = true;
         let text = '';
 
         await sendMessage({ client: client, interaction: interaction, components: [], content: 'Let the battle begin!', files: [messageFile] });
@@ -130,15 +125,15 @@ exports.run = async (client, interaction, logger) => {
                     };
                     text += addLine(`**${nicks[(i + 1) % 2]}** fainted!`);
                     for (let h = 0; h < 2; h++) {
-                        await api_history.incrementCombatAmount(trainers[h].id, i == h);
+                        await incrementCombatAmount(trainers[h].id, i == h);
                         const exp = shinxes[h].gainExperience(shinxes[(h + 1) % 2].level, i !== h);
                         text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);
                         if (exp[1] > 0) {
                             text += addLine(`**${nicks[h]}** grew to level **${shinxes[h].level}**!`);
                         };
                     };
-                    for (let p = 0; p < 2; p++) await shinxApi.saveBattle(shinxes[p], p === i);
-                    client.globalVars.battling.yes = false;
+                    for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
+                    globalVars.battling.yes = false;
                     let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
@@ -182,12 +177,11 @@ exports.run = async (client, interaction, logger) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "battle",
     description: "Battle someone's Shinx.",
     options: [{

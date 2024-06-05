@@ -1,11 +1,13 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
-        let languages = require("../../objects/discord/languages.json");
-        let verifLevels = require("../../objects/discord/verificationLevels.json");
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+import languages from "../../objects/discord/languages.json" with { type: "json" };
+import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let adminBool = isAdmin(client, interaction.member);
         let adminBot = isAdmin(client, interaction.guild.members.me);
 
@@ -74,9 +76,9 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
         if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
-        let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
+        let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL(client.globalVars.displayAvatarSettings);
+        if (guild.bannerURL()) banner = guild.bannerURL(globalVars.displayAvatarSettings);
         // Rules
         let rules = null;
         if (guild.rulesChannel) rules = guild.rulesChannel;
@@ -117,7 +119,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
         const serverEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(guild.name)
             .setThumbnail(icon)
             .setFooter({ text: guild.id });
@@ -141,12 +143,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "serverinfo",
     description: "Displays info about the server.",
     options: [{

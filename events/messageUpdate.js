@@ -1,20 +1,21 @@
-module.exports = async (client, message, newMessage) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const isAdmin = require('../util/isAdmin');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../util/isAdmin.js";
 
+export default async (client, message, newMessage) => {
+    try {
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
         if (message.content === newMessage.content) return;
 
         await message.guild.fetch();
-        // Get log
-        const { LogChannels } = require('../database/dbServices/server.api');
-        let logChannel = await LogChannels.findOne({ where: { server_id: message.guild.id } });
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
-        if (client.globalVars.sysbotLogChannelID && client.globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == client.globalVars.sysbotLogChannelID);
+        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == globalVars.sysbotLogChannelID);
         if (!log) return;
 
         let botMember = message.guild.members.me;
@@ -44,15 +45,15 @@ module.exports = async (client, message, newMessage) => {
             };
             let avatar;
             if (newMessage.member) {
-                avatar = newMessage.member.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
-                avatar = newMessage.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
             let updateButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}` }));
 
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
                 .setThumbnail(avatar)
                 .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
@@ -76,7 +77,6 @@ module.exports = async (client, message, newMessage) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, message);
     };
 };

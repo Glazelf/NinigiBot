@@ -1,11 +1,14 @@
-module.exports = async ({ client, interaction, page, region }) => {
+import Discord from "discord.js";
+import logger from "../logger.js";
+import sendMessage from "../sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import axios from "axios";
+
+export default async ({ client, interaction, page, region }) => {
     try {
-        const sendMessage = require('../sendMessage');
-        const Discord = require("discord.js");
-        const axios = require("axios");
         let splat3Embed = new Discord.EmbedBuilder()
             .setTitle("Splatfests")
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
         let splatfestButtons = new Discord.ActionRowBuilder();
         let splat3EmbedFields = [];
@@ -125,7 +128,7 @@ module.exports = async ({ client, interaction, page, region }) => {
             let splatfestResultsChallenge = "- Pro Battles: ";
             let splatfestResultsTricolor = "- Tricolor Battles: ";
             let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
-            splatfestTeamIndex = 0;
+            let splatfestTeamIndex = 0;
             let splatfestIdols = {
                 0: "Shiver",
                 1: "Frye",
@@ -224,7 +227,7 @@ module.exports = async ({ client, interaction, page, region }) => {
         });
         let splatfestButtonAppend = `${page}|${region}`;
         // Probably cleaner to just add the fields to the embed in the loop above but this is fine for now. 
-        for (i = pageStartIndex; i <= pageEndIndex; i++) {
+        for (let i = pageStartIndex; i <= pageEndIndex; i++) {
             if (splat3EmbedFields[i]) splat3Embed.addFields([splat3EmbedFields[i]]);
         };
         // "Previous" page button
@@ -240,9 +243,6 @@ module.exports = async ({ client, interaction, page, region }) => {
         return splatfestMessageObject;
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
-
         logger(e, client);
     };
 };

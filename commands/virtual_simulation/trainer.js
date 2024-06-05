@@ -1,27 +1,28 @@
-const Discord = require("discord.js");
-const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const userApi = require('../../database/dbServices/user.api');
-        const shinxApi = require('../../database/dbServices/shinx.api');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
+import { getUser } from "../../database/dbServices/user.api.js";
+import { getShinx } from "../../database/dbServices/shinx.api.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
-        let embed;
+        let embed = new Discord.EmbedBuilder();
         let avatar = null;
         let master = interaction.user;
-        let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "info":
-                user = await userApi.getUser(master.id);
+                let user = await getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
-                if (member) avatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
-                trophy_level = 0;
-                trophies = await user.getShopTrophies();
-                trophy_string = '';
+                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+                let trophy_level = 0;
+                let trophies = await user.getShopTrophies();
+                let trophy_string = '';
                 trophies.forEach(trophy => {
                     trophy_string += (trophy.icon + ' ');
                 });
@@ -34,8 +35,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 trophy_level += trophies.length;
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
-                embed = new Discord.EmbedBuilder()
-                    .setColor(client.globalVars.embedColor)
+                embed
+                    .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addFields([
                         { name: "Balance:", value: user.money.toString(), inline: true },
@@ -49,17 +50,16 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 };
                 return sendMessage({ client: client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":
-                const shinx = await shinxApi.getShinx(master.id);
+                const shinx = await getShinx(master.id);
                 return sendMessage({ client: client, interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "trainer",
     description: "Check your trainer stats.",
     options: [{

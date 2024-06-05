@@ -1,18 +1,22 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import axios from "axios";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const axios = require("axios");
         let api = "https://api.dictionaryapi.dev/api/v2/";
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
         let dictionaryEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         let inputWord = interaction.options.getString("word");
         let inputWordType = interaction.options.getString("wordtype");
+        let wordStatus;
 
         try {
             // Sometimes API doesn't respond when a word doesn't exist, sometimes it errors properly. Timeout is to catch both.
@@ -21,7 +25,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
             ]);
             wordStatus = wordStatus.data;
-        } catch (error) {
+        } catch (e) {
+            // console.log(e);
             let errorEmbed = new Discord.EmbedBuilder()
                 .setColor('#FF0000')
                 .setTitle("Error")
@@ -79,12 +84,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "dictionary",
     description: `Get definition of a word.`,
     options: [{

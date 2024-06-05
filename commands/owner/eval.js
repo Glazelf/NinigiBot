@@ -1,12 +1,16 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isOwner from "../../util/isOwner.js";
+import util from "util";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isOwner = require('../../util/isOwner');
+        ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
-        let ephemeral = true;
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         await interaction.deferReply({ ephemeral: ephemeral });
 
         const input = interaction.options.getString("input");
@@ -17,7 +21,7 @@ exports.run = async (client, interaction, logger) => {
             // console.log(e);
             return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.codeBlock(e.stack)}` });
         };
-        if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
+        if (typeof evaled !== "string") evaled = util.inspect(evaled);
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
         for (const [key, value] of Object.entries(client.config)) {
@@ -35,12 +39,11 @@ exports.run = async (client, interaction, logger) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "eval",
     description: "Execute JS.",
     serverID: ["759344085420605471"],

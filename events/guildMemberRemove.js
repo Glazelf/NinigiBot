@@ -1,16 +1,18 @@
-module.exports = async (client, member) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels, PersonalRoles, PersonalRoleServers } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: member.guild.id } });
+export default async (client, member) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let serverID = await PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-        let roleDB = await PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+        let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+        let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 
@@ -20,11 +22,11 @@ module.exports = async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
             let leaveEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
-                let avatar = member.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: Discord.AuditLogEvent.MemberKick
@@ -79,7 +81,6 @@ module.exports = async (client, member) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

@@ -1,4 +1,6 @@
-module.exports = async (client) => {
+import logger from "./logger.js";
+
+export default async (client) => {
     try {
         let currentdate = new Date();
         let datetime = currentdate.getDate() + "/"
@@ -10,9 +12,6 @@ module.exports = async (client) => {
         return datetime;
 
     } catch (e) {
-        // Log error
-        const logger = require('./logger');
-
         logger(e, client);
     };
 };

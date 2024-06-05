@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     return sequelize.define('vc_text_channels', {
         server_id: {
             type: DataTypes.STRING,

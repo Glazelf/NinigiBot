@@ -1,19 +1,21 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require('../../util/isAdmin');
-        let adminBool = isAdmin(client, interaction.member);
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
+        let adminBool = isAdmin(client, interaction.member);
         ephemeral = false;
         let slowmodeSupportedChannelTypes = [
             Discord.ChannelType.GuildText,
-            Discord.ChannelType.GuildPublicThread,
-            Discord.ChannelType.GuildPrivateThread,
+            Discord.ChannelType.PublicThread,
+            Discord.ChannelType.PrivateThread,
             Discord.ChannelType.GuildStageVoice,
             Discord.ChannelType.GuildVoice
         ];
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
@@ -21,12 +23,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "slowmode",
     description: "Set slowmode in the current channel.",
     options: [{

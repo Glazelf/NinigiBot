@@ -1,6 +1,7 @@
-module.exports = ({ type1, type2 = null, bold = false, emotes = true }) => {
-    const typeEmoteList = require('../../objects/pokemon/typeEmotes.json');
-    const capitalizeString = require('../capitalizeString');
+import typeEmoteList from "../../objects/pokemon/typeEmotes.json" with { type: "json" };
+import capitalizeString from "../capitalizeString.js";
+
+export default ({ type1, type2 = null, bold = false, emotes = true }) => {
     let type1Emote = typeEmoteList[type1];
     let type1Name = capitalizeString(type1);
     if (bold == true) type1Name = `**${type1Name}**`;

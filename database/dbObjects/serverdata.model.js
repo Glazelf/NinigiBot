@@ -1,13 +1,24 @@
-module.exports = (sequelize, DataTypes) => {
-    const shinxQuotes = require('./models/server/shinxQuote.model')(sequelize, DataTypes);
-    const EligibleRoles = require('./models/server/eligibleRoles.model')(sequelize, DataTypes);
-    const PersonalRoles = require('./models/server/personalRoles.model')(sequelize, DataTypes);
-    const PersonalRoleServers = require('./models/global/personalRoleServers.model')(sequelize, DataTypes);
-    const ModEnabledServers = require('./models/global/modEnabledServers.model')(sequelize, DataTypes);
-    const LogChannels = require('./models/global/logChannels.model')(sequelize, DataTypes);
-    const StarboardChannels = require('./models/global/starboardChannels.model')(sequelize, DataTypes);
-    const StarboardMessages = require('./models/global/starboardMessages.model')(sequelize, DataTypes);
-    const StarboardLimits = require('./models/server/starboardLimits.model')(sequelize, DataTypes);
+import { DataTypes } from "sequelize";
+
+export default async (sequelize) => {
+    const shinxQuoteModel = await import("./models/server/shinxQuote.model.js");
+    const eligibleRolesModel = await import("./models/server/eligibleRoles.model.js");
+    const personalRolesModel = await import("./models/server/personalRoles.model.js");
+    const personalRoleServersModel = await import("./models/global/personalRoleServers.model.js");
+    const modEnabledServersModel = await import("./models/global/modEnabledServers.model.js");
+    const logChannelsModel = await import("./models/global/logChannels.model.js");
+    const starboardChannelsModel = await import("./models/global/starboardChannels.model.js");
+    const starboardMessagesModel = await import("./models/global/starboardMessages.model.js");
+    const starboardLimitsModel = await import("./models/server/starboardLimits.model.js");
+    const shinxQuotes = shinxQuoteModel.default(sequelize, DataTypes);
+    const EligibleRoles = eligibleRolesModel.default(sequelize, DataTypes);
+    const PersonalRoles = personalRolesModel.default(sequelize, DataTypes);
+    const PersonalRoleServers = personalRoleServersModel.default(sequelize, DataTypes);
+    const ModEnabledServers = modEnabledServersModel.default(sequelize, DataTypes);
+    const LogChannels = logChannelsModel.default(sequelize, DataTypes);
+    const StarboardChannels = starboardChannelsModel.default(sequelize, DataTypes);
+    const StarboardMessages = starboardMessagesModel.default(sequelize, DataTypes);
+    const StarboardLimits = starboardLimitsModel.default(sequelize, DataTypes);
     sequelize.sync();
     return { shinxQuotes, EligibleRoles, PersonalRoles, PersonalRoleServers, LogChannels, StarboardChannels, StarboardMessages, StarboardLimits, ModEnabledServers };
 };

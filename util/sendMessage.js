@@ -1,4 +1,6 @@
-module.exports = async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
+import logger from "./logger.js";
+
+export default async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
@@ -42,8 +44,6 @@ module.exports = async ({ client, interaction, content = null, embeds = null, fi
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('./logger');
         logger(e, client);
     };
 };

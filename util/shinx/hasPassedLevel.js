@@ -1,3 +1,3 @@
-module.exports = (from, to, middle) => {
+export default (from, to, middle) => {
     return (from < middle) && (middle <= to);
 };

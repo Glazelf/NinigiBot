@@ -1,14 +1,17 @@
-module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
-    const Discord = require("discord.js");
-    const Canvas = require('canvas');
-    const { Dex } = require('pokemon-showdown');
-    const imageExists = require('../imageExists');
-    const getCleanPokemonID = require('./getCleanPokemonID');
-    const getRandomObjectItem = require('../getRandomObjectItem');
-    const api_user = require('../../database/dbServices/user.api');
+import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import Canvas from "canvas";
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
+import imageExists from "../imageExists.js";
+import getCleanPokemonID from "./getCleanPokemonID.js";
+import getRandomObjectItem from "../getRandomObjectItem.js";
+import { addMoney } from "../../database/dbServices/user.api.js";
+
+export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new Discord.ActionRowBuilder();
     let doesRenderExist = false;
-    returnString = `# Who's That Pokémon?`;
+    let returnString = `# Who's That Pokémon?`;
     let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
     while (!doesRenderExist) {
@@ -29,8 +32,8 @@ module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
         } else {
             // Format winning message update
             let pkmQuizPrize = 10;
-            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${client.globalVars.currency}!`;
-            api_user.addMoney(winner.id, pkmQuizPrize);
+            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
+            addMoney(winner.id, pkmQuizPrize);
         };
         returnString += `\nThe answer was **${pokemon.name}**!`;
     } else {
@@ -39,7 +42,7 @@ module.exports = async ({ client, pokemonList, winner, pokemon, reveal }) => {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
     };
-    pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
+    let pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
 
     pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizGuess|${pokemon.name}`, label: "Guess", style: Discord.ButtonStyle.Primary }));
     pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizReveal`, label: "Reveal", style: Discord.ButtonStyle.Secondary }));

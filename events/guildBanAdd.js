@@ -1,10 +1,12 @@
-module.exports = async (client, guildBan) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
+export default async (client, guildBan) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: guildBan.guild.id } });
         if (!logChannel) return;
         let log = guildBan.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -27,13 +29,13 @@ module.exports = async (client, guildBan) => {
             if (reason == null) reason = "Not specified.";
             if (target.id !== guildBan.user.id) return;
 
-            // let avatarExecutor = executor.displayAvatarURL(client.globalVars.displayAvatarSettings); // Unused
-            let avatarTarget = target.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            // let avatarExecutor = executor.displayAvatarURL(globalVars.displayAvatarSettings); // Unused
+            let avatarTarget = target.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let banButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${target.id}` }));
             const banEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
@@ -58,7 +60,6 @@ module.exports = async (client, guildBan) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

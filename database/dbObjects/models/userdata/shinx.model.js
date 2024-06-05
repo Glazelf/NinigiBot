@@ -1,44 +1,46 @@
-module.exports = (sequelize, DataTypes) => {
+import getExpFromLevel from "../../../../util/shinx/getExpFromLevel.js";
+import parseMeetDate from "../../../../util/shinx/parseMeetDate.js";
+import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";
+
+export default (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
-    const getExpFromLevel = require('../../../../util/shinx/getExpFromLevel');
-    const parseMeetDate = require('../../../../util/shinx/parseMeetDate');
-    const getLevelFromExp = require('../../../../util/shinx/getLevelFromExp');
     const parseMeetDateNow = () => {
-        const now = new Date()
-        return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear())
+        const now = new Date();
+        return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear());
     };
     const getDay = () => {
-        return Math.floor(Date.now() / 86400000)
+        return Math.floor(Date.now() / 86400000);
     };
-    const Shinx = sequelize.define('Shinx', {
+    const Shinx = sequelize.define("Shinx", {
         user_id: {
             type: DataTypes.STRING,
-            primaryKey: true
+            primaryKey: true,
+            unique: true
         },
         nickname: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'Shinx',
+            defaultValue: "Shinx"
         },
         belly: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1,
+            defaultValue: 1
         },
         shiny: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: false,
+            defaultValue: false
         },
         lastmeet: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: Math.floor(Date.now() / 86400000),
+            defaultValue: Math.floor(Date.now() / 86400000)
         },
         meetup: {
             type: DataTypes.STRING,
@@ -48,15 +50,15 @@ module.exports = (sequelize, DataTypes) => {
         user_male: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
-            allowNull: false,
+            allowNull: false
         },
         auto_feed: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
-            allowNull: false,
+            allowNull: false
         },
     }, {
-        timestamps: false,
+        timestamps: false
     });
     //  checkup
     Shinx.prototype.checkup = function () {
@@ -65,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
         if (diff > 1) {
             this.unfeedGeneric(Math.floor(2 * diff));
             this.lastmeet = today;
-            this.save({ fields: ['belly', 'lastmeet'] });
+            this.save({ fields: ["belly", "lastmeet"] });
         };
     };
     //  Experience
@@ -74,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Shinx.prototype.addExperience = function (experience) {
         this.addExperienceGeneric(experience)
-        this.save({ fields: ['experience'] });
+        this.save({ fields: ["experience"] });
     };
     Shinx.prototype.addExperienceAndLevelUp = function (experience) {
         const pre = this.getLevel();
@@ -98,12 +100,12 @@ module.exports = (sequelize, DataTypes) => {
         const next_level = Math.ceil(getExpFromLevel(this.getLevel() + 1))
         this.addExperienceGeneric((next_level - prev_level) * (food / MAX_RANGE));
         this.feedGeneric(food);
-        this.save({ fields: ['belly', 'experience'] });
+        this.save({ fields: ["belly", "experience"] });
     };
     Shinx.prototype.addExperienceAndUnfeed = function (experience, food) {
         this.addExperienceGeneric(experience);
         this.unfeedGeneric(food);
-        this.save({ fields: ['experience', 'belly'] });
+        this.save({ fields: ["experience", "belly"] });
     };
     // Level
     Shinx.prototype.getLevel = function () {
@@ -112,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     // Shiny 
     Shinx.prototype.switchShininessAndGet = function () {
         this.shiny = !this.shiny;
-        this.save({ fields: ['shiny'] });
+        this.save({ fields: ["shiny"] });
         return this.shiny;
     };
     // Belly
@@ -121,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Shinx.prototype.feed = function (amount) {
         this.feedGeneric(amount);
-        this.save({ fields: ['belly'] });
+        this.save({ fields: ["belly"] });
     };
 
     Shinx.prototype.unfeedGeneric = function (amount) {
@@ -129,7 +131,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Shinx.prototype.unfeed = function (amount) {
         this.unfeedGeneric(amount);
-        this.save({ fields: ['belly'] });
+        this.save({ fields: ["belly"] });
     };
     Shinx.prototype.getHunger = function () {
         return MAX_RANGE - this.belly;
@@ -138,7 +140,7 @@ module.exports = (sequelize, DataTypes) => {
         return this.belly;
     };
     Shinx.prototype.getBellyPercent = function () {
-        return Math.round(this.belly * 100 / MAX_RANGE).toString() + '%'
+        return Math.round(this.belly * 100 / MAX_RANGE).toString() + "%"
     };
     Shinx.prototype.getBellyProportion = function () {
         return this.belly / MAX_RANGE
@@ -146,23 +148,23 @@ module.exports = (sequelize, DataTypes) => {
     // Nickname
     Shinx.prototype.changeNick = function (nick) {
         this.nickname = nick;
-        this.save({ fields: ['nickname'] });
+        this.save({ fields: ["nickname"] });
     };
     // Gender
     Shinx.prototype.swapAndGetTrainerGender = function () {
         this.user_male = !this.user_male;
-        this.save({ fields: ['user_male'] });
+        this.save({ fields: ["user_male"] });
         return this.user_male;
     };
     // Battle
     Shinx.prototype.saveBattle = function (shinxBattle, wins) {
         this.experience = Math.floor(shinxBattle.exp * (1 + wins * 0.2));
-        this.save({ fields: ['experience'] });
+        this.save({ fields: ["experience"] });
     };
     // Auto feed
     Shinx.prototype.setAutoFeedUnchecked = function (mode) {
         this.auto_feed = mode;
-        this.save({ fields: ['auto_feed'] });
+        this.save({ fields: ["auto_feed"] });
         return this.auto_feed;
     };
     Shinx.prototype.setAutoFeed = function (mode) {
@@ -170,7 +172,7 @@ module.exports = (sequelize, DataTypes) => {
             return false;
         } else {
             this.auto_feed = mode;
-            this.save({ fields: ['auto_feed'] });
+            this.save({ fields: ["auto_feed"] });
             return true;
         };
     };
