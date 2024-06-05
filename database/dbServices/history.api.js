@@ -34,7 +34,7 @@ export async function incrementStanAmount(id) {
 export async function incrementCombatAmount(id, won = false) {
     let attributes = ['combat_amount'];
     if (won) attributes = attributes.concat(['win_amount']);
-    history = await getHistory(id, ['user_id']);
+    let history = await getHistory(id, ['user_id']);
     await history.increment(attributes);
 };
 export async function checkEvent(Model, trophy_id, attribute) {

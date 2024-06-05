@@ -102,9 +102,9 @@ export default async (client, interaction, page, user) => {
                 { name: "Balance:", value: userBalance, inline: true },
                 { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }
             ]);
-            trophy_level = 0;
+            let trophy_level = 0;
+            let trophy_string = '';
             let trophies = await user_db.getShopTrophies();
-            trophy_string = '';
             trophies.forEach(trophy => {
                 trophy_string += (trophy.icon + ' ');
             });

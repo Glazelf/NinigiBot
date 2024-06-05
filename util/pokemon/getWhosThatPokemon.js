@@ -8,10 +8,10 @@ import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../getRandomObjectItem.js";
 import { addMoney } from "../../database/dbServices/user.api.js";
 
-export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
+export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new Discord.ActionRowBuilder();
     let doesRenderExist = false;
-    returnString = `# Who's That Pokémon?`;
+    let returnString = `# Who's That Pokémon?`;
     let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
     while (!doesRenderExist) {
@@ -42,7 +42,7 @@ export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
     };
-    pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
+    let pokemonFiles = new Discord.AttachmentBuilder(canvas.toBuffer());
 
     pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizGuess|${pokemon.name}`, label: "Guess", style: Discord.ButtonStyle.Primary }));
     pokemonButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmQuizReveal`, label: "Reveal", style: Discord.ButtonStyle.Secondary }));

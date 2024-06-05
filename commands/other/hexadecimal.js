@@ -21,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "todecimal":
                 try {
-                    interaction.options.getString("input");
+                    input = interaction.options.getString("input");
                     while (input.length < 6) input = "0" + input;
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);
