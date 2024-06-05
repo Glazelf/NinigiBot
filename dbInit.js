@@ -4,7 +4,7 @@ import minimist from "minimist";
 
 const initDB = async (reset_db) => {
     try {
-        inits = [userdata(reset_db), serverdata(reset_db)];
+        let inits = [userdata(reset_db), serverdata(reset_db)];
         await Promise.all(inits);
     } catch (e) {
         console.log(e);

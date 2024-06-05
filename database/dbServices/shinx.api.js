@@ -1,6 +1,7 @@
 import { Op, fn, where, col } from "sequelize";
 import { userdata, serverdata } from "../dbConnection/dbConnection.js";
 import userdataModel from "../../database/dbObjects/userdata.model.js";
+import serverdataModel from "../../database/dbObjects/serverdata.model.js";
 import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";
 import checkFormat from "../../util/string/checkFormat.js";
 
@@ -38,7 +39,6 @@ export async function getShinxShininess(id) {
 };
 
 export async function getRandomReaction() {
-    const serverdataModel = await import("../../database/dbObjects/serverdata.model.js");
     const { shinxQuotes } = await serverdataModel(serverdata);
     const result = await shinxQuotes.findOne({ order: fn('RANDOM') });
     // console.log(result);
