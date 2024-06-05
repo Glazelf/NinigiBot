@@ -1,4 +1,4 @@
-module.exports = (canvas, text, baseSize, limit) => {
+export default (canvas, text, baseSize, limit) => {
     const ctx = canvas.getContext('2d');
     // Declare a base size of the font
     let fontSize = baseSize + 5;

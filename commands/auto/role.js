@@ -1,10 +1,12 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const isAdmin = require("../../util/isAdmin");
-        const { EligibleRoles } = require('../../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
+        const serverApi = await import("../../database/dbServices/server.api.js");
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -18,7 +20,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        let db = await EligibleRoles.findAll();
+        let db = await serverApi.EligibleRoles.findAll();
         let roles = [];
         let roleIDs = [];
         let roleText = [];
@@ -84,7 +86,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             const rolesHelp = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Available roles:`)
                 .setDescription(roleHelpMessage);
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
@@ -107,12 +109,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "role",
     description: "Toggles a role. Use without argument to get a full list.",
     options: [{

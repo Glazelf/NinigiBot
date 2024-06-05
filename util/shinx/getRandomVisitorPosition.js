@@ -5,6 +5,7 @@ const visitors = [
     [[[0, 435, 278], [8, 496, 302]], [[3, 361, 125], [7, 295, 150]], [[3, 425, 125], [7, 486, 150]]],
     [[[1, 368, 134], [6, 362, 236]], [[1, 435, 134], [8, 436, 236]]],
 ];
-module.exports = () => {
+
+export default () => {
     return visitors[Math.floor(Math.random() * visitors.length)];
 };

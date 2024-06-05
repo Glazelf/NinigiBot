@@ -1,18 +1,25 @@
-module.exports = async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
+import Discord from "discord.js";
+import logger from "../logger.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
+import imageExists from "../imageExists.js";
+import isAdmin from "../isAdmin.js";
+import convertMeterFeet from "../convertMeterFeet.js";
+import leadingZeros from "../leadingZeros.js";
+import getCleanPokemonID from "./getCleanPokemonID.js";
+import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+import typechartData from "../../node_modules/pokemon-showdown/dist/data/typechart.js";
+import learnsetsData from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
+import learnsetsRetroData from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
+import getTypeEmotes from "./getTypeEmotes.js";
+import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
+
+export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, generation, ephemeral = true }) => {
     try {
-        const Discord = require("discord.js");
-        const { Dex } = require('pokemon-showdown');
-        const imageExists = require('../imageExists');
-        const isAdmin = require('../isAdmin');
-        const convertMeterFeet = require('../convertMeterFeet');
-        const leadingZeros = require('../leadingZeros');
-        const getCleanPokemonID = require('./getCleanPokemonID.js');
-        const colorHexes = require('../../objects/colorHexes.json');
-        const typechart = require('../../node_modules/pokemon-showdown/dist/data/typechart.js').TypeChart;
-        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
-        if (generation <= 2) learnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
-        const getTypeEmotes = require('./getTypeEmotes');
-        const checkBaseSpeciesMoves = require('./checkBaseSpeciesMoves.js');
+        const typechart = typechartData.TypeChart;
+        let learnsets = learnsetsData.Learnsets;
+        if (generation <= 2) learnsets = learnsetsRetroData.Learnsets;
         // Common settings
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -89,7 +96,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         immunities = immunities.join(", ");
 
         let pokemonID = getCleanPokemonID(pokemon);
-        pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
+        let pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
         // Metrics
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
@@ -246,7 +253,7 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-        let embedColor = client.globalVars.embedColor;
+        let embedColor = globalVars.embedColor;
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };
@@ -472,9 +479,6 @@ module.exports = async ({ client, interaction, pokemon, learnsetBool = false, sh
         };
 
     } catch (e) {
-        // Log error
-        const logger = require('../logger');
-
         logger(e, client);
     };
 };

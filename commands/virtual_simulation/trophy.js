@@ -1,15 +1,18 @@
-const Discord = require("discord.js");
-const Canvas = require('canvas');
-const replaceDiscordEmotes = require('../../util/trophies/replaceDiscordEmotes');
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import Canvas from "canvas";
+import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
+import { getShinx } from "../../database/dbServices/shinx.api.js";
+import { getFullBuyableShopTrophies, buyShopTrophy, getShopTrophyWithName, getEventTrophyWithName } from "../../database/dbServices/trophy.api.js";
+import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const api_shinx = require('../../database/dbServices/shinx.api');
-        // const api_user = require('../../database/dbServices/user.api');
-        const api_trophy = require('../../database/dbServices/trophy.api');
         let messageFile = null;
         let embed, trophy_name, res;
-        let returnString = ''
+        let returnString = '';
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -20,8 +23,8 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         switch (interaction.options.getSubcommand()) {
             case "stock":
                 embed = new Discord.EmbedBuilder()
-                    .setColor(client.globalVars.embedColor)
-                trophies = await api_trophy.getFullBuyableShopTrophies(master.id);
+                    .setColor(globalVars.embedColor)
+                trophies = await getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
                 trophies.forEach(trophy => {
                     let trophyPriceBlock = Discord.codeBlock("diff", `[${trophy.price}]`);
@@ -51,7 +54,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 });
             case "buy":
                 trophy_name = interaction.options.getString("shoptrophy");
-                res = await api_trophy.buyShopTrophy(master.id, trophy_name.toLowerCase());
+                res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
                 switch (res) {
                     case 'NoTrophy':
                         returnString = `**${trophy_name}** isn't available.\nTip: check today's stock with \`/trophy stock\``;
@@ -64,7 +67,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                         break;
                     case 'Ok':
                         returnString = `Bought **${trophy_name}**!`
-                        shinx = await api_shinx.getShinx(master.id)
+                        shinx = await getShinx(master.id)
                         canvas = Canvas.createCanvas(428, 310);
                         ctx = canvas.getContext('2d');
                         img = await Canvas.loadImage('./assets/frontier.png');
@@ -88,7 +91,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     ephemeral: ephemeral || (res != 'Ok')
                 });
             case "list":
-                let trophy_slice = await require('../../util/trophies/getTrophyEmbedSlice')(0);
+                let trophy_slice = await getTrophyEmbedSlice(0);
                 return sendMessage({
                     client: client,
                     interaction: interaction,
@@ -98,9 +101,9 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 });
             case "info":
                 trophy_name = interaction.options.getString("trophy");
-                res = await api_trophy.getShopTrophyWithName(trophy_name);
+                res = await getShopTrophyWithName(trophy_name);
                 let isShop = true;
-                if (!res) { res = await api_trophy.getEventTrophyWithName(trophy_name); isShop = false; }
+                if (!res) { res = await getEventTrophyWithName(trophy_name); isShop = false; }
                 if (!res) {
                     return sendMessage({
                         client: client,
@@ -111,7 +114,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 } else {
                     if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                     embed = new Discord.EmbedBuilder()
-                        .setColor(client.globalVars.embedColor)
+                        .setColor(globalVars.embedColor)
                         .setTitle(`${res.trophy_id}`)
                         .addFields([
                             { name: "Icon:", value: `${res.icon}`, inline: true },
@@ -130,13 +133,12 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
 // Level and Shiny subcommands are missing on purpose
-module.exports.config = {
+export const config = {
     name: "trophy",
     description: "Handles all interactions with trophies",
     options: [{

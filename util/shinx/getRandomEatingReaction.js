@@ -5,6 +5,6 @@ const eating = [
     ['is full. Finish your plate, cutie!', 8],
 ];
 
-module.exports = () => {
+export default () => {
     return eating[Math.floor(Math.random() * eating.length)];
 };

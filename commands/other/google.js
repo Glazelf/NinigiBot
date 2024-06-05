@@ -1,10 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-
-        let ephemeral = false;
-
+        ephemeral = false;
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let input = message.content;
         let questionAskUser = message.author;
@@ -29,12 +29,11 @@ exports.run = async (client, interaction, logger) => {
         return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleButton, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "Google",
     type: Discord.ApplicationCommandType.Message
 };

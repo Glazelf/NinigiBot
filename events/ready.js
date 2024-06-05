@@ -1,14 +1,14 @@
-const Discord = require("discord.js");
-module.exports = async (client) => {
+import getTime from '../util/getTime.js';
+
+export default async (client) => {
     try {
-        const getTime = require('../util/getTime');
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerID = null;
                 if (command.config.serverID) commandServerID = command.config.serverID;
                 // if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
-                slashCommand = await client.application.commands.create(command.config, commandServerID);
+                await client.application.commands.create(command.config, commandServerID);
             } catch (e) {
                 console.log(e);
             };
@@ -29,7 +29,6 @@ Users: ${client.users.cache.size} (cached)
 Connected as ${client.user.username}. (${timestamp})`);
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

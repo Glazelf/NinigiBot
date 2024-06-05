@@ -1,16 +1,17 @@
-module.exports = async (client, oldRole, newRole) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: newRole.guild.id } });
+export default async (client, oldRole, newRole) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: newRole.guild.id } });
         if (!logChannel) return;
         let log = newRole.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
         let botMember = newRole.guild.members.me;
-
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
@@ -26,7 +27,7 @@ module.exports = async (client, oldRole, newRole) => {
             };
             // Role color
             let embedColor = newRole.hexColor;
-            if (embedColor == "#000000") embedColor = client.globalVars.embedColor;
+            if (embedColor == "#000000") embedColor = globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new Discord.EmbedBuilder()
@@ -59,8 +60,8 @@ module.exports = async (client, oldRole, newRole) => {
                 };
             };
             if (oldRole.icon !== newRole.icon) {
-                let oldIcon = oldRole.iconURL(client.globalVars.displayAvatarSettings);
-                let newIcon = newRole.iconURL(client.globalVars.displayAvatarSettings);
+                let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
+                let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
                 updateDescription += "\nIcon updated.";
                 updateEmbed
                     .setThumbnail(oldIcon)
@@ -81,7 +82,6 @@ module.exports = async (client, oldRole, newRole) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

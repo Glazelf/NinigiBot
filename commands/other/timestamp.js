@@ -1,7 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
         // Date manipulation
         let currentDate = new Date();
         let targetDate = new Date();
@@ -44,7 +47,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(dateString)
             .addFields([
                 { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },
@@ -58,12 +61,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "timestamp",
     description: `Helps you construct timestamps.`,
     options: [{

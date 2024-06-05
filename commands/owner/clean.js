@@ -1,20 +1,23 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isOwner from "../../util/isOwner.js";
+import { getAllUsers } from "../../database/dbServices/user.api.js";
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const isOwner = require('../../util/isOwner');
-        const user_api = require('../../database/dbServices/user.api');
+        ephemeral = true;
         let confirm = false;
         let confirmArg = interaction.options.getBoolean("confirm");
         if (confirmArg === true) confirm = confirmArg;
-        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
-        const users = await user_api.getAllUsers();
+        const users = await getAllUsers();
         if (users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' });
         let server_users = await interaction.guild.members.fetch();
         server_users = server_users.map(user => user.id);
@@ -38,12 +41,11 @@ exports.run = async (client, interaction, logger) => {
         return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "clean",
     description: "Runs clean up routine of the database files",
     serverID: ["759344085420605471"],

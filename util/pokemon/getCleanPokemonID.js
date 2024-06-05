@@ -1,9 +1,10 @@
-module.exports = (pokemon) => {
+import leadingZeros from "../leadingZeros.js";
+import correctionID from "../../objects/pokemon/correctionID.json" with { type: "json"};
+
+export default (pokemon) => {
     let pokemonID = pokemon.num.toString();
     let pokemonName = pokemon.name;
     let pokemonTypes = pokemon.types;
-    const leadingZeros = require('../leadingZeros');
-    const correctionID = require('../../objects/pokemon/correctionID.json');
     // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently. This approach doesn't change 4-digit IDs.
     pokemonID = leadingZeros(pokemonID, 3);
     // Forms

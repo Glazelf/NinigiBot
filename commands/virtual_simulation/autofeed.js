@@ -1,5 +1,8 @@
-const Discord = require("discord.js");
-const shinxApi = require('../../database/dbServices/shinx.api');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import { changeAutoFeed } from "../../database/dbServices/shinx.api.js";
+
 const autofeed_modes = [
     {
         "name": "No auto mode",
@@ -15,16 +18,15 @@ const autofeed_modes = [
     }
 ];
 
-exports.run = async (client, interaction, logger) => {
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        let ephemeral = true;
+        ephemeral = true;
         let returnString;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");
-        let res = await shinxApi.changeAutoFeed(master.id, mode_num);
+        let res = await changeAutoFeed(master.id, mode_num);
         let mode_str = autofeed_modes[mode_num].name;
         returnString = res ? `Changed autofeed to: ${mode_str}` : `Autofeed already set to: ${mode_str}`;
         return sendMessage({
@@ -35,12 +37,11 @@ exports.run = async (client, interaction, logger) => {
         });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "autofeed",
     description: "Automatize the feeding process of Shinx",
     options: [{

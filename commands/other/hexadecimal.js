@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
@@ -20,7 +21,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 break;
             case "todecimal":
                 try {
-                    interaction.options.getString("input");
+                    input = interaction.options.getString("input");
                     while (input.length < 6) input = "0" + input;
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);
@@ -33,12 +34,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "hexadecimal",
     description: "Convert a number to hexadecimal.",
     options: [{

@@ -1,32 +1,26 @@
-const Discord = require("discord.js");
-module.exports = async (client, id) => {
-    try {
-        const globalVars = require('../objects/globalVars.json');
-        const getTime = require('../util/getTime');
-        let timestamp = await getTime(client);
+import Discord from "discord.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import getTime from "../util/getTime.js";
+import stan from "../affairs/stan.js";
+import birthday from "../affairs/birthday.js";
 
+export default async (client, id) => {
+    try {
+        let timestamp = await getTime(client);
         let presence = initPresence();
-        // Set global variables
-        client.globalVars = globalVars;
-        client.globalVars.presence = presence;
+        globalVars.presence = presence;
         // Set bot status
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
         // Start affairs
-        const stan = require('../affairs/stan');
-        const birthday = require('../affairs/birthday');
         stan(client);
         birthday(client);
-        // const { bank } = require('../database/bank');
-        // const { Users } = require('../database/dbServices/server.api');
         // const storedBalances = await Users.findAll();
         // storedBalances.forEach(b => bank.currency.set(b.user_id, b));
-
         // Console log status
         return console.log(`Launched shard ${id}. (${timestamp})`);
 
     } catch (e) {
-        // Log error
         console.log(e);
     };
 };

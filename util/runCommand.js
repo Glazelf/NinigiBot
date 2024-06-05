@@ -1,6 +1,8 @@
-module.exports = (command) => {
-    const util = require('node:util');
-    const exec = util.promisify(require('node:child_process').exec);
+import util from "node:util";
+import child_process from "node:child_process";
+
+export default (command) => {
+    const exec = util.promisify(child_process.exec);
     return lsExample(command);
 
     async function lsExample(command) {

@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
 
+export default async (client, interaction) => {
+    try {
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let returnString = `Here's the link(s) to the assets you requested:`;
         let noStickerString = `This only works for messages with stickers attached.`;
@@ -20,12 +21,11 @@ exports.run = async (client, interaction, logger) => {
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "StickerFile",
     type: Discord.ApplicationCommandType.Message
 };

@@ -1,11 +1,11 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const { PassThrough } = require('stream');
-        const PImage = require('pureimage');
-        const getTime = require('../../util/getTime');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import { PassThrough } from "stream";
+import PImage from "pureimage";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
@@ -27,7 +27,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for **${formattingHash}${hex}**:`, files: stream, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for \`${formattingHash}${hex}\`:`, files: stream, ephemeral: ephemeral });
 
         function hexToRgb(hex) {
             let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -38,12 +38,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             } : null;
         };
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "hexcolor",
     description: "Sends image from hexadecimal.",
     options: [{

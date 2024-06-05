@@ -1,8 +1,10 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import { setBirthday, getSwitchCode, setSwitchCode, getEphemeralDefault, setEphemeralDefault } from "../../database/dbServices/user.api.js";
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const api_user = require('../../database/dbServices/user.api');
         switch (interaction.options.getSubcommand()) {
             case "birthday":
                 let day = interaction.options.getInteger("day");
@@ -18,11 +20,11 @@ exports.run = async (client, interaction, logger) => {
                 } else {
                     month = `${month}`;
                 };
-                api_user.setBirthday(interaction.user.id, day + month);
+                setBirthday(interaction.user.id, day + month);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
                 break;
             case "switch":
-                let switchCodeGet = await api_user.getSwitchCode(interaction.user.id);
+                let switchCodeGet = await getSwitchCode(interaction.user.id);
                 let switchFC = interaction.options.getString('switch-fc');
                 let invalidString = `Please specify a valid Nintendo Switch friend code.`;
                 // Present code if no code is supplied as an argument
@@ -34,24 +36,23 @@ exports.run = async (client, interaction, logger) => {
                 switchFC = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
                 if (!switchFC) return sendMessage({ client: client, interaction: interaction, content: invalidString });
                 switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
-                api_user.setSwitchCode(interaction.user.id, switchFC);
+                setSwitchCode(interaction.user.id, switchFC);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
                 break;
             case "ephemeraldefault":
-                // let ephemeralDefaultGet = await api_user.getEphemeralDefault(interaction.user.id);
+                // let ephemeralDefaultGet = await getEphemeralDefault(interaction.user.id);
                 let ephemeralDefault = interaction.options.getBoolean('ephemeral');
-                api_user.setEphemeralDefault(interaction.user.id, ephemeralDefault);
+                setEphemeralDefault(interaction.user.id, ephemeralDefault);
                 return sendMessage({ client: client, interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
                 break;
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "usersettings",
     description: "Change user settings.",
     options: [{

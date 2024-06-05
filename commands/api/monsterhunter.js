@@ -1,14 +1,16 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const randomNumber = require('../../util/randomNumber');
-        const isAdmin = require('../../util/isAdmin');
-        const getMonster = require('../../util/mh/getMonster');
-        const getQuests = require('../../util/mh/getQuests');
-        const monstersJSON = require("../../submodules/monster-hunter-DB/monsters.json");
-        const questsJSON = require("../../submodules/monster-hunter-DB/quests.json");
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+import randomNumber from "../../util/randomNumber.js";
+import getMonster from "../../util/mh/getMonster.js";
+import getQuests from "../../util/mh/getQuests.js";
+import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -17,7 +19,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             // Specific quest
@@ -83,7 +85,6 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
@@ -96,7 +97,7 @@ let mh3uString = "Monster Hunter 3 Ultimate";
 let mhStories2String = "Monster Hunter Stories 2";
 let mhStoriesString = "Monster Hunter Stories";
 
-module.exports.config = {
+export const config = {
     name: "monsterhunter",
     description: "Shows Monster Hunter data.",
     options: [{

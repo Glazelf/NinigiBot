@@ -1,18 +1,19 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import sendMessage from "../../util/sendMessage.js";
+import logger from "../../util/logger.js";
+import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const getUserInfoSlice = require('../../util/userinfo/getUserInfoSlice');
         const user = interaction.options.getUser("user");
         const msg = await getUserInfoSlice(client, interaction, 0, user);
         return sendMessage(msg);
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "Userinfo",
     type: Discord.ApplicationCommandType.User
 };

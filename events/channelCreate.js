@@ -1,10 +1,12 @@
-module.exports = async (client, channel) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: channel.guild.id } });
+export default async (client, channel) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;
         let log = channel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -29,7 +31,7 @@ module.exports = async (client, channel) => {
             let footer = channel.id;
             if (executor) footer = executor.username;
             const createEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${channelType} Created ⭐`)
                 .setDescription(`${channel} (${channel.id})`)
                 .setFooter({ text: footer })
@@ -49,7 +51,6 @@ module.exports = async (client, channel) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

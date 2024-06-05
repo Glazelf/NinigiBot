@@ -1,12 +1,15 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+
+export default async (client, interaction) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const { EligibleRoles } = require('../../database/dbServices/server.api');
-        const isAdmin = require('../../util/isAdmin');
+        const serverApi = await import("../../database/dbServices/server.api.js");
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -24,7 +27,7 @@ exports.run = async (client, interaction, logger) => {
         if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
         if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
 
-        let roleIDs = await EligibleRoles.findAll({ where: { role_id: role.id } });
+        let roleIDs = await serverApi.EligibleRoles.findAll({ where: { role_id: role.id } });
         if (roleIDs.length > 0) {
             for await (const roleID of roleIDs) {
                 roleID.destroy();
@@ -32,20 +35,19 @@ exports.run = async (client, interaction, logger) => {
             return sendMessage({ client: client, interaction: interaction, content: `${role} is no longer eligible to be selfassigned.` });
         } else {
             if (description) {
-                await EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
+                await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
             } else {
-                await EligibleRoles.upsert({ role_id: role.id, name: role.name });
+                await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name });
             };
             return sendMessage({ client: client, interaction: interaction, content: `${role} is now eligible to be selfassigned.` });
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "roleadd",
     description: "Toggle a role's eligibility to be selfassigned.",
     options: [{

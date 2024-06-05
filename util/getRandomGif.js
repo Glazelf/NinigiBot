@@ -1,6 +1,7 @@
-module.exports = async (gifTags = []) => {
-    const axios = require("axios");
-    const config = require("../config.json");
+import axios from "axios";
+import config from "../config.json" with { type: "json" };
+
+export default async (gifTags = []) => {
     let giphyAPI = "https://api.giphy.com/v1/gifs/random";
     const randomTag = gifTags[Math.floor(Math.random() * gifTags.length)];
     let giphyParams = {
@@ -10,14 +11,14 @@ module.exports = async (gifTags = []) => {
     if (gifTags.length > 0) giphyParams.tag = randomTag;
     // Uglier replacement function for the one below
     let giphyURL = `${giphyAPI}?`;
-    await Object.entries(giphyParams).forEach(([key, value]) => {
+    Object.entries(giphyParams).forEach(([key, value]) => {
         giphyURL += `${key}=${value}&`;
     });
     let giphyResponse = await axios.get(giphyURL).catch(e => {
         console.log(e);
         return null;
     });
-    //// Ideally would use this, but for some reason this method returns a 401 error. The above works the same, but is slightly slower and uglier :)
+    //// Ideally would use this, but for some reason this method returns a 401 error. The above works the same, but is slower and uglier
     // let giphyResponse = await axios.get(giphyAPI, {
     //     giphyParams
     // }).catch(e => {

@@ -1,9 +1,11 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const Minesweeper = require('discord.js-minesweeper');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import Minesweeper from "discord.js-minesweeper";
 
+export default async (client, interaction, ephemeral) => {
+    try {
+        ephemeral = true;
         let correctionString = "";
         let rows = 5;
         let columns = 5;
@@ -60,16 +62,15 @@ exports.run = async (client, interaction, logger) => {
         } else {
             returnString += `\nMines: ${mines}`;
         };
-        
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray });
+
+        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "minesweeper",
     aliases: [],
     description: "Play minesweeper.",

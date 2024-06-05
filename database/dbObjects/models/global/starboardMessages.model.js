@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     return sequelize.define('starboard_messages', {
         channel_id: {
             type: DataTypes.STRING,

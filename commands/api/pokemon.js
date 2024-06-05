@@ -1,21 +1,28 @@
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import isAdmin from "../../util/isAdmin.js";
+import axios from "axios";
+import pkm from "pokemon-showdown";
+const { Dex } = pkm;
+import getPokemon from "../../util/pokemon/getPokemon.js";
+import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
+import getTypeEmotes from "../../util/pokemon/getTypeEmotes.js";
+import capitalizeString from "../../util/capitalizeString.js";
+import leadingZeros from "../../util/leadingZeros.js";
+import getRandomObjectItem from "../../util/getRandomObjectItem.js";
+import learnsets from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
+import retroLearnsets from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
+import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
+import imageExists from "../../util/imageExists.js";
+
 let currentGeneration = 9; // Set current generation
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
+
+export default async (client, interaction, ephemeral) => {
     try {
-        const sendMessage = require('../../util/sendMessage');
-        const { Dex } = require('pokemon-showdown');
-        const getPokemon = require('../../util/pokemon/getPokemon');
-        const getWhosThatPokemon = require('../../util/pokemon/getWhosThatPokemon');
-        const getTypeEmotes = require('../../util/pokemon/getTypeEmotes');
-        const capitalizeString = require('../../util/capitalizeString');
-        const leadingZeros = require('../../util/leadingZeros');
-        const getRandomObjectItem = require('../../util/getRandomObjectItem');
-        let learnsets = require('../../node_modules/pokemon-showdown/dist/data/learnsets.js').Learnsets;
-        const retroLearnsets = require('../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js').Learnsets;
-        const checkBaseSpeciesMoves = require('../../util/pokemon/checkBaseSpeciesMoves');
-        const isAdmin = require('../../util/isAdmin');
-        const axios = require("axios");
-        const imageExists = require('../../util/imageExists');
+        let learnsetsObject = learnsets.Learnsets;
+        let retroLearnsetsObject = retroLearnsets.Learnsets;
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -31,7 +38,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         if (shinyArg === true) shinyBool = true;
         // Variables
         let pokemonEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.ActionRowBuilder();
         let returnString = "";
@@ -101,7 +108,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "move":
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generationInput}.` });
                 let moveLearnPool = [];
-                for await (const [key, value] of Object.entries(learnsets)) {
+                for await (const [key, value] of Object.entries(learnsetsObject)) {
                     let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
                     if (!pokemonMatch || !pokemonMatch.exists || pokemonMatch.num <= 0 || !value.learnset || ["CAP", "Future"].includes(pokemonMatch.isNonstandard)) continue;
                     if (!Object.keys(value.learnset).includes(move.id)) continue;
@@ -185,8 +192,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons
-                            .addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
+                        pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -233,8 +239,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
             case "learn":
                 if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
-
-                let learnOptions = [];
+                // Set variables
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
                 let learnsMove = false;
@@ -244,40 +249,41 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                 if (pokemon.prevo) prevo = dexModified.species.get(pokemon.prevo);
                 if (prevo && prevo.prevo) prevoprevo = dexModified.species.get(prevo.prevo);
                 // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
-                evoTreeLearnsets[pokemon.id] = { ...retroLearnsets[pokemon.id], ...learnsets[pokemon.id] };
+                evoTreeLearnsets[pokemon.id] = { ...retroLearnsetsObject[pokemon.id], ...learnsetsObject[pokemon.id] };
                 // Merge these if statements into a singular function
-                if (retroLearnsets[pokemon.id]) {
+                if (retroLearnsetsObject[pokemon.id]) {
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
-                        evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsets[pokemon.id].learnset[key]);
+                        // Moves not learned in gen 1-2 are null, so should be avoided concatenating
+                        if (retroLearnsetsObject[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsetsObject[pokemon.id].learnset[key]);
                     };
                 };
-                if (prevo && retroLearnsets[prevo.id]) {
-                    evoTreeLearnsets[prevo.id] = { ...retroLearnsets[prevo.id], ...learnsets[prevo.id] };
+                if (prevo && retroLearnsetsObject[prevo.id]) {
+                    evoTreeLearnsets[prevo.id] = { ...retroLearnsetsObject[prevo.id], ...learnsetsObject[prevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
-                        evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsets[prevo.id].learnset[key]);
+                        if (retroLearnsetsObject[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsetsObject[prevo.id].learnset[key]);
                     };
                 };
-                if (prevoprevo && retroLearnsets[prevoprevo.id]) {
-                    evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsets[prevoprevo.id], ...learnsets[prevoprevo.id] };
+                if (prevoprevo && retroLearnsetsObject[prevoprevo.id]) {
+                    evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsetsObject[prevoprevo.id], ...learnsetsObject[prevoprevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
-                        evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsets[prevoprevo.id].learnset[key]);
+                        if (retroLearnsetsObject[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsetsObject[prevoprevo.id].learnset[key]);
                     };
                 };
-                learnsets = { ...learnsets, ...evoTreeLearnsets };
-                if (learnsets[pokemon.id]) {
-                    let learnset = learnsets[pokemon.id].learnset;
-                    learnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
+                learnsetsObject = { ...learnsetsObject, ...evoTreeLearnsets };
+                if (learnsetsObject[pokemon.id]) {
+                    let learnset = learnsetsObject[pokemon.id].learnset;
+                    learnset = await checkBaseSpeciesMoves(Dex, learnsetsObject, pokemon);
                     for (let [moveName, learnData] of Object.entries(learnset)) {
                         if (moveName !== move.id) continue;
                         learnsMove = true;
                         learnInfo += getLearnData(learnData);
                     };
                     while (prevo && prevo.num > 0) {
-                        let prevoLearnset = learnsets[prevo.id].learnset;
+                        let prevoLearnset = learnsetsObject[prevo.id].learnset;
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
                             learnInfo += `**As ${prevo.name}:**\n`;
-                            learnDataToAdd = getLearnData(learnData);
+                            let learnDataToAdd = getLearnData(learnData);
                             if (learnDataToAdd.length > 0) learnsMove = true;
                             learnInfo += learnDataToAdd;
                         };
@@ -414,7 +420,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
                     !pokemon.name.startsWith("Squawkabilly-") &&
                     !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
                 );
-                let whosThatPokemonMessageObject = await getWhosThatPokemon({ client: client, pokemonList: allPokemon });
+                let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
                 returnString = whosThatPokemonMessageObject.content;
                 pokemonFiles = whosThatPokemonMessageObject.files;
                 pokemonButtons = whosThatPokemonMessageObject.components;
@@ -456,12 +462,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "pokemon",
     description: "Shows Pokémon data.",
     type: Discord.ApplicationCommandOptionType.Subcommand,

@@ -1,10 +1,12 @@
-module.exports = async (client, oldChannel, newChannel) => {
-    const logger = require('../util/logger');
-    try {
-        const Discord = require("discord.js");
-        const { LogChannels } = require('../database/dbServices/server.api');
+import Discord from "discord.js";
+import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-        let logChannel = await LogChannels.findOne({ where: { server_id: newChannel.guild.id } });
+export default async (client, oldChannel, newChannel) => {
+    try {
+        let serverApi = await import("../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: newChannel.guild.id } });
         if (!logChannel) return;
         let log = newChannel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -31,10 +33,10 @@ module.exports = async (client, oldChannel, newChannel) => {
 
             let footer = newChannel.id;
             if (executor) footer = executor.username;
-            let icon = newChannel.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${newChannelType} Updated ⚒️`)
                 .setDescription(`${newChannel} (${newChannel.id})`)
                 .setFooter({ text: footer })
@@ -120,7 +122,6 @@ module.exports = async (client, oldChannel, newChannel) => {
         };
 
     } catch (e) {
-        // Log error
         logger(e, client);
     };
 };

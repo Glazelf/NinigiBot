@@ -1,11 +1,13 @@
-const Discord = require("discord.js");
-exports.run = async (client, interaction, logger, ephemeral) => {
-    try {
-        const sendMessage = require('../../util/sendMessage');
-        const axios = require("axios");
-        const getWikiURL = require('../../util/getWikiURL');
-        const parseDate = require('../../util/parseDate');
+import Discord from "discord.js";
+import logger from "../../util/logger.js";
+import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import axios from "axios";
+import getWikiURL from "../../util/getWikiURL.js";
+import parseDate from "../../util/parseDate.js";
 
+export default async (client, interaction, ephemeral) => {
+    try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let giAPI = `https://genshin.jmp.blue/`;
@@ -13,7 +15,7 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         let response;
         let buttonArray = [];
         let giEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "character":
                 giAPI += `characters/`;
@@ -107,12 +109,11 @@ exports.run = async (client, interaction, logger, ephemeral) => {
         return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
-        // Log error
         logger(e, client, interaction);
     };
 };
 
-module.exports.config = {
+export const config = {
     name: "genshin",
     description: `Shows Genshin Impact data.`,
     options: [{

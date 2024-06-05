@@ -1,3 +1,5 @@
+import getLevelFromExp from "./getLevelFromExp.js";
+
 const battleMoves = [
     // [chance, [name, attack, knockout]],
     [0, ['Judgement Storm', 2, 2]],
@@ -14,8 +16,6 @@ const battleMoves = [
     [100, ['Tackle', 0.2, 0.1]]
 ];
 
-const getLevelFromExp = require('./getLevelFromExp');
-
 const getMove = (number) => {
     for (let i = 0; i < battleMoves.length; i++) if (number * 100 <= battleMoves[i][0]) return battleMoves[i][1];
 };
@@ -24,7 +24,7 @@ const gainedExp = (lvl) => {
     return (1.5 * 60 * lvl) / 7;
 };
 
-module.exports = class ShinxBattle {
+export default class ShinxBattle {
     constructor(owner, shinxData) {
         this.owner = owner;
         this.nick = shinxData.nickname;

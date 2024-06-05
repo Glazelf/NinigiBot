@@ -4,6 +4,6 @@ const tapping = [
     ['! Time to wake up!', 8, 4]
 ];
 
-module.exports = () => {
+export default () => {
     return tapping[Math.floor(Math.random() * tapping.length)];
 };
