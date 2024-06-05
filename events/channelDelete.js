@@ -6,7 +6,7 @@ export default async (client, channel) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let logChannel = await serverApi.default.LogChannels.findOne({ where: { server_id: channel.guild.id } });
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: channel.guild.id } });
         if (!logChannel) return;
         let log = channel.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;

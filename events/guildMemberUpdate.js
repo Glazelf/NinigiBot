@@ -6,7 +6,7 @@ export default async (client, member, newMember) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let logChannel = await serverApi.default.LogChannels.findOne({ where: { server_id: member.guild.id } });
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
@@ -66,8 +66,8 @@ export default async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            let serverID = await serverApi.default.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-            let roleDB = await serverApi.default.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+            let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+            let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
             if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(Discord.PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
 
             switch (updateCase) {

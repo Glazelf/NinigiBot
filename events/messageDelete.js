@@ -8,7 +8,7 @@ export default async (client, message) => {
         serverApi = await serverApi.default();
         if (!message || !message.guild || !message.author || message.author.bot || message.author.system) return;
         console.log
-        let messageDB = await serverApi.default.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
+        let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: message.channel.id, message_id: message.id } });
         if (messageDB) {
             let starboardChannel = await client.channels.fetch(messageDB.starboard_channel_id);
             if (starboardChannel) {
@@ -17,7 +17,7 @@ export default async (client, message) => {
             };
         };
         // Get log
-        let logChannel = await serverApi.default.LogChannels.findOne({ where: { server_id: message.guild.id } });
+        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: message.guild.id } });
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         // Log sysbot channel events in a seperate channel

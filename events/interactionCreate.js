@@ -220,7 +220,7 @@ export default async (client, interaction) => {
 
                                 let roleSelectReturnString = "Role toggling results:\n";
                                 for await (const role of rolesArray) {
-                                    let checkRoleEligibility = await serverApi.default.EligibleRoles.findOne({ where: { role_id: role.id } });
+                                    let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
                                     if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
                                     if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
                                     if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
@@ -273,7 +273,7 @@ export default async (client, interaction) => {
                             case "role":
                                 let serverApi = await import("../database/dbServices/server.api.js");
                                 serverApi = await serverApi.default();
-                                let dbRoles = await serverApi.default.EligibleRoles.findAll();
+                                let dbRoles = await serverApi.EligibleRoles.findAll();
                                 let roleIDs = [];
                                 let roleObject = [];
                                 await dbRoles.forEach(eligibleRole => {

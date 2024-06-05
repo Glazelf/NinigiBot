@@ -13,6 +13,7 @@ export default async (client, interaction) => {
         await interaction.deferReply({ ephemeral: ephemeral });
 
         const serverApi = await import("../../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
 
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");
@@ -21,8 +22,8 @@ export default async (client, interaction) => {
         let textChannelInvalid = `No text can be sent to ${channelArg}'s type (${Discord.ChannelType[channelArg.type]}) of channel. Please select a text channel.`;
         switch (interaction.options.getSubcommand()) {
             case "starboard":
-                let oldStarboardChannel = await serverApi.default.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
-                let oldStarLimitDB = await serverApi.default.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
+                let oldStarboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
+                let oldStarLimitDB = await serverApi.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
                 let starlimit = null;
                 if (oldStarLimitDB) {
                     starlimit = oldStarLimitDB.star_limit;
@@ -34,20 +35,20 @@ export default async (client, interaction) => {
                 if (starlimitArg) {
                     starlimit = starlimitArg;
                     if (oldStarLimitDB) await oldStarLimitDB.destroy();
-                    await serverApi.default.StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
+                    await serverApi.StarboardLimits.upsert({ server_id: interaction.guild.id, star_limit: starlimit });
                 };
                 // Database
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
-                await serverApi.default.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
                 break;
             case "log":
-                let oldLogChannel = await serverApi.default.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
+                let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 if (oldLogChannel) await oldLogChannel.destroy();
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
-                await serverApi.default.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
+                await serverApi.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
                 break;
             case "automod":
@@ -103,13 +104,13 @@ export default async (client, interaction) => {
                 return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
                 break;
             case "togglepersonalroles":
-                let personalRolesServerID = await serverApi.default.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
+                let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
                 // Database
                 if (personalRolesServerID) {
                     await personalRolesServerID.destroy();
                     return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can no longer be managed by users in **${interaction.guild.name}**.` });
                 } else {
-                    await serverApi.default.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
+                    await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
                     return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can now be managed by users in **${interaction.guild.name}**.` });
                 };
                 break;

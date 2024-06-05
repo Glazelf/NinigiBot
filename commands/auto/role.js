@@ -7,6 +7,7 @@ import isAdmin from "../../util/isAdmin.js";
 export default async (client, interaction, ephemeral) => {
     try {
         const serverApi = await import("../../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -20,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        let db = await serverApi.default.EligibleRoles.findAll();
+        let db = await serverApi.EligibleRoles.findAll();
         let roles = [];
         let roleIDs = [];
         let roleText = [];
