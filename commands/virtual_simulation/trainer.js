@@ -12,18 +12,17 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
-        let embed;
+        let embed = new Discord.EmbedBuilder();
         let avatar = null;
         let master = interaction.user;
-        let user, trophies;
         switch (interaction.options.getSubcommand()) {
             case "info":
-                user = await getUser(master.id);
+                let user = await getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
                 if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
-                trophy_level = 0;
-                trophies = await user.getShopTrophies();
-                trophy_string = '';
+                let trophy_level = 0;
+                let trophies = await user.getShopTrophies();
+                let trophy_string = '';
                 trophies.forEach(trophy => {
                     trophy_string += (trophy.icon + ' ');
                 });
@@ -36,7 +35,7 @@ export default async (client, interaction, ephemeral) => {
                 trophy_level += trophies.length;
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
-                embed = new Discord.EmbedBuilder()
+                embed
                     .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addFields([

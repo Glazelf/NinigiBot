@@ -102,7 +102,7 @@ export async function getTodayShopTrophiesToBuy(money) {
         index = (index + DAILY_TROPHIES) % trophies.length;
     };
     today_trophies = today_trophies.filter(trophy => trophy.price <= money);
-    trophies_ids = today_trophies.map(trophy => trophy.trophy_id);
+    let trophies_ids = today_trophies.map(trophy => trophy.trophy_id);
     return trophies_ids;
 };
 
