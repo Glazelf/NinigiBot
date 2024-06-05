@@ -7,7 +7,6 @@ import { incrementStanAmount, checkEvents } from "../database/dbServices/history
 
 export default async (client) => {
     try {
-        const timezone = 'utc';
         const time = '00 00 18 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
         const guildID = globalVars.ShinxServerID;
@@ -41,7 +40,7 @@ export default async (client) => {
                 content: candidateRandom.toString(), embeds: [gifEmbed],
                 // allowedMentions: { parse: ['users'] }
             });
-        }, timeZone = timezone, start = true);
+        });
 
     } catch (e) {
         logger(e, client);
