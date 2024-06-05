@@ -25,7 +25,7 @@ export default async (client) => {
             let cutiesUsernames = [];
             await guild.members.fetch();
             // For every member check 
-            for (m in [...guild.members.cache.values()]) {
+            for (const m in [...guild.members.cache.values()]) {
                 const member = [...guild.members.cache.values()][m];
                 const birthday = await getBirthday(member.id);
                 if (birthday) {

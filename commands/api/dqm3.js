@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-// import familiesJSON from "../../submodules/DQM3-db/objects/families.json" with { type: "json" };
+import familiesJSON from "../../submodules/DQM3-db/objects/families.json" with { type: "json" };
 import itemsJSON from "../../submodules/DQM3-db/objects/items.json" with { type: "json" };
 // import largeDifferencesJSON from "../../submodules/DQM3-db/objects/largeDifferences.json" with { type: "json" };
 import monstersJSON from "../../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
@@ -40,13 +40,13 @@ export default async (client, interaction, ephemeral) => {
                 let monsterTraitsString = "";
                 if (monsterData.traits) {
                     if (monsterData.traits.small) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
-                        for ([traitID, levelReq] of Object.entries(monsterData.traits.small)) {
+                        for (const [traitID, levelReq] of Object.entries(monsterData.traits.small)) {
                             if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                         };
                     };
                     if (monsterData.traits.large) { // Check might be redundant in complete dataset, depending on if all monsters can be small and/or large
                         monsterTraitsString += `**Large Traits:**\n`;
-                        for ([traitID, levelReq] of Object.entries(monsterData.traits.large)) {
+                        for (const [traitID, levelReq] of Object.entries(monsterData.traits.large)) {
                             if (traitsJSON[traitID]) monsterTraitsString += `${traitsJSON[traitID].name} (${levelReq})\n`;
                         };
                     };
@@ -74,13 +74,13 @@ export default async (client, interaction, ephemeral) => {
                 if (!talentData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that talent.` });
                 let talentSkillsString = "";
                 if (talentData.skills) {
-                    for (let [skillID, skillPoints] of Object.entries(talentData.skills)) {
+                    for (const [skillID, skillPoints] of Object.entries(talentData.skills)) {
                         if (skillsJSON[skillID]) talentSkillsString += `${skillsJSON[skillID].name} (${skillPoints})\n`;
                     };
                 };
                 let talentTraitsString = "";
                 if (talentData.traits) {
-                    for (let [traitID, traitPoints] of Object.entries(talentData.traits)) {
+                    for (const [traitID, traitPoints] of Object.entries(talentData.traits)) {
                         let traitsLevels = traitPoints.join(", ");
                         if (traitsJSON[traitID]) talentTraitsString += `${traitsJSON[traitID].name} (${traitsLevels})\n`;
                     };
@@ -107,7 +107,7 @@ export default async (client, interaction, ephemeral) => {
                 let mpCostString = skillData.mp_cost.toString();
                 if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
                 let skillTalents = [];
-                for (let [talentID, talentObject] of Object.entries(talentsJSON)) {
+                for (const [talentID, talentObject] of Object.entries(talentsJSON)) {
                     if (talentObject.skills == null) continue;
                     if (Object.keys(talentObject.skills).includes(inputID)) skillTalents.push(`${talentObject.name} (${talentObject.skills[inputID]})`);
                 };
@@ -123,13 +123,13 @@ export default async (client, interaction, ephemeral) => {
                 let traitData = traitsJSON[inputID];
                 if (!traitData) return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
                 let traitMonsters = [];
-                for (let [monsterID, monsterObject] of Object.entries(monstersJSON)) {
+                for (const [monsterID, monsterObject] of Object.entries(monstersJSON)) {
                     if (monsterObject.traits == null) continue;
                     if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(inputID)) traitMonsters.push(monsterObject.name);
                     if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(inputID)) traitMonsters.push(`${monsterObject.name} (L)`);
                 };
                 let traitTalents = [];
-                for (let [talentID, talentObject] of Object.entries(talentsJSON)) {
+                for (const [talentID, talentObject] of Object.entries(talentsJSON)) {
                     if (talentObject.traits == null) continue;
                     if (Object.keys(talentObject.traits).includes(inputID)) traitTalents.push(`${talentObject.name} (${talentObject.traits[inputID]})`);
                 };
