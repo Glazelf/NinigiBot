@@ -492,10 +492,12 @@ export default async (client, interaction) => {
                         break;
                     case "persona5":
                         // Submodule is documented in persona5 command
-                        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+                        let skillMapRoyal
+                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
                         switch (focusedOption.name) {
                             case "persona":
-                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+                                let personaMapRoyal;
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
                                 for await (const [key, value] of Object.entries(personaMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
                                 };
@@ -513,7 +515,8 @@ export default async (client, interaction) => {
                                 };
                                 break;
                             case "item":
-                                (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+                                let itemMapRoyal;
+                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
                                 for await (const [key, value] of Object.entries(itemMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         !value.skillCard) choices.push({ name: key, value: key });

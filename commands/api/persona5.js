@@ -14,19 +14,22 @@ export default async (client, interaction, ephemeral) => {
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
         // In strict mode eval isn't allowed to create variables anymore, but the current code works and does the same anyways.
         // Old usage: eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
-        // Imports:
         // rarePersonaeRoyal; list of treasure Persona
         // rareCombosRoyal; ??
         // arcana2CombosRoyal; arcana fusion combos
         // specialCombosRoyal; special fusions
         // dlcPersonaRoyal; list of DLC Persona names
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
-        // Imports personaMapRoyal; object including all persona data (incl. DLC)
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
-        // Imports skillMapRoyal; object including all skill AND trait data
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
-        // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+        let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
+        // (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replaceAll("var ", ""));
+        // itemMapRoyal; object including all item names mapped to item type/descriptions
+        let itemMapRoyal;
+        eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
+        // personaMapRoyal; object including all persona data (incl. DLC)
+        let personaMapRoyal;
+        eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
+        // skillMapRoyal; object including all skill AND trait data
+        let skillMapRoyal;
+        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
         let p5Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
