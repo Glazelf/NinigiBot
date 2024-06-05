@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, message) => {
     try {
@@ -20,7 +21,7 @@ export default async (client, message) => {
         if (!logChannel) return;
         let log = message.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         // Log sysbot channel events in a seperate channel
-        if (client.globalVars.sysbotLogChannelID && client.globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == client.globalVars.sysbotLogChannelID);
+        if (globalVars.sysbotLogChannelID && globalVars.sysbotChannelIDs.includes(message.channel.id)) log = message.guild.channels.cache.find(channel => channel.id == globalVars.sysbotLogChannelID);
         if (!log) return;
         let executor = null;
         try {
@@ -60,12 +61,12 @@ export default async (client, message) => {
             };
             let avatar;
             if (message.member) {
-                avatar = message.member.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
-                avatar = message.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
             const deleteEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)

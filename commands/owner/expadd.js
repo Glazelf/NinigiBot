@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
 
@@ -8,7 +9,7 @@ export default async (client, interaction) => {
     try {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;

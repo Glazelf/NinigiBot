@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -8,10 +9,10 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let role = interaction.options.getRole("role");
         // Role visuals
-        let icon = role.iconURL(client.globalVars.displayAvatarSettings);
+        let icon = role.iconURL(globalVars.displayAvatarSettings);
         let defaultColor = "#000000";
         let embedColor = role.hexColor;
-        if (embedColor == defaultColor) embedColor = client.globalVars.embedColor;
+        if (embedColor == defaultColor) embedColor = globalVars.embedColor;
 
         let guildMembers = await interaction.guild.members.fetch();
         let memberCount = guildMembers.filter(member => member.roles.cache.find(loopRole => loopRole == role)).size;

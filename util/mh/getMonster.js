@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../logger.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
 import getWikiURL from "../getWikiURL.js";
@@ -151,7 +152,7 @@ export default async (client, interaction, monsterData, ephemeral) => {
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender);
         if (monsterDescription) mhEmbed.setDescription(monsterDescription);

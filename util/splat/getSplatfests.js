@@ -1,13 +1,14 @@
 import Discord from "discord.js";
 import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
 export default async ({ client, interaction, page, region }) => {
     try {
         let splat3Embed = new Discord.EmbedBuilder()
             .setTitle("Splatfests")
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
         let splatfestButtons = new Discord.ActionRowBuilder();
         let splat3EmbedFields = [];

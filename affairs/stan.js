@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from '../util/logger.js';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getRandomGif from "../util/getRandomGif.js";
 import cron from "cron";
 import { incrementStanAmount, checkEvents } from "../database/dbServices/history.api.js";
@@ -9,9 +10,9 @@ export default async (client) => {
         const timezone = 'utc';
         const time = '00 00 18 * * *'; // Sec Min Hour
         const gifTags = ['pokemon', 'geass', 'dragon', 'game'];
-        const guildID = client.globalVars.ShinxServerID;
+        const guildID = globalVars.ShinxServerID;
 
-        if (client.user.id != client.globalVars.NinigiID) return;
+        if (client.user.id != globalVars.NinigiID) return;
         // Create cronjob
         new cron.CronJob(time, async () => {
             let guild = await client.guilds.fetch(guildID);
@@ -30,10 +31,10 @@ export default async (client) => {
             const randomGif = await getRandomGif(gifTags);
             if (!randomGif) return;
 
-            let channel = guild.channels.cache.find(channel => channel.id === client.globalVars.eventChannelID);
+            let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
             const gifEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);
             channel.send({

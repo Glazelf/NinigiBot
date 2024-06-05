@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
-// import sendMessage from "../util/sendMessage.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 import { addMoney } from "../database/dbServices/user.api.js";
 
 const talkedRecently = new Set();
@@ -18,13 +18,13 @@ export default async (client, message) => {
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
-            let avatar = message.author.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let profileButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
 
             const dmEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`DM Message`)
                 .setThumbnail(avatar)
                 .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);

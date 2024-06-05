@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldChannel, newChannel) => {
     try {
@@ -32,10 +33,10 @@ export default async (client, oldChannel, newChannel) => {
 
             let footer = newChannel.id;
             if (executor) footer = executor.username;
-            let icon = newChannel.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${newChannelType} Updated ⚒️`)
                 .setDescription(`${newChannel} (${newChannel.id})`)
                 .setFooter({ text: footer })

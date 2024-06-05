@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction, ephemeral) => {
@@ -85,7 +86,7 @@ export default async (client, interaction, ephemeral) => {
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             const rolesHelp = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Available roles:`)
                 .setDescription(roleHelpMessage);
             return sendMessage({ client: client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });

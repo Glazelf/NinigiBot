@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import util from "util";
 
@@ -9,7 +10,7 @@ export default async (client, interaction, ephemeral) => {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         await interaction.deferReply({ ephemeral: ephemeral });
 
         const input = interaction.options.getString("input");

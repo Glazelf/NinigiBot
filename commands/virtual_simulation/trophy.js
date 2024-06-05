@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
@@ -22,7 +23,7 @@ export default async (client, interaction, ephemeral) => {
         switch (interaction.options.getSubcommand()) {
             case "stock":
                 embed = new Discord.EmbedBuilder()
-                    .setColor(client.globalVars.embedColor)
+                    .setColor(globalVars.embedColor)
                 trophies = await getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
                 trophies.forEach(trophy => {
@@ -113,7 +114,7 @@ export default async (client, interaction, ephemeral) => {
                 } else {
                     if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                     embed = new Discord.EmbedBuilder()
-                        .setColor(client.globalVars.embedColor)
+                        .setColor(globalVars.embedColor)
                         .setTitle(`${res.trophy_id}`)
                         .addFields([
                             { name: "Icon:", value: `${res.icon}`, inline: true },

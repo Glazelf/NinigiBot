@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
 export default async ({ client, interaction, gameName, page }) => {
@@ -11,7 +12,7 @@ export default async ({ client, interaction, gameName, page }) => {
         // Sort by difficulty
         questsTotal = questsTotal.sort(compare);
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(`${gameName} Quests`);
         let questsButtons = new Discord.ActionRowBuilder();
         let questsEmbedFields = [];

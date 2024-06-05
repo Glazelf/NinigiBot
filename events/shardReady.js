@@ -8,9 +8,7 @@ export default async (client, id) => {
     try {
         let timestamp = await getTime(client);
         let presence = initPresence();
-        // Set global variables
-        client.globalVars = globalVars;
-        client.globalVars.presence = presence;
+        globalVars.presence = presence;
         // Set bot status
         await client.user.setPresence(presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);

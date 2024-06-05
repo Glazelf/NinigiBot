@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
@@ -19,7 +20,7 @@ export default async (client, interaction, ephemeral) => {
             case "info":
                 user = await getUser(master.id);
                 let member = await interaction.guild.members.fetch(master.id);
-                if (member) avatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
                 trophy_level = 0;
                 trophies = await user.getShopTrophies();
                 trophy_string = '';
@@ -36,7 +37,7 @@ export default async (client, interaction, ephemeral) => {
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
                 embed = new Discord.EmbedBuilder()
-                    .setColor(client.globalVars.embedColor)
+                    .setColor(globalVars.embedColor)
                     .setThumbnail(avatar)
                     .addFields([
                         { name: "Balance:", value: user.money.toString(), inline: true },

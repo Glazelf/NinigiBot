@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
 
@@ -26,7 +27,7 @@ export default async (client, interaction, ephemeral) => {
             seed: catNameSeed
         });
         const catEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
         return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });

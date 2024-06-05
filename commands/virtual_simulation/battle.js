@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
 import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
@@ -18,7 +19,7 @@ export default async (client, interaction) => {
         const trainers = [interaction.user, target];
         if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
         if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, interaction: interaction, content: `You cannot battle yourself!` });
-        if (client.globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
         let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
@@ -28,7 +29,7 @@ export default async (client, interaction) => {
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        const avatars = [trainers[0].displayAvatarURL(client.globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(client.globalVars.displayAvatarSettings)];
+        const avatars = [trainers[0].displayAvatarURL(globalVars.displayAvatarSettings), trainers[1].displayAvatarURL(globalVars.displayAvatarSettings)];
         let canvas = Canvas.createCanvas(240, 71);
         let ctx = canvas.getContext('2d');
         let background = await Canvas.loadImage('./assets/vs.png');
@@ -60,8 +61,8 @@ export default async (client, interaction) => {
         } else if (trainer_answer.customId === 'battleNo') {
             return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
         };
-        if (client.globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
-        client.globalVars.battling.yes = true;
+        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
+        globalVars.battling.yes = true;
         let text = '';
 
         await sendMessage({ client: client, interaction: interaction, components: [], content: 'Let the battle begin!', files: [messageFile] });
@@ -132,7 +133,7 @@ export default async (client, interaction) => {
                         };
                     };
                     for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
-                    client.globalVars.battling.yes = false;
+                    globalVars.battling.yes = false;
                     let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {

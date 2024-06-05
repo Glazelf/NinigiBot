@@ -1,15 +1,16 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getMoney, addMoney } from "../../database/dbServices/user.api.js";
 import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let currency = client.globalVars.currency;
+        let currency = globalVars.currency;
 
         let transferTargetID = interaction.options.getString("user");
         let transferAmount = interaction.options.getInteger("amount");

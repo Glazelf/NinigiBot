@@ -1,13 +1,14 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -26,7 +27,7 @@ export default async (client, interaction) => {
                 if (oldStarLimitDB) {
                     starlimit = oldStarLimitDB.star_limit;
                 } else {
-                    starlimit = client.globalVars.starboardLimit;
+                    starlimit = globalVars.starboardLimit;
                 };
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
                 let starlimitArg = interaction.options.getInteger("starlimit");

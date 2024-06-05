@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -46,7 +47,7 @@ export default async (client, interaction, ephemeral) => {
         if (timezone != 0) dateString += `${timezone > 0 ? "+" : ""}${timezone}`;
         let unixTime = Math.floor(targetDate.getTime() / 1000);
         const timestampEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(dateString)
             .addFields([
                 { name: "Short Time", value: `\`<t:${unixTime}:t>\` ➡ <t:${unixTime}:t>`, inline: false },

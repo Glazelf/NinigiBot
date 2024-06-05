@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction, ephemeral) => {
@@ -9,12 +10,12 @@ export default async (client, interaction, ephemeral) => {
         ephemeral = false;
         let slowmodeSupportedChannelTypes = [
             Discord.ChannelType.GuildText,
-            Discord.ChannelType.GuildPublicThread,
-            Discord.ChannelType.GuildPrivateThread,
+            Discord.ChannelType.PublicThread,
+            Discord.ChannelType.PrivateThread,
             Discord.ChannelType.GuildStageVoice,
             Discord.ChannelType.GuildVoice
         ];
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");

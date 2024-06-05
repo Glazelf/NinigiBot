@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import axios from "axios";
 import pkm from "pokemon-showdown";
@@ -37,7 +38,7 @@ export default async (client, interaction, ephemeral) => {
         if (shinyArg === true) shinyBool = true;
         // Variables
         let pokemonEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new Discord.ActionRowBuilder();
         let returnString = "";

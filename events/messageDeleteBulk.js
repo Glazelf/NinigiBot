@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, messages) => {
     try {
@@ -34,7 +35,7 @@ export default async (client, messages) => {
             if (messagesContent.length < 1) return;
 
             const purgeEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Messages Purged ❌`)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });

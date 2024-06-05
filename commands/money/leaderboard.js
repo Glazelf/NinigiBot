@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getUsersRankedByMoney } from "../../database/dbServices/user.api.js";
 
 export default async (client, interaction, ephemeral) => {
@@ -15,24 +16,24 @@ export default async (client, interaction, ephemeral) => {
         if (globalArg === true) global = globalArg;
         const money_db = await getUsersRankedByMoney();
         const leaderboardEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         if (global) {
             // Global leaderboard
             let leaderboardStringGlobal = money_db.filter(user => client.users.cache.has(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${client.globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
                 .setTitle(`Global Leaderboard:`);
         } else {
             // Server leaderboard
-            let icon = interaction.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
                 .filter(user => !client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${client.globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
             if (leaderboardString.length < 1) return sendMessage({ client: client, interaction: interaction, content: "Noone in this server has any currency yet." });
             leaderboardEmbed

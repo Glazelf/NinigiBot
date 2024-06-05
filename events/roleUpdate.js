@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, oldRole, newRole) => {
     try {
@@ -26,7 +27,7 @@ export default async (client, oldRole, newRole) => {
             };
             // Role color
             let embedColor = newRole.hexColor;
-            if (embedColor == "#000000") embedColor = client.globalVars.embedColor;
+            if (embedColor == "#000000") embedColor = globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
             const updateEmbed = new Discord.EmbedBuilder()
@@ -59,8 +60,8 @@ export default async (client, oldRole, newRole) => {
                 };
             };
             if (oldRole.icon !== newRole.icon) {
-                let oldIcon = oldRole.iconURL(client.globalVars.displayAvatarSettings);
-                let newIcon = newRole.iconURL(client.globalVars.displayAvatarSettings);
+                let oldIcon = oldRole.iconURL(globalVars.displayAvatarSettings);
+                let newIcon = newRole.iconURL(globalVars.displayAvatarSettings);
                 updateDescription += "\nIcon updated.";
                 updateEmbed
                     .setThumbnail(oldIcon)

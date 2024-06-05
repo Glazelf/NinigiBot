@@ -1,9 +1,10 @@
 // Global
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import sendMessage from "../util/sendMessage.js";
 import axios from "axios";
 import fs from "fs";
-import sendMessage from "../util/sendMessage.js";
 // Pokémon
 import pkm from "pokemon-showdown";
 const { Dex } = pkm;
@@ -623,7 +624,7 @@ export default async (client, interaction) => {
                 });
                 break;
             case Discord.InteractionType.ModalSubmit:
-                let userAvatar = interaction.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
                         // Bug report
@@ -635,7 +636,7 @@ export default async (client, interaction) => {
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
                         const bugReportEmbed = new Discord.EmbedBuilder()
-                            .setColor(client.globalVars.embedColor)
+                            .setColor(globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
@@ -657,7 +658,7 @@ export default async (client, interaction) => {
                         let profileButtons = new Discord.ActionRowBuilder()
                             .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
                         const modMailEmbed = new Discord.EmbedBuilder()
-                            .setColor(client.globalVars.embedColor)
+                            .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
                             .setTitle(modMailTitle)

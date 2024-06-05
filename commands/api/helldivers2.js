@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import axios from "axios";
@@ -14,7 +15,7 @@ export default async (client, interaction, ephemeral) => {
         let defenseString = "Defense";
         await interaction.deferReply({ ephemeral: ephemeral });
         let helldiversEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "planet":

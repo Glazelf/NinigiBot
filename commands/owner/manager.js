@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import checker from "../../util/string/checkFormat.js";
 import { checkTrophyExistance, createShopTrophy, deleteShopTrophy } from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/isOwner.js";
@@ -9,7 +10,7 @@ export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
 

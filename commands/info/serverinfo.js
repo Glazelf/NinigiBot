@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
@@ -75,9 +76,9 @@ export default async (client, interaction, ephemeral) => {
         };
         if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
         // Icon and banner
-        let icon = guild.iconURL(client.globalVars.displayAvatarSettings);
+        let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;
-        if (guild.bannerURL()) banner = guild.bannerURL(client.globalVars.displayAvatarSettings);
+        if (guild.bannerURL()) banner = guild.bannerURL(globalVars.displayAvatarSettings);
         // Rules
         let rules = null;
         if (guild.rulesChannel) rules = guild.rulesChannel;
@@ -118,7 +119,7 @@ export default async (client, interaction, ephemeral) => {
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
         const serverEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor)
+            .setColor(globalVars.embedColor)
             .setTitle(guild.name)
             .setThumbnail(icon)
             .setFooter({ text: guild.id });

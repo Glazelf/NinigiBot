@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 import getWikiURL from "../../util/getWikiURL.js";
 import parseDate from "../../util/parseDate.js";
@@ -14,7 +15,7 @@ export default async (client, interaction, ephemeral) => {
         let response;
         let buttonArray = [];
         let giEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "character":
                 giAPI += `characters/`;

@@ -1,13 +1,14 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.BanMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.BanMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });

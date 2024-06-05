@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import fs from "fs";
 import axios from "axios";
 import getSplatfests from "../../util/splat/getSplatfests.js";
@@ -46,7 +47,7 @@ export default async (client, interaction, ephemeral) => {
         let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
         let splat3Embed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "clothing":
                 inputID = interaction.options.getString("clothing");

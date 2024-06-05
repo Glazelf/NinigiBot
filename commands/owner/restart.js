@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
@@ -9,7 +10,7 @@ export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = false;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");

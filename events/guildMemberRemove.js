@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member) => {
     try {
@@ -21,11 +22,11 @@ export default async (client, member) => {
             let reasonText = "Not specified.";
             let kicked = false;
             let leaveEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
-                let avatar = member.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
                     type: Discord.AuditLogEvent.MemberKick

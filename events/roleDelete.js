@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, role) => {
     try {
@@ -28,10 +29,10 @@ export default async (client, role) => {
             let embedColor = role.hexColor;
             let roleColorText = role.hexColor;
             if (!embedColor || embedColor == "#000000") {
-                embedColor = client.globalVars.embedColor;
+                embedColor = globalVars.embedColor;
                 roleColorText = null;
             };
-            let icon = role.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
 
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(embedColor)

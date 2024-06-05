@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../logger.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import pkm from "pokemon-showdown";
 const { Dex } = pkm;
 import imageExists from "../imageExists.js";
@@ -252,7 +253,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-        let embedColor = client.globalVars.embedColor;
+        let embedColor = globalVars.embedColor;
         if (pokemon.color) {
             if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         };

@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member, newMember) => {
     try {
@@ -14,8 +15,8 @@ export default async (client, member, newMember) => {
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
-            let oldAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
-            let avatar = newMember.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
 
             let updateCase = null;
             let topText = null;
@@ -114,7 +115,7 @@ export default async (client, member, newMember) => {
             };
             if (changeText && changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
             const updateEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(topText)
                 .setThumbnail(oldAvatar);
             if (changeText) updateEmbed.setDescription(changeText);

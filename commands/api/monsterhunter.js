@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import randomNumber from "../../util/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
@@ -18,7 +19,7 @@ export default async (client, interaction, ephemeral) => {
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             // Specific quest

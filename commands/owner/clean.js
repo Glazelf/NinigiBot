@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import { getAllUsers } from "../../database/dbServices/user.api.js";
 
@@ -12,7 +13,7 @@ export default async (client, interaction, ephemeral) => {
         if (confirmArg === true) confirm = confirmArg;
         if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: client.globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });

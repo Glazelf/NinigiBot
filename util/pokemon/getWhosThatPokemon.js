@@ -1,11 +1,12 @@
 import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
-import { addMoney } from "../../database/dbServices/user.api.js";
 import pkm from "pokemon-showdown";
 const { Dex } = pkm;
 import imageExists from "../imageExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../getRandomObjectItem.js";
+import { addMoney } from "../../database/dbServices/user.api.js";
 
 export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new Discord.ActionRowBuilder();
@@ -31,7 +32,7 @@ export default async ({ client, pokemonList, winner, pokemon, reveal }) => {
         } else {
             // Format winning message update
             let pkmQuizPrize = 10;
-            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${client.globalVars.currency}!`;
+            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
             addMoney(winner.id, pkmQuizPrize);
         };
         returnString += `\nThe answer was **${pokemon.name}**!`;

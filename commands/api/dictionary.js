@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
 export default async (client, interaction, ephemeral) => {
@@ -11,7 +12,7 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
         let dictionaryEmbed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         let inputWord = interaction.options.getString("word");
         let inputWordType = interaction.options.getString("wordtype");

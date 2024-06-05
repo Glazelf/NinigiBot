@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, channel) => {
     try {
@@ -30,7 +31,7 @@ export default async (client, channel) => {
             let footer = channel.id;
             if (executor) footer = executor.username;
             const createEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${channelType} Created ⭐`)
                 .setDescription(`${channel} (${channel.id})`)
                 .setFooter({ text: footer })

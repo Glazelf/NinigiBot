@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, channel) => {
     try {
@@ -27,9 +28,9 @@ export default async (client, channel) => {
                 };
             };
             const channelType = channel.constructor.name;
-            let icon = channel.guild.iconURL(client.globalVars.displayAvatarSettings);
+            let icon = channel.guild.iconURL(globalVars.displayAvatarSettings);
             const deleteEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`${channelType} Deleted ❌`)
                 .setDescription(`${channel.name} (${channel.id})`)
                 .setFooter({ text: channel.id })

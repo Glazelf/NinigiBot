@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import logger from "../util/logger.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member) => {
     try {
@@ -13,11 +14,11 @@ export default async (client, member) => {
         let botMember = member.guild.members.me;
 
         if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
-            let avatar = member.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+            let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
             let joinButtons = new Discord.ActionRowBuilder()
                 .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${member.id}` }));
             const joinEmbed = new Discord.EmbedBuilder()
-                .setColor(client.globalVars.embedColor)
+                .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)

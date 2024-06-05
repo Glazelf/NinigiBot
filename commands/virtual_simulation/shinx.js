@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
 import { getShinx, getRandomShinx, feedShinx, getShinxAutofeed, autoFeedShinx1, autoFeedShinx2, getRandomReaction, nameShinx, getShinxShininess, isTrainerMale, hasEventTrophy, switchShininessAndGet } from "../../database/dbServices/shinx.api.js";
 import applyText from "../../util/shinx/applyCanvasText.js";
@@ -39,7 +40,7 @@ export default async (client, interaction, ephemeral) => {
                 shinx = await getShinx(master.id);
                 const is_user_male = shinx.user_male;
 
-                avatar = client.user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+                avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 canvas = Canvas.createCanvas(791, 441);
                 ctx = canvas.getContext('2d');

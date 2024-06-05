@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import isAdmin from "../../util/isAdmin.js";
@@ -10,12 +11,12 @@ export default async (client, interaction, page, user) => {
     user = await client.users.fetch(user.id, { force: true });
     let member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
-    let embedColor = client.globalVars.embedColor;
+    let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
     // Avatar
     let serverAvatar = null;
-    if (member) serverAvatar = member.displayAvatarURL(client.globalVars.displayAvatarSettings);
-    let avatar = user.displayAvatarURL(client.globalVars.displayAvatarSettings);
+    if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+    let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
     const profileEmbed = new Discord.EmbedBuilder()
         .setColor(embedColor)
@@ -54,7 +55,7 @@ export default async (client, interaction, page, user) => {
             if (memberRoles) roleCount = memberRoles.size;
             // Banner
             let banner = null;
-            if (user.banner) banner = user.bannerURL(client.globalVars.displayAvatarSettings);
+            if (user.banner) banner = user.bannerURL(globalVars.displayAvatarSettings);
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
@@ -96,7 +97,7 @@ export default async (client, interaction, page, user) => {
             // Balance check
             let dbBalance = user_db.money;
             dbBalance = Math.floor(dbBalance);
-            let userBalance = `${dbBalance}${client.globalVars.currency}`;
+            let userBalance = `${dbBalance}${globalVars.currency}`;
             profileEmbed.addFields([
                 { name: "Balance:", value: userBalance, inline: true },
                 { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }

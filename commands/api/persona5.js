@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import fs from "fs";
 import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
@@ -25,7 +26,7 @@ export default async (client, interaction, ephemeral) => {
         // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
         eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
         let p5Embed = new Discord.EmbedBuilder()
-            .setColor(client.globalVars.embedColor);
+            .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
             case "persona":
