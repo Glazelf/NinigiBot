@@ -73,7 +73,8 @@ export async function hasEventTrophy(user_id, trophy_id) {
     const trophy = await EventTrophy.findOne(
         { attributes: ['trophy_id'], where: where(fn('lower', col('trophy_id')), trophy_id_t) }
     );
-    return (await user.hasEventTrophy(trophy))
+    let res = await user.hasEventTrophy(trophy);
+    return res;
 };
 
 export async function addEventTrophy(user_id, trophy_id) {

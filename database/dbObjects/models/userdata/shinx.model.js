@@ -5,41 +5,42 @@ import getLevelFromExp from "../../../../util/shinx/getLevelFromExp.js";
 export default (sequelize, DataTypes) => {
     const MAX_RANGE = 10;
     const parseMeetDateNow = () => {
-        const now = new Date()
-        return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear())
+        const now = new Date();
+        return parseMeetDate(now.getDate(), now.getMonth(), now.getFullYear());
     };
     const getDay = () => {
-        return Math.floor(Date.now() / 86400000)
+        return Math.floor(Date.now() / 86400000);
     };
     const Shinx = sequelize.define("Shinx", {
         user_id: {
             type: DataTypes.STRING,
-            primaryKey: true
+            primaryKey: true,
+            unique: true
         },
         nickname: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: "Shinx",
+            defaultValue: "Shinx"
         },
         belly: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1,
+            defaultValue: 1
         },
         shiny: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: false,
+            defaultValue: false
         },
         lastmeet: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: Math.floor(Date.now() / 86400000),
+            defaultValue: Math.floor(Date.now() / 86400000)
         },
         meetup: {
             type: DataTypes.STRING,
@@ -49,15 +50,15 @@ export default (sequelize, DataTypes) => {
         user_male: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
-            allowNull: false,
+            allowNull: false
         },
         auto_feed: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
-            allowNull: false,
+            allowNull: false
         },
     }, {
-        timestamps: false,
+        timestamps: false
     });
     //  checkup
     Shinx.prototype.checkup = function () {

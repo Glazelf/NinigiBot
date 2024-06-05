@@ -3,19 +3,20 @@ export default (sequelize, DataTypes) => {
         user_id: {
             type: DataTypes.STRING,
             primaryKey: true,
+            unique: true
         },
         money: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
         swcode: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         birthday: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         ephemeral_default: {
             type: DataTypes.BOOLEAN,
@@ -25,10 +26,10 @@ export default (sequelize, DataTypes) => {
         food: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
     }, {
-        timestamps: false,
+        timestamps: false
     });
     // Money
     User.prototype.addMoneyGeneric = function (money) {

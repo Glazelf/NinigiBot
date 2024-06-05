@@ -3,24 +3,25 @@ export default (sequelize, DataTypes) => {
         user_id: {
             type: DataTypes.STRING,
             primaryKey: true,
+            unique: true
         },
         stan_amount: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
         combat_amount: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
         win_amount: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0
         },
     }, {
-        timestamps: false,
+        timestamps: false
     });
     return History;
 };
