@@ -15,6 +15,7 @@ export default async (client, interaction, ephemeral) => {
 
         let inputWord = interaction.options.getString("word");
         let inputWordType = interaction.options.getString("wordtype");
+        let wordStatus;
 
         try {
             // Sometimes API doesn't respond when a word doesn't exist, sometimes it errors properly. Timeout is to catch both.
@@ -23,7 +24,8 @@ export default async (client, interaction, ephemeral) => {
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
             ]);
             wordStatus = wordStatus.data;
-        } catch (error) {
+        } catch (e) {
+            // console.log(e);
             let errorEmbed = new Discord.EmbedBuilder()
                 .setColor('#FF0000')
                 .setTitle("Error")
