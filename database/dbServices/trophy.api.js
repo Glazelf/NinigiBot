@@ -195,7 +195,6 @@ export async function addEventTrophy(user_id, trophy_id) {
 };
 
 export async function hasEventTrophy(user_id, trophy_id) {
-
     const { EventTrophy } = await userdataModel(userdata);
     let user = await getUser(user_id, ['user_id']);
     let trophy_id_t = trophy_id.toLowerCase();

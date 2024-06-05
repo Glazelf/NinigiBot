@@ -245,7 +245,7 @@ export default async (client, interaction, ephemeral) => {
                 });
                 break;
             case "shiny":
-                res = await hasEventTrophy(master.id, 'shiny charm');
+                res = await hasEventTrophy(master.id, 'Shiny Charm');
                 if (res) {
                     const is_shiny = await switchShininessAndGet(master.id);
                     returnString = is_shiny ? `Your Shinx is shiny now` : `Your Shinx is no longer shiny`;
