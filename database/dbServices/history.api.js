@@ -5,7 +5,7 @@ const DAILY_TROPHIES = 5;
 
 export async function getUser(id, attributes = null) {
     const { User } = await userdataModel(userdata);
-    let user = await User.findByPk(param = id, options = {
+    let user = await User.findByPk(id, {
         attributes: attributes
     });
     if (!user) {
@@ -16,7 +16,7 @@ export async function getUser(id, attributes = null) {
 
 export async function getHistory(id, attributes = null) {
     const { History } = await userdataModel(userdata);
-    let history = await History.findByPk(param = id, options = {
+    let history = await History.findByPk(id, {
         attributes: attributes
     });
     if (!history) {

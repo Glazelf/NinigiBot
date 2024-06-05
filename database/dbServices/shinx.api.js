@@ -6,7 +6,7 @@ import checkFormat from "../../util/string/checkFormat.js";
 
 export async function getShinx(id, attributes = null) {
     const { Shinx } = await userdataModel(userdata);
-    let shinx = await Shinx.findByPk(param = id, options = {
+    let shinx = await Shinx.findByPk(id, {
         attributes: attributes
     });
     if (!shinx) {
@@ -19,7 +19,7 @@ export async function getShinx(id, attributes = null) {
 
 export async function getUser(id, attributes = null) {
     const { User } = await userdataModel(userdata);
-    let user = await User.findByPk(param = id, options = {
+    let user = await User.findByPk(id, {
         attributes: attributes
     });
     if (!user) user = await User.create({ user_id: id });
