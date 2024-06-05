@@ -22,11 +22,11 @@ export default async (client, interaction, ephemeral) => {
         // dlcPersonaRoyal; list of DLC Persona names
         (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
         // Imports personaMapRoyal; object including all persona data (incl. DLC)
-        eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
         // Imports skillMapRoyal; object including all skill AND trait data
-        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
-        eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
         let p5Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
