@@ -6,13 +6,13 @@ export default async (client, member) => {
     try {
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let logChannel = await serverApi.LogChannels.findOne({ where: { server_id: member.guild.id } });
+        let logChannel = await serverApi.default.LogChannels.findOne({ where: { server_id: member.guild.id } });
         if (!logChannel) return;
         let log = member.guild.channels.cache.find(channel => channel.id == logChannel.channel_id);
         if (!log) return;
 
-        let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-        let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+        let serverID = await serverApi.default.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+        let roleDB = await serverApi.default.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
         if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 

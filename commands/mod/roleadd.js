@@ -27,7 +27,7 @@ export default async (client, interaction) => {
         if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
         if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
 
-        let roleIDs = await serverApi.EligibleRoles.findAll({ where: { role_id: role.id } });
+        let roleIDs = await serverApi.default.EligibleRoles.findAll({ where: { role_id: role.id } });
         if (roleIDs.length > 0) {
             for await (const roleID of roleIDs) {
                 roleID.destroy();
@@ -35,9 +35,9 @@ export default async (client, interaction) => {
             return sendMessage({ client: client, interaction: interaction, content: `${role} is no longer eligible to be selfassigned.` });
         } else {
             if (description) {
-                await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
+                await serverApi.default.EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
             } else {
-                await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name });
+                await serverApi.default.EligibleRoles.upsert({ role_id: role.id, name: role.name });
             };
             return sendMessage({ client: client, interaction: interaction, content: `${role} is now eligible to be selfassigned.` });
         };

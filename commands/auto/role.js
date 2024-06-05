@@ -20,7 +20,7 @@ export default async (client, interaction, ephemeral) => {
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
-        let db = await serverApi.EligibleRoles.findAll();
+        let db = await serverApi.default.EligibleRoles.findAll();
         let roles = [];
         let roleIDs = [];
         let roleText = [];
