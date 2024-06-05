@@ -9,6 +9,7 @@ export default async (client, interaction, ephemeral) => {
         const serverApi = await import("../../database/dbServices/server.api.js");
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
+        console.log(serverApi)
         let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
