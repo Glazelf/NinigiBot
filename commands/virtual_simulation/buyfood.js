@@ -10,7 +10,7 @@ export default async (client, interaction) => {
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
-        foodArg = interaction.options.getInteger("food");
+        let foodArg = interaction.options.getInteger("food");
         res = await buyFood(master.id, foodArg);
         returnString = res ? `Added ${foodArg}🍗 to your account!` : `Not enough money!`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });

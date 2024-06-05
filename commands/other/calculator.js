@@ -26,7 +26,7 @@ export default async (client, interaction, ephemeral) => {
             "&",
             "$"
         ];
-        calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
+        let calcInput = input.replace("x", "*").replace(",", ".").replace(/[a-zA-Z]/gm, '');
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");

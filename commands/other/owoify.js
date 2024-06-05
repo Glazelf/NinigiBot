@@ -13,7 +13,7 @@ export default async (client, interaction, ephemeral) => {
         let severity = interaction.options.getString("severity");
         if (!severity) severity = "owo";
 
-        let inputOwOified = owoify(input, severity);
+        let inputOwOified = owoify.default(input, severity);
         let returnString = Discord.codeBlock("fix", inputOwOified);
 
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });

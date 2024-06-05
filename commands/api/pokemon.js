@@ -283,7 +283,7 @@ export default async (client, interaction, ephemeral) => {
                         for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
                             if (moveName !== move.id) continue;
                             learnInfo += `**As ${prevo.name}:**\n`;
-                            learnDataToAdd = getLearnData(learnData);
+                            let learnDataToAdd = getLearnData(learnData);
                             if (learnDataToAdd.length > 0) learnsMove = true;
                             learnInfo += learnDataToAdd;
                         };
