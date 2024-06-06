@@ -150,7 +150,7 @@ export default async (client, interaction, ephemeral) => {
                 };
                 ctx.drawImage(img, 578 * time, 0, 578, 398, 0, 0, 578, 398);
                 const layout = getRandomVisitorPosition();
-                guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
+                let guests = await getRandomShinx(layout.length, shinx.user_id, interaction.guild);
                 img = await Canvas.loadImage('./assets/mc.png');
                 ctx.drawImage(img, 51 * !shinx.user_male, 72 * 0, 51, 72, 60, 223, 51, 72);
                 ctx.font = 'normal bolder 18px Arial';
