@@ -85,7 +85,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "feed":
                 // let foodArg = interaction.options.getInteger("food");
-                let res = await feedShinx(master.id);
+                res = await feedShinx(master.id);
                 switch (res) {
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
@@ -246,7 +246,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "shiny":
                 // This command is currently broken due to missing checks to see if user has Shiny Charm and possibly broken level-up rewards
-                let res = null;
+                res = null;
                 // res = await hasEventTrophy(master.id, 'Shiny Charm');
                 if (res) {
                     const is_shiny = await switchShininessAndGet(master.id);
