@@ -12,8 +12,6 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
         let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
-        // In strict mode eval isn't allowed to create variables anymore, but the current code works and does the same anyways.
-        // Old usage: eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
         // rarePersonaeRoyal; list of treasure Persona
         // rareCombosRoyal; ??
         // arcana2CombosRoyal; arcana fusion combos
@@ -21,14 +19,11 @@ export default async (client, interaction, ephemeral) => {
         // dlcPersonaRoyal; list of DLC Persona names
         let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
         // (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replaceAll("var ", ""));
-        // itemMapRoyal; object including all item names mapped to item type/descriptions
-        let itemMapRoyal;
+        let itemMapRoyal; // Object including all item names mapped to item type/descriptions
         eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
-        // personaMapRoyal; object including all persona data (incl. DLC)
-        let personaMapRoyal;
+        let personaMapRoyal; // Object including all persona data (incl. DLC)
         eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
-        // skillMapRoyal; object including all skill AND trait data
-        let skillMapRoyal;
+        let skillMapRoyal; // Object including all skill AND trait data
         eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
         let p5Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
