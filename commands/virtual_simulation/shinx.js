@@ -85,7 +85,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "feed":
                 // let foodArg = interaction.options.getInteger("food");
-                res = await feedShinx(master.id);
+                let res = await feedShinx(master.id);
                 switch (res) {
                     case 'NoHungry':
                         returnString = `Shinx is not hungry!`;
