@@ -7,6 +7,7 @@ import { getBirthday } from "../database/dbServices/user.api.js";
 
 export default async (client) => {
     try {
+        let timezone = "utc";
         const time = '05 00 06 * * *'; // Sec Min Hour, 8am CEST
         const guildID = globalVars.ShinxServerID;
         const channelID = globalVars.eventChannelID;
@@ -48,7 +49,7 @@ export default async (client) => {
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
             channel.send({ embeds: [gifEmbed], content: cuties.join(' ') });
-        });
+        }, timezone, true);
 
     } catch (e) {
         logger(e, client);
