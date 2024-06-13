@@ -116,8 +116,8 @@ export default async (client, interaction, ephemeral) => {
                 };
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
-                // Move is NOT capitalized on Bulbapedia URLs
-                nameBulbapedia = move.name.toLowerCase().replaceAll(" ", "_");
+                // Capitalization doesn't matter for Bulbapedia URLs
+                nameBulbapedia = move.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
                 let description = move.desc;
