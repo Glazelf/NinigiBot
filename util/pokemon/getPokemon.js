@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import logger from "../logger.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { Dex } from '@pkmn/dex';
+import { Dex as DexSim } from '@pkmn/sim';
 import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
 import convertMeterFeet from "../convertMeterFeet.js";
@@ -71,15 +72,14 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         // Metrics
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
-        let heightAmerican = convertMeterFeet(pokemon.heightm);
+        let pokemonSim = DexSim.forGen(genData.dex.gen).species.get(pokemon.name);
+        let heightAmerican = convertMeterFeet(pokemonSim.heightm);
         if (pokemon.weightkg && pokemon.weightkg > 0) {
             metricsString += `**Weight:**\n${pokemon.weightkg}kg | ${weightAmerican}lbs`;
         } else {
             metricsString += `**Weight:**\n???`;
         };
-        if (pokemon.heightm) {
-            metricsString += `\n**Height:**\n${pokemon.heightm}m | ${heightAmerican}ft`;
-        };
+        if (pokemonSim.heightm) metricsString += `\n**Height:**\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
         // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
         // Official art
         let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
@@ -281,7 +281,8 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             if (["Future"].includes(prevoData.isNonstandard)) description += ` (Generation ${prevoData.gen}+)`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
-        for (let i = 0; i < pokemon.evos.length; i++) {
+        let pokemonEvos = pokemon.evos || [];
+        for (let i = 0; i < pokemonEvos.length; i++) {
             let pokemonData = genData.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;

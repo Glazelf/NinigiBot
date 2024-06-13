@@ -47,7 +47,7 @@ export default async (client, interaction, ephemeral) => {
         let generation = interaction.options.getInteger("generation") || currentGeneration;
         const gens = new Generations(Dex);
         let genData = gens.get(generation);
-        let allPokemon = genData.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+        let allPokemon = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let pokemon = genData.species.get(pokemonName);
         let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
