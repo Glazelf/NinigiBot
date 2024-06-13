@@ -17,7 +17,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         if (!pokemon && pokemonList) pokemon = getRandomObjectItem(pokemonList);
         pokemonID = getCleanPokemonID(pokemon);
         serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
-        doesRenderExist = await imageExists(serebiiRender);
+        doesRenderExist = imageExists(serebiiRender);
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
     // Initiate image context
