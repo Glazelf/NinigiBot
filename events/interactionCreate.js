@@ -288,7 +288,7 @@ export default async (client, interaction) => {
                                     };
                                 });
                                 roleObject = roleObject.sort((r, r2) => r2.position - r.position);
-                                await roleObject.forEach(role => {
+                                roleObject.forEach(role => {
                                     if (role.name.toLowerCase().includes(focusedOption.value)) choices.push({ name: role.name, value: role.value });
                                 });
                                 break;
@@ -303,7 +303,7 @@ export default async (client, interaction) => {
                                 // For some reason filtering breaks the original sorted order, sort by number to restore it
                                 let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                 let usageBool = (interaction.options.getSubcommand() == "usage");
-                                await pokemonSpecies.forEach(species => {
+                                pokemonSpecies.forEach(species => {
                                     let pokemonIdentifier = `${species.num}: ${species.name}`;
                                     if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                         && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
@@ -312,7 +312,7 @@ export default async (client, interaction) => {
                             case "ability":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
                                 let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                await abilities.forEach(ability => {
+                                abilities.forEach(ability => {
                                     if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
                                 });
                                 break;
