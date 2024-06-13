@@ -49,7 +49,8 @@ export default async (client, interaction, ephemeral) => {
         let genData = gens.get(generation);
         let allPokemon = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
-        let pokemon = genData.species.get(pokemonName);
+        let pokemon = null;
+        if (pokemonName) pokemon = genData.species.get(pokemonName);
         let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
         if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
         let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
@@ -88,7 +89,7 @@ export default async (client, interaction, ephemeral) => {
                 if (!item || !item.exists || ["Future", "CAP"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item called \`${itemSearch}\` in generation ${generation}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
-                let hasPGLImage = await imageExists(itemImage);
+                let hasPGLImage = imageExists(itemImage);
                 if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${item.id}.png`;
                 nameBulbapedia = item.name.replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
@@ -115,9 +116,8 @@ export default async (client, interaction, ephemeral) => {
                 };
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
-
-                nameBulbapedia = move.name.replaceAll(" ", "_");
                 // Move is NOT capitalized on Bulbapedia URLs
+                nameBulbapedia = move.name.toLowerCase().replaceAll(" ", "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
                 let description = move.desc;
@@ -125,7 +125,7 @@ export default async (client, interaction, ephemeral) => {
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
                 if (move.isNonstandard == "Past") description += `\nThis move is not usable in generation ${generation}.`;
 
-                let type = getTypeEmotes({ type1: move.type, emotes: emotesAllowed });
+                let type = getTypeEmotes({ type: move.type, emotes: emotesAllowed });
                 let category = move.category;
                 let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
