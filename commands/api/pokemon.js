@@ -11,8 +11,10 @@ import getTypeEmotes from "../../util/pokemon/getTypeEmotes.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/getRandomObjectItem.js";
-import learnsets from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
-import retroLearnsets from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
+let learnsets;
+let retroLearnsets;
+// import learnsets from "../../node_modules/pokemon-showdown/dist/data/learnsets.js";
+// import retroLearnsets from "../../node_modules/pokemon-showdown/dist/data/mods/gen2/learnsets.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
 
@@ -20,8 +22,8 @@ let currentGeneration = 9; // Set current generation
 
 export default async (client, interaction, ephemeral) => {
     try {
-        let learnsetsObject = learnsets.Learnsets;
-        let retroLearnsetsObject = retroLearnsets.Learnsets;
+        let learnsetsObject = Dex.learnsets;
+        let retroLearnsetsObject = Dex.learnsets;
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
