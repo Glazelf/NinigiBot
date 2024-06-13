@@ -6,6 +6,8 @@
   "type": "module",
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.11",
+    "@pkmn/data": "^0.9.7",
+    "@pkmn/dex": "^0.9.7",
     "@sapphire/async-queue": "^1.5.2",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
@@ -17,7 +19,6 @@
     "minimist": "^1.2.8",
     "owoify-js": "^2.0.0",
     "path": "^0.12.7",
-    "pokemon-showdown": "github:smogon/pokemon-showdown",
     "pureimage": "^0.4.13",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7",

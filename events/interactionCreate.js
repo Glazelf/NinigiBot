@@ -6,8 +6,7 @@ import sendMessage from "../util/sendMessage.js";
 import axios from "axios";
 import fs from "fs";
 // Pokémon
-import pkm from "pokemon-showdown";
-const { Dex } = pkm;
+import { Dex } from '@pkmn/dex';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 // Monster Hunter

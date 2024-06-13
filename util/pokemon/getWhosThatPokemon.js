@@ -1,8 +1,7 @@
 import Discord from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
-import pkm from "pokemon-showdown";
-const { Dex } = pkm;
+import { Dex } from '@pkmn/dex';
 import imageExists from "../imageExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../getRandomObjectItem.js";
