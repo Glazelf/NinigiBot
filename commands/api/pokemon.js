@@ -64,7 +64,11 @@ export default async (client, interaction, ephemeral) => {
             case "ability":
                 let abilitySearch = interaction.options.getString("ability");
                 let ability = Dex.abilities.get(abilitySearch);
-                if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
+                // let abilityGen = genData.abilities.get(abilitySearch);
+                let abilityIsFuture = (ability.gen > generation); // Abilities don't have a Future nonStandard flag?
+                let abilityFailString = `Sorry, I could not find that ability in generation ${generation}.`;
+                if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
+                if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
 
                 nameBulbapedia = ability.name.replace(/ /g, "_");
                 // Ability is capitalized on Bulbapedia URLs
@@ -106,7 +110,6 @@ export default async (client, interaction, ephemeral) => {
                 break;
             // Moves
             case "move":
-                console.log(move)
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generation}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsetsObject)) {
@@ -346,14 +349,14 @@ export default async (client, interaction, ephemeral) => {
                 Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replace(/\+/g, "").replace(/--/g, "") });
                 usageArray = usageArray.map(element => element.trim());
                 // Variables for generic usage data
-                let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
+                // let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
                 let rawUsage = 0;
                 let usagePercentage = 0;
                 let usageRank = 0;
                 let genericDataSplitPokemon = null;
                 let pokemonDataSplitLine = null;
                 if (pokemonName) {
-                    let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // space is to exclude matching more popular subforms
+                    let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // Space is to exclude matching more popular subforms
                     if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
                     // Data from generic usage page
                     genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);

@@ -98,7 +98,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let afdSprite = `https://play.pokemonshowdown.com/sprites/afd/${pokemon.spriteid}.png`;
         if (shinyBool) afdSprite = afdSprite.replace("/afd/", "/afd-shiny/");
 
-        let banner = render;
+        // let banner = render;
         let iconAuthor = PMDPortrait;
         let iconFooter = partyIcon;
         let iconThumbnail = render;
