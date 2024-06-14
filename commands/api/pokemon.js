@@ -67,7 +67,7 @@ export default async (client, interaction, ephemeral) => {
                 let ability = Dex.abilities.get(abilitySearch);
                 let abilityGen = genData.abilities.get(abilitySearch);
                 // let abilityGen = genData.abilities.get(abilitySearch);
-                let abilityIsFuture = (ability.gen > generation);
+                let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
                 let abilityFailString = `Sorry, I could not find that ability in generation ${generation}.`;
                 if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
                 if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
@@ -94,26 +94,32 @@ export default async (client, interaction, ephemeral) => {
                 let itemSearch = interaction.options.getString("item");
                 let item = Dex.items.get(itemSearch);
                 let itemGen = genData.items.get(itemSearch);
+                let generationFooter = generation; // Might be usefull to move to top of file
                 let itemIsFuture = (item.gen > generation);
+                let itemIsAvailable = (itemGen == undefined);
                 let itemFailString = `Sorry, I could not find that item in generation ${generation}.`;
                 if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
-                if (!item || !itemGen || !item.exists || item.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that item in generation ${generation}.` });
+                if (!itemGen) {
+                    itemGen = item;
+                    generationFooter = globalVars.pokemonCurrentGeneration;
+                };
+                if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that item in generation ${generation}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
                 let hasPGLImage = imageExists(itemImage);
-                if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${itemGenn.id}.png`;
+                if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${itemGen.id}.png`;
                 nameBulbapedia = itemGen.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
                 let itemDescription = itemGen.desc;
-                if (item.isNonstandard == "Past") itemDescription += `\nThis item is not available in generation ${generation}.`;
+                if (itemIsAvailable) itemDescription += `\nThis item is not available in generation ${generation}.`;
 
                 pokemonEmbed
-                    .setTitle(item.name)
+                    .setTitle(itemGen.name)
                     .setThumbnail(itemImage)
                     .setDescription(itemDescription)
-                    .setFooter({ text: `Introduced in generation ${item.gen} | Generation ${generation} data` });
-                if (item.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: item.fling.basePower.toString(), inline: true }]);
+                    .setFooter({ text: `Introduced in generation ${item.gen} | Generation ${generationFooter} data` });
+                if (itemGen.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: itemGen.fling.basePower.toString(), inline: true }]);
                 break;
             // Moves
             case "move":
