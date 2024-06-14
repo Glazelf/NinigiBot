@@ -33,8 +33,6 @@ import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 
-// Pokémon
-let currentGeneration = 9;
 // Helldivers
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona 5
@@ -309,7 +307,7 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || currentGeneration;
+                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
