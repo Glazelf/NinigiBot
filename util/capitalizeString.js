@@ -20,7 +20,7 @@ export default (str) => {
 
     if (splitStr.length == 1 && typeof splitStr == 'object') returnStr = splitStr[0];
     returnStr = splitStr.join(' ');
-    let dashException = returnStr.replaceAll(" ", "-");
+    let dashException = returnStr.replace(/ /g, "-");
     if (exceptions.includes(dashException.toLowerCase())) returnStr = dashException;
 
     returnStr = returnStr.charAt(0).toUpperCase() + returnStr.slice(1);

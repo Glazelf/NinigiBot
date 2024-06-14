@@ -147,7 +147,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
-                let subweaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
+                let subweaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                     let weaponSubID = weapon.SubWeapon.split("/");
                     weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
                     if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
@@ -163,8 +163,8 @@ export default async (client, interaction, ephemeral) => {
                 let subName = languageJSON["CommonMsg/Weapon/WeaponName_Sub"][inputID];
                 let subDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Sub"][inputID]
                     .replace("\\n", " ")
-                    .replace("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`")
-                    .replace("[group=0003 type=0000 params=00 00 80 3f 00 00 00 00]", "`A`");
+                    .replace(/\[group=0003 type=000a params=00 00 80 3f 00 00 00 00]/g, "`R`")
+                    .replace(/\[group=0003 type=0000 params=00 00 80 3f 00 00 00 00]/g, "`A`");
                 splat3Embed
                     .setTitle(subName)
                     .setThumbnail(subThumbnail)
@@ -174,7 +174,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
-                let specialWeaponMatches = await Object.values(WeaponInfoMainJSON).filter(weapon => {
+                let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                     let weaponSpecialID = weapon.SpecialWeapon.split("/");
                     weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
                     if (weapon.__RowId.endsWith("_Coop") || weapon.__RowId.endsWith("_Msn") || weapon.__RowId.includes("_Rival") && weapon.__RowId.includes("_AMB_")) return false;
@@ -190,7 +190,7 @@ export default async (client, interaction, ephemeral) => {
                 let specialName = languageJSON["CommonMsg/Weapon/WeaponName_Special"][inputID];
                 let specialDescription = languageJSON["CommonMsg/Weapon/WeaponExp_Special"][inputID]
                     .replace("\\n", " ")
-                    .replaceAll("[group=0003 type=000c params=00 00 80 3f 00 00 00 00]", "`ZR`").replaceAll("[group=0003 type=000a params=00 00 80 3f 00 00 00 00]", "`R`").replaceAll("[group=0003 type=000b params=00 00 80 3f 00 00 00 00]", "`ZL`").replaceAll("[group=0003 type=0001 params=00 00 80 3f 00 00 00 00]", "`B`");
+                    .replace(/\[group=0003 type=000c params=00 00 80 3f 00 00 00 00]/g, "`ZR`").replace(/\[group=0003 type=000a params=00 00 80 3f 00 00 00 00]/g, "`R`").replace(/\[group=0003 type=000b params=00 00 80 3f 00 00 00 00]/g, "`ZL`").replace(/\[group=0003 type=0001 params=00 00 80 3f 00 00 00 00]/g, "`B`");
                 splat3Embed
                     .setTitle(specialName)
                     .setThumbnail(specialThumbnail)
@@ -335,7 +335,7 @@ export default async (client, interaction, ephemeral) => {
                     await scheduleData.nodes.forEach(async (entry) => {
                         let challengeName = entry.leagueMatchSetting.leagueMatchEvent.name;
                         let challengeDesc = entry.leagueMatchSetting.leagueMatchEvent.desc;
-                        let challengeDescLong = entry.leagueMatchSetting.leagueMatchEvent.regulation.replaceAll("<br />", "").replaceAll("・", "\n- ");
+                        let challengeDescLong = entry.leagueMatchSetting.leagueMatchEvent.regulation.replace(/<br \/>/g, "").replace(/・/g, "\n- ");
                         let challengeMode = entry.leagueMatchSetting.vsRule.name;
                         let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
                         let challengeTimes = "";

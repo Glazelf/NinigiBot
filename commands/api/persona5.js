@@ -18,7 +18,7 @@ export default async (client, interaction, ephemeral) => {
         // specialCombosRoyal; special fusions
         // dlcPersonaRoyal; list of DLC Persona names
         let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
-        // (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replaceAll("var ", ""));
+        // (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace(/var /g, ""));
         let itemMapRoyal; // Object including all item names mapped to item type/descriptions
         eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
         let personaMapRoyal; // Object including all persona data (incl. DLC)
@@ -34,7 +34,7 @@ export default async (client, interaction, ephemeral) => {
                 let personaInput = interaction.options.getString("persona");
                 let personaObject = personaMapRoyal[personaInput];
                 if (!personaObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that Persona.` });
-                let personaWikiName = personaInput.replaceAll(" ", "_");
+                let personaWikiName = personaInput.replace(/ /g, "_");
                 if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
                 let personaImageFile = `${personaWikiName}_P5R.jpg`;
                 let personaImage = getWikiURL(personaImageFile, personaWiki);
