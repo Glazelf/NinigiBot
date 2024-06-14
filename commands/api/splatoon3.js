@@ -75,7 +75,7 @@ export default async (client, interaction, ephemeral) => {
                 };
                 let clothingObject = await Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
                 if (!clothingObject) return sendMessage({ client: client, interaction: interaction, content: clothingFailedString });
-                let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][inputID]; // Possible to read .__RowId property instead of using clothingType
+                let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
                 if (!clothingAuthor) clothingAuthor = inputID;
 
                 let starRating = star.repeat(clothingObject.Rarity);
