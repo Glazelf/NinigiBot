@@ -67,7 +67,7 @@ export default async (client, interaction, ephemeral) => {
                 let ability = Dex.abilities.get(abilitySearch);
                 let abilityGen = genData.abilities.get(abilitySearch);
                 // let abilityGen = genData.abilities.get(abilitySearch);
-                let abilityIsFuture = (ability.gen > generation); // Abilities don't have a Future nonStandard flag?
+                let abilityIsFuture = (ability.gen > generation);
                 let abilityFailString = `Sorry, I could not find that ability in generation ${generation}.`;
                 if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
                 if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
@@ -82,26 +82,31 @@ export default async (client, interaction, ephemeral) => {
                 let abilityMatchesString = "";
                 abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
                 abilityMatchesString = abilityMatchesString.slice(0, -2);
+                if (abilityMatchesString.length == 0) abilityMatchesString = `No Pokémon has this ability in generation ${generation}.`;
 
                 pokemonEmbed
                     .setTitle(abilityGen.name)
                     .setDescription(abilityGen.desc)
-                    .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generation} data` });
-                if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
+                    .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generation} data` })
+                    .addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
                 break;
             // Items
             case "item":
                 let itemSearch = interaction.options.getString("item");
                 let item = Dex.items.get(itemSearch);
-                if (!item || !item.exists || ["Future", "CAP"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item called \`${itemSearch}\` in generation ${generation}.` });
+                let itemGen = genData.items.get(itemSearch);
+                let itemIsFuture = (item.gen > generation);
+                let itemFailString = `Sorry, I could not find that item in generation ${generation}.`;
+                if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
+                if (!item || !itemGen || !item.exists || item.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that item in generation ${generation}.` });
 
-                let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
+                let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
                 let hasPGLImage = imageExists(itemImage);
-                if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${item.id}.png`;
-                nameBulbapedia = item.name.replace(/ /g, "_");
+                if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${itemGenn.id}.png`;
+                nameBulbapedia = itemGen.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
-                let itemDescription = item.desc;
+                let itemDescription = itemGen.desc;
                 if (item.isNonstandard == "Past") itemDescription += `\nThis item is not available in generation ${generation}.`;
 
                 pokemonEmbed
