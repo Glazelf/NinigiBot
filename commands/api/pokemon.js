@@ -15,12 +15,11 @@ import getRandomObjectItem from "../../util/getRandomObjectItem.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
 
-let currentGeneration = 9; // Set current generation
+const gens = new Generations(Dex);
+let learnsetsObject = Dex.learnsets;
 
 export default async (client, interaction, ephemeral) => {
     try {
-        let learnsetsObject = Dex.learnsets;
-        let retroLearnsetsObject = Dex.learnsets;
         // Command settings
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -44,10 +43,11 @@ export default async (client, interaction, ephemeral) => {
         let nameBulbapedia = null;
         let linkBulbapedia = null;
         // Set generation
-        let generation = interaction.options.getInteger("generation") || currentGeneration;
-        const gens = new Generations(Dex);
+        let generation = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
+
         let genData = gens.get(generation);
         let allPokemon = Array.from(Dex.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+        let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let pokemon = null;
         if (pokemonName) pokemon = Dex.species.get(pokemonName);
@@ -57,6 +57,7 @@ export default async (client, interaction, ephemeral) => {
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = Dex.moves.get(moveSearch);
+        let moveGen = genData.moves.get(moveSearch);
         let moveExists = (move && move.exists && !["CAP", "Future"].includes(move.isNonstandard));
 
         switch (interaction.options.getSubcommand()) {
@@ -64,25 +65,27 @@ export default async (client, interaction, ephemeral) => {
             case "ability":
                 let abilitySearch = interaction.options.getString("ability");
                 let ability = Dex.abilities.get(abilitySearch);
+                let abilityGen = genData.abilities.get(abilitySearch);
                 // let abilityGen = genData.abilities.get(abilitySearch);
                 let abilityIsFuture = (ability.gen > generation); // Abilities don't have a Future nonStandard flag?
                 let abilityFailString = `Sorry, I could not find that ability in generation ${generation}.`;
                 if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
-                if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
+                if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
 
-                nameBulbapedia = ability.name.replace(/ /g, "_");
+                nameBulbapedia = abilityGen.name.replace(/ /g, "_");
                 // Ability is capitalized on Bulbapedia URLs
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
-                let abilityMatches = Object.values(allPokemon).filter(pokemon => Object.values(pokemon.abilities).includes(ability.name) && pokemon.exists && pokemon.num > 0);
+                let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0);
+                console.log(abilityMatches)
                 abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
                 let abilityMatchesString = "";
                 abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
                 abilityMatchesString = abilityMatchesString.slice(0, -2);
 
                 pokemonEmbed
-                    .setTitle(ability.name)
-                    .setDescription(ability.desc)
+                    .setTitle(abilityGen.name)
+                    .setDescription(abilityGen.desc)
                     .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generation} data` });
                 if (abilityMatchesString.length > 0) pokemonEmbed.addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
                 break;
@@ -121,10 +124,10 @@ export default async (client, interaction, ephemeral) => {
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
                 // Capitalization doesn't matter for Bulbapedia URLs
-                nameBulbapedia = move.name.replace(/ /g, "_");
+                nameBulbapedia = moveGen.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
-                let description = move.desc;
+                let description = moveGen.desc;
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
                 if (move.isNonstandard == "Past") description += `\nThis move is not usable in generation ${generation}.`;
@@ -252,24 +255,24 @@ export default async (client, interaction, ephemeral) => {
                 if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
                 if (prevo && prevo.prevo) prevoprevo = Dex.species.get(prevo.prevo);
                 // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
-                evoTreeLearnsets[pokemon.id] = { ...retroLearnsetsObject[pokemon.id], ...learnsetsObject[pokemon.id] };
+                evoTreeLearnsets[pokemon.id] = { ...learnsetsObject[pokemon.id], ...learnsetsObject[pokemon.id] };
                 // Merge these if statements into a singular function
-                if (retroLearnsetsObject[pokemon.id]) {
+                if (learnsetsObject[pokemon.id]) {
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
                         // Moves not learned in gen 1-2 are null, so should be avoided concatenating
-                        if (retroLearnsetsObject[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(retroLearnsetsObject[pokemon.id].learnset[key]);
+                        if (learnsetsObject[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(learnsetsObject[pokemon.id].learnset[key]);
                     };
                 };
-                if (prevo && retroLearnsetsObject[prevo.id]) {
-                    evoTreeLearnsets[prevo.id] = { ...retroLearnsetsObject[prevo.id], ...learnsetsObject[prevo.id] };
+                if (prevo && learnsetsObject[prevo.id]) {
+                    evoTreeLearnsets[prevo.id] = { ...learnsetsObject[prevo.id], ...learnsetsObject[prevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
-                        if (retroLearnsetsObject[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(retroLearnsetsObject[prevo.id].learnset[key]);
+                        if (learnsetsObject[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(learnsetsObject[prevo.id].learnset[key]);
                     };
                 };
-                if (prevoprevo && retroLearnsetsObject[prevoprevo.id]) {
-                    evoTreeLearnsets[prevoprevo.id] = { ...retroLearnsetsObject[prevoprevo.id], ...learnsetsObject[prevoprevo.id] };
+                if (prevoprevo && learnsetsObject[prevoprevo.id]) {
+                    evoTreeLearnsets[prevoprevo.id] = { ...learnsetsObject[prevoprevo.id], ...learnsetsObject[prevoprevo.id] };
                     for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
-                        if (retroLearnsetsObject[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(retroLearnsetsObject[prevoprevo.id].learnset[key]);
+                        if (learnsetsObject[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(learnsetsObject[prevoprevo.id].learnset[key]);
                     };
                 };
                 learnsetsObject = { ...learnsetsObject, ...evoTreeLearnsets };
@@ -488,7 +491,7 @@ export const config = {
             type: Discord.ApplicationCommandOptionType.Integer,
             description: "Generation to use.",
             minValue: 3,
-            maxValue: currentGeneration
+            maxValue: globalVars.pokemonCurrentGeneration
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
@@ -509,7 +512,7 @@ export const config = {
             type: Discord.ApplicationCommandOptionType.Integer,
             description: "Generation to use.",
             minValue: 1,
-            maxValue: currentGeneration
+            maxValue: globalVars.pokemonCurrentGeneration
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
@@ -530,7 +533,7 @@ export const config = {
             type: Discord.ApplicationCommandOptionType.Integer,
             description: "Generation to use.",
             minValue: 1,
-            maxValue: currentGeneration
+            maxValue: globalVars.pokemonCurrentGeneration
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
@@ -589,7 +592,7 @@ export const config = {
             type: Discord.ApplicationCommandOptionType.Integer,
             description: "Generation to use.",
             minValue: 1,
-            maxValue: currentGeneration
+            maxValue: globalVars.pokemonCurrentGeneration
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
