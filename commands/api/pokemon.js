@@ -47,26 +47,26 @@ export default async (client, interaction, ephemeral) => {
         let generation = interaction.options.getInteger("generation") || currentGeneration;
         const gens = new Generations(Dex);
         let genData = gens.get(generation);
-        let allPokemon = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+        let allPokemon = Array.from(Dex.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let pokemon = null;
-        if (pokemonName) pokemon = genData.species.get(pokemonName);
+        if (pokemonName) pokemon = Dex.species.get(pokemonName);
         let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
         if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
         let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
-        let move = genData.moves.get(moveSearch);
+        let move = Dex.moves.get(moveSearch);
         let moveExists = (move && move.exists && !["CAP", "Future"].includes(move.isNonstandard));
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
             case "ability":
                 let abilitySearch = interaction.options.getString("ability");
-                let ability = genData.abilities.get(abilitySearch);
+                let ability = Dex.abilities.get(abilitySearch);
                 if (!ability || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP") return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an ability by that name.` });
 
-                nameBulbapedia = ability.name.replaceAll(" ", "_");
+                nameBulbapedia = ability.name.replace(/ /g, "_");
                 // Ability is capitalized on Bulbapedia URLs
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
@@ -85,13 +85,13 @@ export default async (client, interaction, ephemeral) => {
             // Items
             case "item":
                 let itemSearch = interaction.options.getString("item");
-                let item = genData.items.get(itemSearch);
+                let item = Dex.items.get(itemSearch);
                 if (!item || !item.exists || ["Future", "CAP"].includes(item.isNonstandard)) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find an item called \`${itemSearch}\` in generation ${generation}.` });
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${item.id}.png`;
                 let hasPGLImage = imageExists(itemImage);
                 if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${item.id}.png`;
-                nameBulbapedia = item.name.replaceAll(" ", "_");
+                nameBulbapedia = item.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
                 let itemDescription = item.desc;
@@ -106,6 +106,7 @@ export default async (client, interaction, ephemeral) => {
                 break;
             // Moves
             case "move":
+                console.log(move)
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generation}.` });
                 let moveLearnPool = [];
                 for await (const [key, value] of Object.entries(learnsetsObject)) {
@@ -117,7 +118,7 @@ export default async (client, interaction, ephemeral) => {
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
                 // Capitalization doesn't matter for Bulbapedia URLs
-                nameBulbapedia = move.name.replaceAll(" ", "_");
+                nameBulbapedia = move.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(move)`;
 
                 let description = move.desc;
@@ -195,7 +196,7 @@ export default async (client, interaction, ephemeral) => {
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
-                let formatDescription = (format.desc + "\n").replaceAll("&eacute;", "é");
+                let formatDescription = (format.desc + "\n").replace(/&eacute;/g, "é");
                 if (format.searchShow) {
                     formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
                 } else if (format.rated) {
@@ -245,8 +246,8 @@ export default async (client, interaction, ephemeral) => {
                 let prevo = null;
                 let prevoprevo = null;
                 let evoTreeLearnsets = {}; // Merge, first object's properties get overwritten by second object's properties
-                if (pokemon.prevo) prevo = genData.species.get(pokemon.prevo);
-                if (prevo && prevo.prevo) prevoprevo = genData.species.get(prevo.prevo);
+                if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
+                if (prevo && prevo.prevo) prevoprevo = Dex.species.get(prevo.prevo);
                 // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
                 evoTreeLearnsets[pokemon.id] = { ...retroLearnsetsObject[pokemon.id], ...learnsetsObject[pokemon.id] };
                 // Merge these if statements into a singular function
@@ -286,7 +287,7 @@ export default async (client, interaction, ephemeral) => {
                             if (learnDataToAdd.length > 0) learnsMove = true;
                             learnInfo += learnDataToAdd;
                         };
-                        prevo = genData.species.get(prevo.prevo);
+                        prevo = Dex.species.get(prevo.prevo);
                     };
                     if (!learnsMove) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
                 } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
@@ -341,8 +342,8 @@ export default async (client, interaction, ephemeral) => {
                     return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
                 };
                 // Filter, split and trim pokemon data
-                let usageArray = response.data.replaceAll("|", "").replaceAll("\n", "").trim().split(`----------------------------------------+  +----------------------------------------+`);
-                await Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replaceAll("+", "").replaceAll("--", "") });
+                let usageArray = response.data.replace(/\|/g, "").replace(/\n/g, "").trim().split(`----------------------------------------+  +----------------------------------------+`);
+                Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replace(/\+/g, "").replace(/--/g, "") });
                 usageArray = usageArray.map(element => element.trim());
                 // Variables for generic usage data
                 let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
@@ -362,12 +363,12 @@ export default async (client, interaction, ephemeral) => {
                     usageRank = genericDataSplitPokemon[0].split("|");
                     usageRank = usageRank[usageRank.length - 2].trim();
                     // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
-                    let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
-                    let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
-                    let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "").replaceAll(":", " ");
-                    let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
-                    let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replaceAll("   ", "");
-                    let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replaceAll("   ", "");
+                    let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
+                    let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
+                    let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "").replace(/:/g, " ");
+                    let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
+                    let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
+                    let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
                     pokemonEmbed
                         .setTitle(`${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
