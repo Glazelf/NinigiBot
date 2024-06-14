@@ -5,6 +5,8 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
 
+let catAAS = "https://cataas.com/cat";
+
 export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -14,7 +16,6 @@ export default async (client, interaction, ephemeral) => {
         let standardCatText = "Meow";
         if (!catText) catText = standardCatText;
 
-        let catAAS = "https://cataas.com/cat";
         let catAPI = `${catAAS}?json=true`;
         let response = await axios.get(catAPI);
         let catImage = null;

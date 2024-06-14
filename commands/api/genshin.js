@@ -6,12 +6,14 @@ import axios from "axios";
 import getWikiURL from "../../util/getWikiURL.js";
 import parseDate from "../../util/parseDate.js";
 
+let giAPI = `https://genshin.jmp.blue/`;
+let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
+
 export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let giAPI = `https://genshin.jmp.blue/`;
-        let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
+
         let response;
         let buttonArray = [];
         let giEmbed = new Discord.EmbedBuilder()

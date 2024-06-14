@@ -7,17 +7,19 @@ import getWikiURL from "../getWikiURL.js";
 import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
 
+
+let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
+// Game names
+let MHRise = "Monster Hunter Rise";
+let MHW = "Monster Hunter World";
+let MHGU = "Monster Hunter Generations Ultimate";
+
 export default async (client, interaction, monsterData, ephemeral) => {
     try {
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
-        // Game names
-        let MHRise = "Monster Hunter Rise";
-        let MHW = "Monster Hunter World";
-        let MHGU = "Monster Hunter Generations Ultimate";
-        let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-        let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
         let gameDBName;
         // Get icon, description and game appearances
         let monsterIcon;

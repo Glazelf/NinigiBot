@@ -4,15 +4,16 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import axios from "axios";
 
+let api = "https://helldiverstrainingmanual.com/api/v1/";
+let liberationString = "Liberation";
+let defenseString = "Defense";
+
 export default async (client, interaction, ephemeral) => {
     try {
-        let api = "https://helldiverstrainingmanual.com/api/v1/";
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let campaignStatus = null;
-        let liberationString = "Liberation";
-        let defenseString = "Defense";
+
         await interaction.deferReply({ ephemeral: ephemeral });
         let helldiversEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);

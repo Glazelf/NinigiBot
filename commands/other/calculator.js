@@ -2,30 +2,31 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
+let maxMessageLength = 2000;
+let noInputString = `You need to provide a valid input.`;
+let sanitizeValues = [
+    " ",
+    "`",
+    '"',
+    "'",
+    "{",
+    "}",
+    "[",
+    "]",
+    "<",
+    ">",
+    "&",
+    "$"
+];
+
 export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let maxMessageLength = 2000;
-        let noInputString = `You need to provide a valid input.`;
         let input = interaction.options.getString("input");
         // Sanitize input
-        let sanitizeValues = [
-            " ",
-            "`",
-            '"',
-            "'",
-            "{",
-            "}",
-            "[",
-            "]",
-            "<",
-            ">",
-            "&",
-            "$"
-        ];
         let calcInput = input.replace(/x/g, "*").replace(/,/g, ".").replace(/[a-zA-Z]/gm, '');
         if (!calcInput.includes("!=")) calcInput = calcInput.replace("=", "==");
         sanitizeValues.forEach(function (value) {

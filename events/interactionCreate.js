@@ -33,6 +33,21 @@ import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 
+// Pokémon
+let currentGeneration = 9;
+// Helldivers
+let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
+// Persona 5
+// Submodule is documented in persona5 command
+let skillMapRoyal
+eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
+let personaMapRoyal;
+eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
+let itemMapRoyal;
+eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
+// Genshin Impact
+let giAPI = `https://genshin.jmp.blue/`;
+
 export default async (client, interaction) => {
     try {
         if (interaction.user.bot) return;
@@ -294,7 +309,6 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let currentGeneration = 9
                         let generationInput = interaction.options.getInteger("generation") || currentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
@@ -318,20 +332,20 @@ export default async (client, interaction) => {
                             case "move":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
                                 let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                await moves.forEach(move => {
+                                moves.forEach(move => {
                                     if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
                                 });
                                 break;
                             case "item":
                                 // For some reason filtering breaks the original sorted order, sort by name to restore it
                                 let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                await items.forEach(item => {
+                                items.forEach(item => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
                             case "nature":
                                 let natures = Dex.natures.all();
-                                await natures.forEach(nature => {
+                                natures.forEach(nature => {
                                     if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         nature.exists) choices.push({ name: nature.name, value: nature.name });
                                 });
@@ -460,7 +474,6 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "genshin":
-                        let giAPI = `https://genshin.jmp.blue/`;
                         let giResponse;
                         switch (focusedOption.name) {
                             case "character":
@@ -490,13 +503,8 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "persona5":
-                        // Submodule is documented in persona5 command
-                        let skillMapRoyal
-                        eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
                         switch (focusedOption.name) {
                             case "persona":
-                                let personaMapRoyal;
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
                                 for await (const [key, value] of Object.entries(personaMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
                                 };
@@ -514,8 +522,6 @@ export default async (client, interaction) => {
                                 };
                                 break;
                             case "item":
-                                let itemMapRoyal;
-                                eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
                                 for await (const [key, value] of Object.entries(itemMapRoyal)) {
                                     if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                         !value.skillCard) choices.push({ name: key, value: key });
@@ -559,7 +565,6 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "helldivers2":
-                        let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
                         switch (focusedOption.name) {
                             case "planet":
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);

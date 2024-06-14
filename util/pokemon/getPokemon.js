@@ -135,7 +135,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
         };
         let statLevels = `(lvl50) (lvl100)`;
-        let HPstats = calcHP(pokemon.baseStats.hp, generation);
+        let HPstats = calcHP(pokemon, generation);
         let Atkstats = calcStat(pokemon.baseStats.atk, generation);
         let Defstats = calcStat(pokemon.baseStats.def, generation);
         let SpAstats = calcStat(pokemon.baseStats.spa, generation);
@@ -354,107 +354,110 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 
-        function calcHP(base, generation) {
-            let min50;
-            let max50;
-            let min100;
-            let max100;
-            if (generation <= 2) {
-                min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
-                max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
-                min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
-                max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 100 + 10);
-            } else if (generation >= 3) {
-                min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
-                max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
-                min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
-                max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
-            };
-            //// Let's Go
-            // let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
-            // let max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
-            // let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
-            // let max100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10 + 200);
-            //// Legends: Arceus
-            // let min50 = Math.floor((50 / 100 + 1) * base + 50 + (50 / 2.5));
-            // let max50 = Math.floor((50 / 100 + 1) * base + 50 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-            // let min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
-            // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-
-            let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
-            if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
-            return StatText;
-        };
-        function calcStat(base, generation) {
-            let min50;
-            let max50;
-            let min100;
-            let max100;
-            if (generation <= 2) {
-                min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
-                max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
-                min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
-                max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 5);
-            } else if (generation >= 3) {
-                //// Gen 3+
-                min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
-                max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
-                min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
-                max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
-            };
-            //// Let's Go
-            // let min50 = Math.floor((((2 * base) * 50) / 100) + 5);
-            // let max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
-            // let min100 = Math.floor((((2 * base) * 100) / 100) + 5);
-            // let max100 = Math.floor((((((2 * base + 31) * 100) / 100) + 5) * 1.1 * 1.1) + 200);
-            //// Legends: Arceus
-            // let min50 = Math.floor((((50 / 50 + 1) * base) / 1.5) + (50 / 2.5));
-            // let max50 = Math.floor(((((50 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-            // let min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
-            // let max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
-
-            let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
-            return StatText;
-        };
-
-        function getEvoMethod(pokemon) {
-            let evoMethod;
-            switch (pokemon.evoType) {
-                case "useItem":
-                    evoMethod = ` using a ${pokemon.evoItem}`;
-                    break;
-                case "trade":
-                    evoMethod = ` when traded`;
-                    if (pokemon.evoItem) evoMethod += ` holding a ${pokemon.evoItem}`;
-                    break;
-                case "levelHold":
-                    evoMethod = ` when leveling up while holding a ${pokemon.evoItem}`;
-                    break;
-                case "levelExtra":
-                    evoMethod = ` when leveling up`;
-                    break;
-                case "levelFriendship":
-                    evoMethod = ` when leveling up with high friendship`;
-                    break;
-                case "levelMove":
-                    evoMethod = ` when leveling up while knowing ${pokemon.evoMove}`;
-                    break;
-                case "other":
-                    evoMethod = `:`;
-                    break;
-                default:
-                    evoMethod = ` at level ${pokemon.evoLevel}`;
-                    break;
-            };
-            if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
-            return evoMethod;
-        };
-        function compare(a, b) {
-            return a.num - b.num;
-        };
-
     } catch (e) {
         logger(e, client);
     };
+};
+
+function calcHP(pokemon, generation) {
+    let base = pokemon.baseStats.hp;
+    let min50;
+    let max50;
+    let min100;
+    let max100;
+    if (generation <= 2) {
+        min50 = Math.floor(((((base) * 2) * 50) / 100) + 50 + 10);
+        max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 50 + 10);
+        min100 = Math.floor(((((base) * 2) * 100) / 100) + 100 + 10);
+        max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 100 + 10);
+    } else if (generation >= 3) {
+        min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+        max50 = Math.floor((((2 * base + 31 + (252 / 4)) * 50) / 100) + 50 + 10);
+        min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+        max100 = Math.floor((((2 * base + 31 + (252 / 4)) * 100) / 100) + 100 + 10);
+    };
+    //// Let's Go
+    // let min50 = Math.floor((((2 * base) * 50) / 100) + 50 + 10);
+    // let max50 = Math.floor((((2 * base + 31) * 50) / 100) + 50 + 10 + 200);
+    // let min100 = Math.floor((((2 * base) * 100) / 100) + 100 + 10);
+    // let max100 = Math.floor((((2 * base + 31) * 100) / 100) + 100 + 10 + 200);
+    //// Legends: Arceus
+    // let min50 = Math.floor((50 / 100 + 1) * base + 50 + (50 / 2.5));
+    // let max50 = Math.floor((50 / 100 + 1) * base + 50 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // let min100 = Math.floor((100 / 100 + 1) * base + 100 + (50 / 2.5));
+    // let max100 = Math.floor((100 / 100 + 1) * base + 100 + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+
+    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+    if (pokemon.name.endsWith("-Gmax") || pokemon.name.endsWith("-Eternamax")) StatText = `(${Math.floor(min50 * 1.5)}-${max50 * 2}) (${Math.floor(min100 * 1.5)}-${max100 * 2})`;
+    if (pokemon.name == "Shedinja") StatText = `(1-1) (1-1)`;
+    return StatText;
+};
+
+function calcStat(base, generation) {
+    let min50;
+    let max50;
+    let min100;
+    let max100;
+    if (generation <= 2) {
+        min50 = Math.floor(((((base) * 2) * 50) / 100) + 5);
+        max50 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 50) / 100) + 5);
+        min100 = Math.floor(((((base) * 2) * 100) / 100) + 5);
+        max100 = Math.floor((((((base + 15) * 2) + Math.sqrt(65535) / 4) * 100) / 100) + 5);
+    } else if (generation >= 3) {
+        //// Gen 3+
+        min50 = Math.floor(((((2 * base) * 50) / 100) + 5) * 0.9);
+        max50 = Math.floor(((((2 * base + 31 + (252 / 4)) * 50) / 100) + 5) * 1.1);
+        min100 = Math.floor(((((2 * base) * 100) / 100) + 5) * 0.9);
+        max100 = Math.floor(((((2 * base + 31 + (252 / 4)) * 100) / 100) + 5) * 1.1);
+    };
+    //// Let's Go
+    // let min50 = Math.floor((((2 * base) * 50) / 100) + 5);
+    // let max50 = Math.floor((((((2 * base + 31) * 50) / 100) + 5) * 1.1 * 1.1) + 200);
+    // let min100 = Math.floor((((2 * base) * 100) / 100) + 5);
+    // let max100 = Math.floor((((((2 * base + 31) * 100) / 100) + 5) * 1.1 * 1.1) + 200);
+    //// Legends: Arceus
+    // let min50 = Math.floor((((50 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+    // let max50 = Math.floor(((((50 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+    // let min100 = Math.floor((((100 / 50 + 1) * base) / 1.5) + (50 / 2.5));
+    // let max100 = Math.floor(((((100 / 50 + 1) * base) / 1.5) * 1.1) + Math.round((Math.sqrt(base) * 25 + 50) / 2.5));
+
+    let StatText = `(${min50}-${max50}) (${min100}-${max100})`;
+    return StatText;
+};
+
+function getEvoMethod(pokemon) {
+    let evoMethod;
+    switch (pokemon.evoType) {
+        case "useItem":
+            evoMethod = ` using a ${pokemon.evoItem}`;
+            break;
+        case "trade":
+            evoMethod = ` when traded`;
+            if (pokemon.evoItem) evoMethod += ` holding a ${pokemon.evoItem}`;
+            break;
+        case "levelHold":
+            evoMethod = ` when leveling up while holding a ${pokemon.evoItem}`;
+            break;
+        case "levelExtra":
+            evoMethod = ` when leveling up`;
+            break;
+        case "levelFriendship":
+            evoMethod = ` when leveling up with high friendship`;
+            break;
+        case "levelMove":
+            evoMethod = ` when leveling up while knowing ${pokemon.evoMove}`;
+            break;
+        case "other":
+            evoMethod = `:`;
+            break;
+        default:
+            evoMethod = ` at level ${pokemon.evoLevel}`;
+            break;
+    };
+    if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
+    return evoMethod;
+};
+
+function compare(a, b) {
+    return a.num - b.num;
 };

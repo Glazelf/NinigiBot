@@ -2,12 +2,13 @@ import Discord from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
+let starboardEmote = "⭐";
+const altboardChannelID = "1234922298255872092"; // Evil starboard
+const altboardEmoteID = "780198211913646130";
+const altboardEmote = `<:nostar:${altboardEmoteID}>`;
+
 export default async (client, messageReaction) => {
     try {
-        let starboardEmote = "⭐";
-        const altboardChannelID = "1234922298255872092"; // Evil starboard
-        const altboardEmoteID = "780198211913646130";
-        const altboardEmote = `<:nostar:${altboardEmoteID}>`;
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
         // Check if message is reacting to nostar in Shinx server
