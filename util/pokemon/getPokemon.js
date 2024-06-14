@@ -194,7 +194,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                     };
                 };
             };
-            levelMoves = await Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
+            levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
             // Prevo egg moves
             if (prevo) {
                 for (let [moveName, learnData] of Object.entries(learnsets[prevo.id].learnset)) {
