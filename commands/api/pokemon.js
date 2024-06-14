@@ -77,7 +77,6 @@ export default async (client, interaction, ephemeral) => {
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}_(Ability)`;
 
                 let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0);
-                console.log(abilityMatches)
                 abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
                 let abilityMatchesString = "";
                 abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
