@@ -5,6 +5,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
+import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
@@ -202,7 +203,7 @@ export default async (client, interaction, ephemeral) => {
             // Format
             case "format":
                 let formatSearch = interaction.options.getString("format");
-                let format = Dex.formats.get(formatSearch);
+                let format = DexSim.formats.get(formatSearch);
                 if (!format || !format.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
 
                 if (format.threads) {
@@ -344,6 +345,7 @@ export default async (client, interaction, ephemeral) => {
                 // Format URL and other variables
                 let searchURL = `https://www.smogon.com/stats/${year}-${stringMonth}/moveset/${formatInput}-${rating}.txt`;
                 let response = null;
+                let genericUsageResponse = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
                 let usageButtons = new Discord.ActionRowBuilder()
                     .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
@@ -352,6 +354,7 @@ export default async (client, interaction, ephemeral) => {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
                 } catch (e) {
+                    // console.log(e);
                     // Make generic embed to guide people to usage statistics :)
                     let replyText = failText;
                     return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
