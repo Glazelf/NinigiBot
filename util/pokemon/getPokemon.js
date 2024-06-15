@@ -166,7 +166,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemon.prevo) prevo = genData.species.get(pokemon.prevo);
         if (prevo && prevo.prevo) prevo = genData.species.get(prevo.prevo);
         if (learnsetBool && pokemonLearnset) {
-            pokemonLearnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
+            pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
                 moveName = genData.moves.get(moveName).name;
                 for (let moveLearnData of learnData) {
