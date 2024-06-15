@@ -6,27 +6,27 @@ import fs from "fs";
 import capitalizeString from "../../util/capitalizeString.js";
 import getWikiURL from "../../util/getWikiURL.js";
 
+let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
+// rarePersonaeRoyal; list of treasure Persona
+// rareCombosRoyal; ??
+// arcana2CombosRoyal; arcana fusion combos
+// specialCombosRoyal; special fusions
+// dlcPersonaRoyal; list of DLC Persona names
+let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
+// eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace(/var /g, ""));
+let itemMapRoyal; // Object including all item names mapped to item type/descriptions
+eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
+let personaMapRoyal; // Object including all persona data (incl. DLC)
+eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
+let skillMapRoyal; // Object including all skill AND trait data
+eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
+
 export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
-        let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
-        // In strict mode eval isn't allowed to create variables anymore, but the current code works and does the same anyways.
-        // Old usage: eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
-        // Imports:
-        // rarePersonaeRoyal; list of treasure Persona
-        // rareCombosRoyal; ??
-        // arcana2CombosRoyal; arcana fusion combos
-        // specialCombosRoyal; special fusions
-        // dlcPersonaRoyal; list of DLC Persona names
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8"));
-        // Imports personaMapRoyal; object including all persona data (incl. DLC)
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8"));
-        // Imports skillMapRoyal; object including all skill AND trait data
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8"));
-        // Imports itemMapRoyal; object including all item names mapped to item type/descriptions
-        (0, eval)(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8"));
+
         let p5Embed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor);
 
@@ -36,7 +36,7 @@ export default async (client, interaction, ephemeral) => {
                 let personaInput = interaction.options.getString("persona");
                 let personaObject = personaMapRoyal[personaInput];
                 if (!personaObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that Persona.` });
-                let personaWikiName = personaInput.replaceAll(" ", "_");
+                let personaWikiName = personaInput.replace(/ /g, "_");
                 if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
                 let personaImageFile = `${personaWikiName}_P5R.jpg`;
                 let personaImage = getWikiURL(personaImageFile, personaWiki);
@@ -56,7 +56,7 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(`${personaInput} (${personaObject.arcana})`)
                     .setDescription(elementalMatchup)
                     .addFields([
-                        { name: "Stats:", value: `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, inline: true },
+                        { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level}\n${personaStats}`, inline: true },
                         { name: "Skills:", value: personaSkills, inline: true },
                         { name: "Item:", value: personaItem, inline: false },
                         { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }

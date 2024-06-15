@@ -88,7 +88,7 @@ export default async (client, interaction, ephemeral) => {
                 };
                 let talentMonstersString = "";
                 let talentMonstersArray = [];
-                let talentMonsters = await Object.entries(monstersJSON).filter(monster => {
+                let talentMonsters = Object.entries(monstersJSON).filter(monster => {
                     if (!monster[1].talents) return false; // Check might be redundant in complete dataset
                     return monster[1].talents.includes(inputID);
                 });

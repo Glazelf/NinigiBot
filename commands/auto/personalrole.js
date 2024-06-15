@@ -6,7 +6,8 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
-        const serverApi = await import("../../database/dbServices/server.api.js");
+        let serverApi = await import("../../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
         let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
