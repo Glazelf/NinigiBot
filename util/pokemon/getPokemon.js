@@ -20,6 +20,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             .setColor(embedColor);
         let generation = genData.dex.gen;
         let pokemonLearnset = await genData.learnsets.get(pokemon.name);
+        pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
         let pokemonGen = genData.species.get(pokemon.name);
         if (generation < pokemon.gen) {
             pkmEmbed
@@ -36,9 +37,10 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let recentGame = "SV";
         let description = "";
         // Construct footer
-        let footerText = `Unvailable in generation ${generation}`;
+        let footerText = `Unavailable in generation ${generation}`;
         let pokemonAvailable = (pokemonGen !== undefined);
-        if (pokemonAvailable) footerText = `Available in generation ${generation}`;
+        // For some reason gmax forms don't return generational data, so get an extra check here
+        if (pokemonAvailable || (generation == 8 && pokemon.name.endsWith("-Gmax"))) footerText = `Available in generation ${generation}`;
         if (!pokemonGen) pokemonGen = pokemon;
         // Gender studies
         let pokemonGender = "";
@@ -179,12 +181,12 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let transferMoves = [];
         let reminderMoves = [];
         let vcMoves = [];
-        let prevoData = Dex.species.get(pokemon.prevo);
-        if (prevoData && prevoData.prevo) prevoData = Dex.species.get(prevoData.prevo);
+        let prevoDataMoves = Dex.species.get(pokemon.prevo);
+        if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
         if (learnsetBool && pokemonLearnset) {
-            pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
-            for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
-                moveName = genData.moves.get(moveName).name;
+            for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
+                let moveData = genData.moves.get(moveName);
+                if (moveData) moveName = moveData.name;
                 for (let moveLearnData of learnData) {
                     let moveLearnGen = moveLearnData[0];
                     if (moveLearnGen > generation) {
@@ -209,17 +211,19 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                         reminderMoves.push(moveName);
                     } else if (moveLearnData.includes("V") && !vcMoves.includes(moveName)) {
                         vcMoves.push(moveName);
-                    }
+                    };
                 };
             };
             levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
             // Prevo egg moves
-            if (pokemon.prevo) {
-                for (let [moveName, learnData] of Object.entries(learnsets[prevoData.id].learnset)) {
-                    moveName = genData.moves.get(moveName).name;
-                    for (let moveLearnData of learnData) {
-                        if (moveLearnData.startsWith("9E")) {
-                            eggMoves.push(moveName);
+            if (prevoDataMoves && prevoDataMoves.name) {
+                let pokemonPrevoLearnset = await genData.learnsets.get(prevoDataMoves.name);
+                if (pokemonPrevoLearnset && pokemonPrevoLearnset.learnset) {
+                    for (let [moveName, learnData] of Object.entries(pokemonPrevoLearnset.learnset)) {
+                        let moveData = genData.moves.get(moveName);
+                        if (moveData) moveName = moveData.name;
+                        for (let moveLearnData of learnData) {
+                            if (moveLearnData.startsWith(`${generation}E`)) eggMoves.push(moveName);
                         };
                     };
                 };
@@ -253,7 +257,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
         let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
-        let maxPkmID = Object.entries(genData.species).length;
+        let maxPkmID = allPokemon.length;
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
         if (previousPokemonID < 1) previousPokemonID = maxPkmID;
@@ -276,9 +280,10 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
+            let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
             let evoMethod = getEvoMethod(pokemon);
-            if (prevoData.gen <= generation) {
-                if (pokemon.gender == prevoData.gender) pokemonGender = "";
+            if (prevoDataEvo.gen <= generation) {
+                if (pokemon.gender == prevoDataEvo.gender) pokemonGender = "";
                 description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
                 if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
             };
