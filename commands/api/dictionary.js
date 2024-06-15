@@ -4,20 +4,20 @@ import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
+let api = "https://api.dictionaryapi.dev/api/v2/";
+
 export default async (client, interaction, ephemeral) => {
     try {
-        let api = "https://api.dictionaryapi.dev/api/v2/";
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
-        let dictionaryEmbed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor);
 
         let inputWord = interaction.options.getString("word");
         let inputWordType = interaction.options.getString("wordtype");
         let wordStatus;
 
+        let dictionaryEmbed = new Discord.EmbedBuilder()
+            .setColor(globalVars.embedColor);
         try {
             // Sometimes API doesn't respond when a word doesn't exist, sometimes it errors properly. Timeout is to catch both.
             wordStatus = await Promise.race([

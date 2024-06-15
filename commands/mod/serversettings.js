@@ -12,7 +12,8 @@ export default async (client, interaction) => {
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        const serverApi = await import("../../database/dbServices/server.api.js");
+        let serverApi = await import("../../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
 
         let disableBool = false;
         let disableArg = interaction.options.getBoolean("disable");

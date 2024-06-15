@@ -6,7 +6,8 @@ import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
-        const serverApi = await import("../../database/dbServices/server.api.js");
+        let serverApi = await import("../../database/dbServices/server.api.js");
+        serverApi = await serverApi.default();
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });

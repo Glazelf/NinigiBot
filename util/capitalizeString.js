@@ -1,7 +1,7 @@
-export default (str) => {
-    let exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy", "soul-heart", "multi-attack"];
-    let exceptionsLowercase = ["v-create", "u-turn"];
+let exceptions = ["double-edge", "self-destruct", "soft-boiled", "mud-slap", "lock-on", "will-o-wisp", "x-scissor", "freeze-dry", "topsy-turvy", "soul-heart", "multi-attack"];
+let exceptionsLowercase = ["v-create", "u-turn"];
 
+export default (str) => {
     str = str.replace("-s-", "'s-")
     let splitStr = str;
     if (!exceptionsLowercase.includes(str)) splitStr = str.split('-');
@@ -20,7 +20,7 @@ export default (str) => {
 
     if (splitStr.length == 1 && typeof splitStr == 'object') returnStr = splitStr[0];
     returnStr = splitStr.join(' ');
-    let dashException = returnStr.replaceAll(" ", "-");
+    let dashException = returnStr.replace(/ /g, "-");
     if (exceptions.includes(dashException.toLowerCase())) returnStr = dashException;
 
     returnStr = returnStr.charAt(0).toUpperCase() + returnStr.slice(1);

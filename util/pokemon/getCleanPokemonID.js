@@ -1,6 +1,11 @@
 import leadingZeros from "../leadingZeros.js";
 import correctionID from "../../objects/pokemon/correctionID.json" with { type: "json"};
 
+const primalString = "-Primal";
+const totemString = "-Totem";
+const gmaxString = "-Gmax";
+const eternamaxString = "-Eternamax";
+
 export default (pokemon) => {
     let pokemonID = pokemon.num.toString();
     let pokemonName = pokemon.name;
@@ -8,10 +13,6 @@ export default (pokemon) => {
     // Turn this number into 4 when Showdown and Serebii switch to 4 digit IDs consistently. This approach doesn't change 4-digit IDs.
     pokemonID = leadingZeros(pokemonID, 3);
     // Forms
-    const primalString = "-Primal";
-    const totemString = "-Totem";
-    const gmaxString = "-Gmax";
-    const eternamaxString = "-Eternamax";
     const primalBool = pokemonName.endsWith(primalString);
     const totemBool = pokemonName.endsWith(totemString);
     const gmaxBool = pokemonName.endsWith(gmaxString);

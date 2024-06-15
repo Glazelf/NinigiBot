@@ -102,7 +102,7 @@ export default async (client, interaction, ephemeral) => {
         });
         let serverButtons = new Discord.ActionRowBuilder();
         // Doesn't seem like there's a feature yet for having guild web pages enabled
-        let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replaceAll(" ", "-"))}-${guild.id}`;
+        let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(/ /g, "-"))}-${guild.id}`;
         if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
@@ -113,7 +113,7 @@ export default async (client, interaction, ephemeral) => {
         if (threadCount > 0) statsString += `\nActive Threads: ${threadCount}`;
         if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
         if (banCount > 0) statsString += `\nBans: ${banCount}`;
-        if (guild.premiumSubscriptionCount > 0) statsString += `\nNitro Boosters: ${boosterString}`;
+        if (guild.premiumSubscriptionCount > 0) statsString += `\nBoosters: ${boosterString}`;
         let assetString = `\nEmotes: ${unmanagedEmoteCount}/${emoteMax} 😳`;
         if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
