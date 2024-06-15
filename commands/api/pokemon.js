@@ -450,6 +450,10 @@ function getLearnData(learnData) {
                 let specialMoveString = `${learnGenString} Special\n`;
                 if (!learnInfo.includes(specialMoveString) && !learnInfo.includes(learnGenString)) learnInfo += specialMoveString;
                 break;
+            case "V":
+                let virtualConsoleMoveString = `${learnGenString} Virtual Console\n`;
+                if (!learnInfo.includes(virtualConsoleMoveString) && !learnInfo.includes(learnGenString)) learnInfo += virtualConsoleMoveString;
+                break;
         };
     });
     return learnInfo;
