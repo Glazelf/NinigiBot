@@ -15,7 +15,7 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
     try {
         let generation = genData.dex.gen;
-        let learnsets = genData.learnsets;
+        let pokemonLearnset = await genData.learnsets.get(pokemon.name);
         let pokemonGen = genData.species.get(pokemon.name);
         // Common settings
         if (!pokemon) return;
@@ -165,7 +165,6 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let prevo = null;
         if (pokemon.prevo) prevo = genData.species.get(pokemon.prevo);
         if (prevo && prevo.prevo) prevo = genData.species.get(prevo.prevo);
-        let pokemonLearnset = learnsets[pokemon.id];
         if (learnsetBool && pokemonLearnset) {
             pokemonLearnset = await checkBaseSpeciesMoves(Dex, learnsets, pokemon);
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
