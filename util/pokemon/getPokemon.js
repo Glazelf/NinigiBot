@@ -12,6 +12,8 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import getTypeEmotes from "./getTypeEmotes.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 
+let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
     try {
         let messageObject;
@@ -19,6 +21,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         const pkmEmbed = new Discord.EmbedBuilder()
             .setColor(embedColor);
         let generation = genData.dex.gen;
+        let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard))
         let pokemonLearnset = await genData.learnsets.get(pokemon.name);
         pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
         let pokemonGen = genData.species.get(pokemon.name);
@@ -255,24 +258,16 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         // Get relative Pokédex variables
         let previousPokemon = null;
         let nextPokemon = null;
-        let allPokemon = Dex.species.all();
+
         let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
-        let maxPkmID = allPokemon.length;
+        let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
         if (previousPokemonID < 1) previousPokemonID = maxPkmID;
         if (nextPokemonID > maxPkmID) nextPokemonID = 1;
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
-        // Skip placeholders, should clean this sometime but this code might become obsolete later in Showdown's SV support
-        if (!previousPokemon) {
-            previousPokemonID = previousPokemonID - 1;
-            previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
-        };
-        if (!nextPokemon) {
-            nextPokemonID += 1;
-            nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
-        };
+
         let pkmButtons = new Discord.ActionRowBuilder();
         let pkmButtons2 = new Discord.ActionRowBuilder();
         if (previousPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmleft|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
