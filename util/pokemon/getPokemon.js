@@ -280,16 +280,28 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             let prevoData = Dex.species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
             if (prevoData.gen <= generation) {
+                if (pokemon.gender == prevoData.gender) pokemonGender = "";
                 description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
                 if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
             };
         };
         let pokemonEvos = pokemon.evos || [];
         for (let i = 0; i < pokemonEvos.length; i++) {
-            let pokemonData = Dex.species.get(pokemon.evos[i]);
-            let evoMethod = getEvoMethod(pokemonData);
-            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonData.gen <= generation) {
-                description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
+            let pokemonEvoData = Dex.species.get(pokemon.evos[i]);
+            let evoMethod = getEvoMethod(pokemonEvoData);
+            let evoGender = "";
+            if (pokemon.gender !== pokemonEvoData.gender) {
+                switch (pokemonEvoData.gender) {
+                    case "M":
+                        evoGender = iconMale;
+                        break;
+                    case "F":
+                        evoGender = iconFemale;
+                        break;
+                };
+            };
+            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonEvoData.gen <= generation) {
+                description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
