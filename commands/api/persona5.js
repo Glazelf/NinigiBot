@@ -56,7 +56,7 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(`${personaInput} (${personaObject.arcana})`)
                     .setDescription(elementalMatchup)
                     .addFields([
-                        { name: "Stats:", value: `Level: ${personaObject.level}\nTrait: ${personaObject.trait}\n${personaStats}`, inline: true },
+                        { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level}\n${personaStats}`, inline: true },
                         { name: "Skills:", value: personaSkills, inline: true },
                         { name: "Item:", value: personaItem, inline: false },
                         { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
