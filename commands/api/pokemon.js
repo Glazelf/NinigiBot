@@ -56,7 +56,7 @@ export default async (client, interaction, ephemeral) => {
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = Dex.moves.get(moveSearch);
-        let moveExists = (move && move.exists && move.isNonstandard == "CAP");
+        let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
@@ -410,7 +410,7 @@ export default async (client, interaction, ephemeral) => {
                     });
                     let usageListPart1 = [];
                     let usageListPart2 = [];
-                    await usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
+                    usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                     pokemonEmbed
                         .setTitle(`Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                         .addFields([
