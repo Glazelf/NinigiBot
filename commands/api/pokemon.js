@@ -424,6 +424,8 @@ export default async (client, interaction, ephemeral) => {
                 await interaction.deferReply({ ephemeral: ephemeral });
                 allPokemon = allPokemon.filter(pokemon =>
                     !isIdenticalForm(pokemon.name) &&
+                    !pokemon.name.startsWith("Basculin-") &&
+                    !pokemon.name.startsWith("Basculegion-") &&
                     !pokemon.name.endsWith("-Totem")
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
@@ -477,6 +479,7 @@ function getLearnData(learnData) {
     return learnInfo;
 };
 
+// "Identical" here means having the same sillouette and learnset
 function isIdenticalForm(pokemonName) {
     if (pokemonName.startsWith("Arceus-") ||
         pokemonName.startsWith("Silvally-") ||
@@ -485,7 +488,7 @@ function isIdenticalForm(pokemonName) {
         pokemonName.startsWith("Gourgeist-") ||
         pokemonName.startsWith("Pumpkaboo-") ||
         pokemonName.startsWith("Squawkabilly-") ||
-        pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds images for them
+        pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds proper images for them
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
