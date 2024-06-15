@@ -114,15 +114,15 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             iconFooter = null;
         };
         let abilityString = "";
-        if (pokemon.abilities['0']) {
+        if (pokemon.abilities['0'] && generation >= 3) {
             let ability0Desc = genData.abilities.get(pokemon.abilities[0]).shortDesc;
             abilityString += `**${pokemon.abilities['0']}**: ${ability0Desc}`;
         };
-        if (pokemon.abilities['1']) {
+        if (pokemon.abilities['1'] && generation >= 3) {
             let ability1Desc = genData.abilities.get(pokemon.abilities[1]).shortDesc;
             abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
         };
-        if (pokemon.abilities['H']) {
+        if (pokemon.abilities['H'] && generation >= 3) {
             let abilityHDesc = genData.abilities.get(pokemon.abilities['H']).shortDesc;
             if (pokemon.unreleasedHidden) {
                 abilityString += `\n**${pokemon.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
@@ -141,17 +141,17 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let SpAstats = calcStat(pokemon.baseStats.spa, generation);
         let SpDstats = calcStat(pokemon.baseStats.spd, generation);
         let Spestats = calcStat(pokemon.baseStats.spe, generation);
-        let statsString = `HP: **${pokemon.baseStats.hp}** ${HPstats}\nAtk: **${pokemon.baseStats.atk}** ${Atkstats}\nDef: **${pokemon.baseStats.def}** ${Defstats}\n`;
+        let statsString = `${Dex.stats.shortNames.hp}: **${pokemon.baseStats.hp}** ${HPstats}\n${Dex.stats.shortNames.atk}: **${pokemon.baseStats.atk}** ${Atkstats}\n${Dex.stats.shortNames.def}: **${pokemon.baseStats.def}** ${Defstats}\n`;
         // Account for gen 1 Special stat
         switch (generation) {
             case 1:
-                statsString += `Spc: **${pokemon.baseStats.spa}** ${SpAstats}\n`;
+                statsString += `${genData.stats.dex.stats.shortNames.spa}: **${pokemon.baseStats.spa}** ${SpAstats}\n`;
                 break;
             default:
-                statsString += `SpA: **${pokemon.baseStats.spa}** ${SpAstats}\nSpD: **${pokemon.baseStats.spd}** ${SpDstats}\n`;
+                statsString += `${Dex.stats.shortNames.spa}: **${pokemon.baseStats.spa}** ${SpAstats}\n${Dex.stats.shortNames.spd}: **${pokemon.baseStats.spd}** ${SpDstats}\n`;
                 break;
         };
-        statsString += `Spe: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`;
+        statsString += `${Dex.stats.shortNames.spe}: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`;
 
         let levelMoves = [];
         let levelMovesNames = [];
