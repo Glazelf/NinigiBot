@@ -24,6 +24,11 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
         let recentGame = "SV";
         let description = "";
+        // Construct footer
+        let footerText = `Unvailable in generation ${generation}`;
+        let pokemonAvailable = (pokemonGen !== undefined);
+        if (pokemonAvailable) footerText = `Available in generation ${generation}`;
+        if (!pokemonGen) pokemonGen = pokemon;
         // Gender studies
         let pokemonGender = "";
         let genderString = "";
@@ -42,21 +47,21 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                 genderString = "Unknown";
                 break;
             default:
-                genderString = `${iconMale} ${pokemon.genderRatio.M * 100}%\n${iconFemale} ${pokemon.genderRatio.F * 100}%`;
+                genderString = `${iconMale} ${pokemonGen.genderRatio.M * 100}%\n${iconFemale} ${pokemonGen.genderRatio.F * 100}%`;
                 break;
         };
         // Typing
-        let type1 = pokemon.types[0];
-        let type2 = pokemon.types[1];
+        let type1 = pokemonGen.types[0];
+        let type2 = pokemonGen.types[1];
         let typeString = `${getTypeEmotes({ type: type1, emotes: emotesAllowed })}`;
         if (type2) typeString += `\n${getTypeEmotes({ type: type2, emotes: emotesAllowed })}`;
-        // Check type matchups, maybe use genData.types sometime
+        // Check type matchups
         let superEffectives = [];
         let resistances = [];
         let immunities = [];
         for (let type of genData.types) {
             if (["???", "Stellar"].includes(type.name)) continue;
-            let effectiveness = genData.types.totalEffectiveness(type.name, pokemon.types);
+            let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
             let typeEmoteBold = false;
             if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
             let typeEffectString = getTypeEmotes({ type: type.name, bold: typeEmoteBold, emotes: emotesAllowed });
@@ -68,15 +73,15 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let resistancesString = resistances.join(", ");
         let immunitiesString = immunities.join(", ");
 
-        let pokemonID = getCleanPokemonID(pokemon);
+        let pokemonID = getCleanPokemonID(pokemonGen);
         let pokemonIDPMD = leadingZeros(pokemonID, 4); // Remove this when Showdown and Serebii switch to 4 digit IDs consistently as well
         // Metrics
         let metricsString = "";
         let weightAmerican = Math.round(pokemon.weightkg * 2.20462 * 10) / 10;
         let pokemonSim = DexSim.forGen(genData.dex.gen).species.get(pokemon.name);
         let heightAmerican = convertMeterFeet(pokemonSim.heightm);
-        if (pokemon.weightkg && pokemon.weightkg > 0) {
-            metricsString += `**Weight:**\n${pokemon.weightkg}kg | ${weightAmerican}lbs`;
+        if (pokemonGen.weightkg && pokemonGen.weightkg > 0) {
+            metricsString += `**Weight:**\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
         } else {
             metricsString += `**Weight:**\n???`;
         };
@@ -117,7 +122,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let abilityString = "";
         if (pokemonGen.abilities['0']) {
             let ability0Desc = genData.abilities.get(pokemonGen.abilities[0]).shortDesc;
-            abilityString += `**${pokemon.abilities['0']}**: ${ability0Desc}`;
+            abilityString += `**${pokemonGen.abilities['0']}**: ${ability0Desc}`;
         };
         if (pokemonGen.abilities['1']) {
             let ability1Desc = genData.abilities.get(pokemonGen.abilities[1]).shortDesc;
@@ -131,28 +136,28 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                 abilityString += `\n**${pokemonGen.abilities['H']}** (Hidden): ${abilityHDesc}`;
             };
         };
-        if (pokemon.abilities['S']) {
-            let abilitySDesc = genData.abilities.get(pokemon.abilities['S']).shortDesc;
-            abilityString += `\n**${pokemon.abilities['S']}** (Special): ${abilitySDesc}`;
+        if (pokemonGen.abilities['S']) {
+            let abilitySDesc = genData.abilities.get(pokemonGen.abilities['S']).shortDesc;
+            abilityString += `\n**${pokemonGen.abilities['S']}** (Special): ${abilitySDesc}`;
         };
         let statLevels = `(lvl50) (lvl100)`;
-        let HPstats = calcHP(pokemon, generation);
-        let Atkstats = calcStat(pokemon.baseStats.atk, generation);
-        let Defstats = calcStat(pokemon.baseStats.def, generation);
-        let SpAstats = calcStat(pokemon.baseStats.spa, generation);
-        let SpDstats = calcStat(pokemon.baseStats.spd, generation);
-        let Spestats = calcStat(pokemon.baseStats.spe, generation);
-        let statsString = `${Dex.stats.shortNames.hp}: **${pokemon.baseStats.hp}** ${HPstats}\n${Dex.stats.shortNames.atk}: **${pokemon.baseStats.atk}** ${Atkstats}\n${Dex.stats.shortNames.def}: **${pokemon.baseStats.def}** ${Defstats}\n`;
+        let HPstats = calcHP(pokemonGen, generation);
+        let Atkstats = calcStat(pokemonGen.baseStats.atk, generation);
+        let Defstats = calcStat(pokemonGen.baseStats.def, generation);
+        let SpAstats = calcStat(pokemonGen.baseStats.spa, generation);
+        let SpDstats = calcStat(pokemonGen.baseStats.spd, generation);
+        let Spestats = calcStat(pokemonGen.baseStats.spe, generation);
+        let statsString = `${Dex.stats.shortNames.hp}: **${pokemonGen.baseStats.hp}** ${HPstats}\n${Dex.stats.shortNames.atk}: **${pokemonGen.baseStats.atk}** ${Atkstats}\n${Dex.stats.shortNames.def}: **${pokemonGen.baseStats.def}** ${Defstats}\n`;
         // Account for gen 1 Special stat
         switch (generation) {
             case 1:
-                statsString += `${genData.stats.dex.stats.shortNames.spa}: **${pokemon.baseStats.spa}** ${SpAstats}\n`;
+                statsString += `${genData.stats.dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n`;
                 break;
             default:
-                statsString += `${Dex.stats.shortNames.spa}: **${pokemon.baseStats.spa}** ${SpAstats}\n${Dex.stats.shortNames.spd}: **${pokemon.baseStats.spd}** ${SpDstats}\n`;
+                statsString += `${Dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n${Dex.stats.shortNames.spd}: **${pokemonGen.baseStats.spd}** ${SpDstats}\n`;
                 break;
         };
-        statsString += `${Dex.stats.shortNames.spe}: **${pokemon.baseStats.spe}** ${Spestats}\nBST: ${pokemon.bst}`;
+        statsString += `${Dex.stats.shortNames.spe}: **${pokemonGen.baseStats.spe}** ${Spestats}\nBST: ${pokemonGen.bst}`;
 
         let levelMoves = [];
         let levelMovesNames = [];
@@ -162,9 +167,10 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let specialMoves = [];
         let transferMoves = [];
         let reminderMoves = [];
+        let vcMoves = [];
         let prevo = null;
-        if (pokemon.prevo) prevo = genData.species.get(pokemon.prevo);
-        if (prevo && prevo.prevo) prevo = genData.species.get(prevo.prevo);
+        if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
+        if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
         if (learnsetBool && pokemonLearnset) {
             pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
@@ -191,7 +197,9 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                         specialMoves.push(moveName);
                     } else if (moveLearnData.includes("R") && !reminderMoves.includes(moveName)) {
                         reminderMoves.push(moveName);
-                    };
+                    } else if (moveLearnData.includes("V") && !vcMoves.includes(moveName)) {
+                        vcMoves.push(moveName);
+                    }
                 };
             };
             levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
@@ -230,43 +238,28 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
         let embedColor = globalVars.embedColor;
-        if (pokemon.color) {
-            if (colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
-        };
-        // Construct footer
-        let footerText = ``;
-        let pokemonAvailability = pokemon.isNonstandard;
-        switch (pokemonAvailability) {
-            case null:
-                footerText = `Available in generation ${generation}`;
-                break;
-            case "Past":
-                footerText = `Unavailable in generation ${generation}`;
-                break;
-            case "Future":
-                footerText = `Does not exist yet in generation ${generation}`;
-                break;
-        };
+        if (pokemon.color && colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         // Get relative Pokédex variables
         let previousPokemon = null;
-        let nextPokemon = null;;
+        let nextPokemon = null;
+        let allPokemon = Dex.species.all();
+        let allPokemonSorted = allPokemon.sort(compare);
         let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
-        let allPokemonSorted = [...genData.species].sort(compare);
         let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
         if (previousPokemonID < 1) previousPokemonID = maxPkmID;
         if (nextPokemonID > maxPkmID) nextPokemonID = 1;
-        previousPokemon = Array.from(genData.species).filter(pokemon => pokemon.num == previousPokemonID)[0];
-        nextPokemon = Array.from(genData.species).filter(pokemon => pokemon.num == nextPokemonID)[0];
+        previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
+        nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         // Skip placeholders, should clean this sometime but this code might become obsolete later in Showdown's SV support
         if (!previousPokemon) {
             previousPokemonID = previousPokemonID - 1;
-            previousPokemon = Array.from(genData.species).filter(pokemon => pokemon.num == previousPokemonID)[0];
+            previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         };
         if (!nextPokemon) {
             nextPokemonID += 1;
-            nextPokemon = Array.from(genData.species).filter(pokemon => pokemon.num == nextPokemonID)[0];
+            nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
         };
         let pkmButtons = new Discord.ActionRowBuilder();
         let pkmButtons2 = new Discord.ActionRowBuilder();
@@ -275,18 +268,18 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
-            let prevoData = genData.species.get(pokemon.prevo);
+            let prevoData = Dex.species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-            if (["Future"].includes(prevoData.isNonstandard)) description += ` (Generation ${prevoData.gen}+)`;
+            if (prevoData.gen > generation) description += ` (Generation ${prevoData.gen}+)`;
             if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
         };
         let pokemonEvos = pokemon.evos || [];
         for (let i = 0; i < pokemonEvos.length; i++) {
-            let pokemonData = genData.species.get(pokemon.evos[i]);
+            let pokemonData = Dex.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
             description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
-            if (["Future"].includes(pokemonData.isNonstandard)) description += ` (Generation ${pokemonData.gen}+)`;
+            if (pokemonData.gen > generation) description += ` (Generation ${pokemonData.gen}+)`;
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
@@ -305,7 +298,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             4: new Discord.ActionRowBuilder()
         };
         let pokemonForms = [];
-        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Whatever.
+        if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
         if (pokemon.canGigantamax) pokemonForms.push(`${pokemon.name}-Gmax`);
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
