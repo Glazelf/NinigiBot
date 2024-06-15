@@ -279,17 +279,17 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemon.prevo) {
             let prevoData = Dex.species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
-            description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-            if (prevoData.gen > generation) description += ` (Generation ${prevoData.gen}+)`;
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
+            if (prevoData.gen <= generation) {
+                description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
+                if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
+            };
         };
         let pokemonEvos = pokemon.evos || [];
         for (let i = 0; i < pokemonEvos.length; i++) {
             let pokemonData = Dex.species.get(pokemon.evos[i]);
             let evoMethod = getEvoMethod(pokemonData);
-            description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
-            if (pokemonData.gen > generation) description += ` (Generation ${pokemonData.gen}+)`;
-            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name) {
+            if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonData.gen <= generation) {
+                description += `\nEvolves into ${pokemon.evos[i]}${evoMethod}.`;
                 if (pkmButtons.components.length < 5) {
                     pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
@@ -312,6 +312,8 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemonForms && pokemonForms.length > 0) {
             if (pokemonForms.length > 0) {
                 for (let i = 0; i < pokemonForms.length; i++) {
+                    let formData = Dex.species.get(pokemonForms[i]);
+                    if (formData.gen > generation) continue;
                     if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
                     formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.ButtonBuilder({ customId: `pkmForm${i}|${buttonAppend}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i] }));
                 };
