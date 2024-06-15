@@ -17,7 +17,7 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
 
 const gens = new Generations(Dex);
-let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
 export default async (client, interaction, ephemeral) => {
     try {
