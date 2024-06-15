@@ -16,7 +16,7 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
 
 const gens = new Generations(Dex);
-let learnsetsObject = Dex.learnsets;
+let allPokemon = Array.from(Dex.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -44,9 +44,7 @@ export default async (client, interaction, ephemeral) => {
         let linkBulbapedia = null;
         // Set generation
         let generation = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
-
         let genData = gens.get(generation);
-        let allPokemon = Array.from(Dex.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         // Used for pokemon and learn
         let pokemon = null;
@@ -124,13 +122,14 @@ export default async (client, interaction, ephemeral) => {
             // Moves
             case "move":
                 if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generation}.` });
+
                 let moveLearnPool = [];
-                for await (const [key, value] of Object.entries(learnsetsObject)) {
-                    let pokemonMatch = allPokemon.find(pokemon => pokemon.id == key);
-                    if (!pokemonMatch || !pokemonMatch.exists || pokemonMatch.num <= 0 || !value.learnset || ["CAP", "Future"].includes(pokemonMatch.isNonstandard)) continue;
-                    if (!Object.keys(value.learnset).includes(move.id)) continue;
-                    if (value.learnset[move.id].some(learnstring => learnstring.startsWith(generation))) moveLearnPool.push(pokemonMatch.name);
+                for (const pokemon of allPokemonGen) {
+                    if (isIdenticalForm(pokemon.name) || pokemon.name.startsWith("Terapagos-")) continue;
+                    let canLearnBool = await genData.learnsets.canLearn(pokemon.name, move.name);
+                    if (canLearnBool) moveLearnPool.push(pokemon.name);
                 };
+
                 let moveLearnPoolString = moveLearnPool.join(", ");
                 if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
                 // Capitalization doesn't matter for Bulbapedia URLs
@@ -179,7 +178,7 @@ export default async (client, interaction, ephemeral) => {
             case "nature":
                 let natureSearch = interaction.options.getString("nature");
                 let nature = Dex.natures.get(natureSearch);
-                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a nature called \`${natureSerach}\`.` });
+                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that nature.` });
 
                 let boosted = Dex.stats.names[nature.plus];
                 let lowered = Dex.stats.names[nature.minus];
@@ -426,15 +425,8 @@ export default async (client, interaction, ephemeral) => {
                 allPokemon = allPokemon.filter(pokemon =>
                     pokemon.num > 0 &&
                     !["CAP"].includes(pokemon.isNonstandard) &&
-                    !pokemon.name.endsWith("-Totem") &&
-                    !pokemon.name.endsWith("-Tera") && // Ogerpon Tera forms
-                    !pokemon.name.startsWith("Arceus-") &&
-                    !pokemon.name.startsWith("Silvally-") &&
-                    !pokemon.name.startsWith("Genesect-") &&
-                    !pokemon.name.startsWith("Gourgeist-") &&
-                    !pokemon.name.startsWith("Pumpkaboo-") &&
-                    !pokemon.name.startsWith("Squawkabilly-") &&
-                    !["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemon.name)
+                    !isIdenticalForm(pokemon.name) &&
+                    !pokemon.name.endsWith("-Totem")
                 );
                 let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
                 returnString = whosThatPokemonMessageObject.content;
@@ -446,40 +438,53 @@ export default async (client, interaction, ephemeral) => {
         if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
         return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
-        function getLearnData(learnData) {
-            let learnInfo = "";
-            learnData.forEach(learnMethod => {
-                let learnGen = learnMethod.charAt(0);
-                let learnType = learnMethod.charAt(1);
-                let learnGenString = `Gen ${learnGen}:`;
-                switch (learnType) {
-                    case "L":
-                        learnInfo += `${learnGenString} Level ${learnMethod.split("L")[1]}\n`;
-                        break;
-                    case "M":
-                        learnInfo += `${learnGenString} TM\n`;
-                        break;
-                    case "T":
-                        learnInfo += `${learnGenString} Move Tutor\n`;
-                        break;
-                    case "E":
-                        learnInfo += `${learnGenString} Egg move\n`;
-                        break;
-                    case "R":
-                        learnInfo += `${learnGenString} Reminder\n`;
-                        break;
-                    case "S":
-                        let specialMoveString = `${learnGenString} Special\n`;
-                        if (!learnInfo.includes(specialMoveString) && !learnInfo.includes(learnGenString)) learnInfo += specialMoveString;
-                        break;
-                };
-            });
-            return learnInfo;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
+};
+
+function getLearnData(learnData) {
+    let learnInfo = "";
+    learnData.forEach(learnMethod => {
+        let learnGen = learnMethod.charAt(0);
+        let learnType = learnMethod.charAt(1);
+        let learnGenString = `Gen ${learnGen}:`;
+        switch (learnType) {
+            case "L":
+                learnInfo += `${learnGenString} Level ${learnMethod.split("L")[1]}\n`;
+                break;
+            case "M":
+                learnInfo += `${learnGenString} TM\n`;
+                break;
+            case "T":
+                learnInfo += `${learnGenString} Move Tutor\n`;
+                break;
+            case "E":
+                learnInfo += `${learnGenString} Egg move\n`;
+                break;
+            case "R":
+                learnInfo += `${learnGenString} Reminder\n`;
+                break;
+            case "S":
+                let specialMoveString = `${learnGenString} Special\n`;
+                if (!learnInfo.includes(specialMoveString) && !learnInfo.includes(learnGenString)) learnInfo += specialMoveString;
+                break;
+        };
+    });
+    return learnInfo;
+};
+
+function isIdenticalForm(pokemonName) {
+    if (pokemonName.startsWith("Arceus-") ||
+        pokemonName.startsWith("Silvally-") ||
+        pokemonName.startsWith("Vivillon-") ||
+        pokemonName.startsWith("Genesect-") ||
+        pokemonName.startsWith("Gourgeist-") ||
+        pokemonName.startsWith("Pumpkaboo-") ||
+        pokemonName.startsWith("Squawkabilly-") ||
+        pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds images for them
+        ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
+    return false;
 };
 
 export const config = {
