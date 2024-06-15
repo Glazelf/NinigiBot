@@ -14,9 +14,20 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 
 export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
     try {
+        let messageObject;
+        let embedColor = globalVars.embedColor;
+        const pkmEmbed = new Discord.EmbedBuilder()
+            .setColor(embedColor);
         let generation = genData.dex.gen;
         let pokemonLearnset = await genData.learnsets.get(pokemon.name);
         let pokemonGen = genData.species.get(pokemon.name);
+        if (generation < pokemon.gen) {
+            pkmEmbed
+                .setTitle(`Error`)
+                .setDescription(`${pokemon.name} did not exist yet in generation ${generation}.\n${pokemon.name} was introduced in generation ${pokemon.gen}.`);
+            messageObject = { embeds: pkmEmbed, components: [] };
+            return messageObject;
+        };
         // Common settings
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -237,15 +248,13 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-        let embedColor = globalVars.embedColor;
         if (pokemon.color && colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         // Get relative Pokédex variables
         let previousPokemon = null;
         let nextPokemon = null;
         let allPokemon = Dex.species.all();
-        let allPokemonSorted = allPokemon.sort(compare);
         let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
-        let maxPkmID = allPokemonSorted[allPokemonSorted.length - 1].num;
+        let maxPkmID = Object.entries(genData.species).length;
         let previousPokemonID = pokemon.num - 1;
         let nextPokemonID = pokemon.num + 1;
         if (previousPokemonID < 1) previousPokemonID = maxPkmID;
@@ -316,8 +325,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         buttonArray.push(pkmButtons);
         if (pkmButtons2.components.length > 0) buttonArray.push(pkmButtons2);
         // Embed building
-        const pkmEmbed = new Discord.EmbedBuilder()
-            .setColor(embedColor)
+        pkmEmbed
             .setAuthor({ name: `${pokemonID.toUpperCase()}: ${pokemon.name}`, iconURL: iconAuthor })
             .setThumbnail(iconThumbnail);
         if (description.length > 0) pkmEmbed.setDescription(description);
@@ -341,7 +349,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             if (generation < 8 && transferMovesStrings.length > 0) transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
         };
         pkmEmbed.setFooter({ text: footerText, iconURL: iconFooter });
-        let messageObject = { embeds: pkmEmbed, components: buttonArray };
+        messageObject = { embeds: pkmEmbed, components: buttonArray };
         return messageObject;
 
     } catch (e) {
