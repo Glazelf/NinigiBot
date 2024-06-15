@@ -7,17 +7,19 @@ import getWikiURL from "../getWikiURL.js";
 import imageExists from "../imageExists.js";
 import isAdmin from "../isAdmin.js";
 
+
+let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
+let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
+// Game names
+let MHRise = "Monster Hunter Rise";
+let MHW = "Monster Hunter World";
+let MHGU = "Monster Hunter Generations Ultimate";
+
 export default async (client, interaction, monsterData, ephemeral) => {
     try {
         let adminBot = isAdmin(client, interaction.guild.members.me);
         let emotesAllowed = true;
         if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
-        // Game names
-        let MHRise = "Monster Hunter Rise";
-        let MHW = "Monster Hunter World";
-        let MHGU = "Monster Hunter Generations Ultimate";
-        let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
-        let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
         let gameDBName;
         // Get icon, description and game appearances
         let monsterIcon;
@@ -53,7 +55,7 @@ export default async (client, interaction, monsterData, ephemeral) => {
             let monsterSize = "monster";
             if (!monsterData.isLarge && !isOnlyInGU) monsterSize = "small_monster";
             let monsterURLName = monsterData.name;
-            if (!isOnlyInGU) monsterURLName = monsterURLName.replaceAll(" ", "_");
+            if (!isOnlyInGU) monsterURLName = monsterURLName.replace(/ /g, "_");
             if (monsterURLName == "Narwa_the_Allmother") monsterURLName = "Narwa_The_Allmother"; // wack as fuck
             if (isOnlyInGU) {
                 gameDBName = "MHGU";
@@ -69,7 +71,7 @@ export default async (client, interaction, monsterData, ephemeral) => {
         };
         let monsterGameIndicator = gameDBName;
         if (monsterIcon) monsterGameIndicator = monsterIcon.replace(iconsRepo, "").split("-")[0];
-        let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replaceAll(" ", "_")}_Render_001.png`;
+        let monsterRenderName = `${monsterGameIndicator}-${monsterData.name.replace(/ /g, "_")}_Render_001.png`;
         let monsterRender = getWikiURL(monsterRenderName, mhWiki);
         let renderExists = imageExists(monsterRender);
         if (!renderExists) {

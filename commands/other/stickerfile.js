@@ -2,11 +2,12 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
+let returnString = `Here's the link(s) to the assets you requested:`;
+let noStickerString = `This only works for messages with stickers attached.`;
+
 export default async (client, interaction) => {
     try {
         let message = await interaction.channel.messages.fetch(interaction.targetId);
-        let returnString = `Here's the link(s) to the assets you requested:`;
-        let noStickerString = `This only works for messages with stickers attached.`;
         if (!message.stickers || !message.stickers.first()) return sendMessage({ client: client, interaction: interaction, content: noStickerString });
 
         await message.stickers.forEach(sticker => {
