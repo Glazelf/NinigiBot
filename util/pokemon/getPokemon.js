@@ -330,10 +330,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (superEffectivesString.length > 0) pkmEmbed.addFields([{ name: "Weaknesses:", value: superEffectivesString, inline: false }]);
         if (resistancesString.length > 0) pkmEmbed.addFields([{ name: "Resistances:", value: resistancesString, inline: false }]);
         if (immunitiesString.length > 0) pkmEmbed.addFields([{ name: "Immunities:", value: immunitiesString, inline: false }]);
-        pkmEmbed
-            .addFields([
-                { name: `Stats: ${statLevels}`, value: statsString, inline: false }
-            ]);
+        pkmEmbed.addFields([{ name: `Stats: ${statLevels}`, value: statsString, inline: false }]);
         // .setImage(banner)
         if (learnsetBool) {
             if (levelMovesString.length > 0) pkmEmbed.addFields([{ name: "Levelup Moves:", value: levelMovesString, inline: false }]);
