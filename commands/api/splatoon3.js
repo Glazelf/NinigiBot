@@ -7,6 +7,26 @@ import axios from "axios";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/randomNumber.js";
 
+let splatoon3Languages = [
+    { name: "English", value: "EUen" },
+    { name: "French | Français", value: "EUfr" },
+    { name: "German | Deutsch", value: "EUde" },
+    { name: "Spanish | Español", value: "EUes" },
+    { name: "Dutch | Nederlands", value: "EUnl" },
+    { name: "Italian | Italiano", value: "EUit" },
+    { name: "Russian | Русский", value: "EUru" },
+    { name: "Japanese | 日本語", value: "JPja" },
+    { name: "Korean | 한국어", value: "KRko" },
+    { name: "Chinese (Simplified) | 中文（简体)", value: "CNzh" },
+    { name: "Chinese (Traditional) | 中文（繁體)", value: "TWzh" }
+];
+let splatoon3Regions = [
+    { value: "EU", name: "Europe" },
+    { value: "US", name: "United States" },
+    { value: "JP", name: "Japan" },
+    { value: "AP", name: "Asia/Pacific" }
+];
+
 export default async (client, interaction, ephemeral) => {
     try {
         // Game data
@@ -471,26 +491,6 @@ export default async (client, interaction, ephemeral) => {
         logger(e, client, interaction);
     };
 };
-
-let splatoon3Languages = [
-    { name: "English", value: "EUen" },
-    { name: "French | Français", value: "EUfr" },
-    { name: "German | Deutsch", value: "EUde" },
-    { name: "Spanish | Español", value: "EUes" },
-    { name: "Dutch | Nederlands", value: "EUnl" },
-    { name: "Italian | Italiano", value: "EUit" },
-    { name: "Russian | Русский", value: "EUru" },
-    { name: "Japanese | 日本語", value: "JPja" },
-    { name: "Korean | 한국어", value: "KRko" },
-    { name: "Chinese (Simplified) | 中文（简体)", value: "CNzh" },
-    { name: "Chinese (Traditional) | 中文（繁體)", value: "TWzh" }
-];
-let splatoon3Regions = [
-    { value: "EU", name: "Europe" },
-    { value: "US", name: "United States" },
-    { value: "JP", name: "Japan" },
-    { value: "AP", name: "Asia/Pacific" }
-];
 
 export const config = {
     name: "splatoon3",

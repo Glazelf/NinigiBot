@@ -9,6 +9,14 @@ import getQuests from "../../util/mh/getQuests.js";
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
+let mhRiseString = "Monster Hunter Rise";
+let mhWorldString = "Monster Hunter World";
+let mhguString = "Monster Hunter Generations Ultimate";
+let mh4uString = "Monster Hunter 4 Ultimate";
+let mh3uString = "Monster Hunter 3 Ultimate";
+let mhStories2String = "Monster Hunter Stories 2";
+let mhStoriesString = "Monster Hunter Stories";
+
 export default async (client, interaction, ephemeral) => {
     try {
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -88,14 +96,6 @@ export default async (client, interaction, ephemeral) => {
         logger(e, client, interaction);
     };
 };
-
-let mhRiseString = "Monster Hunter Rise";
-let mhWorldString = "Monster Hunter World";
-let mhguString = "Monster Hunter Generations Ultimate";
-let mh4uString = "Monster Hunter 4 Ultimate";
-let mh3uString = "Monster Hunter 3 Ultimate";
-let mhStories2String = "Monster Hunter Stories 2";
-let mhStoriesString = "Monster Hunter Stories";
 
 export const config = {
     name: "monsterhunter",
