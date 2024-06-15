@@ -16,6 +16,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
     try {
         let generation = genData.dex.gen;
         let learnsets = genData.learnsets;
+        let pokemonGen = genData.species.get(pokemon.name);
         // Common settings
         if (!pokemon) return;
         let adminBot = isAdmin(client, interaction.guild.members.me);
@@ -114,20 +115,20 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             iconFooter = null;
         };
         let abilityString = "";
-        if (pokemon.abilities['0'] && generation >= 3) {
-            let ability0Desc = genData.abilities.get(pokemon.abilities[0]).shortDesc;
+        if (pokemonGen.abilities['0']) {
+            let ability0Desc = genData.abilities.get(pokemonGen.abilities[0]).shortDesc;
             abilityString += `**${pokemon.abilities['0']}**: ${ability0Desc}`;
         };
-        if (pokemon.abilities['1'] && generation >= 3) {
-            let ability1Desc = genData.abilities.get(pokemon.abilities[1]).shortDesc;
+        if (pokemonGen.abilities['1']) {
+            let ability1Desc = genData.abilities.get(pokemonGen.abilities[1]).shortDesc;
             abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
         };
-        if (pokemon.abilities['H'] && generation >= 3) {
-            let abilityHDesc = genData.abilities.get(pokemon.abilities['H']).shortDesc;
-            if (pokemon.unreleasedHidden) {
-                abilityString += `\n**${pokemon.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
+        if (pokemonGen.abilities['H']) {
+            let abilityHDesc = genData.abilities.get(pokemonGen.abilities['H']).shortDesc;
+            if (pokemonGen.unreleasedHidden) {
+                abilityString += `\n**${pokemonGen.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
             } else {
-                abilityString += `\n**${pokemon.abilities['H']}** (Hidden): ${abilityHDesc}`;
+                abilityString += `\n**${pokemonGen.abilities['H']}** (Hidden): ${abilityHDesc}`;
             };
         };
         if (pokemon.abilities['S']) {
