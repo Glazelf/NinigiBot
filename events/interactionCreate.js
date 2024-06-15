@@ -7,6 +7,7 @@ import axios from "axios";
 import fs from "fs";
 // Pokémon
 import { Dex } from '@pkmn/dex';
+import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
@@ -353,7 +354,7 @@ export default async (client, interaction) => {
                                 });
                                 break;
                             case "format":
-                                let formats = Dex.formats.all();
+                                let formats = DexSim.formats.all();
                                 await formats.forEach(format => {
                                     if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase())) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
                                 });
