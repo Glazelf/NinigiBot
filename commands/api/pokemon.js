@@ -258,57 +258,36 @@ export default async (client, interaction, ephemeral) => {
                 // Set variables
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
+
+                let prevo = Dex.species.get(pokemon.prevo);
+                let prevoLearnset = null;
+                let prevoprevoLearnset = null;
+                let pokemonLearnset = await Dex.learnsets.get(pokemon.id);
+                pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
+                if (pokemon.prevo) prevoLearnset = await Dex.learnsets.get(pokemon.prevo);
+                if (prevoLearnset && prevo.prevo) prevoprevoLearnset = await Dex.learnsets.get(prevo.prevo);
+
                 let learnsMove = false;
-                let prevo = null;
-                let prevoprevo = null;
-                let evoTreeLearnsets = {}; // Merge, first object's properties get overwritten by second object's properties
-                if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
-                if (prevo && prevo.prevo) prevoprevo = Dex.species.get(prevo.prevo);
-                // Might be better and cleaner to combine the learnsets files into a single file/object at launch or with a seperate script instead of doing all these checks and awaited for loops every command run
-                evoTreeLearnsets[pokemon.id] = { ...learnsetsObject[pokemon.id], ...learnsetsObject[pokemon.id] };
-                // Merge these if statements into a singular function
-                if (learnsetsObject[pokemon.id]) {
-                    for await (let [key, value] of Object.entries(evoTreeLearnsets[pokemon.id].learnset)) {
-                        // Moves not learned in gen 1-2 are null, so should be avoided concatenating
-                        if (learnsetsObject[pokemon.id].learnset[key]) evoTreeLearnsets[pokemon.id].learnset[key] = evoTreeLearnsets[pokemon.id].learnset[key].concat(learnsetsObject[pokemon.id].learnset[key]);
-                    };
-                };
-                if (prevo && learnsetsObject[prevo.id]) {
-                    evoTreeLearnsets[prevo.id] = { ...learnsetsObject[prevo.id], ...learnsetsObject[prevo.id] };
-                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevo.id].learnset)) {
-                        if (learnsetsObject[prevo.id].learnset[key]) evoTreeLearnsets[prevo.id].learnset[key] = evoTreeLearnsets[prevo.id].learnset[key].concat(learnsetsObject[prevo.id].learnset[key]);
-                    };
-                };
-                if (prevoprevo && learnsetsObject[prevoprevo.id]) {
-                    evoTreeLearnsets[prevoprevo.id] = { ...learnsetsObject[prevoprevo.id], ...learnsetsObject[prevoprevo.id] };
-                    for await (let [key, value] of Object.entries(evoTreeLearnsets[prevoprevo.id].learnset)) {
-                        if (learnsetsObject[prevoprevo.id].learnset[key]) evoTreeLearnsets[prevoprevo.id].learnset[key] = evoTreeLearnsets[prevoprevo.id].learnset[key].concat(learnsetsObject[prevoprevo.id].learnset[key]);
-                    };
-                };
-                learnsetsObject = { ...learnsetsObject, ...evoTreeLearnsets };
-                if (learnsetsObject[pokemon.id]) {
-                    let learnset = learnsetsObject[pokemon.id].learnset;
-                    learnset = await checkBaseSpeciesMoves(Dex, learnsetsObject, pokemon);
-                    for (let [moveName, learnData] of Object.entries(learnset)) {
-                        if (moveName !== move.id) continue;
-                        learnsMove = true;
-                        learnInfo += getLearnData(learnData);
-                    };
-                    while (prevo && prevo.num > 0) {
-                        let prevoLearnset = learnsetsObject[prevo.id].learnset;
-                        for (let [moveName, learnData] of Object.entries(prevoLearnset)) {
-                            if (moveName !== move.id) continue;
-                            learnInfo += `**As ${prevo.name}:**\n`;
-                            let learnDataToAdd = getLearnData(learnData);
-                            if (learnDataToAdd.length > 0) learnsMove = true;
-                            learnInfo += learnDataToAdd;
-                        };
+                if ((pokemonLearnset && pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) ||
+                    (prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
+                    (prevoprevoLearnset && prevoprevoLearnset.learnset && prevoprevoLearnset.learnset[move.id])) learnsMove = true;
+
+                if (learnsMove) {
+                    if (pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) learnInfo += getLearnData(pokemonLearnset?.learnset[move.id]);
+                    while (prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) {
+                        learnInfo += `**As ${prevo.name}:**\n`;
+                        let learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
+                        if (learnDataToAdd.length > 0) learnsMove = true;
+                        learnInfo += learnDataToAdd;
+                        // Set up next loop
                         prevo = Dex.species.get(prevo.prevo);
+                        prevoLearnset = await Dex.learnsets.get(prevo.id);
                     };
-                    if (!learnsMove) learnAuthor = `${pokemon.name} does not learn ${move.name}`;
-                } else return sendMessage({ client: client, interaction: interaction, content: `I could not find a learnset for ${pokemon.name}.` });
+                    pokemonEmbed.setDescription(learnInfo);
+                } else {
+                    learnAuthor = `${pokemon.name} does not learn ${move.name}`;
+                };
                 pokemonEmbed.setTitle(learnAuthor);
-                if (learnsMove) pokemonEmbed.setDescription(learnInfo);
                 break;
             case "usage":
                 let formatInput = "gen9vgc2023series1";
@@ -446,6 +425,7 @@ export default async (client, interaction, ephemeral) => {
 
 function getLearnData(learnData) {
     let learnInfo = "";
+    if (learnData.length == 0) return learnInfo;
     learnData.forEach(learnMethod => {
         let learnGen = learnMethod.charAt(0);
         let learnType = learnMethod.charAt(1);
