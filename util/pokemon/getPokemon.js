@@ -179,9 +179,8 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         let transferMoves = [];
         let reminderMoves = [];
         let vcMoves = [];
-        let prevo = null;
-        if (pokemon.prevo) prevo = Dex.species.get(pokemon.prevo);
-        if (prevo && prevo.prevo) prevo = Dex.species.get(prevo.prevo);
+        let prevoData = Dex.species.get(pokemon.prevo);
+        if (prevoData && prevoData.prevo) prevoData = Dex.species.get(prevoData.prevo);
         if (learnsetBool && pokemonLearnset) {
             pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
             for (let [moveName, learnData] of Object.entries(pokemonLearnset)) {
@@ -215,8 +214,8 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             };
             levelMoves = Object.entries(levelMoves).sort((a, b) => a[1] - b[1]);
             // Prevo egg moves
-            if (prevo) {
-                for (let [moveName, learnData] of Object.entries(learnsets[prevo.id].learnset)) {
+            if (pokemon.prevo) {
+                for (let [moveName, learnData] of Object.entries(learnsets[prevoData.id].learnset)) {
                     moveName = genData.moves.get(moveName).name;
                     for (let moveLearnData of learnData) {
                         if (moveLearnData.startsWith("9E")) {
@@ -277,7 +276,6 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
         if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
-            let prevoData = Dex.species.get(pokemon.prevo);
             let evoMethod = getEvoMethod(pokemon);
             if (prevoData.gen <= generation) {
                 if (pokemon.gender == prevoData.gender) pokemonGender = "";
