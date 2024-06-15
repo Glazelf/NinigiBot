@@ -7,6 +7,7 @@ import axios from "axios";
 import fs from "fs";
 // Pokémon
 import { Dex } from '@pkmn/dex';
+import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 // Monster Hunter
@@ -33,6 +34,8 @@ import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 
+// Pokémon
+const gens = new Generations(Dex);
 // Helldivers
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona 5
@@ -126,10 +129,11 @@ export default async (client, interaction) => {
                             let learnsetBool = (customIdSplit[1] == "true");
                             let shinyBool = (customIdSplit[2] == "true");
                             let generationButton = customIdSplit[3];
+                            let genData = gens.get(generationButton);
                             newPokemonName = newPokemonName.label;
-                            let pokemon = Dex.mod(`gen${generationButton}`).species.get(newPokemonName);
+                            let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
