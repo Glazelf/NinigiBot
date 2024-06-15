@@ -28,8 +28,8 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (generation < pokemon.gen) {
             pkmEmbed
                 .setTitle(`Error`)
-                .setDescription(`${pokemon.name} did not exist yet in generation ${generation}.\n${pokemon.name} was introduced in generation ${pokemon.gen}.`);
-            messageObject = { embeds: pkmEmbed, components: [] };
+                .setDescription(`\`${pokemon.name}\` does not exist yet in generation ${generation}.\n\`${pokemon.name}\` was introduced in generation ${pokemon.gen}.`);
+            messageObject = { embeds: pkmEmbed, components: [], ephemeral: true };
             return messageObject;
         };
         // Common settings

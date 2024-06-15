@@ -56,8 +56,7 @@ export default async (client, interaction, ephemeral) => {
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = Dex.moves.get(moveSearch);
-        let moveGen = genData.moves.get(moveSearch);
-        let moveExists = (move && move.exists && !["CAP", "Future"].includes(move.isNonstandard));
+        let moveExists = (move && move.exists && move.isNonstandard == "CAP");
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
@@ -67,9 +66,14 @@ export default async (client, interaction, ephemeral) => {
                 let abilityGen = genData.abilities.get(abilitySearch);
                 // let abilityGen = genData.abilities.get(abilitySearch);
                 let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
-                let abilityFailString = `Sorry, I could not find that ability in generation ${generation}.`;
+                let abilityFailString = `I could not find that ability in generation ${generation}.`;
                 if (abilityIsFuture) abilityFailString += `\n\`${ability.name}\` was introduced in generation ${ability.gen}.`;
-                if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) return sendMessage({ client: client, interaction: interaction, content: abilityFailString });
+                if (!ability || !abilityGen || !ability.exists || ability.name == "No Ability" || ability.isNonstandard == "CAP" || abilityIsFuture) {
+                    pokemonEmbed
+                        .setTitle("Error")
+                        .setDescription(abilityFailString);
+                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                };
 
                 nameBulbapedia = abilityGen.name.replace(/ /g, "_");
                 // Ability is capitalized on Bulbapedia URLs
@@ -96,13 +100,18 @@ export default async (client, interaction, ephemeral) => {
                 let generationFooter = generation; // Might be usefull to move to top of file
                 let itemIsFuture = (item.gen > generation);
                 let itemIsAvailable = (itemGen == undefined);
-                let itemFailString = `Sorry, I could not find that item in generation ${generation}.`;
+                let itemFailString = `I could not find that item in generation ${generation}.`;
                 if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
                 if (!itemGen) {
                     itemGen = item;
                     generationFooter = globalVars.pokemonCurrentGeneration;
                 };
-                if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that item in generation ${generation}.` });
+                if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) {
+                    pokemonEmbed
+                        .setTitle("Error")
+                        .setDescription(itemFailString);
+                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                };
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
                 let hasPGLImage = imageExists(itemImage);
@@ -122,7 +131,16 @@ export default async (client, interaction, ephemeral) => {
                 break;
             // Moves
             case "move":
-                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\` in generation ${generation}.` });
+                let moveGen = genData.moves.get(moveSearch);
+                let moveIsFuture = (move.gen > generation);
+                let moveFailString = `I could not find that move in generation ${generation}.`;
+                if (moveIsFuture) moveFailString += `\n\`${move.name}\` was introduced in generation ${move.gen}.`;
+                if (!moveExists || !moveGen) {
+                    pokemonEmbed
+                        .setTitle("Error")
+                        .setDescription(moveFailString);
+                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                };
 
                 let moveLearnPool = [];
                 for (const pokemon of allPokemonGen) {
