@@ -17,7 +17,7 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
 
 const gens = new Generations(Dex);
-let allPokemon = Array.from(Dex.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
+let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -426,8 +426,6 @@ export default async (client, interaction, ephemeral) => {
                 pokemonEmbed = null;
                 await interaction.deferReply({ ephemeral: ephemeral });
                 allPokemon = allPokemon.filter(pokemon =>
-                    pokemon.num > 0 &&
-                    !["CAP"].includes(pokemon.isNonstandard) &&
                     !isIdenticalForm(pokemon.name) &&
                     !pokemon.name.endsWith("-Totem")
                 );
