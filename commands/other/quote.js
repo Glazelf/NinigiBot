@@ -2,132 +2,47 @@ import Discord from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import logger from "../../util/logger.js";
 import randomNumber from "../../util/randomNumber.js";
-let lastQuote = null;
+import quotes from "../../objects/quotes.json" with { type: "json" };
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+let previousQuoteTime = null;
+
 export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = false;
 
         const now = Date.now();
         const cooldownAmount = 6 * 60 * 60 * 1000; // 6 hours in ms
-
-        if (lastQuote) {
-            const expirationTime = lastQuote + cooldownAmount;
+        if (previousQuoteTime) {
+            const expirationTime = previousQuoteTime + cooldownAmount;
             if (now < expirationTime) {
                 const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
                 return sendMessage({ client: client, interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
             };
         };
+        // Get list of all message IDs for fairer random pick
+        let allMessages = [];
+        for await (const [key, value] of quotes) {
+            value.forEach(messageID => allMessages.push({ channnelID: key, messageID: messageID }));
+        };
+        let randomMessage = allMessages[randomNumber[allMessages.length - 1]];
+        let channel = interaction.guild.channels.fetch(randomMessage.channelID);
+        let message = channel.messages.fetch(randomMessage.messageID);
 
-        lastQuote = now;
-        setTimeout(() => lastQuote = null, cooldownAmount);
+        let messageImage = null;
+        if (message.attachments.size > 0) {
+            messageImage = message.attachments.first().url;
+        };
 
-        const answers = [
-            "https://discord.com/channels/549214833858576395/549217627365441566/778390611388137472",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1165061943934066770",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1113368396457840691",
-            "https://discord.com/channels/549214833858576395/748873664308576337/1125169489797972232",
-            "https://discord.com/channels/549214833858576395/730808051266748437/1080615232428331108",
-            "https://discord.com/channels/549214833858576395/747878956434325626/1007758700150280262",
-            "https://discord.com/channels/549214833858576395/1098285734496043118/1098286221437968575",
-            "https://discord.com/channels/549214833858576395/722113630153343076/733067749252923463",
-            "https://discord.com/channels/549214833858576395/665274079397281835/671735953970298902",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1233431544169758752",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1235705614857146509",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1235298798146682911",
-            "https://discord.com/channels/549214833858576395/549217627365441566/973552750338146394",
-            "https://discord.com/channels/549214833858576395/549217627365441566/982249751242244097",
-            "https://discord.com/channels/549214833858576395/815249117303406602/1002144404716404806",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1004499744233627768",
-            "https://discord.com/channels/549214833858576395/761961657169477660/1007378627589066762",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1009591004149596332",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1011262768906784779",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1011419118219571322",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1012353757582999622",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1014896686096728064",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1028033491021070376",
-            "https://discord.com/channels/549214833858576395/551132163438018575/1028218546066563133",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1030098191586168902",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1030152490559225887",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1031632178796298310",
-            "https://discord.com/channels/549214833858576395/551132163438018575/1032413732380348468",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1033860923259097148",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1034199638489706588",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1034200531113099264",
-            "https://discord.com/channels/549214833858576395/551132163438018575/1043909278739746906",
-            "https://discord.com/channels/549214833858576395/974238847900717066/1045113117639708695",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1049033029860995083",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1051554460599599155",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1056181914874155079",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1057605537845489704",
-            "https://discord.com/channels/549214833858576395/1043833369340944396/1058979522084601967",
-            "https://discord.com/channels/549214833858576395/677598636707938335/1059134530440679487",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1060217005820612618",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1069589806234992660",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1071447371076075630",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1072999169603686591",
-            "https://discord.com/channels/549214833858576395/705372420718198795/1073554749481308230",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1077917671355588608",
-            "https://discord.com/channels/549214833858576395/1078298069067645050/1079116198882590921",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1079474487151562853",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1080225428486234162",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1081256635747549224",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1110933190614458489",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1116011247738028192",
-            "https://discord.com/channels/549214833858576395/748873664308576337/1129371296925491271",
-            "https://discord.com/channels/549214833858576395/1059151082045063300/1129407474110304389",
-            "https://discord.com/channels/549214833858576395/551132163438018575/1137162836250992722",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1141765698583019691",
-            "https://discord.com/channels/549214833858576395/717841246101700709/1150886767877169272",
-            "https://discord.com/channels/549214833858576395/769949605139578900/1155529073183961178",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1165591236187537418",
-            "https://discord.com/channels/549214833858576395/705601772785238080/1166088494234488882",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1167338661549977600",
-            "https://discord.com/channels/549214833858576395/705601772785238080/1167770443541917747",
-            "https://discord.com/channels/549214833858576395/1045353775893852160/1168497455642456105",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1169614414354337822",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1172132432451993601",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1174006300779221022",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1174059730482757633",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1175881474415788053",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1177335888250945607",
-            "https://discord.com/channels/549214833858576395/752626723345924157/1180647604137242755",
-            "https://discord.com/channels/549214833858576395/752626723345924157/1180648304988655626",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1184771509043068988",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1184992247813513296",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1187774667432415295",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1189242833878650941",
-            "https://discord.com/channels/549214833858576395/551132163438018575/1189343243687694406",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1190019952661512222",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1190349724230881363",
-            "https://discord.com/channels/549214833858576395/549214833858576399/1191054304711278733",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1191056093074436108",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1191060012978667690",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1191509287319650385",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1192890518238142494",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1193324828850143313",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1201271723174146248",
-            "https://discord.com/channels/549214833858576395/1212052738335051839/1212350913919057940",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1217895146113470474",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1226941731342123142",
-            "https://discord.com/channels/549214833858576395/752626723345924157/1227357596273348679",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1228042718547021915",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1233429378516516985",
-            "https://discord.com/channels/549214833858576395/1078298069067645050/1079116128854474803",
-            "https://discord.com/channels/549214833858576395/551132163438018575/746021971468353556",
-            "https://discord.com/channels/549214833858576395/549217627365441566/742886654204838078",
-            "https://discord.com/channels/549214833858576395/549217627365441566/832384880738172938",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1122319130377322507",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1239875209406845018",
-            "https://discord.com/channels/549214833858576395/549217627365441566/933138585106935898",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1230900642399387758",
-            "https://discord.com/channels/549214833858576395/656557551755853844/1186408087402328305",
-            "https://discord.com/channels/549214833858576395/549217627365441566/1150545454761783437",
-            "https://discord.com/channels/549214833858576395/549217627365441566/729158135620567051",
-            "https://discord.com/channels/549214833858576395/549217627365441566/730380749139607572",
-            "https://discord.com/channels/549214833858576395/549217627365441566/775558626244558848",
-        ];
-        const randomAnswer = answers[randomNumber(0, answers.length)];
-        return sendMessage({ client: client, interaction: interaction, content: `${randomAnswer}`, ephemeral: ephemeral });
+        let quoteEmbed = new Discord.EmbedBuilder()
+            .setColor(globalVars.embedColor)
+            .setAuthor({ name: "Quote" })
+            .setTitle(message.author.username)
+            .setDescription(message.content)
+            .setImage(messageImage);
+
+        previousQuoteTime = now;
+        return sendMessage({ client: client, interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger(e, client, interaction);
