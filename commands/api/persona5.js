@@ -55,13 +55,13 @@ export default async (client, interaction, ephemeral) => {
                 p5Embed
                     .setTitle(`${personaInput} (${personaObject.arcana})`)
                     .setDescription(elementalMatchup)
+                    .setImage(personaImage)
                     .addFields([
                         { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level}\n${personaStats}`, inline: true },
                         { name: "Skills:", value: personaSkills, inline: true },
                         { name: "Item:", value: personaItem, inline: false },
                         { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
-                    ])
-                    .setImage(personaImage);
+                    ]);
                 break;
             case "skill":
                 let skillInput = interaction.options.getString("skill");
@@ -104,24 +104,24 @@ export default async (client, interaction, ephemeral) => {
         };
         return sendMessage({ client: client, interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 
-        function getWeaknessString(string) {
-            string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
-            return string;
-        };
-        function getItemString(string) {
-            let itemObject = itemMapRoyal[string];
-            if (!itemObject) return "None";
-            if (itemObject.type && itemObject.description) {
-                string = `${string} (${itemObject.type}): ${itemObject.description}`;
-            } else if (itemObject.skillCard) {
-                string = `${string} (Skill Card)`;
-            };
-            return string;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
+};
+
+function getWeaknessString(string) {
+    string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
+    return string;
+};
+function getItemString(string) {
+    let itemObject = itemMapRoyal[string];
+    if (!itemObject) return "None";
+    if (itemObject.type && itemObject.description) {
+        string = `${string} (${itemObject.type}): ${itemObject.description}`;
+    } else if (itemObject.skillCard) {
+        string = `${string} (Skill Card)`;
+    };
+    return string;
 };
 
 export const config = {

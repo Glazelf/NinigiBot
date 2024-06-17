@@ -117,14 +117,13 @@ export default async (client, member, newMember) => {
             const updateEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(topText)
-                .setThumbnail(oldAvatar);
-            if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
-            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
-            updateEmbed
+                .setThumbnail(oldAvatar)
                 .setImage(image)
                 .setFooter({ text: user.username })
                 .setTimestamp();
+            if (changeText) updateEmbed.setDescription(changeText);
+            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 
             async function deleteBoosterRole() {

@@ -41,14 +41,10 @@ export default async (client, oldRole, newRole) => {
                 ]);
             };
             if (oldRole.rawPosition !== newRole.rawPosition) {
-                updateEmbed.addFields([
-                    { name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }
-                ]);
+                updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
             if (oldRole.color !== newRole.color) {
-                updateEmbed.addFields([
-                    { name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }
-                ]);
+                updateEmbed.addFields([{ name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field

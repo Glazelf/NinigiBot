@@ -56,14 +56,13 @@ export default async (client, message, newMessage) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
                 .setThumbnail(avatar)
-                .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
-            if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
-            updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
-            if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
-            updateEmbed
+                .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)
                 .setImage(messageImage)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
+            if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
+            updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
+            if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {

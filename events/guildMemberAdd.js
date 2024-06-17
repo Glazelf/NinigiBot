@@ -22,12 +22,12 @@ export default async (client, member) => {
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setFooter({ text: member.user.username })
+                .setTimestamp()
                 .addFields([
                     { name: "User:", value: `${member} (${member.id})`, inline: false },
                     { name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }
-                ])
-                .setFooter({ text: member.user.username })
-                .setTimestamp();
+                ]);
             return log.send({ embeds: [joinEmbed], components: [joinButtons] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
             try {

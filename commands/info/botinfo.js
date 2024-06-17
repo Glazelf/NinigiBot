@@ -17,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
 
         await client.guilds.fetch();
         let totalGuilds = client.guilds.cache.size;
-        let totalMembers = await getUsers();
+        let totalMembers = await getUsers(client);
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
         let githubRepoResponse = null;
@@ -71,18 +71,18 @@ export default async (client, interaction, ephemeral) => {
             .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
-        async function getUsers() {
-            // Fast but inaccurate method
-            let userCount = 0;
-            await client.guilds.cache.forEach(guild => {
-                if (guild.memberCount) userCount += guild.memberCount;
-            });
-            return userCount;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
+};
+
+async function getUsers(client) {
+    // Fast but inaccurate method
+    let userCount = 0;
+    await client.guilds.cache.forEach(guild => {
+        if (guild.memberCount) userCount += guild.memberCount;
+    });
+    return userCount;
 };
 
 export const config = {

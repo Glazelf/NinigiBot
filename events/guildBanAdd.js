@@ -39,13 +39,13 @@ export default async (client, guildBan) => {
                 .setTitle(`Member Banned 💔`)
                 .setThumbnail(avatarTarget)
                 .setDescription(`**${guildBan.guild.name}** now has ${guildBan.guild.memberCount} members.`)
+                .setFooter({ text: target.username })
+                .setTimestamp()
                 .addFields([
                     { name: `User:`, value: `${target} (${target.id})`, inline: false },
                     { name: `Reason:`, value: reason, inline: false },
                     { name: `Executor:`, value: `${executor} (${executor.id})`, inline: false }
-                ])
-                .setFooter({ text: target.username })
-                .setTimestamp();
+                ]);
             return log.send({ embeds: [banEmbed], components: [banButtons] });
 
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {

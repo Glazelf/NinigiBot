@@ -62,14 +62,14 @@ export default async (client, messageReaction) => {
         const starEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${starboardEmote}${messageReaction.count}`)
-            .setThumbnail(avatar);
+            .setThumbnail(avatar)
+            .setImage(messageImage)
+            .setFooter({ text: targetMessage.author.username })
+            .setTimestamp(targetMessage.createdTimestamp);
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
         starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
         if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: true }]);
         starEmbed
-            .setImage(messageImage)
-            .setFooter({ text: targetMessage.author.username })
-            .setTimestamp(targetMessage.createdTimestamp);
         if (messageReaction.count == 0 && messageDB) {
             // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);

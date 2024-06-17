@@ -156,16 +156,15 @@ export default async (client, interaction, monsterData, ephemeral) => {
         let mhEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
-            .setThumbnail(monsterRender);
+            .setThumbnail(monsterRender)
+            .setImage(monsterBanner);
         if (monsterDescription) mhEmbed.setDescription(monsterDescription);
         if (!monsterData.isLarge) mhEmbed.addFields([{ name: "Size:", value: monsterSize, inline: true }]);
         if (monsterDanger) mhEmbed.addFields([{ name: "Danger:", value: `${monsterDanger}⭐`, inline: true }]);
         if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
         if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
         if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
-        mhEmbed
-            .addFields([{ name: "Games:", value: gameAppearances, inline: false }])
-            .setImage(monsterBanner);
+        mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }])
         let messageObject = { embeds: mhEmbed, components: buttonArray };
         return messageObject;
 
