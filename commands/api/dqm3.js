@@ -52,12 +52,13 @@ export default async (client, interaction, ephemeral) => {
                         };
                     };
                 };
-                dqm3Embed.setTitle(monsterTitle);
+                dqm3Embed
+                    .setTitle(monsterTitle)
+                    .addFields([
+                        { name: "Rank", value: monsterData.rank, inline: true },
+                        { name: "Family", value: familiesJSON[monsterData.family].name, inline: true }
+                    ]);
                 if (monsterData.description) dqm3Embed.setDescription(monsterData.description);
-                dqm3Embed.addFields([
-                    { name: "Rank", value: monsterData.rank, inline: true },
-                    { name: "Family", value: familiesJSON[monsterData.family].name, inline: true }
-                ]);
                 if (monsterData.talents) dqm3Embed.addFields([{ name: "Innate Talents:", value: innateTalentsString, inline: true }]);
                 if (monsterData.traits) dqm3Embed.addFields([{ name: "Traits: (Lvl)", value: monsterTraitsString, inline: true }]);
                 if (monsterData.growth) dqm3Embed.addFields([{ name: "Growth:", value: growthString, inline: false }]);
@@ -115,8 +116,10 @@ export default async (client, interaction, ephemeral) => {
                 dqm3Embed
                     .setTitle(skillData.name)
                     .setDescription(skillData.description)
-                    .addFields([{ name: "Type:", value: skillData.type, inline: true }])
-                    .addFields([{ name: "MP Cost:", value: mpCostString, inline: true }]);
+                    .addFields([
+                        { name: "Type:", value: skillData.type, inline: true },
+                        { name: "MP Cost:", value: mpCostString, inline: true }
+                    ]);
                 if (skillTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: skillTalents.join("\n"), inline: false }]);
                 break;
             case "trait":
@@ -205,10 +208,10 @@ export default async (client, interaction, ephemeral) => {
                     };
                     dqm3Embed
                         .setTitle("Synthesis")
-                        .setDescription(`${parent1Name} + ${parent2Name} = ${targetName}`);
+                        .setDescription(`${parent1Name} + ${parent2Name} = ${targetName}`)
+                        .setFooter({ text: "Note: Monsters can always synthesize into their own species." });
                     if (familySynthesisString.length > 0) dqm3Embed.addFields([{ name: "Family Synthesis:", value: `${familySynthesisString}\n${familySynthesisNote}`, inline: false }]);
                     if (uniqueSynthesisString.length > 0) dqm3Embed.addFields([{ name: "Unique Synthesis:", value: uniqueSynthesisString, inline: false }]);
-                    dqm3Embed.setFooter({ text: "Note: Monsters can always synthesize into their own species." });
                 } else {
                     return sendMessage({ client: client, interaction: interaction, content: `Coming soon.` });
                 };

@@ -114,14 +114,14 @@ export default async (client, interaction, ephemeral) => {
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
                     .setThumbnail(abilityImage)
+                    .setImage(clothingImage)
+                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` })
                     .addFields([
                         { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
                         { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
                         { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
                         { name: "Obtain Method:", value: obtainMethod, inline: true }
-                    ])
-                    .setImage(clothingImage)
-                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
+                    ]);
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
@@ -156,14 +156,14 @@ export default async (client, interaction, ephemeral) => {
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
+                    .setImage(weaponImage)
+                    .setFooter({ text: versionString })
                     .addFields([
                         { name: subTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], inline: true },
                         { name: specialTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], inline: true },
                         { name: shopTitle, value: weaponUnlockString, inline: true },
                         { name: infoTitle, value: weaponStats, inline: false }
-                    ])
-                    .setImage(weaponImage)
-                    .setFooter({ text: versionString });
+                    ]);
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -189,8 +189,8 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(subName)
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
-                    .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }])
-                    .setFooter({ text: versionString });
+                    .setFooter({ text: versionString })
+                    .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }]);
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -215,8 +215,8 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(specialName)
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
+                    .setFooter({ text: versionString })
                     .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
-                    .setFooter({ text: versionString });
                 break;
             case "schedule":
                 let inputData = interaction.options.getString("mode");
@@ -329,8 +329,8 @@ export default async (client, interaction, ephemeral) => {
                     tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                     splat3Embed
                         .setDescription(splatfestScheduleDescription)
-                        .addFields([{ name: "Tricolor Battle:", value: tricolorSchedule, inline: false }])
-                        .setImage(splatfestData.image.url);
+                        .setImage(splatfestData.image.url)
+                        .addFields([{ name: "Tricolor Battle:", value: tricolorSchedule, inline: false }]);
                 };
                 if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
                     // Turf War, Anarchy, xBattle and SplatfestTW
@@ -371,7 +371,11 @@ export default async (client, interaction, ephemeral) => {
                 if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
                 let splatnetData = responseSplatnet.data.data.gesotown;
                 // Limited time brand
-                splat3Embed.addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
+                splat3Embed
+                    .setTitle("SplatNet3 Shop")
+                    .setImage(splatnetData.pickupBrand.image.url)
+                    .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` })
+                    .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
                 await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                     let brandGearString = getGearString(brandGear, "brand");
                     splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
@@ -382,11 +386,6 @@ export default async (client, interaction, ephemeral) => {
                     let limitedGearString = getGearString(limitedGear, "limited");
                     splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
                 });
-
-                splat3Embed
-                    .setTitle("SplatNet3 Shop")
-                    .setImage(splatnetData.pickupBrand.image.url)
-                    .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` });
                 break;
             case "splatfests":
                 await interaction.deferReply({ ephemeral: ephemeral });
@@ -435,6 +434,7 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(replayMode)
                     .setThumbnail(replayData.player.weapon.image.url)
                     .setDescription(matchData)
+                    .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` })
                     .addFields([
                         { name: "Player Data:", value: playerData.join("\n"), inline: false },
                         { name: `${replayData.player.headGear.name} Skills:`, value: headSkills.join("\n"), inline: true },
@@ -442,7 +442,6 @@ export default async (client, interaction, ephemeral) => {
                         { name: `${replayData.player.shoesGear.name} Skills:`, value: shoesSkills.join("\n"), inline: true }
                     ]);
                 if (replayAwards.length > 0) splat3Embed.addFields([{ name: "Awards:", value: replayAwards.join("\n"), inline: false }]);
-                splat3Embed.setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` });
                 break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
@@ -474,22 +473,22 @@ export default async (client, interaction, ephemeral) => {
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
 
-        function getGearString(gear, type) {
-            let limitedGearString = "";
-            if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
-            limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
-            let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
-            let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;
-            if (gear.gear.additionalGearPowers.length > 1) limitedGearStarString += ` (${limitedGearStars})`;
-            limitedGearString += `${limitedGearStarString}\n`;
-            limitedGearString += `Brand: ${gear.gear.brand.name}\n`;
-            limitedGearString += `Price: ${gear.price}\n`;
-            return limitedGearString;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
+};
+
+function getGearString(gear, type) {
+    let limitedGearString = "";
+    if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
+    limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
+    let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
+    let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;
+    if (gear.gear.additionalGearPowers.length > 1) limitedGearStarString += ` (${limitedGearStars})`;
+    limitedGearString += `${limitedGearStarString}\n`;
+    limitedGearString += `Brand: ${gear.gear.brand.name}\n`;
+    limitedGearString += `Price: ${gear.price}\n`;
+    return limitedGearString;
 };
 
 export const config = {

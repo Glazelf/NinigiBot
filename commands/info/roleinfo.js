@@ -31,6 +31,7 @@ export default async (client, interaction, ephemeral) => {
             .setColor(embedColor)
             .setTitle(role.name)
             .setThumbnail(icon)
+            .setFooter({ text: role.id })
             .addFields([{ name: "Role:", value: role.toString(), inline: true }]);
         if (role.hexColor !== defaultColor) roleEmbed.addFields([{ name: "Color:", value: role.hexColor, inline: true }]);
         roleEmbed
@@ -39,8 +40,7 @@ export default async (client, interaction, ephemeral) => {
                 { name: "Position:", value: role.rawPosition.toString(), inline: true },
                 { name: "Properties:", value: roleProperties, inline: false },
                 { name: "Permissions:", value: permissionString, inline: false }
-            ])
-            .setFooter({ text: role.id });
+            ]);
         return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
     } catch (e) {

@@ -648,12 +648,12 @@ export default async (client, interaction) => {
                             .setThumbnail(userAvatar)
                             .setTitle(bugReportTitle)
                             .setDescription(bugReportDescription)
+                            .setFooter({ text: interaction.user.username })
                             .addFields([
                                 { name: "Reproduce:", value: bugReportReproduce, inline: false },
                                 { name: "Expected Behaviour:", value: bugReportBehaviour, inline: false },
                                 { name: "Device Context:", value: bugReportContext, inline: false }
-                            ])
-                            .setFooter({ text: interaction.user.username });
+                            ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
                         break;

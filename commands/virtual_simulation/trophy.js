@@ -11,7 +11,9 @@ import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 export default async (client, interaction, ephemeral) => {
     try {
         let messageFile = null;
-        let embed, trophy_name, res;
+        let trophy_name, res;
+        let embed = new Discord.EmbedBuilder()
+            .setColor(globalVars.embedColor)
         let returnString = '';
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -22,8 +24,6 @@ export default async (client, interaction, ephemeral) => {
         let trophies;
         switch (interaction.options.getSubcommand()) {
             case "stock":
-                embed = new Discord.EmbedBuilder()
-                    .setColor(globalVars.embedColor)
                 trophies = await getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
                 trophies.forEach(trophy => {
@@ -113,8 +113,7 @@ export default async (client, interaction, ephemeral) => {
                     });
                 } else {
                     if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
-                    embed = new Discord.EmbedBuilder()
-                        .setColor(globalVars.embedColor)
+                    embed
                         .setTitle(`${res.trophy_id}`)
                         .addFields([
                             { name: "Icon:", value: `${res.icon}`, inline: true },

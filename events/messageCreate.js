@@ -27,13 +27,12 @@ export default async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`DM Message`)
                 .setThumbnail(avatar)
+                .setImage(messageImage)
+                .setTimestamp()
                 .addFields([{ name: `Author:`, value: message.author.username, inline: false }]);
             if (message.content) dmEmbed.addFields([{ name: `Message Content:`, value: message.content, inline: false }]);
             dmEmbed
-                .setImage(messageImage)
-                .setTimestamp();
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
-
             return DMChannel.send(dmLogObject);
         };
         if (!message.channel.type == Discord.ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;

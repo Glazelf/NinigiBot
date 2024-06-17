@@ -50,11 +50,10 @@ export default async (client, member) => {
                 leaveEmbed
                     .setTitle(embedAuthor)
                     .setThumbnail(avatar)
+                    .setFooter({ text: member.user.username })
                     .addFields([{ name: `User:`, value: `${member} (${member.id})`, inline: false }]);
                 if (member.joinedAt) leaveEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:f>`, inline: true }]);
-                leaveEmbed
-                    .addFields([{ name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }])
-                    .setFooter({ text: member.user.username });
+                leaveEmbed.addFields([{ name: "Created:", value: `<t:${Math.floor(member.user.createdAt.valueOf() / 1000)}:f>`, inline: true }]);
                 if (kicked == true) {
                     leaveEmbed.addFields([{ name: `Reason:`, value: reasonText, inline: false }]);
                     if (executor) leaveEmbed.addFields([{ name: `Executor:`, value: `${executor.username} (${executor.id})`, inline: false }]);

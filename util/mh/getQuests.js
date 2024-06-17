@@ -41,7 +41,6 @@ export default async ({ client, interaction, gameName, page }) => {
         mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
         let messageObject = { embeds: mhEmbed, components: [questsButtons] };
         return messageObject;
-
         // Function to sort by difficulty
         function compare(a, b) {
             if (a.difficulty > b.difficulty) return -1;
