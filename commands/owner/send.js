@@ -19,7 +19,7 @@ export default async (client, interaction, ephemeral) => {
         let attachment = null;
         if (attachmentArg) attachment = attachmentArg.url;
         let target;
-        let textMessageBlock = Discord.codeBlock(textMessage);
+        let textMessageBlock = Discord.codeBlock("fix", textMessage);
         if (userIDArg || channelIDArg) {
             try {
                 if (channelIDArg) target = await client.channels.fetch(channelIDArg);
@@ -32,8 +32,8 @@ export default async (client, interaction, ephemeral) => {
         };
         if (!target) return sendMessage({ client: client, interaction: interaction, content: `I could not find a user or channel with that ID.` });
         let targetFormat = null;
-        if (channelIDArg) targetFormat = `${target.name} (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
-        if (userIDArg) targetFormat = `${target.username} (${target.id})`;
+        if (channelIDArg) targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
+        if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
         try {
             let messageObject = { content: textMessage };
             if (attachment) messageObject["files"] = [attachment];
