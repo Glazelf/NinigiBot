@@ -43,6 +43,10 @@ export default async (client, interaction, ephemeral) => {
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
         // Owner
         let owner = "glazelf (232875725898645504)";
+        // SKU
+        let shopButtonText = "Donate";
+        let SKUID = ""; // Without SKU ID link goes to store page
+        let shopButtonLink = `https://discord.com/application-directory/${client.user.id}/store/${SKUID}`;
 
         let botEmbed = new Discord.EmbedBuilder()
             .setColor(globalVars.embedColor)
@@ -51,9 +55,9 @@ export default async (client, interaction, ephemeral) => {
             .setDescription(githubRepoResponse.data.description)
             .addFields([
                 { name: "Owner:", value: owner, inline: false },
-                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
+                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true },
+                { name: "Memory Usage:", value: memoryUsage, inline: true }
             ]);
-        if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
         if (client.options.shardCount) botEmbed.addFields([{ name: "Shards:", value: client.options.shardCount.toString(), inline: true }]);
         botEmbed.addFields([
             { name: "Servers:", value: totalGuilds.toString(), inline: true },
@@ -65,10 +69,11 @@ export default async (client, interaction, ephemeral) => {
         if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
         let botButtons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }))
+            .addComponents(new Discord.ButtonBuilder({ label: shopButtonText, style: Discord.ButtonStyle.Link, url: shopButtonLink }))
             .addComponents(new Discord.ButtonBuilder({ label: 'App Directory', style: Discord.ButtonStyle.Link, url: `https://discord.com/application-directory/${client.user.id}` }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'GitHub', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
+            // .addComponents(new Discord.ButtonBuilder({ label: 'GitHub', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
+            // .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
+            .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }));
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
     } catch (e) {
