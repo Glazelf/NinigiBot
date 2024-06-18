@@ -132,10 +132,15 @@ export default async (client, interaction, ephemeral) => {
             // Moves
             case "move":
                 let moveGen = genData.moves.get(moveSearch);
+                let moveIsAvailable = true;
+                if (!moveGen) {
+                    moveGen = move;
+                    moveIsAvailable = false;
+                };
                 let moveIsFuture = (move.gen > generation);
                 let moveFailString = `I could not find that move in generation ${generation}.`;
                 if (moveIsFuture) moveFailString += `\n\`${move.name}\` was introduced in generation ${move.gen}.`;
-                if (!moveExists || !moveGen) {
+                if (!moveExists || moveIsFuture) {
                     pokemonEmbed
                         .setTitle("Error")
                         .setDescription(moveFailString);
@@ -158,7 +163,7 @@ export default async (client, interaction, ephemeral) => {
                 let description = moveGen.desc;
                 if (move.flags.contact) description += " Makes contact with the target.";
                 if (move.flags.bypasssub) description += " Bypasses Substitute.";
-                if (move.isNonstandard == "Past") description += `\nThis move is not usable in generation ${generation}.`;
+                if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
                 let type = getTypeEmotes({ type: move.type, emotes: emotesAllowed });
                 let category = move.category;
