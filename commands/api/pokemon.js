@@ -399,7 +399,7 @@ export default async (client, interaction, ephemeral) => {
                             { name: "Spreads:", value: spreadsString, inline: true },
                             { name: "Teammates:", value: teammatesString, inline: true }
                         ]);
-                    if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: true }]);
+                    if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: false }]);
                 } else {
                     // Format generic data display
                     let usageList = [];
