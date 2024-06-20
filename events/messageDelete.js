@@ -47,7 +47,6 @@ export default async (client, message) => {
 
             let messageContent = message.content;
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
-            if (messageContent.length < 1) return;
 
             let isReply = false;
             let replyMessage
@@ -59,18 +58,28 @@ export default async (client, message) => {
                     isReply = false;
                 };
             };
+            // Assets
+            let messageImage = null; // Very inconsistent, almost never works
+            let messageAttachmentsString = "";
+            if (message.attachments.size > 0) {
+                messageImage = message.attachments.first().proxyURL;
+                message.attachments.forEach(attachment => messageAttachmentsString += `${attachment.proxyURL}\n`)
+            };
             let avatar;
             if (message.member) {
                 avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
                 avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
+
             const deleteEmbed = new Discord.EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
-                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)
-                .addFields([{ name: `Content:`, value: messageContent, inline: false }]);
+                .setImage(messageImage)
+                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
+            if (messageContent.length > 0) deleteEmbed.addFields([{ name: `Content:`, value: messageContent, inline: false }]);
+            if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: "Attachments:", value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
