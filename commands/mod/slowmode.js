@@ -17,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
             Discord.ChannelType.GuildStageVoice,
             Discord.ChannelType.GuildVoice
         ];
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");

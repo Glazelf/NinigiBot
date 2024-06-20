@@ -12,7 +12,7 @@ export default async (client, interaction) => {
         serverApi = await serverApi.default();
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });

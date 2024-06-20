@@ -7,7 +7,7 @@ import isOwner from "../../util/isOwner.js";
 export default async (client, interaction, ephemeral) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });

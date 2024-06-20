@@ -20,7 +20,7 @@ export default async (client) => {
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
 
         console.log(`Commands: ${client.commands.size}
 Guilds: ${client.guilds.cache.size}

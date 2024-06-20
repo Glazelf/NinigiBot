@@ -10,7 +10,7 @@ const requiredPermission = Discord.PermissionFlagsBits.ManageGuild;
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 

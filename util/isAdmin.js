@@ -14,5 +14,6 @@ export default (client, member) => {
 
     } catch (e) {
         logger(e, client);
+        return false;
     };
 };

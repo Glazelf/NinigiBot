@@ -8,7 +8,7 @@ import isOwner from "../../util/isOwner.js";
 export default async (client, interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let currency = globalVars.currency;
 

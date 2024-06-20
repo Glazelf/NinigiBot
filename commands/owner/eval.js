@@ -10,7 +10,7 @@ export default async (client, interaction, ephemeral) => {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
         // NEVER remove this, even for testing. Research eval() before doing so, at least.
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
         await interaction.deferReply({ ephemeral: ephemeral });
 
         const input = interaction.options.getString("input");

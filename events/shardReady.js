@@ -6,7 +6,7 @@ import birthday from "../affairs/birthday.js";
 
 export default async (client, id) => {
     try {
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         let presence = initPresence();
         globalVars.presence = presence;
         // Set bot status

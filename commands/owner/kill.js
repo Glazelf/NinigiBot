@@ -9,13 +9,13 @@ import getTime from "../../util/getTime.js";
 export default async (client, interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
 
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         let shutdownString = "Shutting down.";
         if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: shutdownString });

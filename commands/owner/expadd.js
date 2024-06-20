@@ -9,7 +9,7 @@ export default async (client, interaction) => {
     try {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let userArg = interaction.options.getUser("user");
         if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });

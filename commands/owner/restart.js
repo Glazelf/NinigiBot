@@ -10,7 +10,7 @@ export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = false;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
         await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
@@ -21,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
         let dbinit = false;
         let dbinitArg = interaction.options.getBoolean("dbinit");
         if (dbinitArg === true) dbinit = dbinitArg;
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
         let installResult = "";
         // Run commands

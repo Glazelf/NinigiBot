@@ -13,7 +13,7 @@ export default async (client, interaction, ephemeral) => {
         if (confirmArg === true) confirm = confirmArg;
         if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });

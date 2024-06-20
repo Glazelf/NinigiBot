@@ -10,7 +10,7 @@ const requiredPermission = Discord.PermissionFlagsBits.ModerateMembers;
 export default async (client, interaction, ephemeral) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -54,7 +54,7 @@ export default async (client, interaction, ephemeral) => {
                 muteReturnString = `Unmuted ${member.user.username} (${member.id}).`;
             };
         };
-        let time = await getTime(client);
+        let time = getTime();
         let reasonInfo = `-${interaction.user.username} (${time})`;
         let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by ${interaction.user.username} for the following reason: ${reasonCodeBlock}`;
         // Timeout logic

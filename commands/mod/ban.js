@@ -10,7 +10,7 @@ const requiredPermission = Discord.PermissionFlagsBits.BanMembers;
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -41,7 +41,7 @@ export default async (client, interaction) => {
             // console.log(e);
             bansFetch = null;
         };
-        let time = await getTime(client);
+        let time = getTime();
         let reasonInfo = `-${interaction.user.username} (${time})`;
         // If member is found
         if (member) {

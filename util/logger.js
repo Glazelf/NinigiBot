@@ -6,7 +6,7 @@ import util from "util";
 export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
     try {
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (exceptionString.includes("Missing Access")) {

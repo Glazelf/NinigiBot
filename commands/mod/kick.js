@@ -10,7 +10,7 @@ const requiredPermission = Discord.PermissionFlagsBits.KickMembers;
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -31,7 +31,7 @@ export default async (client, interaction) => {
         if (reasonArg) reason = reasonArg;
         let reasonCodeBlock = Discord.codeBlock("fix", reason);
 
-        let time = await getTime(client);
+        let time = getTime();
         let reasonInfo = `-${interaction.user.username} (${time})`;
         // Kick
         let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
