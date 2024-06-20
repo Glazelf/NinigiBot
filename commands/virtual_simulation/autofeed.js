@@ -22,8 +22,6 @@ export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = true;
         let returnString;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let mode_num = interaction.options.getInteger("mode");
         let res = await changeAutoFeed(master.id, mode_num);

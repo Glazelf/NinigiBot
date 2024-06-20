@@ -11,9 +11,6 @@ export default async (client, interaction) => {
         let ownerBool = await isOwner(client, interaction.user);
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
-
         let userArg = interaction.options.getUser("user");
         if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
         let expArg = interaction.options.getInteger("amount");

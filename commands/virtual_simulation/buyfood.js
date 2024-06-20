@@ -7,8 +7,6 @@ export default async (client, interaction) => {
     try {
         let ephemeral = true;
         let res, returnString;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
         let foodArg = interaction.options.getInteger("food");
         res = await buyFood(master.id, foodArg);
