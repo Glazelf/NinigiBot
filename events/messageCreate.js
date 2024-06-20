@@ -11,9 +11,7 @@ export default async (client, message) => {
         if (message.author.bot || message.author.system) return;
 
         let messageImage = null;
-        if (message.attachments.size > 0) {
-            messageImage = message.attachments.first().url;
-        };
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
         // Ignore commands in DMs
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
