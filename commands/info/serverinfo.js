@@ -5,11 +5,13 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
+import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
-        let adminBot = isAdmin(client, interaction.guild.members.me);
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -74,7 +76,7 @@ export default async (client, interaction, ephemeral) => {
                     boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
             };
         };
-        if (guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) || adminBot) boosterString = boosterString + nitroEmote;
+        if (emotesAllowed) boosterString = boosterString + nitroEmote;
         // Icon and banner
         let icon = guild.iconURL(globalVars.displayAvatarSettings);
         let banner = null;

@@ -63,7 +63,6 @@ export default async (client, interaction) => {
         let pkmQuizModalId = 'pkmQuizModal';
         switch (interaction.type) {
             case Discord.InteractionType.ApplicationCommand:
-                if (!interaction.member) return sendMessage({ client: client, interaction: interaction, content: `Sorry, you're not allowed to use commands in private messages!\nThis is because a lot of the responses require a server to be present.\nDon't worry, similar to this message, most of my replies will be invisible to other server members!` });
                 // Grab the command data from the client.commands Enmap
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");

@@ -6,6 +6,7 @@ import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let ephemeralArg = interaction.options.getBoolean("ephemeral");

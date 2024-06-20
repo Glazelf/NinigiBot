@@ -8,6 +8,7 @@ const requiredPermission = Discord.PermissionFlagsBits.ManageChannels;
 
 export default async (client, interaction, ephemeral) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         ephemeral = false;
         let slowmodeSupportedChannelTypes = [

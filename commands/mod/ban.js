@@ -9,6 +9,7 @@ const requiredPermission = Discord.PermissionFlagsBits.BanMembers;
 
 export default async (client, interaction) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 

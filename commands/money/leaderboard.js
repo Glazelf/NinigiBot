@@ -28,6 +28,7 @@ export default async (client, interaction, ephemeral) => {
                 .setDescription(leaderboardStringGlobal)
                 .setTitle(`Global Leaderboard:`);
         } else {
+            if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
             // Server leaderboard
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
             let leaderboardString = money_db.filter(user => client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))

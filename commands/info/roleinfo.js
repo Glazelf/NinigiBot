@@ -5,6 +5,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let role = interaction.options.getRole("role");

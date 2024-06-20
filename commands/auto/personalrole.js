@@ -1,11 +1,13 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
+        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBool = isAdmin(client, interaction.member);

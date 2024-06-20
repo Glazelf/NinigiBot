@@ -12,15 +12,15 @@ import playing_reaction from "../../util/shinx/getPlayingReaction.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
+        // Every subcommand here except maybe "play" should be accessible in DMs honestly but I don't feel like rewriting them significantly for now to actually allow for that
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
-        let shinx, res;
+        let shinx, res, time;
         let canvas, ctx, img;
         let returnString = "";
-        let userFinder = await interaction.guild.members.fetch();
-        let messageFile = null;
-        let time;
+        let userFinder, messageFile = null;
+        if (interaction.inGuild()) userFinder = await interaction.guild.members.fetch();
 
         const now = new Date();
         let master = interaction.user;
@@ -37,7 +37,6 @@ export default async (client, interaction, ephemeral) => {
             case "info":
                 shinx = await getShinx(master.id);
                 const is_user_male = shinx.user_male;
-                const avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
                 canvas = Canvas.createCanvas(791, 441);
                 ctx = canvas.getContext('2d');
@@ -82,6 +81,7 @@ export default async (client, interaction, ephemeral) => {
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
                 break;
             case "feed":
+                if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
                 // let foodArg = interaction.options.getInteger("food");
                 res = await feedShinx(master.id);
                 switch (res) {
@@ -134,6 +134,7 @@ export default async (client, interaction, ephemeral) => {
                 });
                 break;
             case "play":
+                if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
                 shinx = await getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
                 ctx = canvas.getContext('2d');
