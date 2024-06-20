@@ -5,10 +5,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.ModerateMembers;
+
 export default async (client, interaction, ephemeral) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ModerateMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -77,7 +79,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "mute",
     description: "Times the target out.",
-    default_member_permissions: Discord.PermissionFlagsBits.ModerateMembers,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,

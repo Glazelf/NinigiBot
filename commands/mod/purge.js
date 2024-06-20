@@ -4,11 +4,13 @@ import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.ManageMessages;
+
 export default async (client, interaction, ephemeral) => {
     try {
 
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -76,7 +78,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "purge",
     description: "Bulk delete messages.",
-    default_member_permissions: Discord.PermissionFlagsBits.ManageMessages,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "amount",
         type: Discord.ApplicationCommandOptionType.Integer,

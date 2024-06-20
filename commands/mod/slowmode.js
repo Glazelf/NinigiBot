@@ -4,6 +4,8 @@ import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.ManageChannels;
+
 export default async (client, interaction, ephemeral) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
@@ -15,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
             Discord.ChannelType.GuildStageVoice,
             Discord.ChannelType.GuildVoice
         ];
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ client: client, interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
         let time = interaction.options.getInteger("time");
@@ -30,7 +32,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "slowmode",
     description: "Set slowmode in the current channel.",
-    default_member_permissions: Discord.PermissionFlagsBits.ManageChannels,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "time",
         type: Discord.ApplicationCommandOptionType.Integer,

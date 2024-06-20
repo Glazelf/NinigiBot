@@ -5,10 +5,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import textChannelTypes from "../../objects/discord/textChannelTypes.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.ManageGuild;
+
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageGuild) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -124,7 +126,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "serversettings",
     description: "Change server settings.",
-    default_member_permissions: Discord.PermissionFlagsBits.ManageGuild,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "starboard",
         type: Discord.ApplicationCommandOptionType.Subcommand,

@@ -4,13 +4,15 @@ import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.ManageRoles;
+
 export default async (client, interaction) => {
     try {
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -51,7 +53,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "roleadd",
     description: "Toggle a role's eligibility to be selfassigned.",
-    default_member_permissions: Discord.PermissionFlagsBits.ManageRoles,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "role",
         type: Discord.ApplicationCommandOptionType.Role,

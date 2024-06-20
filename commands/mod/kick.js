@@ -5,10 +5,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.KickMembers;
+
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.KickMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -56,7 +58,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "kick",
     description: "Kick a target user from the server.",
-    default_member_permissions: Discord.PermissionFlagsBits.KickMembers,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,

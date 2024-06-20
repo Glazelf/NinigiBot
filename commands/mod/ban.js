@@ -5,10 +5,12 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
+const requiredPermission = Discord.PermissionFlagsBits.BanMembers;
+
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.BanMembers) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -95,7 +97,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "ban",
     description: "Bans target user.",
-    default_member_permissions: Discord.PermissionFlagsBits.BanMembers,
+    default_member_permissions: requiredPermission,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,
