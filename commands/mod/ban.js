@@ -95,6 +95,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "ban",
     description: "Bans target user.",
+    default_member_permissions: Discord.PermissionFlagsBits.BanMembers,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,

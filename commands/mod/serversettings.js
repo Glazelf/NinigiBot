@@ -8,7 +8,7 @@ import isAdmin from "../../util/isAdmin.js";
 export default async (client, interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageChannels) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageGuild) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -124,6 +124,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "serversettings",
     description: "Change server settings.",
+    default_member_permissions: Discord.PermissionFlagsBits.ManageGuild,
     options: [{
         name: "starboard",
         type: Discord.ApplicationCommandOptionType.Subcommand,

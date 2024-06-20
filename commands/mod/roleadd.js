@@ -51,6 +51,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "roleadd",
     description: "Toggle a role's eligibility to be selfassigned.",
+    default_member_permissions: Discord.PermissionFlagsBits.ManageRoles,
     options: [{
         name: "role",
         type: Discord.ApplicationCommandOptionType.Role,

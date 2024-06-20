@@ -76,6 +76,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "purge",
     description: "Bulk delete messages.",
+    default_member_permissions: Discord.PermissionFlagsBits.ManageMessages,
     options: [{
         name: "amount",
         type: Discord.ApplicationCommandOptionType.Integer,
