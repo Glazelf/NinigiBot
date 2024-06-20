@@ -56,6 +56,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "kick",
     description: "Kick a target user from the server.",
+    default_member_permissions: Discord.PermissionFlagsBits.KickMembers,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,

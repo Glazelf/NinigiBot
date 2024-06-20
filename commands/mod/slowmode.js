@@ -30,6 +30,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "slowmode",
     description: "Set slowmode in the current channel.",
+    default_member_permissions: Discord.PermissionFlagsBits.ManageChannels,
     options: [{
         name: "time",
         type: Discord.ApplicationCommandOptionType.Integer,

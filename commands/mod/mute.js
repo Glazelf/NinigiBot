@@ -77,6 +77,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "mute",
     description: "Times the target out.",
+    default_member_permissions: Discord.PermissionFlagsBits.ModerateMembers,
     options: [{
         name: "user",
         type: Discord.ApplicationCommandOptionType.User,
