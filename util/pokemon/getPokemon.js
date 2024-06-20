@@ -4,7 +4,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import imageExists from "../imageExists.js";
-import isAdmin from "../isAdmin.js";
+import areEmotesAllowed from "../areEmotesAllowed.js";
 import convertMeterFeet from "../convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
@@ -34,9 +34,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         };
         // Common settings
         if (!pokemon) return;
-        let adminBot = isAdmin(client, interaction.guild.members.me);
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
         let recentGame = "SV";
         let description = "";
         // Construct footer

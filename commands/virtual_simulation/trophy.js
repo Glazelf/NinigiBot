@@ -3,6 +3,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
+import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import { getFullBuyableShopTrophies, buyShopTrophy, getShopTrophyWithName, getEventTrophyWithName } from "../../database/dbServices/trophy.api.js";
@@ -18,8 +19,7 @@ export default async (client, interaction, ephemeral) => {
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
         let master = interaction.user;
         let trophies;
         switch (interaction.options.getSubcommand()) {

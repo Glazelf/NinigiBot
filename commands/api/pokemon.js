@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../../util/isAdmin.js";
+import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -22,11 +22,9 @@ let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.n
 export default async (client, interaction, ephemeral) => {
     try {
         // Command settings
-        let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
         // Bools
         let learnsetBool = false;
         let learnsetArg = interaction.options.getBoolean("learnset");

@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../../util/isAdmin.js";
+import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import randomNumber from "../../util/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
@@ -19,11 +19,9 @@ let mhStoriesString = "Monster Hunter Stories";
 
 export default async (client, interaction, ephemeral) => {
     try {
-        let adminBot = isAdmin(client, interaction.guild.members.me);
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.members.me.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis) && !adminBot) emotesAllowed = false;
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
