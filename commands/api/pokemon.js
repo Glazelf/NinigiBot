@@ -204,13 +204,13 @@ export default async (client, interaction, ephemeral) => {
 
                 let boosted = Dex.stats.names[nature.plus];
                 let lowered = Dex.stats.names[nature.minus];
-                let arrowUp = "<:arrow_up_red:909901820732784640>";
-                let arrowDown = "<:arrow_down_blue:909903420054437929>";
+                let arrowUpEmote = "<:arrow_up_red:909901820732784640>";
+                let arrowDownEmote = "<:arrow_down_blue:909903420054437929>";
                 let resultString = "Neutral nature, no stat changes.";
                 if (boosted && lowered) {
                     if (emotesAllowed) {
-                        boosted = `${arrowUp}${boosted}`;
-                        lowered = `${arrowDown}${lowered}`;
+                        boosted = `${arrowUpEmote}${boosted}`;
+                        lowered = `${arrowDownEmote}${lowered}`;
                     } else {
                         boosted = `Boosted: ${boosted}`;
                         lowered = `Lowered: ${lowered}`;
