@@ -23,22 +23,26 @@ export default async (client, message, newMessage) => {
         let adminBool = isAdmin(client, botMember);
 
         if ((log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) || adminBool) {
-            let messageImage = null;
+            // Assets
+            let messageImage = null; // Very inconsistent, almost never works
+            let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
-                messageImage = message.attachments.first().url;
-                message.attachments.forEach(attachment => messageAttachmentsString += `${attachment.proxyURL}\n`);
+                messageImage = message.attachments.first().proxyURL;
+                messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
+                message.attachments.forEach(attachment => {
+                    if (messageAttachmentsString.length < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`);
+                };
             };
-
+            // Content checks
             let messageContent = message.content;
             let newMessageContent = newMessage.content
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
             if (newMessageContent.length > 1024) newMessageContent = `${newMessageContent.substring(0, 1021)}...`;
-
+            // Reply info
             let isReply = false;
             let replyMessage;
             if (message.reference) isReply = true;
-
             if (isReply) {
                 try {
                     replyMessage = await message.channel.messages.fetch(message.reference.messageId);
@@ -65,7 +69,7 @@ export default async (client, message, newMessage) => {
                 .setTimestamp(message.createdTimestamp);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
-            if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: "Attachments:", value: messageAttachmentsString }]);
+            if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
             return log.send({ embeds: [updateEmbed], components: [updateButtons] });
         } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
