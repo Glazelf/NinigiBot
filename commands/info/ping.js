@@ -1,9 +1,9 @@
+import { SlashCommandBuilder } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
 export default async (client, interaction) => {
     try {
-        console.log(interaction.inGuild());
         let commandPing = Math.abs(Date.now() - interaction.createdTimestamp);
         let websocketPing = Math.abs(client.ws.ping);
         let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;
@@ -15,7 +15,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "ping",
-    description: `Pings bot.`
-};
+export const config = new SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("Pings bot.");
