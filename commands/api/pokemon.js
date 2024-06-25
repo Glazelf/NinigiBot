@@ -229,7 +229,7 @@ export default async (client, interaction, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        let threadButton = new ButtonBuilder()
+                        const threadButton = new ButtonBuilder()
                             .setLabel(thread.split(">")[1].split("<")[0])
                             .setStyle(ButtonStyle.Link)
                             .setURL(thread.split("\"")[1]);
@@ -351,11 +351,11 @@ export default async (client, interaction, ephemeral) => {
                 let response = null;
                 let genericUsageResponse = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
-                let usageButtonSimple = new ButtonBuilder()
+                const usageButtonSimple = new ButtonBuilder()
                     .setLabel("Showdown Usage")
                     .setStyle(ButtonStyle.Link)
                     .setURL("https://www.smogon.com/stats/");
-                let usageButtonDetailed = new ButtonBuilder()
+                const usageButtonDetailed = new ButtonBuilder()
                     .setLabel("Showdown Usage (Detailed)")
                     .setStyle(ButtonStyle.Link)
                     .setURL(searchURL);
