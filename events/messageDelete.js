@@ -83,7 +83,7 @@ export default async (client, message) => {
                 .setImage(messageImage)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
             if (messageContent.length > 0) deleteEmbed.addFields([{ name: `Content:`, value: messageContent, inline: false }]);
-            if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: "Attachments:", value: messageAttachmentsString }]);
+            if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
