@@ -229,7 +229,10 @@ export default async (client, interaction, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons.addComponents(new ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: ButtonStyle.Link, url: thread.split("\"")[1] }));
+                        pokemonButtons.addComponents(new ButtonBuilder()
+                            .setLabel(thread.split(">")[1].split("<")[0])
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(thread.split("\"")[1]));
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -348,8 +351,14 @@ export default async (client, interaction, ephemeral) => {
                 let genericUsageResponse = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
                 let usageButtons = new ActionRowBuilder()
-                    .addComponents(new ButtonBuilder({ label: 'Showdown Usage', style: ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
-                    .addComponents(new ButtonBuilder({ label: 'Showdown Usage (Detailed)', style: ButtonStyle.Link, url: searchURL }));
+                    .addComponents(new ButtonBuilder()
+                        .setLabel("Showdown Usage")
+                        .setStyle(ButtonStyle.Link)
+                        .setURL("https://www.smogon.com/stats/"))
+                    .addComponents(new ButtonBuilder()
+                        .setLabel("Showdown Usage (Detailed)")
+                        .setStyle(ButtonStyle.Link)
+                        .setURL(searchURL));
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
@@ -438,7 +447,10 @@ export default async (client, interaction, ephemeral) => {
                 break;
         };
         // Bulbapedia button
-        if (linkBulbapedia) pokemonButtons.addComponents(new ButtonBuilder({ label: 'More info', style: ButtonStyle.Link, url: linkBulbapedia }));
+        if (linkBulbapedia) pokemonButtons.addComponents(new ButtonBuilder()
+            .setLabel("More info")
+            .setStyle(ButtonStyle.Link)
+            .setURL(linkBulbapedia));
         return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
     } catch (e) {

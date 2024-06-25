@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import logger from '../util/logger.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getRandomGif from "../util/getRandomGif.js";
@@ -44,7 +44,7 @@ export default async (client) => {
             // Random gif
             const randomGif = await getRandomGif(gifTags);
             // Create embed
-            const gifEmbed = new Discord.EmbedBuilder()
+            const gifEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today is ${cutiesUsernames.join(' and ')}'s birthday, everyone!`)
                 .setImage(randomGif);
