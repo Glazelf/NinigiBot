@@ -60,10 +60,14 @@ export default async (client, message) => {
             };
             // Assets
             let messageImage = null; // Very inconsistent, almost never works
+            let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
                 messageImage = message.attachments.first().proxyURL;
-                message.attachments.forEach(attachment => messageAttachmentsString += `${attachment.proxyURL}\n`)
+                messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
+                message.attachments.forEach(attachment => {
+                    if (messageAttachmentsString.length < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`);
+                };
             };
             let avatar;
             if (message.member) {
