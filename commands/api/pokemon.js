@@ -229,10 +229,11 @@ export default async (client, interaction, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons.addComponents(new ButtonBuilder()
+                        let threadButton = new ButtonBuilder()
                             .setLabel(thread.split(">")[1].split("<")[0])
                             .setStyle(ButtonStyle.Link)
-                            .setURL(thread.split("\"")[1]));
+                            .setURL(thread.split("\"")[1]);
+                        pokemonButtons.addComponents(threadButton);
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -350,15 +351,16 @@ export default async (client, interaction, ephemeral) => {
                 let response = null;
                 let genericUsageResponse = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
+                let usageButtonSimple = new ButtonBuilder()
+                    .setLabel("Showdown Usage")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL("https://www.smogon.com/stats/");
+                let usageButtonDetailed = new ButtonBuilder()
+                    .setLabel("Showdown Usage (Detailed)")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL(searchURL);
                 let usageButtons = new ActionRowBuilder()
-                    .addComponents(new ButtonBuilder()
-                        .setLabel("Showdown Usage")
-                        .setStyle(ButtonStyle.Link)
-                        .setURL("https://www.smogon.com/stats/"))
-                    .addComponents(new ButtonBuilder()
-                        .setLabel("Showdown Usage (Detailed)")
-                        .setStyle(ButtonStyle.Link)
-                        .setURL(searchURL));
+                    .addComponents([usageButtonSimple, usageButtonDetailed]);
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
@@ -447,10 +449,13 @@ export default async (client, interaction, ephemeral) => {
                 break;
         };
         // Bulbapedia button
-        if (linkBulbapedia) pokemonButtons.addComponents(new ButtonBuilder()
-            .setLabel("More info")
-            .setStyle(ButtonStyle.Link)
-            .setURL(linkBulbapedia));
+        if (linkBulbapedia) {
+            const bulbapediaButton = new ButtonBuilder()
+                .setLabel("More info")
+                .setStyle(ButtonStyle.Link)
+                .setURL(linkBulbapedia);
+            pokemonButtons.addComponents(bulbapediaButton);
+        };
         return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
     } catch (e) {

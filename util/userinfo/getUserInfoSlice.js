@@ -25,19 +25,26 @@ export default async (client, interaction, page, user) => {
             .setColor(embedColor)
             .setAuthor({ name: user.username, iconURL: avatar })
             .setThumbnail(serverAvatar);
+        const profileButton = new ButtonBuilder()
+            .setLabel("Profile")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`discord://-/users/${user.id}`);
         let profileButtons = new ActionRowBuilder()
-            .addComponents(new ButtonBuilder()
-                .setLabel("Profile")
-                .setStyle(ButtonStyle.Link)
-                .setURL(`discord://-/users/${user.id}`));
-        if (page > 0) profileButtons.addComponents(new ButtonBuilder()
-            .setCustomId(`usf${page - 1}:${user.id}`)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬅️'));
-        if (page < number_of_pages - 1 && member && !user.bot) profileButtons.addComponents(new ButtonBuilder()
-            .setCustomId(`usf${page + 1}:${user.id}`)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('➡️'));
+            .addComponents(profileButton);
+        if (page > 0) {
+            const previousPageButton = new ButtonBuilder()
+                .setCustomId(`usf${page - 1}:${user.id}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('⬅️')
+            profileButtons.addComponents(previousPageButton);
+        };
+        if (page < number_of_pages - 1 && member && !user.bot) {
+            const nextPageButton = new ButtonBuilder()
+                .setCustomId(`usf${page + 1}:${user.id}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('➡️')
+            profileButtons.addComponents(nextPageButton);
+        };
 
         let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
         switch (page) {
