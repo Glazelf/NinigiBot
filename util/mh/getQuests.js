@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -11,10 +11,10 @@ export default async ({ client, interaction, gameName, page }) => {
         if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
         // Sort by difficulty
         questsTotal = questsTotal.sort(compare);
-        let mhEmbed = new Discord.EmbedBuilder()
+        let mhEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${gameName} Quests`);
-        let questsButtons = new Discord.ActionRowBuilder();
+        let questsButtons = new ActionRowBuilder();
         let questsEmbedFields = [];
         let pageLength = 25;
         let startIndex = pageLength * page - pageLength + 1; // 1, 26, 53, etc.
@@ -30,13 +30,26 @@ export default async ({ client, interaction, gameName, page }) => {
         let mhQuestsButtonAppend = `${gameName}|${page}|${totalPages}`;
         //// Checks are deprecated, felt more intuitive without them for this command.
         // if (page > 2)
-        questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|first|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '◀️' }));
+        const questsFirstButton = new ButtonBuilder()
+            .setCustomId(`mhquests|first|${mhQuestsButtonAppend}`)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('◀️')
         // if (page > 1)
-        questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|left|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
+        const questsLeftButton = new ButtonBuilder()
+            .setCustomId(`mhquests|left|${mhQuestsButtonAppend}`)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('⬅️')
         // if (questsTotal[endIndex + 1])
-        questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|right|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
+        const questsRightButton = new ButtonBuilder()
+            .setCustomId(`mhquests|right|${mhQuestsButtonAppend}`)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('➡️')
         // if (page < totalPages - 1)
-        questsButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhquests|last|${mhQuestsButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '▶️' }));
+        const questsLastButton = new ButtonBuilder()
+            .setCustomId(`mhquests|last|${mhQuestsButtonAppend}`)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('▶️')
+        questsButtons.addComponents([questsFirstButton, questsLeftButton, questsRightButton, questsLastButton]);
 
         mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
         let messageObject = { embeds: mhEmbed, components: [questsButtons] };

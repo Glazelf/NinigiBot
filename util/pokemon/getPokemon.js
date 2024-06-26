@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import logger from "../logger.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { Dex } from '@pkmn/dex';
@@ -18,7 +18,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
     try {
         let messageObject;
         let embedColor = globalVars.embedColor;
-        const pkmEmbed = new Discord.EmbedBuilder()
+        const pkmEmbed = new EmbedBuilder()
             .setColor(embedColor);
         let generation = genData.dex.gen;
         let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard))
@@ -266,19 +266,19 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
 
-        let pkmButtons = new Discord.ActionRowBuilder();
-        let pkmButtons2 = new Discord.ActionRowBuilder();
-        if (previousPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmleft|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
+        let pkmButtons = new ActionRowBuilder();
+        let pkmButtons2 = new ActionRowBuilder();
+        if (previousPokemon) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmleft|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
 
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
-        if (nextPokemon) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
+        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
+        if (nextPokemon) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
         if (pokemon.prevo) {
             let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
             let evoMethod = getEvoMethod(pokemon);
             if (prevoDataEvo.gen <= generation) {
                 if (pokemon.gender == prevoDataEvo.gender) pokemonGender = "";
                 description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-                if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
+                if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
             };
         };
         let pokemonEvos = pokemon.evos || [];
@@ -299,20 +299,20 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonEvoData.gen <= generation) {
                 description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new Discord.ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(new ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
                 };
             };
         };
         let formButtonsComponentsCounter = 0;
         let formButtonsObject = {
-            0: new Discord.ActionRowBuilder(),
-            1: new Discord.ActionRowBuilder(),
-            2: new Discord.ActionRowBuilder(),
-            3: new Discord.ActionRowBuilder(),
-            4: new Discord.ActionRowBuilder()
+            0: new ActionRowBuilder(),
+            1: new ActionRowBuilder(),
+            2: new ActionRowBuilder(),
+            3: new ActionRowBuilder(),
+            4: new ActionRowBuilder()
         };
         let pokemonForms = [];
         if (pokemon.otherFormes && pokemon.otherFormes.length > 0) pokemonForms = [...pokemon.otherFormes]; // Needs to be a copy. Not sure why since no changes are being applied to pokemon.otherFormes. Changing this causes a bug where buttons are sometimes duplicated after clicking buttons.
@@ -323,7 +323,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                     let formData = Dex.species.get(pokemonForms[i]);
                     if (formData.gen > generation) continue;
                     if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
-                    formButtonsObject[formButtonsComponentsCounter].addComponents(new Discord.ButtonBuilder({ customId: `pkmForm${i}|${buttonAppend}`, style: Discord.ButtonStyle.Secondary, label: pokemonForms[i] }));
+                    formButtonsObject[formButtonsComponentsCounter].addComponents(new ButtonBuilder({ customId: `pkmForm${i}|${buttonAppend}`, style: ButtonStyle.Secondary, label: pokemonForms[i] }));
                 };
             };
         };

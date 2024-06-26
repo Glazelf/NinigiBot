@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { ActivityType } from "discord.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getTime from "../util/getTime.js";
 import stan from "../affairs/stan.js";
@@ -26,6 +26,6 @@ export default async (client, id) => {
 };
 
 function initPresence() {
-    let presence = { activities: [{ name: 'the lake theme', type: Discord.ActivityType.Listening }], status: 'idle' };
+    let presence = { activities: [{ name: 'the lake theme', type: ActivityType.Listening }], status: 'idle' };
     return presence;
 };
