@@ -1,4 +1,11 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandIntegerOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -16,7 +23,7 @@ export default async (client, interaction, ephemeral) => {
 
         let response;
         let buttonArray = [];
-        let giEmbed = new Discord.EmbedBuilder()
+        let giEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "character":
@@ -115,57 +122,50 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "genshin",
-    description: `Shows Genshin Impact data.`,
-    options: [{
-        name: "character",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a character.",
-        options: [{
-            name: "character",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify character by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "detailed",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Show detailed info.",
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: globalVars.ephemeralOptionDescription
-        }]
-    }, {
-        name: "weapon",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a weapon.",
-        options: [{
-            name: "weapon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify weapon by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: globalVars.ephemeralOptionDescription
-        }]
-    }, {
-        name: "artifact",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on an artifact.",
-        options: [{
-            name: "artifact",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify artifact by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: globalVars.ephemeralOptionDescription
-        }]
-    }]
-};
+// String options
+const characterOption = new SlashCommandStringOption()
+    .setName("character")
+    .setDescription("Specify character by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const weaponOption = new SlashCommandStringOption()
+    .setName("weapon")
+    .setDescription("Specify weapon by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const artifactOption = new SlashCommandStringOption()
+    .setName("artifact")
+    .setDescription("Specify artifact by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+// Boolean options
+const detailedOption = new SlashCommandBooleanOption()
+    .setName("detailed")
+    .setDescription("Whether to show detailed info.");
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const characterSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("character")
+    .setDescription("Get info on a character.")
+    .addStringOption(characterOption)
+    .addBooleanOption(detailedOption)
+    .addBooleanOption(ephemeralOption);
+const weaponSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("weapon")
+    .setDescription("Get info on a weapon.")
+    .addStringOption(weaponOption)
+    .addBooleanOption(ephemeralOption);
+const artifactSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("artifact")
+    .setDescription("Get info on an artifact.")
+    .addStringOption(artifactOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("genshin")
+    .setDescription("Shows Genshin Impact info.")
+    .addSubcommand(characterSubcommand)
+    .addSubcommand(weaponSubcommand)
+    .addSubcommand(artifactSubcommand);
