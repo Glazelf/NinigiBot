@@ -2,7 +2,6 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
