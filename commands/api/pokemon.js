@@ -359,8 +359,7 @@ export default async (client, interaction, ephemeral) => {
                     .setLabel("Showdown Usage (Detailed)")
                     .setStyle(ButtonStyle.Link)
                     .setURL(searchURL);
-                let usageButtons = new ActionRowBuilder()
-                    .addComponents([usageButtonSimple, usageButtonDetailed]);
+                let usageButtons = new ActionRowBuilder().addComponents([usageButtonSimple, usageButtonDetailed]);
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);

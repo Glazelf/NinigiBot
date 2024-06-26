@@ -61,8 +61,7 @@ export default async (client, messageReaction) => {
             .setLabel("Context")
             .setStyle(ButtonStyle.Link)
             .setURL(`discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}`);
-        let starButtons = new ActionRowBuilder()
-            .addComponents(contextButton);
+        let starButtons = new ActionRowBuilder().addComponents(contextButton);
         // Format starred message embed
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)

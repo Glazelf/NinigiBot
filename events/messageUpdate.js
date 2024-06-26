@@ -60,8 +60,7 @@ export default async (client, message, newMessage) => {
                 .setLabel("Context")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}`);
-            let updateButtons = new ActionRowBuilder()
-                .addComponents(contextButton);
+            let updateButtons = new ActionRowBuilder().addComponents(contextButton);
 
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)

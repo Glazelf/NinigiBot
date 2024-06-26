@@ -22,8 +22,7 @@ export default async (client, message) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${message.author.id}`);
-            let profileButtons = new ActionRowBuilder()
-                .addComponents(profileButton);
+            let profileButtons = new ActionRowBuilder().addComponents(profileButton);
 
             const dmEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
