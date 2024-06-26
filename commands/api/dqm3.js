@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -21,7 +27,7 @@ export default async (client, interaction, ephemeral) => {
         let detailedArg = interaction.options.getBoolean("detailed");
         if (detailedArg === true) detailed = true;
 
-        let dqm3Embed = new Discord.EmbedBuilder()
+        let dqm3Embed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "monster":
@@ -224,111 +230,87 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "dqm3",
-    description: `Shows Dragon Quest Monsters 3: The Dark Prince data.`,
-    options: [{
-        name: "monster",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a monster.",
-        options: [{
-            name: "monster",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify monster by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "detailed",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Show detailed info."
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "talent",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a talent",
-        options: [{
-            name: "talent",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify talent by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "skill",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a skill.",
-        options: [{
-            name: "skill",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify skill by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "trait",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a trait.",
-        options: [{
-            name: "trait",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify trait by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "item",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on an item.",
-        options: [{
-            name: "item",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify item by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "synthesis",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Calculate synthesis.",
-        options: [{
-            name: "parent1",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify parent by name.",
-            autocomplete: true
-        }, {
-            name: "parent2",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify parent by name.",
-            autocomplete: true
-        }, {
-            name: "target",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify target by name.",
-            autocomplete: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
-};
+const monsterOptionDescription = "Specify monster by name.";
+// String options
+const monsterOption = new SlashCommandStringOption()
+    .setName("monster")
+    .setDescription(monsterOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const talentOption = new SlashCommandStringOption()
+    .setName("talent")
+    .setDescription("Specify talent by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const skillOption = new SlashCommandStringOption()
+    .setName("skill")
+    .setDescription("Specify skill by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const traitOption = new SlashCommandStringOption()
+    .setName("trait")
+    .setDescription("Specify trait by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const itemOption = new SlashCommandStringOption()
+    .setName("item")
+    .setDescription("Specify item by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const parent1Option = new SlashCommandStringOption()
+    .setName("parent1")
+    .setDescription(monsterOptionDescription)
+    .setAutocomplete(true);
+const parent2Option = parent1Option.setName("parent2");
+const targetOption = parent1Option.setName("target");
+// Boolean options
+const detailedOption = new SlashCommandBooleanOption()
+    .setName("detailed")
+    .setDescription("Show detailed info.");
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const monsterSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("monster")
+    .setDescription("Get info on a monster.")
+    .addStringOption(monsterOption)
+    .addBooleanOption(detailedOption)
+    .addBooleanOption(ephemeralOption);
+const talentSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("talent")
+    .setDescription("Get info on a talent.")
+    .addStringOption(talentOption)
+    .addBooleanOption(ephemeralOption);
+const skillSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("skill")
+    .setDescription("Get info on a skill.")
+    .addStringOption(skillOption)
+    .addBooleanOption(ephemeralOption);
+const traitSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("trait")
+    .setDescription("Get info on a trait.")
+    .addStringOption(traitOption)
+    .addBooleanOption(ephemeralOption);
+const itemSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("item")
+    .setDescription("Get info on an item.")
+    .addStringOption(itemOption)
+    .addBooleanOption(ephemeralOption);
+const synthesisSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("synthesis")
+    .setDescription("Calculate synthesis.")
+    .addStringOption(parent1Option)
+    .addStringOption(parent2Option)
+    .addStringOption(targetOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("dqm3")
+    .setDescription("Shows Dragon Quest Monsters 3: The Dark Prince data.")
+    .addSubcommand(monsterSubcommand)
+    .addSubcommand(talentSubcommand)
+    .addSubcommand(skillSubcommand)
+    .addSubcommand(traitSubcommand)
+    .addSubcommand(itemSubcommand)
+    .addSubcommand(synthesisSubcommand);
