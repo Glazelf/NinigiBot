@@ -1,5 +1,15 @@
 // Global
-import { InteractionType, ComponentType, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import {
+    InteractionType,
+    ComponentType,
+    ActionRowBuilder,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import sendMessage from "../util/sendMessage.js";
@@ -28,7 +38,11 @@ import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { typ
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
 // Database
 import { getEphemeralDefault } from "../database/dbServices/user.api.js";
-import { getShopTrophies, getEventTrophies, getBuyableShopTrophies } from "../database/dbServices/trophy.api.js";
+import {
+    getShopTrophies,
+    getEventTrophies,
+    getBuyableShopTrophies
+} from "../database/dbServices/trophy.api.js";
 // Other util
 import isAdmin from "../util/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";

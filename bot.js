@@ -1,4 +1,10 @@
-import { Client, GatewayIntentBits, Partials, Collection, ApplicationCommandType } from "discord.js";
+import {
+    Client,
+    GatewayIntentBits,
+    Partials,
+    Collection,
+    ApplicationCommandType
+} from "discord.js";
 import fs from 'fs';
 import path from 'path';
 import config from './config.json' with { type: "json" };

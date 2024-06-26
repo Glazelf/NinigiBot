@@ -3,7 +3,10 @@ import logger from '../util/logger.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getRandomGif from "../util/getRandomGif.js";
 import cron from "cron";
-import { incrementStanAmount, checkEvents } from "../database/dbServices/history.api.js";
+import {
+    incrementStanAmount,
+    checkEvents
+} from "../database/dbServices/history.api.js";
 
 export default async (client) => {
     try {

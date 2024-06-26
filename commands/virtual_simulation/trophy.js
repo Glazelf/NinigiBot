@@ -6,7 +6,12 @@ import Canvas from "canvas";
 import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
-import { getFullBuyableShopTrophies, buyShopTrophy, getShopTrophyWithName, getEventTrophyWithName } from "../../database/dbServices/trophy.api.js";
+import {
+    getFullBuyableShopTrophies,
+    buyShopTrophy,
+    getShopTrophyWithName,
+    getEventTrophyWithName
+} from "../../database/dbServices/trophy.api.js";
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 
 export default async (client, interaction, ephemeral) => {

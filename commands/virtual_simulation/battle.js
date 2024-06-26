@@ -7,7 +7,10 @@ import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
-import { getShinx, saveBattle } from "../../database/dbServices/shinx.api.js";
+import {
+    getShinx,
+    saveBattle
+} from "../../database/dbServices/shinx.api.js";
 import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];

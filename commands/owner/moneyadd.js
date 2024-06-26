@@ -2,7 +2,10 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import { getMoney, addMoney } from "../../database/dbServices/user.api.js";
+import {
+    getMoney,
+    addMoney
+} from "../../database/dbServices/user.api.js";
 import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction) => {

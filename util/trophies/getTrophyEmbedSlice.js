@@ -1,5 +1,10 @@
 
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getTrophieslice } from "../../database/dbServices/trophy.api.js";
 

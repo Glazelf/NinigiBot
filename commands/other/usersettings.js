@@ -1,7 +1,13 @@
 import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import { setBirthday, getSwitchCode, setSwitchCode, getEphemeralDefault, setEphemeralDefault } from "../../database/dbServices/user.api.js";
+import {
+    setBirthday,
+    getSwitchCode,
+    setSwitchCode,
+    getEphemeralDefault,
+    setEphemeralDefault
+} from "../../database/dbServices/user.api.js";
 
 export default async (client, interaction) => {
     try {

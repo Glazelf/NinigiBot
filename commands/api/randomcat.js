@@ -3,7 +3,10 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
-import { uniqueNamesGenerator, names } from 'unique-names-generator'; // Random name generator that can be seeded
+import {
+    uniqueNamesGenerator,
+    names
+} from 'unique-names-generator'; // Random name generator that can be seeded
 
 let catAAS = "https://cataas.com/cat";
 

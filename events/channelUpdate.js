@@ -1,4 +1,9 @@
-import { EmbedBuilder, PermissionFlagsBits, AuditLogEvent, ChannelType } from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent,
+    ChannelType
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 

@@ -1,5 +1,13 @@
-import { Op, fn, where, col } from "sequelize";
-import { userdata, serverdata } from "../dbConnection/dbConnection.js";
+import {
+    Op,
+    fn,
+    where,
+    col
+} from "sequelize";
+import {
+    userdata,
+    serverdata
+} from "../dbConnection/dbConnection.js";
 import userdataModel from "../../database/dbObjects/userdata.model.js";
 import serverdataModel from "../../database/dbObjects/serverdata.model.js";
 import hasPassedLevel from "../../util/shinx/hasPassedLevel.js";

@@ -3,7 +3,20 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
-import { getShinx, getRandomShinx, feedShinx, getShinxAutofeed, autoFeedShinx1, autoFeedShinx2, getRandomReaction, nameShinx, getShinxShininess, isTrainerMale, hasEventTrophy, switchShininessAndGet } from "../../database/dbServices/shinx.api.js";
+import {
+    getShinx,
+    getRandomShinx,
+    feedShinx,
+    getShinxAutofeed,
+    autoFeedShinx1,
+    autoFeedShinx2,
+    getRandomReaction,
+    nameShinx,
+    getShinxShininess,
+    isTrainerMale,
+    hasEventTrophy,
+    switchShininessAndGet
+} from "../../database/dbServices/shinx.api.js";
 import applyText from "../../util/shinx/applyCanvasText.js";
 import getBelly from "../../util/shinx/getBelly.js";
 import getRandomEatingReaction from "../../util/shinx/getRandomEatingReaction.js";

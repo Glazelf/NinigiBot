@@ -1,4 +1,9 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

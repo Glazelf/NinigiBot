@@ -1,4 +1,9 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import logger from "../logger.js";
 import { getUser } from "../../database/dbServices/user.api.js";

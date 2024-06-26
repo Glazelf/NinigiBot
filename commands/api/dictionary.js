@@ -1,4 +1,9 @@
-import { SlashCommandBuilder, EmbedBuilder, SlashCommandStringOption, SlashCommandBooleanOption } from "discord.js";
+import {
+    SlashCommandBuilder,
+    EmbedBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

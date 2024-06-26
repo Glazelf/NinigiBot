@@ -1,4 +1,9 @@
-import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import {
+    ActionRowBuilder,
+    AttachmentBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
 import { Dex } from '@pkmn/dex';

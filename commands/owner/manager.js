@@ -3,7 +3,11 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import checker from "../../util/string/checkFormat.js";
-import { checkTrophyExistance, createShopTrophy, deleteShopTrophy } from "../../database/dbServices/trophy.api.js";
+import {
+    checkTrophyExistance,
+    createShopTrophy,
+    deleteShopTrophy
+} from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/isOwner.js";
 
 export default async (client, interaction, ephemeral) => {
