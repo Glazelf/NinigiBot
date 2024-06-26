@@ -2,7 +2,6 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandIntegerOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder
 } from "discord.js";
@@ -22,7 +21,6 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
         let response;
-        let buttonArray = [];
         let giEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
@@ -115,7 +113,7 @@ export default async (client, interaction, ephemeral) => {
                 if (artifact["5-piece_bonus"]) giEmbed.addFields([{ name: "5-Piece Bonus:", value: artifact["5-piece_bonus"], inline: false }]);
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral, components: buttonArray });
+        return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger(e, client, interaction);
