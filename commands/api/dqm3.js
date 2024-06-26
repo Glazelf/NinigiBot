@@ -266,7 +266,7 @@ const targetOption = parent1Option.setName("target");
 // Boolean options
 const detailedOption = new SlashCommandBooleanOption()
     .setName("detailed")
-    .setDescription("Show detailed info.");
+    .setDescription("Whether to show detailed info.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
