@@ -28,7 +28,6 @@ export default async (client, interaction) => {
                 };
                 setBirthday(interaction.user.id, day + month);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
-                break;
             case "switch":
                 let switchCodeGet = await getSwitchCode(interaction.user.id);
                 let switchFC = interaction.options.getString('switch-fc');
@@ -44,13 +43,11 @@ export default async (client, interaction) => {
                 switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
                 setSwitchCode(interaction.user.id, switchFC);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
-                break;
             case "ephemeraldefault":
                 // let ephemeralDefaultGet = await getEphemeralDefault(interaction.user.id);
                 let ephemeralDefault = interaction.options.getBoolean('ephemeral');
                 setEphemeralDefault(interaction.user.id, ephemeralDefault);
                 return sendMessage({ client: client, interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
-                break;
         };
 
     } catch (e) {

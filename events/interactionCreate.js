@@ -642,7 +642,6 @@ export default async (client, interaction) => {
                 return interaction.respond(choices).catch(e => {
                     // console.log(e);
                 });
-                break;
             case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
@@ -669,7 +668,6 @@ export default async (client, interaction) => {
                             ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
-                        break;
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
@@ -689,7 +687,6 @@ export default async (client, interaction) => {
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
-                        break;
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;

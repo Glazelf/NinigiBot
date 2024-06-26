@@ -18,7 +18,6 @@ export default async (client, interaction, ephemeral) => {
                 while (hexString.length < 6) hexString = "0" + hexString;
                 let returnString = Discord.codeBlock("js", `0x${hexString}`)
                 return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
-                break;
             case "todecimal":
                 try {
                     input = interaction.options.getString("input");
@@ -30,7 +29,6 @@ export default async (client, interaction, ephemeral) => {
                 } catch (e) {
                     return sendMessage({ client: client, interaction: interaction, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
                 };
-                break;
         };
 
     } catch (e) {

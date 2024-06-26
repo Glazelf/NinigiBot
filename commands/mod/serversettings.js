@@ -45,7 +45,6 @@ export default async (client, interaction) => {
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled starboard functionality.` });
                 await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
-                break;
             case "log":
                 let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
                 if (!Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalid })
@@ -53,7 +52,6 @@ export default async (client, interaction) => {
                 if (disableBool) return sendMessage({ client: client, interaction: interaction, content: `Disabled logging functionality in **${interaction.guild.name}**.` });
                 await serverApi.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
                 return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
-                break;
             case "automod":
                 let scamKeywords = [
                     "http.?:\/\/(dicsord-nitro|discrod-egifts|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)",// Discord gift links
@@ -105,7 +103,6 @@ export default async (client, interaction) => {
                     return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
                 }
                 return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
-                break;
             case "togglepersonalroles":
                 let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
                 // Database
@@ -116,7 +113,6 @@ export default async (client, interaction) => {
                     await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
                     return sendMessage({ client: client, interaction: interaction, content: `Personal Roles can now be managed by users in **${interaction.guild.name}**.` });
                 };
-                break;
         };
 
     } catch (e) {
