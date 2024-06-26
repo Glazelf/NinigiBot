@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits, AuditLogEvent } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -12,10 +12,10 @@ export default async (client, role) => {
         if (!log) return;
 
         let botMember = role.guild.members.me;
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await role.guild.fetchAuditLogs({
                 limit: 1,
-                type: Discord.AuditLogEvent.RoleDelete
+                type: AuditLogEvent.RoleDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog && deleteLog.createdTimestamp < (Date.now() - 5000)) deleteLog = null;
@@ -34,7 +34,7 @@ export default async (client, role) => {
             };
             let icon = role.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const deleteEmbed = new Discord.EmbedBuilder()
+            const deleteEmbed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setThumbnail(icon)
                 .setTitle(`Role Deleted ❌`)
@@ -44,7 +44,7 @@ export default async (client, role) => {
             if (roleColorText) deleteEmbed.addFields([{ name: 'Color:', value: role.hexColor, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Deleted By:', value: `${executor} (${executor.id})`, inline: true }])
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits, AuditLogEvent, ChannelType } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -13,10 +13,10 @@ export default async (client, oldChannel, newChannel) => {
 
         let botMember = newChannel.guild.members.me;
 
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newChannel.guild.fetchAuditLogs({
                 limit: 1,
-                type: Discord.AuditLogEvent.ChannelUpdate
+                type: AuditLogEvent.ChannelUpdate
             });
             let updateLog = fetchedLogs.entries.first();
             if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
@@ -35,7 +35,7 @@ export default async (client, oldChannel, newChannel) => {
             if (executor) footer = executor.username;
             let icon = newChannel.guild.iconURL(globalVars.displayAvatarSettings);
 
-            const updateEmbed = new Discord.EmbedBuilder()
+            const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`${newChannelType} Updated ⚒️`)
                 .setDescription(`${newChannel} (${newChannel.id})`)
@@ -58,7 +58,7 @@ export default async (client, oldChannel, newChannel) => {
                     { name: `Category:`, value: `Old: ${categoryOld}\nNew: ${categoryNew}`, inline: true }
                 ]);
             };
-            if ([Discord.ChannelType.GuildText, Discord.ChannelType.GuildNews, Discord.ChannelType.GuildStore].includes(newChannel.type)) {
+            if ([ChannelType.GuildText, ChannelType.GuildNews, ChannelType.GuildStore].includes(newChannel.type)) {
                 if (oldChannel.topic !== newChannel.topic) {
                     let topicOld = oldChannel.topic || 'None';
                     let topicNew = newChannel.topic || 'None';
@@ -82,7 +82,7 @@ export default async (client, oldChannel, newChannel) => {
                     ]);
                 };
             };
-            if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildStageVoice].includes(newChannel.type)) {
+            if ([ChannelType.GuildVoice, ChannelType.GuildStageVoice].includes(newChannel.type)) {
                 if (oldChannel.bitrate !== newChannel.bitrate) {
                     updateEmbed.addFields([
                         { name: `Bitrate:`, value: `Old: ${(oldChannel.bitrate / 1000)}kbps\nNew: ${(newChannel.bitrate / 1000)}kbps`, inline: true }
@@ -110,7 +110,7 @@ export default async (client, oldChannel, newChannel) => {
             if (!updateEmbed.data.fields) return;
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {
