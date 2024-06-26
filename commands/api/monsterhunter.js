@@ -2,7 +2,6 @@ import Discord from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import randomNumber from "../../util/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
@@ -21,7 +20,6 @@ export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
 
         let buttonArray = [];
         let mhEmbed = new Discord.EmbedBuilder()
