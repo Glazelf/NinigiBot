@@ -524,6 +524,8 @@ function isIdenticalForm(pokemonName) {
     return false;
 };
 
+const generationOptionName = "generation";
+const generationOptionDescription = "Generation to use.";
 // String options
 const pokemonOption = new SlashCommandStringOption()
     .setName("pokemon")
@@ -557,11 +559,15 @@ const formatOption = new SlashCommandStringOption()
     .setRequired(true);
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
-    .setName("generation")
-    .setDescription("Generation to use.")
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
     .setMinValue(1)
     .setMaxValue(globalVars.pokemonCurrentGeneration);
-const generationOptionAbilities = generationOption.setMinValue(3);
+const generationOptionAbilities = new SlashCommandIntegerOption()
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
+    .setMinValue(3)
+    .setMaxValue(globalVars.pokemonCurrentGeneration);
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
     .setDescription("Month (number) to get data from.")

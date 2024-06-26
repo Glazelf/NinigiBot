@@ -261,8 +261,14 @@ const parent1Option = new SlashCommandStringOption()
     .setName("parent1")
     .setDescription(monsterOptionDescription)
     .setAutocomplete(true);
-const parent2Option = parent1Option.setName("parent2");
-const targetOption = parent1Option.setName("target");
+const parent2Option = new SlashCommandStringOption()
+    .setName("parent2")
+    .setDescription(monsterOptionDescription)
+    .setAutocomplete(true);
+const targetOption = new SlashCommandStringOption()
+    .setName("target")
+    .setDescription(monsterOptionDescription)
+    .setAutocomplete(true);
 // Boolean options
 const detailedOption = new SlashCommandBooleanOption()
     .setName("detailed")
