@@ -2,6 +2,7 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandStringOption,
+    SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -90,7 +91,7 @@ const planetOption = new SlashCommandStringOption()
     .setAutocomplete(true)
     .setRequired(true);
 // Boolean options
-const ephemeralOption = new SlashCommandStringOption()
+const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Subcommands

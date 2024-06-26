@@ -1,4 +1,7 @@
-import { ContextMenuCommandBuilder } from "discord.js";
+import {
+    ContextMenuCommandBuilder,
+    ApplicationCommandType
+} from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import logger from "../../util/logger.js";
 import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
