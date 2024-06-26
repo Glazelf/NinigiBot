@@ -265,20 +265,43 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         if (nextPokemonID > maxPkmID) nextPokemonID = 1;
         previousPokemon = allPokemon.filter(pokemon => pokemon.num == previousPokemonID)[0];
         nextPokemon = allPokemon.filter(pokemon => pokemon.num == nextPokemonID)[0];
-
+        // Add species buttons
         let pkmButtons = new ActionRowBuilder();
         let pkmButtons2 = new ActionRowBuilder();
-        if (previousPokemon) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmleft|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⬅️', label: previousPokemon.name }));
-
-        if (pokemon.name !== pokemon.baseSpecies) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmbase|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⬇️', label: pokemon.baseSpecies }));
-        if (nextPokemon) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name }));
+        const previousPokemonButton = new ButtonBuilder()
+            .setCustomId(`pkmleft|${buttonAppend}`)
+            .setLabel(previousPokemon.name)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('⬅️');
+        pkmButtons.addComponents(previousPokemonButton);
+        if (pokemon.name !== pokemon.baseSpecies) {
+            const baseSpeciesButton = new ButtonBuilder()
+                .setCustomId(`pkmbase|${buttonAppend}`)
+                .setLabel(pokemon.baseSpecies)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('⬇️');
+            pkmButtons.addComponents(baseSpeciesButton);
+        };
+        const nextPokemonButton = new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name })
+            .setCustomId(`pkmright|${buttonAppend}`)
+            .setLabel(nextPokemon.name)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('➡️');
+        pkmButtons.addComponents(nextPokemonButton);
         if (pokemon.prevo) {
             let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
             let evoMethod = getEvoMethod(pokemon);
             if (prevoDataEvo.gen <= generation) {
                 if (pokemon.gender == prevoDataEvo.gender) pokemonGender = "";
                 description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-                if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmprevo|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏬', label: pokemon.prevo }));
+                if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) {
+                    const prevoButton = new ButtonBuilder()
+                        .setCustomId(`pkmprevo|${buttonAppend}`)
+                        .setLabel(pokemon.prevo)
+                        .setStyle(ButtonStyle.Primary)
+                        .setEmoji('⏬');
+                    pkmButtons.addComponents(prevoButton);
+                };
             };
         };
         let pokemonEvos = pokemon.evos || [];
@@ -298,11 +321,16 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
             };
             if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonEvoData.gen <= generation) {
                 description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
+                const evoButton = new ButtonBuilder()
+                    .setCustomId(`pkmevo${i + 1}|${buttonAppend}`)
+                    .setLabel(pokemon.evos[i])
+                    .setStyle(ButtonStyle.Primary)
+                    .setEmoji('⏫');
                 if (pkmButtons.components.length < 5) {
-                    pkmButtons.addComponents(new ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons.addComponents(evoButton);
                 } else {
                     // This exists solely because of Eevee
-                    pkmButtons2.addComponents(new ButtonBuilder({ customId: `pkmevo${i + 1}|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '⏫', label: pokemon.evos[i] }));
+                    pkmButtons2.addComponents(evoButton);
                 };
             };
         };
@@ -323,7 +351,11 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
                     let formData = Dex.species.get(pokemonForms[i]);
                     if (formData.gen > generation) continue;
                     if (formButtonsObject[formButtonsComponentsCounter].components.length > 4) formButtonsComponentsCounter++;
-                    formButtonsObject[formButtonsComponentsCounter].addComponents(new ButtonBuilder({ customId: `pkmForm${i}|${buttonAppend}`, style: ButtonStyle.Secondary, label: pokemonForms[i] }));
+                    const formButton = new ButtonBuilder()
+                        .setCustomId(`pkmForm${i}|${buttonAppend}`)
+                        .setLabel(pokemonForms[i])
+                        .setStyle(ButtonStyle.Secondary);
+                    formButtonsObject[formButtonsComponentsCounter].addComponents(formButton);
                 };
             };
         };

@@ -43,7 +43,14 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     };
     let pokemonFiles = new AttachmentBuilder(canvas.toBuffer());
 
-    pokemonButtons.addComponents(new ButtonBuilder({ customId: `pkmQuizGuess|${pokemon.name}`, label: "Guess", style: ButtonStyle.Primary }));
-    pokemonButtons.addComponents(new ButtonBuilder({ customId: `pkmQuizReveal`, label: "Reveal", style: ButtonStyle.Secondary }));
+    const quizGuessButton = new ButtonBuilder()
+        .setCustomId(`pkmQuizGuess|${pokemon.name}`)
+        .setLabel("Guess")
+        .setStyle(ButtonStyle.Primary);
+    const quizRevealButton = new ButtonBuilder()
+        .setCustomId(`pkmQuizReveal|${pokemon.name}`)
+        .setLabel("Reveal")
+        .setStyle(ButtonStyle.Secondary);
+    pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
     return { content: returnString, files: [pokemonFiles], components: [pokemonButtons] };
 };
