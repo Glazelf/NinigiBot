@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -30,7 +35,7 @@ export default async (client, interaction, ephemeral) => {
             dictionaries: [names],
             seed: catNameSeed
         });
-        const catEmbed = new Discord.EmbedBuilder()
+        const catEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
@@ -41,16 +46,17 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "randomcat",
-    description: "Get a random cat image.",
-    options: [{
-        name: "text",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Text to put over the image."
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: globalVars.ephemeralOptionDescription
-    }]
-};
+// String options
+const textOption = new SlashCommandStringOption()
+    .setName("text")
+    .setDescription("Text to put over the image.");
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("randomcat")
+    .setDescription("Get a random cat image.")
+    .addStringOption(textOption)
+    .addBooleanOption(ephemeralOption);
