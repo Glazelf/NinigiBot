@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ContextMenuCommandBuilder,
+    ApplicationCommandType
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -17,7 +21,7 @@ export default async (client, interaction) => {
             serverAvatar = avatar;
             avatar = null;
         };
-        const avatarEmbed = new Discord.EmbedBuilder()
+        const avatarEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setThumbnail(avatar)
             .setTitle(`${user.username}'s avatar(s):`)
@@ -29,7 +33,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "Avatar",
-    type: Discord.ApplicationCommandType.User
-};
+export const config = new ContextMenuCommandBuilder()
+    .setName("Avatar")
+    .setType(ApplicationCommandType.User);

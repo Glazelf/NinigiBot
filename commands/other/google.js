@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    ContextMenuCommandBuilder,
+    ApplicationCommandType,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
@@ -21,19 +27,22 @@ export default async (client, interaction, ephemeral) => {
         if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
 
         // Button
-        let googleButton = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ label: 'Google', style: Discord.ButtonStyle.Link, url: googleLink }));
+        const googleButton = new ButtonBuilder()
+            .setLabel("Google")
+            .setStyle(ButtonStyle.Link)
+            .setURL(googleLink);
+        let googleActionRow = new ActionRowBuilder()
+            .addComponents(googleButton);
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleButton, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleActionRow, ephemeral: ephemeral });
 
     } catch (e) {
         logger(e, client, interaction);
     };
 };
 
-export const config = {
-    name: "Google",
-    type: Discord.ApplicationCommandType.Message
-};
+export const config = new ContextMenuCommandBuilder()
+    .setName("Google")
+    .setType(ApplicationCommandType.Message);
