@@ -28,6 +28,7 @@ import imageExists from "../../util/imageExists.js";
 
 const gens = new Generations(Dex);
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const currentYear = new Date().getFullYear();
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -569,7 +570,7 @@ const yearOption = new SlashCommandIntegerOption()
     .setName("year")
     .setDescription("Year to get data from.")
     .setMinValue(2014)
-    .setMaxValue(new Date().getFullYear());
+    .setMaxValue(currentYear);
 const ratingOption = new SlashCommandIntegerOption()
     .setName("rating")
     .setDescription("Minimum rating to get data from.")
