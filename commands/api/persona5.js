@@ -140,7 +140,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "skill",
@@ -155,7 +155,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "trait",
@@ -170,7 +170,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "item",
@@ -185,7 +185,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }]
 };

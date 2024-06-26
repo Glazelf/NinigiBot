@@ -512,7 +512,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "weapon",
@@ -532,7 +532,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "subweapon",
@@ -552,7 +552,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "special",
@@ -572,7 +572,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "schedule",
@@ -592,7 +592,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "splatnet",
@@ -601,7 +601,7 @@ export const config = {
         options: [{
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "splatfests",
@@ -615,7 +615,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "replay",
@@ -629,7 +629,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "splashtag-random",
@@ -643,7 +643,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }]
 };

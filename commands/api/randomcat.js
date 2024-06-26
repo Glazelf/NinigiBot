@@ -51,6 +51,6 @@ export const config = {
     }, {
         name: "ephemeral",
         type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the reply will be private."
+        description: globalVars.ephemeralOptionDescription
     }]
 };

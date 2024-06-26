@@ -135,7 +135,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "weapon",
@@ -150,7 +150,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }, {
         name: "artifact",
@@ -165,7 +165,7 @@ export const config = {
         }, {
             name: "ephemeral",
             type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
+            description: globalVars.ephemeralOptionDescription
         }]
     }]
 };

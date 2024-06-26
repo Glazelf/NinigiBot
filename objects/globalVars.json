@@ -12,6 +12,7 @@
     "embedColor": "#219DCD",
     "lackPermsString": "You do not have the required permissions to do this.",
     "guildRequiredString": "This command can only be used inside a server.",
+    "ephemeralOptionDescription": "Whether the reply will be private.",
     "starboardLimit": 3,
     "battling": {
         "yes": false

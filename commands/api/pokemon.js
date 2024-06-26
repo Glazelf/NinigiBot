@@ -585,7 +585,7 @@ const shinyOption = new SlashCommandBooleanOption()
     .setDescription("Whether to show the Pokémon's shiny sprite.");
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
-    .setDescription("Whether the reply will be private.");
+    .setDescription(globalVars.ephemeralOptionDescription);
 // Subcommands
 const pokemonSubcommand = new SlashCommandSubcommandBuilder()
     .setName("pokemon")

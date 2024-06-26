@@ -107,7 +107,7 @@ const wordTypeOption = new SlashCommandStringOption()
     ]);
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
-    .setDescription("Whether the reply will be private.");
+    .setDescription(globalVars.ephemeralOptionDescription);
 
 export const config = new SlashCommandBuilder()
     .setName("dictionary")
