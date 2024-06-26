@@ -43,7 +43,8 @@ export default async (client, guildBan) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${target.id}`);
-            let banButtons = new ActionRowBuilder().addComponents(profileButton);
+            let banButtons = new ActionRowBuilder()
+                .addComponents(profileButton);
             const banEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Banned 💔`)

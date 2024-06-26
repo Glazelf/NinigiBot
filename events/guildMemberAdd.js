@@ -25,7 +25,8 @@ export default async (client, member) => {
                 .setLabel("Profile")
                 .setStyle(ButtonStyle.Link)
                 .setURL(`discord://-/users/${member.id}`);
-            let joinButtons = new ActionRowBuilder().addComponents(profileButton);
+            let joinButtons = new ActionRowBuilder()
+                .addComponents(profileButton);
             const joinEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)

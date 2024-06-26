@@ -128,7 +128,8 @@ export default async (client, interaction) => {
                                 .setStyle(TextInputStyle.Short)
                                 .setMaxLength(64)
                                 .setRequired(true);
-                            const pkmQuizActionRow = new ActionRowBuilder().addComponents(pkmQuizModalGuessInput);
+                            const pkmQuizActionRow = new ActionRowBuilder()
+                                .addComponents(pkmQuizModalGuessInput);
                             pkmQuizModal.addComponents(pkmQuizActionRow);
                             return interaction.showModal(pkmQuizModal);
                         } else if (interaction.customId.startsWith("pkm")) {
@@ -676,7 +677,8 @@ export default async (client, interaction) => {
                             .setLabel("Profile")
                             .setStyle(ButtonStyle.Link)
                             .setURL(`discord://-/users/${interaction.user.id}`);
-                        let profileButtons = new ActionRowBuilder().addComponents(profileButton);
+                        let profileButtons = new ActionRowBuilder()
+                            .addComponents(profileButton);
                         const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)

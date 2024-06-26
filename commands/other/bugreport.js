@@ -44,11 +44,16 @@ const contextInput = new Discord.TextInputBuilder()
     .setMinLength(1)
     .setMaxLength(100)
     .setRequired(true);
-const actionRow1 = new Discord.ActionRowBuilder().addComponents(titleInput);
-const actionRow2 = new Discord.ActionRowBuilder().addComponents(descriptionInput);
-const actionRow3 = new Discord.ActionRowBuilder().addComponents(reproduceInput);
-const actionRow4 = new Discord.ActionRowBuilder().addComponents(behaviourInput);
-const actionRow5 = new Discord.ActionRowBuilder().addComponents(contextInput);
+const actionRow1 = new Discord.ActionRowBuilder()
+    .addComponents(titleInput);
+const actionRow2 = new Discord.ActionRowBuilder()
+    .addComponents(descriptionInput);
+const actionRow3 = new Discord.ActionRowBuilder()
+    .addComponents(reproduceInput);
+const actionRow4 = new Discord.ActionRowBuilder()
+    .addComponents(behaviourInput);
+const actionRow5 = new Discord.ActionRowBuilder()
+    .addComponents(contextInput);
 
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 

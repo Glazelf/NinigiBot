@@ -22,8 +22,10 @@ const descriptionInput = new Discord.TextInputBuilder()
     .setMinLength(10)
     .setMaxLength(1024)
     .setRequired(true);
-const actionRow1 = new Discord.ActionRowBuilder().addComponents(titleInput);
-const actionRow2 = new Discord.ActionRowBuilder().addComponents(descriptionInput);
+const actionRow1 = new Discord.ActionRowBuilder()
+    .addComponents(titleInput);
+const actionRow2 = new Discord.ActionRowBuilder()
+    .addComponents(descriptionInput);
 
 modal.addComponents(actionRow1, actionRow2);
 

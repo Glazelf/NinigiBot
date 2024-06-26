@@ -34,7 +34,8 @@ export default async (client, interaction, page, user) => {
             .setLabel("Profile")
             .setStyle(ButtonStyle.Link)
             .setURL(`discord://-/users/${user.id}`);
-        let profileButtons = new ActionRowBuilder().addComponents(profileButton);
+        let profileButtons = new ActionRowBuilder()
+            .addComponents(profileButton);
         if (page > 0) {
             const previousPageButton = new ButtonBuilder()
                 .setCustomId(`usf${page - 1}:${user.id}`)
