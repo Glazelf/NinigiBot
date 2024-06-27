@@ -66,7 +66,7 @@ export default async (client, message) => {
                 messageImage = message.attachments.first().proxyURL;
                 messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
                 message.attachments.forEach(attachment => {
-                    if (messageAttachmentsString.length + attachment.proxyURL.length < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
+                    if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });
             };
             let avatar;
