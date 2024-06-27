@@ -5,10 +5,10 @@ export default async (client) => {
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
-                let commandServerID = null;
-                if (command.config.serverID) commandServerID = command.config.serverID;
+                let commandServerIDs = null;
+                if (command.guildIDs) commandServerIDs = command.guildIDs;
                 // if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
-                await client.application.commands.create(command.config, commandServerID);
+                await client.application.commands.create(command.config, commandServerIDs);
             } catch (e) {
                 console.log(e);
             };

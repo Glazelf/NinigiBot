@@ -1,33 +1,38 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandStringOption,
+    SlashCommandSubcommandBuilder,
+    SlashCommandUserOption,
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
-const requiredPermission = Discord.PermissionFlagsBits.BanMembers;
+const requiredPermission = PermissionFlagsBits.BanMembers;
 
 export default async (client, interaction) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let user = interaction.options.getUser("user");
-        let member = interaction.options.getMember("user");
+        let user = interaction.options.getUser("member");
+        let member = interaction.options.getMember("member");
         let userIDArg = interaction.options.getString("user-id");
         if (user && !userIDArg) userIDArg = user.id;
         let reason = interaction.options.getString("reason");
         if (!reason) reason = `Not specified.`;
-        let reasonCodeBlock = Discord.codeBlock("fix", reason);
+        let reasonCodeBlock = codeBlock("fix", reason);
         let deleteMessageDays = 0;
         let deleteMessageDaysArg = interaction.options.getInteger("delete-messages-days");
         if (deleteMessageDaysArg) deleteMessageDays = deleteMessageDaysArg;
-        if (deleteMessageDays < 0) deleteMessageDays = 0;
-        if (deleteMessageDays > 7) deleteMessageDays = 7;
         let deletedMessagesString = `\nDeleted messages by banned user from the last ${deleteMessageDays} day(s).`;
         let deleteMessageSeconds = deleteMessageDays * 86400; // Why is this in seconds now??
 
@@ -87,7 +92,7 @@ export default async (client, interaction) => {
                 };
             };
         } else {
-            return sendMessage({ client: client, interaction: interaction, content: `You need to provide a user to ban either through the \`user\` or the \`user-id\` argument.` });
+            return sendMessage({ client: client, interaction: interaction, content: `You need to provide a target to ban either through the \`member\` or the \`user-id\` argument.` });
         };
 
     } catch (e) {
@@ -95,27 +100,43 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "ban",
-    description: "Bans target user.",
-    default_member_permissions: requiredPermission,
-    options: [{
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "User to ban.",
-    }, {
-        name: "reason",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Reason for ban."
-    }, {
-        name: "delete-messages-days",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of days to delete messages for.",
-        minValue: 0,
-        maxValue: 7
-    }, {
-        name: "user-id",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Ban user by ID.",
-    }]
-};
+// String options
+const userIDOption = new SlashCommandStringOption()
+    .setName("user-id")
+    .setDescription("User ID to ban.")
+    .setRequired(true);
+const reasonOption = new SlashCommandStringOption()
+    .setName("reason")
+    .setDescription("Reason for ban.");
+// Integer options
+const deleteMessageDaysOption = new SlashCommandIntegerOption()
+    .setName("delete-message-days")
+    .setDescription("Amount of days to delete messages for.")
+    .setMinValue(0)
+    .setMaxValue(7);
+// User options
+const memberOption = new SlashCommandUserOption()
+    .setName("member")
+    .setDescription("Member to ban.")
+    .setRequired(true);
+// Subcommands
+const memberSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("member")
+    .setDescription("Ban a server member.")
+    .addUserOption(memberOption)
+    .addStringOption(reasonOption)
+    .addIntegerOption(deleteMessageDaysOption);
+const userIDSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("user-id")
+    .setDescription("Ban user by ID.")
+    .addStringOption(userIDOption)
+    .addStringOption(reasonOption)
+    .addIntegerOption(deleteMessageDaysOption);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("ban")
+    .setDescription("Ban target user.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addSubcommand(memberSubcommand)
+    .addSubcommand(userIDSubcommand);

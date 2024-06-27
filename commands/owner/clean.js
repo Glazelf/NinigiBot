@@ -48,7 +48,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "clean",
     description: "Runs clean up routine of the database files",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "confirm",
         type: Discord.ApplicationCommandOptionType.Boolean,

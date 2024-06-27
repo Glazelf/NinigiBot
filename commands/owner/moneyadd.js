@@ -36,7 +36,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "moneyadd",
     description: "Add money to a user.",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "amount",
         type: Discord.ApplicationCommandOptionType.Integer,

@@ -14,7 +14,6 @@ export default async (client, interaction, ephemeral) => {
         let message = await interaction.channel.messages.fetch(interaction.targetId);
         let input = message.content;
         let questionAskUser = message.author;
-
         // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
         if (interaction) message = interaction;
 
@@ -25,7 +24,6 @@ export default async (client, interaction, ephemeral) => {
 
         let maxLinkLength = 512;
         if (googleLink.length > maxLinkLength) googleLink = googleLink.substring(0, maxLinkLength);
-
         // Button
         const googleButton = new ButtonBuilder()
             .setLabel("Google")

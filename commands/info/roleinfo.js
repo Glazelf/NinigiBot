@@ -1,11 +1,15 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBooleanOption,
+    SlashCommandBuilder,
+    SlashCommandRoleOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let role = interaction.options.getRole("role");
@@ -28,7 +32,7 @@ export default async (client, interaction, ephemeral) => {
         if (role.permissions.toArray().length > 0) permissionString = role.permissions.toArray().join(", ");
         if (permissionString.length > 1024) permissionString = `${permissionString.substring(0, 1021)}...`;
         // Embed
-        let roleEmbed = new Discord.EmbedBuilder()
+        let roleEmbed = new EmbedBuilder()
             .setColor(embedColor)
             .setTitle(role.name)
             .setThumbnail(icon)
@@ -49,17 +53,19 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "roleinfo",
-    description: "Displays info about a role.",
-    options: [{
-        name: "role",
-        type: Discord.ApplicationCommandOptionType.Role,
-        description: "Specify role.",
-        required: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: globalVars.ephemeralOptionDescription
-    }]
-};
+// Role options
+const roleOption = new SlashCommandRoleOption()
+    .setName("role")
+    .setDescription("Specify a role.")
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("roleinfo")
+    .setDescription("Displays info about a role.")
+    .setDMPermission(false)
+    .addRoleOption(roleOption)
+    .addBooleanOption(ephemeralOption);

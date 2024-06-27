@@ -524,14 +524,20 @@ function isIdenticalForm(pokemonName) {
     return false;
 };
 
+const pokemonOptionName = "pokemon";
+const pokemonOptionDescription = "Pokémon to get info on.";
 const generationOptionName = "generation";
 const generationOptionDescription = "Generation to use.";
 // String options
 const pokemonOption = new SlashCommandStringOption()
-    .setName("pokemon")
-    .setDescription("Pokémon to get info on.")
+    .setName(pokemonOptionName)
+    .setDescription(pokemonOptionDescription)
+    .setAutocomplete(true);
+const pokemonOptionRequired = new SlashCommandStringOption()
+    .setName(pokemonOptionName)
+    .setDescription(pokemonOptionDescription)
     .setAutocomplete(true)
-const pokemonOptionRequired = pokemonOption.setRequired(true);
+    .setRequired(true);
 const abilityOption = new SlashCommandStringOption()
     .setName("ability")
     .setDescription("Ability to get info on.")

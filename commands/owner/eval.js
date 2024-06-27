@@ -46,7 +46,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "eval",
     description: "Execute JS.",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "input",
         type: Discord.ApplicationCommandOptionType.String,

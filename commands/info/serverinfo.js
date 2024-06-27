@@ -1,4 +1,13 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChannelType,
+    PermissionFlagsBits,
+    SlashCommandBooleanOption,
+    SlashCommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -9,7 +18,6 @@ import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
 
@@ -94,21 +102,33 @@ export default async (client, interaction, ephemeral) => {
         if (guild.rulesChannel) serverLinks += `${rules}\n`;
         if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
         await guild.channels.cache.forEach(async channel => {
-            if ([Discord.ChannelType.GuildVoice, Discord.ChannelType.GuildText].includes(channel.type)) channelCount += 1;
-            if (channel.type == Discord.ChannelType.GuildThread) threadCount += 1;
+            if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
+            if (channel.type == ChannelType.GuildThread) threadCount += 1;
             // Get archived threads?
-            // if (channel.threads && channel.type == Discord.ChannelType.GuildText && botMember.permissions.has(Discord.PermissionFlagsBits.Administrator)) {
+            // if (channel.threads && channel.type == ChannelType.GuildText && botMember.permissions.has(PermissionFlagsBits.Administrator)) {
             //     let archivedThreads = await channel.threads.fetchArchived();
             //     threadCount += archivedThreads.threads.entries().length;
             // };
         });
-        let serverButtons = new Discord.ActionRowBuilder();
+        let serverButtons = new ActionRowBuilder();
         // Doesn't seem like there's a feature yet for having guild web pages enabled
         let guildwebpage = `https://discord.com/servers/${encodeURIComponent(guild.name.toLowerCase().replace(/ /g, "-"))}-${guild.id}`;
-        if (guild.features.includes("DISCOVERABLE")) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Server Web Page', style: Discord.ButtonStyle.Link, url: guildwebpage }));
+        if (guild.features.includes("DISCOVERABLE")) {
+            const webPageButton = new ButtonBuilder()
+                .setLabel("Server Web Page")
+                .setStyle(ButtonStyle.Link)
+                .setURL(guildwebpage);
+            serverButtons.addComponents(webPageButton);
+        };
         // Doesn't consider canary or ptb
         let serverInsights = `https://discordapp.com/developers/servers/${guild.id}/`;
-        if (guild.rulesChannel && (interaction.member.permissions.has(Discord.PermissionFlagsBits.ViewGuildInsights) || adminBool)) serverButtons.addComponents(new Discord.ButtonBuilder({ label: 'Insights', style: Discord.ButtonStyle.Link, url: serverInsights }));
+        if (guild.rulesChannel && (interaction.member.permissions.has(PermissionFlagsBits.ViewGuildInsights) || adminBool)) {
+            const insightsButton = new ButtonBuilder()
+                .setLabel("Insights")
+                .setStyle(ButtonStyle.Link)
+                .setURL(serverInsights);
+            serverButtons.addComponents(insightsButton);
+        };
 
         let statsString = `Members: ${guild.memberCount}\nBots: ${botMembers.size}🤖\nChannels: ${channelCount}`;
         // Change "Active Threads" to "Threads" when archived threads get added
@@ -120,7 +140,7 @@ export default async (client, interaction, ephemeral) => {
         if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
         assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
-        const serverEmbed = new Discord.EmbedBuilder()
+        const serverEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(guild.name)
             .setThumbnail(icon)
@@ -149,12 +169,13 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "serverinfo",
-    description: "Displays info about the server.",
-    options: [{
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: globalVars.ephemeralOptionDescription
-    }]
-};
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("serverinfo")
+    .setDescription("Displays info about this server.")
+    .setDMPermission(false)
+    .addBooleanOption(ephemeralOption);

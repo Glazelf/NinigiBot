@@ -25,7 +25,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "expadd",
     description: "Add exp to a user shinx.",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "amount",
         type: Discord.ApplicationCommandOptionType.Integer,

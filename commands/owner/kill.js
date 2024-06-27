@@ -52,7 +52,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "kill",
     description: "Shuts down bot.",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "remove-interactions",
         type: Discord.ApplicationCommandOptionType.Boolean,

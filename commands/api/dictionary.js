@@ -93,6 +93,13 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
+let wordTypeChoices = [
+    { name: "noun", value: "noun" },
+    { name: "verb", value: "verb" },
+    { name: "adjective", value: "adjective" }
+];
+
+// String options
 const wordOption = new SlashCommandStringOption()
     .setName("word")
     .setDescription("Specify word to look up.")
@@ -100,15 +107,12 @@ const wordOption = new SlashCommandStringOption()
 const wordTypeOption = new SlashCommandStringOption()
     .setName("wordtype")
     .setDescription("Select type of word.")
-    .addChoices([
-        { name: "noun", value: "noun" },
-        { name: "verb", value: "verb" },
-        { name: "adjective", value: "adjective" }
-    ]);
+    .addChoices(wordTypeChoices);
+// Boolean options
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
-
+// Final command
 export const config = new SlashCommandBuilder()
     .setName("dictionary")
     .setDescription("Get definition of a word.")

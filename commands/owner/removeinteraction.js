@@ -34,7 +34,7 @@ export default async (client, interaction) => {
 export const config = {
     name: "removeinteraction",
     description: "Remove an interaction.",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "interaction-name",
         type: Discord.ApplicationCommandOptionType.String,

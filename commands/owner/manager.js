@@ -88,7 +88,7 @@ export default async (client, interaction, ephemeral) => {
 export const config = {
     name: "manager",
     description: "Owner only, manage multiple aspects about Ninigi Virtual Simulation Core",
-    serverID: ["759344085420605471"],
+    guildIDs: ["759344085420605471"],
     options: [{
         name: "addshoptrophy",
         type: Discord.ApplicationCommandOptionType.Subcommand,
