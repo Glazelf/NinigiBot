@@ -1,14 +1,19 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    SlashCommandBooleanOption,
+    SlashCommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 
-const requiredPermission = Discord.PermissionFlagsBits.ManageMessages;
+const requiredPermission = PermissionFlagsBits.ManageMessages;
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
@@ -75,24 +80,27 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "purge",
-    description: "Bulk delete messages.",
-    default_member_permissions: requiredPermission,
-    options: [{
-        name: "amount",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "The amount of messages to delete.",
-        required: true,
-        minValue: 0,
-        maxValue: 100
-    }, {
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "The user to delete messages from."
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the response should be ephemeral."
-    }]
-};
+// Integer options
+const amountOption = new SlashCommandIntegerOption()
+    .setName("amount")
+    .setDescription("The amount of messages to delete.")
+    .setMinValue(1)
+    .setMaxValue(100)
+    .setRequired(true);
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("Specific user to delete messages from.");
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("purge")
+    .setDescription("Bulk delete messages.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addIntegerOption(amountOption)
+    .addUserOption(userOption)
+    .addBooleanOption(ephemeralOption);
