@@ -1,4 +1,7 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBooleanOption,
+    SlashCommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -16,12 +19,12 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "balance",
-    description: "Sends how much money you have.",
-    options: [{
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: globalVars.ephemeralOptionDescription
-    }]
-};
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("balance")
+    .setDescription("Shows how much money you have.")
+    .addBooleanOption(ephemeralOption);

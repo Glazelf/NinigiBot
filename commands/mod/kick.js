@@ -15,15 +15,14 @@ const requiredPermission = PermissionFlagsBits.KickMembers;
 
 export default async (client, interaction) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let user = interaction.options.getUser("member");
-        let member = interaction.options.getMember("member");
+        let user = interaction.options.getUser("user");
+        let member = interaction.options.getMember("user");
         if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a member to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
@@ -65,13 +64,18 @@ export default async (client, interaction) => {
 // String options
 const reasonOption = new SlashCommandStringOption()
     .setName("reason")
-    .setDescription("Reason for kick.");
+    .setDescription("Reason for kick.")
+    .setMaxLength(450); // Max reason length is 512, leave some space for executor and timestamp
 // User options
-const memberOption = new SlashCommandUserOption()
-    .setName("member")
-    .setDescription("Member to kick")
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("User to kick")
     .setRequired(true);
 // Final command
 export const config = new SlashCommandBuilder()
     .setName("kick")
-    .setDescription("Kick a member from the server.");
+    .setDescription("Kick a user from the server.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addUserOption(userOption)
+    .addStringOption(reasonOption);

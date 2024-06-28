@@ -1,13 +1,20 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBooleanOption,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandStringOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import {
     setBirthday,
     getSwitchCode,
     setSwitchCode,
-    getEphemeralDefault,
+    // getEphemeralDefault,
     setEphemeralDefault
 } from "../../database/dbServices/user.api.js";
+import leadingZeros from "../../util/leadingZeros.js";
 
 export default async (client, interaction) => {
     try {
@@ -16,16 +23,8 @@ export default async (client, interaction) => {
                 let day = interaction.options.getInteger("day");
                 let month = interaction.options.getInteger("month");
                 // Birthdays are stored as string DDMM instead of being seperated by a -
-                if (day < 10) {
-                    day = `0${day}`;
-                } else {
-                    day = `${day}`;
-                };
-                if (month < 10) {
-                    month = `0${month}`;
-                } else {
-                    month = `${month}`;
-                };
+                day = leadingZeros(day, 2);
+                month = leadingZeros(month, 2);
                 setBirthday(interaction.user.id, day + month);
                 return sendMessage({ client: client, interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
             case "switch":
@@ -55,46 +54,48 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "usersettings",
-    description: "Change user settings.",
-    options: [{
-        name: "birthday",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Update your birthday.",
-        options: [{
-            name: "day",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Birth day of the month.",
-            required: true,
-            minValue: 1,
-            maxValue: 31
-        }, {
-            name: "month",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Birth month of the year.",
-            required: true,
-            minValue: 1,
-            maxValue: 12
-        }]
-    }, {
-        name: "switch",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Updates your Switch friend code.",
-        options: [{
-            name: "switch-fc",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Switch friend code. Example: SW-1234-1234-1234."
-        }]
-    }, {
-        name: "ephemeraldefault",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Change ephemeral default.",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "New ephemeral default.",
-            required: true
-        }]
-    }]
-};
+// String options
+const switchFCOption = new SlashCommandStringOption()
+    .setName("switch-fc")
+    .setDescription("Switch friend code. Example: SW-1234-5678-9012.")
+    .setMinLength(14)
+    .setMaxLength(17);
+// Integer options
+const dayOption = new SlashCommandIntegerOption()
+    .setName("day")
+    .setDescription("Day of the month.")
+    .setMinValue(1)
+    .setMaxValue(31)
+    .setRequired(true);
+const monthOption = new SlashCommandIntegerOption()
+    .setName("month")
+    .setDescription("Month of the year.")
+    .setMinValue(1)
+    .setMaxValue(12)
+    .setRequired(true);
+// Boolean options
+const ephemeralDefaultOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription("New ephemeral default.")
+    .setRequired(true);
+// Subcommands
+const birthdaySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("birthday")
+    .setDescription("Update your birthday.")
+    .addIntegerOption(dayOption)
+    .addIntegerOption(monthOption);
+const switchSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("switch")
+    .setDescription("Share or update your Switch friend code.")
+    .addStringOption(switchFCOption);
+const ephemeralDefaultSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("ephemeraldefault")
+    .setDescription("Update default ephemerality.")
+    .addBooleanOption(ephemeralDefaultOption);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("usersettings")
+    .setDescription("Change user settings.")
+    .addSubcommand(birthdaySubcommand)
+    .addSubcommand(switchSubcommand)
+    .addSubcommand(ephemeralDefaultSubcommand);

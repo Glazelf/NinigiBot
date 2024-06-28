@@ -23,8 +23,8 @@ export default async (client, interaction) => {
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
 
-        let user = interaction.options.getUser("member");
-        let member = interaction.options.getMember("member");
+        let user = interaction.options.getUser("user");
+        let member = interaction.options.getMember("user");
         let userIDArg = interaction.options.getString("user-id");
         if (user && !userIDArg) userIDArg = user.id;
         let reason = interaction.options.getString("reason");
@@ -107,7 +107,8 @@ const userIDOption = new SlashCommandStringOption()
     .setRequired(true);
 const reasonOption = new SlashCommandStringOption()
     .setName("reason")
-    .setDescription("Reason for ban.");
+    .setDescription("Reason for ban.")
+    .setMaxLength(450); // Max reason length is 512, leave some space for executor and timestamp
 // Integer options
 const deleteMessageDaysOption = new SlashCommandIntegerOption()
     .setName("delete-message-days")
@@ -115,15 +116,15 @@ const deleteMessageDaysOption = new SlashCommandIntegerOption()
     .setMinValue(0)
     .setMaxValue(7);
 // User options
-const memberOption = new SlashCommandUserOption()
-    .setName("member")
-    .setDescription("Member to ban.")
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("User to ban.")
     .setRequired(true);
 // Subcommands
-const memberSubcommand = new SlashCommandSubcommandBuilder()
-    .setName("member")
-    .setDescription("Ban a server member.")
-    .addUserOption(memberOption)
+const userSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("user")
+    .setDescription("Ban a user.")
+    .addUserOption(userOption)
     .addStringOption(reasonOption)
     .addIntegerOption(deleteMessageDaysOption);
 const userIDSubcommand = new SlashCommandSubcommandBuilder()
@@ -138,5 +139,5 @@ export const config = new SlashCommandBuilder()
     .setDescription("Ban target user.")
     .setDMPermission(false)
     .setDefaultMemberPermissions(requiredPermission)
-    .addSubcommand(memberSubcommand)
+    .addSubcommand(userSubcommand)
     .addSubcommand(userIDSubcommand);

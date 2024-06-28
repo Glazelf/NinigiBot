@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBooleanOption,
+    SlashCommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -15,7 +19,7 @@ export default async (client, interaction, ephemeral) => {
         let globalArg = interaction.options.getBoolean("global");
         if (globalArg === true) global = globalArg;
         const money_db = await getUsersRankedByMoney();
-        const leaderboardEmbed = new Discord.EmbedBuilder()
+        const leaderboardEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         if (global) {
             // Global leaderboard
@@ -49,16 +53,16 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "leaderboard",
-    description: "Displays money leaderboard.",
-    options: [{
-        name: "global",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether to showcase global leaderboard."
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: globalVars.ephemeralOptionDescription
-    }]
-};
+// Boolean options
+const globalOption = new SlashCommandBooleanOption()
+    .setName("global")
+    .setDescription("Whether to show global leaderboard.");
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const config = new SlashCommandBuilder()
+    .setName("leaderboard")
+    .setDescription("Displays money leaderboard.")
+    .addBooleanOption(globalOption)
+    .addBooleanOption(ephemeralOption);
