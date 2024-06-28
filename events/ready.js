@@ -1,4 +1,6 @@
+import { ActivityType } from "discord.js";
 import getTime from '../util/getTime.js';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client) => {
     try {
@@ -22,6 +24,12 @@ export default async (client) => {
         // });
         let timestamp = getTime();
 
+        let presence = initPresence();
+        globalVars.presence = presence;
+        // Set bot status
+        await client.user.setPresence(presence);
+        console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
+
         console.log(`Commands: ${client.commands.size}
 Guilds: ${client.guilds.cache.size}
 Channels: ${client.channels.cache.size}
@@ -31,4 +39,9 @@ Connected as ${client.user.username}. (${timestamp})`);
     } catch (e) {
         console.log(e);
     };
+};
+
+function initPresence() {
+    let presence = { activities: [{ name: 'the lake theme', type: ActivityType.Listening }], status: 'idle' };
+    return presence;
 };
