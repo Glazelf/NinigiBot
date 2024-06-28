@@ -14,7 +14,6 @@ const selectDescriptionCharacterLimit = 50;
 
 export default async (client, interaction) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
