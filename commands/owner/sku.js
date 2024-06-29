@@ -1,4 +1,5 @@
 import {
+    EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder
 } from "discord.js";
@@ -15,10 +16,27 @@ export default async (client, interaction, ephemeral) => {
 
         ephemeral = true;
 
+        const entitlementEmbed = new EmbedBuilder()
+            .setColor(globalVars.embedColor)
+            .setTitle("SKUs & Entitlements");
+
         let SKUs = await client.application.fetchSKUs();
-        console.log(client.application.entitlements)
-        let subscriberList = "";
-        return sendMessage({ client: client, interaction: interaction, content: Object.entries(SKUs).toString(), ephemeral: ephemeral });
+        let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
+        console.log(entitlements)
+
+        if (Object.entries(entitlements).length < 1) entitlementEmbed.setDescription("No entitlements found.");
+        for await (let SKU of SKUs) {
+            let userList = [];
+            let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
+            if (entitlementsSKU.length < 1) continue;
+            for await (let entitlement of (entitlementsSKU)) {
+                let entitlementUser = await entitlement.fetchUser();
+                userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
+            };
+            entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
+        };
+
+        return sendMessage({ client: client, interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger(e, client, interaction);
