@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+import config from "../config.json" with { type: "json" };
 import sendMessage from "../util/sendMessage.js";
 import axios from "axios";
 import fs from "fs";
@@ -653,7 +654,7 @@ export default async (client, interaction) => {
                         const bugReportReproduce = interaction.fields.getTextInputValue('bugReportReproduce');
                         const bugReportBehaviour = interaction.fields.getTextInputValue('bugReportBehaviour');
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
-                        let DMChannel = await client.channels.fetch(client.config.devChannelID);
+                        let DMChannel = await client.channels.fetch(config.devChannelID);
 
                         const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)

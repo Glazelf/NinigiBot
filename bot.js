@@ -20,7 +20,6 @@ const client = new Client({
     allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
     shards: "auto"
 });
-client.config = config;
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
 fs.readdir("./events/", (err, files) => {
     if (err) return console.error(err);

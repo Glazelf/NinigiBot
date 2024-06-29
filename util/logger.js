@@ -2,6 +2,7 @@ import { codeBlock } from "discord.js";
 import getTime from "./getTime.js";
 import sendMessage from "./sendMessage.js";
 import util from "util";
+import config from "../config.json" with { type: "json" };
 
 export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
@@ -60,7 +61,7 @@ ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
         if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1994) + `\`\`\`...`;
         // Fix cross-shard logging sometime
-        let devChannel = await client.channels.fetch(client.config.devChannelID);
+        let devChannel = await client.channels.fetch(config.devChannelID);
         if (baseMessage.includes("Missing Permissions")) {
             try {
                 return interaction.reply(`I lack permissions to perform the requested action.`);
