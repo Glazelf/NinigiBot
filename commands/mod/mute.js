@@ -16,7 +16,6 @@ const requiredPermission = PermissionFlagsBits.ModerateMembers;
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
