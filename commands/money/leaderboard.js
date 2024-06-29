@@ -61,7 +61,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Displays money leaderboard.")
     .addBooleanOption(globalOption)

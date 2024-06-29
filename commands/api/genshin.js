@@ -161,7 +161,7 @@ const artifactSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(artifactOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("genshin")
     .setDescription("Shows Genshin Impact info.")
     .addSubcommand(characterSubcommand)

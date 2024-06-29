@@ -118,7 +118,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("botinfo")
     .setDescription("Displays info about this bot.")
     .addBooleanOption(ephemeralOption);

@@ -134,7 +134,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Full command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("role")
     .setDescription("Toggles a role. Use without argument to get a full list.")
     .setDMPermission(false)

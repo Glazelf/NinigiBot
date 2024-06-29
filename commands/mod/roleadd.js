@@ -66,7 +66,7 @@ const roleOption = new SlashCommandRoleOption()
     .setDescription("Specify role to toggle.")
     .setRequired(true);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("roleadd")
     .setDescription("Toggle a role's eligibility to be selfassigned.")
     .setDMPermission(false)

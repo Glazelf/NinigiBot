@@ -60,12 +60,10 @@ const actionRow4 = new ActionRowBuilder()
     .addComponents(behaviourInput);
 const actionRow5 = new ActionRowBuilder()
     .addComponents(contextInput);
-
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 
 export default async (client, interaction) => {
     try {
-
         return interaction.showModal(modal);
 
     } catch (e) {
@@ -74,6 +72,6 @@ export default async (client, interaction) => {
 };
 
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("bugreport")
     .setDescription("Report a bug to the bot owners.");

@@ -144,7 +144,7 @@ const questlistSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(gameOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("monsterhunter")
     .setDescription("Shows Monster Hunter data.")
     .addSubcommand(monsterSubcommand)

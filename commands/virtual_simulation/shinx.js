@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    AttachmentBuilder,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -14,7 +20,7 @@ import {
     nameShinx,
     getShinxShininess,
     isTrainerMale,
-    hasEventTrophy,
+    // hasEventTrophy,
     switchShininessAndGet
 } from "../../database/dbServices/shinx.api.js";
 import applyText from "../../util/shinx/applyCanvasText.js";
@@ -32,8 +38,8 @@ export default async (client, interaction, ephemeral) => {
         let shinx, res, time;
         let canvas, ctx, img;
         let returnString = "";
-        let userFinder, messageFile = null;
-        if (interaction.inGuild()) userFinder = await interaction.guild.members.fetch();
+        let messageFile = null;
+        let userFinder = await interaction.guild.members.fetch();
 
         const now = new Date();
         let master = interaction.user;
@@ -90,10 +96,9 @@ export default async (client, interaction, ephemeral) => {
                     ctx.fillStyle = '#00d4a8'
                     ctx.fillRect(467, 413, 245 * exp_struct.curr_percent, 14);
                 };
-                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                messageFile = new AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({ client: client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "feed":
-                if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
                 // let foodArg = interaction.options.getInteger("food");
                 res = await feedShinx(master.id);
                 switch (res) {
@@ -138,12 +143,11 @@ export default async (client, interaction, ephemeral) => {
                             img = await Canvas.loadImage('./assets/dinNight.png');
                             ctx.drawImage(img, 199, 0);
                         };
-                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                        messageFile = new AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
                 return sendMessage({ client: client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok') });
             case "play":
-                if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
                 shinx = await getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
                 ctx = canvas.getContext('2d');
@@ -184,7 +188,7 @@ export default async (client, interaction, ephemeral) => {
                 img = await Canvas.loadImage('./assets/reactions.png');
                 ctx.drawImage(img, 10 + 30 * reactionPlay[1], 8, 30, 32, 120, 212, 30, 32);
                 shinx.addExperienceAndUnfeed(100 * reactionPlay[2], 1);
-                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                messageFile = new AttachmentBuilder(canvas.toBuffer());
                 return sendMessage({
                     client: client,
                     interaction: interaction,
@@ -212,7 +216,7 @@ export default async (client, interaction, ephemeral) => {
                 let conversation = await getRandomReaction();
                 ctx.drawImage(img, 64 * conversation.reaction, 64 * shinx.shiny, 64, 64, 173, 68, 64, 64);
 
-                messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                messageFile = new AttachmentBuilder(canvas.toBuffer());
                 shinx.addExperienceAndUnfeed(50, 1);
                 return sendMessage({ client: client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
             case "nickname":
@@ -243,7 +247,7 @@ export default async (client, interaction, ephemeral) => {
                         img = await Canvas.loadImage('./assets/reactions.png');
                         ctx.drawImage(img, 10 + 30 * 4, 8, 30, 32, 335, 192, 30, 32);
                         returnString = `Nickname changed to **${new_nick}**!`;
-                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                        messageFile = new AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
                 return sendMessage({
@@ -266,7 +270,7 @@ export default async (client, interaction, ephemeral) => {
                         img = await Canvas.loadImage('./assets/sparkle.png');
                         ctx.drawImage(img, 49, 10);
                     };
-                    messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                    messageFile = new AttachmentBuilder(canvas.toBuffer());
                 } else {
                     returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                     messageFile = null;
@@ -289,62 +293,56 @@ export default async (client, interaction, ephemeral) => {
 };
 
 // Level and Shiny subcommands are missing on purpose
-export const config = {
-    name: "shinx",
-    description: "Interact with your Shinx.",
-    options: [{
-        name: "info",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "See your shinx!",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "feed",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Feed Shinx!"
-    }, {
-        name: "play",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Play with your shinx!",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "talk",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Talk with your shinx!",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "nickname",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Change your Shinx nickname!",
-        options: [{
-            name: "nickname",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Alphanumeric string (between 1 and 12 characters)",
-            required: true
-        }]
-    }, {
-        name: "shiny",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Change Shinx's color!"
-    }, {
-        name: "release",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Release Shinx.",
-        options: [{
-            name: "confirm",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Are you sure? You can never get this Shinx back."
-        }]
-    }]
-};
+// String options
+const nicknameOption = new SlashCommandStringOption()
+    .setName("nickname")
+    .setDescription("New Shinx nickname.")
+    .setMinLength(1)
+    .setMaxLength(12)
+    .setRequired(true);
+// Boolean options
+const confirmOption = new SlashCommandBooleanOption()
+    .setName("confirm")
+    .setDescription("Are you sure? You can never get this Shinx back.");
+const ephemeralOption = new SlashCommandStringOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const infoSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("info")
+    .setDescription("See info on your Shinx.")
+    .addBooleanOption(ephemeralOption);
+const feedSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("feed")
+    .setDescription("Feed your Shinx.");
+const playSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("play")
+    .setDescription("Play with your Shinx.")
+    .addBooleanOption(ephemeralOption);
+const talkSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("talk")
+    .setDescription("Talk to your Shinx.")
+    .addBooleanOption(ephemeralOption);
+const nicknameSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("nickname")
+    .setDescription("Change your Shinx's nickname.")
+    .addStringOption(nicknameOption);
+const shinySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("shiny")
+    .setDescription("Toggle your Shinx being shiny.");
+const releaseSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("release")
+    .setDescription("Release your Shinx.")
+    .addBooleanOption(confirmOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("shinx")
+    .setDescription("Interact with your Shinx")
+    .setDMPermission(false)
+    .addSubcommand(infoSubcommand)
+    .addSubcommand(feedSubcommand)
+    .addSubcommand(playSubcommand)
+    .addSubcommand(talkSubcommand)
+    .addSubcommand(nicknameSubcommand)
+    // .addSubcommand(shinySubcommand) // Disabled untill https://github.com/Glazelf/NinigiBot/issues/838 is fixed
+    .addSubcommand(releaseSubcommand);

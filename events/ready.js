@@ -9,8 +9,8 @@ export default async (client) => {
             try {
                 let commandServerIDs = null;
                 if (command.guildIDs) commandServerIDs = command.guildIDs;
-                // if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
-                await client.application.commands.create(command.config, commandServerIDs);
+                // if (client.user.id != module.exports.NinigiID) commandServerID = client.guildIDs; // set to test server for test build
+                await client.application.commands.create(command.commandObject, commandServerIDs);
             } catch (e) {
                 console.log(e);
             };

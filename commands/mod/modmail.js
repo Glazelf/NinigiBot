@@ -48,7 +48,7 @@ export default async (client, interaction) => {
 };
 
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("modmail")
     .setDescription("Send a message to mods.")
     .setDMPermission(false);

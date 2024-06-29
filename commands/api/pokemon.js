@@ -657,7 +657,7 @@ const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Who's that Pokémon?")
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("pokemon")
     .setDescription("Shows Pokémon data.")
     .addSubcommand(pokemonSubcommand)

@@ -8,8 +8,9 @@ import {
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -57,7 +58,8 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const guildIDs = ["759344085420605471"];
+export const guildIDs = [config.devServerID];
+
 // String options
 const contentOption = new SlashCommandStringOption()
     .setName("content")
@@ -95,8 +97,9 @@ const userSubcommand = new SlashCommandSubcommandBuilder()
     .addAttachmentOption(attachmentOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("send")
     .setDescription("Sends a message to a channel or user.")
+    .setDMPermission(false)
     .addSubcommand(channelSubcommand)
     .addSubcommand(userSubcommand);

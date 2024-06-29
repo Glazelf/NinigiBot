@@ -134,7 +134,7 @@ const userIDSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(reasonOption)
     .addIntegerOption(deleteMessageDaysOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("ban")
     .setDescription("Ban target user.")
     .setDMPermission(false)

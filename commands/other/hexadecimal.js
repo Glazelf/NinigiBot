@@ -1,6 +1,15 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandIntegerOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import leadingZeros from "../../util/leadingZeros.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -8,15 +17,12 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
         let input = null;
-        // Make these seperate subcommands, main command "hex" with subcommands "tohex" and "todecimal" (or just combine this into /convert actually)
-        // Get this from an argument instead if using slash commands
         switch (interaction.options.getSubcommand()) {
             case "tohex":
                 input = interaction.options.getInteger("input");
-                let failText = `Please provide a valid number to convert to hex.`;
                 let hexString = input.toString(16).toUpperCase();
-                while (hexString.length < 6) hexString = "0" + hexString;
-                let returnString = Discord.codeBlock("js", `0x${hexString}`)
+                hexString = leadingZeros(hexString, 6);
+                let returnString = codeBlock("js", `0x${hexString}`)
                 return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
             case "todecimal":
                 try {
@@ -24,10 +30,10 @@ export default async (client, interaction, ephemeral) => {
                     while (input.length < 6) input = "0" + input;
                     let argHex = `0x${input}`;
                     let hexInt = parseInt(argHex);
-                    let returnString = Discord.codeBlock("js", hexInt.toString())
+                    let returnString = codeBlock("js", hexInt.toString())
                     return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
                 } catch (e) {
-                    return sendMessage({ client: client, interaction: interaction, content: `An error occurred trying to convert to decimal. Make sure your input is a valid hex.` });
+                    return sendMessage({ client: client, interaction: interaction, content: "An error occurred trying to convert to decimal. Make sure your input is a valid hex." });
                 };
         };
 
@@ -36,36 +42,35 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "hexadecimal",
-    description: "Convert a number to hexadecimal.",
-    options: [{
-        name: "tohex",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Convert from decimal to hex.",
-        options: [{
-            name: "input",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Decimal number to convert.",
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the response should be ephemeral."
-        }]
-    }, {
-        name: "todecimal",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Convert from hex to decimal.",
-        options: [{
-            name: "input",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Hexadecimal to convert.",
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the response should be ephemeral."
-        }]
-    }]
-};
+// String options
+const inputHexOption = new SlashCommandStringOption()
+    .setName("input")
+    .setDescription("Hexadecimal to convert to decimal.")
+    .setRequired(true);
+// Integer options
+const inputDecimalOption = new SlashCommandIntegerOption()
+    .setName("input")
+    .setDescription("Number to convert to hex.")
+    .setMinValue(0)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const toHexSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("tohex")
+    .setDescription("Convert a number to hexadecimal.")
+    .addIntegerOption(inputDecimalOption)
+    .addBooleanOption(ephemeralOption);
+const toDecimalSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("todecimal")
+    .setDescription("Convert from hexadecimal to decimal.")
+    .addStringOption(inputHexOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("hexadecimal")
+    .setDescription("Convert between decimal and hexadecimal.")
+    .addSubcommand(toHexSubcommand)
+    .addSubcommand(toDecimalSubcommand);

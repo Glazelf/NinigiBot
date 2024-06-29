@@ -183,7 +183,7 @@ const infoSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(trophyOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("trophy")
     .setDescription("Interact with trophies.")
     .addSubcommand(stockSubcommand)

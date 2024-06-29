@@ -177,7 +177,7 @@ const itemSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(itemOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("persona5")
     .setDescription("Shows Persona 5 data.")
     .addSubcommand(personaSubcommand)

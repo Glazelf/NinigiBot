@@ -93,7 +93,7 @@ const ephemeralDefaultSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Update default ephemerality.")
     .addBooleanOption(ephemeralDefaultOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("usersettings")
     .setDescription("Change user settings.")
     .addSubcommand(birthdaySubcommand)

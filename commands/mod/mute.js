@@ -104,7 +104,7 @@ const userOption = new SlashCommandUserOption()
     .setDescription("User to time out.")
     .setRequired(true);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("mute")
     .setDescription("Times the target out.")
     .setDMPermission(false)

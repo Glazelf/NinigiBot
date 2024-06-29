@@ -311,7 +311,7 @@ const synthesisSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(targetOption)
     .addBooleanOption(ephemeralOption);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("dqm3")
     .setDescription("Shows Dragon Quest Monsters 3: The Dark Prince data.")
     .addSubcommand(monsterSubcommand)

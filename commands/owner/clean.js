@@ -1,9 +1,13 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import { getAllUsers } from "../../database/dbServices/user.api.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -45,13 +49,15 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "clean",
-    description: "Runs clean up routine of the database files",
-    guildIDs: ["759344085420605471"],
-    options: [{
-        name: "confirm",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Are you sure? This is an irreversible and expensive command."
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Boolea options
+const confirmOption = new SlashCommandBooleanOption()
+    .setName("confirm")
+    .setDescription("Are you sure? This is an irreversible and expensive command.");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("clean")
+    .setDescription("Runs clean up routine of the database files")
+    .setDMPermission(false)
+    .addBooleanOption(confirmOption);

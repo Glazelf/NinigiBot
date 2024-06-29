@@ -41,6 +41,6 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = new ContextMenuCommandBuilder()
+export const commandObject = new ContextMenuCommandBuilder()
     .setName("Google")
     .setType(ApplicationCommandType.Message);

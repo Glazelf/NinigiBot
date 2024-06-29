@@ -1,7 +1,12 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import randomNumber from "../../util/randomNumber.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -19,22 +24,23 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "rng",
-    description: "Generate a random number.",
-    options: [{
-        name: "number-min",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Minimal number.",
-        required: true
-    }, {
-        name: "number-max",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Maximum number.",
-        required: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether or not to send the owoified text as an ephemeral message.",
-    }]
-};
+// Integer options
+const minNumberOption = new SlashCommandIntegerOption()
+    .setName("number-min")
+    .setDescription("Minimum number.")
+    .setRequired(true);
+const maxNumberOption = new SlashCommandIntegerOption()
+    .setName("number-max")
+    .setDescription("Maximum number.")
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("rng")
+    .setDescription("Generate a random number.")
+    .addIntegerOption(minNumberOption)
+    .addIntegerOption(maxNumberOption)
+    .addBooleanOption(ephemeralOption);

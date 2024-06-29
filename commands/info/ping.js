@@ -15,6 +15,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Pings bot.");

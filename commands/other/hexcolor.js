@@ -1,19 +1,23 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { PassThrough } from "stream";
 import PImage from "pureimage";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
-        let hex = interaction.options.getString("hex");
-        while (hex.length < 6) hex = "0" + hex;
+        let hexInput = interaction.options.getString("hex");
         let formattingHash = "#";
-        let rgb = hexToRgb(hex);
-        if (hex.startsWith("#")) formattingHash = "";
+        let rgb = hexToRgb(hexInput);
+        if (hexInput.startsWith("#")) formattingHash = "";
 
         if (!rgb) return sendMessage({ client: client, interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
 
@@ -27,7 +31,7 @@ export default async (client, interaction, ephemeral) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for \`${formattingHash}${hex}\`:`, files: stream, ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: `Here's the color for \`${formattingHash}${hexInput}\`:`, files: stream, ephemeral: ephemeral });
 
         function hexToRgb(hex) {
             let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -42,17 +46,20 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "hexcolor",
-    description: "Sends image from hexadecimal.",
-    options: [{
-        name: "hex",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Hexadecimal to convert.",
-        required: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the response should be ephemeral."
-    }]
-};
+// String options
+const hexOption = new SlashCommandStringOption()
+    .setName("hex")
+    .setDescription("Hexadecimal to convert.")
+    .setMinLength(6)
+    .setMaxLength(6)
+    .setRequired(true);
+// Booleann options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("hexcolor")
+    .setDescription("Creates color image from hexadecimal.")
+    .addStringOption(hexOption)
+    .addBooleanOption(ephemeralOption);

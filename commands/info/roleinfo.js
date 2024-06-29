@@ -63,7 +63,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("roleinfo")
     .setDescription("Displays info about a role.")
     .setDMPermission(false)

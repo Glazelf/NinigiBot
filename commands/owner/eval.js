@@ -1,9 +1,14 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandStringOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import util from "util";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -19,7 +24,7 @@ export default async (client, interaction, ephemeral) => {
             evaled = await eval(`async () => {${input}}`)();
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${Discord.codeBlock(e.stack)}` });
+            return sendMessage({ client: client, interaction: interaction, content: `Error occurred:\n${codeBlock(e.stack)}` });
         };
         if (typeof evaled !== "string") evaled = util.inspect(evaled);
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
@@ -27,7 +32,7 @@ export default async (client, interaction, ephemeral) => {
         for (const [key, value] of Object.entries(client.config)) {
             if (evaled.includes(value) && ephemeral == false) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
-        let returnString = Discord.codeBlock("js", clean(evaled));
+        let returnString = codeBlock("js", clean(evaled));
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
         function clean(text) {
@@ -43,14 +48,16 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "eval",
-    description: "Execute JS.",
-    guildIDs: ["759344085420605471"],
-    options: [{
-        name: "input",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "JS to execute.",
-        required: true
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// String options
+const inputOption = new SlashCommandStringOption()
+    .setName("input")
+    .setDescription("JS to execute.")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("eval")
+    .setDescription("Execute JS.")
+    .setDMPermission(false)
+    .addStringOption(inputOption);

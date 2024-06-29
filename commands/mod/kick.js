@@ -72,7 +72,7 @@ const userOption = new SlashCommandUserOption()
     .setDescription("User to kick")
     .setRequired(true);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("kick")
     .setDescription("Kick a user from the server.")
     .setDMPermission(false)

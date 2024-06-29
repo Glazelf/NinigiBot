@@ -16,6 +16,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = new ContextMenuCommandBuilder()
+export const commandObject = new ContextMenuCommandBuilder()
     .setName("Userinfo")
     .setType(ApplicationCommandType.User);

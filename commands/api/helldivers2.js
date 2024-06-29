@@ -105,7 +105,7 @@ const campaignSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Get info on current campaigns.")
     .addBooleanOption(ephemeralOption);
 // Full command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("helldivers2")
     .setDescription("Shows Helldivers 2 info.")
     .addSubcommand(planetSubcommand)

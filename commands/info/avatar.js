@@ -33,6 +33,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = new ContextMenuCommandBuilder()
+export const commandObject = new ContextMenuCommandBuilder()
     .setName("Avatar")
     .setType(ApplicationCommandType.User);

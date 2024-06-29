@@ -43,7 +43,7 @@ const timeOption = new SlashCommandIntegerOption()
     .setMinValue(0)
     .setMaxValue(21600);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("slowmode")
     .setDescription("Set slowmode in this channel.")
     .setDMPermission(false)

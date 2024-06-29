@@ -590,7 +590,7 @@ const splashtagRandomSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(languageOption)
     .addBooleanOption(ephemeralOption)
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("splatoon3")
     .setDescription("Shows Splatoon 3 data.")
     .addSubcommand(clothingSubcommand)

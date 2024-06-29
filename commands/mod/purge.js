@@ -96,7 +96,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
-export const config = new SlashCommandBuilder()
+export const commandObject = new SlashCommandBuilder()
     .setName("purge")
     .setDescription("Bulk delete messages.")
     .setDMPermission(false)
