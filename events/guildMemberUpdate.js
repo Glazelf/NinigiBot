@@ -4,6 +4,7 @@ import {
     AuditLogEvent
 } from "discord.js";
 import logger from "../util/logger.js";
+import deletePersonalRole from "../util/deletePersonalRole.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client, member, newMember) => {
@@ -72,7 +73,7 @@ export default async (client, member, newMember) => {
 
             let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
+            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, member.guild);
 
             switch (updateCase) {
                 case "nickname":
@@ -129,18 +130,6 @@ export default async (client, member, newMember) => {
             updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
             if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
-
-            async function deleteBoosterRole() {
-                let oldRole = member.guild.roles.cache.find(r => r.id == roleDB.role_id);
-                if (oldRole) {
-                    try {
-                        await oldRole.delete();
-                    } catch (e) {
-                        // console.log(e);
-                    };
-                };
-                await roleDB.destroy();
-            };
 
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
