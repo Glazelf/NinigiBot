@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -67,7 +73,7 @@ export default async (client, interaction, ephemeral) => {
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
         let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
         let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
-        let splat3Embed = new Discord.EmbedBuilder()
+        let splat3Embed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         switch (interaction.options.getSubcommand()) {
             case "clothing":
@@ -114,14 +120,14 @@ export default async (client, interaction, ephemeral) => {
                 splat3Embed
                     .setAuthor({ name: clothingAuthor, iconURL: brandImage })
                     .setThumbnail(abilityImage)
+                    .setImage(clothingImage)
+                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` })
                     .addFields([
                         { name: abilityTitle, value: `${languageJSON["CommonMsg/Gear/GearPowerName"][clothingObject.Skill]}*`, inline: true },
                         { name: slotsTitle, value: (clothingObject.Rarity + 1).toString(), inline: true },
                         { name: brandTitle, value: languageJSON["CommonMsg/Gear/GearBrandName"][clothingObject.Brand], inline: true },
                         { name: "Obtain Method:", value: obtainMethod, inline: true }
-                    ])
-                    .setImage(clothingImage)
-                    .setFooter({ text: `${versionString} | *Main abilities can differ because of SplatNet or Murch.` });
+                    ]);
                 break;
             case "weapon":
                 inputID = interaction.options.getString("weapon");
@@ -156,14 +162,14 @@ export default async (client, interaction, ephemeral) => {
                 splat3Embed
                     .setAuthor({ name: weaponAuthor, iconURL: subImage })
                     .setThumbnail(specialImage)
+                    .setImage(weaponImage)
+                    .setFooter({ text: versionString })
                     .addFields([
                         { name: subTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Sub"][subID], inline: true },
                         { name: specialTitle, value: languageJSON["CommonMsg/Weapon/WeaponName_Special"][specialID], inline: true },
                         { name: shopTitle, value: weaponUnlockString, inline: true },
                         { name: infoTitle, value: weaponStats, inline: false }
-                    ])
-                    .setImage(weaponImage)
-                    .setFooter({ text: versionString });
+                    ]);
                 break;
             case "subweapon":
                 inputID = interaction.options.getString("subweapon");
@@ -189,8 +195,8 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(subName)
                     .setThumbnail(subThumbnail)
                     .setDescription(subDescription)
-                    .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }])
-                    .setFooter({ text: versionString });
+                    .setFooter({ text: versionString })
+                    .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }]);
                 break;
             case "special":
                 inputID = interaction.options.getString("special");
@@ -215,8 +221,8 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(specialName)
                     .setThumbnail(specialThumbnail)
                     .setDescription(specialDescription)
+                    .setFooter({ text: versionString })
                     .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
-                    .setFooter({ text: versionString });
                 break;
             case "schedule":
                 let inputData = interaction.options.getString("mode");
@@ -329,8 +335,8 @@ export default async (client, interaction, ephemeral) => {
                     tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                     splat3Embed
                         .setDescription(splatfestScheduleDescription)
-                        .addFields([{ name: "Tricolor Battle:", value: tricolorSchedule, inline: false }])
-                        .setImage(splatfestData.image.url);
+                        .setImage(splatfestData.image.url)
+                        .addFields([{ name: "Tricolor Battle:", value: tricolorSchedule, inline: false }]);
                 };
                 if ([turfWarID, anarchyID, splatfestBattleID, xBattleID].includes(inputMode)) {
                     // Turf War, Anarchy, xBattle and SplatfestTW
@@ -371,7 +377,11 @@ export default async (client, interaction, ephemeral) => {
                 if (responseSplatnet.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
                 let splatnetData = responseSplatnet.data.data.gesotown;
                 // Limited time brand
-                splat3Embed.addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
+                splat3Embed
+                    .setTitle("SplatNet3 Shop")
+                    .setImage(splatnetData.pickupBrand.image.url)
+                    .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` })
+                    .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
                 await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                     let brandGearString = getGearString(brandGear, "brand");
                     splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
@@ -382,11 +392,6 @@ export default async (client, interaction, ephemeral) => {
                     let limitedGearString = getGearString(limitedGear, "limited");
                     splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
                 });
-
-                splat3Embed
-                    .setTitle("SplatNet3 Shop")
-                    .setImage(splatnetData.pickupBrand.image.url)
-                    .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` });
                 break;
             case "splatfests":
                 await interaction.deferReply({ ephemeral: ephemeral });
@@ -435,6 +440,7 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(replayMode)
                     .setThumbnail(replayData.player.weapon.image.url)
                     .setDescription(matchData)
+                    .setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` })
                     .addFields([
                         { name: "Player Data:", value: playerData.join("\n"), inline: false },
                         { name: `${replayData.player.headGear.name} Skills:`, value: headSkills.join("\n"), inline: true },
@@ -442,7 +448,6 @@ export default async (client, interaction, ephemeral) => {
                         { name: `${replayData.player.shoesGear.name} Skills:`, value: shoesSkills.join("\n"), inline: true }
                     ]);
                 if (replayAwards.length > 0) splat3Embed.addFields([{ name: "Awards:", value: replayAwards.join("\n"), inline: false }]);
-                splat3Embed.setFooter({ text: `Replay ID: ${replayResponse.data.replay.replayCode}` });
                 break;
             case "splashtag-random":
                 let userTitle = interaction.member.nickname;
@@ -474,177 +479,126 @@ export default async (client, interaction, ephemeral) => {
         };
         return sendMessage({ client: client, interaction: interaction, embeds: splat3Embed, ephemeral: ephemeral });
 
-        function getGearString(gear, type) {
-            let limitedGearString = "";
-            if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
-            limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
-            let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
-            let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;
-            if (gear.gear.additionalGearPowers.length > 1) limitedGearStarString += ` (${limitedGearStars})`;
-            limitedGearString += `${limitedGearStarString}\n`;
-            limitedGearString += `Brand: ${gear.gear.brand.name}\n`;
-            limitedGearString += `Price: ${gear.price}\n`;
-            return limitedGearString;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
 };
 
-export const config = {
-    name: "splatoon3",
-    description: `Shows Splatoon 3 data.`,
-    options: [{
-        name: "clothing",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on clothing.",
-        options: [{
-            name: "clothing",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a piece of clothing by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "language",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a language.",
-            choices: splatoon3Languages
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "weapon",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a weapon.",
-        options: [{
-            name: "weapon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a weapon by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "language",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a language.",
-            choices: splatoon3Languages
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "subweapon",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a subweapon.",
-        options: [{
-            name: "subweapon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a subweapon by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "language",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a language.",
-            choices: splatoon3Languages
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "special",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a special weapon.",
-        options: [{
-            name: "special",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a special weapon by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "language",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a language.",
-            choices: splatoon3Languages
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "schedule",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get a mode's schedule.",
-        options: [{
-            name: "mode",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a mode.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "region",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a region. Default is EU.",
-            choices: splatoon3Regions
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "splatnet",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get SplatNet3 data.",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "splatfests",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get Splatfest data.",
-        options: [{
-            name: "region",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a region. Default is EU.",
-            choices: splatoon3Regions
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "replay",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get a replay.",
-        options: [{
-            name: "code",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a replay code.",
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "splashtag-random",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Generate a random splashtag.",
-        options: [{
-            name: "language",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify a language.",
-            choices: splatoon3Languages
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
+function getGearString(gear, type) {
+    let limitedGearString = "";
+    if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
+    limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
+    let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
+    let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;
+    if (gear.gear.additionalGearPowers.length > 1) limitedGearStarString += ` (${limitedGearStars})`;
+    limitedGearString += `${limitedGearStarString}\n`;
+    limitedGearString += `Brand: ${gear.gear.brand.name}\n`;
+    limitedGearString += `Price: ${gear.price}\n`;
+    return limitedGearString;
 };
+
+// String options
+const languageOption = new SlashCommandStringOption()
+    .setName("language")
+    .setDescription("Specify a language")
+    .setChoices(splatoon3Languages);
+const clothingOption = new SlashCommandStringOption()
+    .setName("clothing")
+    .setDescription("Specify a piece of clothing by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const weaponOption = new SlashCommandStringOption()
+    .setName("weapon")
+    .setDescription("Specify a weapon by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const subweaponOption = new SlashCommandStringOption()
+    .setName("subweapon")
+    .setDescription("Specify a subweapon by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const specialOption = new SlashCommandStringOption()
+    .setName("special")
+    .setDescription("Specify a special weapon by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const modeOption = new SlashCommandStringOption()
+    .setName("mode")
+    .setDescription("Specify a mode")
+    .setAutocomplete(true)
+    .setRequired(true);
+const regionOption = new SlashCommandStringOption()
+    .setName("region")
+    .setDescription("Specify a region. Default is EU.")
+    .setChoices(splatoon3Regions);
+const replayCodeOption = new SlashCommandStringOption()
+    .setName("code")
+    .setDescription("Specify a replay by code.")
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const clothingSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("clothing")
+    .setDescription("Get info on a piece of clothing.")
+    .addStringOption(clothingOption)
+    .addStringOption(languageOption)
+    .addBooleanOption(ephemeralOption);
+const weaponSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("weapon")
+    .setDescription("Get info on a weapon.")
+    .addStringOption(weaponOption)
+    .addStringOption(languageOption)
+    .addBooleanOption(ephemeralOption);
+const subweaponSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("subweapon")
+    .setDescription("Get info on a subweapon")
+    .addStringOption(subweaponOption)
+    .addStringOption(languageOption)
+    .addBooleanOption(ephemeralOption);
+const specialSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("special")
+    .setDescription("Get info on a special weapon.")
+    .addStringOption(specialOption)
+    .addStringOption(languageOption)
+    .addBooleanOption(ephemeralOption);
+const scheduleSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("schedule")
+    .setDescription("Get the schedule of a mode.")
+    .addStringOption(modeOption)
+    .addStringOption(regionOption)
+    .addBooleanOption(ephemeralOption);
+const splatnetSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("splatnet")
+    .setDescription("Get SplatNet3 data.")
+    .addBooleanOption(ephemeralOption);
+const splatfestsSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("splatfests")
+    .setDescription("Get Splatfest data.")
+    .addStringOption(regionOption)
+    .addBooleanOption(ephemeralOption);
+const replaySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("replay")
+    .setDescription("Get info on a replay.")
+    .addStringOption(replayCodeOption)
+    .addBooleanOption(ephemeralOption);
+const splashtagRandomSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("splashtag-random")
+    .setDescription("Generate a random splashtag.")
+    .addStringOption(languageOption)
+    .addBooleanOption(ephemeralOption)
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("splatoon3")
+    .setDescription("Shows Splatoon 3 data.")
+    .addSubcommand(clothingSubcommand)
+    .addSubcommand(weaponSubcommand)
+    .addSubcommand(subweaponSubcommand)
+    .addSubcommand(specialSubcommand)
+    .addSubcommand(scheduleSubcommand)
+    .addSubcommand(splatnetSubcommand)
+    .addSubcommand(splatfestsSubcommand)
+    .addSubcommand(replaySubcommand)
+    .addSubcommand(splashtagRandomSubcommand);

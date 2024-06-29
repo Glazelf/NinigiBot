@@ -1,9 +1,12 @@
-import Discord from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import logger from '../util/logger.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import getRandomGif from "../util/getRandomGif.js";
 import cron from "cron";
-import { incrementStanAmount, checkEvents } from "../database/dbServices/history.api.js";
+import {
+    incrementStanAmount,
+    checkEvents
+} from "../database/dbServices/history.api.js";
 
 export default async (client) => {
     try {
@@ -33,7 +36,7 @@ export default async (client) => {
 
             let channel = guild.channels.cache.find(channel => channel.id === globalVars.eventChannelID);
 
-            const gifEmbed = new Discord.EmbedBuilder()
+            const gifEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`Today's most stannable person is ${candidateRandom.username}, everyone!`)
                 .setImage(randomGif);

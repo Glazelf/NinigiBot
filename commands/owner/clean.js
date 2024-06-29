@@ -1,9 +1,13 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import { getAllUsers } from "../../database/dbServices/user.api.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -13,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
         if (confirmArg === true) confirm = confirmArg;
         if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         await interaction.deferReply({ ephemeral: ephemeral });
         await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
@@ -45,13 +49,15 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "clean",
-    description: "Runs clean up routine of the database files",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "confirm",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Are you sure? This is an irreversible and expensive command."
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Boolea options
+const confirmOption = new SlashCommandBooleanOption()
+    .setName("confirm")
+    .setDescription("Are you sure? This is an irreversible and expensive command.");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("clean")
+    .setDescription("Runs clean up routine of the database files")
+    .setDMPermission(false)
+    .addBooleanOption(confirmOption);

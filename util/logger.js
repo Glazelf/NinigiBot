@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { codeBlock } from "discord.js";
 import getTime from "./getTime.js";
 import sendMessage from "./sendMessage.js";
 import util from "util";
@@ -6,7 +6,7 @@ import util from "util";
 export default async (exception, client, interaction = null) => {
     // Note: interaction may be a message
     try {
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
         if (exceptionString.includes("Missing Access")) {
@@ -30,9 +30,9 @@ export default async (exception, client, interaction = null) => {
             if (interaction.member) user = interaction.author;
             if (interaction.user) user = interaction.user;
         };
-        let exceptionCode = Discord.codeBlock(errorInspectResult); // Used to be exception.stack
+        let exceptionCode = codeBlock(errorInspectResult); // Used to be exception.stack
         let messageContentCode = "";
-        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = Discord.codeBlock(interaction.content);
+        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = codeBlock(interaction.content);
         let interactionOptions = "\n";
         let subCommand = "";
         if (interaction && interaction.options) {

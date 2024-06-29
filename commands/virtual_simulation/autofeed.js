@@ -1,9 +1,12 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandIntegerOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { changeAutoFeed } from "../../database/dbServices/shinx.api.js";
 
-const autofeed_modes = [
+const autoFeedModes = [
     {
         "name": "No auto mode",
         "value": 0
@@ -22,13 +25,11 @@ export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = true;
         let returnString;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
-        let mode_num = interaction.options.getInteger("mode");
-        let res = await changeAutoFeed(master.id, mode_num);
-        let mode_str = autofeed_modes[mode_num].name;
-        returnString = res ? `Changed autofeed to: ${mode_str}` : `Autofeed already set to: ${mode_str}`;
+        let modeNumber = interaction.options.getInteger("mode");
+        let res = await changeAutoFeed(master.id, modeNumber);
+        let modeString = autoFeedModes[modeNumber].name;
+        returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
         return sendMessage({
             client: client,
             interaction: interaction,
@@ -41,14 +42,14 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "autofeed",
-    description: "Automatize the feeding process of Shinx",
-    options: [{
-        name: "mode",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Mode you want to set",
-        required: true,
-        choices: autofeed_modes
-    }]
-};
+// Integer options
+const modeOption = new SlashCommandIntegerOption()
+    .setName("mode")
+    .setDescription("Mode you want to set.")
+    .setChoices(autoFeedModes)
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("autofeed")
+    .setDescription("Automate the feeding process of Shinx.")
+    .addIntegerOption(modeOption);

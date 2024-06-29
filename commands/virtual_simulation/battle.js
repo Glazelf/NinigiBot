@@ -1,4 +1,11 @@
-import Discord from "discord.js";
+import {
+    AttachmentBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SlashCommandBuilder,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -7,7 +14,10 @@ import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
 import wait from "../../util/battle/waitTurn.js";
 import hp from "../../util/battle/getHP.js";
-import { getShinx, saveBattle } from "../../database/dbServices/shinx.api.js";
+import {
+    getShinx,
+    saveBattle
+} from "../../database/dbServices/shinx.api.js";
 import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
 
 const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
@@ -43,10 +53,17 @@ export default async (client, interaction) => {
             ctx.drawImage(avatar, 18 + 147 * i, 7, 58, 58);
         };
 
-        let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
-        const answer_buttons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ customId: 'battleYes', style: Discord.ButtonStyle.Success, label: 'Accept' }))
-            .addComponents(new Discord.ButtonBuilder({ customId: 'battleNo', style: Discord.ButtonStyle.Danger, label: 'Reject' }))
+        let messageFile = new AttachmentBuilder(canvas.toBuffer());
+        const battleAcceptButton = new ButtonBuilder()
+            .setCustomId("battleYes")
+            .setStyle(ButtonStyle.Success)
+            .setLabel("Accept");
+        const battleRefuseButton = new ButtonBuilder()
+            .setCustomId("battleNo")
+            .setStyle(ButtonStyle.Danger)
+            .setLabel("Refuse");
+        const answer_buttons = new ActionRowBuilder()
+            .addComponents([battleAcceptButton, battleRefuseButton]);
         const sent_message = await sendMessage({ client: client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
         const filter = (interaction) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
@@ -135,7 +152,7 @@ export default async (client, interaction) => {
                     };
                     for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
-                    let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                    let messageFile = new AttachmentBuilder(canvas.toBuffer());
                     return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
@@ -172,7 +189,7 @@ export default async (client, interaction) => {
                     ctx.fillText(image_nicks[i], 53 + 49 * i, 49 + 79 * i);
                 };
             };
-            let messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+            let messageFile = new AttachmentBuilder(canvas.toBuffer());
             await sendMessage({ client: client, interaction: interaction, content: text, files: [messageFile] });
             await wait();
         };
@@ -182,13 +199,13 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "battle",
-    description: "Battle someone's Shinx.",
-    options: [{
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "Specify user.",
-        required: true
-    }]
-};
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("Specify user to battle.")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("battle")
+    .setDescription("Battle someone's Shinx.")
+    .addUserOption(userOption);

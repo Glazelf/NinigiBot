@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -12,10 +16,10 @@ export default async (client, oldRole, newRole) => {
         if (!log) return;
 
         let botMember = newRole.guild.members.me;
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             const fetchedLogs = await newRole.guild.fetchAuditLogs({
                 limit: 1,
-                type: Discord.AuditLogEvent.RoleUpdate
+                type: AuditLogEvent.RoleUpdate
             });
             let updateLog = fetchedLogs.entries.first();
             if (updateLog && updateLog.createdTimestamp < (Date.now() - 5000)) updateLog = null;
@@ -30,7 +34,7 @@ export default async (client, oldRole, newRole) => {
             if (embedColor == "#000000") embedColor = globalVars.embedColor;
             let updateDescription = `${newRole} (${newRole.id})`;
 
-            const updateEmbed = new Discord.EmbedBuilder()
+            const updateEmbed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setTitle(`Role Updated ⚒️`)
                 .setFooter({ text: newRole.id })
@@ -41,14 +45,10 @@ export default async (client, oldRole, newRole) => {
                 ]);
             };
             if (oldRole.rawPosition !== newRole.rawPosition) {
-                updateEmbed.addFields([
-                    { name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }
-                ]);
+                updateEmbed.addFields([{ name: `Position:`, value: `Old: ${oldRole.rawPosition}\nNew: ${newRole.rawPosition}`, inline: true }]);
             };
             if (oldRole.color !== newRole.color) {
-                updateEmbed.addFields([
-                    { name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }
-                ]);
+                updateEmbed.addFields([{ name: `Color:`, value: `Old: ${oldRole.hexColor}\nNew: ${newRole.hexColor}`, inline: true }]);
             };
             if (oldRole.permissions.bitfield !== newRole.permissions.bitfield) {
                 // Only change that's seperated into two fields for better readability and to avoid hitting character limit on a field
@@ -70,7 +70,7 @@ export default async (client, oldRole, newRole) => {
             updateEmbed.setDescription(updateDescription);
             if (executor) updateEmbed.addFields([{ name: 'Updated By:', value: `${executor} (${executor.id})`, inline: false }]);
             return log.send({ embeds: [updateEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -27,7 +33,7 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let buttonArray = [];
 
-        let p5Embed = new Discord.EmbedBuilder()
+        let p5Embed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -55,13 +61,13 @@ export default async (client, interaction, ephemeral) => {
                 p5Embed
                     .setTitle(`${personaInput} (${personaObject.arcana})`)
                     .setDescription(elementalMatchup)
+                    .setImage(personaImage)
                     .addFields([
                         { name: "Stats:", value: `Trait: ${personaObject.trait}\nLevel: ${personaObject.level}\n${personaStats}`, inline: true },
                         { name: "Skills:", value: personaSkills, inline: true },
                         { name: "Item:", value: personaItem, inline: false },
                         { name: "Item (Fusion Alarm):", value: personaItemAlarm, inline: false }
-                    ])
-                    .setImage(personaImage);
+                    ]);
                 break;
             case "skill":
                 let skillInput = interaction.options.getString("skill");
@@ -104,88 +110,77 @@ export default async (client, interaction, ephemeral) => {
         };
         return sendMessage({ client: client, interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 
-        function getWeaknessString(string) {
-            string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
-            return string;
-        };
-        function getItemString(string) {
-            let itemObject = itemMapRoyal[string];
-            if (!itemObject) return "None";
-            if (itemObject.type && itemObject.description) {
-                string = `${string} (${itemObject.type}): ${itemObject.description}`;
-            } else if (itemObject.skillCard) {
-                string = `${string} (Skill Card)`;
-            };
-            return string;
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
 };
 
-export const config = {
-    name: "persona5",
-    description: "Shows Persona 5 data.",
-    options: [{
-        name: "persona",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a specific Persona.",
-        options: [{
-            name: "persona",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify Persona by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "skill",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a skill.",
-        options: [{
-            name: "skill",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify skill by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "trait",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a trait.",
-        options: [{
-            name: "trait",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify trait by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "item",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on an item.",
-        options: [{
-            name: "item",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify item by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
+function getWeaknessString(string) {
+    string = string.replace("wk", "Weak").replace("rs", "Resist").replace("nu", "Null").replace("ab", "Absorb").replace("rp", "Repel").replace("-", "Neutral");
+    return string;
 };
+function getItemString(string) {
+    let itemObject = itemMapRoyal[string];
+    if (!itemObject) return "None";
+    if (itemObject.type && itemObject.description) {
+        string = `${string} (${itemObject.type}): ${itemObject.description}`;
+    } else if (itemObject.skillCard) {
+        string = `${string} (Skill Card)`;
+    };
+    return string;
+};
+
+// String options
+const personaOption = new SlashCommandStringOption()
+    .setName("persona")
+    .setDescription("Specify Persona by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const skillOption = new SlashCommandStringOption()
+    .setName("skill")
+    .setDescription("Specify skill by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const traitOption = new SlashCommandStringOption()
+    .setName("trait")
+    .setDescription("Specify trait by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const itemOption = new SlashCommandStringOption()
+    .setName("item")
+    .setDescription("Specify item by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const personaSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("persona")
+    .setDescription("Get info on a Persona.")
+    .addStringOption(personaOption)
+    .addBooleanOption(ephemeralOption);
+const skillSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("skill")
+    .setDescription("Get info on a skill.")
+    .addStringOption(skillOption)
+    .addBooleanOption(ephemeralOption);
+const traitSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("trait")
+    .setDescription("Get info on a trait.")
+    .addStringOption(traitOption)
+    .addBooleanOption(ephemeralOption);
+const itemSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("item")
+    .setDescription("Get info on an item.")
+    .addStringOption(itemOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("persona5")
+    .setDescription("Shows Persona 5 data.")
+    .addSubcommand(personaSubcommand)
+    .addSubcommand(skillSubcommand)
+    .addSubcommand(traitSubcommand)
+    .addSubcommand(itemSubcommand);

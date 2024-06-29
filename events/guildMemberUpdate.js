@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -12,7 +16,7 @@ export default async (client, member, newMember) => {
         if (!log) return;
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (newMember) newMember = await newMember.fetch({ force: true });
             let user = await client.users.fetch(member.id);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
@@ -56,7 +60,7 @@ export default async (client, member, newMember) => {
             try {
                 fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: Discord.AuditLogEvent.MemberUpdate
+                    type: AuditLogEvent.MemberUpdate
                 });
                 let memberUpdateLog = fetchedLogs.entries.first();
                 if (memberUpdateLog) executor = memberUpdateLog.executor;
@@ -68,7 +72,7 @@ export default async (client, member, newMember) => {
 
             let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
             let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(Discord.PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
+            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deleteBoosterRole();
 
             switch (updateCase) {
                 case "nickname":
@@ -114,17 +118,16 @@ export default async (client, member, newMember) => {
                     return;
             };
             if (changeText && changeText.length > 1024) changeText = changeText.slice(0, 1020) + "...";
-            const updateEmbed = new Discord.EmbedBuilder()
+            const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(topText)
-                .setThumbnail(oldAvatar);
-            if (changeText) updateEmbed.setDescription(changeText);
-            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
-            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
-            updateEmbed
+                .setThumbnail(oldAvatar)
                 .setImage(image)
                 .setFooter({ text: user.username })
                 .setTimestamp();
+            if (changeText) updateEmbed.setDescription(changeText);
+            updateEmbed.addFields([{ name: `User:`, value: `${user} (${user.id})`, inline: true }]);
+            if (executor) updateEmbed.addFields([{ name: `Executor:`, value: `${executor} (${executor.id})`, inline: true }]);
             return log.send({ embeds: [updateEmbed] });
 
             async function deleteBoosterRole() {
@@ -139,7 +142,7 @@ export default async (client, member, newMember) => {
                 await roleDB.destroy();
             };
 
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

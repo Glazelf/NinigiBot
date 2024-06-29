@@ -1,8 +1,16 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    SlashCommandBuilder,
+    SlashCommandRoleOption,
+    SlashCommandStringOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
+
+const requiredPermission = PermissionFlagsBits.ManageRoles;
+const selectDescriptionCharacterLimit = 50;
 
 export default async (client, interaction) => {
     try {
@@ -10,7 +18,7 @@ export default async (client, interaction) => {
         serverApi = await serverApi.default();
         let adminBoolBot = isAdmin(client, interaction.guild.members.me);
         let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -18,7 +26,6 @@ export default async (client, interaction) => {
         let role = interaction.options.getRole("role");
         let description = null;
         let descriptionArg = interaction.options.getString("description");
-        let selectDescriptionCharacterLimit = 50;
         if (descriptionArg) {
             description = descriptionArg;
             if (description.length > selectDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
@@ -48,17 +55,21 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "roleadd",
-    description: "Toggle a role's eligibility to be selfassigned.",
-    options: [{
-        name: "role",
-        type: Discord.ApplicationCommandOptionType.Role,
-        description: "Specify role to toggle.",
-        required: true
-    }, {
-        name: "description",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Specify a description for the role."
-    }]
-};
+// String options
+const descriptionOption = new SlashCommandStringOption()
+    .setName("description")
+    .setDescription("Specify a description for the role.")
+    .setMaxLength(50);
+// Role options
+const roleOption = new SlashCommandRoleOption()
+    .setName("role")
+    .setDescription("Specify role to toggle.")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("roleadd")
+    .setDescription("Toggle a role's eligibility to be selfassigned.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addRoleOption(roleOption)
+    .addStringOption(descriptionOption);
