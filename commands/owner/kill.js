@@ -1,21 +1,25 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import forever from "forever";
 import isOwner from "../../util/isOwner.js";
 import getTime from "../../util/getTime.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");
         if (interactionsArg === true) removeInteractions = interactionsArg;
 
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         let shutdownString = "Shutting down.";
         if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: shutdownString });
@@ -49,13 +53,15 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "kill",
-    description: "Shuts down bot.",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "remove-interactions",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Remove all interactions?"
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Boolean options
+const removeInteractionsOption = new SlashCommandBooleanOption()
+    .setName("remove-interactions")
+    .setDescription("Remove all interactions?");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("kill")
+    .setDescription("Shuts down bot.")
+    .setDMPermission(false)
+    .addBooleanOption(removeInteractionsOption);

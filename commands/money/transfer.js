@@ -1,8 +1,15 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import { getMoney, addMoney } from "../../database/dbServices/user.api.js";
+import {
+    getMoney,
+    addMoney
+} from "../../database/dbServices/user.api.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -14,7 +21,6 @@ export default async (client, interaction, ephemeral) => {
 
         if (transferTarget == interaction.user) return sendMessage({ client: client, interaction: interaction, content: `You can't transfer money to yourself.` });
         if (transferAmount > currentBalance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${userBalance}.` });
-        if (transferAmount < 1) return sendMessage({ client: client, interaction: interaction, content: `Please enter an amount greater than zero.` });
 
         addMoney(interaction.user.id, -transferAmount);
         addMoney(transferTarget.id, transferAmount);
@@ -26,18 +32,20 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "transfer",
-    description: "Give money to another user.",
-    options: [{
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "Specify user.",
-        required: true
-    }, {
-        name: "amount",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Specify amount.",
-        required: true
-    }]
-};
+// Integer options
+const amountOption = new SlashCommandIntegerOption()
+    .setName("amount")
+    .setDescription("Amount to transfer.")
+    .setMinValue(1)
+    .setRequired(true);
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("User to transfer to.")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("transfer")
+    .setDescription("Give money to another user.")
+    .addUserOption(userOption)
+    .addIntegerOption(amountOption);

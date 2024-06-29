@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
@@ -14,7 +15,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "ping",
-    description: `Pings bot.`
-};
+export const commandObject = new SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("Pings bot.");

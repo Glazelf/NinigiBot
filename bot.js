@@ -1,14 +1,20 @@
-import Discord from "discord.js";
+import {
+    Client,
+    GatewayIntentBits,
+    Partials,
+    Collection,
+    ApplicationCommandType
+} from "discord.js";
 import fs from 'fs';
 import path from 'path';
 import config from './config.json' with { type: "json" };
 
 // All except guild presence
 // privileged: MessageContent, GuildMembers, GuildPresence
-const intents = [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers, Discord.GatewayIntentBits.GuildBans, Discord.GatewayIntentBits.GuildEmojisAndStickers, Discord.GatewayIntentBits.GuildIntegrations, Discord.GatewayIntentBits.GuildVoiceStates, Discord.GatewayIntentBits.GuildMessages, Discord.GatewayIntentBits.GuildMessageReactions, Discord.GatewayIntentBits.DirectMessages, Discord.GatewayIntentBits.MessageContent];
-const partials = [Discord.Partials.Channel, Discord.Partials.GuildMember, Discord.Partials.Message, Discord.Partials.Reaction, Discord.Partials.User];
+const intents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildModeration, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent];
+const partials = [Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction, Partials.User];
 
-const client = new Discord.Client({
+const client = new Client({
     intents: intents,
     partials: partials,
     allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
@@ -31,8 +37,8 @@ fs.readdir("./events/", (err, files) => {
         client.on(eventName, event.bind(null, client));
     });
 });
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
+client.commands = new Collection();
+client.aliases = new Collection();
 await walk(`./commands/`);
 console.log("Loaded commands!");
 
@@ -48,12 +54,12 @@ async function walk(dir, callback) {
                     walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
-                    if (!props.config.type) props.config.type = Discord.ApplicationCommandType.ChatInput;
+                    if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     let commandName = file.split(".")[0];
                     // console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
-                    if (props.config.aliases) {
-                        props.config.aliases.forEach(alias => {
+                    if (props.commandObject.aliases) {
+                        props.commandObject.aliases.forEach(alias => {
                             if (client.aliases.get(alias)) return console.log(`Warning: Two commands share an alias name: ${alias}`);
                             client.aliases.set(alias, commandName);
                         });

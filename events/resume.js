@@ -5,7 +5,7 @@ export default async (client) => {
     try {
         // Set bot status
         client.user.setPresence(globalVars.presence);
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
         // console.log(`Resumed. (${timestamp})`);
         return;
 

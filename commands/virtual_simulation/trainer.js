@@ -1,7 +1,13 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
@@ -10,9 +16,8 @@ export default async (client, interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
-        let embed = new Discord.EmbedBuilder();
+        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        let embed = new EmbedBuilder();
         let avatar = null;
         let master = interaction.user;
         switch (interaction.options.getSubcommand()) {
@@ -59,21 +64,21 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "trainer",
-    description: "Check your trainer stats.",
-    options: [{
-        name: "info",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Check your trainer stats!",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "swapsprite",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Swap your trainer sprite between Dawn and Lucas."
-    }]
-};
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const infoOption = new SlashCommandSubcommandBuilder()
+    .setName("info")
+    .setDescription("Check your trainer stats.")
+    .addBooleanOption(ephemeralOption);
+const swapSpriteOption = new SlashCommandSubcommandBuilder()
+    .setName("swapsprite")
+    .setDescription("Swap your trainer sprite between Dawn and Lucas.");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("trainer")
+    .setDescription("Check and edit your trainer.")
+    .addSubcommand(infoOption)
+    .addSubcommand(swapSpriteOption);

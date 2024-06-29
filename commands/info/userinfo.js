@@ -1,4 +1,7 @@
-import Discord from "discord.js";
+import {
+    ContextMenuCommandBuilder,
+    ApplicationCommandType
+} from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import logger from "../../util/logger.js";
 import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
@@ -13,7 +16,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "Userinfo",
-    type: Discord.ApplicationCommandType.User
-};
+export const commandObject = new ContextMenuCommandBuilder()
+    .setName("Userinfo")
+    .setType(ApplicationCommandType.User);

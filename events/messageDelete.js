@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -27,7 +31,7 @@ export default async (client, message) => {
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
                 limit: 1,
-                type: Discord.AuditLogEvent.MessageDelete
+                type: AuditLogEvent.MessageDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) {
@@ -41,13 +45,12 @@ export default async (client, message) => {
         };
         // Check message content
         let botMember = message.guild.members.me;
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
             let messageContent = message.content;
             if (messageContent.length > 1024) messageContent = `${messageContent.substring(0, 1021)}...`;
-            if (messageContent.length < 1) return;
 
             let isReply = false;
             let replyMessage
@@ -59,25 +62,39 @@ export default async (client, message) => {
                     isReply = false;
                 };
             };
+            // Assets
+            let messageImage = null; // Very inconsistent, almost never works
+            let messageAttachmentsTitle = "Attachments:";
+            let messageAttachmentsString = "";
+            if (message.attachments.size > 0) {
+                messageImage = message.attachments.first().proxyURL;
+                messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
+                message.attachments.forEach(attachment => {
+                    if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
+                });
+            };
             let avatar;
             if (message.member) {
                 avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
             } else {
                 avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
-            const deleteEmbed = new Discord.EmbedBuilder()
+
+            const deleteEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
-                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)
-                .addFields([{ name: `Content:`, value: messageContent, inline: false }]);
+                .setImage(messageImage)
+                .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
+            if (messageContent.length > 0) deleteEmbed.addFields([{ name: `Content:`, value: messageContent, inline: false }]);
+            if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) deleteEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author} (${replyMessage.author.id})`, inline: true }]);
             if (executor) deleteEmbed.addFields([{ name: 'Executor:', value: `${executor} (${executor.id})`, inline: true }]);
             deleteEmbed
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

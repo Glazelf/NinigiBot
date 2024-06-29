@@ -1,4 +1,7 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandIntegerOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { buyFood } from "../../database/dbServices/user.api.js";
@@ -7,12 +10,10 @@ export default async (client, interaction) => {
     try {
         let ephemeral = true;
         let res, returnString;
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
         let master = interaction.user;
-        let foodArg = interaction.options.getInteger("food");
-        res = await buyFood(master.id, foodArg);
-        returnString = res ? `Added ${foodArg}🍗 to your account!` : `Not enough money!`;
+        let amountArg = interaction.options.getInteger("amount");
+        res = await buyFood(master.id, amountArg);
+        returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
 
     } catch (e) {
@@ -20,14 +21,14 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "buyfood",
-    description: "Buy food for Shinx",
-    options: [{
-        name: "food",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "The amount of food you want to buy.",
-        required: true,
-        minValue: 1
-    }]
-};
+// Integer options
+const amountOption = new SlashCommandIntegerOption()
+    .setName("amount")
+    .setDescription("Amount of food to buy.")
+    .setMinValue(1)
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("buyfood")
+    .setDescription("Buy food for your Shinx.")
+    .addIntegerOption(amountOption);

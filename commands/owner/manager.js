@@ -1,18 +1,27 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandIntegerOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import checker from "../../util/string/checkFormat.js";
-import { checkTrophyExistance, createShopTrophy, deleteShopTrophy } from "../../database/dbServices/trophy.api.js";
+import {
+    checkTrophyExistance,
+    createShopTrophy,
+    deleteShopTrophy
+} from "../../database/dbServices/trophy.api.js";
 import isOwner from "../../util/isOwner.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPerms });
-        let emotesAllowed = true;
-        if (ephemeral == true && !interaction.guild.roles.everyone.permissions.has(Discord.PermissionFlagsBits.UseExternalEmojis)) emotesAllowed = false;
+        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         let trophy_name, res, returnString;
         const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
@@ -53,7 +62,7 @@ export default async (client, interaction, ephemeral) => {
                 if (trophy_price < 1) error += 'Price cannot be lower than 1';
 
                 if (error.length > 0) {
-                    let errorBlock = Discord.codeBlock(error);
+                    let errorBlock = codeBlock(error);
                     returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
                 } else {
                     await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);
@@ -82,46 +91,49 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
+export const guildIDs = [config.devServerID];
+
 // Level and Shiny subcommands are missing on purpose
-export const config = {
-    name: "manager",
-    description: "Owner only, manage multiple aspects about Ninigi Virtual Simulation Core",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "addshoptrophy",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Owner only, add a custom trophy to the shop.",
-        options: [{
-            name: "name",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Name of the trophy. Make sure it's unique with less than 25 characters!",
-            required: true
-        }, {
-            name: "emote",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Icon of the trophy. Make sure it's a valid emote.",
-            required: true
-        }, {
-            name: "description",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Description of the trophy",
-            required: true
-        }, {
-            name: "price",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Amount of money to charge for it",
-            required: true,
-        },]
-    }, {
-        name: "deleteshoptrophy",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Owner only, delete a trophy from the shop",
-        options: [{
-            name: "name",
-            type: Discord.ApplicationCommandOptionType.String,
-            autocomplete: true,
-            description: "Name of the trophy. Make sure it's valid!",
-            required: true
-        }]
-    }]
-};
+// String options
+const nameCreateOption = new SlashCommandStringOption()
+    .setName("name")
+    .setDescription("Name of the trophy. Make sure it's unique!")
+    .setMaxLength(24)
+    .setRequired(true);
+const nameFindOption = new SlashCommandStringOption()
+    .setName("name")
+    .setDescription("Name of the trophy. Make sure it's valid!")
+    .setAutocomplete(true)
+    .setRequired(true);
+const emoteOption = new SlashCommandStringOption()
+    .setName("emote")
+    .setDescription("Icon of the trophy. Make sure it's a valid emote.")
+    .setRequired(true);
+const descriptionOption = new SlashCommandStringOption()
+    .setName("description")
+    .setDescription("Description of the trophy.")
+    .setRequired(true);
+// Integer options
+const priceOption = new SlashCommandIntegerOption()
+    .setName("price")
+    .setDescription("Amount of money the trophy will cost.")
+    .setRequired(true);
+// Subcommands
+const addShopTrophySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("addshoptrophy")
+    .setDescription("Add a custom trophy to the shop.")
+    .addStringOption(nameCreateOption)
+    .addStringOption(emoteOption)
+    .addStringOption(descriptionOption)
+    .addIntegerOption(priceOption);
+const deleteShopTrophySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("deleteshoptrophy")
+    .setDescription("Delete a trophy from the shop.")
+    .addStringOption(nameFindOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("manager")
+    .setDescription("Manage multiple aspects about Ninigi Virtual Simulation Core.")
+    .setDMPermission(false)
+    .addSubcommand(addShopTrophySubcommand)
+    .addSubcommand(deleteShopTrophySubcommand);

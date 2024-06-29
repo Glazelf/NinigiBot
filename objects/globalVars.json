@@ -10,7 +10,8 @@
     "sysbotLogChannelID": "771363190780854293",
     "currency": "💰",
     "embedColor": "#219DCD",
-    "lackPerms": "You do not have the required permissions to do this.",
+    "lackPermsString": "You do not have the required permissions to do this.",
+    "ephemeralOptionDescription": "Whether the reply will be private.",
     "starboardLimit": 3,
     "battling": {
         "yes": false

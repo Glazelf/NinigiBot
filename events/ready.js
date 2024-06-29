@@ -1,14 +1,16 @@
+import { ActivityType } from "discord.js";
 import getTime from '../util/getTime.js';
+import globalVars from "../objects/globalVars.json" with { type: "json" };
 
 export default async (client) => {
     try {
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
-                let commandServerID = null;
-                if (command.config.serverID) commandServerID = command.config.serverID;
-                // if (client.user.id != module.exports.NinigiID) commandServerID = client.config.devServerID; // set to test server for test build
-                await client.application.commands.create(command.config, commandServerID);
+                let commandServerIDs = null;
+                if (command.guildIDs) commandServerIDs = command.guildIDs;
+                // if (client.user.id != module.exports.NinigiID) commandServerID = client.guildIDs; // set to test server for test build
+                await client.application.commands.create(command.commandObject, commandServerIDs);
             } catch (e) {
                 console.log(e);
             };
@@ -20,7 +22,13 @@ export default async (client) => {
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
-        let timestamp = await getTime(client);
+        let timestamp = getTime();
+
+        let presence = initPresence();
+        globalVars.presence = presence;
+        // Set bot status
+        await client.user.setPresence(presence);
+        console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
 
         console.log(`Commands: ${client.commands.size}
 Guilds: ${client.guilds.cache.size}
@@ -31,4 +39,9 @@ Connected as ${client.user.username}. (${timestamp})`);
     } catch (e) {
         console.log(e);
     };
+};
+
+function initPresence() {
+    let presence = { activities: [{ name: 'the lake theme', type: ActivityType.Listening }], status: 'idle' };
+    return presence;
 };

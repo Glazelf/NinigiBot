@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChannelType
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import { addMoney } from "../database/dbServices/user.api.js";
@@ -11,19 +17,21 @@ export default async (client, message) => {
         if (message.author.bot || message.author.system) return;
 
         let messageImage = null;
-        if (message.attachments.size > 0) {
-            messageImage = message.attachments.first().url;
-        };
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
         // Ignore commands in DMs
         if (message.channel.type == "DM" || !message.guild) {
             // Send message contents to dm channel
             let DMChannel = await client.channels.fetch(client.config.devChannelID);
             let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
 
-            let profileButtons = new Discord.ActionRowBuilder()
-                .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${message.author.id}` }));
+            const profileButton = new ButtonBuilder()
+                .setLabel("Profile")
+                .setStyle(ButtonStyle.Link)
+                .setURL(`discord://-/users/${message.author.id}`);
+            let profileButtons = new ActionRowBuilder()
+                .addComponents(profileButton);
 
-            const dmEmbed = new Discord.EmbedBuilder()
+            const dmEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`DM Message`)
                 .setThumbnail(avatar)
@@ -35,7 +43,7 @@ export default async (client, message) => {
             let dmLogObject = { content: message.author.id, embeds: [dmEmbed], components: [profileButtons] };
             return DMChannel.send(dmLogObject);
         };
-        if (!message.channel.type == Discord.ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
+        if (!message.channel.type == ChannelType.GuildForum && !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")) return;
         if (!message.member) return;
 
         let memberRoles = 0;

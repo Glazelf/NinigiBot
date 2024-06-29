@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SlashCommandBuilder,
+    SlashCommandIntegerOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Minesweeper from "discord.js-minesweeper";
@@ -47,9 +53,13 @@ export default async (client, interaction, ephemeral) => {
         let buttonIndex = 0;
         let rowIndex = 0;
         matrix.forEach(arr => {
-            let buttonRow = new Discord.ActionRowBuilder();
+            let buttonRow = new ActionRowBuilder();
             arr.forEach(element => {
-                buttonRow.addComponents(new Discord.ButtonBuilder({ customId: `minesweeper${rowIndex}-${buttonIndex}-${element}`, style: Discord.ButtonStyle.Primary, emoji: spoilerEmote }));
+                const mineButton = new ButtonBuilder()
+                    .setCustomId(`minesweeper${rowIndex}-${buttonIndex}-${element}`)
+                    .setStyle(ButtonStyle.Primary)
+                    .setEmoji(spoilerEmote);
+                buttonRow.addComponents(mineButton);
                 buttonIndex += 1;
             });
             rowIndex += 1;
@@ -70,26 +80,28 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "minesweeper",
-    aliases: [],
-    description: "Play minesweeper.",
-    options: [{
-        name: "mines",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of mines.",
-        minValue: 1
-    }, {
-        name: "rows",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of rows.",
-        minValue: 2,
-        maxValue: 5
-    }, {
-        name: "columns",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of columns.",
-        minValue: 2,
-        maxValue: 5
-    }]
-};
+let minGridLength = 2;
+let maxGridLength = 5;
+// Integer options
+const minesOption = new SlashCommandIntegerOption()
+    .setName("mines")
+    .setDescription("Amount of mines.")
+    .setMinValue(1)
+    .setMaxValue(12);
+const rowsOption = new SlashCommandIntegerOption()
+    .setName("rows")
+    .setDescription("Amount of rows.")
+    .setMinValue(minGridLength)
+    .setMaxValue(maxGridLength);
+const columnsOption = new SlashCommandIntegerOption()
+    .setName("columns")
+    .setDescription("Amount of columns.")
+    .setMinValue(minGridLength)
+    .setMaxValue(maxGridLength);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("minesweeper")
+    .setDescription("Play minesweeper.")
+    .addIntegerOption(minesOption)
+    .addIntegerOption(rowsOption)
+    .addIntegerOption(columnsOption);
