@@ -51,7 +51,7 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const guildIDs = [config.devServerID]; // Add Shinx server ID to this before release.
+export const guildIDs = [config.devServerID]; // Add globalVars.ShinxServerID to this before release.
 
 export const commandObject = new SlashCommandBuilder()
     .setName("quote")
