@@ -16,7 +16,7 @@ export default async (client, interaction, ephemeral) => {
         ephemeral = true;
 
         let SKUs = await client.application.fetchSKUs();
-        return sendMessage({ client: client, interaction: interaction, content: SKUs.toString(), ephemeral: ephemeral });
+        return sendMessage({ client: client, interaction: interaction, content: Object.keys(SKUs).toString(), ephemeral: ephemeral });
 
     } catch (e) {
         logger(e, client, interaction);
