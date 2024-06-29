@@ -1,9 +1,13 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder
+} from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import logger from "../../util/logger.js";
 import randomNumber from "../../util/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 let previousQuoteTime = null;
 
@@ -30,11 +34,9 @@ export default async (client, interaction, ephemeral) => {
         let message = channel.messages.fetch(randomMessage.messageID);
 
         let messageImage = null;
-        if (message.attachments.size > 0) {
-            messageImage = message.attachments.first().url;
-        };
+        if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-        let quoteEmbed = new Discord.EmbedBuilder()
+        let quoteEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: "Quote" })
             .setTitle(message.author.username)
@@ -49,8 +51,9 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "quote",
-    description: "Let someones wisdom guide you.",
-    serverID: ["759344085420605471"],
-};
+export const guildIDs = [config.devServerID]; // Add Shinx server ID to this before release.
+
+export const commandObject = new SlashCommandBuilder()
+    .setName("quote")
+    .setDescription("Let someone's wisdom guide you.")
+    .setDMPermission(false);
