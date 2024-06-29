@@ -1,10 +1,11 @@
 import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+import config from "../config.json" with { type: "json" };
 
 export default async (client, guild) => {
     try {
-        let log = await client.channels.fetch(client.config.devChannelID);
+        let log = await client.channels.fetch(config.devChannelID);
         if (!log) return;
 
         let icon = guild.iconURL(globalVars.displayAvatarSettings);

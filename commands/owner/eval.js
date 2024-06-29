@@ -29,7 +29,7 @@ export default async (client, interaction, ephemeral) => {
         if (typeof evaled !== "string") evaled = util.inspect(evaled);
         if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
         // Check if requested content has any matches with client config. Should avoid possible security leaks.
-        for (const [key, value] of Object.entries(client.config)) {
+        for (const [key, value] of Object.entries(config)) {
             if (evaled.includes(value) && ephemeral == false) return sendMessage({ client: client, interaction: interaction, content: `For security reasons this content can't be returned.` });
         };
         let returnString = codeBlock("js", clean(evaled));
