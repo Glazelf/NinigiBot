@@ -1,4 +1,14 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandIntegerOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -18,6 +28,7 @@ import imageExists from "../../util/imageExists.js";
 
 const gens = new Generations(Dex);
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const currentYear = new Date().getFullYear();
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -33,10 +44,10 @@ export default async (client, interaction, ephemeral) => {
         let shinyArg = interaction.options.getBoolean("shiny");
         if (shinyArg === true) shinyBool = true;
         // Variables
-        let pokemonEmbed = new Discord.EmbedBuilder()
+        let pokemonEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         let pokemonName = interaction.options.getString("pokemon");
-        let pokemonButtons = new Discord.ActionRowBuilder();
+        let pokemonButtons = new ActionRowBuilder();
         let returnString = "";
         let pokemonFiles = null;
         let nameBulbapedia = null;
@@ -229,7 +240,11 @@ export default async (client, interaction, ephemeral) => {
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
-                        pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: thread.split(">")[1].split("<")[0], style: Discord.ButtonStyle.Link, url: thread.split("\"")[1] }));
+                        const threadButton = new ButtonBuilder()
+                            .setLabel(thread.split(">")[1].split("<")[0])
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(thread.split("\"")[1]);
+                        pokemonButtons.addComponents(threadButton);
                     });
                 };
                 // Leading newlines get ignored if format.desc is empty
@@ -347,9 +362,16 @@ export default async (client, interaction, ephemeral) => {
                 let response = null;
                 let genericUsageResponse = null;
                 let failText = `Could not fetch data for the inputs you provided.\nThe most common reasons for this are spelling mistakes and a lack of Smogon data. If it's early in the month it's possible usage for last month has not been uploaded yet.`;
-                let usageButtons = new Discord.ActionRowBuilder()
-                    .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage', style: Discord.ButtonStyle.Link, url: `https://www.smogon.com/stats/` }))
-                    .addComponents(new Discord.ButtonBuilder({ label: 'Showdown Usage (Detailed)', style: Discord.ButtonStyle.Link, url: searchURL }));
+                const usageButtonSimple = new ButtonBuilder()
+                    .setLabel("Showdown Usage")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL("https://www.smogon.com/stats/");
+                const usageButtonDetailed = new ButtonBuilder()
+                    .setLabel("Showdown Usage (Detailed)")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL(searchURL);
+                let usageButtons = new ActionRowBuilder()
+                    .addComponents([usageButtonSimple, usageButtonDetailed]);
                 try {
                     response = await axios.get(searchURL);
                     genericUsageResponse = await axios.get(`https://www.smogon.com/stats/${year}-${stringMonth}/${formatInput}-${rating}.txt`);
@@ -438,7 +460,13 @@ export default async (client, interaction, ephemeral) => {
                 break;
         };
         // Bulbapedia button
-        if (linkBulbapedia) pokemonButtons.addComponents(new Discord.ButtonBuilder({ label: 'More info', style: Discord.ButtonStyle.Link, url: linkBulbapedia }));
+        if (linkBulbapedia) {
+            const bulbapediaButton = new ButtonBuilder()
+                .setLabel("More info")
+                .setStyle(ButtonStyle.Link)
+                .setURL(linkBulbapedia);
+            pokemonButtons.addComponents(bulbapediaButton);
+        };
         return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
     } catch (e) {
@@ -496,199 +524,148 @@ function isIdenticalForm(pokemonName) {
     return false;
 };
 
-export const config = {
-    name: "pokemon",
-    description: "Shows Pokémon data.",
-    type: Discord.ApplicationCommandOptionType.Subcommand,
-    options: [{
-        name: "ability",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on an ability.",
-        options: [{
-            name: "ability",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Ability to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "generation",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Generation to use.",
-            minValue: 3,
-            maxValue: globalVars.pokemonCurrentGeneration
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "item",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on an item.",
-        options: [{
-            name: "item",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Item to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "generation",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Generation to use.",
-            minValue: 1,
-            maxValue: globalVars.pokemonCurrentGeneration
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "move",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a move.",
-        options: [{
-            name: "move",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Move to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "generation",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Generation to use.",
-            minValue: 1,
-            maxValue: globalVars.pokemonCurrentGeneration
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "nature",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a nature.",
-        options: [{
-            name: "nature",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Nature to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "format",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a format.",
-        options: [{
-            name: "format",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Format to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "pokemon",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a Pokémon.",
-        options: [{
-            name: "pokemon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Pokémon to get info on.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "learnset",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether to show the Pokémon's learnset."
-        }, {
-            name: "shiny",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether to show the Pokémon's shiny sprite."
-        }, {
-            name: "generation",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Generation to use.",
-            minValue: 1,
-            maxValue: globalVars.pokemonCurrentGeneration
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "learn",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Check if a Pokémon can learn a move.",
-        options: [{
-            name: "move",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Move to check availability.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "pokemon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Pokémon to check availability.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "usage",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Shows Smogon usage data.",
-        options: [{
-            name: "format",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Format to get data from.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "pokemon",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Pokémon to get data on.",
-            autocomplete: true
-        }, {
-            name: "month",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Month (number) to get data from.",
-            minValue: 1,
-            maxValue: 12
-        }, {
-            name: "year",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Year to get data from.",
-            minValue: 2014,
-            maxValue: new Date().getFullYear()
-        }, {
-            name: "rating",
-            type: Discord.ApplicationCommandOptionType.Integer,
-            description: "Minimum rating to get data from.",
-            autocomplete: true,
-            minValue: 1000
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "whosthat",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Who's that Pokémon?",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
-};
+const pokemonOptionName = "pokemon";
+const pokemonOptionDescription = "Pokémon to get info on.";
+const generationOptionName = "generation";
+const generationOptionDescription = "Generation to use.";
+// String options
+const pokemonOption = new SlashCommandStringOption()
+    .setName(pokemonOptionName)
+    .setDescription(pokemonOptionDescription)
+    .setAutocomplete(true);
+const pokemonOptionRequired = new SlashCommandStringOption()
+    .setName(pokemonOptionName)
+    .setDescription(pokemonOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const abilityOption = new SlashCommandStringOption()
+    .setName("ability")
+    .setDescription("Ability to get info on.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const itemOption = new SlashCommandStringOption()
+    .setName("item")
+    .setDescription("Item to get info on.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const moveOption = new SlashCommandStringOption()
+    .setName("move")
+    .setDescription("Move to get info on.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const natureOption = new SlashCommandStringOption()
+    .setName("nature")
+    .setDescription("Nature to get info on.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const formatOption = new SlashCommandStringOption()
+    .setName("format")
+    .setDescription("Format to get info on.")
+    .setAutocomplete(true)
+    .setRequired(true);
+// Integer options
+const generationOption = new SlashCommandIntegerOption()
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
+    .setMinValue(1)
+    .setMaxValue(globalVars.pokemonCurrentGeneration);
+const generationOptionAbilities = new SlashCommandIntegerOption()
+    .setName(generationOptionName)
+    .setDescription(generationOptionDescription)
+    .setMinValue(3)
+    .setMaxValue(globalVars.pokemonCurrentGeneration);
+const monthOption = new SlashCommandIntegerOption()
+    .setName("month")
+    .setDescription("Month (number) to get data from.")
+    .setMinValue(1)
+    .setMaxValue(12);
+const yearOption = new SlashCommandIntegerOption()
+    .setName("year")
+    .setDescription("Year to get data from.")
+    .setMinValue(2014)
+    .setMaxValue(currentYear);
+const ratingOption = new SlashCommandIntegerOption()
+    .setName("rating")
+    .setDescription("Minimum rating to get data from.")
+    .setMinValue(1000)
+    .setMaxValue(1825)
+    .setAutocomplete(true);
+// Boolean options
+const learnsetOption = new SlashCommandBooleanOption()
+    .setName("learnset")
+    .setDescription("Whether to show the Pokémon's learnset.");
+const shinyOption = new SlashCommandBooleanOption()
+    .setName("shiny")
+    .setDescription("Whether to show the Pokémon's shiny sprite.");
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const pokemonSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("pokemon")
+    .setDescription("Get info on a Pokémon.")
+    .addStringOption(pokemonOptionRequired)
+    .addIntegerOption(generationOption)
+    .addBooleanOption(learnsetOption)
+    .addBooleanOption(shinyOption)
+    .addBooleanOption(ephemeralOption);
+const abilitySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("ability")
+    .setDescription("Get info on an ability.")
+    .addStringOption(abilityOption)
+    .addIntegerOption(generationOptionAbilities)
+    .addBooleanOption(ephemeralOption);
+const moveSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("move")
+    .setDescription("Get info on a move.")
+    .addStringOption(moveOption)
+    .addIntegerOption(generationOption)
+    .addBooleanOption(ephemeralOption);
+const itemSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("item")
+    .setDescription("Get info on an item.")
+    .addStringOption(itemOption)
+    .addIntegerOption(generationOption)
+    .addBooleanOption(ephemeralOption);
+const natureSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("nature")
+    .setDescription("Get info on a nature.")
+    .addStringOption(natureOption)
+    .addBooleanOption(ephemeralOption);
+const formatSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("format")
+    .setDescription("Get info on a format.")
+    .addStringOption(formatOption)
+    .addBooleanOption(ephemeralOption);
+const learnSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("learn")
+    .setDescription("Check if a Pokémon can learn a move")
+    .addStringOption(pokemonOptionRequired)
+    .addStringOption(moveOption)
+    .addBooleanOption(ephemeralOption)
+const usageSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("usage")
+    .setDescription("Shows Smogon usage data.")
+    .addStringOption(formatOption)
+    .addStringOption(pokemonOption)
+    .addIntegerOption(monthOption)
+    .addIntegerOption(yearOption)
+    .addIntegerOption(ratingOption)
+    .addBooleanOption(ephemeralOption);
+const whosThatSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("whosthat")
+    .setDescription("Who's that Pokémon?")
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("pokemon")
+    .setDescription("Shows Pokémon data.")
+    .addSubcommand(pokemonSubcommand)
+    .addSubcommand(abilitySubcommand)
+    .addSubcommand(moveSubcommand)
+    .addSubcommand(itemSubcommand)
+    .addSubcommand(natureSubcommand)
+    .addSubcommand(formatSubcommand)
+    .addSubcommand(learnSubcommand)
+    .addSubcommand(usageSubcommand)
+    .addSubcommand(whosThatSubcommand);

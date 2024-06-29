@@ -1,4 +1,12 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    codeBlock,
+    AttachmentBuilder,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandBooleanOption,
+    SlashCommandStringOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -6,15 +14,20 @@ import Canvas from "canvas";
 import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
-import { getFullBuyableShopTrophies, buyShopTrophy, getShopTrophyWithName, getEventTrophyWithName } from "../../database/dbServices/trophy.api.js";
+import {
+    getFullBuyableShopTrophies,
+    buyShopTrophy,
+    getShopTrophyWithName,
+    getEventTrophyWithName
+} from "../../database/dbServices/trophy.api.js";
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
         let messageFile = null;
         let trophy_name, res;
-        let embed = new Discord.EmbedBuilder()
-            .setColor(globalVars.embedColor)
+        let embed = new EmbedBuilder()
+            .setColor(globalVars.embedColor);
         let returnString = '';
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -27,15 +40,15 @@ export default async (client, interaction, ephemeral) => {
                 trophies = await getFullBuyableShopTrophies(master.id);
                 if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
                 trophies.forEach(trophy => {
-                    let trophyPriceBlock = Discord.codeBlock("diff", `[${trophy.price}]`);
+                    let trophyPriceBlock = codeBlock("diff", `[${trophy.price}]`);
                     let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
                     let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
                     switch (trophy.temp_bought) {
                         case 'Bought':
-                            trophy_price.value = Discord.codeBlock("yaml", `Bought`);
+                            trophy_price.value = codeBlock("yaml", `Bought`);
                             break;
                         case 'CantBuy':
-                            trophy_price.value = Discord.codeBlock("css", `[${trophy.price}]`);
+                            trophy_price.value = codeBlock("css", `[${trophy.price}]`);
                             break;
                         case 'CanBuy':
                             break;
@@ -79,7 +92,7 @@ export default async (client, interaction, ephemeral) => {
                         img = await Canvas.loadImage('./assets/reactions.png');
                         ctx.drawImage(img, 10 + 30 * 0, 8, 30, 32, 230, 117, 30, 32);
 
-                        messageFile = new Discord.AttachmentBuilder(canvas.toBuffer());
+                        messageFile = new AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
 
@@ -136,53 +149,44 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-// Level and Shiny subcommands are missing on purpose
-export const config = {
-    name: "trophy",
-    description: "Handles all interactions with trophies",
-    options: [{
-        name: "stock",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: `Check today's available trophies`,
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "buy",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: `Buy a trophy from today's stock`,
-        options: [{
-            name: "shoptrophy",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Item to buy",
-            autocomplete: true,
-            required: true
-        }]
-    }, {
-        name: "list",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "See a list of all trophies!",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }, {
-        name: "info",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info about a trophy",
-        options: [{
-            name: "trophy",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Trophy or it's icon",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether this command is only visible to you."
-        }]
-    }]
-};
+// String options
+const trophyOption = new SlashCommandStringOption()
+    .setName("trophy")
+    .setDescription("Trophy to show info about.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const shopTrophyOption = new SlashCommandStringOption()
+    .setName("shoptrophy")
+    .setDescription("Trophy to buy.")
+    .setAutocomplete(true)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const stockSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("stock")
+    .setDescription("Check today's available trophies.")
+    .addBooleanOption(ephemeralOption);
+const buySubcommand = new SlashCommandSubcommandBuilder()
+    .setName("buy")
+    .setDescription("Buy a trophy from the store.")
+    .addStringOption(shopTrophyOption);
+const listSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("list")
+    .setDescription("See a lit of all trophies.")
+    .addBooleanOption(ephemeralOption);
+const infoSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("info")
+    .setDescription("Get info about a trophy.")
+    .addStringOption(trophyOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("trophy")
+    .setDescription("Interact with trophies.")
+    .addSubcommand(stockSubcommand)
+    .addSubcommand(buySubcommand)
+    .addSubcommand(listSubcommand)
+    .addSubcommand(infoSubcommand);

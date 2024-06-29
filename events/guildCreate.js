@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -15,7 +15,7 @@ export default async (client, guild) => {
             // console.log(e);
             return;
         };
-        const guildEmbed = new Discord.EmbedBuilder()
+        const guildEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`Guild Joined ⭐`)
             .setThumbnail(icon)

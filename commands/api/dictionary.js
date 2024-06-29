@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    EmbedBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -16,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
         let inputWordType = interaction.options.getString("wordtype");
         let wordStatus;
 
-        let dictionaryEmbed = new Discord.EmbedBuilder()
+        let dictionaryEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         try {
             // Sometimes API doesn't respond when a word doesn't exist, sometimes it errors properly. Timeout is to catch both.
@@ -27,7 +32,7 @@ export default async (client, interaction, ephemeral) => {
             wordStatus = wordStatus.data;
         } catch (e) {
             // console.log(e);
-            let errorEmbed = new Discord.EmbedBuilder()
+            let errorEmbed = new EmbedBuilder()
                 .setColor('#FF0000')
                 .setTitle("Error")
                 .setDescription("Word not found.");
@@ -88,26 +93,29 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "dictionary",
-    description: `Get definition of a word.`,
-    options: [{
-        name: "word",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Specify word to look up.",
-        required: true
-    }, {
-        name: "wordtype",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Select type of word.",
-        choices: [
-            { name: "noun", value: "noun" },
-            { name: "verb", value: "verb" },
-            { name: "adjective", value: "adjective" }
-        ]
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the reply will be private."
-    }]
-};
+let wordTypeChoices = [
+    { name: "noun", value: "noun" },
+    { name: "verb", value: "verb" },
+    { name: "adjective", value: "adjective" }
+];
+
+// String options
+const wordOption = new SlashCommandStringOption()
+    .setName("word")
+    .setDescription("Specify word to look up.")
+    .setRequired(true);
+const wordTypeOption = new SlashCommandStringOption()
+    .setName("wordtype")
+    .setDescription("Select type of word.")
+    .addChoices(wordTypeChoices);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("dictionary")
+    .setDescription("Get definition of a word.")
+    .addStringOption(wordOption)
+    .addStringOption(wordTypeOption)
+    .addBooleanOption(ephemeralOption);

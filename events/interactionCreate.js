@@ -1,5 +1,15 @@
 // Global
-import Discord from "discord.js";
+import {
+    InteractionType,
+    ComponentType,
+    ActionRowBuilder,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import sendMessage from "../util/sendMessage.js";
@@ -28,7 +38,11 @@ import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { typ
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
 // Database
 import { getEphemeralDefault } from "../database/dbServices/user.api.js";
-import { getShopTrophies, getEventTrophies, getBuyableShopTrophies } from "../database/dbServices/trophy.api.js";
+import {
+    getShopTrophies,
+    getEventTrophies,
+    getBuyableShopTrophies
+} from "../database/dbServices/trophy.api.js";
 // Other util
 import isAdmin from "../util/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";
@@ -62,13 +76,13 @@ export default async (client, interaction) => {
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
         switch (interaction.type) {
-            case Discord.InteractionType.ApplicationCommand:
+            case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands Enmap
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
                 // Slower? command checker, since some commands user capitalization
                 await client.commands.forEach(command => {
-                    if (command.config.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
+                    if (command.commandObject.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
                 });
                 if (!cmd) {
                     if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
@@ -87,9 +101,9 @@ export default async (client, interaction) => {
                 } else {
                     return;
                 };
-            case Discord.InteractionType.MessageComponent:
+            case InteractionType.MessageComponent:
                 switch (interaction.componentType) {
-                    case Discord.ComponentType.Button:
+                    case ComponentType.Button:
                         let messageObject = null;
                         if (!interaction.customId) return;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
@@ -104,17 +118,18 @@ export default async (client, interaction) => {
                             return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
-                            const pkmQuizModal = new Discord.ModalBuilder()
+                            const pkmQuizModal = new ModalBuilder()
                                 .setCustomId(pkmQuizModalId)
                                 .setTitle("Who's That Pokémon?");
-                            const pkmQuizModalGuessInput = new Discord.TextInputBuilder()
+                            const pkmQuizModalGuessInput = new TextInputBuilder()
                                 .setCustomId(pkmQuizModalGuessId)
                                 .setLabel("Put in your guess!")
                                 .setPlaceholder("Azelf-Mega-Y")
-                                .setStyle(Discord.TextInputStyle.Short)
+                                .setStyle(TextInputStyle.Short)
                                 .setMaxLength(64)
                                 .setRequired(true);
-                            const pkmQuizActionRow = new Discord.ActionRowBuilder().addComponents(pkmQuizModalGuessInput);
+                            const pkmQuizActionRow = new ActionRowBuilder()
+                                .addComponents(pkmQuizModalGuessInput);
                             pkmQuizModal.addComponents(pkmQuizActionRow);
                             return interaction.showModal(pkmQuizModal);
                         } else if (interaction.customId.startsWith("pkm")) {
@@ -220,7 +235,7 @@ export default async (client, interaction) => {
                             // Other buttons
                             return;
                         };
-                    case Discord.ComponentType.StringSelect:
+                    case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
                             try {
                                 let serverApi = await import("../database/dbServices/server.api.js");
@@ -265,7 +280,7 @@ export default async (client, interaction) => {
                         // Other component types
                         return;
                 };
-            case Discord.InteractionType.ApplicationCommandAutocomplete:
+            case InteractionType.ApplicationCommandAutocomplete:
                 let focusedOption = interaction.options.getFocused(true);
                 let choices = [];
                 // Common arguments 
@@ -628,8 +643,7 @@ export default async (client, interaction) => {
                 return interaction.respond(choices).catch(e => {
                     // console.log(e);
                 });
-                break;
-            case Discord.InteractionType.ModalSubmit:
+            case InteractionType.ModalSubmit:
                 let userAvatar = interaction.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 switch (interaction.customId) {
                     case "bugReportModal":
@@ -641,7 +655,7 @@ export default async (client, interaction) => {
                         const bugReportContext = interaction.fields.getTextInputValue('bugReportContext');
                         let DMChannel = await client.channels.fetch(client.config.devChannelID);
 
-                        const bugReportEmbed = new Discord.EmbedBuilder()
+                        const bugReportEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Bug Report 🐛`)
                             .setThumbnail(userAvatar)
@@ -655,15 +669,17 @@ export default async (client, interaction) => {
                             ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
                         return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
-                        break;
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
                         const modMailDescription = interaction.fields.getTextInputValue('modMailDescription');
-
-                        let profileButtons = new Discord.ActionRowBuilder()
-                            .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${interaction.user.id}` }));
-                        const modMailEmbed = new Discord.EmbedBuilder()
+                        const profileButton = new ButtonBuilder()
+                            .setLabel("Profile")
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(`discord://-/users/${interaction.user.id}`);
+                        let profileButtons = new ActionRowBuilder()
+                            .addComponents(profileButton);
+                        const modMailEmbed = new EmbedBuilder()
                             .setColor(globalVars.embedColor)
                             .setTitle(`Mod Mail 💌`)
                             .setThumbnail(userAvatar)
@@ -673,7 +689,6 @@ export default async (client, interaction) => {
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
                         return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
-                        break;
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;

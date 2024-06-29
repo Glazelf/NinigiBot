@@ -1,10 +1,15 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
@@ -29,12 +34,10 @@ export default async (client, interaction, ephemeral) => {
             installResult = await runCommand("npm install");
             await runCommand("git stash");
         };
-        if (dbinit) {
-            await runCommand("node dbInit.js");
-        };
+        if (dbinit) await runCommand("node dbInit.js");
         // Return messages then destroy
         let restartString = "Restarting.";
-        let installResultString = Discord.codeBlock(installResult.stdout);
+        let installResultString = codeBlock(installResult.stdout);
         if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
         await sendMessage({ client: client, interaction: interaction, content: restartString });
@@ -58,21 +61,23 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "restart",
-    description: "Restart bot and reload all files.",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "reset-interactions",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Reset all interactions?"
-    }, {
-        name: "npm-install",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Run npm install command?"
-    }, {
-        name: "dbinit",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Initialize database?"
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Boolean options
+const resetInteractionsOptions = new SlashCommandBooleanOption()
+    .setName("reset-interactions")
+    .setDescription("Reset all interactions?");
+const npmInstallOption = new SlashCommandBooleanOption()
+    .setName("npm-install")
+    .setDescription("Run NPM install command?");
+const dbInitOption = new SlashCommandBooleanOption()
+    .setName("dbinit")
+    .setDescription("Initialize database?");
+// Full command
+export const commandObject = new SlashCommandBuilder()
+    .setName("restart")
+    .setDescription("Restart bot and reload all files.")
+    .setDMPermission(false)
+    .addBooleanOption(resetInteractionsOptions)
+    .addBooleanOption(npmInstallOption)
+    .addBooleanOption(dbInitOption);

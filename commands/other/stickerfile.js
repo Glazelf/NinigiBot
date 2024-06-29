@@ -1,4 +1,7 @@
-import Discord from "discord.js";
+import {
+    ContextMenuCommandBuilder,
+    ApplicationCommandType
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
@@ -23,7 +26,6 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "StickerFile",
-    type: Discord.ApplicationCommandType.Message
-};
+export const commandObject = new ContextMenuCommandBuilder()
+    .setName("Stickerfile")
+    .setType(ApplicationCommandType.Message);

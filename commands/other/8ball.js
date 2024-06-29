@@ -1,6 +1,12 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
 
@@ -10,7 +16,7 @@ export default async (client, interaction, ephemeral) => {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-        let returnString = `Your question was:${Discord.codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
+        let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
         return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
@@ -18,17 +24,18 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "8ball",
-    description: "Ask the magic 8ball for knowledge.",
-    options: [{
-        name: "input",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Your burning question.",
-        required: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the response should be ephemeral.",
-    }]
-};
+// String options
+const inputOption = new SlashCommandStringOption()
+    .setName("input")
+    .setDescription("Your burning question.")
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("8ball")
+    .setDescription("Ask the magic 8ball for knowledge.")
+    .addStringOption(inputOption)
+    .addBooleanOption(ephemeralOption);

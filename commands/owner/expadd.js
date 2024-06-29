@@ -1,9 +1,14 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandIntegerOption,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction) => {
     try {
@@ -22,19 +27,21 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "expadd",
-    description: "Add exp to a user shinx.",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "amount",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of experience to add.",
-        required: true
-    }, {
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "Specify user.",
-        required: true
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Integer options
+const amountOption = new SlashCommandIntegerOption()
+    .setName("amount")
+    .setDescription("Amount of experience to add.")
+    .setRequired(true);
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("Specify user to give experience.")
+    .setRequired(true);
+export const commandObject = new SlashCommandBuilder()
+    .setName("expadd")
+    .setDescription("Add experience to a user's Shinx.")
+    .setDMPermission(false)
+    .addUserOption(userOption)
+    .addIntegerOption(amountOption);

@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -27,7 +31,7 @@ export default async (client, message) => {
         try {
             const fetchedLogs = await message.guild.fetchAuditLogs({
                 limit: 1,
-                type: Discord.AuditLogEvent.MessageDelete
+                type: AuditLogEvent.MessageDelete
             });
             let deleteLog = fetchedLogs.entries.first();
             if (deleteLog) {
@@ -41,7 +45,7 @@ export default async (client, message) => {
         };
         // Check message content
         let botMember = message.guild.members.me;
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (!message || !message.author) return;
             if (message.channel == log && message.author == client.user) return;
 
@@ -76,7 +80,7 @@ export default async (client, message) => {
                 avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
             };
 
-            const deleteEmbed = new Discord.EmbedBuilder()
+            const deleteEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
@@ -90,7 +94,7 @@ export default async (client, message) => {
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             return log.send({ embeds: [deleteEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

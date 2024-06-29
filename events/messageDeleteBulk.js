@@ -1,4 +1,7 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -30,17 +33,17 @@ export default async (client, messages) => {
         if (!log) return;
 
         let botMember = guild.members.me;
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             if (messagesContent.length > 1024) messagesContent = `...${messagesContent.substring(messagesContent.length - 1021, messagesContent.length)}`;
             if (messagesContent.length < 1) return;
 
-            const purgeEmbed = new Discord.EmbedBuilder()
+            const purgeEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Messages Purged ❌`)
                 .setDescription(messagesContent)
                 .setFooter({ text: `Messages purged: ${messages.length}` });
             return log.send({ embeds: [purgeEmbed] });
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

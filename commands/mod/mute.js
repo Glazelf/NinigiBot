@@ -1,15 +1,21 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandIntegerOption,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
-const requiredPermission = Discord.PermissionFlagsBits.ModerateMembers;
+const requiredPermission = PermissionFlagsBits.ModerateMembers;
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
@@ -46,7 +52,7 @@ export default async (client, interaction, ephemeral) => {
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
-        let reasonCodeBlock = Discord.codeBlock("fix", reason);
+        let reasonCodeBlock = codeBlock("fix", reason);
 
         let muteReturnString = `Muted ${member} (${member.id}) for ${displayMuteTime}for the following reason: ${reasonCodeBlock}`;
         if (member.communicationDisabledUntil) { // Check if a timeout timestamp exists
@@ -77,25 +83,31 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "mute",
-    description: "Times the target out.",
-    default_member_permissions: requiredPermission,
-    options: [{
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "Specify user.",
-        required: true
-    }, {
-        name: "time",
-        type: Discord.ApplicationCommandOptionType.Integer,
-        description: "Amount of minutes to mute.",
-        autocomplete: true,
-        minValue: 1,
-        maxValue: 43800
-    }, {
-        name: "reason",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Reason for mute."
-    }]
-};
+
+// String options
+const reasonOption = new SlashCommandStringOption()
+    .setName("reason")
+    .setDescription("Reason for mute.")
+    .setMaxLength(450); // Max reason length is 512, leave some space for executor and timestamp
+// Integer options
+const timeOption = new SlashCommandIntegerOption()
+    .setName("time")
+    .setDescription("Amount of time to mute in minutes.")
+    .setAutocomplete(true)
+    .setRequired(true)
+    .setMinValue(1)
+    .setMaxValue(43800);
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("User to time out.")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("mute")
+    .setDescription("Times the target out.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addUserOption(userOption)
+    .addIntegerOption(timeOption)
+    .addStringOption(reasonOption);

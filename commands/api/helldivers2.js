@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -15,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
         let campaignStatus = null;
 
         await interaction.deferReply({ ephemeral: ephemeral });
-        let helldiversEmbed = new Discord.EmbedBuilder()
+        let helldiversEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -78,32 +84,29 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "helldivers2",
-    description: `Shows Helldivers 2 data.`,
-    options: [{
-        name: "planet",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a planet.",
-        options: [{
-            name: "planet",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify planet by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "campaign",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on current campaigns.",
-        options: [{
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
-};
+// String options
+const planetOption = new SlashCommandStringOption()
+    .setName("planet")
+    .setDescription("Specify planet by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const planetSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("planet")
+    .setDescription("Get info on a planet.")
+    .addStringOption(planetOption)
+    .addBooleanOption(ephemeralOption);
+const campaignSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("campaign")
+    .setDescription("Get info on current campaigns.")
+    .addBooleanOption(ephemeralOption);
+// Full command
+export const commandObject = new SlashCommandBuilder()
+    .setName("helldivers2")
+    .setDescription("Shows Helldivers 2 info.")
+    .addSubcommand(planetSubcommand)
+    .addSubcommand(campaignSubcommand);

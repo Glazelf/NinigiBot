@@ -1,8 +1,12 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandStringOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isOwner from "../../util/isOwner.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction) => {
     try {
@@ -31,18 +35,20 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "removeinteraction",
-    description: "Remove an interaction.",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "interaction-name",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Interaction to remove.",
-        required: true
-    }, {
-        name: "guild-id",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "ID of guild."
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// String options
+const interactionNameOption = new SlashCommandStringOption()
+    .setName("interaction-name")
+    .setDescription("Interaction to remove")
+    .setRequired(true);
+const guildIDOption = new SlashCommandStringOption()
+    .setName("guild-id")
+    .setDescription("ID of guild.");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("removeinteraction")
+    .setDescription("Remove an interaction.")
+    .setDMPermission(false)
+    .addStringOption(interactionNameOption)
+    .addStringOption(guildIDOption);

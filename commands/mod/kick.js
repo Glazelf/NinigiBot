@@ -1,15 +1,20 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandUserOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
 import getTime from "../../util/getTime.js";
 
-const requiredPermission = Discord.PermissionFlagsBits.KickMembers;
+const requiredPermission = PermissionFlagsBits.KickMembers;
 
 export default async (client, interaction) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let adminBool = isAdmin(client, interaction.member);
         if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
@@ -18,7 +23,7 @@ export default async (client, interaction) => {
 
         let user = interaction.options.getUser("user");
         let member = interaction.options.getMember("user");
-        if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a user to kick.` });
+        if (!member) return sendMessage({ client: client, interaction: interaction, content: `Please provide a member to kick.` });
 
         let kickFailString = `Kick failed. Either the specified user isn't in the server or I lack kicking permissions.`;
         // Check permissions
@@ -30,7 +35,7 @@ export default async (client, interaction) => {
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
         if (reasonArg) reason = reasonArg;
-        let reasonCodeBlock = Discord.codeBlock("fix", reason);
+        let reasonCodeBlock = codeBlock("fix", reason);
 
         let time = getTime();
         let reasonInfo = `-${interaction.user.username} (${time})`;
@@ -56,18 +61,21 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "kick",
-    description: "Kick a target user from the server.",
-    default_member_permissions: requiredPermission,
-    options: [{
-        name: "user",
-        type: Discord.ApplicationCommandOptionType.User,
-        description: "User to kick.",
-        required: true
-    }, {
-        name: "reason",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Reason for kick."
-    }]
-};
+// String options
+const reasonOption = new SlashCommandStringOption()
+    .setName("reason")
+    .setDescription("Reason for kick.")
+    .setMaxLength(450); // Max reason length is 512, leave some space for executor and timestamp
+// User options
+const userOption = new SlashCommandUserOption()
+    .setName("user")
+    .setDescription("User to kick")
+    .setRequired(true);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("kick")
+    .setDescription("Kick a user from the server.")
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(requiredPermission)
+    .addUserOption(userOption)
+    .addStringOption(reasonOption);

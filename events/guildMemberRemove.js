@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    PermissionFlagsBits,
+    AuditLogEvent
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -16,12 +20,12 @@ export default async (client, member) => {
         if (serverID && roleDB) await deleteBoosterRole();
         let botMember = member.guild.members.me;
 
-        if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             let memberLeaveObject = {};
             let embedAuthor = `Member Left 💔`;
             let reasonText = "Not specified.";
             let kicked = false;
-            let leaveEmbed = new Discord.EmbedBuilder()
+            let leaveEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
@@ -29,13 +33,13 @@ export default async (client, member) => {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);
                 const fetchedLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: Discord.AuditLogEvent.MemberKick
+                    type: AuditLogEvent.MemberKick
                 });
                 let kickLog = fetchedLogs.entries.first();
                 // Return if ban exists
                 const banLogs = await member.guild.fetchAuditLogs({
                     limit: 1,
-                    type: Discord.AuditLogEvent.MemberBanAdd
+                    type: AuditLogEvent.MemberBanAdd
                 });
                 if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
                 let banLog = banLogs.entries.first();
@@ -62,7 +66,7 @@ export default async (client, member) => {
             memberLeaveObject['embeds'] = [leaveEmbed];
             return log.send(memberLeaveObject);
 
-        } else if (log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(Discord.PermissionFlagsBits.EmbedLinks)) {
+        } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });
             } catch (e) {

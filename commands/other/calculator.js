@@ -1,6 +1,12 @@
-import Discord from "discord.js";
+import {
+    codeBlock,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 let maxMessageLength = 2000;
 let noInputString = `You need to provide a valid input.`;
@@ -44,10 +50,10 @@ export default async (client, interaction, ephemeral) => {
         // let remainder = evaled % 1;
         // Amount of 0's is the amount of decimals to round to
         let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
-        let output = Discord.codeBlock("js", `${rounded} (${calcInput})`);
+        let output = codeBlock("js", `${rounded} (${calcInput})`);
         if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently [not supported](<https://github.com/Glazelf/NinigiBot/issues/436>).`;
         let returnString = output;
-        if (output.length > maxMessageLength) returnString = Discord.codeBlock("js", rounded.toString());
+        if (output.length > maxMessageLength) returnString = codeBlock("js", rounded.toString());
 
         return sendMessage({ client: client, interaction: interaction, content: returnString });
 
@@ -56,17 +62,19 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "calculator",
-    description: "Calculate.",
-    options: [{
-        name: "input",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Input to calculate.",
-        required: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the response should be ephemeral."
-    }]
-};
+// String options
+const inputOption = new SlashCommandStringOption()
+    .setName("input")
+    .setDescription("Input to calculate.")
+    .setMaxLength(maxMessageLength - 50)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("calculator")
+    .setDescription("Calculate input.")
+    .addStringOption(inputOption)
+    .addBooleanOption(ephemeralOption);

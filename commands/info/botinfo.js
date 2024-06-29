@@ -1,17 +1,23 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SlashCommandBooleanOption,
+    SlashCommandBuilder,
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 import isOwner from "../../util/isOwner.js";
+import packageJSON from "../../package.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
-        let ownerBool = await isOwner(client, interaction.user);
-
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let DiscordJSVersion = Discord.version;
+        let DiscordJSVersion = packageJSON.dependencies["discord.js"].substring(1,); // Substring is because string starts with ^
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
@@ -43,21 +49,22 @@ export default async (client, interaction, ephemeral) => {
         let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
         // Owner
         let owner = "glazelf (232875725898645504)";
+        let ownerBool = await isOwner(client, interaction.user);
         // SKU
         let shopButtonText = "Donate";
         let SKUID = ""; // Without SKU ID link goes to store page
         let shopButtonLink = `https://discord.com/application-directory/${client.user.id}/store/${SKUID}`;
 
-        let botEmbed = new Discord.EmbedBuilder()
+        let botEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(client.user.username)
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addFields([
                 { name: "Owner:", value: owner, inline: false },
-                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true },
-                { name: "Memory Usage:", value: memoryUsage, inline: true }
+                { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
             ]);
+        if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
         if (client.options.shardCount) botEmbed.addFields([{ name: "Shards:", value: client.options.shardCount.toString(), inline: true }]);
         botEmbed.addFields([
             { name: "Servers:", value: totalGuilds.toString(), inline: true },
@@ -68,12 +75,28 @@ export default async (client, interaction, ephemeral) => {
         if (githubRepoResponse) botEmbed.addFields([{ name: "GitHub Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
         if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
-        let botButtons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ label: shopButtonText, style: Discord.ButtonStyle.Link, url: shopButtonLink }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'App Directory', style: Discord.ButtonStyle.Link, url: `https://discord.com/application-directory/${client.user.id}` }))
-            // .addComponents(new Discord.ButtonBuilder({ label: 'GitHub', style: Discord.ButtonStyle.Link, url: `https://github.com/${githubURLVars}` }))
-            // .addComponents(new Discord.ButtonBuilder({ label: 'Support Server', style: Discord.ButtonStyle.Link, url: `https://discord.gg/${globalVars.ShinxServerInvite}` }))
-            .addComponents(new Discord.ButtonBuilder({ label: 'Invite Bot', style: Discord.ButtonStyle.Link, url: `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands` }));
+        const shopButton = new ButtonBuilder()
+            .setLabel(shopButtonText)
+            .setStyle(ButtonStyle.Link)
+            .setURL(shopButtonLink);
+        const appDirectoryButton = new ButtonBuilder()
+            .setLabel("App Directory")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://discord.com/application-directory/${client.user.id}`);
+        const githubButton = new ButtonBuilder() // Unused
+            .setLabel("GitHub")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://github.com/${githubURLVars}`);
+        const supportServerButton = new ButtonBuilder() // Unused
+            .setLabel("Support Server")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+        const inviteButton = new ButtonBuilder()
+            .setLabel("Invite Bot")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`);
+        let botButtons = new ActionRowBuilder()
+            .addComponents([shopButton, appDirectoryButton, inviteButton]);
         return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
     } catch (e) {
@@ -90,12 +113,12 @@ async function getUsers(client) {
     return userCount;
 };
 
-export const config = {
-    name: "botinfo",
-    description: `Displays info about this bot.`,
-    options: [{
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the reply will be private."
-    }]
-};
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("botinfo")
+    .setDescription("Displays info about this bot.")
+    .addBooleanOption(ephemeralOption);

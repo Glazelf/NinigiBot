@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import logger from "../logger.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
@@ -133,25 +138,37 @@ export default async (client, interaction, monsterData, ephemeral) => {
             });
         };
         let buttonArray = [];
-        let subSpeciesButtons = new Discord.ActionRowBuilder();
+        let subSpeciesButtons = new ActionRowBuilder();
+        // Get subspecies
         if (monsterData.subSpecies && monsterData.subSpecies.length > 0) {
             if (monsterData.subSpecies.length < 6) {
                 for (let i = 0; i < monsterData.subSpecies.length; i++) {
-                    subSpeciesButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhSub${i}`, style: Discord.ButtonStyle.Secondary, label: monsterData.subSpecies[i] }));
+                    const subSpeciesButton = new ButtonBuilder()
+                        .setCustomId(`mhSub${i}`)
+                        .setStyle(ButtonStyle.Secondary)
+                        .setLabel(monsterData.subSpecies[i]);
+                    subSpeciesButtons.addComponents(subSpeciesButton);
                 };
             } else {
                 // How many subspecies do you need??
             };
         };
+        // Get base monster
         if (!monsterData.subSpecies) {
             monstersJSON.monsters.forEach(monster => {
                 if (!monster.subSpecies) return;
-                if (monster.subSpecies.includes(monsterData.name)) subSpeciesButtons.addComponents(new Discord.ButtonBuilder({ customId: `mhSubOrigin`, style: Discord.ButtonStyle.Secondary, label: monster.name }));
+                if (monster.subSpecies.includes(monsterData.name)) {
+                    const baseMonsterButton = new ButtonBuilder()
+                        .setCustomId("mhSubOrigin")
+                        .setStyle(ButtonStyle.Secondary)
+                        .setLabel(monster.name);
+                    subSpeciesButtons.addComponents(baseMonsterButton);
+                };
             });
         };
         if (subSpeciesButtons.components.length > 0) buttonArray.push(subSpeciesButtons);
 
-        let mhEmbed = new Discord.EmbedBuilder()
+        let mhEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
             .setThumbnail(monsterRender)

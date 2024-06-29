@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -56,10 +61,15 @@ export default async (client, messageReaction) => {
                 isReply = false;
             };
         };
+        // Add button
+        const contextButton = new ButtonBuilder()
+            .setLabel("Context")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}`);
+        let starButtons = new ActionRowBuilder()
+            .addComponents(contextButton);
         // Format starred message embed
-        let starButtons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ label: 'Context', style: Discord.ButtonStyle.Link, url: `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}` }));
-        const starEmbed = new Discord.EmbedBuilder()
+        const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${starboardEmote}${messageReaction.count}`)
             .setThumbnail(avatar)

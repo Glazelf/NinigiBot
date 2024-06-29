@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    PermissionFlagsBits,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandAttachmentOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -7,11 +13,10 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBool = isAdmin(client, interaction.member);
-        let modBool = interaction.member.permissions.has(Discord.PermissionFlagsBits.ManageRoles);
+        let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
         let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
         if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
@@ -58,10 +63,22 @@ export default async (client, interaction, ephemeral) => {
             if (roleColor.length > 6) roleColor = roleColor.substring(roleColor.length - 6, roleColor.length);
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
-        if (deleteBool == true) return deleteRole(`Deleted your personal role and database entry.`, `Your personal role isn't in my database so I can't delete it.`);
+        if (deleteBool == true) return deleteRole({
+            client: client,
+            interaction: interaction,
+            roleDB: roleDB,
+            successString: "Deleted your personal role and database entry.",
+            failString: "Your personal role isn't in my database so I can't delete it."
+        });
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-        if (!boosterRole && !modBool && !adminBool) return deleteRole(`Since you can't manage a personal role anymore I cleaned up your old role.`, `You need to be a Nitro Booster or moderator to manage a personal role.`);
+        if (!boosterRole && !modBool && !adminBool) return deleteRole({
+            client: client,
+            interaction: interaction,
+            roleDB: roleDB,
+            successString: "Since you can't manage a personal role anymore I cleaned up your old role.",
+            failString: "You need to be a Nitro Booster or moderator to manage a personal role."
+        });
 
         if (roleDB) {
             let editReturnString = `Updated your role.`;
@@ -137,36 +154,39 @@ export default async (client, interaction, ephemeral) => {
             return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
         };
 
-        async function deleteRole(successString, failString) {
-            if (roleDB) {
-                let oldRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
-                if (oldRole) await oldRole.delete();
-                await roleDB.destroy();
-                return sendMessage({ client: client, interaction: interaction, content: successString });
-            } else {
-                return sendMessage({ client: client, interaction: interaction, content: failString });
-            };
-        };
-
     } catch (e) {
         logger(e, client, interaction);
     };
 };
 
-export const config = {
-    name: "personalrole",
-    description: "Update your personal role.",
-    options: [{
-        name: "color-hex",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Specify a color."
-    }, {
-        name: "icon",
-        type: Discord.ApplicationCommandOptionType.Attachment,
-        description: "Role icon to use. Requires sufficient boosts."
-    }, {
-        name: "delete",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Delete your personal role."
-    }]
+async function deleteRole({ client, interaction, roleDB, successString, failString }) {
+    if (roleDB) {
+        let oldRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
+        if (oldRole) await oldRole.delete();
+        await roleDB.destroy();
+        return sendMessage({ client: client, interaction: interaction, content: successString });
+    } else {
+        return sendMessage({ client: client, interaction: interaction, content: failString });
+    };
 };
+
+// String options
+const colorHexOption = new SlashCommandStringOption()
+    .setName("color-hex")
+    .setDescription("Specify a color.");
+// Attachment options
+const iconOption = new SlashCommandAttachmentOption()
+    .setName("icon")
+    .setDescription("Role icon to use. Requires sufficient boosts.");
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("personalrole")
+    .setDescription("Update your personal role.")
+    .setDMPermission(false)
+    .addStringOption(colorHexOption)
+    .addAttachmentOption(iconOption)
+    .addBooleanOption(ephemeralOption);

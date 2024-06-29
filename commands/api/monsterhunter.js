@@ -1,4 +1,10 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -22,7 +28,7 @@ export default async (client, interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
 
         let buttonArray = [];
-        let mhEmbed = new Discord.EmbedBuilder()
+        let mhEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
 
         switch (interaction.options.getSubcommand()) {
@@ -60,11 +66,10 @@ export default async (client, interaction, ephemeral) => {
                 if (targets.length > 0) mhEmbed.addFields([{ name: "Targets:", value: targets, inline: true }]);
                 break;
             // All quests from a game
-            case "quests":
+            case "questlist":
                 let gameName = interaction.options.getString("game");
                 let questsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: gameName, page: 1 });
                 return sendMessage({ client: client, interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
-                break;
             // Monsters
             case "monster":
                 let monsterName = interaction.options.getString("monster").toLowerCase();
@@ -84,7 +89,6 @@ export default async (client, interaction, ephemeral) => {
 
                 let messageObject = await getMonster(client, interaction, monsterData, ephemeral);
                 return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
-                break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
 
@@ -93,61 +97,56 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "monsterhunter",
-    description: "Shows Monster Hunter data.",
-    options: [{
-        name: "quest",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a specific quest.",
-        options: [{
-            name: "quest",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify quest by name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "quests",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "List all quests from a game.",
-        options: [{
-            name: "game",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify game by name or abbreviation.",
-            required: true,
-            choices: [
-                { name: mhRiseString, value: mhRiseString },
-                { name: mhWorldString, value: mhWorldString },
-                { name: mhguString, value: mhguString },
-                { name: mh4uString, value: mh4uString },
-                { name: mh3uString, value: mh3uString },
-                { name: mhStories2String, value: mhStories2String },
-                { name: mhStoriesString, value: mhStoriesString }
-            ]
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }, {
-        name: "monster",
-        type: Discord.ApplicationCommandOptionType.Subcommand,
-        description: "Get info on a monster.",
-        options: [{
-            name: "monster",
-            type: Discord.ApplicationCommandOptionType.String,
-            description: "Specify monster by its English name.",
-            autocomplete: true,
-            required: true
-        }, {
-            name: "ephemeral",
-            type: Discord.ApplicationCommandOptionType.Boolean,
-            description: "Whether the reply will be private."
-        }]
-    }]
-};
+const gameChoices = [
+    { name: mhRiseString, value: mhRiseString },
+    { name: mhWorldString, value: mhWorldString },
+    { name: mhguString, value: mhguString },
+    { name: mh4uString, value: mh4uString },
+    { name: mh3uString, value: mh3uString },
+    { name: mhStories2String, value: mhStories2String },
+    { name: mhStoriesString, value: mhStoriesString }
+];
+
+// String options
+const monsterOption = new SlashCommandStringOption()
+    .setName("monster")
+    .setDescription("Specify monster by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const questOption = new SlashCommandStringOption()
+    .setName("quest")
+    .setDescription("Specify quest by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const gameOption = new SlashCommandStringOption()
+    .setName("game")
+    .setDescription("Specify game by name.")
+    .setChoices(gameChoices)
+    .setRequired(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Subcommands
+const monsterSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("monster")
+    .setDescription("Get info on a monster.")
+    .addStringOption(monsterOption)
+    .addBooleanOption(ephemeralOption);
+const questSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("quest")
+    .setDescription("Get info on a quest.")
+    .addStringOption(questOption)
+    .addBooleanOption(ephemeralOption);
+const questlistSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("questlist")
+    .setDescription("List all quests from a game.")
+    .addStringOption(gameOption)
+    .addBooleanOption(ephemeralOption);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("monsterhunter")
+    .setDescription("Shows Monster Hunter data.")
+    .addSubcommand(monsterSubcommand)
+    .addSubcommand(questSubcommand)
+    .addSubcommand(questlistSubcommand);

@@ -1,4 +1,11 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    StringSelectMenuBuilder,
+    SlashCommandBuilder,
+    SlashCommandStringOption,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -6,7 +13,6 @@ import isAdmin from "../../util/isAdmin.js";
 
 export default async (client, interaction, ephemeral) => {
     try {
-        if (!interaction.inGuild()) return sendMessage({ client: client, interaction: interaction, content: globalVars.guildRequiredString });
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -30,9 +36,7 @@ export default async (client, interaction, ephemeral) => {
             roleIDs.push(eligibleRole.role_id);
         });
         await interaction.guild.roles.cache.each(async (role) => {
-            if (roleIDs.includes(role.id)) {
-                roleText.push(role);
-            };
+            if (roleIDs.includes(role.id)) roleText.push(role);
         });
         // Role sorting for role help
         roleText = roleText.sort((r, r2) => r2.position - r.position);
@@ -72,8 +76,13 @@ export default async (client, interaction, ephemeral) => {
                 };
                 if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
 
-                let rolesSelects = new Discord.ActionRowBuilder()
-                    .addComponents(new Discord.SelectMenuBuilder({ customId: 'role-select', placeholder: 'Click here to drop down!', options: rolesArray, maxValues: rolesArray.length }));
+                const roleSelectMenu = new StringSelectMenuBuilder()
+                    .setCustomId("role-select")
+                    .setPlaceholder("Click here to drop down!")
+                    .addOptions(rolesArray)
+                    .setMaxValues(rolesArray.length);
+                let rolesSelects = new ActionRowBuilder()
+                    .addComponents(roleSelectMenu);
 
                 let returnString = `Choose roles to toggle:`;
                 if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
@@ -87,7 +96,7 @@ export default async (client, interaction, ephemeral) => {
             if (roleHelpMessage.length == 0) return sendMessage({ client: client, interaction: interaction, content: noRolesString });
             if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
-            const rolesHelp = new Discord.EmbedBuilder()
+            const rolesHelp = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Available roles:`)
                 .setDescription(roleHelpMessage);
@@ -115,17 +124,19 @@ export default async (client, interaction, ephemeral) => {
     };
 };
 
-export const config = {
-    name: "role",
-    description: "Toggles a role. Use without argument to get a full list.",
-    options: [{
-        name: "role",
-        type: Discord.ApplicationCommandOptionType.String,
-        description: "Specify the role to toggle.",
-        autocomplete: true
-    }, {
-        name: "ephemeral",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Whether the reply will be private."
-    }]
-};
+// String options
+const roleOption = new SlashCommandStringOption()
+    .setName("role")
+    .setDescription("Specify the role to toggle.")
+    .setAutocomplete(true);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
+// Full command
+export const commandObject = new SlashCommandBuilder()
+    .setName("role")
+    .setDescription("Toggles a role. Use without argument to get a full list.")
+    .setDMPermission(false)
+    .addStringOption(roleOption)
+    .addBooleanOption(ephemeralOption);

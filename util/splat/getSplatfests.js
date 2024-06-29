@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import logger from "../logger.js";
 import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -6,11 +11,11 @@ import axios from "axios";
 
 export default async ({ client, interaction, page, region }) => {
     try {
-        let splat3Embed = new Discord.EmbedBuilder()
+        let splat3Embed = new EmbedBuilder()
             .setTitle("Splatfests")
             .setColor(globalVars.embedColor)
             .setFooter({ text: "Image is from upcoming or most recent Splatfest." });
-        let splatfestButtons = new Discord.ActionRowBuilder();
+        let splatfestButtons = new ActionRowBuilder();
         let splat3EmbedFields = [];
         let pageStartIndex = (page - 1) * 10; // 1 --> 0, 2 --> 10, 3 --> 20, etc.
         let pageEndIndex = page * 10 - 1; // 1 --> 9, 2 --> 19, 3 --> 29, etc.
@@ -230,12 +235,20 @@ export default async ({ client, interaction, page, region }) => {
         for (let i = pageStartIndex; i <= pageEndIndex; i++) {
             if (splat3EmbedFields[i]) splat3Embed.addFields([splat3EmbedFields[i]]);
         };
-        // "Previous" page button
+        // "Previous" page button. This is actually the next page because of how the splatfests are ordered. Sort of. It goes left.
         if (splat3EmbedFields[pageEndIndex + 1]) {
-            splatfestButtons.addComponents(new Discord.ButtonBuilder({ customId: `splatfest|left|${splatfestButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
+            const leftButton = new ButtonBuilder()
+                .setCustomId(`splatfest|left|${splatfestButtonAppend}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('⬅️');
+            splatfestButtons.addComponents(leftButton);
         };
         if (page > 1) { // Check to add next button (buttons are swapped because we start at newest splatfest and work backwards)
-            splatfestButtons.addComponents(new Discord.ButtonBuilder({ customId: `splatfest|right|${splatfestButtonAppend}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
+            const rightButton = new ButtonBuilder()
+                .setCustomId(`splatfest|right|${splatfestButtonAppend}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('➡️')
+            splatfestButtons.addComponents(rightButton);
         };
         splat3Embed.setImage(splatfestBanner);
         if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n**Bold** indicates the winning team, *italics* indicates second place.");

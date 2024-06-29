@@ -1,10 +1,14 @@
-import Discord from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandBooleanOption
+} from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import forever from "forever";
 import isOwner from "../../util/isOwner.js";
 import getTime from "../../util/getTime.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 export default async (client, interaction) => {
     try {
@@ -49,13 +53,15 @@ export default async (client, interaction) => {
     };
 };
 
-export const config = {
-    name: "kill",
-    description: "Shuts down bot.",
-    serverID: ["759344085420605471"],
-    options: [{
-        name: "remove-interactions",
-        type: Discord.ApplicationCommandOptionType.Boolean,
-        description: "Remove all interactions?"
-    }]
-};
+export const guildIDs = [config.devServerID];
+
+// Boolean options
+const removeInteractionsOption = new SlashCommandBooleanOption()
+    .setName("remove-interactions")
+    .setDescription("Remove all interactions?");
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("kill")
+    .setDescription("Shuts down bot.")
+    .setDMPermission(false)
+    .addBooleanOption(removeInteractionsOption);

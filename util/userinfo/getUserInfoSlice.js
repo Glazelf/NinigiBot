@@ -1,4 +1,9 @@
-import Discord from "discord.js";
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
+} from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import logger from "../logger.js";
 import { getUser } from "../../database/dbServices/user.api.js";
@@ -21,14 +26,30 @@ export default async (client, interaction, page, user) => {
         if (member) serverAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
         let avatar = user.displayAvatarURL(globalVars.displayAvatarSettings);
 
-        const profileEmbed = new Discord.EmbedBuilder()
+        const profileEmbed = new EmbedBuilder()
             .setColor(embedColor)
             .setAuthor({ name: user.username, iconURL: avatar })
             .setThumbnail(serverAvatar);
-        let profileButtons = new Discord.ActionRowBuilder()
-            .addComponents(new Discord.ButtonBuilder({ label: 'Profile', style: Discord.ButtonStyle.Link, url: `discord://-/users/${user.id}` }));
-        if (page > 0) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page - 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '⬅️' }));
-        if (page < number_of_pages - 1 && member && !user.bot) profileButtons.addComponents(new Discord.ButtonBuilder({ customId: `usf${page + 1}:${user.id}`, style: Discord.ButtonStyle.Primary, emoji: '➡️' }));
+        const profileButton = new ButtonBuilder()
+            .setLabel("Profile")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`discord://-/users/${user.id}`);
+        let profileButtons = new ActionRowBuilder()
+            .addComponents(profileButton);
+        if (page > 0) {
+            const previousPageButton = new ButtonBuilder()
+                .setCustomId(`usf${page - 1}:${user.id}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('⬅️')
+            profileButtons.addComponents(previousPageButton);
+        };
+        if (page < number_of_pages - 1 && member && !user.bot) {
+            const nextPageButton = new ButtonBuilder()
+                .setCustomId(`usf${page + 1}:${user.id}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('➡️')
+            profileButtons.addComponents(nextPageButton);
+        };
 
         let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
         switch (page) {
