@@ -35,7 +35,7 @@ export default async (client, interaction, ephemeral) => {
                 let entitlementUser = await entitlement.fetchUser();
                 userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
             };
-            entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
+            if (userList.length > 0) entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
         };
 
         return sendMessage({ client: client, interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
