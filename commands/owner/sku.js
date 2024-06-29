@@ -26,19 +26,16 @@ export default async (client, interaction, ephemeral) => {
         // console.log(entitlements)
 
         if (Object.entries(entitlements).length < 1) entitlementEmbed.setDescription("No entitlements found.");
-        for await (let SKU of SKUs) {
-            console.log(SKU[0])
+        for await (let [SKUID, SKU] of SKUs) {
             let userList = [];
-            let entitlementsSKU = entitlements.filter(entitlement => {
-                return entitlement.skuId == SKU[0]
-            });
+            let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
             if (entitlementsSKU.length < 1) continue;
-            for await (let entitlement of (entitlementsSKU)) {
+            for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
                 console.log(entitlement)
                 let entitlementUser = await entitlement.fetchUser();
                 userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
             };
-            // entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
+            entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
         };
 
         return sendMessage({ client: client, interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
