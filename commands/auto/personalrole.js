@@ -29,12 +29,9 @@ export default async (client, interaction, ephemeral) => {
         let iconArg = interaction.options.getAttachment("icon");
         let deleteArg = interaction.options.getBoolean("delete");
 
-        let roleColor = null;
-        let iconImg = null;
+        let roleColor, iconImg = null;
+        let deleteBool, fileIsImg = false;
         let iconSize = 0;
-        let deleteBool = false;
-        let fileIsImg = false;
-
         if (colorArg) roleColor = colorArg;
         if (iconArg) {
             // Object seems to be structured differently between ephemeral and public messages, or I may be stupid
@@ -51,8 +48,17 @@ export default async (client, interaction, ephemeral) => {
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
         if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
+        let boosterBool = interaction.member.roles.cache.has(boosterRole.id);
         let personalRolePosition = boosterRole.position + 1;
-        if (!interaction.member.roles.cache.has(boosterRole.id) && !modBool && !adminBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
+        // Check SKU entitlement
+        let botSubscriberBool = false;
+        if (interaction.guild.id == globalVars.ShinxServerID) {
+            let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
+            let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == "1164974692889808999" && entitlement.userId == interaction.user.id);
+            if (Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
+        };
+        // Check if user is eligible to use this command
+        if (!boosterBool && !modBool && !adminBool && !botSubscriberBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
         if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
@@ -72,7 +78,7 @@ export default async (client, interaction, ephemeral) => {
         });
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
-        if (!boosterRole && !modBool && !adminBool) return deleteRole({
+        if (!boosterRole && !modBool && !adminBool && !botSubscriberBool) return deleteRole({
             client: client,
             interaction: interaction,
             roleDB: roleDB,
