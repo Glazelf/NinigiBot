@@ -22,15 +22,15 @@ export default async (client, interaction, ephemeral) => {
 
         let SKUs = await client.application.fetchSKUs();
         let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
-        console.log(entitlements)
+        console.log(SKUs)
+        // console.log(entitlements)
 
         if (Object.entries(entitlements).length < 1) entitlementEmbed.setDescription("No entitlements found.");
         for await (let SKU of SKUs) {
+            console.log(SKU)
             let userList = [];
             let entitlementsSKU = entitlements.filter(entitlement => {
-                console.log(SKU.id)
-                console.log(entitlement.skuId)
-                entitlement.skuId == SKU.id
+                return entitlement.skuId == SKU.id
             });
             if (entitlementsSKU.length < 1) continue;
             for await (let entitlement of (entitlementsSKU)) {
