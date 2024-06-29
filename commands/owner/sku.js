@@ -22,16 +22,12 @@ export default async (client, interaction, ephemeral) => {
 
         let SKUs = await client.application.fetchSKUs();
         let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
-        console.log(SKUs)
-        // console.log(entitlements)
 
-        if (Object.entries(entitlements).length < 1) entitlementEmbed.setDescription("No entitlements found.");
         for await (let [SKUID, SKU] of SKUs) {
             let userList = [];
             let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
             if (entitlementsSKU.length < 1) continue;
             for await (let [entitlementID, entitlement] of (entitlementsSKU)) {
-                console.log(entitlement)
                 let entitlementUser = await entitlement.fetchUser();
                 userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
             };
