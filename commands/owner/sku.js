@@ -27,7 +27,11 @@ export default async (client, interaction, ephemeral) => {
         if (Object.entries(entitlements).length < 1) entitlementEmbed.setDescription("No entitlements found.");
         for await (let SKU of SKUs) {
             let userList = [];
-            let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
+            let entitlementsSKU = entitlements.filter(entitlement => {
+                console.log(SKU.id)
+                console.log(entitlement.skuId)
+                entitlement.skuId == SKU.id
+            });
             if (entitlementsSKU.length < 1) continue;
             for await (let entitlement of (entitlementsSKU)) {
                 console.log(entitlement)
