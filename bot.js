@@ -54,12 +54,12 @@ async function walk(dir, callback) {
                     walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
-                    if (!props.config.type) props.config.type = ApplicationCommandType.ChatInput;
+                    if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     let commandName = file.split(".")[0];
                     // console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
-                    if (props.config.aliases) {
-                        props.config.aliases.forEach(alias => {
+                    if (props.commandObject.aliases) {
+                        props.commandObject.aliases.forEach(alias => {
                             if (client.aliases.get(alias)) return console.log(`Warning: Two commands share an alias name: ${alias}`);
                             client.aliases.set(alias, commandName);
                         });

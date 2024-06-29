@@ -304,7 +304,7 @@ const nicknameOption = new SlashCommandStringOption()
 const confirmOption = new SlashCommandBooleanOption()
     .setName("confirm")
     .setDescription("Are you sure? You can never get this Shinx back.");
-const ephemeralOption = new SlashCommandStringOption()
+const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
     .setDescription(globalVars.ephemeralOptionDescription);
 // Subcommands
