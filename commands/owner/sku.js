@@ -30,10 +30,11 @@ export default async (client, interaction, ephemeral) => {
             let entitlementsSKU = entitlements.filter(entitlement => entitlement.skuId == SKU.id);
             if (entitlementsSKU.length < 1) continue;
             for await (let entitlement of (entitlementsSKU)) {
+                console.log(entitlement)
                 let entitlementUser = await entitlement.fetchUser();
                 userList.push(`${entitlementUser.username} (${entitlementUser.id})`);
             };
-            entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
+            // entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
         };
 
         return sendMessage({ client: client, interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
