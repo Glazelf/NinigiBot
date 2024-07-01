@@ -18,7 +18,7 @@ let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // arcana2CombosRoyal; arcana fusion combos
 // specialCombosRoyal; special fusions
 // dlcPersonaRoyal; list of DLC Persona names
-let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
+// let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
 // eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace(/var /g, ""));
 let itemMapRoyal; // Object including all item names mapped to item type/descriptions
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
