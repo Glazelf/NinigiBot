@@ -107,7 +107,7 @@ export default async (client, interaction, ephemeral) => {
                     .setTitle(artifact.name)
                     .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
                 let pieceBonusVarName = "-piece_bonus";
-                for (let i = 1; i < 5; i++) {
+                for (let i = 1; i <= 5; i++) {
                     if (artifact[`${i}${pieceBonusVarName}`]) giEmbed.addFields([{ name: `${i}-Piece Bonus:`, value: artifact[`${i}${pieceBonusVarName}`] }]);
                 };
                 break;
