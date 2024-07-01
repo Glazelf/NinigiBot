@@ -78,16 +78,8 @@ export default async (client, member, newMember) => {
                 if (newMember.guild.id == globalVars.ShinxServerID) {
                     let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
                     coso
-                    let entitlementMatch = entitlements.find(entitlement => {
-                        console.log(entitlement.skuId)
-                        console.log(globalVars.subscriptionSKUID)
-                        console.log(entitlement.userId)
-                        console.log(newMember.id)
-                        console.log("---")
-                        return (entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
-                    })
-                    console.log(entitlementMatch)
-                    if (Object.entries(entitlementMatch).length > 0) isSupporter = true;
+                    let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
+                    if (!entitlementMatch) isSupporter = true;
                 };
                 if (serverID && roleDB && !isSupporter && !isSupporter) await deletePersonalRole(roleDB, member.guild);
             };
