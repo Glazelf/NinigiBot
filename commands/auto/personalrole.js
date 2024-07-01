@@ -1,13 +1,15 @@
 import {
     PermissionFlagsBits,
     SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
     SlashCommandAttachmentOption
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
+import deletePersonalRole from "../../util/deletePersonalRole.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 export default async (client, interaction, ephemeral) => {
@@ -26,7 +28,6 @@ export default async (client, interaction, ephemeral) => {
 
         let colorArg = interaction.options.getString('color-hex');
         let iconArg = interaction.options.getAttachment("icon");
-        let deleteArg = interaction.options.getBoolean("delete");
 
         let roleColor, iconImg = null;
         let deleteBool, fileIsImg = false;
@@ -39,7 +40,7 @@ export default async (client, interaction, ephemeral) => {
             iconSize = Math.ceil(iconArg.attachment.size / 1000);
             if (iconArg.contentType.includes('image')) fileIsImg = true;
         };
-        if (deleteArg === true) deleteBool = deleteArg;
+        if (interaction.options.getSubcommand() == "delete") deleteBool = true;
         // Check if icons are possible
         let iconsAllowed = false;
         let nitroLevel2Req = 7;
@@ -166,9 +167,7 @@ export default async (client, interaction, ephemeral) => {
 
 async function deleteRole({ client, interaction, roleDB, successString, failString }) {
     if (roleDB) {
-        let oldRole = interaction.guild.roles.cache.find(r => r.id == roleDB.role_id);
-        if (oldRole) await oldRole.delete();
-        await roleDB.destroy();
+        await deletePersonalRole(roleDB, interaction.guild);
         return sendMessage({ client: client, interaction: interaction, content: successString });
     } else {
         return sendMessage({ client: client, interaction: interaction, content: failString });
@@ -183,10 +182,19 @@ const colorHexOption = new SlashCommandStringOption()
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")
     .setDescription("Role icon to use. Requires sufficient boosts.");
+// Subcommands
+const editSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("edit")
+    .setDescription("Edit or create your personal role.")
+    .addStringOption(colorHexOption)
+    .addAttachmentOption(iconOption);
+const deleteSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("delete")
+    .setDescription("Delete your personal role.");
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("personalrole")
     .setDescription("Update your personal role.")
     .setDMPermission(false)
-    .addStringOption(colorHexOption)
-    .addAttachmentOption(iconOption);
+    .addSubcommand(editSubcommand)
+    .addSubcommand(deleteSubcommand);
