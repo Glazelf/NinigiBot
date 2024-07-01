@@ -166,7 +166,7 @@ export default async (client, interaction) => {
             };
             let shinxHP0 = await hp(shinxes[0].percent);
             let shinxHP1 = await hp(shinxes[1].percent);
-            const hps = [shinxHP0, shinxHP1]
+            const hps = [shinxHP0, shinxHP1];
             for (let i = 0; i < 2; i++) {
                 if (!isNaN(hps[i][0])) {
                     const color = hps[i][0];
