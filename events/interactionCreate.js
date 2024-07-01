@@ -85,9 +85,6 @@ export default async (client, interaction) => {
                 await client.commands.forEach(command => {
                     if (command.commandObject.name.toLowerCase().replace(" ", "") == commandName) cmd = client.commands.get(commandName);
                 });
-                if (!cmd) {
-                    if (client.aliases.has(commandName)) cmd = client.commands.get(client.aliases.get(commandName));
-                };
                 // Run the command
                 if (cmd) {
                     try {
