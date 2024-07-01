@@ -106,11 +106,10 @@ export default async (client, interaction, ephemeral) => {
                 giEmbed
                     .setTitle(artifact.name)
                     .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
-                if (artifact["1-piece_bonus"]) giEmbed.addFields([{ name: "1-Piece Bonus:", value: artifact["1-piece_bonus"], inline: false }]);
-                if (artifact["2-piece_bonus"]) giEmbed.addFields([{ name: "2-Piece Bonus:", value: artifact["2-piece_bonus"], inline: false }]);
-                if (artifact["3-piece_bonus"]) giEmbed.addFields([{ name: "3-Piece Bonus:", value: artifact["3-piece_bonus"], inline: false }]);
-                if (artifact["4-piece_bonus"]) giEmbed.addFields([{ name: "4-Piece Bonus:", value: artifact["4-piece_bonus"], inline: false }]);
-                if (artifact["5-piece_bonus"]) giEmbed.addFields([{ name: "5-Piece Bonus:", value: artifact["5-piece_bonus"], inline: false }]);
+                let pieceBonusVarName = "-piece_bonus";
+                for (let i = 1; i < 5; i++) {
+                    if (artifact[`${i}${pieceBonusVarName}`]) giEmbed.addFields([{ name: `${i}-Piece Bonus:`, value: artifact[`${i}${pieceBonusVarName}`] }]);
+                };
                 break;
         };
         return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
