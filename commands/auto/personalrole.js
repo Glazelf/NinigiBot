@@ -2,8 +2,7 @@ import {
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandAttachmentOption,
-    SlashCommandBooleanOption
+    SlashCommandAttachmentOption
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -184,15 +183,10 @@ const colorHexOption = new SlashCommandStringOption()
 const iconOption = new SlashCommandAttachmentOption()
     .setName("icon")
     .setDescription("Role icon to use. Requires sufficient boosts.");
-// Boolean options
-const ephemeralOption = new SlashCommandBooleanOption()
-    .setName("ephemeral")
-    .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("personalrole")
     .setDescription("Update your personal role.")
     .setDMPermission(false)
     .addStringOption(colorHexOption)
-    .addAttachmentOption(iconOption)
-    .addBooleanOption(ephemeralOption);
+    .addAttachmentOption(iconOption);

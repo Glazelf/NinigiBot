@@ -15,13 +15,12 @@ export default async (client, interaction, ephemeral) => {
         if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = true;
+        let SKUs = await client.application.fetchSKUs();
+        let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle("SKUs & Entitlements");
-
-        let SKUs = await client.application.fetchSKUs();
-        let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
 
         for await (let [SKUID, SKU] of SKUs) {
             let userList = [];

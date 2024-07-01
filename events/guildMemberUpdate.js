@@ -71,9 +71,17 @@ export default async (client, member, newMember) => {
                 if (e.toString().includes("Missing Permissions")) executor = null;
             };
 
-            let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
-            let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
-            if (!newMember.premiumSince && serverID && roleDB && member.permissions && !member.permissions.has(PermissionFlagsBits.ManageRoles)) await deletePersonalRole(roleDB, member.guild);
+            if (!newMember.premiumSince && newMember.permissions && !newMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
+                let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: member.guild.id } });
+                let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: member.guild.id, user_id: member.id } });
+                let isSupporter = false;
+                if (newMember.guild.id == globalVars.ShinxServerID) {
+                    let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
+                    let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.supporterSKU && entitlement.userId == newMember.id);
+                    if (Object.entries(entitlementMatch.length > 0)) isSupporter = true;
+                };
+                if (serverID && roleDB && !isSupporter && !isSupporter) await deletePersonalRole(roleDB, member.guild);
+            };
 
             switch (updateCase) {
                 case "nickname":
