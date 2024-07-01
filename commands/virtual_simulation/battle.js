@@ -20,7 +20,13 @@ import {
 } from "../../database/dbServices/shinx.api.js";
 import { incrementCombatAmount } from "../../database/dbServices/history.api.js";
 
-const colors = ['green', 'yellow', 'orange', 'red', 'purple'];
+const colors = [
+    'green',
+    'yellow',
+    'orange',
+    'red',
+    'purple'
+];
 
 export default async (client, interaction) => {
     try {
@@ -105,7 +111,6 @@ export default async (client, interaction) => {
         };
 
         const nicks = [];
-
         const prevColors = [0, 0];
         for (let i = 0; i < 2; i++) nicks.push(`${shinxes[i].owner.username}'s ${shinxes[i].nick}`);
         const geasson = await Canvas.loadImage('./assets/geasson.png');
