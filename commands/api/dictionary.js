@@ -11,7 +11,7 @@ import axios from "axios";
 
 let api = "https://api.dictionaryapi.dev/api/v2/";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -36,7 +36,7 @@ export default async (client, interaction, ephemeral) => {
                 .setColor('#FF0000')
                 .setTitle("Error")
                 .setDescription("Word not found.");
-            return sendMessage({ client: client, interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
         };
 
         let wordMeaning;
@@ -86,10 +86,10 @@ export default async (client, interaction, ephemeral) => {
             .setTitle(`${wordStatusTitle}, ${wordType}`)
             .setURL(wordSourceUrls[0]);
         if (wordPhoneticString.length > 0) dictionaryEmbed.setDescription(wordPhoneticString);
-        return sendMessage({ client: client, interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: dictionaryEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

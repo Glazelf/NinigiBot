@@ -15,7 +15,7 @@ import parseDate from "../../util/parseDate.js";
 let giAPI = `https://genshin.jmp.blue/`;
 let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -31,7 +31,7 @@ export default async (client, interaction, ephemeral) => {
                 let detailedArg = interaction.options.getBoolean("detailed");
                 if (detailedArg === true) detailed = true;
                 response = await axios.get(giAPI + characterName);
-                if (response.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred, make sure that character exists.` });
+                if (response.status != 200) return sendMessage({ client: interaction.client, interaction: interaction, content: `Error occurred, make sure that character exists.` });
                 let character = response.data;
                 let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
                 let characterThumbnail = getWikiURL(characterThumbnailFile, giWiki);
@@ -112,10 +112,10 @@ export default async (client, interaction, ephemeral) => {
                 };
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

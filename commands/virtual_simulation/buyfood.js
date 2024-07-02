@@ -6,7 +6,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { buyFood } from "../../database/dbServices/user.api.js";
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let ephemeral = true;
         let res, returnString;
@@ -14,10 +14,10 @@ export default async (client, interaction) => {
         let amountArg = interaction.options.getInteger("amount");
         res = await buyFood(master.id, amountArg);
         returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
-        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

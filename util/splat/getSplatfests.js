@@ -256,6 +256,6 @@ export default async ({ client, interaction, page, region }) => {
         return splatfestMessageObject;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

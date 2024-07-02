@@ -10,20 +10,20 @@ import { addExperience } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         ephemeral = true;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         let userArg = interaction.options.getUser("user");
-        if (!userArg) return sendMessage({ client: client, interaction: interaction, content: `Could not find user.` });
+        if (!userArg) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find user.` });
         let expArg = interaction.options.getInteger("amount");
         await addExperience(userArg.id, expArg);
         returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
-        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral });
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

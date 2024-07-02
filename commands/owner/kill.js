@@ -10,10 +10,10 @@ import getTime from "../../util/getTime.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("remove-interactions");
@@ -22,14 +22,14 @@ export default async (client, interaction) => {
         let timestamp = getTime();
         let shutdownString = "Shutting down.";
         if (removeInteractions) shutdownString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
-        await sendMessage({ client: client, interaction: interaction, content: shutdownString });
+        await sendMessage({ client: interaction.client, interaction: interaction, content: shutdownString });
 
         if (removeInteractions) {
             await interaction.deferReply({ ephemeral: true });
             // Delete all global commands
-            await client.application.commands.set([]);
+            await interaction.clientapplication.commands.set([]);
             // Delete all guild commands
-            await client.guilds.cache.forEach(async (guild) => {
+            await interaction.clientguilds.cache.forEach(async (guild) => {
                 guild.commands.set([]).catch(e => {
                     return;
                 });
@@ -45,11 +45,11 @@ export default async (client, interaction) => {
         };
         console.log(`Bot killed by ${interaction.user.username}. (${timestamp})`);
 
-        await client.destroy();
+        await interaction.clientdestroy();
         return process.exit();
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

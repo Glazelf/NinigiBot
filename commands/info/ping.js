@@ -2,16 +2,16 @@ import { SlashCommandBuilder } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let commandPing = Math.abs(Date.now() - interaction.createdTimestamp);
-        let websocketPing = Math.abs(client.ws.ping);
+        let websocketPing = Math.abs(interaction.clientws.ping);
         let replyString = `Pong!\n- Websocket ping is ${websocketPing}ms.\n- Command ping is ${commandPing}ms.`;
 
-        return sendMessage({ client: client, interaction: interaction, content: replyString });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: replyString });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

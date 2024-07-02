@@ -12,7 +12,7 @@ import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -53,14 +53,14 @@ export default async (client, interaction, ephemeral) => {
                         { name: "Trophies:", value: trophy_string, inline: true }
                     ]);
                 };
-                return sendMessage({ client: client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
+                return sendMessage({ client: interaction.client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":
                 const shinx = await getShinx(master.id);
-                return sendMessage({ client: client, interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
+                return sendMessage({ client: interaction.client, interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

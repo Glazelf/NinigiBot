@@ -22,7 +22,7 @@ let mh3uString = "Monster Hunter 3 Ultimate";
 let mhStories2String = "Monster Hunter Stories 2";
 let mhStoriesString = "Monster Hunter Stories";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -39,7 +39,7 @@ export default async (client, interaction, ephemeral) => {
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified quest." });
+                if (!questData) return sendMessage({ client: interaction.client, interaction: interaction, content: "Could not find the specified quest." });
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
                 if (questData.isKey) questTitle += ` 🔑`;
@@ -68,8 +68,8 @@ export default async (client, interaction, ephemeral) => {
             // All quests from a game
             case "questlist":
                 let gameName = interaction.options.getString("game");
-                let questsMessageObject = await getQuests({ client: client, interaction: interaction, gameName: gameName, page: 1 });
-                return sendMessage({ client: client, interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
+                let questsMessageObject = await getQuests({ client: interaction.client, interaction: interaction, gameName: gameName, page: 1 });
+                return sendMessage({ client: interaction.client, interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
             // Monsters
             case "monster":
                 let monsterName = interaction.options.getString("monster").toLowerCase();
@@ -85,15 +85,15 @@ export default async (client, interaction, ephemeral) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified monster." });
+                if (!monsterData) return sendMessage({ client: interaction.client, interaction: interaction, content: "Could not find the specified monster." });
 
                 let messageObject = await getMonster(client, interaction, monsterData, ephemeral);
-                return sendMessage({ client: client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
+                return sendMessage({ client: interaction.client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
+        return sendMessage({ client: interaction.client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

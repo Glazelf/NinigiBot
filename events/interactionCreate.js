@@ -90,7 +90,7 @@ export default async (client, interaction) => {
                     try {
                         let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.default(client, interaction, ephemeralDefault);
+                        await cmd.default(interaction, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -709,6 +709,6 @@ export default async (client, interaction) => {
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };

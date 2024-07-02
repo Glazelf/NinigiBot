@@ -30,7 +30,7 @@ const gens = new Generations(Dex);
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const currentYear = new Date().getFullYear();
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         // Command settings
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -81,7 +81,7 @@ export default async (client, interaction, ephemeral) => {
                     pokemonEmbed
                         .setTitle("Error")
                         .setDescription(abilityFailString);
-                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                    return sendMessage({ client: interaction.client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
                 };
 
                 nameBulbapedia = abilityGen.name.replace(/ /g, "_");
@@ -119,7 +119,7 @@ export default async (client, interaction, ephemeral) => {
                     pokemonEmbed
                         .setTitle("Error")
                         .setDescription(itemFailString);
-                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                    return sendMessage({ client: interaction.client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
                 };
 
                 let itemImage = `https://www.serebii.net/itemdex/sprites/pgl/${itemGen.id}.png`;
@@ -154,7 +154,7 @@ export default async (client, interaction, ephemeral) => {
                     pokemonEmbed
                         .setTitle("Error")
                         .setDescription(moveFailString);
-                    return sendMessage({ client: client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
+                    return sendMessage({ client: interaction.client, interaction: interaction, embeds: pokemonEmbed, ephemeral: true });
                 };
 
                 let moveLearnPool = [];
@@ -212,7 +212,7 @@ export default async (client, interaction, ephemeral) => {
             case "nature":
                 let natureSearch = interaction.options.getString("nature");
                 let nature = Dex.natures.get(natureSearch);
-                if (!nature || !nature.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find that nature.` });
+                if (!nature || !nature.exists) return sendMessage({ client: interaction.client, interaction: interaction, content: `Sorry, I could not find that nature.` });
 
                 let boosted = Dex.stats.names[nature.plus];
                 let lowered = Dex.stats.names[nature.minus];
@@ -237,7 +237,7 @@ export default async (client, interaction, ephemeral) => {
             case "format":
                 let formatSearch = interaction.options.getString("format");
                 let format = DexSim.formats.get(formatSearch);
-                if (!format || !format.exists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
+                if (!format || !format.exists) return sendMessage({ client: interaction.client, interaction: interaction, content: `Sorry, I could not find a format by that name.` });
 
                 if (format.threads) {
                     format.threads.forEach(thread => {
@@ -284,14 +284,14 @@ export default async (client, interaction, ephemeral) => {
                 break;
             // Pokémon
             case "pokemon":
-                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
-                let messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
+                if (!pokemonExists) return sendMessage({ client: interaction.client, interaction: interaction, content: noPokemonString });
+                let messageObject = await getPokemon({ client: interaction.client, interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
                 pokemonEmbed = messageObject.embeds;
                 pokemonButtons = messageObject.components;
                 break;
             case "learn":
-                if (!pokemonExists) return sendMessage({ client: client, interaction: interaction, content: noPokemonString });
-                if (!moveExists) return sendMessage({ client: client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+                if (!pokemonExists) return sendMessage({ client: interaction.client, interaction: interaction, content: noPokemonString });
+                if (!moveExists) return sendMessage({ client: interaction.client, interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
                 // Set variables
                 let learnAuthor = `${pokemon.name} learns ${move.name}`;
                 let learnInfo = "";
@@ -380,7 +380,7 @@ export default async (client, interaction, ephemeral) => {
                     // console.log(e);
                     // Make generic embed to guide people to usage statistics :)
                     let replyText = failText;
-                    return sendMessage({ client: client, interaction: interaction, content: replyText, components: usageButtons });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: replyText, components: usageButtons });
                 };
                 // Filter, split and trim pokemon data
                 let usageArray = response.data.replace(/\|/g, "").replace(/\n/g, "").trim().split(`----------------------------------------+  +----------------------------------------+`);
@@ -395,7 +395,7 @@ export default async (client, interaction, ephemeral) => {
                 let pokemonDataSplitLine = null;
                 if (pokemonName) {
                     let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // Space is to exclude matching more popular subforms
-                    if (!usagePokemonString) return sendMessage({ client: client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
+                    if (!usagePokemonString) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
                     // Data from generic usage page
                     genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
@@ -468,10 +468,10 @@ export default async (client, interaction, ephemeral) => {
                 .setURL(linkBulbapedia);
             pokemonButtons.addComponents(bulbapediaButton);
         };
-        return sendMessage({ client: client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

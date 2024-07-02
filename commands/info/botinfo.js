@@ -13,7 +13,7 @@ import axios from "axios";
 import isOwner from "../../util/isOwner.js";
 import packageJSON from "../../package.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -21,8 +21,8 @@ export default async (client, interaction, ephemeral) => {
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
-        await client.guilds.fetch();
-        let totalGuilds = client.guilds.cache.size;
+        await interaction.clientguilds.fetch();
+        let totalGuilds = interaction.clientguilds.cache.size;
         let totalMembers = await getUsers(client);
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
@@ -37,27 +37,27 @@ export default async (client, interaction, ephemeral) => {
             githubMasterResponse = null;
         };
         // Timestamps are divided by 1000 to convert from milliseconds (unix) to seconds (Disord timestamps)
-        let createdAt = Math.floor(client.user.createdAt.valueOf() / 1000);
+        let createdAt = Math.floor(interaction.clientuser.createdAt.valueOf() / 1000);
         let date = Date.now();
-        let onlineSince = Math.floor((date - client.uptime) / 1000);
+        let onlineSince = Math.floor((date - interaction.clientuptime) / 1000);
         let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
         let lastCommitMessage = `"[${githubMasterResponse.data.commit.commit.message.split("\n")[0]}](https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha})"`;
         let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
         let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
-        let avatar = client.user.displayAvatarURL(globalVars.displayAvatarSettings);
+        let avatar = interaction.clientuser.displayAvatarURL(globalVars.displayAvatarSettings);
         // Owner
         let owner = "glazelf (232875725898645504)";
         let ownerBool = await isOwner(client, interaction.user);
         // SKU
         let shopButtonText = "Donate";
         let SKUID = ""; // Without SKU ID link goes to store page
-        let shopButtonLink = `https://discord.com/application-directory/${client.user.id}/store/${SKUID}`;
+        let shopButtonLink = `https://discord.com/application-directory/${interaction.clientuser.id}/store/${SKUID}`;
 
         let botEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setTitle(client.user.username)
+            .setTitle(interaction.clientuser.username)
             .setThumbnail(avatar)
             .setDescription(githubRepoResponse.data.description)
             .addFields([
@@ -65,7 +65,7 @@ export default async (client, interaction, ephemeral) => {
                 { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
             ]);
         if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
-        if (client.options.shardCount) botEmbed.addFields([{ name: "Shards:", value: client.options.shardCount.toString(), inline: true }]);
+        if (interaction.clientoptions.shardCount) botEmbed.addFields([{ name: "Shards:", value: interaction.clientoptions.shardCount.toString(), inline: true }]);
         botEmbed.addFields([
             { name: "Servers:", value: totalGuilds.toString(), inline: true },
             { name: "Total Users:", value: totalMembers.toString(), inline: true },
@@ -82,7 +82,7 @@ export default async (client, interaction, ephemeral) => {
         const appDirectoryButton = new ButtonBuilder()
             .setLabel("App Directory")
             .setStyle(ButtonStyle.Link)
-            .setURL(`https://discord.com/application-directory/${client.user.id}`);
+            .setURL(`https://discord.com/application-directory/${interaction.clientuser.id}`);
         const githubButton = new ButtonBuilder() // Unused
             .setLabel("GitHub")
             .setStyle(ButtonStyle.Link)
@@ -94,20 +94,20 @@ export default async (client, interaction, ephemeral) => {
         const inviteButton = new ButtonBuilder()
             .setLabel("Invite Bot")
             .setStyle(ButtonStyle.Link)
-            .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`);
+            .setURL(`https://discordapp.com/oauth2/authorize?client_id=${interaction.clientuser.id}&permissions=8&scope=bot%20applications.commands`);
         let botButtons = new ActionRowBuilder()
             .addComponents([shopButton, appDirectoryButton, inviteButton]);
-        return sendMessage({ client: client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 
 async function getUsers(client) {
     // Fast but inaccurate method
     let userCount = 0;
-    await client.guilds.cache.forEach(guild => {
+    await interaction.clientguilds.cache.forEach(guild => {
         if (guild.memberCount) userCount += guild.memberCount;
     });
     return userCount;

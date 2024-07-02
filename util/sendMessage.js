@@ -1,6 +1,6 @@
 import logger from "./logger.js";
 
-export default async ({ client, interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
+export default async ({ interaction, content = null, embeds = null, files = null, ephemeral = true, components = null }) => {
     try {
         if (!interaction) return; // Note: interaction can be a message instead
         // 'DEFAULT' = text message, 'APPLICATION_COMMAND' = slash command
@@ -44,6 +44,6 @@ export default async ({ client, interaction, content = null, embeds = null, file
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client, interaction: interaction });
     };
 };

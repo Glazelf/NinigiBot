@@ -12,10 +12,10 @@ import isOwner from "../../util/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -24,22 +24,22 @@ export default async (client, interaction, ephemeral) => {
         let userIDArg = interaction.options.getString("user-id");
         let channelIDArg = interaction.options.getString("channel-id");
         let attachmentArg = interaction.options.getAttachment("attachment");
-        if (!messageContent && !attachmentArg) return sendMessage({ client: client, interaction: interaction, content: "Please provide something to send." });
+        if (!messageContent && !attachmentArg) return sendMessage({ client: interaction.client, interaction: interaction, content: "Please provide something to send." });
         let attachment = null;
         if (attachmentArg) attachment = attachmentArg.url;
         let target;
         let textMessageBlock = codeBlock("fix", messageContent);
         if (userIDArg || channelIDArg) {
             try {
-                if (channelIDArg) target = await client.channels.fetch(channelIDArg);
-                if (userIDArg) target = await client.users.fetch(userIDArg);
+                if (channelIDArg) target = await interaction.clientchannels.fetch(channelIDArg);
+                if (userIDArg) target = await interaction.clientusers.fetch(userIDArg);
             } catch (e) {
                 // console.log(e);
             };
         } else {
-            return sendMessage({ client: client, interaction: interaction, content: "Please provide a user ID or channel ID." });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: "Please provide a user ID or channel ID." });
         };
-        if (!target) return sendMessage({ client: client, interaction: interaction, content: "I could not find a user or channel with that ID." });
+        if (!target) return sendMessage({ client: interaction.client, interaction: interaction, content: "I could not find a user or channel with that ID." });
         let targetFormat = null;
         if (channelIDArg) targetFormat = `**${target.name}** (${target.id}) in **${target.guild.name}** (${target.guild.id})`;
         if (userIDArg) targetFormat = `**${target.username}** (${target.id})`;
@@ -47,14 +47,14 @@ export default async (client, interaction, ephemeral) => {
             let messageObject = { content: messageContent };
             if (attachment) messageObject["files"] = [attachment];
             await target.send(messageObject);
-            return sendMessage({ client: client, interaction: interaction, content: `Message sent to ${targetFormat}:${textMessageBlock}`, files: attachment });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Message sent to ${targetFormat}:${textMessageBlock}`, files: attachment });
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `Failed to message ${targetFormat}:${textMessageBlock}`, files: attachment });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to message ${targetFormat}:${textMessageBlock}`, files: attachment });
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

@@ -11,11 +11,11 @@ import runCommand from "../../util/runCommand.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
         await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
@@ -40,24 +40,24 @@ export default async (client, interaction, ephemeral) => {
         let installResultString = codeBlock(installResult.stdout);
         if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
-        await sendMessage({ client: client, interaction: interaction, content: restartString });
+        await sendMessage({ client: interaction.client, interaction: interaction, content: restartString });
         // Remove all interactions (will be reinstated on next boot)
         if (removeInteractions) {
             // Delete all global commands
-            await client.application.commands.set([]);
+            await interaction.clientapplication.commands.set([]);
             // Delete all guild commands
-            await client.guilds.cache.forEach(async (guild) => {
+            await interaction.clientguilds.cache.forEach(async (guild) => {
                 guild.commands.set([]).catch(e => {
                     return;
                 });
             });
         };
         // Destroy, will reboot thanks to forever package
-        await client.destroy();
+        await interaction.clientdestroy();
         return process.exit();
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

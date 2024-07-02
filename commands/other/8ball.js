@@ -10,17 +10,17 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const answers = ["Maybe someday", "Nothing", "Neither", "I don't think so", "No", "Yes", "Try asking again", "Definitely", "Probably not"];
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let input = interaction.options.getString("input");
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
         let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
-        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

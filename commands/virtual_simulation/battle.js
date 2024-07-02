@@ -28,14 +28,14 @@ const colors = [
     'purple'
 ];
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let target = interaction.options.getUser("user");
-        if (target.bot) return sendMessage({ client: client, interaction: interaction, content: `You can not battle a bot.` });
+        if (target.bot) return sendMessage({ client: interaction.client, interaction: interaction, content: `You can not battle a bot.` });
         const trainers = [interaction.user, target];
-        if (!trainers[1]) return sendMessage({ client: client, interaction: interaction, content: `Please tag a valid person to battle.` });
-        if (trainers[0].id === trainers[1].id) return sendMessage({ client: client, interaction: interaction, content: `You cannot battle yourself!` });
-        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.` });
+        if (!trainers[1]) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please tag a valid person to battle.` });
+        if (trainers[0].id === trainers[1].id) return sendMessage({ client: interaction.client, interaction: interaction, content: `You cannot battle yourself!` });
+        if (globalVars.battling.yes) return sendMessage({ client: interaction.client, interaction: interaction, content: `Theres already a battle going on.` });
         let shinxes = [];
 
         for (let i = 0; i < 2; i++) {
@@ -70,7 +70,7 @@ export default async (client, interaction) => {
             .setLabel("Refuse");
         const answer_buttons = new ActionRowBuilder()
             .addComponents([battleAcceptButton, battleRefuseButton]);
-        const sent_message = await sendMessage({ client: client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
+        const sent_message = await sendMessage({ client: interaction.client, interaction: interaction, content: `${trainers[0]} wants to battle!\nDo you accept the challenge, ${trainers[1]}?`, components: answer_buttons, files: [messageFile] });
 
         const filter = (interaction) => (interaction.customId === 'battleYes' || interaction.customId === 'battleNo') && interaction.user.id === trainers[1].id;
         let trainer_answer;
@@ -80,15 +80,15 @@ export default async (client, interaction) => {
             trainer_answer = null;
         };
         if (!trainer_answer) {
-            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Battle cancelled, the challenge timed out.`, components: [] });
         } else if (trainer_answer.customId === 'battleNo') {
-            return sendMessage({ client: client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Battle cancelled, ${trainers[1]} rejected the challenge.`, components: [] });
         };
-        if (globalVars.battling.yes) return sendMessage({ client: client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
+        if (globalVars.battling.yes) return sendMessage({ client: interaction.client, interaction: interaction, content: `Theres already a battle going on.`, components: [] });
         globalVars.battling.yes = true;
         let text = '';
 
-        await sendMessage({ client: client, interaction: interaction, components: [], content: 'Let the battle begin!', files: [messageFile] });
+        await sendMessage({ client: interaction.client, interaction: interaction, components: [], content: 'Let the battle begin!', files: [messageFile] });
         await wait();
         // await interaction.channel.send({ files: [messageFile] });
         canvas = Canvas.createCanvas(240, 168);
@@ -157,7 +157,7 @@ export default async (client, interaction) => {
                     for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
                     globalVars.battling.yes = false;
                     let messageFile = new AttachmentBuilder(canvas.toBuffer());
-                    return sendMessage({ client: client, interaction: interaction, content: text, files: messageFile });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: text, files: messageFile });
                 } else {
                     if (result === -1) {
                         text += addLine(`**${nicks[i]}** lost his shield by blocking a deathblow!`);
@@ -194,12 +194,12 @@ export default async (client, interaction) => {
                 };
             };
             let messageFile = new AttachmentBuilder(canvas.toBuffer());
-            await sendMessage({ client: client, interaction: interaction, content: text, files: [messageFile] });
+            await sendMessage({ client: interaction.client, interaction: interaction, content: text, files: [messageFile] });
             await wait();
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

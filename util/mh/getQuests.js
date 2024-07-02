@@ -67,6 +67,6 @@ export default async ({ client, interaction, gameName, page }) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

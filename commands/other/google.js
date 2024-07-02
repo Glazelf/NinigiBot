@@ -8,7 +8,7 @@ import {
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
         let message = await interaction.channel.messages.fetch(interaction.targetId);
@@ -17,7 +17,7 @@ export default async (client, interaction, ephemeral) => {
         // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.
         if (interaction) message = interaction;
 
-        if (input.length < 1) return sendMessage({ client: client, interaction: interaction, content: `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.` });
+        if (input.length < 1) return sendMessage({ client: interaction.client, interaction: interaction, content: `Make sure you provided input either by typing it out as an argument or replying to a message that has text in it.` });
 
         let question = input.normalize("NFD");
         let googleLink = `https://www.google.com/search?q=${encodeURIComponent(question)}`;
@@ -34,10 +34,10 @@ export default async (client, interaction, ephemeral) => {
 
         let returnString = `Here's the answer to your question, ${questionAskUser}:`;
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: googleActionRow, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, components: googleActionRow, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

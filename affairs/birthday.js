@@ -52,6 +52,6 @@ export default async (client) => {
         }, timezone, true);
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

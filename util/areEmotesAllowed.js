@@ -10,7 +10,7 @@ export default (client, interaction, ephemeral = true) => {
         return true;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
         return false;
     };
 };

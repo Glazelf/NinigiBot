@@ -8,7 +8,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         // Date manipulation
         let currentDate = new Date();
@@ -63,10 +63,10 @@ export default async (client, interaction, ephemeral) => {
                 { name: "Long Date/Time", value: `\`<t:${unixTime}:F>\` ➡ <t:${unixTime}:F>`, inline: false },
                 { name: "Relative Time", value: `\`<t:${unixTime}:R>\` ➡ <t:${unixTime}:R>`, inline: false }
             ]);
-        return sendMessage({ client: client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

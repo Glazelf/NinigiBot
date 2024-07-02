@@ -155,7 +155,7 @@ export default async (client, interaction, page, user) => {
             components: profileButtons
         };
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     }
 };
 

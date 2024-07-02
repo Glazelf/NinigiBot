@@ -60,6 +60,6 @@ export default async (client, role) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

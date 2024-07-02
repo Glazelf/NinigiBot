@@ -13,7 +13,7 @@ export default (client, member) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
         return false;
     };
 };

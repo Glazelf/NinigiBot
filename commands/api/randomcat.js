@@ -15,7 +15,7 @@ import {
 
 let catAAS = "https://cataas.com/cat";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -39,10 +39,10 @@ export default async (client, interaction, ephemeral) => {
             .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
-        return sendMessage({ client: client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

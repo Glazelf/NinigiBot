@@ -8,30 +8,30 @@ import isOwner from "../../util/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         await interaction.deferReply({ ephemeral: true });
 
         let interactionName = interaction.options.getString("interaction-name");
         let guildID = interaction.options.getString("guild-id");
 
-        let commands = await client.application.commands.fetch();
+        let commands = await interaction.clientapplication.commands.fetch();
         let command = commands.find(c => c.name === interactionName);
-        if (!command) return sendMessage({ client: client, interaction: interaction, content: `Command \`${interactionName}\` not found.` });
+        if (!command) return sendMessage({ client: interaction.client, interaction: interaction, content: `Command \`${interactionName}\` not found.` });
 
         try {
-            await client.application.commands.delete(command.id, guildID);
+            await interaction.clientapplication.commands.delete(command.id, guildID);
         } catch (e) {
             // console.log();
-            return sendMessage({ client: client, interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
         };
-        return sendMessage({ client: client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

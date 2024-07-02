@@ -127,6 +127,6 @@ export default async (client, oldChannel, newChannel) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

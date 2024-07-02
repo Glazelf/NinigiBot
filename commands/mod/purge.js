@@ -12,10 +12,10 @@ import isAdmin from "../../util/isAdmin.js";
 
 const requiredPermission = PermissionFlagsBits.ManageMessages;
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -40,15 +40,15 @@ export default async (client, interaction, ephemeral) => {
                     .then(messagesDeleted => {
                         returnString = `Deleted ${messagesDeleted.size} messages from ${user.username} within the last ${amount} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                        sendMessage({ client: client, interaction: interaction, content: returnString });
+                        sendMessage({ client: interaction.client, interaction: interaction, content: returnString });
                     });
                 return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, interaction);
+                    return logger({ exception: e, interaction: interaction });
                 } else {
                     // console.log(e);
-                    return sendMessage({ client: client, interaction: interaction, content: deleteFailString });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: deleteFailString });
                 };
             };
         } else {
@@ -58,15 +58,15 @@ export default async (client, interaction, ephemeral) => {
                     .then(messagesDeleted => {
                         returnString = `Deleted ${messagesDeleted.size} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                        sendMessage({ client: client, interaction: interaction, content: returnString });
+                        sendMessage({ client: interaction.client, interaction: interaction, content: returnString });
                     });
                 return;
             } catch (e) {
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, interaction);
+                    return logger({ exception: e, interaction: interaction });
                 } else {
                     if (e.toString().includes("Missing Permissions")) {
-                        return logger(e, client, interaction);
+                        return logger({ exception: e, interaction: interaction });
                     } else {
                         // console.log(e);
                         return interaction.channel.send({ content: deleteFailString });
@@ -76,7 +76,7 @@ export default async (client, interaction, ephemeral) => {
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

@@ -4,12 +4,13 @@ import sendMessage from "./sendMessage.js";
 import util from "util";
 import config from "../config.json" with { type: "json" };
 
-export default async (exception, client, interaction = null) => {
+export default async ({ exception, client, interaction = null }) => {
     // Note: interaction may be a message
     try {
         let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
+        if (!client && interaction) client = interaction.client;
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {

@@ -400,7 +400,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         return messageObject;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };
 

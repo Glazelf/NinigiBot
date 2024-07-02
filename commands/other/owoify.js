@@ -9,7 +9,7 @@ import sendMessage from "../../util/sendMessage.js";
 import owoify from "owoify-js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -22,10 +22,10 @@ export default async (client, interaction, ephemeral) => {
         let inputOwOified = owoify.default(input, severity);
         let returnString = codeBlock("fix", inputOwOified);
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

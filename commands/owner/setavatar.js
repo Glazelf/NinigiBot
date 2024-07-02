@@ -8,10 +8,10 @@ import isOwner from "../../util/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -22,17 +22,17 @@ export default async (client, interaction, ephemeral) => {
         let fileIsImg = false;
         if (avatarArg.contentType.includes('image')) fileIsImg = true;
 
-        if (!fileIsImg) return sendMessage({ client: client, interaction: interaction, content: `Please supply an image.` });
+        if (!fileIsImg) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please supply an image.` });
         try {
-            await client.user.setAvatar(iconImg);
+            await interaction.clientuser.setAvatar(iconImg);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: `Failed to update my avatar.` });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to update my avatar.` });
         };
-        return sendMessage({ client: client, interaction: interaction, content: `Updated my avatar.` });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: `Updated my avatar.` });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

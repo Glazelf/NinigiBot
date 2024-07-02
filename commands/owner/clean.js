@@ -9,20 +9,20 @@ import { getAllUsers } from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = true;
         let confirm = false;
         let confirmArg = interaction.options.getBoolean("confirm");
         if (confirmArg === true) confirm = confirmArg;
-        if (!confirm) return sendMessage({ client: client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
+        if (!confirm) return sendMessage({ client: interaction.client, interaction: interaction, content: `You are about to run an irreversible and expensive command.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.`, ephemeral: true });
         let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
 
         await interaction.deferReply({ ephemeral: ephemeral });
-        await sendMessage({ client: client, interaction: interaction, content: 'Deleting outdated entries...' });
+        await sendMessage({ client: interaction.client, interaction: interaction, content: 'Deleting outdated entries...' });
         const users = await getAllUsers();
-        if (users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already empty!' });
+        if (users.length == 0) return sendMessage({ client: interaction.client, interaction: interaction, content: 'Database is already empty!' });
         let server_users = await interaction.guild.members.fetch();
         server_users = server_users.map(user => user.id);
         const pre_length = users.length;
@@ -40,12 +40,12 @@ export default async (client, interaction, ephemeral) => {
             };
         });
         deleted_users = [...new Set(deleted_users)];
-        if (deleted_users.length == 0) return sendMessage({ client: client, interaction: interaction, content: 'Database is already clean!' });
+        if (deleted_users.length == 0) return sendMessage({ client: interaction.client, interaction: interaction, content: 'Database is already clean!' });
         await user_api.bulkDeleteUsers(deleted_users);
-        return sendMessage({ client: client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: `Done ✔\nDeleted ${deleted_users.length} out of ${pre_length} entries.` });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

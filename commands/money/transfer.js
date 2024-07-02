@@ -11,7 +11,7 @@ import {
     addMoney
 } from "../../database/dbServices/user.api.js";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
         const currentBalance = await getMoney(interaction.user.id);
@@ -19,16 +19,16 @@ export default async (client, interaction, ephemeral) => {
         let transferTarget = interaction.options.getUser("user");
         let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-        if (transferTarget == interaction.user) return sendMessage({ client: client, interaction: interaction, content: `You can't transfer money to yourself.` });
-        if (transferAmount > currentBalance) return sendMessage({ client: client, interaction: interaction, content: `You only have ${userBalance}.` });
+        if (transferTarget == interaction.user) return sendMessage({ client: interaction.client, interaction: interaction, content: `You can't transfer money to yourself.` });
+        if (transferAmount > currentBalance) return sendMessage({ client: interaction.client, interaction: interaction, content: `You only have ${userBalance}.` });
 
         addMoney(interaction.user.id, -transferAmount);
         addMoney(transferTarget.id, transferAmount);
 
-        return sendMessage({ client: client, interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

@@ -184,6 +184,6 @@ export default async (client, interaction, monsterData, ephemeral) => {
         return messageObject;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

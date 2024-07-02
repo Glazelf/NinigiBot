@@ -15,10 +15,10 @@ import isAdmin from "../../util/isAdmin.js";
 
 const requiredPermission = PermissionFlagsBits.ManageGuild;
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
 
@@ -35,7 +35,7 @@ export default async (client, interaction) => {
         let argRequiredString = "At least one argument is required for this command.";
         switch (interaction.options.getSubcommand()) {
             case "starboard":
-                if (!channelArg && !disableArg) return sendMessage({ client: client, interaction: interaction, content: argRequiredString });
+                if (!channelArg && !disableArg) return sendMessage({ client: interaction.client, interaction: interaction, content: argRequiredString });
                 let oldStarboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
                 let oldStarLimitDB = await serverApi.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
                 let starlimit = null;
@@ -44,7 +44,7 @@ export default async (client, interaction) => {
                 } else {
                     starlimit = globalVars.starboardLimit;
                 };
-                if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalidString })
+                if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: interaction.client, interaction: interaction, content: textChannelInvalidString })
                 let starlimitArg = interaction.options.getInteger("starlimit");
                 if (starlimitArg) {
                     starlimit = starlimitArg;
@@ -53,17 +53,17 @@ export default async (client, interaction) => {
                 };
                 // Database
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
-                if (disableBool) return sendMessage({ client: client, interaction: interaction, content: disableString });
+                if (disableBool) return sendMessage({ client: interaction.client, interaction: interaction, content: disableString });
                 await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
-                return sendMessage({ client: client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
+                return sendMessage({ client: interaction.client, interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
             case "log":
-                if (!channelArg && !disableArg) return sendMessage({ client: client, interaction: interaction, content: argRequiredString });
+                if (!channelArg && !disableArg) return sendMessage({ client: interaction.client, interaction: interaction, content: argRequiredString });
                 let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
-                if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: client, interaction: interaction, content: textChannelInvalidString })
+                if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ client: interaction.client, interaction: interaction, content: textChannelInvalidString })
                 if (oldLogChannel) await oldLogChannel.destroy();
-                if (disableBool) return sendMessage({ client: client, interaction: interaction, content: disableString });
+                if (disableBool) return sendMessage({ client: interaction.client, interaction: interaction, content: disableString });
                 await serverApi.LogChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
-                return sendMessage({ client: client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
+                return sendMessage({ client: interaction.client, interaction: interaction, content: `Logging has been added to ${channelArg}.` });
             case "automod":
                 let scamKeywords = [
                     "http.?:\/\/(dicsord-nitro|discrod-egifts|steamnitro|discordgift|discordc|discorcl|dizcord|dicsord|dlscord|dlcsorcl|dlisocrd|djscord-airdrops).(com|org|ru|click|gift|net)",// Discord gift links
@@ -90,7 +90,7 @@ export default async (client, interaction) => {
                         {
                             type: 1,
                             metadata: {
-                                customMessage: `Blocked by ${client.user.username} AutoMod rule.`,
+                                customMessage: `Blocked by ${interaction.clientuser.username} AutoMod rule.`,
                                 channel: channelArg.id
                             }
                         },
@@ -114,23 +114,23 @@ export default async (client, interaction) => {
                     await interaction.guild.autoModerationRules.create(autoModObject);
                 } catch (e) {
                     // console.log(e);
-                    return sendMessage({ client: client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to add AutoMod rule. Make sure **${interaction.guild.name}** does not already have the maximum amount of AutoMod rules.` });
                 }
-                return sendMessage({ client: client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
+                return sendMessage({ client: interaction.client, interaction: interaction, content: `AutoMod rules added to **${interaction.guild.name}**.\nAutoMod notiications will be sent to ${channelArg}.` });
             case "personalroles":
                 let personalRolesServerID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
                 // Database
                 if (personalRolesServerID) {
                     await personalRolesServerID.destroy();
-                    return sendMessage({ client: client, interaction: interaction, content: `Personal roles can no longer be managed by users in **${interaction.guild.name}**.` });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: `Personal roles can no longer be managed by users in **${interaction.guild.name}**.` });
                 } else {
                     await serverApi.PersonalRoleServers.upsert({ server_id: interaction.guild.id });
-                    return sendMessage({ client: client, interaction: interaction, content: `Personal roles can now be managed by users in **${interaction.guild.name}**.` });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: `Personal roles can now be managed by users in **${interaction.guild.name}**.` });
                 };
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

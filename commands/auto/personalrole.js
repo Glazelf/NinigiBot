@@ -12,14 +12,14 @@ import deletePersonalRole from "../../util/deletePersonalRole.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         let adminBool = isAdmin(client, interaction.member);
         let modBool = interaction.member.permissions.has(PermissionFlagsBits.ManageRoles);
         let serverID = await serverApi.PersonalRoleServers.findOne({ where: { server_id: interaction.guild.id } });
-        if (!serverID) return sendMessage({ client: client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
+        if (!serverID) return sendMessage({ client: interaction.client, interaction: interaction, content: `Personal Roles are disabled in **${interaction.guild.name}**.` });
 
         let roleDB = await serverApi.PersonalRoles.findOne({ where: { server_id: interaction.guild.id, user_id: interaction.user.id } });
 
@@ -47,21 +47,21 @@ export default async (client, interaction, ephemeral) => {
         if (interaction.guild.premiumSubscriptionCount >= nitroLevel2Req || interaction.guild.verified || interaction.guild.partnered) iconsAllowed = true;
         // Get Nitro Booster position
         let boosterRole = await interaction.guild.roles.premiumSubscriberRole;
-        if (!boosterRole) return sendMessage({ client: client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
+        if (!boosterRole) return sendMessage({ client: interaction.client, interaction: interaction, content: `**${interaction.guild}** does not have a Nitro Booster role. This role is created the first time someone boosts the server.` });
         let boosterBool = interaction.member.roles.cache.has(boosterRole.id);
         let personalRolePosition = boosterRole.position + 1;
         // Check SKU entitlement
         let botSubscriberBool = false;
         if (interaction.guild.id == globalVars.ShinxServerID) {
-            let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
+            let entitlements = await interaction.clientapplication.entitlements.fetch({ excludeEnded: true });
             let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == "1164974692889808999" && entitlement.userId == interaction.user.id);
             if (Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
         };
         // Check if user is eligible to use this command
-        if (!boosterBool && !modBool && !adminBool && !botSubscriberBool) return sendMessage({ client: client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
+        if (!boosterBool && !modBool && !adminBool && !botSubscriberBool) return sendMessage({ client: interaction.client, interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
         // Custom role position for mods opens up a can of permission exploits where mods can mod eachother based on personal role order
         // if (interaction.member.roles.cache.has(modRole.id)) personalRolePosition = modRole.position + 1;
-        if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
+        if (interaction.guild.members.me.roles.highest.position <= personalRolePosition) return sendMessage({ client: interaction.client, interaction: interaction, content: `My highest role isn't above your personal role or the Nitro Boost role so I can't edit your personal role.` });
         if (roleColor) {
             roleColor = roleColor.replace(/\W/g, ''); // Remove non-alphanumeric characters
             roleColor = roleColor.toLowerCase();
@@ -70,7 +70,7 @@ export default async (client, interaction, ephemeral) => {
             while (roleColor.length < 6) roleColor = "0" + roleColor;
         };
         if (deleteBool == true) return deleteRole({
-            client: client,
+            client: interaction.client,
             interaction: interaction,
             roleDB: roleDB,
             successString: "Deleted your personal role and database entry.",
@@ -79,7 +79,7 @@ export default async (client, interaction, ephemeral) => {
         // Might want to change checks to be more inline with v13's role tags (assuming a mod role tag will be added)
         // Needs to be bugfixed, doesn't check booster role properly anymore and would allow anyone to use command
         if (!boosterRole && !modBool && !adminBool && !botSubscriberBool) return deleteRole({
-            client: client,
+            client: interaction.client,
             interaction: interaction,
             roleDB: roleDB,
             successString: "Since you can't manage a personal role anymore I cleaned up your old role.",
@@ -100,7 +100,7 @@ export default async (client, interaction, ephemeral) => {
                 permissions: []
             }).catch(e => {
                 // console.log(e);
-                return sendMessage({ client: client, interaction: interaction, content: `An error occurred.` });
+                return sendMessage({ client: interaction.client, interaction: interaction, content: `An error occurred.` });
             });
             if (iconArg && iconsAllowed && fileIsImg) {
                 let roleIconSizeLimit = 256;
@@ -121,7 +121,7 @@ export default async (client, interaction, ephemeral) => {
             // Re-add role if it got removed
             if (!interaction.member.roles.cache.find(r => r.name == interaction.user.username)) interaction.member.roles.add(personalRole.id);
 
-            return sendMessage({ client: client, interaction: interaction, content: editReturnString });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: editReturnString });
         } else {
             // Create role if it doesn't exit yet
             return createRole();
@@ -144,9 +144,9 @@ export default async (client, interaction, ephemeral) => {
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
-                    return logger(e, client, interaction);
+                    return logger({ exception: e, interaction: interaction });
                 } else {
-                    return sendMessage({ client: client, interaction: interaction, content: `An error occurred creating a role.` });
+                    return sendMessage({ client: interaction.client, interaction: interaction, content: `An error occurred creating a role.` });
                 };
             };
             let createdRole = await interaction.guild.roles.cache.find(role => role.name == interaction.user.username);
@@ -157,20 +157,20 @@ export default async (client, interaction, ephemeral) => {
             };
             interaction.member.roles.add(createdRole.id);
             await serverApi.PersonalRoles.upsert({ server_id: interaction.guild.id, user_id: interaction.user.id, role_id: createdRole.id });
-            return sendMessage({ client: client, interaction: interaction, content: `Created a personal role for you.` });
+            return sendMessage({ client: interaction.client, interaction: interaction, content: `Created a personal role for you.` });
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 
 async function deleteRole({ client, interaction, roleDB, successString, failString }) {
     if (roleDB) {
         await deletePersonalRole(roleDB, interaction.guild);
-        return sendMessage({ client: client, interaction: interaction, content: successString });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: successString });
     } else {
-        return sendMessage({ client: client, interaction: interaction, content: failString });
+        return sendMessage({ client: interaction.client, interaction: interaction, content: failString });
     };
 };
 
