@@ -8,7 +8,7 @@
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@pkmn/data": "^0.9.7",
     "@pkmn/dex": "^0.9.7",
-    "@pkmn/sim": "^0.9.7",
+    "@pkmn/sim": "^0.9.8",
     "@sapphire/async-queue": "^1.5.2",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
