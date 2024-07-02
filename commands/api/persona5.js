@@ -18,7 +18,7 @@ let personaWiki = "https://static.wikia.nocookie.net/megamitensei/images/";
 // arcana2CombosRoyal; arcana fusion combos
 // specialCombosRoyal; special fusions
 // dlcPersonaRoyal; list of DLC Persona names
-let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
+// let rarePersonaeRoyal, rareCombosRoyal, arcana2CombosRoyal, specialCombosRoyal, dlcPersonaRoyal, inheritanceChartRoyal;
 // eval(fs.readFileSync("submodules/persona5_calculator/data/Data5Royal.js", "utf8").replace(/var /g, ""));
 let itemMapRoyal; // Object including all item names mapped to item type/descriptions
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
@@ -27,7 +27,7 @@ eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", 
 let skillMapRoyal; // Object including all skill AND trait data
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -41,7 +41,7 @@ export default async (client, interaction, ephemeral) => {
                 // TODO: use calculator to calc paths to fuse this monster
                 let personaInput = interaction.options.getString("persona");
                 let personaObject = personaMapRoyal[personaInput];
-                if (!personaObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that Persona.` });
+                if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.` });
                 let personaWikiName = personaInput.replace(/ /g, "_");
                 if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
                 let personaImageFile = `${personaWikiName}_P5R.jpg`;
@@ -72,7 +72,7 @@ export default async (client, interaction, ephemeral) => {
             case "skill":
                 let skillInput = interaction.options.getString("skill");
                 let skillObject = skillMapRoyal[skillInput];
-                if (!skillObject || skillObject.element == "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that skill.` });
+                if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
                 let skillPersonas = "";
                 if (skillObject.unique) {
                     skillPersonas += `${skillObject.unique}: Unique\n`;
@@ -90,7 +90,7 @@ export default async (client, interaction, ephemeral) => {
             case "trait":
                 let traitInput = interaction.options.getString("trait");
                 let traitObject = skillMapRoyal[traitInput];
-                if (!traitObject || traitObject.element !== "trait") return sendMessage({ client: client, interaction: interaction, content: `Could not find that trait.` });
+                if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
                 let traitPersonas = Object.keys(traitObject.personas).join("\n");
                 p5Embed
                     .setTitle(traitInput)
@@ -100,7 +100,7 @@ export default async (client, interaction, ephemeral) => {
             case "item":
                 let itemInput = interaction.options.getString("item");
                 let itemObject = itemMapRoyal[itemInput];
-                if (!itemObject) return sendMessage({ client: client, interaction: interaction, content: `Could not find that item.` });
+                if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
                 if (itemObject.type && itemObject.description) {
                     p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
                 } else if (itemObject.skillCard) {
@@ -108,10 +108,10 @@ export default async (client, interaction, ephemeral) => {
                 };
                 p5Embed.setTitle(itemInput);
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
+        return sendMessage({ interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

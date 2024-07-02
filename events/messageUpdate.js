@@ -26,7 +26,7 @@ export default async (client, message, newMessage) => {
 
         let botMember = message.guild.members.me;
         // Check message content
-        let adminBool = isAdmin(client, botMember);
+        let adminBool = isAdmin(botMember);
 
         if ((log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) || adminBool) {
             // Assets
@@ -94,6 +94,6 @@ export default async (client, message, newMessage) => {
         };
 
     } catch (e) {
-        logger(e, client, message);
+        logger({ exception: e, client: client, interaction: message });
     };
 };

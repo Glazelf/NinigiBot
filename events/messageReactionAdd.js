@@ -115,6 +115,6 @@ export default async (client, messageReaction) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

@@ -22,7 +22,7 @@ import {
 } from "../../database/dbServices/trophy.api.js";
 import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let messageFile = null;
         let trophy_name, res;
@@ -32,7 +32,7 @@ export default async (client, interaction, ephemeral) => {
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
         let master = interaction.user;
         let trophies;
         switch (interaction.options.getSubcommand()) {
@@ -60,7 +60,6 @@ export default async (client, interaction, ephemeral) => {
                     ]);
                 });
                 return sendMessage({
-                    client: client,
                     interaction: interaction,
                     embeds: [embed],
                     ephemeral: ephemeral
@@ -97,7 +96,6 @@ export default async (client, interaction, ephemeral) => {
                 };
 
                 return sendMessage({
-                    client: client,
                     interaction: interaction,
                     content: returnString,
                     files: messageFile,
@@ -106,7 +104,6 @@ export default async (client, interaction, ephemeral) => {
             case "list":
                 let trophy_slice = await getTrophyEmbedSlice(0);
                 return sendMessage({
-                    client: client,
                     interaction: interaction,
                     embeds: [trophy_slice.embed],
                     components: trophy_slice.components,
@@ -119,7 +116,6 @@ export default async (client, interaction, ephemeral) => {
                 if (!res) { res = await getEventTrophyWithName(trophy_name); isShop = false; }
                 if (!res) {
                     return sendMessage({
-                        client: client,
                         interaction: interaction,
                         content: `**${trophy_name}** doesn't exist.\nTip: check all trophies with \`/trophy list\``,
                         ephemeral: true
@@ -136,7 +132,6 @@ export default async (client, interaction, ephemeral) => {
                     if (!isShop) location = res.origin;
                     embed.addFields([{ name: "Location:", value: `${location}`, inline: true }]);
                     return sendMessage({
-                        client: client,
                         interaction: interaction,
                         embeds: [embed],
                         ephemeral: ephemeral
@@ -145,7 +140,7 @@ export default async (client, interaction, ephemeral) => {
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

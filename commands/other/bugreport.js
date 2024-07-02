@@ -62,12 +62,12 @@ const actionRow5 = new ActionRowBuilder()
     .addComponents(contextInput);
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 
-export default async (client, interaction) => {
+export default async (interaction) => {
     try {
         return interaction.showModal(modal);
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

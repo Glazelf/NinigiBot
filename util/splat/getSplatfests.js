@@ -21,7 +21,7 @@ export default async ({ client, interaction, page, region }) => {
         let pageEndIndex = page * 10 - 1; // 1 --> 9, 2 --> 19, 3 --> 29, etc.
         let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results.
         let responseSplatfest = await axios.get(splatfestAPI);
-        if (responseSplatfest.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
+        if (responseSplatfest.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting Splatfest data. Please try again later.` });
         let splatfestData = responseSplatfest.data[region].data.festRecords.nodes;
         let splatfestBanner = null;
         let isUpcomingOrOngoingSplatfest = false;
@@ -256,6 +256,6 @@ export default async ({ client, interaction, page, region }) => {
         return splatfestMessageObject;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

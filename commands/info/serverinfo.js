@@ -16,10 +16,10 @@ import languages from "../../objects/discord/languages.json" with { type: "json"
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
 import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
-        let adminBool = isAdmin(client, interaction.member);
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        let adminBool = isAdmin(interaction.member);
+        const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -160,12 +160,12 @@ export default async (client, interaction, ephemeral) => {
             { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
         ]);
         //// Doesn't add much value with 1 shard and autosharding
-        // if (client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${client.options.shardCount}`, inline: true }]);
+        // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);
         if (banner) serverEmbed.setImage(banner);
-        return sendMessage({ client: client, interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: serverEmbed, components: serverButtons, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

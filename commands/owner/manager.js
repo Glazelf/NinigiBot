@@ -17,11 +17,11 @@ import isOwner from "../../util/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = true;
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         let trophy_name, res, returnString;
         const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
@@ -69,7 +69,6 @@ export default async (client, interaction, ephemeral) => {
                     returnString = `${trophy_name} added successfully to the shop!`;
                 };
                 return sendMessage({
-                    client: client,
                     interaction: interaction,
                     content: returnString,
                     ephemeral: true
@@ -79,7 +78,6 @@ export default async (client, interaction, ephemeral) => {
                 res = await deleteShopTrophy(trophy_name);
                 returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`;
                 return sendMessage({
-                    client: client,
                     interaction: interaction,
                     content: returnString,
                     ephemeral: true
@@ -87,7 +85,7 @@ export default async (client, interaction, ephemeral) => {
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

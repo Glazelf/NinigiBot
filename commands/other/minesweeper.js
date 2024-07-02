@@ -9,7 +9,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Minesweeper from "discord.js-minesweeper";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = true;
         let correctionString = "";
@@ -73,10 +73,10 @@ export default async (client, interaction, ephemeral) => {
             returnString += `\nMines: ${mines}`;
         };
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 
