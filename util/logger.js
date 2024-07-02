@@ -60,7 +60,7 @@ Options: ${interactionOptions}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1994) + `\`\`\`...`;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(config.devChannelID);
         if (baseMessage.includes("Missing Permissions")) {
