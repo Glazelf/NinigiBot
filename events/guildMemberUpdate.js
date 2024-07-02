@@ -151,6 +151,6 @@ export default async (client, member, newMember) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

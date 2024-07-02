@@ -82,6 +82,6 @@ export default async (client, oldRole, newRole) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

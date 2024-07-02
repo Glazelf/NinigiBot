@@ -4,6 +4,6 @@ export default async (client, info) => {
     try {
         logger(info, client);
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

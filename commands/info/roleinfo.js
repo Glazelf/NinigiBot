@@ -8,7 +8,7 @@ import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -46,10 +46,10 @@ export default async (client, interaction, ephemeral) => {
                 { name: "Properties:", value: roleProperties, inline: false },
                 { name: "Permissions:", value: permissionString, inline: false }
             ]);
-        return sendMessage({ client: client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

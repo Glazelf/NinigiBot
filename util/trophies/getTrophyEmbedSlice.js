@@ -8,7 +8,7 @@ import {
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getTrophieslice } from "../../database/dbServices/trophy.api.js";
 
-export default async (client, offset) => {
+export default async (offset) => {
     const trophies_per_page = 10;
     let trophy_list = await getTrophieslice(offset, trophies_per_page);
     const embed = new EmbedBuilder().setColor(globalVars.embedColor);

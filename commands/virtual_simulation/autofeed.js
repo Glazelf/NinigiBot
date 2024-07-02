@@ -21,7 +21,7 @@ const autoFeedModes = [
     }
 ];
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = true;
         let returnString;
@@ -31,14 +31,13 @@ export default async (client, interaction, ephemeral) => {
         let modeString = autoFeedModes[modeNumber].name;
         returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
         return sendMessage({
-            client: client,
             interaction: interaction,
             content: returnString,
             ephemeral: ephemeral || res != true
         });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

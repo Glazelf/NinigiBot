@@ -13,7 +13,7 @@ export default async ({ client, interaction, gameName, page }) => {
     try {
         // Add quests matching game title to an array
         let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());
-        if (questsTotal.length == 0) return sendMessage({ client: client, interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
+        if (questsTotal.length == 0) return sendMessage({ interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });
         // Sort by difficulty
         questsTotal = questsTotal.sort(compare);
         let mhEmbed = new EmbedBuilder()
@@ -67,6 +67,6 @@ export default async ({ client, interaction, gameName, page }) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

@@ -90,7 +90,7 @@ export default async (client, interaction) => {
                     try {
                         let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
                         if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.default(client, interaction, ephemeralDefault);
+                        await cmd.default(interaction, ephemeralDefault);
                     } catch (e) {
                         // console.log(e);
                         return;
@@ -107,7 +107,7 @@ export default async (client, interaction) => {
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         if (interaction.user.id !== interaction.message.interaction.user.id &&
                             !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)
-                        ) return sendMessage({ client: client, interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                        ) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             // Response in case of forfeit/reveal
@@ -146,7 +146,7 @@ export default async (client, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ client: client, interaction: interaction, pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhSub")) {
@@ -163,7 +163,7 @@ export default async (client, interaction) => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMHMonster(client, interaction, monsterData);
+                            messageObject = await getMHMonster(interaction, monsterData);
                             if (!messageObject) return;
                             return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
                         } else if (interaction.customId.startsWith("mhquests")) {
@@ -220,14 +220,14 @@ export default async (client, interaction) => {
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
-                            let trophy_slice = await getTrophyEmbedSlice(client, offset);
+                            let trophy_slice = await getTrophyEmbedSlice(offset);
                             return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
-                            let userinfo_page = await getUserInfoSlice(client, interaction, page, { id: user });
+                            let userinfo_page = await getUserInfoSlice(interaction, page, { id: user });
                             return interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
                         } else {
                             // Other buttons
@@ -244,8 +244,8 @@ export default async (client, interaction) => {
                                     const roleArrayItem = await interaction.guild.roles.fetch(value);
                                     rolesArray.push(roleArrayItem);
                                 };
-                                if (rolesArray.length < 1) return sendMessage({ client: client, interaction: interaction, content: `None of the selected roles are valid.` });
-                                let adminBool = isAdmin(client, interaction.guild.members.me);
+                                if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: `None of the selected roles are valid.` });
+                                let adminBool = isAdmin(interaction.guild.members.me);
 
                                 let roleSelectReturnString = "Role toggling results:\n";
                                 for await (const role of rolesArray) {
@@ -265,7 +265,7 @@ export default async (client, interaction) => {
                                         roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
                                     };
                                 };
-                                return sendMessage({ client: client, interaction: interaction, content: roleSelectReturnString });
+                                return sendMessage({ interaction: interaction, content: roleSelectReturnString });
                             } catch (e) {
                                 console.log(e);
                                 return;
@@ -666,7 +666,7 @@ export default async (client, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
-                        return sendMessage({ client: client, interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
+                        return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
@@ -686,7 +686,7 @@ export default async (client, interaction) => {
                             .setFooter({ text: `${interaction.user.username} (${interaction.user.id})` });
 
                         await interaction.guild.publicUpdatesChannel.send({ embeds: [modMailEmbed], components: [profileButtons] });
-                        return sendMessage({ client: client, interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
+                        return sendMessage({ interaction: interaction, content: `Your message has been sent to the mods!\nModerators should get back to you as soon as soon as possible.` });
                     case pkmQuizModalId:
                         let pkmQuizGuessResultEphemeral = false;
                         if (interaction.message.flags.has("Ephemeral")) pkmQuizGuessResultEphemeral = true;
@@ -699,7 +699,7 @@ export default async (client, interaction) => {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
                             interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
                         } else {
-                            return sendMessage({ client: client, interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
+                            return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
                         break;
                 };
@@ -709,6 +709,6 @@ export default async (client, interaction) => {
         };
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };

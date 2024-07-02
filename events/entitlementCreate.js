@@ -23,6 +23,6 @@ export default async (client, entitlement) => {
 
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

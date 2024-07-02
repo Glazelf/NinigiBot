@@ -106,6 +106,6 @@ export default async (client, message) => {
         };
 
     } catch (e) {
-        logger(e, client, message);
+        logger({ exception: e, client: client, interaction: message });
     };
 };

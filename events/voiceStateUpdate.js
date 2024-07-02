@@ -6,6 +6,6 @@ export default async (client, oldMember, newMember) => {
         return;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

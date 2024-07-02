@@ -55,6 +55,6 @@ export default async (client, channel) => {
         };
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
     };
 };

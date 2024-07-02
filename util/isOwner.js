@@ -7,7 +7,7 @@ export default async (client, user) => {
         return false;
 
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, client: client });
         return false;
     };
 };
