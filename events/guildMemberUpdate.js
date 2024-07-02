@@ -77,7 +77,6 @@ export default async (client, member, newMember) => {
                 let isSupporter = false;
                 if (newMember.guild.id == globalVars.ShinxServerID) {
                     let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
-                    coso
                     let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
                     if (!entitlementMatch) isSupporter = true;
                 };
