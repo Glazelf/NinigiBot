@@ -129,6 +129,7 @@ export default async (client, interaction, ephemeral) => {
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
 
                 let itemDescription = itemGen.desc;
+                if (!itemDescription) itemDescription = itemGen.shortDesc; // This check is futureproofing can be removed when the following ps commit gets merged: https://github.com/smogon/pokemon-showdown/commit/6c46ab9924aac84fc9fbab5139d3eac5118fa71f
                 if (itemIsAvailable) itemDescription += `\nThis item is not available in generation ${generation}.`;
 
                 pokemonEmbed
