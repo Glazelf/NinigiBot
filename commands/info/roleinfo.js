@@ -46,7 +46,7 @@ export default async (interaction, ephemeral) => {
                 { name: "Properties:", value: roleProperties, inline: false },
                 { name: "Permissions:", value: permissionString, inline: false }
             ]);
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: roleEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

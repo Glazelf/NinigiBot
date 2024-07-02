@@ -63,7 +63,7 @@ export default async (interaction, ephemeral) => {
                 { name: "Long Date/Time", value: `\`<t:${unixTime}:F>\` ➡ <t:${unixTime}:F>`, inline: false },
                 { name: "Relative Time", value: `\`<t:${unixTime}:R>\` ➡ <t:${unixTime}:R>`, inline: false }
             ]);
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: timestampEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

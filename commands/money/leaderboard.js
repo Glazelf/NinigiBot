@@ -23,10 +23,10 @@ export default async (interaction, ephemeral) => {
             .setColor(globalVars.embedColor);
         if (global) {
             // Global leaderboard
-            let leaderboardStringGlobal = money_db.filter(user => interaction.clientusers.cache.has(user.user_id))
-                .filter(user => !interaction.clientusers.cache.get(user.user_id).bot)
+            let leaderboardStringGlobal = money_db.filter(user => interaction.client.users.cache.has(user.user_id))
+                .filter(user => !interaction.client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(interaction.clientusers.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
             leaderboardEmbed
                 .setDescription(leaderboardStringGlobal)
@@ -34,18 +34,18 @@ export default async (interaction, ephemeral) => {
         } else {
             // Server leaderboard
             let icon = interaction.guild.iconURL(globalVars.displayAvatarSettings);
-            let leaderboardString = money_db.filter(user => interaction.clientusers.cache.get(user.user_id) && memberFetch.get(user.user_id))
-                .filter(user => !interaction.clientusers.cache.get(user.user_id).bot)
+            let leaderboardString = money_db.filter(user => interaction.client.users.cache.get(user.user_id) && memberFetch.get(user.user_id))
+                .filter(user => !interaction.client.users.cache.get(user.user_id).bot)
                 .slice(0, 10)
-                .map((user, position) => `${position + 1}. ${(interaction.clientusers.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
+                .map((user, position) => `${position + 1}. ${(interaction.client.users.cache.get(user.user_id).username)}: ${Math.floor(user.money)}${globalVars.currency}`)
                 .join('\n');
-            if (leaderboardString.length < 1) return sendMessage({ client: interaction.client, interaction: interaction, content: "Noone in this server has any currency yet." });
+            if (leaderboardString.length < 1) return sendMessage({ interaction: interaction, content: "Noone in this server has any currency yet." });
             leaderboardEmbed
                 .setDescription(leaderboardString)
                 .setTitle(`Leaderboard:`)
                 .setThumbnail(icon);
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: leaderboardEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: leaderboardEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

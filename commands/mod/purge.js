@@ -14,8 +14,8 @@ const requiredPermission = PermissionFlagsBits.ManageMessages;
 
 export default async (interaction, ephemeral) => {
     try {
-        let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let adminBool = isAdmin(interaction.member);
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -40,7 +40,7 @@ export default async (interaction, ephemeral) => {
                     .then(messagesDeleted => {
                         returnString = `Deleted ${messagesDeleted.size} messages from ${user.username} within the last ${amount} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                        sendMessage({ client: interaction.client, interaction: interaction, content: returnString });
+                        sendMessage({ interaction: interaction, content: returnString });
                     });
                 return;
             } catch (e) {
@@ -48,7 +48,7 @@ export default async (interaction, ephemeral) => {
                     return logger({ exception: e, interaction: interaction });
                 } else {
                     // console.log(e);
-                    return sendMessage({ client: interaction.client, interaction: interaction, content: deleteFailString });
+                    return sendMessage({ interaction: interaction, content: deleteFailString });
                 };
             };
         } else {
@@ -58,7 +58,7 @@ export default async (interaction, ephemeral) => {
                     .then(messagesDeleted => {
                         returnString = `Deleted ${messagesDeleted.size} messages.`;
                         if (messagesDeleted.size < amount) returnString += missingMessagesString;
-                        sendMessage({ client: interaction.client, interaction: interaction, content: returnString });
+                        sendMessage({ interaction: interaction, content: returnString });
                     });
                 return;
             } catch (e) {

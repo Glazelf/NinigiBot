@@ -17,12 +17,12 @@ let currency = globalVars.currency;
 
 export default async (interaction) => {
     try {
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         let transferTargetID = interaction.options.getString("user");
         let transferAmount = interaction.options.getInteger("amount");
-        if (!transferTargetID) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find user.` });
+        if (!transferTargetID) return sendMessage({ interaction: interaction, content: `Could not find user.` });
 
         let dbBalance = await getMoney(transferTargetID);
         let userBalance = `${Math.floor(dbBalance)}${currency}`;
@@ -30,7 +30,7 @@ export default async (interaction) => {
         await addMoney(transferTargetID, +transferAmount);
         userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
+        return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

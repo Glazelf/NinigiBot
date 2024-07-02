@@ -32,7 +32,7 @@ export default async (interaction, ephemeral) => {
         let canvas, ctx, img, shinx;
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
         let master = interaction.user;
         let trophies;
         switch (interaction.options.getSubcommand()) {

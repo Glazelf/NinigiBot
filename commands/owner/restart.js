@@ -14,8 +14,8 @@ import config from "../../config.json" with { type: "json" };
 export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
         await interaction.deferReply({ ephemeral: ephemeral });
         let removeInteractions = false;
         let interactionsArg = interaction.options.getBoolean("reset-interactions");
@@ -40,20 +40,20 @@ export default async (interaction, ephemeral) => {
         let installResultString = codeBlock(installResult.stdout);
         if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
         if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
-        await sendMessage({ client: interaction.client, interaction: interaction, content: restartString });
+        await sendMessage({ interaction: interaction, content: restartString });
         // Remove all interactions (will be reinstated on next boot)
         if (removeInteractions) {
             // Delete all global commands
-            await interaction.clientapplication.commands.set([]);
+            await interaction.client.application.commands.set([]);
             // Delete all guild commands
-            await interaction.clientguilds.cache.forEach(async (guild) => {
+            await interaction.client.guilds.cache.forEach(async (guild) => {
                 guild.commands.set([]).catch(e => {
                     return;
                 });
             });
         };
         // Destroy, will reboot thanks to forever package
-        await interaction.clientdestroy();
+        await interaction.client.destroy();
         return process.exit();
 
     } catch (e) {

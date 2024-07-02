@@ -17,8 +17,8 @@ const requiredPermission = PermissionFlagsBits.BanMembers;
 
 export default async (interaction) => {
     try {
-        let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let adminBool = isAdmin(interaction.member);
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -54,11 +54,11 @@ export default async (interaction) => {
             // Check permissions
             let userRole = interaction.member.roles.highest;
             let targetRole = member.roles.highest;
-            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ client: interaction.client, interaction: interaction, content: `You don't have a high enough role to ban ${member.user.username} (${member.id}).` });
-            if (!member.bannable) return sendMessage({ client: interaction.client, interaction: interaction, content: banFailString });
+            if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to ban ${member.user.username} (${member.id}).` });
+            if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(member.id)) return sendMessage({ client: interaction.client, interaction: interaction, content: `${member.user.username} (${member.id}) is already banned.` });
+                if (bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${member.user.username} (${member.id}) is already banned.` });
             };
             banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
             await user.send({ content: dmString })
@@ -67,32 +67,32 @@ export default async (interaction) => {
             if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
             try {
                 await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-                return sendMessage({ client: interaction.client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
-                return sendMessage({ client: interaction.client, interaction: interaction, content: banFailString });
+                return sendMessage({ interaction: interaction, content: banFailString });
             };
         } else if (userIDArg) {
             // Try to ban by ID ("hackban") instead
             // See if target isn't already banned
             if (bansFetch) {
-                if (bansFetch.has(userIDArg)) return sendMessage({ client: interaction.client, interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
+                if (bansFetch.has(userIDArg)) return sendMessage({ interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
             };
             banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${reasonCodeBlock}No DM was sent since this ban was by ID or the user was not in the server.`;
             if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
             try {
                 await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
-                return sendMessage({ client: interaction.client, interaction: interaction, content: banReturn, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, content: banReturn, ephemeral: ephemeral });
             } catch (e) {
                 // console.log(e);
                 if (e.toString().includes("Missing Permissions")) {
                     return logger({ exception: e, interaction: interaction });
                 } else {
-                    return sendMessage({ client: interaction.client, interaction: interaction, content: banFailString });
+                    return sendMessage({ interaction: interaction, content: banFailString });
                 };
             };
         } else {
-            return sendMessage({ client: interaction.client, interaction: interaction, content: `You need to provide a target to ban either through the \`member\` or the \`user-id\` argument.` });
+            return sendMessage({ interaction: interaction, content: `You need to provide a target to ban either through the \`member\` or the \`user-id\` argument.` });
         };
 
     } catch (e) {

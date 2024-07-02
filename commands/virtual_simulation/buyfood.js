@@ -14,7 +14,7 @@ export default async (interaction) => {
         let amountArg = interaction.options.getInteger("amount");
         res = await buyFood(master.id, amountArg);
         returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
-        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
+        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

@@ -10,8 +10,8 @@ import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     try {
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -22,14 +22,14 @@ export default async (interaction, ephemeral) => {
         let fileIsImg = false;
         if (avatarArg.contentType.includes('image')) fileIsImg = true;
 
-        if (!fileIsImg) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please supply an image.` });
+        if (!fileIsImg) return sendMessage({ interaction: interaction, content: `Please supply an image.` });
         try {
-            await interaction.clientuser.setAvatar(iconImg);
+            await interaction.client.user.setAvatar(iconImg);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to update my avatar.` });
+            return sendMessage({ interaction: interaction, content: `Failed to update my avatar.` });
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Updated my avatar.` });
+        return sendMessage({ interaction: interaction, content: `Updated my avatar.` });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

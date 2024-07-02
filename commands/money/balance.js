@@ -12,7 +12,7 @@ export default async (interaction, ephemeral) => {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let dbBalance = await getMoney(interaction.user.id);
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

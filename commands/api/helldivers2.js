@@ -30,7 +30,7 @@ export default async (interaction, ephemeral) => {
                 let planetsResponse = await axios.get(`${api}planets`);
                 let planetsData = planetsResponse.data;
                 let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
-                if (!planetObject) return sendMessage({ client: interaction.client, interaction: interaction, content: "Could not find the specified planet." });
+                if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
                 let planetIndex = planetObject[0];
                 planetObject = planetObject[1];
                 let planetSector = `${planetObject.sector} Sector`;
@@ -77,7 +77,7 @@ export default async (interaction, ephemeral) => {
                 helldiversEmbed.setTitle("Campaign Status");
                 break;
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

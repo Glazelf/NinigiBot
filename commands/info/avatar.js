@@ -16,7 +16,7 @@ export default async (interaction) => {
         let serverAvatar = null;
         if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
         if (member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
-        if (!avatar && !serverAvatar) return sendMessage({ client: interaction.client, interaction: interaction, content: `${user.username} doesn't have an avatar.` });
+        if (!avatar && !serverAvatar) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have an avatar.` });
         if (!serverAvatar) {
             serverAvatar = avatar;
             avatar = null;
@@ -26,7 +26,7 @@ export default async (interaction) => {
             .setThumbnail(avatar)
             .setTitle(`${user.username}'s avatar(s):`)
             .setImage(serverAvatar);
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: avatarEmbed });
+        return sendMessage({ interaction: interaction, embeds: avatarEmbed });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

@@ -1,7 +1,7 @@
 import { PermissionFlagsBits } from "discord.js";
 import logger from "./logger.js";
 
-export default (client, member) => {
+export default (member) => {
     try {
         if (!member || !member.guild || !member.permissions) return false;
         if (member.guild.ownerID == member.id) {
@@ -13,7 +13,7 @@ export default (client, member) => {
         };
 
     } catch (e) {
-        logger({ exception: e, client: client });
+        logger({ exception: e });
         return false;
     };
 };

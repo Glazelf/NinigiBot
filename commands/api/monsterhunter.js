@@ -39,7 +39,7 @@ export default async (interaction, ephemeral) => {
                 questsJSON.quests.forEach(quest => {
                     if (quest.name.toLowerCase() == questName) questData = quest;
                 });
-                if (!questData) return sendMessage({ client: interaction.client, interaction: interaction, content: "Could not find the specified quest." });
+                if (!questData) return sendMessage({ interaction: interaction, content: "Could not find the specified quest." });
                 // Format quest title
                 let questTitle = `${questData.difficulty}⭐ ${questData.name}`;
                 if (questData.isKey) questTitle += ` 🔑`;
@@ -69,7 +69,7 @@ export default async (interaction, ephemeral) => {
             case "questlist":
                 let gameName = interaction.options.getString("game");
                 let questsMessageObject = await getQuests({ client: interaction.client, interaction: interaction, gameName: gameName, page: 1 });
-                return sendMessage({ client: interaction.client, interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
             // Monsters
             case "monster":
                 let monsterName = interaction.options.getString("monster").toLowerCase();
@@ -85,12 +85,12 @@ export default async (interaction, ephemeral) => {
                         if (monster.name.toLowerCase() == monsterName) monsterData = monster;
                     });
                 };
-                if (!monsterData) return sendMessage({ client: interaction.client, interaction: interaction, content: "Could not find the specified monster." });
+                if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });
 
-                let messageObject = await getMonster(client, interaction, monsterData, ephemeral);
-                return sendMessage({ client: interaction.client, interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
+                let messageObject = await getMonster(interaction, monsterData, ephemeral);
+                return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
+        return sendMessage({ interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

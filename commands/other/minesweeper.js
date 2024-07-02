@@ -73,7 +73,7 @@ export default async (interaction, ephemeral) => {
             returnString += `\nMines: ${mines}`;
         };
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

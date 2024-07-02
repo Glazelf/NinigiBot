@@ -24,7 +24,7 @@ export default async (interaction, ephemeral) => {
         let roleArgument = interaction.options.getString('role');
         let requestRole = null;
         if (roleArgument) requestRole = roleArgument;
-        let adminBoolBot = isAdmin(client, interaction.guild.members.me);
+        let adminBoolBot = isAdmin(interaction.guild.members.me);
         let embedDescriptionCharacterLimit = 4096;
         let selectOptionLimit = 25;
 
@@ -74,7 +74,7 @@ export default async (interaction, ephemeral) => {
                         description: value[1].description,
                     });
                 };
-                if (rolesArray.length < 1) return sendMessage({ client: interaction.client, interaction: interaction, content: noRolesString });
+                if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: noRolesString });
 
                 const roleSelectMenu = new StringSelectMenuBuilder()
                     .setCustomId("role-select")
@@ -86,27 +86,27 @@ export default async (interaction, ephemeral) => {
 
                 let returnString = `Choose roles to toggle:`;
                 if (ephemeral == true) returnString = `${rolesArray.length}/25 roles before the dropdown is full.\n${removeEmote} You have the role and it will be removed.\n${receiveEmote} You don't have this role yet and it will be added.\n${returnString}`;
-                return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, content: returnString, components: rolesSelects, ephemeral: ephemeral });
             };
             // Help menu
             for (let i = 0; i < roleText.length; i++) {
                 // Might want to add descriptions here but you might get character limit issues lol
                 roleHelpMessage = `${roleHelpMessage}\n${i + 1}. ${roleText[i]}`;
             };
-            if (roleHelpMessage.length == 0) return sendMessage({ client: interaction.client, interaction: interaction, content: noRolesString });
-            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ client: interaction.client, interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
+            if (roleHelpMessage.length == 0) return sendMessage({ interaction: interaction, content: noRolesString });
+            if (roleHelpMessage.length > embedDescriptionCharacterLimit) return sendMessage({ interaction: interaction, content: `Embed descriptions can't be over ${embedDescriptionCharacterLimit} characters. Consider removing some roles.` });
 
             const rolesHelp = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Available roles:`)
                 .setDescription(roleHelpMessage);
-            return sendMessage({ client: interaction.client, interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, embeds: rolesHelp, ephemeral: ephemeral });
         } else {
             let invalidRoleText = `That role does not exist or isn't selfassignable. Use </role:978075106276429864> without any argument to see a drop down menu of available roles.`; // Make ID adaptive
             requestRole = await interaction.guild.roles.fetch(requestRole);
-            if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ client: interaction.client, interaction: interaction, content: invalidRoleText });
-            if (requestRole.managed == true) return sendMessage({ client: interaction.client, interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
-            if (interaction.guild.members.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ client: interaction.client, interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
+            if (!requestRole || !roleIDs.includes(requestRole.id)) return sendMessage({ interaction: interaction, content: invalidRoleText });
+            if (requestRole.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole.name} because it is being automatically managed by an integration.` });
+            if (interaction.guild.members.me.roles.highest.comparePositionTo(requestRole) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage ${requestRole} because it is above my highest role.` });
 
             let returnString;
             if (interaction.member.roles.cache.has(requestRole.id)) {
@@ -116,7 +116,7 @@ export default async (interaction, ephemeral) => {
                 await interaction.member.roles.add(requestRole);
                 returnString = `You now have ${requestRole}!`;
             };
-            return sendMessage({ client: interaction.client, interaction: interaction, content: returnString });
+            return sendMessage({ interaction: interaction, content: returnString });
         };
 
     } catch (e) {

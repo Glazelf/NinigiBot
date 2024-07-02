@@ -22,7 +22,7 @@ export default async (interaction, ephemeral) => {
         let inputOwOified = owoify.default(input, severity);
         let returnString = codeBlock("fix", inputOwOified);
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

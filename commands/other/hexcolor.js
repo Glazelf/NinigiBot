@@ -19,7 +19,7 @@ export default async (interaction, ephemeral) => {
         let rgb = hexToRgb(hexInput);
         if (hexInput.startsWith("#")) formattingHash = "";
 
-        if (!rgb) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
+        if (!rgb) return sendMessage({ interaction: interaction, content: `Please provide a valid hex. Color hexes are 6 characters long using characters 0-9 and A-F.` });
 
         let imgWidth = 225;
         let imgHeight = 100;
@@ -31,7 +31,7 @@ export default async (interaction, ephemeral) => {
         const stream = new PassThrough();
         await PImage.encodePNGToStream(img, stream);
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Here's the color for \`${formattingHash}${hexInput}\`:`, files: stream, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: `Here's the color for \`${formattingHash}${hexInput}\`:`, files: stream, ephemeral: ephemeral });
 
         function hexToRgb(hex) {
             let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

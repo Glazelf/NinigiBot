@@ -44,6 +44,6 @@ export default async ({ interaction, content = null, embeds = null, files = null
         };
 
     } catch (e) {
-        logger({ exception: e, client: client, interaction: interaction });
+        logger({ exception: e, interaction: interaction });
     };
 };

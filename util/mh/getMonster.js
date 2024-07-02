@@ -20,9 +20,9 @@ let MHRise = "Monster Hunter Rise";
 let MHW = "Monster Hunter World";
 let MHGU = "Monster Hunter Generations Ultimate";
 
-export default async (client, interaction, monsterData, ephemeral) => {
+export default async (interaction, monsterData, ephemeral) => {
     try {
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
         let gameDBName;
         // Get icon, description and game appearances
         let monsterIcon;
@@ -184,6 +184,6 @@ export default async (client, interaction, monsterData, ephemeral) => {
         return messageObject;
 
     } catch (e) {
-        logger({ exception: e, client: client });
+        logger({ exception: e, interaction: interaction });
     };
 };

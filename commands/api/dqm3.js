@@ -33,7 +33,7 @@ export default async (interaction, ephemeral) => {
             case "monster":
                 inputID = interaction.options.getString("monster");
                 let monsterData = monstersJSON[inputID];
-                if (!monsterData) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find that monster.` });
+                if (!monsterData) return sendMessage({ interaction: interaction, content: `Could not find that monster.` });
                 let monsterTitle = monsterData.name;
                 if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
                 let growthString = ""; // Redundant check in complete dataset
@@ -79,7 +79,7 @@ export default async (interaction, ephemeral) => {
             case "talent":
                 inputID = interaction.options.getString("talent");
                 let talentData = talentsJSON[inputID];
-                if (!talentData) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find that talent.` });
+                if (!talentData) return sendMessage({ interaction: interaction, content: `Could not find that talent.` });
                 let talentSkillsString = "";
                 if (talentData.skills) {
                     for (const [skillID, skillPoints] of Object.entries(talentData.skills)) {
@@ -111,7 +111,7 @@ export default async (interaction, ephemeral) => {
             case "skill":
                 inputID = interaction.options.getString("skill");
                 let skillData = skillsJSON[inputID];
-                if (!skillData) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find that skill.` });
+                if (!skillData) return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
                 let mpCostString = skillData.mp_cost.toString();
                 if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
                 let skillTalents = [];
@@ -131,7 +131,7 @@ export default async (interaction, ephemeral) => {
             case "trait":
                 inputID = interaction.options.getString("trait");
                 let traitData = traitsJSON[inputID];
-                if (!traitData) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find that trait.` });
+                if (!traitData) return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
                 let traitMonsters = [];
                 for (const [monsterID, monsterObject] of Object.entries(monstersJSON)) {
                     if (monsterObject.traits == null) continue;
@@ -152,7 +152,7 @@ export default async (interaction, ephemeral) => {
             case "item":
                 inputID = interaction.options.getString("item");
                 let itemData = itemsJSON[inputID];
-                if (!itemData) return sendMessage({ client: interaction.client, interaction: interaction, content: `Could not find that item.` });
+                if (!itemData) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
                 dqm3Embed
                     .setTitle(itemData.name)
                     .setDescription(itemData.description)
@@ -219,11 +219,11 @@ export default async (interaction, ephemeral) => {
                     if (familySynthesisString.length > 0) dqm3Embed.addFields([{ name: "Family Synthesis:", value: `${familySynthesisString}\n${familySynthesisNote}`, inline: false }]);
                     if (uniqueSynthesisString.length > 0) dqm3Embed.addFields([{ name: "Unique Synthesis:", value: uniqueSynthesisString, inline: false }]);
                 } else {
-                    return sendMessage({ client: interaction.client, interaction: interaction, content: `Coming soon.` });
+                    return sendMessage({ interaction: interaction, content: `Coming soon.` });
                 };
                 break;
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: dqm3Embed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

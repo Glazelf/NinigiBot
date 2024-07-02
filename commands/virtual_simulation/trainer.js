@@ -53,10 +53,10 @@ export default async (interaction, ephemeral) => {
                         { name: "Trophies:", value: trophy_string, inline: true }
                     ]);
                 };
-                return sendMessage({ client: interaction.client, interaction: interaction, embeds: [embed], ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, embeds: [embed], ephemeral: ephemeral });
             case "swapsprite":
                 const shinx = await getShinx(master.id);
-                return sendMessage({ client: interaction.client, interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
+                return sendMessage({ interaction: interaction, content: `Your character is now ${shinx.swapAndGetTrainerGender() ? 'male' : 'female'}, ${master}!` });
         };
 
     } catch (e) {

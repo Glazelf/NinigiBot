@@ -17,7 +17,7 @@ export default async (interaction, ephemeral) => {
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
         let returnString = `Your question was:${codeBlock("fix", input)}The 8ball says: "${randomAnswer}.".`;
-        return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

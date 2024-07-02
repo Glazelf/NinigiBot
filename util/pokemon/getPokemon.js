@@ -19,7 +19,7 @@ import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ client, interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
+export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
     try {
         let messageObject;
         let embedColor = globalVars.embedColor;
@@ -39,7 +39,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         };
         // Common settings
         if (!pokemon) return;
-        const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
+        const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
         let recentGame = "SV";
         let description = "";
         // Construct footer
@@ -400,7 +400,7 @@ export default async ({ client, interaction, pokemon, learnsetBool = false, shin
         return messageObject;
 
     } catch (e) {
-        logger({ exception: e, client: client });
+        logger({ exception: e, interaction: interaction });
     };
 };
 

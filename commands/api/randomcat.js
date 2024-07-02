@@ -39,7 +39,7 @@ export default async (interaction, ephemeral) => {
             .setColor(globalVars.embedColor)
             .setImage(catImage)
             .setFooter({ text: `"${catText}" -${catName}` });
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

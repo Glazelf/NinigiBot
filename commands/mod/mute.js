@@ -16,20 +16,20 @@ const requiredPermission = PermissionFlagsBits.ModerateMembers;
 
 export default async (interaction, ephemeral) => {
     try {
-        let adminBool = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let adminBool = isAdmin(interaction.member);
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = false;
         await interaction.deferReply({ ephemeral: ephemeral });
         let user = interaction.options.getUser("user");
         let member = await interaction.guild.members.fetch(user.id);
-        if (!member) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please provide a user to mute.` });
+        if (!member) return sendMessage({ interaction: interaction, content: `Please provide a user to mute.` });
 
         let muteTime = 60;
         let maxMuteTime = 2419200000; // Max time is 28 days
         let timeArg = interaction.options.getInteger("time");
         if (timeArg) muteTime = timeArg;
-        if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please provide a valid number.` });
+        if (isNaN(muteTime) || 1 > muteTime) return sendMessage({ interaction: interaction, content: `Please provide a valid number.` });
         muteTime = muteTime * 1000 * 60; // Convert to milliseconds
         if (muteTime > maxMuteTime) muteTime = maxMuteTime;
         // Format display time
@@ -42,12 +42,12 @@ export default async (interaction, ephemeral) => {
         let minutesMutedDisplay = minutesMuted > 0 ? minutesMuted + (minutesMuted == 1 ? " minute " : " minutes ") : "";
         displayMuteTime = daysMutedDisplay + hoursMutedDisplay + minutesMutedDisplay;
 
-        if (!member) return sendMessage({ client: interaction.client, interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
+        if (!member) return sendMessage({ interaction: interaction, content: `Please use a proper mention if you want to mute someone.` });
         // Check permissions
         let userRole = interaction.member.roles.highest;
         let targetRole = member.roles.highest;
-        if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ client: interaction.client, interaction: interaction, content: `You don't have a high enough role to mute ${member.user.username} (${member.id}).` });
-        if (!member.moderatable) return sendMessage({ client: interaction.client, interaction: interaction, content: `I don't have permissions to mute this user.` });
+        if (targetRole.position >= userRole.position && !adminBool) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to mute ${member.user.username} (${member.id}).` });
+        if (!member.moderatable) return sendMessage({ interaction: interaction, content: `I don't have permissions to mute this user.` });
 
         let reason = "Not specified.";
         let reasonArg = interaction.options.getString("reason");
@@ -70,10 +70,10 @@ export default async (interaction, ephemeral) => {
             await user.send({ content: dmString })
                 .then(message => muteReturnString += `Succeeded in sending a DM to ${user.username} with the reason.`)
                 .catch(e => muteReturnString += `Failed to send a DM to ${user.username} with the reason.`);
-            return sendMessage({ client: interaction.client, interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
+            return sendMessage({ interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
         } catch (e) {
             // console.log(e);
-            if (e.toString().includes("Missing Permissions")) return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to toggle timeout on ${user.username}. I probably lack permissions.` });
+            if (e.toString().includes("Missing Permissions")) return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${user.username}. I probably lack permissions.` });
             // Log error
             logger({ exception: e, interaction: interaction });
         };

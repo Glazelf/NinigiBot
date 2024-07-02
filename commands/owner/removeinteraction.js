@@ -10,25 +10,25 @@ import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
     try {
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         await interaction.deferReply({ ephemeral: true });
 
         let interactionName = interaction.options.getString("interaction-name");
         let guildID = interaction.options.getString("guild-id");
 
-        let commands = await interaction.clientapplication.commands.fetch();
+        let commands = await interaction.client.application.commands.fetch();
         let command = commands.find(c => c.name === interactionName);
-        if (!command) return sendMessage({ client: interaction.client, interaction: interaction, content: `Command \`${interactionName}\` not found.` });
+        if (!command) return sendMessage({ interaction: interaction, content: `Command \`${interactionName}\` not found.` });
 
         try {
-            await interaction.clientapplication.commands.delete(command.id, guildID);
+            await interaction.client.application.commands.delete(command.id, guildID);
         } catch (e) {
             // console.log();
-            return sendMessage({ client: interaction.client, interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
+            return sendMessage({ interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
         };
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
+        return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

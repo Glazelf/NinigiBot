@@ -9,7 +9,7 @@ import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
 export default async (interaction) => {
     try {
         const user = interaction.options.getUser("user");
-        const msg = await getUserInfoSlice(client, interaction, 0, user);
+        const msg = await getUserInfoSlice(interaction, 0, user);
         return sendMessage(msg);
     } catch (e) {
         logger({ exception: e, interaction: interaction });

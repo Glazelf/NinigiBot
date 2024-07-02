@@ -16,9 +16,9 @@ export default async (interaction) => {
     try {
         let serverApi = await import("../../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
-        let adminBoolBot = isAdmin(client, interaction.guild.members.me);
-        let adminBoolUser = isAdmin(client, interaction.member);
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let adminBoolBot = isAdmin(interaction.guild.members.me);
+        let adminBoolUser = isAdmin(interaction.member);
+        if (!interaction.member.permissions.has(requiredPermission) && !adminBoolUser) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         let ephemeral = true;
         await interaction.deferReply({ ephemeral: ephemeral });
@@ -28,26 +28,26 @@ export default async (interaction) => {
         let descriptionArg = interaction.options.getString("description");
         if (descriptionArg) {
             description = descriptionArg;
-            if (description.length > selectDescriptionCharacterLimit) return sendMessage({ client: interaction.client, interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
+            if (description.length > selectDescriptionCharacterLimit) return sendMessage({ interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
         };
 
-        if (role.managed == true) return sendMessage({ client: interaction.client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
-        if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ client: interaction.client, interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
-        if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ client: interaction.client, interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
+        if (role.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
+        if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
+        if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
 
         let roleIDs = await serverApi.EligibleRoles.findAll({ where: { role_id: role.id } });
         if (roleIDs.length > 0) {
             for await (const roleID of roleIDs) {
                 roleID.destroy();
             };
-            return sendMessage({ client: interaction.client, interaction: interaction, content: `${role} is no longer eligible to be selfassigned.` });
+            return sendMessage({ interaction: interaction, content: `${role} is no longer eligible to be selfassigned.` });
         } else {
             if (description) {
                 await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name, description: description });
             } else {
                 await serverApi.EligibleRoles.upsert({ role_id: role.id, name: role.name });
             };
-            return sendMessage({ client: interaction.client, interaction: interaction, content: `${role} is now eligible to be selfassigned.` });
+            return sendMessage({ interaction: interaction, content: `${role} is now eligible to be selfassigned.` });
         };
 
     } catch (e) {

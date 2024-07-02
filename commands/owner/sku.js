@@ -11,12 +11,12 @@ import config from "../../config.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     try {
-        let ownerBool = await isOwner(client, interaction.user);
-        if (!ownerBool) return sendMessage({ client: interaction.client, interaction: interaction, content: globalVars.lackPermsString });
+        let ownerBool = await isOwner(interaction.client, interaction.user);
+        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
         ephemeral = true;
-        let SKUs = await interaction.clientapplication.fetchSKUs();
-        let entitlements = await interaction.clientapplication.entitlements.fetch({ excludeEnded: true });
+        let SKUs = await interaction.client.application.fetchSKUs();
+        let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
@@ -33,7 +33,7 @@ export default async (interaction, ephemeral) => {
             if (userList.length > 0) entitlementEmbed.addFields([{ name: SKU.name, value: userList.join("\n") }]);
         };
 
-        return sendMessage({ client: interaction.client, interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: entitlementEmbed, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

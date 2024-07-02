@@ -17,7 +17,7 @@ export default async (interaction, ephemeral) => {
         if (lowNumber > highNumber) [lowNumber, highNumber] = [highNumber, lowNumber]; // Flip variables in case lowNumber is higher. randomNumber() does this too but we do it again here to keep the end string sorted from low to high
         let randomValue = randomNumber(lowNumber, highNumber);
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Your random number between \`${lowNumber}\` and \`${highNumber}\` is \`${randomValue}\`.`, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: `Your random number between \`${lowNumber}\` and \`${highNumber}\` is \`${randomValue}\`.`, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });

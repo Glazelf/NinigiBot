@@ -97,7 +97,7 @@ export default async (interaction, ephemeral) => {
                     ctx.fillRect(467, 413, 245 * exp_struct.curr_percent, 14);
                 };
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
-                return sendMessage({ client: interaction.client, interaction: interaction, files: messageFile, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, files: messageFile, ephemeral: ephemeral });
             case "feed":
                 // let foodArg = interaction.options.getInteger("food");
                 res = await feedShinx(master.id);
@@ -146,7 +146,7 @@ export default async (interaction, ephemeral) => {
                         messageFile = new AttachmentBuilder(canvas.toBuffer());
                         break;
                 };
-                return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok') });
+                return sendMessage({ interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != 'Ok') });
             case "play":
                 shinx = await getShinx(master.id);
                 canvas = Canvas.createCanvas(578, 398);
@@ -217,7 +217,7 @@ export default async (interaction, ephemeral) => {
 
                 messageFile = new AttachmentBuilder(canvas.toBuffer());
                 shinx.addExperienceAndUnfeed(50, 1);
-                return sendMessage({ client: interaction.client, interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
+                return sendMessage({ interaction: interaction, content: `**${shinx.nickname}** ${conversation.quote}`, files: messageFile, ephemeral: ephemeral });
             case "nickname":
                 let new_nick = interaction.options.getString("nickname");
                 res = await nameShinx(master.id, new_nick);
@@ -277,16 +277,16 @@ export default async (interaction, ephemeral) => {
                     returnString = 'Your Shinx needs to be at least level 50 to make it shiny.';
                     messageFile = null;
                 };
-                return sendMessage({ client: interaction.client, interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != true) });
+                return sendMessage({ interaction: interaction, content: returnString, files: messageFile, ephemeral: ephemeral || (res != true) });
             case "release":
                 let confirm = false
                 let confirmArg = interaction.options.getBoolean("confirm");
                 if (confirmArg === true) confirm = confirmArg;
-                if (!confirm) return sendMessage({ client: interaction.client, interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
+                if (!confirm) return sendMessage({ interaction: interaction, content: `This action is irreversible and will reset all your Shinx's values.\nPlease set the \`confirm\` option for this command to \`true\` if you're sure.` });
                 shinx = await getShinx(master.id);
                 let shinxNickname = shinx.nickname;
                 await shinx.destroy();
-                return sendMessage({ client: interaction.client, interaction: interaction, content: `Released your Shinx.\nBye-bye, ${shinxNickname}!` });
+                return sendMessage({ interaction: interaction, content: `Released your Shinx.\nBye-bye, ${shinxNickname}!` });
         };
 
     } catch (e) {

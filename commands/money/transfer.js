@@ -19,13 +19,13 @@ export default async (interaction, ephemeral) => {
         let transferTarget = interaction.options.getUser("user");
         let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-        if (transferTarget == interaction.user) return sendMessage({ client: interaction.client, interaction: interaction, content: `You can't transfer money to yourself.` });
-        if (transferAmount > currentBalance) return sendMessage({ client: interaction.client, interaction: interaction, content: `You only have ${userBalance}.` });
+        if (transferTarget == interaction.user) return sendMessage({ interaction: interaction, content: `You can't transfer money to yourself.` });
+        if (transferAmount > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${userBalance}.` });
 
         addMoney(interaction.user.id, -transferAmount);
         addMoney(transferTarget.id, transferAmount);
 
-        return sendMessage({ client: interaction.client, interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
 
     } catch (e) {
         logger({ exception: e, interaction: interaction });
