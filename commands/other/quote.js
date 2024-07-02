@@ -11,7 +11,7 @@ import config from "../../config.json" with { type: "json" };
 
 let previousQuoteTime = null;
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
 
@@ -21,7 +21,7 @@ export default async (client, interaction, ephemeral) => {
             const expirationTime = previousQuoteTime + cooldownAmount;
             if (now < expirationTime) {
                 const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
-                return sendMessage({ client: client, interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
+                return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
             };
         };
         // Get list of all message IDs for fairer random pick
@@ -44,10 +44,10 @@ export default async (client, interaction, ephemeral) => {
             .setImage(messageImage);
 
         previousQuoteTime = now;
-        return sendMessage({ client: client, interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 
