@@ -25,7 +25,7 @@ let sanitizeValues = [
     "$"
 ];
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -38,13 +38,13 @@ export default async (client, interaction, ephemeral) => {
         sanitizeValues.forEach(function (value) {
             calcInput = calcInput.replace(value, "");
         });
-        if (!calcInput) return sendMessage({ client: client, interaction: interaction, content: noInputString });
+        if (!calcInput) return sendMessage({ interaction: interaction, content: noInputString });
         let evaled = null;
         try {
             evaled = eval(calcInput);
         } catch (e) {
             // console.log(e);
-            return sendMessage({ client: client, interaction: interaction, content: noInputString });
+            return sendMessage({ interaction: interaction, content: noInputString });
         };
         // Test out rounding based on remainder sometime
         // let remainder = evaled % 1;
@@ -55,10 +55,10 @@ export default async (client, interaction, ephemeral) => {
         let returnString = output;
         if (output.length > maxMessageLength) returnString = codeBlock("js", rounded.toString());
 
-        return sendMessage({ client: client, interaction: interaction, content: returnString });
+        return sendMessage({ interaction: interaction, content: returnString });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

@@ -14,7 +14,7 @@ let api = "https://helldiverstrainingmanual.com/api/v1/";
 let liberationString = "Liberation";
 let defenseString = "Defense";
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -30,7 +30,7 @@ export default async (client, interaction, ephemeral) => {
                 let planetsResponse = await axios.get(`${api}planets`);
                 let planetsData = planetsResponse.data;
                 let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
-                if (!planetObject) return sendMessage({ client: client, interaction: interaction, content: "Could not find the specified planet." });
+                if (!planetObject) return sendMessage({ interaction: interaction, content: "Could not find the specified planet." });
                 let planetIndex = planetObject[0];
                 planetObject = planetObject[1];
                 let planetSector = `${planetObject.sector} Sector`;
@@ -77,10 +77,10 @@ export default async (client, interaction, ephemeral) => {
                 helldiversEmbed.setTitle("Campaign Status");
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: helldiversEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

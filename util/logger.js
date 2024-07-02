@@ -4,17 +4,18 @@ import sendMessage from "./sendMessage.js";
 import util from "util";
 import config from "../config.json" with { type: "json" };
 
-export default async (exception, client, interaction = null) => {
+export default async ({ exception, client, interaction = null }) => {
     // Note: interaction may be a message
     try {
         let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
+        if (!client && interaction) client = interaction.client;
         if (exceptionString.includes("Missing Access")) {
             return; // Permission error; guild-side mistake
         } else if (exceptionString.includes("Internal Server Error") && !message.author) {
             // If this happens, it's probably a Discord issue. If this return occurs too frequently it might need to be disabled. Also only procs for interactions, not messages. Might want to write a better type check.
-            return sendMessage({ client: client, interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
+            return sendMessage({ interaction: interaction, content: "An internal server error occurred at Discord. Please check back later to see if Discord has fixed the issue.", ephemeral: true });
         } else if (exceptionString.includes("Unknown interaction")) {
             return; // Expired interaction, can't reply to said interaction
         } else if (exceptionString.includes("ETIMEDOUT") || exceptionString.includes("ECONNREFUSED") || exceptionString.includes("ECONNRESET")) {
@@ -59,7 +60,7 @@ Options: ${interactionOptions}
 Error:\n${exceptionCode}
 ${messageContentCode}` : `An error occurred:\n${exceptionCode}`;
 
-        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1994) + `\`\`\`...`;
+        if (baseMessage.length > 2000) baseMessage = baseMessage.substring(0, 1990) + `...\`\`\``;
         // Fix cross-shard logging sometime
         let devChannel = await client.channels.fetch(config.devChannelID);
         if (baseMessage.includes("Missing Permissions")) {

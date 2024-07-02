@@ -15,7 +15,7 @@ import parseDate from "../../util/parseDate.js";
 let giAPI = `https://genshin.jmp.blue/`;
 let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
 
-export default async (client, interaction, ephemeral) => {
+export default async (interaction, ephemeral) => {
     try {
         let ephemeralArg = interaction.options.getBoolean("ephemeral");
         if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -31,7 +31,7 @@ export default async (client, interaction, ephemeral) => {
                 let detailedArg = interaction.options.getBoolean("detailed");
                 if (detailedArg === true) detailed = true;
                 response = await axios.get(giAPI + characterName);
-                if (response.status != 200) return sendMessage({ client: client, interaction: interaction, content: `Error occurred, make sure that character exists.` });
+                if (response.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred, make sure that character exists.` });
                 let character = response.data;
                 let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
                 let characterThumbnail = getWikiURL(characterThumbnailFile, giWiki);
@@ -106,17 +106,16 @@ export default async (client, interaction, ephemeral) => {
                 giEmbed
                     .setTitle(artifact.name)
                     .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
-                if (artifact["1-piece_bonus"]) giEmbed.addFields([{ name: "1-Piece Bonus:", value: artifact["1-piece_bonus"], inline: false }]);
-                if (artifact["2-piece_bonus"]) giEmbed.addFields([{ name: "2-Piece Bonus:", value: artifact["2-piece_bonus"], inline: false }]);
-                if (artifact["3-piece_bonus"]) giEmbed.addFields([{ name: "3-Piece Bonus:", value: artifact["3-piece_bonus"], inline: false }]);
-                if (artifact["4-piece_bonus"]) giEmbed.addFields([{ name: "4-Piece Bonus:", value: artifact["4-piece_bonus"], inline: false }]);
-                if (artifact["5-piece_bonus"]) giEmbed.addFields([{ name: "5-Piece Bonus:", value: artifact["5-piece_bonus"], inline: false }]);
+                let pieceBonusVarName = "-piece_bonus";
+                for (let i = 1; i <= 5; i++) {
+                    if (artifact[`${i}${pieceBonusVarName}`]) giEmbed.addFields([{ name: `${i}-Piece Bonus:`, value: artifact[`${i}${pieceBonusVarName}`] }]);
+                };
                 break;
         };
-        return sendMessage({ client: client, interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
+        return sendMessage({ interaction: interaction, embeds: giEmbed, ephemeral: ephemeral });
 
     } catch (e) {
-        logger(e, client, interaction);
+        logger({ exception: e, interaction: interaction });
     };
 };
 

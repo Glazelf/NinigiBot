@@ -13,9 +13,9 @@ import areEmotesAllowed from "../areEmotesAllowed.js";
 
 const number_of_pages = 2;
 
-export default async (client, interaction, page, user) => {
+export default async (interaction, page, user) => {
     try {
-        user = await client.users.fetch(user.id, { force: true });
+        user = await interaction.client.users.fetch(user.id, { force: true });
         let member = null;
         if (interaction.inGuild()) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
         // Accent color
@@ -54,7 +54,7 @@ export default async (client, interaction, page, user) => {
         let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
         switch (page) {
             case 0:
-                const emotesAllowed = areEmotesAllowed(client, interaction);
+                const emotesAllowed = areEmotesAllowed(interaction);
                 let switchCode = user_db.swcode;
                 let birthday = user_db.birthday;
                 let birthdayParsed = parseDate(birthday);
@@ -149,13 +149,12 @@ export default async (client, interaction, page, user) => {
                 break;
         };
         return {
-            client: client,
             interaction: interaction,
             embeds: profileEmbed,
             components: profileButtons
         };
     } catch (e) {
-        logger(e, client);
+        logger({ exception: e, interaction: interaction });
     }
 };
 

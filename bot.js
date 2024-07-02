@@ -11,8 +11,25 @@ import config from './config.json' with { type: "json" };
 
 // All except guild presence
 // privileged: MessageContent, GuildMembers, GuildPresence
-const intents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildModeration, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.GuildIntegrations, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent];
-const partials = [Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction, Partials.User];
+const intents = [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildIntegrations,
+    // GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.MessageContent
+];
+const partials = [
+    Partials.Channel,
+    Partials.GuildMember,
+    Partials.Message,
+    Partials.Reaction,
+    Partials.User
+];
 
 const client = new Client({
     intents: intents,
@@ -37,7 +54,6 @@ fs.readdir("./events/", (err, files) => {
     });
 });
 client.commands = new Collection();
-client.aliases = new Collection();
 await walk(`./commands/`);
 console.log("Loaded commands!");
 
@@ -57,12 +73,6 @@ async function walk(dir, callback) {
                     let commandName = file.split(".")[0];
                     // console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
-                    if (props.commandObject.aliases) {
-                        props.commandObject.aliases.forEach(alias => {
-                            if (client.aliases.get(alias)) return console.log(`Warning: Two commands share an alias name: ${alias}`);
-                            client.aliases.set(alias, commandName);
-                        });
-                    };
                 };
             });
         });
