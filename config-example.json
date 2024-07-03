@@ -5,6 +5,5 @@
     "ownerID": "",
     "token": "",
     "dbUsername": "",
-    "dbPassword": "",
-    "forever": false
+    "dbPassword": ""
 }
