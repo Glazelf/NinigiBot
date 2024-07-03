@@ -111,7 +111,7 @@ const reasonOption = new SlashCommandStringOption()
     .setMaxLength(450); // Max reason length is 512, leave some space for executor and timestamp
 // Integer options
 const deleteMessageDaysOption = new SlashCommandIntegerOption()
-    .setName("delete-message-days")
+    .setName("delete-messages-days")
     .setDescription("Amount of days to delete messages for.")
     .setMinValue(0)
     .setMaxValue(7);
