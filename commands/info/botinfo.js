@@ -21,8 +21,8 @@ export default async (interaction, ephemeral) => {
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
-        let guilds = await interaction.client.guilds.fetch();
-        let totalGuilds = guilds.size;
+        await interaction.client.guilds.fetch();
+        let totalGuilds = interaction.client.guilds.cache.size;
         let totalMembers = await getTotalUsers(guilds);
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
@@ -107,7 +107,7 @@ export default async (interaction, ephemeral) => {
 async function getTotalUsers(guilds) {
     // Fast but inaccurate method
     let userCount = 0;
-    await guilds.forEach(guild => {
+    await interaction.client.guilds.cache.forEach(guild => {
         if (guild.memberCount) userCount += guild.memberCount;
     });
     return userCount;
