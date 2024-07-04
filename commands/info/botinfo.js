@@ -21,7 +21,6 @@ export default async (interaction, ephemeral) => {
         if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
         let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
-        await interaction.client.guilds.fetch();
         let totalGuilds = interaction.client.guilds.cache.size;
         let totalMembers = await getUsers(interaction);
         // Get latest commit
