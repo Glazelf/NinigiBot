@@ -23,7 +23,7 @@ export default async (interaction, ephemeral) => {
 
         await interaction.client.guilds.fetch();
         let totalGuilds = interaction.client.guilds.cache.size;
-        let totalMembers = await getTotalUsers(guilds);
+        let totalMembers = await getTotalUsers(interaction.client.guilds);
         // Get latest commit
         let githubURLVars = "Glazelf/NinigiBot";
         let githubRepoResponse = null;
@@ -107,7 +107,7 @@ export default async (interaction, ephemeral) => {
 async function getTotalUsers(guilds) {
     // Fast but inaccurate method
     let userCount = 0;
-    await interaction.client.guilds.cache.forEach(guild => {
+    await guilds.cache.forEach(guild => {
         if (guild.memberCount) userCount += guild.memberCount;
     });
     return userCount;
