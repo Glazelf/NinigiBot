@@ -107,7 +107,7 @@ export default async (interaction, ephemeral) => {
 async function getTotalUsers(guilds) {
     // Fast but inaccurate method
     let userCount = 0;
-    await guilds.cache.forEach(guild => {
+    await guilds.forEach(guild => {
         if (guild.memberCount) userCount += guild.memberCount;
     });
     return userCount;
