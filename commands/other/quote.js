@@ -51,8 +51,8 @@ export default async (interaction, ephemeral) => {
         if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         quoteEmbed
-            .setAuthor({ name: "Quote" })
-            .setTitle(message.author.username)
+            .setAuthor({ name: message.author.username, iconURL: avatar })
+            .setTitle("Quote")
             .setURL(messageURL)
             .setThumbnail(avatar)
             .setImage(messageImage)
