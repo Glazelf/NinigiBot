@@ -78,7 +78,7 @@ export default async (client, member, newMember) => {
                 if (newMember.guild.id == globalVars.ShinxServerID) {
                     let entitlements = await client.application.entitlements.fetch({ excludeEnded: true });
                     let entitlementMatch = entitlements.find(entitlement => entitlement.skuId == globalVars.subscriptionSKUID && entitlement.userId == newMember.id);
-                    if (!entitlementMatch) isSupporter = true;
+                    if (entitlementMatch) isSupporter = true;
                 };
                 if (serverID && roleDB && !isSupporter && !isSupporter) await deletePersonalRole(roleDB, member.guild);
             };

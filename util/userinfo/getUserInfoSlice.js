@@ -108,7 +108,7 @@ export default async (interaction, page, user) => {
                     joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
                     joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;
                 };
-                profileEmbed.addFields([{ name: "Account:", value: `${user} ${badgesString}`, inline: true }]);
+                profileEmbed.addFields([{ name: "Account:", value: `${user}\n${badgesString}`, inline: true }]);
                 if (birthday && birthdayParsed && member) profileEmbed.addFields([{ name: "Birthday:", value: birthdayParsed, inline: true }]);
                 if (switchCode && switchCode !== 'None' && member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
                 if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);

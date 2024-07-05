@@ -5,11 +5,9 @@
   "main": "forever.js",
   "type": "module",
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.11",
     "@pkmn/data": "^0.9.8",
     "@pkmn/dex": "^0.9.8",
     "@pkmn/sim": "^0.9.8",
-    "@sapphire/async-queue": "^1.5.2",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
     "cron": "^3.1.7",
@@ -27,7 +25,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
-    "mocha": "^10.5.2"
+    "mocha": "^10.6.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

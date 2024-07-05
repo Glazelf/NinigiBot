@@ -1,9 +1,4 @@
-import {
-    EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle
-} from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -43,12 +38,8 @@ export default async (client, messageReaction) => {
         let messageImage = null;
         if (targetMessage.attachments.size > 0) messageImage = await targetMessage.attachments.first().url;
         // Get user's avatar, try to use server avatar, otherwise default to global avatar
-        let avatar;
-        if (targetMessage.member) {
-            avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
-        } else {
-            avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
-        };
+        let avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+        if (targetMessage.member) avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         // Check if the starred message is replying to another message
         let isReply = false;
         let replyMessage;
@@ -61,17 +52,11 @@ export default async (client, messageReaction) => {
                 isReply = false;
             };
         };
-        // Add button
-        const contextButton = new ButtonBuilder()
-            .setLabel("Context")
-            .setStyle(ButtonStyle.Link)
-            .setURL(`discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}`);
-        let starButtons = new ActionRowBuilder()
-            .addComponents(contextButton);
         // Format starred message embed
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setURL(targetMessage.url)
             .setThumbnail(avatar)
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
@@ -94,7 +79,7 @@ export default async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
-            await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
+            await starMessage.edit({ embeds: [starEmbed] });
             return;
         } else {
             return;

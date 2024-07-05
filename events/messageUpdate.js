@@ -1,8 +1,5 @@
 import {
     EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     PermissionFlagsBits
 } from "discord.js";
 import logger from "../util/logger.js";
@@ -56,22 +53,13 @@ export default async (client, message, newMessage) => {
                     isReply = false;
                 };
             };
-            let avatar;
-            if (newMessage.member) {
-                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
-            } else {
-                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
-            };
-            const contextButton = new ButtonBuilder()
-                .setLabel("Context")
-                .setStyle(ButtonStyle.Link)
-                .setURL(`discord://-/channels/${message.guild.id}/${message.channel.id}/${message.id}`);
-            let updateButtons = new ActionRowBuilder()
-                .addComponents(contextButton);
+            let avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (newMessage.member) avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
+                .setURL(message.url)
                 .setThumbnail(avatar)
                 .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)
                 .setImage(messageImage)
@@ -81,7 +69,7 @@ export default async (client, message, newMessage) => {
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
             if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
-            return log.send({ embeds: [updateEmbed], components: [updateButtons] });
+            return log.send({ embeds: [updateEmbed] });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

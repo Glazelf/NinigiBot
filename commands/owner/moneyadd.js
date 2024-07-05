@@ -37,7 +37,7 @@ export default async (interaction) => {
     };
 };
 
-export const guildIDs = [config.devServerID];
+export const guildID = config.devServerID;
 
 // String options
 const amountOption = new SlashCommandIntegerOption()

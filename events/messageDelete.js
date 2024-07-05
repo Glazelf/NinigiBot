@@ -73,12 +73,8 @@ export default async (client, message) => {
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });
             };
-            let avatar;
-            if (message.member) {
-                avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
-            } else {
-                avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
-            };
+            let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
             const deleteEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)

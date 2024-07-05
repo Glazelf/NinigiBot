@@ -35,17 +35,15 @@ export default async (interaction) => {
         let argRequiredString = "At least one argument is required for this command.";
         switch (interaction.options.getSubcommand()) {
             case "starboard":
-                if (!channelArg && !disableArg) return sendMessage({ interaction: interaction, content: argRequiredString });
+                let starlimitArg = interaction.options.getInteger("starlimit");
+                if (starlimitArg && !channelArg) return sendMessage({ interaction: interaction, content: "Can not set starlimit without also providing a channel." });
+                if (!channelArg && !disableArg && !starlimitArg) return sendMessage({ interaction: interaction, content: argRequiredString });
                 let oldStarboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: interaction.guild.id } });
                 let oldStarLimitDB = await serverApi.StarboardLimits.findOne({ where: { server_id: interaction.guild.id } });
-                let starlimit = null;
-                if (oldStarLimitDB) {
-                    starlimit = oldStarLimitDB.star_limit;
-                } else {
-                    starlimit = globalVars.starboardLimit;
-                };
+                let starlimit = globalVars.starboardLimit;
+                if (oldStarLimitDB) starlimit = oldStarLimitDB.star_limit;
                 if (channelArg && !Object.values(textChannelTypes).includes(channelArg.type)) return sendMessage({ interaction: interaction, content: textChannelInvalidString })
-                let starlimitArg = interaction.options.getInteger("starlimit");
+
                 if (starlimitArg) {
                     starlimit = starlimitArg;
                     if (oldStarLimitDB) await oldStarLimitDB.destroy();
@@ -55,7 +53,7 @@ export default async (interaction) => {
                 if (oldStarboardChannel) await oldStarboardChannel.destroy();
                 if (disableBool) return sendMessage({ interaction: interaction, content: disableString });
                 await serverApi.StarboardChannels.upsert({ server_id: interaction.guild.id, channel_id: channelArg.id });
-                return sendMessage({ interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are required for a message to appear there.` });
+                return sendMessage({ interaction: interaction, content: `${channelArg} is now **${interaction.guild.name}**'s starboard. ${starlimit} stars are now required for a message to appear on the starboard.` });
             case "log":
                 if (!channelArg && !disableArg) return sendMessage({ interaction: interaction, content: argRequiredString });
                 let oldLogChannel = await serverApi.LogChannels.findOne({ where: { server_id: interaction.guild.id } });
