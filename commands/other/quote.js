@@ -54,7 +54,6 @@ export default async (interaction, ephemeral) => {
             .setAuthor({ name: message.author.username, iconURL: avatar })
             .setTitle("Quote")
             .setURL(messageURL)
-            .setThumbnail(avatar)
             .setImage(messageImage)
             .setFooter({ text: `Channel: ${channel.id} | Message: ${message.id}` });
         if (message.content.length > 0) quoteEmbed.setDescription(message.content);
