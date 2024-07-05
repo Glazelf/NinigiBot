@@ -11,7 +11,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 let previousQuoteTime = null;
 let allMessages = [];
 for (const [key, value] of Object.entries(quotes)) {
-    value.forEach(messageID => allMessages.push({ channnelID: key, messageID: messageID }));
+    value.forEach(messageID => allMessages.push({ channelID: key, messageID: messageID }));
 };
 
 export default async (interaction, ephemeral) => {
