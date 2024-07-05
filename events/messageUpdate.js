@@ -56,12 +56,8 @@ export default async (client, message, newMessage) => {
                     isReply = false;
                 };
             };
-            let avatar;
-            if (newMessage.member) {
-                avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
-            } else {
-                avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
-            };
+            let avatar = newMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (newMessage.member) avatar = newMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
             const contextButton = new ButtonBuilder()
                 .setLabel("Context")
                 .setStyle(ButtonStyle.Link)

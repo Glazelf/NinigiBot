@@ -55,12 +55,8 @@ export default async (client, messageReaction) => {
             if (messageImage.endsWith(".mp4")) seperateFiles = messageImage;
         };
         // Get user's avatar, try to use server avatar, otherwise default to global avatar
-        let avatar;
-        if (targetMessage.member) {
-            avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
-        } else {
-            avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
-        };
+        let avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
+        if (targetMessage.member) avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
         // Check if the starred message is replying to another message
         let isReply = false;
         let replyMessage = null;
