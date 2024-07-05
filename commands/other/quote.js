@@ -58,7 +58,7 @@ export default async (interaction, ephemeral) => {
             .setThumbnail(avatar)
             .setDescription(message.content)
             .setImage(messageImage)
-            .setFooter(`Channel: ${channel.id} | Message: ${message.id}`);
+            .setFooter({ text: `Channel: ${channel.id} | Message: ${message.id}` });
         previousQuoteTime = now;
         return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
