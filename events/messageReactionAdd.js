@@ -1,9 +1,4 @@
-import {
-    EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle
-} from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -72,16 +67,13 @@ export default async (client, messageReaction) => {
                 isReply = false;
             };
         };
+        // This implementation isn't supported by embed URLs, only by button urls. For some reason.
+        // let messageURL = `discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}`;
         // Format the starboard embed message
-        const contextButton = new ButtonBuilder()
-            .setLabel("Context")
-            .setStyle(ButtonStyle.Link)
-            .setURL(`discord://-/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}`);
-        let starButtons = new ActionRowBuilder()
-            .addComponents(contextButton);
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setURL(targetMessage.url)
             .setThumbnail(avatar)
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
@@ -92,7 +84,7 @@ export default async (client, messageReaction) => {
         // Check if message already existed in database (was posted to starboard) or if star amount simply changed
         if (messageReaction.count >= starLimit && !messageDB) {
             // Send message then push data to database
-            await starboard.send({ embeds: [starEmbed], components: [starButtons] }).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
+            await starboard.send({ embeds: [starEmbed] }).then(async (m) => await serverApi.StarboardMessages.upsert({ channel_id: targetMessage.channel.id, message_id: targetMessage.id, starboard_channel_id: m.channel.id, starboard_message_id: m.id }));
             return;
         } else if (messageDB) {
             // Update existing starboard message and database entry
@@ -100,7 +92,7 @@ export default async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
-            await starMessage.edit({ embeds: [starEmbed], components: [starButtons] });
+            await starMessage.edit({ embeds: [starEmbed] });
             // Try to pin messages with double stars
             if (messageReaction.count >= starLimit * 2) starMessage.pin().catch(e => {
                 // console.log(e); 
