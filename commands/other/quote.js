@@ -34,8 +34,9 @@ export default async (interaction, ephemeral) => {
         let channel, message;
         try {
             channel = await interaction.guild.channels.fetch(randomMessage.channelID);
-            console.log(channel)
-            message = await channel.messages.fetch(randomMessage.messageID, { force: true });
+            message = await channel.messages.fetch(randomMessage.messageID);
+            console.log(message)
+            console.log(message.id)
             console.log(message.content)
         } catch (e) {
             console.log(e);
