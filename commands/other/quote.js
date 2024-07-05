@@ -36,6 +36,7 @@ export default async (interaction, ephemeral) => {
             channel = interaction.guild.channels.fetch(randomMessage.channelID);
             message = channel.messages.fetch(randomMessage.messageID);
         } catch (e) {
+            console.log(e);
             quoteEmbed
                 .setTitle("Error")
                 .setURL(messageURL)
