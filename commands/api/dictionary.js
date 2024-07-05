@@ -33,7 +33,7 @@ export default async (interaction, ephemeral) => {
         } catch (e) {
             // console.log(e);
             let errorEmbed = new EmbedBuilder()
-                .setColor('#FF0000')
+                .setColor(globalVars.embedColorError)
                 .setTitle("Error")
                 .setDescription("Word not found.");
             return sendMessage({ interaction: interaction, embeds: errorEmbed, ephemeral: ephemeral });
