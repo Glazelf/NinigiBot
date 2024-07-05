@@ -47,7 +47,9 @@ export default async (interaction, ephemeral) => {
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
-        let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
+        if (message.member) console.log(message.member)
+        let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
+        if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         quoteEmbed
             .setAuthor({ name: "Quote" })
