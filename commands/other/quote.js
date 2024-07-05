@@ -10,13 +10,19 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
 let previousQuoteTime = null;
+let allMessages = [];
+for (const [key, value] of Object.entries(quotes)) {
+    value.forEach(messageID => allMessages.push({ channnelID: key, messageID: messageID }));
+};
 
 export default async (interaction, ephemeral) => {
     try {
         ephemeral = false;
-
+        let quoteEmbed = new EmbedBuilder()
+            .setColor(globalVars.embedColor);
         const now = Date.now();
         const cooldownAmount = 6 * 60 * 60 * 1000; // 6 hours in ms
+
         if (previousQuoteTime) {
             const expirationTime = previousQuoteTime + cooldownAmount;
             if (now < expirationTime) {
@@ -24,25 +30,30 @@ export default async (interaction, ephemeral) => {
                 return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
             };
         };
-        // Get list of all message IDs for fairer random pick
-        let allMessages = [];
-        for await (const [key, value] of quotes) {
-            value.forEach(messageID => allMessages.push({ channnelID: key, messageID: messageID }));
+        let randomMessage = allMessages[randomNumber(0, allMessages.length - 1)];
+        let messageURL = `https://discord.com/channels/${globalVars.ShinxServerID}/${randomMessage.channelID}/${randomMessage.messageID}`;
+        let channel, message;
+        try {
+            channel = interaction.guild.channels.fetch(randomMessage.channelID);
+            message = channel.messages.fetch(randomMessage.messageID);
+        } catch (e) {
+            quoteEmbed
+                .setAuthor("Error")
+                .setColor(globalVars.embedColorError)
+                .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
+            return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
         };
-        let randomMessage = allMessages[randomNumber[allMessages.length - 1]];
-        let channel = interaction.guild.channels.fetch(randomMessage.channelID);
-        let message = channel.messages.fetch(randomMessage.messageID);
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
 
-        let quoteEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
+        quoteEmbed
             .setAuthor({ name: "Quote" })
             .setTitle(message.author.username)
+            .setURL(messageURL)
             .setDescription(message.content)
-            .setImage(messageImage);
-
+            .setImage(messageImage)
+            .setFooter(`Channel: ${channel.id} | Message: ${message.id}`);
         previousQuoteTime = now;
         return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
@@ -51,7 +62,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildIDs = [config.devServerID]; // Add globalVars.ShinxServerID to this before release.
+export const guildIDs = [config.devServerID, globalVars.ShinxServerID];
 
 export const commandObject = new SlashCommandBuilder()
     .setName("quote")
