@@ -11,6 +11,7 @@
     "subscriptionSKUID": "1164974692889808999",
     "currency": "💰",
     "embedColor": "#219DCD",
+    "embedColorError": "#FF0000",
     "lackPermsString": "You do not have the required permissions to do this.",
     "ephemeralOptionDescription": "Whether the reply will be private.",
     "starboardLimit": 3,

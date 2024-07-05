@@ -8,8 +8,10 @@ export default async (client) => {
         await client.commands.forEach(async (command) => {
             try {
                 let commandServerIDs = null;
-                if (command.guildIDs) commandServerIDs = command.guildIDs;
-                // if (client.user.id != module.exports.NinigiID) commandServerID = client.guildIDs; // set to test server for test build
+                if (command.guildIDs) {
+                    commandServerIDs = command.guildIDs;
+                    if (client.user.id != globalVars.NinigiID) commandServerIDs = commandServerIDs.filter(ID => ID != globalVars.ShinxServerID);
+                };
                 await client.application.commands.create(command.commandObject, commandServerIDs);
             } catch (e) {
                 console.log(e);
