@@ -9,11 +9,8 @@ import fs from 'fs';
 import path from 'path';
 import config from './config.json' with { type: "json" };
 
-// All except guild presence
-// privileged: MessageContent, GuildMembers, GuildPresence
 const intents = [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildIntegrations,
@@ -21,6 +18,9 @@ const intents = [
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.DirectMessages,
+    // Privileged intents
+    // GatewayIntentBits.GuildPresences, // Ungranted
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent
 ];
 const partials = [
