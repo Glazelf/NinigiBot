@@ -38,6 +38,7 @@ export default async (interaction, ephemeral) => {
         } catch (e) {
             quoteEmbed
                 .setTitle("Error")
+                .setURL(messageURL)
                 .setColor(globalVars.embedColorError)
                 .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
             return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
