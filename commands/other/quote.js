@@ -8,7 +8,7 @@ import randomNumber from "../../util/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-// let previousQuoteTime = null;
+let previousQuoteTime = null;
 let allMessages = [];
 for (const [key, value] of Object.entries(quotes)) {
     value.forEach(messageID => allMessages.push({ channelID: key, messageID: messageID }));
@@ -20,15 +20,15 @@ export default async (interaction, ephemeral) => {
         let quoteEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor);
         // Set cooldown
-        // const now = Date.now();
-        // const cooldownAmount = 6 * 60 * 60 * 1000; // 6 hours in ms
-        // if (previousQuoteTime) {
-        //     const expirationTime = previousQuoteTime + cooldownAmount;
-        //     if (now < expirationTime) {
-        //         const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
-        //         return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.` });
-        //     };
-        // };
+        const now = Date.now();
+        const cooldownAmount = 1 * 60 * 60 * 1000; // 1 hour in ms
+        if (previousQuoteTime) {
+            const expirationTime = previousQuoteTime + cooldownAmount;
+            if (now < expirationTime) {
+                const timeLeft = Math.floor((expirationTime - now) / 1000 / 60); // time left in min
+                return sendMessage({ interaction: interaction, content: `Please wait ${timeLeft} more minutes before trying to achieve even more wisdom.\nCooldown exists to make sure quotes stay fresh and don't repeat too often.`, ephemeral: true });
+            };
+        };
         let randomMessage = allMessages[randomNumber(0, allMessages.length - 1)];
         let messageURL = `https://discord.com/channels/${globalVars.ShinxServerID}/${randomMessage.channelID}/${randomMessage.messageID}`;
         let channel, message;
@@ -57,7 +57,7 @@ export default async (interaction, ephemeral) => {
             .setImage(messageImage)
             .setFooter({ text: `Channel: ${channel.id} | Message: ${message.id}` });
         if (message.content.length > 0) quoteEmbed.setDescription(message.content);
-        // previousQuoteTime = now;
+        previousQuoteTime = now;
         return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
     } catch (e) {
