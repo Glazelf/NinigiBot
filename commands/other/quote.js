@@ -48,6 +48,7 @@ export default async (interaction, ephemeral) => {
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
         if (message.member) console.log(message.member)
+        if (!message.member) console.log(message)
         let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
         if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
