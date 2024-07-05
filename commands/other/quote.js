@@ -33,8 +33,8 @@ export default async (interaction, ephemeral) => {
         let messageURL = `https://discord.com/channels/${globalVars.ShinxServerID}/${randomMessage.channelID}/${randomMessage.messageID}`;
         let channel, message;
         try {
-            channel = interaction.guild.channels.fetch(randomMessage.channelID);
-            message = channel.messages.fetch(randomMessage.messageID);
+            channel = await interaction.guild.channels.fetch(randomMessage.channelID);
+            message = await channel.messages.fetch(randomMessage.messageID);
         } catch (e) {
             console.log(e);
             quoteEmbed
