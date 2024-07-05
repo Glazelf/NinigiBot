@@ -46,11 +46,13 @@ export default async (interaction, ephemeral) => {
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
+        let avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
         quoteEmbed
             .setAuthor({ name: "Quote" })
             .setTitle(message.author.username)
             .setURL(messageURL)
+            .setThumbnail(avatar)
             .setDescription(message.content)
             .setImage(messageImage)
             .setFooter(`Channel: ${channel.id} | Message: ${message.id}`);
