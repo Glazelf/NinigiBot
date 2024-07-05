@@ -7,7 +7,6 @@ import logger from "../../util/logger.js";
 import randomNumber from "../../util/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import config from "../../config.json" with { type: "json" };
 
 let previousQuoteTime = null;
 let allMessages = [];
@@ -64,7 +63,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildIDs = [config.devServerID, globalVars.ShinxServerID];
+export const guildID = globalVars.ShinxServerID;
 
 export const commandObject = new SlashCommandBuilder()
     .setName("quote")

@@ -58,7 +58,7 @@ export default async (interaction, ephemeral) => {
     };
 };
 
-export const guildIDs = [config.devServerID];
+export const guildID = config.devServerID;
 
 // String options
 const contentOption = new SlashCommandStringOption()

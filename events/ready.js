@@ -1,18 +1,19 @@
 import { ActivityType } from "discord.js";
 import getTime from '../util/getTime.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
+import config from "../config.json" with { type: "json" };
 
 export default async (client) => {
     try {
         // Set interactions
         await client.commands.forEach(async (command) => {
             try {
-                let commandServerIDs = null;
-                if (command.guildIDs) {
-                    commandServerIDs = command.guildIDs;
-                    if (client.user.id != globalVars.NinigiID) commandServerIDs = commandServerIDs.filter(ID => ID != globalVars.ShinxServerID);
+                let commandGuildID = null;
+                if (command.guildID) {
+                    commandGuildID = command.guildID;
+                    if (client.user.id != globalVars.NinigiID) commandGuildID = config.devServerID;
                 };
-                await client.application.commands.create(command.commandObject, commandServerIDs);
+                await client.application.commands.create(command.commandObject, commandGuildID);
             } catch (e) {
                 console.log(e);
             };

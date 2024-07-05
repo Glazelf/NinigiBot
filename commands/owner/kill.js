@@ -53,7 +53,7 @@ export default async (interaction) => {
     };
 };
 
-export const guildIDs = [config.devServerID];
+export const guildID = config.devServerID;
 
 // Boolean options
 const removeInteractionsOption = new SlashCommandBooleanOption()
