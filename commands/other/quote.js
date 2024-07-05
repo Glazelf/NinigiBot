@@ -35,9 +35,6 @@ export default async (interaction, ephemeral) => {
         try {
             channel = await interaction.guild.channels.fetch(randomMessage.channelID);
             message = await channel.messages.fetch(randomMessage.messageID);
-            console.log(message)
-            console.log(message.id)
-            console.log(message.content)
         } catch (e) {
             console.log(e);
             quoteEmbed
@@ -47,12 +44,9 @@ export default async (interaction, ephemeral) => {
                 .setDescription(`Failed to fetch the selected message.\nChannel ID: ${randomMessage.channelID}\nMessage ID: ${randomMessage.messageID}`);
             return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
         };
-        return;
 
         let messageImage = null;
         if (message.attachments.size > 0) messageImage = message.attachments.first().url;
-        if (message.member) console.log(message.member)
-        if (!message.member) console.log(message)
         let avatar = message.author.displayAvatarURL(globalVars.displayAvatarSettings);
         if (message.member) avatar = message.member.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -61,9 +55,9 @@ export default async (interaction, ephemeral) => {
             .setTitle(message.author.username)
             .setURL(messageURL)
             .setThumbnail(avatar)
-            .setDescription(message.content)
             .setImage(messageImage)
             .setFooter({ text: `Channel: ${channel.id} | Message: ${message.id}` });
+        if (message.content.length > 0) quoteEmbed.setDescription(message.content);
         previousQuoteTime = now;
         return sendMessage({ interaction: interaction, embeds: quoteEmbed, ephemeral: ephemeral });
 
