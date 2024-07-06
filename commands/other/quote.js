@@ -8,6 +8,7 @@ import randomNumber from "../../util/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
+// Avoid using channel ID for starboard (705601772785238080), link to channels directly instead.
 let previousQuoteTime = null;
 let allMessages = [];
 for (const [key, value] of Object.entries(quotes)) {
