@@ -1,7 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
 import deletePersonalRole from "../util/deletePersonalRole.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import config from "../config.json" with { type: "json" };
 
 export default async (client, entitlement) => {
     try {
