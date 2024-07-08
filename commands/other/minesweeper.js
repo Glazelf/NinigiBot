@@ -3,15 +3,18 @@ import {
     ButtonBuilder,
     ButtonStyle,
     SlashCommandBuilder,
-    SlashCommandIntegerOption
+    SlashCommandIntegerOption,
+    SlashCommandBooleanOption
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import Minesweeper from "discord.js-minesweeper";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     try {
-        ephemeral = true;
+        let ephemeralArg = interaction.options.getBoolean("ephemeral");
+        if (ephemeralArg !== null) ephemeral = ephemeralArg;
         let correctionString = "";
         let rows = 5;
         let columns = 5;
@@ -98,10 +101,15 @@ const columnsOption = new SlashCommandIntegerOption()
     .setDescription("Amount of columns.")
     .setMinValue(minGridLength)
     .setMaxValue(maxGridLength);
+// Boolean options
+const ephemeralOption = new SlashCommandBooleanOption()
+    .setName("ephemeral")
+    .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("minesweeper")
     .setDescription("Play minesweeper.")
     .addIntegerOption(minesOption)
     .addIntegerOption(rowsOption)
-    .addIntegerOption(columnsOption);
+    .addIntegerOption(columnsOption)
+    .addBooleanOption(ephemeralOption);
