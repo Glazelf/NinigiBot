@@ -70,5 +70,5 @@ export const guildID = globalVars.ShinxServerID;
 
 export const commandObject = new SlashCommandBuilder()
     .setName("quote")
-    .setDescription("Let someone's wisdom guide you.")
+    .setDescription("Display a random SAC quote!")
     .setDMPermission(false);
