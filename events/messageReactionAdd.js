@@ -73,13 +73,12 @@ export default async (client, messageReaction) => {
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle(`${starboardEmote}${messageReaction.count}`)
-            .setURL(targetMessage.url)
             .setThumbnail(avatar)
             .setImage(messageImage)
             .setFooter({ text: targetMessage.author.username })
             .setTimestamp(targetMessage.createdTimestamp);
         if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
-        starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}`, inline: false }]);
+        starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}\nContext: ${targetMessage.url}`, inline: false }]);
         if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
         // Check if message already existed in database (was posted to starboard) or if star amount simply changed
         if (messageReaction.count >= starLimit && !messageDB) {

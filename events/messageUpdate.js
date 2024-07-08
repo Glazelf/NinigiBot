@@ -59,9 +59,8 @@ export default async (client, message, newMessage) => {
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
-                .setURL(message.url)
                 .setThumbnail(avatar)
-                .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`)
+                .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})\nContext: ${message.url}`)
                 .setImage(messageImage)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
