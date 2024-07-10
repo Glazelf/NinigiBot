@@ -5,7 +5,6 @@ import {
     ButtonStyle
 } from "discord.js";
 import logger from "../logger.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import imageExists from "../imageExists.js";
@@ -13,7 +12,6 @@ import areEmotesAllowed from "../areEmotesAllowed.js";
 import convertMeterFeet from "../convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
-import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import getTypeEmotes from "./getTypeEmotes.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 
@@ -22,11 +20,9 @@ let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.n
 export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
     try {
         let messageObject;
-        let embedColor = globalVars.embedColor;
-        const pkmEmbed = new EmbedBuilder()
-            .setColor(embedColor);
+        const pkmEmbed = new EmbedBuilder();
         let generation = genData.dex.gen;
-        let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard))
+        let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
         let pokemonLearnset = await genData.learnsets.get(pokemon.name);
         pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
         let pokemonGen = genData.species.get(pokemon.name);
@@ -257,7 +253,6 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
             transferMovesStrings[transferMoveIndex].push(transferMove);
             if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
         };
-        if (pokemon.color && colorHexes[pokemon.color.toLowerCase()]) embedColor = colorHexes[pokemon.color.toLowerCase()];
         // Get relative Pokédex variables
         let previousPokemon = null;
         let nextPokemon = null;

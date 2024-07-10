@@ -11,7 +11,6 @@ import {
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import areEmotesAllowed from "../../util/areEmotesAllowed.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -25,6 +24,8 @@ import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/getRandomObjectItem.js";
 import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import imageExists from "../../util/imageExists.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 const gens = new Generations(Dex);
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
@@ -44,14 +45,14 @@ export default async (interaction, ephemeral) => {
         let shinyArg = interaction.options.getBoolean("shiny");
         if (shinyArg === true) shinyBool = true;
         // Variables
-        let pokemonEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor);
+        let embedColor = globalVars.embedColor;
         let pokemonName = interaction.options.getString("pokemon");
         let pokemonButtons = new ActionRowBuilder();
         let returnString = "";
         let pokemonFiles = null;
         let nameBulbapedia = null;
         let linkBulbapedia = null;
+        let colorPokemonName = null;
         // Set generation
         let generation = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
         let genData = gens.get(generation);
@@ -62,10 +63,13 @@ export default async (interaction, ephemeral) => {
         let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
         if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
         let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
+        if (pokemonExists) colorPokemonName = pokemon.name;
         // Used for move and learn
         let moveSearch = interaction.options.getString("move");
         let move = Dex.moves.get(moveSearch);
         let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
+        // Embed initialization
+        let pokemonEmbed = new EmbedBuilder();
 
         switch (interaction.options.getSubcommand()) {
             // Abilities
@@ -127,6 +131,7 @@ export default async (interaction, ephemeral) => {
                 if (!hasPGLImage) itemImage = `https://www.serebii.net/itemdex/sprites/sv/${itemGen.id}.png`;
                 nameBulbapedia = itemGen.name.replace(/ /g, "_");
                 linkBulbapedia = `https://bulbapedia.bulbagarden.net/wiki/${nameBulbapedia}`;
+                if (item.itemUser) colorPokemonName = item.itemUser[0];
 
                 let itemDescription = itemGen.desc;
                 if (!itemDescription) itemDescription = itemGen.shortDesc; // This check is futureproofing can be removed when the following ps commit gets merged: https://github.com/smogon/pokemon-showdown/commit/6c46ab9924aac84fc9fbab5139d3eac5118fa71f
@@ -468,6 +473,9 @@ export default async (interaction, ephemeral) => {
                 .setURL(linkBulbapedia);
             pokemonButtons.addComponents(bulbapediaButton);
         };
+        const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
+        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
+        pokemonEmbed.setColor(embedColor);
         return sendMessage({ interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 
     } catch (e) {
