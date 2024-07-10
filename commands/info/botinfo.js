@@ -94,7 +94,7 @@ export default async (interaction, ephemeral) => {
         const inviteButton = new ButtonBuilder()
             .setLabel("Invite Bot")
             .setStyle(ButtonStyle.Link)
-            .setURL(`https://discordapp.com/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=8&scope=bot%20applications.commands`);
+            .setURL(`https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`);
         let botButtons = new ActionRowBuilder()
             .addComponents([shopButton, appDirectoryButton, inviteButton]);
         return sendMessage({ interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
