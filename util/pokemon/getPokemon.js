@@ -497,7 +497,3 @@ function getEvoMethod(pokemon) {
     if (pokemon.evoCondition) evoMethod += ` ${pokemon.evoCondition}`;
     return evoMethod;
 };
-
-function compare(a, b) {
-    return a.num - b.num;
-};
