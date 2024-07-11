@@ -17,8 +17,6 @@ export default async (interaction, ephemeral) => {
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     await interaction.deferReply({ ephemeral: ephemeral });
 
-    await interaction.guild.roles.fetch();
-
     let roleArgument = interaction.options.getString('role');
     let requestRole = null;
     if (roleArgument) requestRole = roleArgument;
