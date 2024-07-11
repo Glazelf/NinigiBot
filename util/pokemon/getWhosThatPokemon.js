@@ -7,7 +7,7 @@ import {
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
 import { Dex } from '@pkmn/dex';
-import imageExists from "../imageExists.js";
+import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getRandomObjectItem from "../getRandomObjectItem.js";
 import { addMoney } from "../../database/dbServices/user.api.js";
@@ -22,7 +22,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         if (!pokemon && pokemonList) pokemon = getRandomObjectItem(pokemonList);
         pokemonID = getCleanPokemonID(pokemon);
         serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
-        doesRenderExist = imageExists(serebiiRender);
+        doesRenderExist = urlExists(serebiiRender);
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
     // Initiate image context

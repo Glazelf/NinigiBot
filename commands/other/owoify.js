@@ -4,29 +4,23 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import logger from "../../util/logger.js";
-import sendMessage from "../../util/sendMessage.js";
 import owoify from "owoify-js";
+import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
-    try {
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        await interaction.deferReply({ ephemeral: ephemeral });
+    let ephemeralArg = interaction.options.getBoolean("ephemeral");
+    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    await interaction.deferReply({ ephemeral: ephemeral });
 
-        let input = interaction.options.getString("input");
-        let severity = interaction.options.getString("severity");
-        if (!severity) severity = "owo";
+    let input = interaction.options.getString("input");
+    let severity = interaction.options.getString("severity");
+    if (!severity) severity = "owo";
 
-        let inputOwOified = owoify.default(input, severity);
-        let returnString = codeBlock("fix", inputOwOified);
+    let inputOwOified = owoify.default(input, severity);
+    let returnString = codeBlock("fix", inputOwOified);
 
-        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 };
 
 let severityChoices = [
@@ -34,6 +28,7 @@ let severityChoices = [
     { name: "2. UwU", value: "uwu" },
     { name: "3. UvU", value: "uvu" }
 ];
+
 // String options
 const inputOption = new SlashCommandStringOption()
     .setName("input")

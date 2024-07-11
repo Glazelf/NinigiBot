@@ -3,7 +3,6 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
@@ -11,20 +10,16 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
-    try {
-        ephemeral = true;
-        let ownerBool = await isOwner(interaction.client, interaction.user);
-        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    ephemeral = true;
+    let ownerBool = await isOwner(interaction.client, interaction.user);
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-        let userArg = interaction.options.getUser("user");
-        if (!userArg) return sendMessage({ interaction: interaction, content: `Could not find user.` });
-        let expArg = interaction.options.getInteger("amount");
-        await addExperience(userArg.id, expArg);
-        returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
-        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    let userArg = interaction.options.getUser("user");
+    if (!userArg) return sendMessage({ interaction: interaction, content: `Could not find user.` });
+    let expArg = interaction.options.getInteger("amount");
+    await addExperience(userArg.id, expArg);
+    returnString = `Added ${expArg} points to ${userArg}'s shinx!`;
+    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral });
 };
 
 export const guildID = config.devServerID;

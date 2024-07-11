@@ -87,14 +87,9 @@ export default async (client, interaction) => {
                 });
                 // Run the command
                 if (cmd) {
-                    try {
-                        let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
-                        if (ephemeralDefault === null) ephemeralDefault = true;
-                        await cmd.default(interaction, ephemeralDefault);
-                    } catch (e) {
-                        // console.log(e);
-                        return;
-                    };
+                    let ephemeralDefault = await getEphemeralDefault(interaction.user.id);
+                    if (ephemeralDefault === null) ephemeralDefault = true;
+                    await cmd.default(interaction, ephemeralDefault);
                     return;
                 } else {
                     return;

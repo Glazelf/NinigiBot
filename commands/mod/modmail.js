@@ -5,9 +5,7 @@ import {
     ActionRowBuilder,
     SlashCommandBuilder
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const modal = new ModalBuilder()
     .setCustomId('modMailModal')
@@ -36,14 +34,8 @@ const actionRow2 = new ActionRowBuilder()
 modal.addComponents(actionRow1, actionRow2);
 
 export default async (interaction) => {
-    try {
-        if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
-
-        return interaction.showModal(modal);
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    if (!interaction.guild.features.includes("COMMUNITY") || !interaction.guild.publicUpdatesChannel) return sendMessage({ interaction: interaction, content: "This server has Community features disabled.\nThese are required for this command to work properly.\nMod mail will be sent to the same channel as community updates." });
+    return interaction.showModal(modal);
 };
 
 // Final command

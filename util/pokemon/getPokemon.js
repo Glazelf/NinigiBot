@@ -7,7 +7,7 @@ import {
 import logger from "../logger.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
-import imageExists from "../imageExists.js";
+import urlExists from "../urlExists.js";
 import areEmotesAllowed from "../areEmotesAllowed.js";
 import convertMeterFeet from "../convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
@@ -109,7 +109,7 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
         // Shiny
         // PMD portraits
         let PMDPortrait = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokemonIDPMD}/Normal.png`;
-        let PMDPortraitExists = imageExists(PMDPortrait);
+        let PMDPortraitExists = urlExists(PMDPortrait);
         // Small party icons
         let partyIcon = `https://www.serebii.net/pokedex-${recentGame.toLowerCase()}/icon/${pokemonID}.png`;
         // Shiny render

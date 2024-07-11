@@ -4,34 +4,28 @@ import {
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import isAdmin from "../../util/isAdmin.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const requiredPermission = PermissionFlagsBits.ManageChannels;
 
 export default async (interaction, ephemeral) => {
-    try {
-        let adminBool = isAdmin(interaction.member);
-        ephemeral = false;
-        let slowmodeSupportedChannelTypes = [
-            ChannelType.GuildText,
-            ChannelType.PublicThread,
-            ChannelType.PrivateThread,
-            ChannelType.GuildStageVoice,
-            ChannelType.GuildVoice
-        ];
-        if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-        if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.` });
+    let adminBool = isAdmin(interaction.member);
+    ephemeral = false;
+    let slowmodeSupportedChannelTypes = [
+        ChannelType.GuildText,
+        ChannelType.PublicThread,
+        ChannelType.PrivateThread,
+        ChannelType.GuildStageVoice,
+        ChannelType.GuildVoice
+    ];
+    if (!interaction.member.permissions.has(requiredPermission) && !adminBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!slowmodeSupportedChannelTypes.includes(interaction.channel.type)) return sendMessage({ interaction: interaction, content: `This channel type doesn't support slowmode.` });
 
-        let time = interaction.options.getInteger("time");
-        await interaction.channel.setRateLimitPerUser(time);
-        return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    let time = interaction.options.getInteger("time");
+    await interaction.channel.setRateLimitPerUser(time);
+    return sendMessage({ interaction: interaction, content: `Slowmode set to ${time} seconds.`, ephemeral: ephemeral });
 };
 
 // Integer options

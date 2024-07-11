@@ -3,7 +3,6 @@ import {
     SlashCommandStringOption,
     SlashCommandIntegerOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import {
     getMoney,
@@ -16,25 +15,20 @@ import config from "../../config.json" with { type: "json" };
 let currency = globalVars.currency;
 
 export default async (interaction) => {
-    try {
-        let ownerBool = await isOwner(interaction.client, interaction.user);
-        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    let ownerBool = await isOwner(interaction.client, interaction.user);
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
 
-        let transferTargetID = interaction.options.getString("user");
-        let transferAmount = interaction.options.getInteger("amount");
-        if (!transferTargetID) return sendMessage({ interaction: interaction, content: `Could not find user.` });
+    let transferTargetID = interaction.options.getString("user");
+    let transferAmount = interaction.options.getInteger("amount");
+    if (!transferTargetID) return sendMessage({ interaction: interaction, content: `Could not find user.` });
 
-        let dbBalance = await getMoney(transferTargetID);
-        let userBalance = `${Math.floor(dbBalance)}${currency}`;
+    let dbBalance = await getMoney(transferTargetID);
+    let userBalance = `${Math.floor(dbBalance)}${currency}`;
 
-        await addMoney(transferTargetID, +transferAmount);
-        userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
+    await addMoney(transferTargetID, +transferAmount);
+    userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
-        return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
 };
 
 export const guildID = config.devServerID;

@@ -2,7 +2,6 @@ import {
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { changeAutoFeed } from "../../database/dbServices/shinx.api.js";
 
@@ -22,23 +21,18 @@ const autoFeedModes = [
 ];
 
 export default async (interaction, ephemeral) => {
-    try {
-        ephemeral = true;
-        let returnString;
-        let master = interaction.user;
-        let modeNumber = interaction.options.getInteger("mode");
-        let res = await changeAutoFeed(master.id, modeNumber);
-        let modeString = autoFeedModes[modeNumber].name;
-        returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
-        return sendMessage({
-            interaction: interaction,
-            content: returnString,
-            ephemeral: ephemeral || res != true
-        });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    ephemeral = true;
+    let returnString;
+    let master = interaction.user;
+    let modeNumber = interaction.options.getInteger("mode");
+    let res = await changeAutoFeed(master.id, modeNumber);
+    let modeString = autoFeedModes[modeNumber].name;
+    returnString = res ? `Changed autofeed to: ${modeString}` : `Autofeed already set to: ${modeString}`;
+    return sendMessage({
+        interaction: interaction,
+        content: returnString,
+        ephemeral: ephemeral || res != true
+    });
 };
 
 // Integer options

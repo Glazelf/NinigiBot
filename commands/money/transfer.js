@@ -3,33 +3,27 @@ import {
     SlashCommandIntegerOption,
     SlashCommandUserOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import {
     getMoney,
     addMoney
 } from "../../database/dbServices/user.api.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
-    try {
-        ephemeral = false;
-        const currentBalance = await getMoney(interaction.user.id);
-        let transferAmount = interaction.options.getInteger("amount");
-        let transferTarget = interaction.options.getUser("user");
-        let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
+    ephemeral = false;
+    const currentBalance = await getMoney(interaction.user.id);
+    let transferAmount = interaction.options.getInteger("amount");
+    let transferTarget = interaction.options.getUser("user");
+    let userBalance = `${Math.floor(currentBalance)}${globalVars.currency}`;
 
-        if (transferTarget == interaction.user) return sendMessage({ interaction: interaction, content: `You can't transfer money to yourself.` });
-        if (transferAmount > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${userBalance}.` });
+    if (transferTarget == interaction.user) return sendMessage({ interaction: interaction, content: `You can't transfer money to yourself.` });
+    if (transferAmount > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${userBalance}.` });
 
-        addMoney(interaction.user.id, -transferAmount);
-        addMoney(transferTarget.id, transferAmount);
+    addMoney(interaction.user.id, -transferAmount);
+    addMoney(transferTarget.id, transferAmount);
 
-        return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    return sendMessage({ interaction: interaction, content: `Transferred ${transferAmount}${globalVars.currency} to ${transferTarget}.`, ephemeral: ephemeral });
 };
 
 // Integer options
