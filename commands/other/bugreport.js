@@ -5,7 +5,6 @@ import {
     TextInputStyle,
     SlashCommandBuilder
 } from "discord.js";
-import logger from "../../util/logger.js";
 
 const modal = new ModalBuilder()
     .setCustomId('bugReportModal')
@@ -63,12 +62,7 @@ const actionRow5 = new ActionRowBuilder()
 modal.addComponents(actionRow1, actionRow2, actionRow3, actionRow4, actionRow5);
 
 export default async (interaction) => {
-    try {
-        return interaction.showModal(modal);
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    return interaction.showModal(modal);
 };
 
 // Final command

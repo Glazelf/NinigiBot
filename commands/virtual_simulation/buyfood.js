@@ -2,23 +2,17 @@ import {
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import { buyFood } from "../../database/dbServices/user.api.js";
 
 export default async (interaction) => {
-    try {
-        let ephemeral = true;
-        let res, returnString;
-        let master = interaction.user;
-        let amountArg = interaction.options.getInteger("amount");
-        res = await buyFood(master.id, amountArg);
-        returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
-        return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    let ephemeral = true;
+    let res, returnString;
+    let master = interaction.user;
+    let amountArg = interaction.options.getInteger("amount");
+    res = await buyFood(master.id, amountArg);
+    returnString = res ? `Added ${amountArg}🍗 to your account!` : `Not enough money!`;
+    return sendMessage({ interaction: interaction, content: returnString, ephemeral: ephemeral || res != true });
 };
 
 // Integer options

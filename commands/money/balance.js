@@ -2,21 +2,15 @@ import {
     SlashCommandBooleanOption,
     SlashCommandBuilder
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getMoney } from "../../database/dbServices/user.api.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
-    try {
-        let ephemeralArg = interaction.options.getBoolean("ephemeral");
-        if (ephemeralArg !== null) ephemeral = ephemeralArg;
-        let dbBalance = await getMoney(interaction.user.id);
-        return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
-    };
+    let ephemeralArg = interaction.options.getBoolean("ephemeral");
+    if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    let dbBalance = await getMoney(interaction.user.id);
+    return sendMessage({ interaction: interaction, content: `You have ${Math.floor(dbBalance)}${globalVars.currency}.`, ephemeral: ephemeral });
 };
 
 // Boolean options

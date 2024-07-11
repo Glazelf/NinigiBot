@@ -2,37 +2,31 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import isOwner from "../../util/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 
 export default async (interaction) => {
+    let ownerBool = await isOwner(interaction.client, interaction.user);
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+
+    await interaction.deferReply({ ephemeral: true });
+
+    let interactionName = interaction.options.getString("interaction-name");
+    let guildID = interaction.options.getString("guild-id");
+
+    let commands = await interaction.client.application.commands.fetch();
+    let command = commands.find(c => c.name === interactionName);
+    if (!command) return sendMessage({ interaction: interaction, content: `Command \`${interactionName}\` not found.` });
+
     try {
-        let ownerBool = await isOwner(interaction.client, interaction.user);
-        if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
-
-        await interaction.deferReply({ ephemeral: true });
-
-        let interactionName = interaction.options.getString("interaction-name");
-        let guildID = interaction.options.getString("guild-id");
-
-        let commands = await interaction.client.application.commands.fetch();
-        let command = commands.find(c => c.name === interactionName);
-        if (!command) return sendMessage({ interaction: interaction, content: `Command \`${interactionName}\` not found.` });
-
-        try {
-            await interaction.client.application.commands.delete(command.id, guildID);
-        } catch (e) {
-            // console.log();
-            return sendMessage({ interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
-        };
-        return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
-
+        await interaction.client.application.commands.delete(command.id, guildID);
     } catch (e) {
-        logger({ exception: e, interaction: interaction });
+        // console.log();
+        return sendMessage({ interaction: interaction, content: `Failed to delete \`${interactionName}\`.` });
     };
+    return sendMessage({ interaction: interaction, content: `Deleted interaction \`${interactionName}\`.` });
 };
 
 export const guildID = config.devServerID;

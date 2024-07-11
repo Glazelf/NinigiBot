@@ -5,7 +5,6 @@ import {
     SlashCommandIntegerOption,
     SlashCommandStringOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import {
     setBirthday,
@@ -17,40 +16,35 @@ import {
 import leadingZeros from "../../util/leadingZeros.js";
 
 export default async (interaction) => {
-    try {
-        switch (interaction.options.getSubcommand()) {
-            case "birthday":
-                let day = interaction.options.getInteger("day");
-                let month = interaction.options.getInteger("month");
-                // Birthdays are stored as string DDMM instead of being seperated by a -
-                day = leadingZeros(day, 2);
-                month = leadingZeros(month, 2);
-                setBirthday(interaction.user.id, day + month);
-                return sendMessage({ interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
-            case "switch":
-                let switchCodeGet = await getSwitchCode(interaction.user.id);
-                let switchFC = interaction.options.getString('switch-fc');
-                let invalidString = `Please specify a valid Nintendo Switch friend code.`;
-                // Present code if no code is supplied as an argument
-                if (!switchFC) {
-                    if (switchCodeGet) return sendMessage({ interaction: interaction, content: `${interaction.user.username}'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
-                    return sendMessage({ interaction: interaction, content: invalidString });
-                };
-                // Check and sanitize input
-                switchFC = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
-                if (!switchFC) return sendMessage({ interaction: interaction, content: invalidString });
-                switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
-                setSwitchCode(interaction.user.id, switchFC);
-                return sendMessage({ interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
-            case "ephemeraldefault":
-                // let ephemeralDefaultGet = await getEphemeralDefault(interaction.user.id);
-                let ephemeralDefault = interaction.options.getBoolean('ephemeral');
-                setEphemeralDefault(interaction.user.id, ephemeralDefault);
-                return sendMessage({ interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
-        };
-
-    } catch (e) {
-        logger({ exception: e, interaction: interaction });
+    switch (interaction.options.getSubcommand()) {
+        case "birthday":
+            let day = interaction.options.getInteger("day");
+            let month = interaction.options.getInteger("month");
+            // Birthdays are stored as string DDMM instead of being seperated by a -
+            day = leadingZeros(day, 2);
+            month = leadingZeros(month, 2);
+            setBirthday(interaction.user.id, day + month);
+            return sendMessage({ interaction: interaction, content: `Updated your birthday to \`${day}-${month}\` (dd-mm).` });
+        case "switch":
+            let switchCodeGet = await getSwitchCode(interaction.user.id);
+            let switchFC = interaction.options.getString('switch-fc');
+            let invalidString = `Please specify a valid Nintendo Switch friend code.`;
+            // Present code if no code is supplied as an argument
+            if (!switchFC) {
+                if (switchCodeGet) return sendMessage({ interaction: interaction, content: `${interaction.user.username}'s Nintendo Switch friend code is ${switchCodeGet}.`, ephemeral: false });
+                return sendMessage({ interaction: interaction, content: invalidString });
+            };
+            // Check and sanitize input
+            switchFC = /^(?:SW)?[- ]?([0-9]{4})[- ]?([0-9]{4})[- ]?([0-9]{4})$/.exec(switchFC);
+            if (!switchFC) return sendMessage({ interaction: interaction, content: invalidString });
+            switchFC = `SW-${switchFC[1]}-${switchFC[2]}-${switchFC[3]}`;
+            setSwitchCode(interaction.user.id, switchFC);
+            return sendMessage({ interaction: interaction, content: `Updated your Nintendo Switch friend code to \`${switchFC}\`.` });
+        case "ephemeraldefault":
+            // let ephemeralDefaultGet = await getEphemeralDefault(interaction.user.id);
+            let ephemeralDefault = interaction.options.getBoolean('ephemeral');
+            setEphemeralDefault(interaction.user.id, ephemeralDefault);
+            return sendMessage({ interaction: interaction, content: `Changed the default ephemeral argument on your commands to \`${ephemeralDefault}\`.` });
     };
 };
 
