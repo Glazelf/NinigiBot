@@ -19,7 +19,6 @@ let MHW = "Monster Hunter World";
 let MHGU = "Monster Hunter Generations Ultimate";
 
 export default async (interaction, monsterData, ephemeral) => {
-    console.log(beans)
     const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     let gameDBName;
     // Get icon, description and game appearances
