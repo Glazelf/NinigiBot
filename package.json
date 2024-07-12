@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "@pkmn/data": "^0.9.8",
-    "@pkmn/dex": "^0.9.8",
+    "@pkmn/dex": "^0.9.9",
     "@pkmn/sim": "^0.9.9",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
