@@ -99,17 +99,22 @@ export default async (client, interaction) => {
                     case ComponentType.Button:
                         let messageObject = null;
                         if (!interaction.customId) return;
+                        let contentReturn, embedsReturn, componentsReturn, filesReturn = null;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
-                        let editOriginalMessage = ((interaction.user.id == interaction.message.interaction.user.id ||
-                            !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) &&
-                            !interaction.customId.includes("minesweeper"));
+                        let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);
+                        let editOriginalMessage = (isOriginalUser ||
+                            interaction.customId.startsWith(pkmQuizGuessButtonIdStart) ||
+                            !interaction.message.interaction);
+
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
+                        // Response in case of forfeit/reveal
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
-                            // Response in case of forfeit/reveal
                             let pkmQuizRevealCorrectAnswer = interaction.message.components[0].components[0].customId.split("|")[1];
                             let pkmQuizRevealMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizRevealCorrectAnswer, winner: interaction.user, reveal: true });
-                            return interaction.update({ content: pkmQuizRevealMessageObject.content, files: pkmQuizRevealMessageObject.files, embeds: pkmQuizRevealMessageObject.embeds, components: [] });
+                            contentReturn = pkmQuizRevealMessageObject.content;
+                            embedsReturn = pkmQuizRevealMessageObject.embeds;
+                            filesReturn = pkmQuizRevealMessageObject.files;
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
                             const pkmQuizModal = new ModalBuilder()
@@ -144,7 +149,8 @@ export default async (client, interaction) => {
                             if (!pokemon || !pokemon.exists) return;
                             messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
-                            return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
+                            embedsReturn = messageObject.embeds;
+                            componentsReturn = messageObject.components;
                         } else if (interaction.customId.startsWith("mhSub")) {
                             // Monster Hunter forms
                             let newMonsterName = null;
@@ -161,7 +167,8 @@ export default async (client, interaction) => {
                             if (!monsterData) return;
                             messageObject = await getMHMonster(interaction, monsterData);
                             if (!messageObject) return;
-                            return interaction.update({ embeds: [messageObject.embeds], components: messageObject.components });
+                            embedsReturn = messageObject.embeds;
+                            componentsReturn = messageObject.components;
                         } else if (interaction.customId.startsWith("mhquests")) {
                             // Monster Hunter quests
                             let mhQuestsDirection = customIdSplit[1];
@@ -185,7 +192,8 @@ export default async (client, interaction) => {
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
                             let mhQuestsMessageObject = await getMHQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
-                            return interaction.update({ embeds: [mhQuestsMessageObject.embeds], components: mhQuestsMessageObject.components });
+                            embedsReturn = mhQuestsMessageObject.embeds;
+                            componentsReturn = mhQuestsMessageObject.components;
                         } else if (interaction.customId.startsWith("splatfest")) {
                             // Splatfest
                             let splatfestDirection = customIdSplit[1];
@@ -200,10 +208,11 @@ export default async (client, interaction) => {
                                     break;
                             };
                             let splatfestMessageObject = await getSplatfests({ client: client, interaction: interaction, page: splatfestPage, region: splatfestRegion });
-                            return interaction.update({ embeds: [splatfestMessageObject.embeds], components: splatfestMessageObject.components });
+                            embedsReturn = splatfestMessageObject.embeds;
+                            componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (!editOriginalMessage) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                             let componentsCopy = interaction.message.components;
                             await componentsCopy.forEach(async function (part, index) {
                                 await this[index].toJSON().components.forEach(function (part2, index2) {
@@ -213,60 +222,66 @@ export default async (client, interaction) => {
                                     };
                                 }, this[index].toJSON().components);
                             }, componentsCopy);
-                            return interaction.update({ components: componentsCopy });
+                            componentsReturn = componentsCopy;
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
                             let trophy_slice = await getTrophyEmbedSlice(offset);
-                            return interaction.update({ embeds: [trophy_slice.embed], components: [trophy_slice.components] });
+                            embedsReturn = [trophy_slice.embed];
+                            componentsReturn = [trophy_slice.components];
                         } else if (interaction.customId.startsWith("usf")) {
                             // Userinfo
                             const data = interaction.customId.match(/usf([0-9]+):([0-9]+)/);
                             const page = parseInt(data[1]);
                             const user = data[2];
                             let userinfo_page = await getUserInfoSlice(interaction, page, { id: user });
-                            return interaction.update({ embeds: [userinfo_page.embeds], components: [userinfo_page.components] });
+                            embedsReturn = [userinfo_page.embeds];
+                            componentsReturn = [userinfo_page.components];
                         } else {
                             // Other buttons
                             return;
                         };
+                        // Force proper arrays
+                        if (embedsReturn && !Array.isArray(embedsReturn)) embedsReturn = [embedsReturn];
+                        if (componentsReturn && !Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
+                        if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
+                        if (editOriginalMessage) {
+                            interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
+                        } else {
+                            interaction.reply({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn, ephemeral: true });
+                        };
                     case ComponentType.StringSelect:
                         if (interaction.customId == 'role-select') {
-                            try {
-                                let serverApi = await import("../database/dbServices/server.api.js");
-                                serverApi = await serverApi.default();
-                                // Toggle selected role
-                                const rolesArray = [];
-                                for await (const value of interaction.values) {
-                                    const roleArrayItem = await interaction.guild.roles.fetch(value);
-                                    rolesArray.push(roleArrayItem);
-                                };
-                                if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: `None of the selected roles are valid.` });
-                                let adminBool = isAdmin(interaction.guild.members.me);
-
-                                let roleSelectReturnString = "Role toggling results:\n";
-                                for await (const role of rolesArray) {
-                                    let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
-                                    if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
-                                    if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
-                                    if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
-                                    try {
-                                        if (interaction.member.roles.cache.has(role.id)) {
-                                            await interaction.member.roles.remove(role);
-                                            roleSelectReturnString += `✅ You no longer have ${role}!\n`
-                                        } else {
-                                            await interaction.member.roles.add(role);
-                                            roleSelectReturnString += `✅ You now have ${role}!\n`;
-                                        };
-                                    } catch (e) {
-                                        roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
-                                    };
-                                };
-                                return sendMessage({ interaction: interaction, content: roleSelectReturnString });
-                            } catch (e) {
-                                console.log(e);
-                                return;
+                            let serverApi = await import("../database/dbServices/server.api.js");
+                            serverApi = await serverApi.default();
+                            // Toggle selected role
+                            const rolesArray = [];
+                            for await (const value of interaction.values) {
+                                const roleArrayItem = await interaction.guild.roles.fetch(value);
+                                rolesArray.push(roleArrayItem);
                             };
+                            if (rolesArray.length < 1) return sendMessage({ interaction: interaction, content: `None of the selected roles are valid.` });
+                            let adminBool = isAdmin(interaction.guild.members.me);
+
+                            let roleSelectReturnString = "Role toggling results:\n";
+                            for await (const role of rolesArray) {
+                                let checkRoleEligibility = await serverApi.EligibleRoles.findOne({ where: { role_id: role.id } });
+                                if (!checkRoleEligibility) roleSelectReturnString += `❌ ${role} is not available to selfassign anymore.\n`;
+                                if (role.managed) roleSelectReturnString += `❌ I can't manage ${role} because it is being automatically managed by an integration.\n`;
+                                if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBool) roleSelectReturnString += `❌ I do not have permission to manage ${role}.\n`;
+                                try {
+                                    if (interaction.member.roles.cache.has(role.id)) {
+                                        await interaction.member.roles.remove(role);
+                                        roleSelectReturnString += `✅ You no longer have ${role}!\n`
+                                    } else {
+                                        await interaction.member.roles.add(role);
+                                        roleSelectReturnString += `✅ You now have ${role}!\n`;
+                                    };
+                                } catch (e) {
+                                    roleSelectReturnString += `❌ Failed to toggle ${role}, probably because I lack permissions.\n`;
+                                };
+                            };
+                            return sendMessage({ interaction: interaction, content: roleSelectReturnString });
                         } else {
                             // Other select menus
                             return;
@@ -364,7 +379,7 @@ export default async (client, interaction) => {
                                 break;
                             case "format":
                                 let formats = DexSim.formats.all();
-                                await formats.forEach(format => {
+                                formats.forEach(format => {
                                     if ((format.id.includes(focusedOption.value.toLowerCase()) || format.name.toLowerCase().includes(focusedOption.value.toLowerCase())) && !format.id.includes("random")) choices.push({ name: format.id, value: format.id });
                                 });
                                 break;

@@ -55,12 +55,14 @@ export default async ({ client, interaction, gameName, page }) => {
     questsButtons.addComponents([questsFirstButton, questsLeftButton, questsRightButton, questsLastButton]);
 
     mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
-    let messageObject = { embeds: mhEmbed, components: [questsButtons] };
+    let messageObject = { embeds: [mhEmbed], components: questsButtons };
     return messageObject;
-    // Function to sort by difficulty
-    function compare(a, b) {
-        if (a.difficulty > b.difficulty) return -1;
-        if (a.difficulty < b.difficulty) return 1;
-        return 0;
-    };
+
+};
+
+// Function to sort by difficulty
+function compare(a, b) {
+    if (a.difficulty > b.difficulty) return -1;
+    if (a.difficulty < b.difficulty) return 1;
+    return 0;
 };

@@ -177,6 +177,6 @@ export default async (interaction, monsterData, ephemeral) => {
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
     mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }])
-    let messageObject = { embeds: mhEmbed, components: buttonArray };
+    let messageObject = { embeds: [mhEmbed], components: buttonArray };
     return messageObject;
 };

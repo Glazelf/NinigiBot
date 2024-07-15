@@ -285,13 +285,6 @@ export default async (interaction, ephemeral) => {
             if (unbanlist) pokemonEmbed.addFields([{ name: "Unbanlist:", value: unbanlist, inline: false }]);
             if (format.restricted && format.restricted.length > 0) pokemonEmbed.addFields([{ name: "Restricted type:", value: format.restricted.join(", "), inline: false }]);
             break;
-        // Pokémon
-        case "pokemon":
-            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            let messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
-            pokemonEmbed = messageObject.embeds;
-            pokemonButtons = messageObject.components;
-            break;
         case "learn":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
             if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
@@ -458,6 +451,13 @@ export default async (interaction, ephemeral) => {
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
             break;
+        // Pokémon
+        case "pokemon":
+            if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
+            let messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
+            pokemonEmbed = messageObject.embeds[0];
+            pokemonButtons = messageObject.components;
+            break;
     };
     // Bulbapedia button
     if (linkBulbapedia) {
@@ -467,9 +467,12 @@ export default async (interaction, ephemeral) => {
             .setURL(linkBulbapedia);
         pokemonButtons.addComponents(bulbapediaButton);
     };
-    const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
-    if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
-    pokemonEmbed.setColor(embedColor);
+    // Color check for non-Pokémon commands
+    if (pokemonEmbed) {
+        const pokemonSim = DexSim.forGen(genData.dex.gen).species.get(colorPokemonName);
+        if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
+        pokemonEmbed.setColor(embedColor);
+    };
     return sendMessage({ interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 };
 
