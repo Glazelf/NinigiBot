@@ -37,7 +37,7 @@ export default async (interaction) => {
 
     let banReturn = null;
     let banFailString = `Ban failed. Either the specified user isn't in the server or I lack the \`${Object.keys(PermissionFlagsBits)[parseInt(requiredPermission) - 1]}\` permission.`;
-    let dmString = `You've been banned from **${interaction.guild.name}** by ${interaction.user.username} for the following reason: ${reasonCodeBlock}`;
+    let dmString = `You've been banned from **${interaction.guild.name}** by **${interaction.user.username}** for the following reason: ${reasonCodeBlock}`;
 
     let bansFetch = null;
     try {
@@ -57,12 +57,12 @@ export default async (interaction) => {
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
         if (bansFetch) {
-            if (bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `${member.user.username} (${member.id}) is already banned.` });
+            if (bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `**${member.user.username}** (${member.id}) is already banned.` });
         };
         banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
-            .then(message => banReturn += `Succeeded in sending a DM to ${user.username} with the reason.`)
-            .catch(e => banReturn += `Failed to send a DM to ${user.username} with the reason.`);
+            .then(message => banReturn += `Succeeded in sending a DM to **${user.username}** with the reason.`)
+            .catch(e => banReturn += `Failed to send a DM to **${user.username}** with the reason.`);
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await member.ban({ reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });

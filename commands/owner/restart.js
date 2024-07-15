@@ -25,7 +25,7 @@ export default async (interaction, ephemeral) => {
     let dbinitArg = interaction.options.getBoolean("dbinit");
     if (dbinitArg === true) dbinit = dbinitArg;
     let timestamp = getTime();
-    console.log(`Restarting for ${interaction.user.username}. (${timestamp})`);
+    console.log(`Restarting for **${interaction.user.username}**. (${timestamp})`);
     let installResult = "";
     // Run commands
     if (npmInstall) {
