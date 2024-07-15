@@ -661,7 +661,7 @@ export default async (client, interaction) => {
                                 { name: "Device Context:", value: bugReportContext, inline: false }
                             ]);
                         await DMChannel.send({ content: interaction.user.id, embeds: [bugReportEmbed] });
-                        return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM from ${client.user.username} with a follow-up.` });
+                        return sendMessage({ interaction: interaction, content: `Thanks for the bug report!\nIf your DMs are open you may get a DM with a follow-up.` });
                     case "modMailModal":
                         // Modmail
                         const modMailTitle = interaction.fields.getTextInputValue('modMailTitle');
