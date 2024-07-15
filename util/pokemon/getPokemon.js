@@ -13,6 +13,8 @@ import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getTypeEmotes from "./getTypeEmotes.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
@@ -389,7 +391,11 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
         if (generation < 8 && transferMovesStrings.length > 0) transferMovesStrings.forEach(transferMovesString => pkmEmbed.addFields([{ name: "Transfer Moves:", value: transferMovesString.join(", "), inline: false }]));
     };
     pkmEmbed.setFooter({ text: footerText, iconURL: iconFooter });
-    messageObject = { embeds: pkmEmbed, components: buttonArray };
+    // Embed color, mostly for buttons
+    let embedColor = globalVars.embedColor;
+    if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
+    pkmEmbed.setColor(embedColor);
+    messageObject = { embeds: [pkmEmbed], components: buttonArray };
     return messageObject;
 };
 

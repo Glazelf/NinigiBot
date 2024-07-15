@@ -250,6 +250,6 @@ export default async ({ client, interaction, page, region }) => {
     };
     splat3Embed.setImage(splatfestBanner);
     if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n**Bold** indicates the winning team, *italics* indicates second place.");
-    let splatfestMessageObject = { embeds: splat3Embed, components: [splatfestButtons] };
+    let splatfestMessageObject = { embeds: [splat3Embed], components: splatfestButtons };
     return splatfestMessageObject;
 };

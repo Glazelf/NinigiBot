@@ -57,5 +57,5 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         .setLabel("Reveal")
         .setStyle(ButtonStyle.Secondary);
     pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
-    return { content: returnString, files: [pokemonFiles], components: [pokemonButtons] };
+    return { content: returnString, files: [pokemonFiles], components: pokemonButtons };
 };
