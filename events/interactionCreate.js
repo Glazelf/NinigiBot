@@ -100,9 +100,10 @@ export default async (client, interaction) => {
                         let messageObject = null;
                         if (!interaction.customId) return;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
-                        if (interaction.user.id !== interaction.message.interaction.user.id &&
-                            !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)
-                        ) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                        let editOriginalMessage = ((interaction.user.id !== interaction.message.interaction.user.id ||
+                            !interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) &&
+                            !interaction.customId.includes("minesweeper"));
+                        if (!editOriginalMessage) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                         let pkmQuizModalGuessId = `pkmQuizModalGuess|${customIdSplit[1]}`;
                         if (interaction.customId.startsWith("pkmQuizReveal")) {
                             // Response in case of forfeit/reveal
