@@ -212,35 +212,27 @@ export default async (client, interaction) => {
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
-                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
+                            if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
                             let minesweeperComponentsCopy = interaction.message.components;
-                            let componentsReturn = [];
+                            componentsReturn = [];
                             for await (let actionRow of minesweeperComponentsCopy) {
                                 const rowCopy = ActionRowBuilder.from(actionRow);
                                 let rowNew = new ActionRowBuilder();
                                 for await (let button of rowCopy.components) {
                                     const buttonCopy = ButtonBuilder.from(button);
+                                    let buttonEmoji = interaction.customId.split("-")[2];
                                     if (button.data.custom_id == interaction.customId) {
                                         buttonCopy
-                                            .setStyle(ButtonStyle.Secondary)
-                                            .setEmoji(interaction.customId.split("-")[2])
+                                            .setStyle(ButtonStyle.Success)
+                                            .setEmoji(buttonEmoji)
                                             .setDisabled(true);
-                                        console.log(buttonCopy)
+                                        if (buttonEmoji == "💣") buttonCopy.setStyle(ButtonStyle.Danger);
                                     };
                                     rowNew.addComponents(buttonCopy);
                                 };
-                                componentsReturn.push(rowNew);
+                                if (rowNew.components.length > 0) componentsReturn.push(rowNew);
                             };
-                            console.log(componentsReturn[0].components[0])
-
-                            // await minesweeperComponentsCopy.forEach(async function (part, index) {
-                            //     await this[index].toJSON().components.forEach(function (part2, index2) {
-                            //         if (this[index2].custom_id == interaction.customId) {
-                            //             this[index2].emoji.name = interaction.customId.split("-")[2];
-                            //             this[index2].disabled = true; // Doesnt work??
-                            //         };
-                            //     }, this[index].toJSON().components);
-                            // }, minesweeperComponentsCopy);
+                            contentReturn = interaction.message.content;
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
