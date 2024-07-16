@@ -6,7 +6,6 @@ import {
     SlashCommandIntegerOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import Minesweeper from "discord.js-minesweeper";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
@@ -35,37 +34,19 @@ export default async (interaction, ephemeral) => {
             mines = minesArg;
         };
     };
-    const minesweeper = new Minesweeper({
-        rows: rows,
-        columns: columns,
-        mines: mines,
-        emote: 'bomb',
-        returnType: 'matrix',
-    });
-    let bombEmote = "💣";
-    let spoilerEmote = "⬛";
-    let matrix = minesweeper.start();
-    matrix.forEach(arr => {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
-        };
-    });
+    let placeholderEmoji = "⬛";
     let buttonRowArray = [];
-    let buttonIndex = 0;
-    let rowIndex = 0;
-    matrix.forEach(arr => {
+    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
         let buttonRow = new ActionRowBuilder();
-        arr.forEach(element => {
+        for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
             const mineButton = new ButtonBuilder()
-                .setCustomId(`minesweeper${rowIndex}-${buttonIndex}-${element}`)
+                .setCustomId(`minesweeper${rowIndex}-${columnIndex}-${placeholderEmoji}`)
                 .setStyle(ButtonStyle.Primary)
-                .setEmoji(spoilerEmote);
+                .setEmoji(placeholderEmoji);
             buttonRow.addComponents(mineButton);
-            buttonIndex += 1;
-        });
-        rowIndex += 1;
+        };
         buttonRowArray.push(buttonRow);
-    });
+    };
 
     let returnString = `Here is your minesweeper grid!`;
     if (correctionString.length > 0) {
