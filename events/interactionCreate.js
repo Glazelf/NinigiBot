@@ -709,7 +709,7 @@ export default async (client, interaction) => {
 
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
-                            interaction.update({ content: pkmQuizMessageObject.content, files: pkmQuizMessageObject.files, components: [] });
+                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: [] });
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };

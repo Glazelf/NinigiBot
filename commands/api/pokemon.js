@@ -46,7 +46,6 @@ export default async (interaction, ephemeral) => {
     let embedColor = globalVars.embedColor;
     let pokemonName = interaction.options.getString("pokemon");
     let pokemonButtons = new ActionRowBuilder();
-    let returnString = "";
     let pokemonFiles = null;
     let nameBulbapedia = null;
     let linkBulbapedia = null;
@@ -438,7 +437,6 @@ export default async (interaction, ephemeral) => {
             };
             break;
         case "whosthat":
-            pokemonEmbed = null;
             await interaction.deferReply({ ephemeral: ephemeral });
             allPokemon = allPokemon.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
@@ -447,7 +445,7 @@ export default async (interaction, ephemeral) => {
                 !pokemon.name.endsWith("-Totem")
             );
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
-            returnString = whosThatPokemonMessageObject.content;
+            pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
             break;
@@ -473,7 +471,7 @@ export default async (interaction, ephemeral) => {
         if (pokemonSim.color) embedColor = colorHexes[pokemonSim.color.toLowerCase()];
         pokemonEmbed.setColor(embedColor);
     };
-    return sendMessage({ interaction: interaction, content: returnString, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: pokemonEmbed, components: pokemonButtons, files: pokemonFiles, ephemeral: ephemeral });
 };
 
 function getLearnData(learnData) {
