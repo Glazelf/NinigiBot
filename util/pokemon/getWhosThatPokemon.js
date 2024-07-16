@@ -48,7 +48,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
     };
-    let pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "whosthatpokemon.jpg" });
+    let pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.jpg" });
 
     let quizEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
