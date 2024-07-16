@@ -214,14 +214,26 @@ export default async (client, interaction) => {
                             // Minesweeper
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                             let componentsCopy = interaction.message.components;
-                            await componentsCopy.forEach(async function (part, index) {
-                                await this[index].toJSON().components.forEach(function (part2, index2) {
-                                    if (this[index2].custom_id == interaction.customId) {
-                                        this[index2].emoji.name = interaction.customId.split("-")[2];
-                                        this[index2].disabled = true; // Doesnt work??
+                            for await (actionRow of componentsCopy) {
+                                const newRow = ActionRowBuilder.from(actionRow);
+                                for await (button of newRow.components) {
+                                    const newButton = ButtonBuilder.from(button);
+                                    if (newButton.customId == interaction.customId) {
+                                        newButton
+                                            .setStyle(ButtonStyle.Secondary)
+                                            .setDisabled(true);
                                     };
-                                }, this[index].toJSON().components);
-                            }, componentsCopy);
+                                };
+                                console.log(newRow);
+                            };
+                            // await componentsCopy.forEach(async function (part, index) {
+                            //     await this[index].toJSON().components.forEach(function (part2, index2) {
+                            //         if (this[index2].custom_id == interaction.customId) {
+                            //             this[index2].emoji.name = interaction.customId.split("-")[2];
+                            //             this[index2].disabled = true; // Doesnt work??
+                            //         };
+                            //     }, this[index].toJSON().components);
+                            // }, componentsCopy);
                             componentsReturn = componentsCopy;
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
