@@ -10,12 +10,12 @@ import {
     TextInputBuilder,
     TextInputStyle
 } from "discord.js";
-import logger from "../util/logger.js";
-import globalVars from "../objects/globalVars.json" with { type: "json" };
-import config from "../config.json" with { type: "json" };
-import sendMessage from "../util/sendMessage.js";
 import axios from "axios";
 import fs from "fs";
+import logger from "../util/logger.js";
+import sendMessage from "../util/sendMessage.js";
+import globalVars from "../objects/globalVars.json" with { type: "json" };
+import config from "../config.json" with { type: "json" };
 // Pokémon
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -24,9 +24,9 @@ import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
+import getMHQuests from "../util/mh/getQuests.js";
 import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
 import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
-import getMHQuests from "../util/mh/getQuests.js";
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // DQM3
@@ -56,7 +56,7 @@ const gens = new Generations(Dex);
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona 5
 // Submodule is documented in persona5 command
-let skillMapRoyal
+let skillMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 let personaMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
@@ -213,28 +213,34 @@ export default async (client, interaction) => {
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
-                            let componentsCopy = interaction.message.components;
-                            for await (let actionRow of componentsCopy) {
-                                const newRow = ActionRowBuilder.from(actionRow);
-                                for await (let button of newRow.components) {
-                                    const newButton = ButtonBuilder.from(button);
-                                    if (newButton.customId == interaction.customId) {
-                                        newButton
+                            let minesweeperComponentsCopy = interaction.message.components;
+                            let componentsReturn = [];
+                            for await (let actionRow of minesweeperComponentsCopy) {
+                                const rowCopy = ActionRowBuilder.from(actionRow);
+                                let rowNew = new ActionRowBuilder();
+                                for await (let button of rowCopy.components) {
+                                    const buttonCopy = ButtonBuilder.from(button);
+                                    if (button.data.custom_id == interaction.customId) {
+                                        buttonCopy
                                             .setStyle(ButtonStyle.Secondary)
+                                            .setEmoji(interaction.customId.split("-")[2])
                                             .setDisabled(true);
+                                        console.log(buttonCopy)
                                     };
+                                    rowNew.addComponents(buttonCopy);
                                 };
-                                console.log(newRow);
+                                componentsReturn.push(rowNew);
                             };
-                            // await componentsCopy.forEach(async function (part, index) {
+                            console.log(componentsReturn[0].components[0])
+
+                            // await minesweeperComponentsCopy.forEach(async function (part, index) {
                             //     await this[index].toJSON().components.forEach(function (part2, index2) {
                             //         if (this[index2].custom_id == interaction.customId) {
                             //             this[index2].emoji.name = interaction.customId.split("-")[2];
                             //             this[index2].disabled = true; // Doesnt work??
                             //         };
                             //     }, this[index].toJSON().components);
-                            // }, componentsCopy);
-                            componentsReturn = componentsCopy;
+                            // }, minesweeperComponentsCopy);
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
