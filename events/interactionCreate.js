@@ -214,9 +214,9 @@ export default async (client, interaction) => {
                             // Minesweeper
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them!`, ephemeral: true });
                             let componentsCopy = interaction.message.components;
-                            for await (actionRow of componentsCopy) {
+                            for await (let actionRow of componentsCopy) {
                                 const newRow = ActionRowBuilder.from(actionRow);
-                                for await (button of newRow.components) {
+                                for await (let button of newRow.components) {
                                     const newButton = ButtonBuilder.from(button);
                                     if (newButton.customId == interaction.customId) {
                                         newButton
