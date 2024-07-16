@@ -18,7 +18,6 @@ export default async ({ client, interaction, gameName, page }) => {
         .setColor(globalVars.embedColor)
         .setTitle(`${gameName} Quests`);
     let questsButtons = new ActionRowBuilder();
-    let questsEmbedFields = [];
     let pageLength = 25;
     let startIndex = pageLength * page - pageLength + 1; // 1, 26, 53, etc.
     let endIndex = startIndex + pageLength - 1; // 25, 50, 75, etc.
@@ -31,33 +30,31 @@ export default async ({ client, interaction, gameName, page }) => {
         mhEmbed.addFields([{ name: `${questTitle}`, value: `${questsTotal[i].objective} in ${questsTotal[i].map}`, inline: false }]);
     };
     let mhQuestsButtonAppend = `${gameName}|${page}|${totalPages}`;
-    //// Checks are deprecated, felt more intuitive without them for this command.
-    // if (page > 2)
     const questsFirstButton = new ButtonBuilder()
         .setCustomId(`mhquests|first|${mhQuestsButtonAppend}`)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('◀️')
-    // if (page > 1)
+        .setEmoji('◀️');
+    if (page < 2) questsFirstButton.setDisabled(true);
     const questsLeftButton = new ButtonBuilder()
         .setCustomId(`mhquests|left|${mhQuestsButtonAppend}`)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('⬅️')
-    // if (questsTotal[endIndex + 1])
+        .setEmoji('⬅️');
+    if (page < 2) questsLeftButton.setDisabled(true);
     const questsRightButton = new ButtonBuilder()
         .setCustomId(`mhquests|right|${mhQuestsButtonAppend}`)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('➡️')
-    // if (page < totalPages - 1)
+        .setEmoji('➡️');
+    if (!questsTotal[endIndex + 1]) questsRightButton.setDisabled(true);
     const questsLastButton = new ButtonBuilder()
         .setCustomId(`mhquests|last|${mhQuestsButtonAppend}`)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('▶️')
+        .setEmoji('▶️');
+    if (page >= totalPages) questsLastButton.setDisabled(true);
     questsButtons.addComponents([questsFirstButton, questsLeftButton, questsRightButton, questsLastButton]);
 
     mhEmbed.setFooter({ text: `Page ${page}/${totalPages}` });
     let messageObject = { embeds: [mhEmbed], components: questsButtons };
     return messageObject;
-
 };
 
 // Function to sort by difficulty
