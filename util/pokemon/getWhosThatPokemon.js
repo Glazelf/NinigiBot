@@ -2,7 +2,8 @@ import {
     ActionRowBuilder,
     AttachmentBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    EmbedBuilder
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import Canvas from "canvas";
@@ -15,7 +16,8 @@ import { addMoney } from "../../database/dbServices/user.api.js";
 export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new ActionRowBuilder();
     let doesRenderExist = false;
-    let returnString = `# Who's That Pokémon?`;
+    let quizTitle = "Who's That Pokémon?";
+    let quizDescription = null;
     let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
     while (!doesRenderExist) {
@@ -32,21 +34,27 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     ctx.drawImage(img, 0, 0);
     if (winner) {
         if (reveal == true) {
-            returnString += `\n${winner} chose to reveal the answer.`;
+            quizDescription = `${winner} chose to reveal the answer.`;
         } else {
             // Format winning message update
             let pkmQuizPrize = 10;
-            returnString += `\n${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
+            quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
             addMoney(winner.id, pkmQuizPrize);
         };
-        returnString += `\nThe answer was **${pokemon.name}**!`;
+        quizDescription += `\nThe answer was **${pokemon.name}**!`;
     } else {
         // Make render black
         ctx.globalCompositeOperation = "source-in";
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, img.height);
     };
-    let pokemonFiles = new AttachmentBuilder(canvas.toBuffer());
+    let pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "whosthatpokemon.jpg" });
+
+    let quizEmbed = new EmbedBuilder()
+        .setColor(globalVars.embedColor)
+        .setTitle(quizTitle)
+        .setDescription(quizDescription)
+        .setImage(`attachment://${pokemonImage.name}`);
 
     const quizGuessButton = new ButtonBuilder()
         .setCustomId(`pkmQuizGuess|${pokemon.name}`)
@@ -57,5 +65,5 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         .setLabel("Reveal")
         .setStyle(ButtonStyle.Secondary);
     pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
-    return { content: returnString, files: [pokemonFiles], components: pokemonButtons };
+    return { embeds: [quizEmbed], files: [pokemonImage], components: pokemonButtons };
 };
