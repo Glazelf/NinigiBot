@@ -17,7 +17,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let pokemonButtons = new ActionRowBuilder();
     let doesRenderExist = false;
     let quizTitle = "Who's That Pokémon?";
-    let quizDescription = "";
+    let quizDescription = null;
     let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
     while (!doesRenderExist) {
@@ -34,11 +34,11 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     ctx.drawImage(img, 0, 0);
     if (winner) {
         if (reveal == true) {
-            quizDescription += `\n${winner} chose to reveal the answer.`;
+            quizDescription = `${winner} chose to reveal the answer.`;
         } else {
             // Format winning message update
             let pkmQuizPrize = 10;
-            quizDescription += `\n${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
+            quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
             addMoney(winner.id, pkmQuizPrize);
         };
         quizDescription += `\nThe answer was **${pokemon.name}**!`;
@@ -53,8 +53,8 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let quizEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(quizTitle)
+        .setDescription(quizDescription)
         .setImage(`attachment://${pokemonImage.name}`);
-    if (quizDescription.length > 0) quizEmbed.setDescription(quizDescription);
 
     const quizGuessButton = new ButtonBuilder()
         .setCustomId(`pkmQuizGuess|${pokemon.name}`)
