@@ -37,6 +37,8 @@ import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with {
 import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json"};
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
+// Minesweeper
+import Minesweeper from "discord.js-minesweeper";
 // Database
 import { getEphemeralDefault } from "../database/dbServices/user.api.js";
 import {
@@ -78,7 +80,7 @@ export default async (client, interaction) => {
         let pkmQuizModalId = 'pkmQuizModal';
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
-                // Grab the command data from the client.commands Enmap
+                // Grab the command data from the client.commands collection
                 let cmd;
                 let commandName = interaction.commandName.toLowerCase().replace(" ", "");
                 // Slower? command checker, since some commands user capitalization
@@ -215,24 +217,55 @@ export default async (client, interaction) => {
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
                             let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
-                            for await (let actionRow of minesweeperComponentsCopy) {
-                                const rowCopy = ActionRowBuilder.from(actionRow);
-                                let rowNew = new ActionRowBuilder();
-                                for await (let button of rowCopy.components) {
-                                    const buttonCopy = ButtonBuilder.from(button);
-                                    let buttonEmoji = interaction.customId.split("-")[2];
-                                    if (button.data.custom_id == interaction.customId) {
-                                        buttonCopy
-                                            .setStyle(ButtonStyle.Success)
-                                            .setEmoji(buttonEmoji)
-                                            .setDisabled(true);
-                                        if (buttonEmoji == "💣") buttonCopy.setStyle(ButtonStyle.Danger);
+                            let bombEmoji = "💣";
+                            let spoilerEmoji = "⬛";
+                            let testBool = true; // DELETE LATER
+                            let testBool2 = true; // DELETE LATER
+                            // Check if first click
+
+                            // Check if win state
+
+                            // Check if loss state
+                            if (testBool) { // if first button pressed
+                                // Build board
+                                const minesweeper = new Minesweeper({
+                                    rows: rows,
+                                    columns: columns,
+                                    mines: mines,
+                                    emote: 'bomb',
+                                    returnType: 'matrix',
+                                });
+
+                                let matrix = minesweeper.start();
+                                matrix.forEach(arr => {
+                                    for (let i = 0; i < arr.length; i++) {
+                                        arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
                                     };
-                                    rowNew.addComponents(buttonCopy);
+                                });
+                                // Check if winning state
+                            } else if (testBool2) { // if win state || loss state
+                                // Behaviour for win/lose
+
+                            } else {
+                                for await (let actionRow of minesweeperComponentsCopy) {
+                                    const rowCopy = ActionRowBuilder.from(actionRow);
+                                    let rowNew = new ActionRowBuilder();
+                                    for await (let button of rowCopy.components) {
+                                        const buttonCopy = ButtonBuilder.from(button);
+                                        let buttonEmoji = interaction.customId.split("-")[2];
+                                        if (button.data.custom_id == interaction.customId) {
+                                            buttonCopy
+                                                .setStyle(ButtonStyle.Success)
+                                                .setEmoji(buttonEmoji)
+                                                .setDisabled(true);
+                                            if (buttonEmoji == bombEmoji) buttonCopy.setStyle(ButtonStyle.Danger);
+                                        };
+                                        rowNew.addComponents(buttonCopy);
+                                    };
+                                    if (rowNew.components.length > 0) componentsReturn.push(rowNew);
                                 };
-                                if (rowNew.components.length > 0) componentsReturn.push(rowNew);
+                                contentReturn = interaction.message.content;
                             };
-                            contentReturn = interaction.message.content;
                         } else if (interaction.customId.startsWith("bgd")) {
                             // Trophy shop
                             const offset = parseInt(interaction.customId.substring(3));
