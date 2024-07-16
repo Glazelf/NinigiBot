@@ -28,24 +28,24 @@ export default async (interaction, page, user) => {
         .setColor(embedColor)
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
+    let profileButtons = new ActionRowBuilder();
     const profileButton = new ButtonBuilder()
         .setLabel("Profile")
         .setStyle(ButtonStyle.Link)
         .setURL(`discord://-/users/${user.id}`);
-    let profileButtons = new ActionRowBuilder()
-        .addComponents(profileButton);
-    if (page > 0) {
-        const previousPageButton = new ButtonBuilder()
-            .setCustomId(`usf${page - 1}:${user.id}`)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬅️')
-        profileButtons.addComponents(previousPageButton);
-    };
-    if (page < number_of_pages - 1 && member && !user.bot) {
+    profileButtons.addComponents(profileButton);
+    const previousPageButton = new ButtonBuilder()
+        .setCustomId(`usf${page - 1}:${user.id}`)
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('⬅️');
+    profileButtons.addComponents(previousPageButton);
+    if (page < 1) previousPageButton.setDisabled(true);
+    if (member && !user.bot) {
         const nextPageButton = new ButtonBuilder()
             .setCustomId(`usf${page + 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
-            .setEmoji('➡️')
+            .setEmoji('➡️');
+        if (page >= number_of_pages - 1) nextPageButton.setDisabled(true);
         profileButtons.addComponents(nextPageButton);
     };
 

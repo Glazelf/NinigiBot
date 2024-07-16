@@ -234,20 +234,19 @@ export default async ({ client, interaction, page, region }) => {
         if (splat3EmbedFields[i]) splat3Embed.addFields([splat3EmbedFields[i]]);
     };
     // "Previous" page button. This is actually the next page because of how the splatfests are ordered. Sort of. It goes left.
-    if (splat3EmbedFields[pageEndIndex + 1]) {
-        const leftButton = new ButtonBuilder()
-            .setCustomId(`splatfest|left|${splatfestButtonAppend}`)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬅️');
-        splatfestButtons.addComponents(leftButton);
-    };
-    if (page > 1) { // Check to add next button (buttons are swapped because we start at newest splatfest and work backwards)
-        const rightButton = new ButtonBuilder()
-            .setCustomId(`splatfest|right|${splatfestButtonAppend}`)
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('➡️')
-        splatfestButtons.addComponents(rightButton);
-    };
+    const leftButton = new ButtonBuilder()
+        .setCustomId(`splatfest|left|${splatfestButtonAppend}`)
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('⬅️');
+    splatfestButtons.addComponents(leftButton);
+    if (!splat3EmbedFields[pageEndIndex + 1]) leftButton.setDisabled(true);
+    // Check to add next button (buttons are swapped because we start at newest splatfest and work backwards)
+    const rightButton = new ButtonBuilder()
+        .setCustomId(`splatfest|right|${splatfestButtonAppend}`)
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('➡️')
+    splatfestButtons.addComponents(rightButton);
+    if (page < 2) rightButton.setDisabled(true);
     splat3Embed.setImage(splatfestBanner);
     if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n**Bold** indicates the winning team, *italics* indicates second place.");
     let splatfestMessageObject = { embeds: [splat3Embed], components: splatfestButtons };
