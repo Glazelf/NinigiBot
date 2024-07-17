@@ -247,12 +247,14 @@ export default async (client, interaction) => {
                                     if (gameOver) buttonCopy.setDisabled(true);
                                     if (button.data.custom_id == interaction.customId) {
                                         // Regenerate board if first button is a bomb or spoiler
-                                        while ([bombEmoji, spoilerEmoji].includes(buttonEmoji) && isFirstButton) {
+                                        let bannedStartingCells = [bombEmoji, spoilerEmoji];
+                                        while (bannedStartingCells.includes(buttonEmoji) && isFirstButton) {
                                             matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
-                                            // Reset loop
-                                            rowIndex = 6;
-                                            columnIndex = 6;
-                                            continue;
+                                            buttonEmoji = matrix[columnIndex][rowIndex];
+                                            if (!bannedStartingCells.includes(buttonEmoji)) {
+                                                rowIndex = 6;
+                                                columnIndex = 6;
+                                            };
                                         };
                                         buttonCopy
                                             .setStyle(ButtonStyle.Success)
