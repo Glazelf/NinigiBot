@@ -40,7 +40,7 @@ import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { t
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
-import { getEphemeralDefault } from "../database/dbServices/user.api.js";
+import { getEphemeralDefault, addMoney } from "../database/dbServices/user.api.js";
 import {
     getShopTrophies,
     getEventTrophies,
@@ -229,24 +229,30 @@ export default async (client, interaction) => {
                             let isFirstButton = (minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[2] == spoilerEmoji);
                             let isLossState = false;
                             let isWinState = false;
+                            let gameOver = false;
+                            let buttonsClicked = 0;
+
                             // Check if first click, build board
                             if (isFirstButton) matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
                             for (let rowIndex = 0; rowIndex < mineRows; rowIndex++) {
                                 let actionRow = minesweeperComponentsCopy[rowIndex];
                                 const rowCopy = ActionRowBuilder.from(actionRow);
                                 let rowNew = new ActionRowBuilder();
+
                                 for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
                                     let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
                                     if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[columnIndex][rowIndex])); // Replace placeholder emoji with generated emoji from above
                                     let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
+                                    if (gameOver) buttonCopy.setDisabled(true);
                                     if (button.data.custom_id == interaction.customId) {
                                         // Regenerate board if first button is a bomb or spoiler
                                         while ([bombEmoji, spoilerEmoji].includes(buttonEmoji) && isFirstButton) {
                                             matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
-                                            // Resetloop
-                                            rowIndex = 0;
-                                            columnIndex = 0;
+                                            // Reset loop
+                                            rowIndex = 6;
+                                            columnIndex = 6;
+                                            continue;
                                         };
                                         buttonCopy
                                             .setStyle(ButtonStyle.Success)
@@ -256,17 +262,39 @@ export default async (client, interaction) => {
                                             buttonCopy.setStyle(ButtonStyle.Danger);
                                             isLossState = true;
                                         };
+                                        // Check if game over state has been reached to reset loop to disable all buttons
+                                        if ((isLossState || isWinState) && !gameOver) {
+                                            gameOver = true;
+                                            // Reset loop
+                                            rowIndex = 6;
+                                            columnIndex = 6;
+                                            continue;
+                                        };
+                                    };
+                                    if (buttonEmoji !== bombEmoji && buttonCopy.data.disabled == true) buttonsClicked++;
+                                    if (buttonsClicked == (mineSize - mineCount)) {
+                                        isWinState = true; // buttonsClicked is incremented later in the loop so check 1 lower
+                                        rowIndex = 6;
                                     };
                                     rowNew.addComponents(buttonCopy);
                                 };
                                 if (rowNew.components.length > 0) componentsReturn.push(rowNew);
-
+                                // Loop reset
+                                if (rowIndex > 5) {
+                                    rowIndex = -1;
+                                    componentsReturn = [];
+                                };
                             };
                             // Check if win state
-                            if (isWinState) {
-
-                            } else if (isLossState) {
-
+                            let matrixString = "";
+                            if (isLossState) {
+                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                contentReturn = `## You hit a mine! Game over!\n${matrixString}`;
+                            } else if (isWinState) {
+                                let moneyPrize = mineCount * 10;
+                                matrixString = getMatrixString(componentsReturn, bombEmoji);
+                                contentReturn = `## You won! Congratulations!\nYou received ${moneyPrize}${globalVars.currency}.\n\n${matrixString}`;
+                                addMoney(interaction.user.id, moneyPrize);
                             } else {
                                 contentReturn = interaction.message.content;
                             };
@@ -291,6 +319,7 @@ export default async (client, interaction) => {
                         // Force proper arrays
                         if (embedsReturn && !Array.isArray(embedsReturn)) embedsReturn = [embedsReturn];
                         if (componentsReturn && !Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
+                        while (componentsReturn.length > 5) componentsReturn.pop();
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
                             interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
@@ -787,4 +816,19 @@ function createMinesweeperBoard(rows, columns, mines, bombEmoji) {
         };
     });
     return matrix;
+};
+
+function getMatrixString(components, bombEmoji) {
+    let boardTitleString = "This was the full board:\n";
+    let matrixString = "";
+    components.forEach(actionRow => {
+        matrixString += "";
+        actionRow.components.forEach(button => {
+            let emoji = button.data.custom_id.split("-")[2];
+            if (emoji == bombEmoji) matrixString += "\\"; // Base emote for readability
+            matrixString += `${emoji}`;
+        });
+        matrixString += "\n";
+    });
+    return `${boardTitleString}${matrixString}`;
 };
