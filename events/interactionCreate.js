@@ -215,44 +215,39 @@ export default async (client, interaction) => {
                         } else if (interaction.customId.includes("minesweeper")) {
                             // Minesweeper
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
-                            let minesweeperComponentsCopy = interaction.message.components;
 
+                            let minesweeperComponentsCopy = interaction.message.components;
                             componentsReturn = [];
                             let bombEmoji = "💣";
                             let spoilerEmoji = "⬛";
-                            let clickedButtons = 0;
+                            let matrix = null;
+                            let mineRows = minesweeperComponentsCopy.length; // Count rows by counting action rows
+                            let mineColumns = minesweeperComponentsCopy[0].components.length; // Count columns by counting buttons in the first row
+                            let mineSize = mineRows * mineColumns; // Total tiles
+                            let mineCount = minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[3]; // Amount of mines
                             // ID will only contain the spoiler emoji as a placeholder when no board has been generated yet
                             let isFirstButton = (minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[2] == spoilerEmoji);
                             let isLossState = false;
                             let isWinState = false;
-
-                            // Check if first click
-                            if (isFirstButton) {
-                                // Build board
-                                // const minesweeper = new Minesweeper({
-                                //     rows: rows,
-                                //     columns: columns,
-                                //     mines: mines,
-                                //     emote: 'bomb',
-                                //     returnType: 'matrix',
-                                // });
-
-                                // let matrix = minesweeper.start();
-                                // matrix.forEach(arr => {
-                                //     for (let i = 0; i < arr.length; i++) {
-                                //         arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
-                                //     };
-                                // });
-
-                            };
-                            for await (let actionRow of minesweeperComponentsCopy) {
+                            // Check if first click, build board
+                            if (isFirstButton) matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                            for (let rowIndex = 0; rowIndex < mineRows; rowIndex++) {
+                                let actionRow = minesweeperComponentsCopy[rowIndex];
                                 const rowCopy = ActionRowBuilder.from(actionRow);
                                 let rowNew = new ActionRowBuilder();
-                                for await (let button of rowCopy.components) {
+                                for (let columnIndex = 0; columnIndex < mineColumns; columnIndex++) {
+                                    let button = rowCopy.components[columnIndex];
                                     const buttonCopy = ButtonBuilder.from(button);
-                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, "NEW EMOJI GOES HERE")); // Replace placeholder emoji with generated emoji from above
-                                    let buttonEmoji = interaction.customId.split("-")[2];
+                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, matrix[columnIndex][rowIndex])); // Replace placeholder emoji with generated emoji from above
+                                    let buttonEmoji = buttonCopy.data.custom_id.split("-")[2];
                                     if (button.data.custom_id == interaction.customId) {
+                                        // Regenerate board if first button is a bomb or spoiler
+                                        while ([bombEmoji, spoilerEmoji].includes(buttonEmoji) && isFirstButton) {
+                                            matrix = createMinesweeperBoard(mineRows, mineColumns, mineCount, bombEmoji);
+                                            // Resetloop
+                                            rowIndex = 0;
+                                            columnIndex = 0;
+                                        };
                                         buttonCopy
                                             .setStyle(ButtonStyle.Success)
                                             .setEmoji(buttonEmoji)
@@ -775,4 +770,21 @@ export default async (client, interaction) => {
     } catch (e) {
         logger({ exception: e, interaction: interaction });
     };
+};
+
+function createMinesweeperBoard(rows, columns, mines, bombEmoji) {
+    const minesweeper = new Minesweeper({
+        rows: rows,
+        columns: columns,
+        mines: mines,
+        emote: 'bomb',
+        returnType: 'matrix',
+    });
+    let matrix = minesweeper.start();
+    matrix.forEach(arr => {
+        for (let i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].replace("|| :bomb: ||", bombEmoji).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
+        };
+    });
+    return matrix;
 };

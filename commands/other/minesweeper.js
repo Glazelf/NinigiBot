@@ -40,7 +40,7 @@ export default async (interaction, ephemeral) => {
         let buttonRow = new ActionRowBuilder();
         for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
             const mineButton = new ButtonBuilder()
-                .setCustomId(`minesweeper${rowIndex}-${columnIndex}-${placeholderEmoji}`)
+                .setCustomId(`minesweeper${rowIndex}-${columnIndex}-${placeholderEmoji}-${mines}`)
                 .setStyle(ButtonStyle.Primary)
                 .setEmoji(placeholderEmoji);
             buttonRow.addComponents(mineButton);
