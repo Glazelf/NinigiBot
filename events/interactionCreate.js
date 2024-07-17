@@ -216,54 +216,63 @@ export default async (client, interaction) => {
                             // Minesweeper
                             if (!isOriginalUser) return sendMessage({ interaction: interaction, content: `Only ${interaction.message.interaction.user} can use this button as the original interaction was used by them.`, ephemeral: true });
                             let minesweeperComponentsCopy = interaction.message.components;
+
                             componentsReturn = [];
                             let bombEmoji = "💣";
                             let spoilerEmoji = "⬛";
-                            let testBool = true; // DELETE LATER
-                            let testBool2 = true; // DELETE LATER
+                            let clickedButtons = 0;
+                            // ID will only contain the spoiler emoji as a placeholder when no board has been generated yet
+                            let isFirstButton = (minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[2] == spoilerEmoji);
+                            let isLossState = false;
+                            let isWinState = false;
+
                             // Check if first click
-
-                            // Check if win state
-
-                            // Check if loss state
-                            if (testBool) { // if first button pressed
+                            if (isFirstButton) {
                                 // Build board
-                                const minesweeper = new Minesweeper({
-                                    rows: rows,
-                                    columns: columns,
-                                    mines: mines,
-                                    emote: 'bomb',
-                                    returnType: 'matrix',
-                                });
+                                // const minesweeper = new Minesweeper({
+                                //     rows: rows,
+                                //     columns: columns,
+                                //     mines: mines,
+                                //     emote: 'bomb',
+                                //     returnType: 'matrix',
+                                // });
 
-                                let matrix = minesweeper.start();
-                                matrix.forEach(arr => {
-                                    for (let i = 0; i < arr.length; i++) {
-                                        arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
+                                // let matrix = minesweeper.start();
+                                // matrix.forEach(arr => {
+                                //     for (let i = 0; i < arr.length; i++) {
+                                //         arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
+                                //     };
+                                // });
+
+                            };
+                            for await (let actionRow of minesweeperComponentsCopy) {
+                                const rowCopy = ActionRowBuilder.from(actionRow);
+                                let rowNew = new ActionRowBuilder();
+                                for await (let button of rowCopy.components) {
+                                    const buttonCopy = ButtonBuilder.from(button);
+                                    if (isFirstButton) buttonCopy.setCustomId(buttonCopy.data.custom_id.replace(spoilerEmoji, "NEW EMOJI GOES HERE")); // Replace placeholder emoji with generated emoji from above
+                                    let buttonEmoji = interaction.customId.split("-")[2];
+                                    if (button.data.custom_id == interaction.customId) {
+                                        buttonCopy
+                                            .setStyle(ButtonStyle.Success)
+                                            .setEmoji(buttonEmoji)
+                                            .setDisabled(true);
+                                        if (buttonEmoji == bombEmoji) {
+                                            buttonCopy.setStyle(ButtonStyle.Danger);
+                                            isLossState = true;
+                                        };
                                     };
-                                });
-                                // Check if winning state
-                            } else if (testBool2) { // if win state || loss state
-                                // Behaviour for win/lose
+                                    rowNew.addComponents(buttonCopy);
+                                };
+                                if (rowNew.components.length > 0) componentsReturn.push(rowNew);
+
+                            };
+                            // Check if win state
+                            if (isWinState) {
+
+                            } else if (isLossState) {
 
                             } else {
-                                for await (let actionRow of minesweeperComponentsCopy) {
-                                    const rowCopy = ActionRowBuilder.from(actionRow);
-                                    let rowNew = new ActionRowBuilder();
-                                    for await (let button of rowCopy.components) {
-                                        const buttonCopy = ButtonBuilder.from(button);
-                                        let buttonEmoji = interaction.customId.split("-")[2];
-                                        if (button.data.custom_id == interaction.customId) {
-                                            buttonCopy
-                                                .setStyle(ButtonStyle.Success)
-                                                .setEmoji(buttonEmoji)
-                                                .setDisabled(true);
-                                            if (buttonEmoji == bombEmoji) buttonCopy.setStyle(ButtonStyle.Danger);
-                                        };
-                                        rowNew.addComponents(buttonCopy);
-                                    };
-                                    if (rowNew.components.length > 0) componentsReturn.push(rowNew);
-                                };
                                 contentReturn = interaction.message.content;
                             };
                         } else if (interaction.customId.startsWith("bgd")) {
