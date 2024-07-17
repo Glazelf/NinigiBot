@@ -18,7 +18,7 @@ export default async (client, member, newMember) => {
         let botMember = member.guild.members.me;
 
         if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
-            if (newMember) newMember = await newMember.fetch({ force: true });
+            if (newMember) newMember = await newMember.fetch({ force: true }).catch(e => { return; });
             let user = await client.users.fetch(member.id);
             let oldAvatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             let avatar = newMember.displayAvatarURL(globalVars.displayAvatarSettings);
