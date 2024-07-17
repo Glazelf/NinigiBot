@@ -6,6 +6,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 import config from "../config.json" with { type: "json" };
 
 export default async (client) => {
+    console.log("ready")
     try {
         // Set interactions
         await client.commands.forEach(async (command) => {
