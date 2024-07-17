@@ -293,7 +293,7 @@ export default async (client, interaction) => {
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
-                                contentReturn = `## You won! Congratulations!\nYou received ${moneyPrize}${globalVars.currency}.\n\n${matrixString}`;
+                                contentReturn = `## You won! Congratulations!\nYou received ${moneyPrize}${globalVars.currency}.\n${matrixString}`;
                                 addMoney(interaction.user.id, moneyPrize);
                             } else {
                                 contentReturn = interaction.message.content;
