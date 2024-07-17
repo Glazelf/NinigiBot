@@ -322,12 +322,10 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed.setTitle(learnAuthor);
             break;
         case "usage":
-            let formatInput = "gen9vgc2023series1";
-            let formatArg = interaction.options.getString("format");
-            if (formatArg) formatInput = formatArg;
+            await interaction.deferReply({ ephemeral: ephemeral });
+            let formatInput = interaction.options.getString("format");
             // There's a LOT of inconsistencies between the format names in Showdown and https://www.smogon.com/stats/
             if (formatInput == "gen7vgc2019") formatInput = "gen7vgc2019ultraseries";
-
             let rating = 0;
             let ratingTresholds = [0, 1500, 1630, 1760];
             if (formatInput.match(/gen.{1,2}(ou)$/g)) ratingTresholds = [0, 1500, 1695, 1825]; // OU has different rating tresholds
@@ -372,7 +370,7 @@ export default async (interaction, ephemeral) => {
             let genericUsageResponseURLExists = urlExists(genericUsageURL);
             if (!searchURLExists || !genericUsageResponseURLExists) return sendMessage({ interaction: interaction, content: failText, components: usageButtons });
             response = await axios.get(searchURL);
-            genericUsageResponse = await axios.get();
+            genericUsageResponse = await axios.get(genericUsageURL);
             // Filter, split and trim pokemon data
             let usageArray = response.data.replace(/\|/g, "").replace(/\n/g, "").trim().split(`----------------------------------------+  +----------------------------------------+`);
             Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replace(/\+/g, "").replace(/--/g, "") });
