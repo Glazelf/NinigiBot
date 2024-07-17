@@ -372,7 +372,7 @@ export default async (interaction, ephemeral) => {
             let genericUsageResponseURLExists = urlExists(genericUsageURL);
             if (!searchURLExists || !genericUsageResponseURLExists) return sendMessage({ interaction: interaction, content: failText, components: usageButtons });
             response = await axios.get(searchURL);
-            genericUsageResponse = await axios.get();
+            genericUsageResponse = await axios.get(genericUsageURL);
             // Filter, split and trim pokemon data
             let usageArray = response.data.replace(/\|/g, "").replace(/\n/g, "").trim().split(`----------------------------------------+  +----------------------------------------+`);
             Object.keys(usageArray).forEach(key => { usageArray[key] = usageArray[key].replace(/\+/g, "").replace(/--/g, "") });
