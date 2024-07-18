@@ -296,7 +296,8 @@ export default async (client, interaction) => {
                             };
                             // Check if win state
                             let matrixString = "";
-                            let currentBalance = await getMoney(interaction.user.id);
+                            let currentBalance = null;
+                            if (isWinState || (isLossState && mineBet > 0)) currentBalance = await getMoney(interaction.user.id);
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
                                 contentReturn = `## You hit a mine! Game over!`;
