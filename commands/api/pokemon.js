@@ -14,7 +14,6 @@ import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/perms/areEmotesAllowed.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
 import getTypeEmotes from "../../util/pokemon/getTypeEmotes.js";
@@ -35,7 +34,6 @@ export default async (interaction, ephemeral) => {
     // Command settings
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     // Bools
     let learnsetBool = false;
     let learnsetArg = interaction.options.getBoolean("learnset");
@@ -178,7 +176,7 @@ export default async (interaction, ephemeral) => {
             if (move.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
-            let type = getTypeEmotes({ type: move.type, emotes: emotesAllowed });
+            let type = getTypeEmotes({ type: move.type });
             let category = move.category;
             let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
@@ -221,13 +219,8 @@ export default async (interaction, ephemeral) => {
             let lowered = Dex.stats.names[nature.minus];
             let resultString = "Neutral nature, no stat changes.";
             if (boosted && lowered) {
-                if (emotesAllowed) {
-                    boosted = `${emotes.ArrowUpRed}${boosted}`;
-                    lowered = `${emotes.ArrowDownBlue}${lowered}`;
-                } else {
-                    boosted = `Boosted: ${boosted}`;
-                    lowered = `Lowered: ${lowered}`;
-                };
+                boosted = `${emotes.ArrowUpRed}${boosted}`;
+                lowered = `${emotes.ArrowDownBlue}${lowered}`;
                 resultString = `${boosted}\n${lowered}`;
             };
             pokemonEmbed

@@ -1,15 +1,15 @@
 {
-    "Staff": "<:staff:857925240331829248>",
-    "Partner": "<:partner_server_owner:857932666519027712>",
-    "Hypesquad": "<:hypesquad_events:857925240133648385>",
-    "BugHunterLevel1": "<:bug_hunter:857925240326455306>",
-    "BugHunterLevel2": "<:bug_buster:857925240151474187>",
-    "HypeSquadOnlineHouse1": "<:hype_bravery:857923355389984779>",
-    "HypeSquadOnlineHouse2": "<:hype_brilliance:857923355607826432>",
-    "HypeSquadOnlineHouse3": "<:hype_balance:857923355600224266>",
-    "PremiumEarlySupporter": "<:early_supporter:857925240340742144>",
-    "VerifiedBot": "☑️",
-    "VerifiedDeveloper": "<:early_verified_bot_dev:857923355554086922>",
-    "CertifiedModerator": "<:certified_moderator:857923355548844043>",
-    "ActiveDeveloper": ""
+    "Staff": "<:BadgeStaff:1263612752048689323>",
+    "Partner": "<:BadgePartner:1263613743670100048>",
+    "Hypesquad": "<:BadgeHypesquad:1263613927057522771>",
+    "BugHunterLevel1": "<:BadgeBugHunterLevel1:1263614529263239280>",
+    "BugHunterLevel2": "<:BadgeBugHunterLevel2:1263614760818184225>",
+    "HypeSquadOnlineHouse1": "<:BadgeHypeSquadOnlineHouse1:1263614949494751273>",
+    "HypeSquadOnlineHouse2": "<:BadgeHypeSquadOnlineHouse2:1263615132496298004>",
+    "HypeSquadOnlineHouse3": "<:BadgeHypeSquadOnlineHouse3:1263615253330264114>",
+    "PremiumEarlySupporter": "<:BadgePremiumEarlySupporter:1263615621023666186>",
+    "VerifiedBot": "<:BadgeVerifiedBot:1263614179055763569>",
+    "VerifiedDeveloper": "<:BadgeVerifiedDeveloper:1263616656945582081>",
+    "CertifiedModerator": "<:BadgeCertifiedModerator:1263616793847791697>",
+    "ActiveDeveloper": "<:BadgeActiveDeveloper:1263616510740664352>"
 }

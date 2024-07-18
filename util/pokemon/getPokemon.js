@@ -7,7 +7,6 @@ import {
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import urlExists from "../urlExists.js";
-import areEmotesAllowed from "../perms/areEmotesAllowed.js";
 import convertMeterFeet from "../math/convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
@@ -35,7 +34,6 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
     };
     // Common settings
     if (!pokemon) return;
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     let recentGame = "SV";
     let description = "";
     // Construct footer
@@ -68,8 +66,8 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
     // Typing
     let type1 = pokemonGen.types[0];
     let type2 = pokemonGen.types[1];
-    let typeString = `${getTypeEmotes({ type: type1, emotes: emotesAllowed })}`;
-    if (type2) typeString += `\n${getTypeEmotes({ type: type2, emotes: emotesAllowed })}`;
+    let typeString = `${getTypeEmotes({ type: type1 })}`;
+    if (type2) typeString += `\n${getTypeEmotes({ type: type2, })}`;
     // Check type matchups
     let superEffectives = [];
     let resistances = [];
@@ -79,7 +77,7 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
         let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
-        let typeEffectString = getTypeEmotes({ type: type.name, bold: typeEmoteBold, emotes: emotesAllowed });
+        let typeEffectString = getTypeEmotes({ type: type.name, bold: typeEmoteBold });
         if ([2, 4].includes(effectiveness)) superEffectives.push(typeEffectString);
         if ([0.25, 0.5].includes(effectiveness)) resistances.push(typeEffectString);
         if (effectiveness == 0) immunities.push(typeEffectString);

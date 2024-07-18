@@ -9,7 +9,6 @@ import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with
 import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
-import areEmotesAllowed from "../perms/areEmotesAllowed.js";
 
 let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
 let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
@@ -19,7 +18,6 @@ let MHW = "Monster Hunter World";
 let MHGU = "Monster Hunter Generations Ultimate";
 
 export default async (interaction, monsterData, ephemeral) => {
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     let gameDBName;
     // Get icon, description and game appearances
     let monsterIcon;
@@ -105,8 +103,7 @@ export default async (interaction, monsterData, ephemeral) => {
     let monsterAilments = "";
     if (monsterData.elements) {
         monsterData.elements.forEach(element => {
-            let elementString = `${element}`;
-            if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
+            let elementString = `${elementEmotes[element]}${element}`;
             if (monsterElements.length == 0) {
                 monsterElements = elementString;
             } else {
@@ -116,8 +113,7 @@ export default async (interaction, monsterData, ephemeral) => {
     };
     if (monsterData.weakness) {
         monsterData.weakness.forEach(element => {
-            let elementString = `${element}`;
-            if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
+            let elementString = `${elementEmotes[element]}${element}`;
             if (monsterWeaknesses.length == 0) {
                 monsterWeaknesses = elementString;
             } else {

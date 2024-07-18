@@ -1,7 +1,7 @@
 {
-    "Fire": "<:element_fire:922528597250568193>",
-    "Water": "<:element_water:922528597342822421>",
-    "Thunder": "<:element_thunder:922528597485424680>",
-    "Ice": "<:element_ice:922528597082767423>",
-    "Dragon": "<:element_dragon:922528597443481641>"
+    "Fire": "<:MonsterHunterElementFire:1263619935096143914>",
+    "Water": "<:MonsterHunterElementWater:1263619970915369042>",
+    "Thunder": "<:MonsterHunterElementThunder:1263619961428115577>",
+    "Ice": "<:MonsterHunterElementIce:1263619952745906208>",
+    "Dragon": "<:MonsterHunterElementDragon:1263619943954645093>"
 }

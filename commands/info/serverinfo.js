@@ -9,7 +9,6 @@ import {
     SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/perms/areEmotesAllowed.js";
 import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
@@ -18,7 +17,6 @@ import emotes from "../../objects/discord/emotes.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
 
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -82,7 +80,7 @@ export default async (interaction, ephemeral) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    if (emotesAllowed) boosterString = boosterString + emotes.NitroBoost;
+    boosterString = boosterString + emotes.NitroBoost;
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;

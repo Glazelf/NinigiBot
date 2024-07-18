@@ -9,8 +9,6 @@ import {
 } from "discord.js";
 import Canvas from "canvas";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/perms/areEmotesAllowed.js";
-import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import {
     getFullBuyableShopTrophies,
@@ -30,13 +28,11 @@ export default async (interaction, ephemeral) => {
     let canvas, ctx, img, shinx;
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     let master = interaction.user;
     let trophies;
     switch (interaction.options.getSubcommand()) {
         case "stock":
             trophies = await getFullBuyableShopTrophies(master.id);
-            if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
             trophies.forEach(trophy => {
                 let trophyPriceBlock = codeBlock("diff", `[${trophy.price}]`);
                 let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
@@ -119,7 +115,6 @@ export default async (interaction, ephemeral) => {
                     ephemeral: true
                 });
             } else {
-                if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                 embed
                     .setTitle(`${res.trophy_id}`)
                     .addFields([

@@ -6,7 +6,6 @@ import {
 } from "discord.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
-import areEmotesAllowed from "../perms/areEmotesAllowed.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
 import emotes from "../../objects/discord/emotes.json" with { type: "json" };
@@ -53,7 +52,6 @@ export default async (interaction, page, user) => {
     let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            const emotesAllowed = areEmotesAllowed(interaction);
             let switchCode = user_db.swcode;
             let birthday = user_db.birthday;
             let birthdayParsed = parseDate(birthday);
@@ -81,25 +79,23 @@ export default async (interaction, page, user) => {
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
-            if (emotesAllowed) {
-                try {
-                    if (user.bot) badgesArray.push("🤖");
-                    let guildOwner = await interaction.guild.fetchOwner();
-                    if (guildOwner.id === user.id) badgesArray.push("👑");
-                    if (member && member.premiumSince > 0) badgesArray.push(emotes.NitroBoost);
-                    if (user.flags) {
-                        let userFlagsAll = user.flags.serialize();
-                        let flagsArray = Object.entries(userFlagsAll);
-                        let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
-                        let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
-                        for (const [key, value] of Object.entries(badgeEmotes)) {
-                            if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
-                        };
+            try {
+                if (user.bot) badgesArray.push("🤖");
+                let guildOwner = await interaction.guild.fetchOwner();
+                if (guildOwner.id === user.id) badgesArray.push("👑");
+                if (member && member.premiumSince > 0) badgesArray.push(emotes.NitroBoost);
+                if (user.flags) {
+                    let userFlagsAll = user.flags.serialize();
+                    let flagsArray = Object.entries(userFlagsAll);
+                    let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
+                    let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
+                    for (const [key, value] of Object.entries(badgeEmotes)) {
+                        if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                     };
-                    badgesString = badgesArray.join("");
-                } catch (e) {
-                    // console.log(e);
                 };
+                badgesString = badgesArray.join("");
+            } catch (e) {
+                // console.log(e);
             };
             let joinRank, joinPercentage, joinRankText = null;
             if (interaction.inGuild()) {
