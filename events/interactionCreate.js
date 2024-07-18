@@ -229,7 +229,9 @@ export default async (client, interaction) => {
                             let mineRows = minesweeperComponentsCopy.length; // Count rows by counting action rows
                             let mineColumns = minesweeperComponentsCopy[0].components.length; // Count columns by counting buttons in the first row
                             let mineSize = mineRows * mineColumns; // Total tiles
-                            let mineCount = minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[3]; // Amount of mines
+                            let mineCount = parseInt(minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[3]); // Amount of mines
+                            let mineBet = parseInt(minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[4]); // Bet amount
+                            let mineWinAmount = parseInt(minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[5]); // Money gained on win. In customId instead of recalculated to avoid double hard-coding increase % and unnecessary calculations.
                             // ID will only contain the spoiler emoji as a placeholder when no board has been generated yet
                             let isFirstButton = (minesweeperComponentsCopy[0].components[0].data.custom_id.split("-")[2] == spoilerEmoji);
                             let isLossState = false;
@@ -296,11 +298,18 @@ export default async (client, interaction) => {
                             let matrixString = "";
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
-                                contentReturn = `## You hit a mine! Game over!\n${matrixString}`;
+                                contentReturn = `## You hit a mine! Game over!`;
+                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.`;
+                                contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
-                                contentReturn = `## You won! Congratulations!\nYou received ${moneyPrize}${globalVars.currency}.\n${matrixString}`;
+                                contentReturn = `## You won! Congratulations!\n`;
+                                if (mineBet > 0) {
+                                    contentReturn += `You bet ${mineBet}${globalVars.currency}`;
+                                    moneyPrize = mineWinAmount;
+                                };
+                                contentReturn += `You received ${moneyPrize}${globalVars.currency}.\n${matrixString}`;
                                 addMoney(interaction.user.id, moneyPrize);
                             } else {
                                 contentReturn = interaction.message.content;
@@ -392,12 +401,14 @@ export default async (client, interaction) => {
                     case "amount":
                     case "bet":
                         let currentBalance = await getMoney(interaction.user.id);
-                        let balanceQuarter = Math.floor(currentBalance / 4);
                         let balanceHalf = Math.floor(currentBalance / 2);
+                        let balanceQuarter = Math.floor(currentBalance / 4);
+                        let balanceTenth = Math.floor(currentBalance / 10);
                         let balanceRandom = randomNumber(1, currentBalance);
-                        choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
-                        choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
+                        choices.push({ name: `10% (${balanceTenth}${globalVars.currency})`, value: balanceTenth });
                         choices.push({ name: `Quarter (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
+                        choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
+                        choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
                         choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
                 };
                 // Unique argument tree
