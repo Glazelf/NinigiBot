@@ -34,13 +34,13 @@ export default async (interaction, page, user) => {
         .setStyle(ButtonStyle.Link)
         .setURL(`discord://-/users/${user.id}`);
     profileButtons.addComponents(profileButton);
-    const previousPageButton = new ButtonBuilder()
-        .setCustomId(`usf${page - 1}:${user.id}`)
-        .setStyle(ButtonStyle.Primary)
-        .setEmoji('⬅️');
-    profileButtons.addComponents(previousPageButton);
-    if (page < 1) previousPageButton.setDisabled(true);
     if (member && !user.bot) {
+        const previousPageButton = new ButtonBuilder()
+            .setCustomId(`usf${page - 1}:${user.id}`)
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('⬅️');
+        if (page < 1) previousPageButton.setDisabled(true);
+        profileButtons.addComponents(previousPageButton);
         const nextPageButton = new ButtonBuilder()
             .setCustomId(`usf${page + 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
