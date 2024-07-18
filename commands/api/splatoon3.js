@@ -9,7 +9,7 @@ import fs from "fs";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
-import randomNumber from "../../util/randomNumber.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 let splatoon3Languages = [

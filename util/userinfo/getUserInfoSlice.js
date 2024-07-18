@@ -8,7 +8,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
-import areEmotesAllowed from "../areEmotesAllowed.js";
+import areEmotesAllowed from "../perms/areEmotesAllowed.js";
 
 const number_of_pages = 2;
 

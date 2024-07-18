@@ -3,7 +3,7 @@ import {
     SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import randomNumber from "../../util/randomNumber.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import quotes from "../../objects/quotes.json" with { type: "json" };
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

@@ -6,7 +6,7 @@ import {
     SlashCommandSubcommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import randomNumber from "../../util/randomNumber.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import getMonster from "../../util/mh/getMonster.js";
 import getQuests from "../../util/mh/getQuests.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };

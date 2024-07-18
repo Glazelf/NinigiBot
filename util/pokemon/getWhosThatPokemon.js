@@ -10,7 +10,7 @@ import Canvas from "canvas";
 import { Dex } from '@pkmn/dex';
 import urlExists from "../urlExists.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
-import getRandomObjectItem from "../getRandomObjectItem.js";
+import getRandomObjectItem from "../math/getRandomObjectItem.js";
 import { addMoney } from "../../database/dbServices/user.api.js";
 
 export default async ({ pokemonList, winner, pokemon, reveal }) => {

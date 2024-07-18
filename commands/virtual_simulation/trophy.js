@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import Canvas from "canvas";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
+import areEmotesAllowed from "../../util/perms/areEmotesAllowed.js";
 import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import {

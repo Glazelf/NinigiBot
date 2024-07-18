@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
-import isAdmin from "../../util/isAdmin.js";
+import isAdmin from "../../util/perms/isAdmin.js";
 import deletePersonalRole from "../../util/deletePersonalRole.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };

@@ -9,8 +9,8 @@ import {
     SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
-import isAdmin from "../../util/isAdmin.js";
+import areEmotesAllowed from "../../util/perms/areEmotesAllowed.js";
+import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };

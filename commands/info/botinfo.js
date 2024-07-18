@@ -9,7 +9,7 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import packageJSON from "../../package.json" with { type: "json" };
 

@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import forever from "forever";
 import sendMessage from "../../util/sendMessage.js";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };

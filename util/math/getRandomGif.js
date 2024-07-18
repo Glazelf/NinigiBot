@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../config.json" with { type: "json" };
+import config from "../../config.json" with { type: "json" };
 
 let giphyAPI = "https://api.giphy.com/v1/gifs/random";
 

@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../util/isAdmin.js";
+import isAdmin from "../util/perms/isAdmin.js";
 
 export default async (client, message, newMessage) => {
     try {

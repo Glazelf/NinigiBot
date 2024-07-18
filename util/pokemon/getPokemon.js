@@ -7,8 +7,8 @@ import {
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import urlExists from "../urlExists.js";
-import areEmotesAllowed from "../areEmotesAllowed.js";
-import convertMeterFeet from "../convertMeterFeet.js";
+import areEmotesAllowed from "../perms/areEmotesAllowed.js";
+import convertMeterFeet from "../math/convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
 import getTypeEmotes from "./getTypeEmotes.js";

@@ -14,7 +14,7 @@ import axios from "axios";
 import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/sendMessage.js";
-import randomNumber from "../util/randomNumber.js";
+import randomNumber from "../util/math/randomNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import config from "../config.json" with { type: "json" };
 // Pokémon
@@ -52,7 +52,7 @@ import {
     getBuyableShopTrophies
 } from "../database/dbServices/trophy.api.js";
 // Other util
-import isAdmin from "../util/isAdmin.js";
+import isAdmin from "../util/perms/isAdmin.js";
 import capitalizeString from "../util/capitalizeString.js";
 import getUserInfoSlice from "../util/userinfo/getUserInfoSlice.js";
 import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";

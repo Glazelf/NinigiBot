@@ -4,7 +4,7 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import getTime from "../../util/getTime.js";
 import runCommand from "../../util/runCommand.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
