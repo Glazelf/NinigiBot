@@ -48,7 +48,7 @@ export default async (interaction, ephemeral) => {
         buttonRowArray.push(buttonRow);
     };
 
-    let returnString = `## Here is your minesweeper grid!`;
+    let returnString = `## Here is your Minesweeper grid!`;
     if (correctionString.length > 0) {
         returnString += `\n${correctionString}`;
     } else {
