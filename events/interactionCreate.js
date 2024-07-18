@@ -308,7 +308,7 @@ export default async (client, interaction) => {
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
                                 contentReturn = `## You won! Congratulations!\n`;
                                 if (mineBet > 0) {
-                                    contentReturn += `You bet ${mineBet}${globalVars.currency}`;
+                                    contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
                                 contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}. You now have ${currentBalance + mineBet}${globalVars.currency}\n${matrixString}`;
