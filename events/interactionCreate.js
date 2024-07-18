@@ -411,7 +411,8 @@ export default async (client, interaction) => {
                         choices.push({ name: `Quarter (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
                         choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
                         choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
-                        choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
+                        // Only add random if there is money, due to way randomization works result can be 1 while balance is 0
+                        if (currentBalance > 0) choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {
