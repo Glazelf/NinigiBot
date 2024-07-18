@@ -827,7 +827,7 @@ function getMatrixString(components, bombEmoji) {
         matrixString += "";
         actionRow.components.forEach(button => {
             let emoji = button.data.custom_id.split("-")[2];
-            if (emoji == bombEmoji) matrixString += "\\"; // Base emote for readability
+            // if (emoji == bombEmoji) matrixString += "\\"; // Escape emote for readability but seems to break on mobile and just display :bomb:
             matrixString += `${emoji}`;
         });
         matrixString += "\n";
