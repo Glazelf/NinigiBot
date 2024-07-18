@@ -31,7 +31,6 @@ export default async (gifTags = []) => {
     // if (giphyResponse) data = giphyResponse.data; // Information depth with original function
     if (giphyResponse) data = giphyResponse.data.data; // Information depth with replacement function
     if (!data) return null;
-    let images = data.images;
     if (data.images && data.images.original) {
         return data.images.original.url;
     } else {
