@@ -14,6 +14,7 @@ import axios from "axios";
 import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/sendMessage.js";
+import randomNumber from "../util/randomNumber.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import config from "../config.json" with { type: "json" };
 // Pokémon
@@ -40,7 +41,11 @@ import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { t
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
-import { getEphemeralDefault, addMoney } from "../database/dbServices/user.api.js";
+import {
+    getEphemeralDefault,
+    addMoney,
+    getMoney
+} from "../database/dbServices/user.api.js";
 import {
     getShopTrophies,
     getEventTrophies,
@@ -384,6 +389,16 @@ export default async (client, interaction) => {
                         choices.push({ name: "2 weeks", value: 20160 });
                         choices.push({ name: "1 month", value: 43800 });
                         break;
+                    case "amount":
+                    case "bet":
+                        let currentBalance = await getMoney(interaction.user.id);
+                        let balanceQuarter = Math.floor(currentBalance / 4);
+                        let balanceHalf = Math.floor(currentBalance / 2);
+                        let balanceRandom = randomNumber(1, currentBalance);
+                        choices.push({ name: `All (${currentBalance}${globalVars.currency}}`, value: currentBalance });
+                        choices.push({ name: `Half (${balanceHalf}${globalVars.currency})`, value: balanceHalf });
+                        choices.push({ name: `Quarter (${balanceQuarter}${globalVars.currency})`, value: balanceQuarter });
+                        choices.push({ name: `Random (${balanceRandom}${globalVars.currency})`, value: balanceRandom });
                 };
                 // Unique argument tree
                 switch (interaction.commandName) {

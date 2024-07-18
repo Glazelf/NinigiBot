@@ -31,6 +31,7 @@ const amountOption = new SlashCommandIntegerOption()
     .setName("amount")
     .setDescription("Amount to transfer.")
     .setMinValue(1)
+    .setAutocomplete(true)
     .setRequired(true);
 // User options
 const userOption = new SlashCommandUserOption()
