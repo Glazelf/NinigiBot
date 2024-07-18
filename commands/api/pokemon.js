@@ -25,6 +25,7 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+import emotes from "../../objects/discord/emotes.json" with { type: "json" };
 
 const gens = new Generations(Dex);
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
@@ -218,13 +219,11 @@ export default async (interaction, ephemeral) => {
 
             let boosted = Dex.stats.names[nature.plus];
             let lowered = Dex.stats.names[nature.minus];
-            let arrowUpEmote = "<:arrow_up_red:909901820732784640>";
-            let arrowDownEmote = "<:arrow_down_blue:909903420054437929>";
             let resultString = "Neutral nature, no stat changes.";
             if (boosted && lowered) {
                 if (emotesAllowed) {
-                    boosted = `${arrowUpEmote}${boosted}`;
-                    lowered = `${arrowDownEmote}${lowered}`;
+                    boosted = `${emotes.ArrowUpRed}${boosted}`;
+                    lowered = `${emotes.ArrowDownBlue}${lowered}`;
                 } else {
                     boosted = `Boosted: ${boosted}`;
                     lowered = `Lowered: ${lowered}`;

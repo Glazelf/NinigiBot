@@ -14,6 +14,7 @@ import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
+import emotes from "../../objects/discord/emotes.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
@@ -30,7 +31,6 @@ export default async (interaction, ephemeral) => {
     let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
     let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
 
-    let nitroEmote = "<:nitro_boost:753268592081895605>";
     // Bans
     let banCount = 0;
     try {
@@ -82,7 +82,7 @@ export default async (interaction, ephemeral) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    if (emotesAllowed) boosterString = boosterString + nitroEmote;
+    if (emotesAllowed) boosterString = boosterString + emotes.NitroBoost;
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
