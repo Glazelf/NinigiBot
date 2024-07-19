@@ -428,7 +428,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "whosthat":
             await interaction.deferReply({ ephemeral: ephemeral });
-            allPokemon = allPokemon.filter(pokemon =>
+            allPokemonFiltered = allPokemon.filter(pokemon =>
                 !isIdenticalForm(pokemon.name) &&
                 !pokemon.name.startsWith("Basculin-") &&
                 !pokemon.name.startsWith("Basculegion-") &&
