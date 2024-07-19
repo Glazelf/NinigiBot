@@ -27,7 +27,7 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import emotes from "../../objects/discord/emotes.json" with { type: "json" };
 
 const gens = new Generations(Dex);
-let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const currentYear = new Date().getFullYear();
 
 export default async (interaction, ephemeral) => {
@@ -434,7 +434,7 @@ export default async (interaction, ephemeral) => {
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem")
             );
-            let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemon });
+            let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemonFiltered });
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
