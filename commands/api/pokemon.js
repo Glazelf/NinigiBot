@@ -28,6 +28,7 @@ import emotes from "../../objects/discord/emotes.json" with { type: "json" };
 
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
+const allNatures = Dex.natures.all();
 const currentYear = new Date().getFullYear();
 
 export default async (interaction, ephemeral) => {
@@ -514,6 +515,13 @@ function isIdenticalForm(pokemonName) {
     return false;
 };
 
+// Set nature choices. The max is 25 and there are exactly 25 natures. 
+// If Gamefreak ever adds a 26th nature this will need to be moved back into autocomplete.
+let natureChoices = [];
+allNatures.forEach(nature => {
+    natureChoices.push({ name: nature.name, value: nature.name });
+});
+
 const pokemonOptionName = "pokemon";
 const pokemonOptionDescription = "Pokémon to get info on.";
 const generationOptionName = "generation";
@@ -546,7 +554,7 @@ const moveOption = new SlashCommandStringOption()
 const natureOption = new SlashCommandStringOption()
     .setName("nature")
     .setDescription("Nature to get info on.")
-    .setAutocomplete(true)
+    .setChoices(natureChoices)
     .setRequired(true);
 const formatOption = new SlashCommandStringOption()
     .setName("format")

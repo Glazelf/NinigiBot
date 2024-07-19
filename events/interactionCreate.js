@@ -477,13 +477,6 @@ export default async (client, interaction) => {
                                     if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                 });
                                 break;
-                            case "nature":
-                                let natures = Dex.natures.all();
-                                natures.forEach(nature => {
-                                    if (nature.name.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        nature.exists) choices.push({ name: nature.name, value: nature.name });
-                                });
-                                break;
                             case "format":
                                 let formats = DexSim.formats.all();
                                 formats.forEach(format => {
