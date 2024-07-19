@@ -6,7 +6,7 @@ import emotes from "../objects/discord/emotes.json" with { type: "json" };
 let starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = emotes.NoStar;
-const altboardEmoteID = altboardEmote.replace(">", "").split(":")[2];
+const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
     try {
