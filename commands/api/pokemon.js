@@ -91,9 +91,12 @@ export default async (interaction, ephemeral) => {
 
             let abilityMatches = Object.values(allPokemonGen).filter(pokemon => Object.values(pokemon.abilities).includes(abilityGen.name) && pokemon.exists && pokemon.num > 0);
             abilityMatches = abilityMatches.sort((pokemon1, pokemon2) => pokemon1.num - pokemon2.num);
-            let abilityMatchesString = "";
-            abilityMatches.forEach(match => abilityMatchesString += `${match.name}, `);
-            abilityMatchesString = abilityMatchesString.slice(0, -2);
+            let abilityMatchesArray = [];
+            abilityMatches.forEach(match => {
+                if (!isIdenticalForm(match.name)) abilityMatchesArray.push(match.name);
+            });
+            let abilityMatchesString = abilityMatchesArray.join(", ");
+
             if (abilityMatchesString.length == 0) abilityMatchesString = `No Pokémon has this ability in generation ${generation}.`;
 
             pokemonEmbed
@@ -165,7 +168,6 @@ export default async (interaction, ephemeral) => {
                 let canLearnBool = await genData.learnsets.canLearn(pokemon.name, move.name);
                 if (canLearnBool) moveLearnPool.push(pokemon.name);
             };
-
             let moveLearnPoolString = moveLearnPool.join(", ");
             if (moveLearnPoolString.length > 1024) moveLearnPoolString = `${moveLearnPool.length} Pokémon!`;
             // Capitalization doesn't matter for Bulbapedia URLs
