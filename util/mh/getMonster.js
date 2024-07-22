@@ -6,7 +6,8 @@ import {
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import elementEmoji from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
+import elementEmojis from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
+import ailmentEmojis from "../../objects/monsterhunter/ailmentEmojis.json" with { type: "json" };
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 
@@ -17,7 +18,7 @@ let MHRise = "Monster Hunter Rise";
 let MHW = "Monster Hunter World";
 let MHGU = "Monster Hunter Generations Ultimate";
 
-export default async (interaction, monsterData, ephemeral) => {
+export default async (monsterData) => {
     let gameDBName;
     // Get icon, description and game appearances
     let monsterIcon;
@@ -101,35 +102,10 @@ export default async (interaction, monsterData, ephemeral) => {
     let monsterElements = "";
     let monsterWeaknesses = "";
     let monsterAilments = "";
-    if (monsterData.elements) {
-        monsterData.elements.forEach(element => {
-            let elementString = `${elementEmoji[element]}${element}`;
-            if (monsterElements.length == 0) {
-                monsterElements = elementString;
-            } else {
-                monsterElements += `, ${elementString}`;
-            };
-        });
-    };
-    if (monsterData.weakness) {
-        monsterData.weakness.forEach(element => {
-            let elementString = `${elementEmoji[element]}${element}`;
-            if (monsterWeaknesses.length == 0) {
-                monsterWeaknesses = elementString;
-            } else {
-                monsterWeaknesses += `, ${elementString}`;
-            };
-        });
-    };
-    if (monsterData.ailments) {
-        monsterData.ailments.forEach(ailment => {
-            if (monsterAilments.length == 0) {
-                monsterAilments = ailment;
-            } else {
-                monsterAilments += `, ${ailment}`;
-            };
-        });
-    };
+    if (monsterData.elements) monsterElements = getStringFromObject(monsterData.elements, elementEmojis);
+    if (monsterData.weakness) monsterWeaknesses = getStringFromObject(monsterData.weakness, elementEmojis);
+    if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, ailmentEmojis);
+
     let buttonArray = [];
     let subSpeciesButtons = new ActionRowBuilder();
     // Get subspecies
@@ -175,4 +151,18 @@ export default async (interaction, monsterData, ephemeral) => {
     mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }])
     let messageObject = { embeds: [mhEmbed], components: buttonArray };
     return messageObject;
+};
+
+function getStringFromObject(object, emojis) {
+    let itemArray = [];
+    object.forEach(item => {
+        let itemEmoji = emojis[item];
+        if (itemEmoji) {
+            let itemString = `${itemEmoji}${item}`;
+            itemArray.push(itemString);
+        } else {
+            itemArray.push(item);
+        };
+    });
+    return itemArray.join(", ");
 };
