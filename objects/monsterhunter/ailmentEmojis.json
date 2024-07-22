@@ -17,13 +17,13 @@
     "Sleep": "<:MHAilmentSleep:1265030906972737618>",
     "Bleeding": "<:MHAilmentBleeding:1265031524726866001>",
     "Effluvial": "<:MHAilmentEffluvial:1265031461375967232>",
-    "Leeching": "<:MHAilmentLeeching:1265030662629621761>",
+    "Leeched": "<:MHAilmentLeeched:1265041505467371562>",
     "Snowman": "<:MHAilmentSnowman:1265030694287966350>",
     "Confusion": "<:MHAilmentConfusion:1265030723341910026>",
     "Gunk": "<:MHAilmentGunk:1265030758817464404>",
     "Stench": "<:MHAilmentStench:1265030782083268670>",
     "Webbed": "<:MHAilmentWebbed:1265030806464888834>",
-    "Stunned": "<:MHAilmentStunned:1265030833081942084>",
+    "Stun": "<:MHAilmentStunned:1265030833081942084>",
     "Zombified": "<:MHAilmentZombified:1265030857366966283>",
     "Tired": "<:MHAilmentTired:1265030959116320890>",
     "Tarred": "<:MHAilmentTarred:1265031159419506820>",
@@ -31,5 +31,6 @@
     "Frenzy Virus": "<:MHAilmentFrenzyVirus:1265031497207779359>",
     "Vocal Cord Paralysis": "<:MHAilmentVocalCordParalysis:1265031614350622832>",
     "Ossified": "<:MHAilmentOssified:1265031642314047578>",
-    "Mucus": "<:MHAilmentMucus:1265031670415884360>"
+    "Mucus": "<:MHAilmentMucus:1265031670415884360>",
+    "Defence Down": "<:MHAilmentDefenceDown:1265040813700681882>"
 }
