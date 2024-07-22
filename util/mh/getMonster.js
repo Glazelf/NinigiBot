@@ -24,7 +24,6 @@ export default async (monsterData) => {
     let monsterIcon;
     let monsterBanner = null;
     let monsterDescription;
-    let monsterFooter = "";
     let monsterDanger;
     let gameAppearances = "";
     let mostRecentMainlineGame = MHRise;
@@ -33,12 +32,13 @@ export default async (monsterData) => {
     let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
     monsterData.games.forEach(game => {
         // Add to game appearances list
-        gameAppearances += game.game + "\n";
+        gameAppearances += game.game;
+        if (game.danger) gameAppearances += ` (${game.danger}⭐)`;
+        gameAppearances += "\n";
         // Works because games are in chronological order
         if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
             monsterIcon = `${iconsRepo}${game.image}?raw=true`;
             monsterDescription = game.info;
-            monsterDanger = game.danger;
         };
     });
     // If it isn't in the most recent mainline game; instead use the most recent game it's been in
@@ -97,9 +97,8 @@ export default async (monsterData) => {
         monsterRender = null;
     };
     // Format footer
-    monsterFooter = monsterData.type;
-    if (!monsterData.isLarge) monsterFooter = `Small ${monsterFooter}`;
-    if (monsterDanger) monsterFooter = `${monsterDanger}⭐ ${monsterFooter}`;
+    let monsterType = monsterData.type;
+    if (!monsterData.isLarge) monsterType = `Small ${monsterType}`;
     // Get elements, ailments and weaknesses
     let monsterElements = "";
     let monsterWeaknesses = "";
@@ -141,15 +140,14 @@ export default async (monsterData) => {
 
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
-        .setAuthor({ name: monsterData.name, iconURL: monsterIcon })
+        .setAuthor({ name: `${monsterData.name} (${monsterType})`, iconURL: monsterIcon })
         .setThumbnail(monsterRender)
-        .setImage(monsterBanner)
-        .setFooter({ text: monsterFooter });
+        .setImage(monsterBanner);
     if (monsterDescription) mhEmbed.setDescription(monsterDescription);
     if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
-    mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }]);
+    mhEmbed.addFields([{ name: "Games (Danger):", value: gameAppearances, inline: false }]);
 
     // Second embed lets you add two images to the same embed by setting the same URL but different images
     // let secondImageEmbed = new EmbedBuilder()
