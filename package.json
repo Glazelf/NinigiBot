@@ -24,9 +24,6 @@
     "unique-names-generator": "^4.7.1",
     "xmlhttprequest": "^1.8.0"
   },
-  "devDependencies": {
-    "mocha": "^10.7.0"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write */**/*.js"
