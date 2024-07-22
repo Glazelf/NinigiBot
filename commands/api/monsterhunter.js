@@ -66,7 +66,7 @@ export default async (interaction, ephemeral) => {
         // All quests from a game
         case "questlist":
             let gameName = interaction.options.getString("game");
-            let questsMessageObject = await getQuests({ client: interaction.client, interaction: interaction, gameName: gameName, page: 1 });
+            let questsMessageObject = await getQuests({ interaction: interaction, gameName: gameName, page: 1 });
             return sendMessage({ interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
         // Monsters
         case "monster":
@@ -85,7 +85,7 @@ export default async (interaction, ephemeral) => {
             };
             if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });
 
-            let messageObject = await getMonster(interaction, monsterData, ephemeral);
+            let messageObject = await getMonster(monsterData);
             return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
     };
     return sendMessage({ interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });

@@ -8,7 +8,7 @@ import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
-export default async ({ client, interaction, gameName, page }) => {
+export default async ({ interaction, gameName, page }) => {
     // Add quests matching game title to an array
     let questsTotal = questsJSON.quests.filter(quest => quest.game.toLowerCase() == gameName.toLowerCase());
     if (questsTotal.length == 0) return sendMessage({ interaction: interaction, content: "Could not find any quests for that game. If you are certain this game exists the quest list may still be a work in progress." });

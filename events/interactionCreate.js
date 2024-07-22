@@ -173,7 +173,7 @@ export default async (client, interaction) => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMHMonster(interaction, monsterData);
+                            messageObject = await getMHMonster(monsterData);
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -199,7 +199,7 @@ export default async (client, interaction) => {
                             };
                             if (mhQuestsPage < 1) mhQuestsPage = 1;
                             if (mhQuestsPage > mhQuestsPagesTotal) mhQuestsPage = mhQuestsPagesTotal;
-                            let mhQuestsMessageObject = await getMHQuests({ client: client, interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
+                            let mhQuestsMessageObject = await getMHQuests({ interaction: interaction, gameName: mhQuestsGameName, page: mhQuestsPage });
                             embedsReturn = mhQuestsMessageObject.embeds;
                             componentsReturn = mhQuestsMessageObject.components;
                         } else if (interaction.customId.startsWith("splatfest")) {
