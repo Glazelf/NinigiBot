@@ -53,7 +53,7 @@ export default async (interaction, ephemeral) => {
         if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, ephemeral: true });
         betGain = increaseByPercentageForEach(bet, mines, profitPerMine);
         addMoney(interaction.user.id, -bet);
-        correctionString += `\nYou bet ${bet}${globalVars.currency}. If you win you will receive ${betGain}${globalVars.currency}.`;
+        correctionString += `\nYou bet ${bet}${globalVars.currency}.\nIf you win you will receive ${betGain}${globalVars.currency}.`;
     } else {
         bet = 0;
     };
