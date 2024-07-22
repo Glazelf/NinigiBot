@@ -16,7 +16,7 @@ import { Generations } from '@pkmn/data';
 import sendMessage from "../../util/sendMessage.js";
 import getPokemon from "../../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../../util/pokemon/getWhosThatPokemon.js";
-import getTypeEmotes from "../../util/pokemon/getTypeEmotes.js";
+import getTypeEmojis from "../../util/pokemon/getTypeEmojis.js";
 import capitalizeString from "../../util/capitalizeString.js";
 import leadingZeros from "../../util/leadingZeros.js";
 import getRandomObjectItem from "../../util/math/getRandomObjectItem.js";
@@ -24,7 +24,7 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import emotes from "../../objects/discord/emotes.json" with { type: "json" };
+import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
@@ -179,7 +179,7 @@ export default async (interaction, ephemeral) => {
             if (move.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
-            let type = getTypeEmotes({ type: move.type });
+            let type = getTypeEmojis({ type: move.type });
             let category = move.category;
             let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
@@ -222,8 +222,8 @@ export default async (interaction, ephemeral) => {
             let lowered = Dex.stats.names[nature.minus];
             let resultString = "Neutral nature, no stat changes.";
             if (boosted && lowered) {
-                boosted = `${emotes.ArrowUpRed}${boosted}`;
-                lowered = `${emotes.ArrowDownBlue}${lowered}`;
+                boosted = `${emojis.ArrowUpRed}${boosted}`;
+                lowered = `${emojis.ArrowDownBlue}${lowered}`;
                 resultString = `${boosted}\n${lowered}`;
             };
             pokemonEmbed

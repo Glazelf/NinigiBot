@@ -10,7 +10,7 @@ import urlExists from "../urlExists.js";
 import convertMeterFeet from "../math/convertMeterFeet.js";
 import leadingZeros from "../leadingZeros.js";
 import getCleanPokemonID from "./getCleanPokemonID.js";
-import getTypeEmotes from "./getTypeEmotes.js";
+import getTypeEmojis from "./getTypeEmojis.js";
 import checkBaseSpeciesMoves from "./checkBaseSpeciesMoves.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
@@ -66,8 +66,8 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
     // Typing
     let type1 = pokemonGen.types[0];
     let type2 = pokemonGen.types[1];
-    let typeString = `${getTypeEmotes({ type: type1 })}`;
-    if (type2) typeString += `\n${getTypeEmotes({ type: type2, })}`;
+    let typeString = `${getTypeEmojis({ type: type1 })}`;
+    if (type2) typeString += `\n${getTypeEmojis({ type: type2, })}`;
     // Check type matchups
     let superEffectives = [];
     let resistances = [];
@@ -77,7 +77,7 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
         let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
-        let typeEffectString = getTypeEmotes({ type: type.name, bold: typeEmoteBold });
+        let typeEffectString = getTypeEmojis({ type: type.name, bold: typeEmoteBold });
         if ([2, 4].includes(effectiveness)) superEffectives.push(typeEffectString);
         if ([0.25, 0.5].includes(effectiveness)) resistances.push(typeEffectString);
         if (effectiveness == 0) immunities.push(typeEffectString);
