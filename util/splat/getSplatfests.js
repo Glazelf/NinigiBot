@@ -8,7 +8,7 @@ import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import axios from "axios";
 
-export default async ({ client, interaction, page, region }) => {
+export default async ({ interaction, page, region }) => {
     let splat3Embed = new EmbedBuilder()
         .setTitle("Splatfests")
         .setColor(globalVars.embedColor)

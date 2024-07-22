@@ -17,6 +17,7 @@ let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    await interaction.deferReply({ ephemeral: ephemeral });
 
     let response;
     let giEmbed = new EmbedBuilder()

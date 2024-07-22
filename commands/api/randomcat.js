@@ -17,6 +17,7 @@ let catAAS = "https://cataas.com/cat";
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    await interaction.deferReply({ ephemeral: ephemeral });
 
     let catText = interaction.options.getString("text");
     let standardCatText = "Meow";
