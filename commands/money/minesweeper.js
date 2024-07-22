@@ -47,12 +47,13 @@ export default async (interaction, ephemeral) => {
     };
 
     if (bet) {
+        let minimumMinesBet = 4;
         const currentBalance = await getMoney(interaction.user.id);
-        if (rows == 2 && columns == 2) return sendMessage({ interaction: interaction, content: `You are only allowed to place bets on boards larger than 2x2 to ensure the game is predominantly based on skill.`, ephemeral: true });
+        if (mines < minimumMinesBet) return sendMessage({ interaction: interaction, content: `${correctionString}\nYou are only allowed to place bets with at least ${minimumMinesBet} mines to ensure the game does not favor luck or is too easy.`, ephemeral: true });
         if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, ephemeral: true });
         betGain = increaseByPercentageForEach(bet, mines, profitPerMine);
         addMoney(interaction.user.id, -bet);
-        correctionString += `\nYou bet ${bet}${globalVars.currency}. If you win you will receive ${betGain}${globalVars.currency}.`;
+        correctionString += `\nYou bet ${bet}${globalVars.currency}.\nIf you win you will receive ${betGain}${globalVars.currency}.`;
     } else {
         bet = 0;
     };

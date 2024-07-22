@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
+import elementEmoji from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
 
@@ -103,7 +103,7 @@ export default async (interaction, monsterData, ephemeral) => {
     let monsterAilments = "";
     if (monsterData.elements) {
         monsterData.elements.forEach(element => {
-            let elementString = `${elementEmotes[element]}${element}`;
+            let elementString = `${elementEmoji[element]}${element}`;
             if (monsterElements.length == 0) {
                 monsterElements = elementString;
             } else {
@@ -113,7 +113,7 @@ export default async (interaction, monsterData, ephemeral) => {
     };
     if (monsterData.weakness) {
         monsterData.weakness.forEach(element => {
-            let elementString = `${elementEmotes[element]}${element}`;
+            let elementString = `${elementEmoji[element]}${element}`;
             if (monsterWeaknesses.length == 0) {
                 monsterWeaknesses = elementString;
             } else {

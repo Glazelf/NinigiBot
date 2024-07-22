@@ -7,8 +7,8 @@ import {
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
-import emotes from "../../objects/discord/emotes.json" with { type: "json" };
+import badgeEmojis from "../../objects/discord/badgeEmojis.json" with { type: "json" };
+import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 const number_of_pages = 2;
 
@@ -83,13 +83,13 @@ export default async (interaction, page, user) => {
                 if (user.bot) badgesArray.push("🤖");
                 let guildOwner = await interaction.guild.fetchOwner();
                 if (guildOwner.id === user.id) badgesArray.push("👑");
-                if (member && member.premiumSince > 0) badgesArray.push(emotes.NitroBoost);
+                if (member && member.premiumSince > 0) badgesArray.push(emojis.NitroBoost);
                 if (user.flags) {
                     let userFlagsAll = user.flags.serialize();
                     let flagsArray = Object.entries(userFlagsAll);
                     let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
-                    for (const [key, value] of Object.entries(badgeEmotes)) {
+                    for (const [key, value] of Object.entries(badgeEmojis)) {
                         if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                     };
                 };

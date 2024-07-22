@@ -11,6 +11,7 @@ import {
     TextInputStyle
 } from "discord.js";
 import axios from "axios";
+axios.defaults.timeout = 5000; // Set here since it's the most neutral place where Axios is imported and I don't want to import it in bot.js just to set this value
 import fs from "fs";
 import logger from "../util/logger.js";
 import sendMessage from "../util/sendMessage.js";
@@ -214,7 +215,7 @@ export default async (client, interaction) => {
                                     splatfestPage = parseInt(splatfestPage) - 1;
                                     break;
                             };
-                            let splatfestMessageObject = await getSplatfests({ client: client, interaction: interaction, page: splatfestPage, region: splatfestRegion });
+                            let splatfestMessageObject = await getSplatfests({ interaction: interaction, page: splatfestPage, region: splatfestRegion });
                             embedsReturn = splatfestMessageObject.embeds;
                             componentsReturn = splatfestMessageObject.components;
                         } else if (interaction.customId.includes("minesweeper")) {
@@ -301,7 +302,7 @@ export default async (client, interaction) => {
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
                                 contentReturn = `## You hit a mine! Game over!`;
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}. You now have ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
+                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
@@ -311,7 +312,7 @@ export default async (client, interaction) => {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
-                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}. You now have ${currentBalance + mineBet}${globalVars.currency}\n${matrixString}`;
+                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.\nYour current balance is ${currentBalance + moneyPrize}${globalVars.currency}.\n${matrixString}`;
                                 addMoney(interaction.user.id, moneyPrize);
                             } else {
                                 contentReturn = interaction.message.content;
