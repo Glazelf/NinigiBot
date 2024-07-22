@@ -24,6 +24,7 @@ export default async (monsterData) => {
     let monsterIcon;
     let monsterBanner = null;
     let monsterDescription;
+    let monsterFooter = "";
     let monsterDanger;
     let gameAppearances = "";
     let mostRecentMainlineGame = MHRise;
@@ -95,9 +96,10 @@ export default async (monsterData) => {
         monsterBanner = monsterRender;
         monsterRender = null;
     };
-    // Format size
-    let monsterSize = "Small";
-    if (monsterData.isLarge) monsterSize = "Large";
+    // Format footer
+    monsterFooter = monsterData.type;
+    if (!monsterData.isLarge) monsterFooter = `Small ${monsterFooter}`;
+    if (monsterDanger) monsterFooter = `${monsterDanger}⭐ ${monsterFooter}`;
     // Get elements, ailments and weaknesses
     let monsterElements = "";
     let monsterWeaknesses = "";
@@ -139,12 +141,11 @@ export default async (monsterData) => {
 
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
-        .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
+        .setAuthor({ name: monsterData.name, iconURL: monsterIcon })
         .setThumbnail(monsterRender)
-        .setImage(monsterBanner);
+        .setImage(monsterBanner)
+        .setFooter({ text: monsterFooter });
     if (monsterDescription) mhEmbed.setDescription(monsterDescription);
-    if (!monsterData.isLarge) mhEmbed.addFields([{ name: "Size:", value: monsterSize, inline: true }]);
-    if (monsterDanger) mhEmbed.addFields([{ name: "Danger:", value: `${monsterDanger}⭐`, inline: true }]);
     if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
