@@ -47,7 +47,7 @@ export default async (interaction, ephemeral) => {
     };
 
     if (bet) {
-        let minimumMinesBet = 5;
+        let minimumMinesBet = 4;
         const currentBalance = await getMoney(interaction.user.id);
         if (mines < minimumMinesBet) return sendMessage({ interaction: interaction, content: `${correctionString}\nYou are only allowed to place bets with at least ${minimumMinesBet} mines to ensure the game does not favor luck or is too easy.`, ephemeral: true });
         if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, ephemeral: true });
