@@ -301,7 +301,7 @@ export default async (client, interaction) => {
                             if (isLossState) {
                                 matrixString = getMatrixString(componentsReturn, bombEmoji);
                                 contentReturn = `## You hit a mine! Game over!`;
-                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}. You now have ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
+                                if (mineBet > 0) contentReturn += `\nYou lost ${mineBet}${globalVars.currency}.\nYour current balance is ${Math.max(currentBalance - mineBet, 0)}${globalVars.currency}.`;
                                 contentReturn += `\n${matrixString}`;
                             } else if (isWinState) {
                                 let moneyPrize = mineCount * 10;
@@ -311,7 +311,7 @@ export default async (client, interaction) => {
                                     contentReturn += `You bet ${mineBet}${globalVars.currency}.`;
                                     moneyPrize = mineWinAmount;
                                 };
-                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}. You now have ${currentBalance + mineBet}${globalVars.currency}\n${matrixString}`;
+                                contentReturn += `\nYou received ${moneyPrize}${globalVars.currency}.\nYour current balance is ${currentBalance + mineBet}${globalVars.currency}\n${matrixString}`;
                                 addMoney(interaction.user.id, moneyPrize);
                             } else {
                                 contentReturn = interaction.message.content;
