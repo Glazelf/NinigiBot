@@ -33,7 +33,7 @@ const partials = [
     Partials.User
 ];
 // Presence
-const customStatus = "Chilling in Valor Cavern";
+const customStatus = "💤 Chilling in Valor Cavern";
 // When setting multiple activities including a custom status, only the custom status will be displayed which is weird behaviour inconsistent with normal users but it's no big deal for a bot anyways, it's just visual flair.
 const presenceObject = {
     activities: [{
