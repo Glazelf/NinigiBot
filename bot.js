@@ -70,7 +70,7 @@ async function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
-                    let commandName = file.split(".")[0];
+                    let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);
                 };
