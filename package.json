@@ -5,7 +5,7 @@
   "main": "forever.js",
   "type": "module",
   "dependencies": {
-    "@pkmn/data": "^0.9.9",
+    "@pkmn/data": "^0.9.10",
     "@pkmn/dex": "^0.9.10",
     "@pkmn/sim": "^0.9.10",
     "axios": "^1.7.2",
