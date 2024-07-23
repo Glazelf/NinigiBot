@@ -1,4 +1,3 @@
-import { ActivityType } from "discord.js";
 import getTime from '../util/getTime.js';
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
@@ -33,10 +32,7 @@ export default async (client) => {
         // });
         let timestamp = getTime();
 
-        let presence = initPresence();
-        globalVars.presence = presence;
-        // Set bot status
-        await client.user.setPresence(presence);
+        // await client.user.setPresence(globalVars.presence);
         console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
 
         console.log(`Commands: ${client.commands.size}
@@ -48,9 +44,4 @@ Connected as ${client.user.username}. (${timestamp})`);
     } catch (e) {
         console.log(e);
     };
-};
-
-function initPresence() {
-    let presence = { activities: [{ name: 'the lake theme', type: ActivityType.Listening }], status: 'idle' };
-    return presence;
 };
