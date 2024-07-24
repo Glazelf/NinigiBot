@@ -56,9 +56,7 @@ export default async (interaction) => {
         if (targetRole.position >= userRole.position && interaction.guild.ownerId !== interaction.user.id) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to ban ${member.user.username} (${member.id}).` });
         if (!member.bannable) return sendMessage({ interaction: interaction, content: banFailString });
         // See if target isn't already banned
-        if (bansFetch) {
-            if (bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `**${member.user.username}** (${member.id}) is already banned.` });
-        };
+        if (bansFetch && bansFetch.has(member.id)) return sendMessage({ interaction: interaction, content: `**${member.user.username}** (${member.id}) is already banned.` });
         banReturn = `Banned ${member.user} (${member.id}) for the following reason: ${reasonCodeBlock}`;
         await user.send({ content: dmString })
             .then(message => banReturn += `Succeeded in sending a DM to **${user.username}** with the reason.`)
@@ -74,9 +72,7 @@ export default async (interaction) => {
     } else if (userIDArg) {
         // Try to ban by ID ("hackban") instead
         // See if target isn't already banned
-        if (bansFetch) {
-            if (bansFetch.has(userIDArg)) return sendMessage({ interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
-        };
+        if (bansFetch && bansFetch.has(userIDArg)) return sendMessage({ interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
         banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${reasonCodeBlock}No DM was sent since this ban was by ID or the user was not in the server.`;
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
