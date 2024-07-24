@@ -36,16 +36,22 @@ export default async (client, member) => {
                     type: AuditLogEvent.MemberKick
                 });
                 let kickLog = fetchedLogs.entries.first();
-                // Return if ban exists
-                const banLogs = await member.guild.fetchAuditLogs({
-                    limit: 1,
-                    type: AuditLogEvent.MemberBanAdd
-                });
                 if (kickLog && kickLog.createdTimestamp < (Date.now() - 5000)) kickLog = null;
-                let banLog = banLogs.entries.first();
-                if (banLog && banLog.createdTimestamp < (Date.now() - 5000) && member.id == banLog.target.id) return;
+                // Ignore this log if user is banned, this avoids double logging on ban
+                let bansFetch = null;
+                try {
+                    bansFetch = await member.guild.bans.fetch();
+                } catch (e) {
+                    // console.log(e);
+                    bansFetch = null;
+                };
+                if (bansFetch && bansFetch.has(member.id)) return;
+
+                let executor, target, reason;
                 if (kickLog && kickLog.createdAt > member.joinedAt) {
-                    var { executor, target, reason } = kickLog; // Make this cleaner at some point to avoid using var
+                    executor = kickLog.executor;
+                    target = kickLog.target;
+                    reason = kickLog.reason;
                     if (target.id !== member.id) return;
                     kicked = true;
                     if (reason) reasonText = reason;
