@@ -82,16 +82,16 @@ export default async (interaction, ephemeral) => {
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/application-directory/${interaction.client.user.id}`);
-    const githubButton = new ButtonBuilder() // Unused
-        .setLabel("GitHub")
-        .setStyle(ButtonStyle.Link)
-        .setURL(`https://github.com/${githubURLVars}`);
-    const supportServerButton = new ButtonBuilder() // Unused
-        .setLabel("Support Server")
-        .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+    // const githubButton = new ButtonBuilder()
+    //     .setLabel("GitHub")
+    //     .setStyle(ButtonStyle.Link)
+    //     .setURL(`https://github.com/${githubURLVars}`);
+    // const supportServerButton = new ButtonBuilder()
+    //     .setLabel("Support Server")
+    //     .setStyle(ButtonStyle.Link)
+    //     .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
     const inviteButton = new ButtonBuilder()
-        .setLabel("Invite Bot")
+        .setLabel("Add Bot") // "Add" over "Invite" as bots can be added to users now 
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`);
     let botButtons = new ActionRowBuilder()
