@@ -1,11 +1,10 @@
 import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import emojis from "../objects/discord/emojis.json" with { type: "json" };
 
 let starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
-const altboardEmote = emojis.NoStar;
+const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
