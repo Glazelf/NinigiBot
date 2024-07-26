@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../util/isAdmin.js";
+import isAdmin from "../util/perms/isAdmin.js";
 
 export default async (client, message, newMessage) => {
     try {
@@ -26,13 +26,13 @@ export default async (client, message, newMessage) => {
         let adminBool = isAdmin(botMember);
 
         if ((log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) || adminBool) {
-            // Assets
+            // Attachments
             let messageImage = null; // Very inconsistent, almost never works
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
                 messageImage = message.attachments.first().proxyURL;
-                messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
+                messageAttachmentsTitle += ` (${message.attachments.size})`;
                 message.attachments.forEach(attachment => {
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });

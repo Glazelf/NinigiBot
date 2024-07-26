@@ -5,9 +5,9 @@
   "main": "forever.js",
   "type": "module",
   "dependencies": {
-    "@pkmn/data": "^0.9.8",
-    "@pkmn/dex": "^0.9.8",
-    "@pkmn/sim": "^0.9.8",
+    "@pkmn/data": "^0.9.10",
+    "@pkmn/dex": "^0.9.10",
+    "@pkmn/sim": "^0.9.10",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
     "cron": "^3.1.7",
@@ -23,9 +23,6 @@
     "sqlite3": "^5.1.7",
     "unique-names-generator": "^4.7.1",
     "xmlhttprequest": "^1.8.0"
-  },
-  "devDependencies": {
-    "mocha": "^10.6.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

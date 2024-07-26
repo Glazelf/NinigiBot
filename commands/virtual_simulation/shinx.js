@@ -104,7 +104,11 @@ export default async (interaction, ephemeral) => {
                     returnString = `Shinx is not hungry!`;
                     break;
                 case 'NoFood':
-                    returnString = `Not enough food\nTip: you can buy more using \`/buyfood\``;
+                    const commands = await interaction.client.application.commands.fetch();
+                    let buyFoodCommandName = "buyfood";
+                    const buyFoodCommandId = commands.find(c => c.name == buyFoodCommandName)?.id;
+                    returnString = "Not enough food.";
+                    if (buyFoodCommandId) returnString += `\nTip: you can buy more using </${buyFoodCommandName}:${buyFoodCommandId}>.`;
                     break;
                 case 'Ok':
                     let reactionFeed = getRandomEatingReaction();

@@ -9,13 +9,15 @@ import {
 import sendMessage from "../../util/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
 import axios from "axios";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import packageJSON from "../../package.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
+    await interaction.deferReply({ ephemeral: ephemeral }); // Sometimes the various guild fetches and axios calls make this command time out by a few tenths of seconds
+
     let DiscordJSVersion = packageJSON.dependencies["discord.js"].substring(1,); // Substring is because string starts with ^
     if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
     let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
@@ -80,16 +82,16 @@ export default async (interaction, ephemeral) => {
         .setLabel("App Directory")
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/application-directory/${interaction.client.user.id}`);
-    const githubButton = new ButtonBuilder() // Unused
-        .setLabel("GitHub")
-        .setStyle(ButtonStyle.Link)
-        .setURL(`https://github.com/${githubURLVars}`);
-    const supportServerButton = new ButtonBuilder() // Unused
-        .setLabel("Support Server")
-        .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
+    // const githubButton = new ButtonBuilder()
+    //     .setLabel("GitHub")
+    //     .setStyle(ButtonStyle.Link)
+    //     .setURL(`https://github.com/${githubURLVars}`);
+    // const supportServerButton = new ButtonBuilder()
+    //     .setLabel("Support Server")
+    //     .setStyle(ButtonStyle.Link)
+    //     .setURL(`https://discord.gg/${globalVars.ShinxServerInvite}`);
     const inviteButton = new ButtonBuilder()
-        .setLabel("Invite Bot")
+        .setLabel("Add Bot") // "Add" over "Invite" as bots can be added to users now 
         .setStyle(ButtonStyle.Link)
         .setURL(`https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`);
     let botButtons = new ActionRowBuilder()

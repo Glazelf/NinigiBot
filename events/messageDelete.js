@@ -62,13 +62,13 @@ export default async (client, message) => {
                     isReply = false;
                 };
             };
-            // Assets
+            // Attachments
             let messageImage = null; // Very inconsistent, almost never works
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
                 messageImage = message.attachments.first().proxyURL;
-                messageAttachmentsTitle += ` (${Object.entries(message.attachments).length})`;
+                messageAttachmentsTitle += ` (${message.attachments.size})`;
                 message.attachments.forEach(attachment => {
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });

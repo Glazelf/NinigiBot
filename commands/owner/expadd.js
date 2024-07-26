@@ -4,7 +4,7 @@ import {
     SlashCommandUserOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import { addExperience } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };

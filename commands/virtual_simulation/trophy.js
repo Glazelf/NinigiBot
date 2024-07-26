@@ -9,8 +9,6 @@ import {
 } from "discord.js";
 import Canvas from "canvas";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
-import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import {
     getFullBuyableShopTrophies,
@@ -30,13 +28,13 @@ export default async (interaction, ephemeral) => {
     let canvas, ctx, img, shinx;
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
     let master = interaction.user;
     let trophies;
+    const commands = await interaction.client.application.commands.fetch();
+    const trophyCommandId = commands.find(c => c.name == commandObject.name)?.id;
     switch (interaction.options.getSubcommand()) {
         case "stock":
             trophies = await getFullBuyableShopTrophies(master.id);
-            if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
             trophies.forEach(trophy => {
                 let trophyPriceBlock = codeBlock("diff", `[${trophy.price}]`);
                 let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
@@ -67,7 +65,8 @@ export default async (interaction, ephemeral) => {
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
                 case 'NoTrophy':
-                    returnString = `**${trophy_name}** isn't available.\nTip: check today's stock with \`/trophy stock\``;
+                    returnString = `**${trophy_name}** isn't available.`;
+                    if (trophyCommandId) returnString += `\nTip: check today's stock with </${commandObject.name} stock:${trophyCommandId}>.`;
                     break;
                 case 'HasTrophy':
                     returnString = `You already have **${trophy_name}!**`
@@ -92,7 +91,6 @@ export default async (interaction, ephemeral) => {
                     messageFile = new AttachmentBuilder(canvas.toBuffer());
                     break;
             };
-
             return sendMessage({
                 interaction: interaction,
                 content: returnString,
@@ -111,15 +109,19 @@ export default async (interaction, ephemeral) => {
             trophy_name = interaction.options.getString("trophy");
             res = await getShopTrophyWithName(trophy_name);
             let isShop = true;
-            if (!res) { res = await getEventTrophyWithName(trophy_name); isShop = false; }
             if (!res) {
+                res = await getEventTrophyWithName(trophy_name);
+                isShop = false;
+            };
+            if (!res) {
+                let infoNoResString = `**${trophy_name}** doesn't exist.`;
+                if (trophyCommandId) infoNoResString += `\nTip: check all trophies with </${commandObject.name} list:${trophyCommandId}>.`;
                 return sendMessage({
                     interaction: interaction,
-                    content: `**${trophy_name}** doesn't exist.\nTip: check all trophies with \`/trophy list\``,
+                    content: infoNoResString,
                     ephemeral: true
                 });
             } else {
-                if (!emotesAllowed) res = replaceDiscordEmotes(res, is_array = false);
                 embed
                     .setTitle(`${res.trophy_id}`)
                     .addFields([

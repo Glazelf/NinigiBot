@@ -5,7 +5,7 @@ export default async (client, id) => {
     try {
         // Set bot status
         client.user.setPresence(globalVars.presence);
-        let timestamp = await getTime();
+        let timestamp = getTime();
         // console.log(`Reconnected shard ${id}. (${timestamp})`);
         return;
 

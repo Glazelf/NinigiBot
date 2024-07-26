@@ -5,8 +5,6 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
-import replaceDiscordEmotes from "../../util/trophies/replaceDiscordEmotes.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import { getShinx } from "../../database/dbServices/shinx.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -14,7 +12,6 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    const emotesAllowed = areEmotesAllowed(client, interaction, ephemeral);
     let embed = new EmbedBuilder();
     let avatar = null;
     let master = interaction.user;
@@ -36,7 +33,6 @@ export default async (interaction, ephemeral) => {
                 trophy_string += (trophy.icon + ' ');
             });
             trophy_level += trophies.length;
-            if (!emotesAllowed) trophies = replaceDiscordEmotes(trophies);
 
             embed
                 .setColor(globalVars.embedColor)

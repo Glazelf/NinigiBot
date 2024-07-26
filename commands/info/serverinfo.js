@@ -9,15 +9,14 @@ import {
     SlashCommandBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import areEmotesAllowed from "../../util/areEmotesAllowed.js";
-import isAdmin from "../../util/isAdmin.js";
+import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
+import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
 
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -27,10 +26,9 @@ export default async (interaction, ephemeral) => {
     let guildOwner = await guild.fetchOwner();
     let botMembers = guild.members.cache.filter(member => member.user.bot);
     // let humanMemberCount = guild.members.cache.size - botMembers.size;
-    let managedEmotes = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
-    let unmanagedEmoteCount = guild.emojis.cache.size - managedEmotes.size;
+    let managedEmojis = guild.emojis.cache.filter(emote => emote.managed); // Only managed emote source seems to be Twitch
+    let unmanagedEmoteCount = guild.emojis.cache.size - managedEmojis.size;
 
-    let nitroEmote = "<:nitro_boost:753268592081895605>";
     // Bans
     let banCount = 0;
     try {
@@ -82,7 +80,7 @@ export default async (interaction, ephemeral) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    if (emotesAllowed) boosterString = boosterString + nitroEmote;
+    boosterString = boosterString + emojis.NitroBoost;
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
@@ -134,8 +132,8 @@ export default async (interaction, ephemeral) => {
     if (guild.roles.cache.size > 1) statsString += `\nRoles: ${guild.roles.cache.size - 1}`;
     if (banCount > 0) statsString += `\nBans: ${banCount}`;
     if (guild.premiumSubscriptionCount > 0) statsString += `\nBoosters: ${boosterString}`;
-    let assetString = `\nEmotes: ${unmanagedEmoteCount}/${emoteMax} 😳`;
-    if (managedEmotes.size > 0) assetString += `\nTwitch Emotes: ${managedEmotes.size}`;
+    let assetString = `\nEmojis: ${unmanagedEmoteCount}/${emoteMax} 😳`;
+    if (managedEmojis.size > 0) assetString += `\nTwitch Emojis: ${managedEmojis.size}`;
     assetString += `\nStickers: ${guild.stickers.cache.size}/${stickerMax}`;
 
     const serverEmbed = new EmbedBuilder()

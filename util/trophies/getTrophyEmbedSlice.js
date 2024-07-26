@@ -16,19 +16,17 @@ export default async (offset) => {
         embed.addFields([{ name: "\u200B", value: `${trophy.dataValues.icon} ${trophy.dataValues.trophy_id}`, inline: true }]);
     });
     const navigation_buttons = new ActionRowBuilder();
-    if (trophy_list.buttons.includes('L')) {
-        const leftButton = new ButtonBuilder()
-            .setCustomId('bgd' + (offset - trophies_per_page))
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬅️')
-        navigation_buttons.addComponents(leftButton);
-    };
-    if (trophy_list.buttons.includes('R')) {
-        const rightButton = new ButtonBuilder()
-            .setCustomId('bgd' + (offset + trophies_per_page))
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('➡️')
-        navigation_buttons.addComponents(rightButton);
-    };
+    const leftButton = new ButtonBuilder()
+        .setCustomId('bgd' + (offset - trophies_per_page))
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('⬅️');
+    if (!trophy_list.buttons.includes("L")) leftButton.setDisabled(true);
+    navigation_buttons.addComponents(leftButton);
+    const rightButton = new ButtonBuilder()
+        .setCustomId('bgd' + (offset + trophies_per_page))
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('➡️');
+    if (!trophy_list.buttons.includes("R")) rightButton.setDisabled(true);
+    navigation_buttons.addComponents(rightButton);
     return { embed: embed, components: navigation_buttons };
 };

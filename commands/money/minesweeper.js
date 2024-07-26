@@ -6,9 +6,17 @@ import {
     SlashCommandIntegerOption,
     SlashCommandBooleanOption
 } from "discord.js";
-import Minesweeper from "discord.js-minesweeper";
 import sendMessage from "../../util/sendMessage.js";
+import increaseByPercentageForEach from "../../util/math/increaseByPercentageForEach.js";
+import {
+    getMoney,
+    addMoney
+} from "../../database/dbServices/user.api.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+
+const minGridLength = 2;
+const maxGridLength = 5;
+const profitPerMine = 10; // 10% gain per mine on won bet
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -20,6 +28,8 @@ export default async (interaction, ephemeral) => {
     let minesCapPercentage = 50;
     let rowsArg = interaction.options.getInteger("rows");
     let columnsArg = interaction.options.getInteger("columns");
+    let bet = interaction.options.getInteger("bet");
+    let betGain = 0;
     if (rowsArg) rows = rowsArg;
     if (columnsArg) columns = columnsArg;
 
@@ -28,57 +38,47 @@ export default async (interaction, ephemeral) => {
     if (minesArg) {
         let minesCap = Math.ceil((rows * columns) / 2 - 1); // Cap at 50% mine ratio (otherwise board generation fails idk why)
         if (minesArg > minesCap || minesArg < minesFloor) {
-            correctionString += `\nAmount of mines has to be between ${minesFloor} mine and ${minesCapPercentage}% of the board. Mine count has been adjusted to ${minesCap}.`;
+            correctionString += `\nAmount of mines has to be between ${minesFloor} mine and ${minesCapPercentage}% of the board.`;
             if (minesArg > minesCap) mines = minesCap;
             if (minesArg < minesFloor) mines = minesFloor;
         } else {
             mines = minesArg;
         };
     };
-    const minesweeper = new Minesweeper({
-        rows: rows,
-        columns: columns,
-        mines: mines,
-        emote: 'bomb',
-        returnType: 'matrix',
-    });
-    let bombEmote = "💣";
-    let spoilerEmote = "⬛";
-    let matrix = minesweeper.start();
-    matrix.forEach(arr => {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace("|| :bomb: ||", bombEmote).replace("|| :zero: ||", "0️⃣").replace("|| :one: ||", "1️⃣").replace("|| :two: ||", "2️⃣").replace("|| :three: ||", "3️⃣").replace("|| :four: ||", "4️⃣").replace("|| :five: ||", "5️⃣").replace("|| :six: ||", "6️⃣").replace("|| :seven: ||", "7️⃣").replace("|| :eight: ||", "8️⃣");
-        };
-    });
-    let buttonRowArray = [];
-    let buttonIndex = 0;
-    let rowIndex = 0;
-    matrix.forEach(arr => {
-        let buttonRow = new ActionRowBuilder();
-        arr.forEach(element => {
-            const mineButton = new ButtonBuilder()
-                .setCustomId(`minesweeper${rowIndex}-${buttonIndex}-${element}`)
-                .setStyle(ButtonStyle.Primary)
-                .setEmoji(spoilerEmote);
-            buttonRow.addComponents(mineButton);
-            buttonIndex += 1;
-        });
-        rowIndex += 1;
-        buttonRowArray.push(buttonRow);
-    });
 
-    let returnString = `Here is your minesweeper grid!`;
-    if (correctionString.length > 0) {
-        returnString += `\n${correctionString}`;
+    if (bet) {
+        let minimumMinesBet = 4;
+        const currentBalance = await getMoney(interaction.user.id);
+        if (mines < minimumMinesBet) return sendMessage({ interaction: interaction, content: `${correctionString}\nYou are only allowed to place bets with at least ${minimumMinesBet} mines to ensure the game does not favor luck or is too easy.`, ephemeral: true });
+        if (bet > currentBalance) return sendMessage({ interaction: interaction, content: `You only have ${currentBalance}.`, ephemeral: true });
+        betGain = increaseByPercentageForEach(bet, mines, profitPerMine);
+        addMoney(interaction.user.id, -bet);
+        correctionString += `\nYou bet ${bet}${globalVars.currency}.\nIf you win you will receive ${betGain}${globalVars.currency}.`;
     } else {
-        returnString += `\nMines: ${mines}`;
+        bet = 0;
     };
+
+    let placeholderEmoji = "⬛";
+    let buttonRowArray = [];
+    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+        let buttonRow = new ActionRowBuilder();
+        for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
+            const mineButton = new ButtonBuilder()
+                .setCustomId(`minesweeper${rowIndex}-${columnIndex}-${placeholderEmoji}-${mines}-${bet}-${betGain}`)
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji(placeholderEmoji);
+            buttonRow.addComponents(mineButton);
+        };
+        buttonRowArray.push(buttonRow);
+    };
+
+    let returnString = `## Here is your Minesweeper grid!`;
+    if (correctionString.length > 0) returnString += `\n${correctionString}`;
+    returnString += `\nMines: ${mines}`;
 
     return sendMessage({ interaction: interaction, content: returnString, components: buttonRowArray, ephemeral: ephemeral });
 };
 
-let minGridLength = 2;
-let maxGridLength = 5;
 // Integer options
 const minesOption = new SlashCommandIntegerOption()
     .setName("mines")
@@ -95,6 +95,11 @@ const columnsOption = new SlashCommandIntegerOption()
     .setDescription("Amount of columns.")
     .setMinValue(minGridLength)
     .setMaxValue(maxGridLength);
+const betOption = new SlashCommandIntegerOption()
+    .setName("bet")
+    .setDescription(`Amount of money to bet. Profit is ${profitPerMine}% per mine.`)
+    .setMinValue(1)
+    .setAutocomplete(true);
 // Boolean options
 const ephemeralOption = new SlashCommandBooleanOption()
     .setName("ephemeral")
@@ -106,4 +111,5 @@ export const commandObject = new SlashCommandBuilder()
     .addIntegerOption(minesOption)
     .addIntegerOption(rowsOption)
     .addIntegerOption(columnsOption)
+    .addIntegerOption(betOption)
     .addBooleanOption(ephemeralOption);

@@ -4,7 +4,7 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
-import randomNumber from "../../util/randomNumber.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {

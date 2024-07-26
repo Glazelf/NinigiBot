@@ -4,11 +4,11 @@ import {
     ButtonBuilder,
     ButtonStyle
 } from "discord.js";
-import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
-import badgeEmotes from "../../objects/discord/badgeEmotes.json" with { type: "json" };
-import areEmotesAllowed from "../areEmotesAllowed.js";
+import globalVars from "../../objects/globalVars.json" with { type: "json" };
+import badgeEmojis from "../../objects/discord/badgeEmojis.json" with { type: "json" };
+import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 const number_of_pages = 2;
 
@@ -28,31 +28,30 @@ export default async (interaction, page, user) => {
         .setColor(embedColor)
         .setAuthor({ name: user.username, iconURL: avatar })
         .setThumbnail(serverAvatar);
+    let profileButtons = new ActionRowBuilder();
     const profileButton = new ButtonBuilder()
         .setLabel("Profile")
         .setStyle(ButtonStyle.Link)
         .setURL(`discord://-/users/${user.id}`);
-    let profileButtons = new ActionRowBuilder()
-        .addComponents(profileButton);
-    if (page > 0) {
+    profileButtons.addComponents(profileButton);
+    if (member && !user.bot) {
         const previousPageButton = new ButtonBuilder()
             .setCustomId(`usf${page - 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
-            .setEmoji('⬅️')
+            .setEmoji('⬅️');
+        if (page < 1) previousPageButton.setDisabled(true);
         profileButtons.addComponents(previousPageButton);
-    };
-    if (page < number_of_pages - 1 && member && !user.bot) {
         const nextPageButton = new ButtonBuilder()
             .setCustomId(`usf${page + 1}:${user.id}`)
             .setStyle(ButtonStyle.Primary)
-            .setEmoji('➡️')
+            .setEmoji('➡️');
+        if (page >= number_of_pages - 1) nextPageButton.setDisabled(true);
         profileButtons.addComponents(nextPageButton);
     };
 
     let user_db = await getUser(user.id, ['swcode', 'money', 'birthday', 'user_id', 'food']);
     switch (page) {
         case 0:
-            const emotesAllowed = areEmotesAllowed(interaction);
             let switchCode = user_db.swcode;
             let birthday = user_db.birthday;
             let birthdayParsed = parseDate(birthday);
@@ -80,25 +79,23 @@ export default async (interaction, page, user) => {
             // Profile badges
             let badgesArray = [];
             let badgesString = "";
-            if (emotesAllowed) {
-                try {
-                    if (user.bot) badgesArray.push("🤖");
-                    let guildOwner = await interaction.guild.fetchOwner();
-                    if (guildOwner.id === user.id) badgesArray.push("👑");
-                    if (member && member.premiumSince > 0) badgesArray.push(`<:nitro_boost:753268592081895605>`);
-                    if (user.flags) {
-                        let userFlagsAll = user.flags.serialize();
-                        let flagsArray = Object.entries(userFlagsAll);
-                        let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
-                        let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
-                        for (const [key, value] of Object.entries(badgeEmotes)) {
-                            if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
-                        };
+            try {
+                if (user.bot) badgesArray.push("🤖");
+                let guildOwner = await interaction.guild.fetchOwner();
+                if (guildOwner.id === user.id) badgesArray.push("👑");
+                if (member && member.premiumSince > 0) badgesArray.push(emojis.NitroBoost);
+                if (user.flags) {
+                    let userFlagsAll = user.flags.serialize();
+                    let flagsArray = Object.entries(userFlagsAll);
+                    let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
+                    let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
+                    for (const [key, value] of Object.entries(badgeEmojis)) {
+                        if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
                     };
-                    badgesString = badgesArray.join("");
-                } catch (e) {
-                    // console.log(e);
                 };
+                badgesString = badgesArray.join("");
+            } catch (e) {
+                // console.log(e);
             };
             let joinRank, joinPercentage, joinRankText = null;
             if (interaction.inGuild()) {

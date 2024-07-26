@@ -11,7 +11,7 @@ export default async (client, entitlement) => {
         if (!log) return;
 
         let SKUs = client.application.fetchSKUs();
-        let matchingSKU = SKUs.find(SKU => SKU.id == entitlement.skuId);
+        let matchingSKU = Object.values(SKUs).find(SKU => SKU.id == entitlement.skuId);
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
@@ -19,9 +19,7 @@ export default async (client, entitlement) => {
             .setDescription(`${user.username} (${user.id})'s **${matchingSKU.name}** started.`)
             .setFooter({ text: entitlement.id })
             .setTimestamp();
-
         return log.send({ embeds: [entitlementEmbed] });
-
 
     } catch (e) {
         logger({ exception: e, client: client });

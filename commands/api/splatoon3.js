@@ -9,7 +9,7 @@ import fs from "fs";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
-import randomNumber from "../../util/randomNumber.js";
+import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 let splatoon3Languages = [
@@ -223,6 +223,7 @@ export default async (interaction, ephemeral) => {
                 .addFields([{ name: weaponListTitle, value: allSpecialWeaponMatchesNames, inline: false }])
             break;
         case "schedule":
+            await interaction.deferReply({ ephemeral: ephemeral });
             let inputData = interaction.options.getString("mode");
             let modeName = inputData.split("|")[0];
             let inputMode = inputData.split("|")[1];
@@ -371,6 +372,7 @@ export default async (interaction, ephemeral) => {
             );
             break;
         case "splatnet":
+            await interaction.deferReply({ ephemeral: ephemeral });
             let responseSplatnet = await axios.get(splatnetAPI);
             if (responseSplatnet.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred getting SplatNet3 data. Please try again later.` });
             let splatnetData = responseSplatnet.data.data.gesotown;
@@ -393,10 +395,11 @@ export default async (interaction, ephemeral) => {
             break;
         case "splatfests":
             await interaction.deferReply({ ephemeral: ephemeral });
-            let splatfestReplyObject = await getSplatfests({ client: interaction.client, interaction: interaction, page: 1, region: inputRegion });
+            let splatfestReplyObject = await getSplatfests({ interaction: interaction, page: 1, region: inputRegion });
             return sendMessage({ interaction: interaction, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
             break;
         case "replay":
+            await interaction.deferReply({ ephemeral: ephemeral });
             let replayCode = interaction.options.getString("code");
             replayCode = replayCode.replace("-", "");
             let replayResponse = await axios.get(`${replayAPI}${replayCode.toUpperCase()}`);

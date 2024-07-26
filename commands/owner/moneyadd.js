@@ -8,7 +8,7 @@ import {
     getMoney,
     addMoney
 } from "../../database/dbServices/user.api.js";
-import isOwner from "../../util/isOwner.js";
+import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import config from "../../config.json" with { type: "json" };
 

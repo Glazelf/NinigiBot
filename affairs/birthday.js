@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import logger from '../util/logger.js';
 import globalVars from "../objects/globalVars.json" with { type: "json" };
-import getRandomGif from "../util/getRandomGif.js";
+import getRandomGif from "../util/math/getRandomGif.js";
 import cron from "cron";
 import { getBirthday } from "../database/dbServices/user.api.js";
 

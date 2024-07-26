@@ -6,10 +6,10 @@ import {
 } from "discord.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
-import elementEmotes from "../../objects/monsterhunter/elementEmotes.json" with { type: "json" };
+import elementEmojis from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
+import ailmentEmojis from "../../objects/monsterhunter/ailmentEmojis.json" with { type: "json" };
 import getWikiURL from "../getWikiURL.js";
 import urlExists from "../urlExists.js";
-import areEmotesAllowed from "../areEmotesAllowed.js";
 
 let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
 let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";
@@ -18,9 +18,7 @@ let MHRise = "Monster Hunter Rise";
 let MHW = "Monster Hunter World";
 let MHGU = "Monster Hunter Generations Ultimate";
 
-export default async (interaction, monsterData, ephemeral) => {
-    console.log(beans)
-    const emotesAllowed = areEmotesAllowed(interaction, ephemeral);
+export default async (monsterData) => {
     let gameDBName;
     // Get icon, description and game appearances
     let monsterIcon;
@@ -34,12 +32,13 @@ export default async (interaction, monsterData, ephemeral) => {
     let mostRecentGameEntry = monsterData.games[monsterData.games.length - 1];
     monsterData.games.forEach(game => {
         // Add to game appearances list
-        gameAppearances += game.game + "\n";
+        gameAppearances += game.game;
+        if (game.danger) gameAppearances += ` (${game.danger}⭐)`;
+        gameAppearances += "\n";
         // Works because games are in chronological order
         if (game.game == mostRecentMainlineGame || game.game == fallbackGame1 || game.game == fallbackGame2) {
             monsterIcon = `${iconsRepo}${game.image}?raw=true`;
             monsterDescription = game.info;
-            monsterDanger = game.danger;
         };
     });
     // If it isn't in the most recent mainline game; instead use the most recent game it's been in
@@ -97,44 +96,17 @@ export default async (interaction, monsterData, ephemeral) => {
         monsterBanner = monsterRender;
         monsterRender = null;
     };
-    // Format size
-    let monsterSize = "Small";
-    if (monsterData.isLarge) monsterSize = "Large";
+    // Format footer
+    let monsterType = monsterData.type;
+    if (!monsterData.isLarge) monsterType = `Small ${monsterType}`;
     // Get elements, ailments and weaknesses
     let monsterElements = "";
     let monsterWeaknesses = "";
     let monsterAilments = "";
-    if (monsterData.elements) {
-        monsterData.elements.forEach(element => {
-            let elementString = `${element}`;
-            if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
-            if (monsterElements.length == 0) {
-                monsterElements = elementString;
-            } else {
-                monsterElements += `, ${elementString}`;
-            };
-        });
-    };
-    if (monsterData.weakness) {
-        monsterData.weakness.forEach(element => {
-            let elementString = `${element}`;
-            if (emotesAllowed) elementString = `${elementEmotes[element]}${element}`;
-            if (monsterWeaknesses.length == 0) {
-                monsterWeaknesses = elementString;
-            } else {
-                monsterWeaknesses += `, ${elementString}`;
-            };
-        });
-    };
-    if (monsterData.ailments) {
-        monsterData.ailments.forEach(ailment => {
-            if (monsterAilments.length == 0) {
-                monsterAilments = ailment;
-            } else {
-                monsterAilments += `, ${ailment}`;
-            };
-        });
-    };
+    if (monsterData.elements) monsterElements = getStringFromObject(monsterData.elements, elementEmojis);
+    if (monsterData.weakness) monsterWeaknesses = getStringFromObject(monsterData.weakness, elementEmojis);
+    if (monsterData.ailments) monsterAilments = getStringFromObject(monsterData.ailments, ailmentEmojis);
+
     let buttonArray = [];
     let subSpeciesButtons = new ActionRowBuilder();
     // Get subspecies
@@ -168,16 +140,35 @@ export default async (interaction, monsterData, ephemeral) => {
 
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
-        .setAuthor({ name: `${monsterData.name} (${monsterData.type})`, iconURL: monsterIcon })
+        .setAuthor({ name: `${monsterData.name} (${monsterType})`, iconURL: monsterIcon })
         .setThumbnail(monsterRender)
         .setImage(monsterBanner);
     if (monsterDescription) mhEmbed.setDescription(monsterDescription);
-    if (!monsterData.isLarge) mhEmbed.addFields([{ name: "Size:", value: monsterSize, inline: true }]);
-    if (monsterDanger) mhEmbed.addFields([{ name: "Danger:", value: `${monsterDanger}⭐`, inline: true }]);
     if (monsterElements.length > 0) mhEmbed.addFields([{ name: "Element:", value: monsterElements, inline: true }]);
     if (monsterWeaknesses.length > 0) mhEmbed.addFields([{ name: "Weakness:", value: monsterWeaknesses, inline: true }]);
     if (monsterAilments.length > 0) mhEmbed.addFields([{ name: "Ailment:", value: monsterAilments, inline: true }]);
-    mhEmbed.addFields([{ name: "Games:", value: gameAppearances, inline: false }])
-    let messageObject = { embeds: mhEmbed, components: buttonArray };
+    mhEmbed.addFields([{ name: "Games (Danger):", value: gameAppearances, inline: false }]);
+
+    // Second embed lets you add two images to the same embed by setting the same URL but different images
+    // let secondImageEmbed = new EmbedBuilder()
+    //     .setURL("https://discord.com/")
+    //     .setImage(monsterRender);
+    // mhEmbed.setURL("https://discord.com/") // Not clickable since embed has no title, used to display two big images)
+
+    let messageObject = { embeds: [mhEmbed], components: buttonArray };
     return messageObject;
+};
+
+function getStringFromObject(object, emojis) {
+    let itemArray = [];
+    object.forEach(item => {
+        let itemEmoji = emojis[item];
+        if (itemEmoji) {
+            let itemString = `${itemEmoji}${item}`;
+            itemArray.push(itemString);
+        } else {
+            itemArray.push(item);
+        };
+    });
+    return itemArray.join(", ");
 };

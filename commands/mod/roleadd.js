@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import isAdmin from "../../util/isAdmin.js";
+import isAdmin from "../../util/perms/isAdmin.js";
 
 const requiredPermission = PermissionFlagsBits.ManageRoles;
 const selectDescriptionCharacterLimit = 50;
