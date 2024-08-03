@@ -292,7 +292,7 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
         if (prevoDataEvo.gen <= generation) {
             if (pokemon.gender == prevoDataEvo.gender) pokemonGender = "";
             description = `\nEvolves from ${pokemon.prevo}${pokemonGender}${evoMethod}.`; // Technically uses current Pokémon guaranteed gender and not prevo gender, but since Pokémon can't change gender this works better in cases where only a specific gender of a non-genderlimited Pokémon can evolve
-            if (pokemon.prevo !== previousPokemon.name && pokemon.prevo !== nextPokemon.name) {
+            if (![previousPokemon.name, nextPokemon.name].includes(pokemon.prevo)) {
                 const prevoButton = new ButtonBuilder()
                     .setCustomId(`pkmprevo|${buttonAppend}`)
                     .setLabel(pokemon.prevo)
@@ -317,8 +317,8 @@ export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = 
                     break;
             };
         };
-        if (pokemon.evos[i] !== previousPokemon.name && pokemon.evos[i] !== nextPokemon.name && pokemonEvoData.gen <= generation) {
-            description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
+        description += `\nEvolves into ${pokemon.evos[i]}${evoGender}${evoMethod}.`;
+        if (![previousPokemon.name, nextPokemon.name].includes(pokemon.evos[i]) && pokemonEvoData.gen <= generation) {
             const evoButton = new ButtonBuilder()
                 .setCustomId(`pkmevo${i + 1}|${buttonAppend}`)
                 .setLabel(pokemon.evos[i])
