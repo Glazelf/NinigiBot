@@ -446,8 +446,6 @@ export default async (client, interaction) => {
                     case "pokemon":
                         let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
-                        console.log(focusedOption.name)
-                        console.log(interaction.options.getSubcommand())
                         switch (focusedOption.name) {
                             case "pokemon":
                             case "name":

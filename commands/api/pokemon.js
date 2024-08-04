@@ -332,7 +332,6 @@ export default async (interaction, ephemeral) => {
                 month = date.getMonth();
                 // Test month existence, otherwise default to last month
                 let currentMonnthExists = urlExists(`https://www.smogon.com/stats/${year}-${leadingZeros(month, 2)}/`);
-                console.log(currentMonnthExists)
                 if (!currentMonnthExists) month = month - 1;
             };
             if (month < 1) {
