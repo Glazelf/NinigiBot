@@ -465,6 +465,9 @@ export default async (interaction, ephemeral) => {
                 if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`);
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
+            if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses), inline: true }]);
+            if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances), inline: true }]);
+            if (cardData.retreatCost) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: cardData.retreatCost.map(cost => cardTypeEmojis[cost]).join(""), inline: true }]);
 
             pokemonEmbed
                 .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
@@ -565,6 +568,14 @@ function isIdenticalForm(pokemonName) {
         pokemonName.endsWith("-Tera") || // Ogerpon Tera forms, remove when Serebii adds proper images for them
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
+};
+function getCardMatchupString(matchupArray) {
+    let matchupStringArray = [];
+    matchupArray.forEach(matchup => {
+        const weaknessString = `${cardTypeEmojis[matchup.type]} ${matchup.value}`;
+        matchupStringArray.push(weaknessString);
+    });
+    return matchupStringArray.join("\n");
 };
 
 // Set nature choices. The max is 25 and there are exactly 25 natures. 
