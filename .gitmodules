@@ -10,3 +10,6 @@
 [submodule "submodules/DQM3-db"]
 	path = submodules/DQM3-db
 	url = https://github.com/Glazelf/DQM3-db
+[submodule "submodules/pokemon-tcg-data"]
+	path = submodules/pokemon-tcg-data
+	url = https://github.com/PokemonTCG/pokemon-tcg-data
