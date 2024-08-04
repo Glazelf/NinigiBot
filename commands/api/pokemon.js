@@ -566,7 +566,6 @@ const formatOption = new SlashCommandStringOption()
     .setDescription("Format to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
-const cardOption = new SlashCommandBooleanOption()
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
@@ -656,9 +655,6 @@ const usageSubcommand = new SlashCommandSubcommandBuilder()
     .addIntegerOption(yearOption)
     .addIntegerOption(ratingOption)
     .addBooleanOption(ephemeralOption);
-const cardSubcommand = new SlashCommandSubcommandBuilder()
-    .setName("card")
-    .setDescription("Get info on a card.")
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
@@ -675,5 +671,4 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(formatSubcommand)
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
-    .addSubcommand(cardSubcommand)
     .addSubcommand(whosThatSubcommand);
