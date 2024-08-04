@@ -462,7 +462,10 @@ export default async (interaction, ephemeral) => {
                 let attackName = attack.name;
                 if (attack.damage) attackName += ` - ${attack.damage}`;
                 let attackDescription = attack.text || "No extra effect.";
-                if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]} ${attackName}`);
+                if (attack.cost) {
+                    attackName = ` ${attackName}`; // Space looks better between cost and name
+                    attack.cost.reverse().forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`); // Reverse because we are adding to the front
+                };
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
             if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses), inline: true }]);
