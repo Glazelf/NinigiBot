@@ -572,13 +572,12 @@ function isIdenticalForm(pokemonName) {
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
+// Get weakness/resistance string from dataset's array format
 function getCardMatchupString(matchupArray) {
-    let matchupStringArray = [];
-    matchupArray.forEach(matchup => {
-        const weaknessString = `${cardTypeEmojis[matchup.type]} ${matchup.value}`;
-        matchupStringArray.push(weaknessString);
-    });
-    return matchupStringArray.join("\n");
+    let matchupString = "";
+    matchupArray.forEach(matchup => matchupString += cardTypeEmojis[matchup.type]);
+    matchupString += ` ${matchupArray[0].value}`; // This operates under the assumption that all resistances/weaknesses are equal within each card. Rewrite if this ever changes.
+    return matchupString;
 };
 
 // Set nature choices. The max is 25 and there are exactly 25 natures. 
