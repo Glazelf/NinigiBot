@@ -458,7 +458,8 @@ export default async (interaction, ephemeral) => {
             if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
             if (cardData.attacks) cardData.attacks.forEach(attack => {
-                let attackName = `${attack.name} - ${attack.damage}`;
+                let attackName = attack.name;
+                if (attack.damage) attackName += ` - ${attack.damage}`;
                 let attackDescription = attack.text || "No extra effect.";
                 if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`);
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
