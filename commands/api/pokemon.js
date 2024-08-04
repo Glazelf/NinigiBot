@@ -412,7 +412,7 @@ export default async (interaction, ephemeral) => {
                     genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
-                    usageList.push(`${usageListIndex}.${nameInput} ${usagePercentage}`);
+                    usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
                 let usageListPart1 = [];
@@ -481,11 +481,12 @@ export default async (interaction, ephemeral) => {
             if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options." });
             let setFooter = `${setData.releaseDate}\n`;
             if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
-            let setDescription = `**Cards: (${setData.printedTotal})**`;
+            let setDescription = "";
             setJSON.default.forEach(card => {
-                setDescription += `\n${card.number}. ${card.name}`;
+                setDescription += `\n${card.number} ${card.name}`;
             });
             pokemonEmbed
+                .setAuthor({ name: `${setData.printedTotal} cards` })
                 .setTitle(setData.name)
                 .setThumbnail(setData.images.logo)
                 .setDescription(setDescription)
