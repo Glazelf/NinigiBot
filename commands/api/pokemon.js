@@ -681,4 +681,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(formatSubcommand)
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
+    .addSubcommand(cardSubcommand)
     .addSubcommand(whosThatSubcommand);
