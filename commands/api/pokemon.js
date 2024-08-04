@@ -456,7 +456,7 @@ export default async (interaction, ephemeral) => {
             if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
-            if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`); // Capitalize first character
+            if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
             if (cardData.attacks) cardData.attacks.forEach(attack => {
                 let attackName = attack.name;
