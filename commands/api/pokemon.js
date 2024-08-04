@@ -24,7 +24,9 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+import cardTypeEmojis from "../../objects/pokemon/cardTypeEmojis.json" with { type: "json" };
 import emojis from "../../objects/discord/emojis.json" with { type: "json" };
+import pokemonCardSets from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
@@ -439,7 +441,37 @@ export default async (interaction, ephemeral) => {
             break;
         // Card
         case "card":
-            await interaction.deferReply({ ephemeral: ephemeral });
+            const cardInput = interaction.options.getString("card");
+            const cardSetId = cardInput.split("-")[0];
+            const cardNumberInSet = cardInput.split("-")[1];
+            const cardFailString = "Could not find that card. Please make sure to pick a card from the autocomplete options.";
+            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
+                return null;
+            });
+            if (!setJSON) return sendMessage({ interaction: interaction, content: cardFailString });
+            const cardData = setJSON.default.find(element => element.id == cardInput);
+            if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
+            const setData = pokemonCardSets.find(set => set.id == cardSetId);
+            let cardTitle = `${cardData.name} - ${cardData.hp}HP `; // Space for fomatting with emojis below
+            let cardFooter = `${setData.name} ${cardNumberInSet}/${setData.printedTotal}\n`;
+            if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
+            if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`); // Capitalize first character
+            if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
+            if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
+            if (cardData.attacks) cardData.attacks.forEach(attack => {
+                let attackName = `${attack.name} - ${attack.damage}`;
+                if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`);
+                pokemonEmbed.addFields([{ name: attackName, value: attack.text, inline: false }]);
+            });
+
+            pokemonEmbed
+                .setAuthor({ name: `${cardData.subtypes.join(", ")} ${cardData.supertype}` })
+                .setTitle(cardTitle)
+                .setImage(cardData.images.large)
+                .setFooter({ text: cardFooter, iconURL: setData.images.symbol });
+            if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
+            break;
+        case "cardset":
             break;
         // Pokémon
         case "pokemon":
@@ -571,6 +603,11 @@ const cardOption = new SlashCommandStringOption()
     .setDescription("Pick a card. Any card.")
     .setAutocomplete(true)
     .setRequired(true);
+const cardSetOption = new SlashCommandStringOption()
+    .setName("name")
+    .setDescription("Specify set by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
@@ -665,6 +702,11 @@ const cardSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Get info on a card.")
     .addStringOption(cardOption)
     .addBooleanOption(ephemeralOption);
+const cardSetSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("cardset")
+    .setDescription("Get info on a card set.")
+    .addStringOption(cardSetOption)
+    .addBooleanOption(ephemeralOption);
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
@@ -682,4 +724,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
     .addSubcommand(cardSubcommand)
+    .addSubcommand(cardSetSubcommand)
     .addSubcommand(whosThatSubcommand);
