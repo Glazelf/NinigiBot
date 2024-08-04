@@ -26,7 +26,7 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import cardTypeEmojis from "../../objects/pokemon/cardTypeEmojis.json" with { type: "json" };
 import emojis from "../../objects/discord/emojis.json" with { type: "json" };
-import pokemonCardSets from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
@@ -443,35 +443,51 @@ export default async (interaction, ephemeral) => {
         case "card":
             const cardInput = interaction.options.getString("card");
             const cardSetId = cardInput.split("-")[0];
-            const cardNumberInSet = cardInput.split("-")[1];
             const cardFailString = "Could not find that card. Please make sure to pick a card from the autocomplete options.";
-            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
+            const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
                 return null;
             });
-            if (!setJSON) return sendMessage({ interaction: interaction, content: cardFailString });
-            const cardData = setJSON.default.find(element => element.id == cardInput);
+            if (!cardSetJSON) return sendMessage({ interaction: interaction, content: cardFailString });
+            const cardData = cardSetJSON.default.find(element => element.id == cardInput);
             if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
-            const setData = pokemonCardSets.find(set => set.id == cardSetId);
+            const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
             let cardTitle = `${cardData.name} - ${cardData.hp}HP `; // Space for fomatting with emojis below
-            let cardFooter = `${setData.name} ${cardNumberInSet}/${setData.printedTotal}\n`;
+            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
             if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`); // Capitalize first character
             if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
             if (cardData.attacks) cardData.attacks.forEach(attack => {
                 let attackName = `${attack.name} - ${attack.damage}`;
+                let attackDescription = attack.text || "No extra effect.";
                 if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`);
-                pokemonEmbed.addFields([{ name: attackName, value: attack.text, inline: false }]);
+                pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
 
             pokemonEmbed
                 .setAuthor({ name: `${cardData.subtypes.join(", ")} ${cardData.supertype}` })
                 .setTitle(cardTitle)
                 .setImage(cardData.images.large)
-                .setFooter({ text: cardFooter, iconURL: setData.images.symbol });
+                .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
             if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
             break;
         case "cardset":
+            const setData = pokemonCardSetsJSON.find(element => element.id == nameInput);
+            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
+                return null;
+            });
+            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options." });
+            let setFooter = `${setData.releaseDate}\n`;
+            if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
+            let setDescription = `**Cards: (${setData.printedTotal})**`;
+            setJSON.default.forEach(card => {
+                setDescription += `\n${card.number}. ${card.name}`;
+            });
+            pokemonEmbed
+                .setTitle(setData.name)
+                .setThumbnail(setData.images.logo)
+                .setDescription(setDescription)
+                .setFooter({ text: setFooter, iconURL: setData.images.symbol });
             break;
         // Pokémon
         case "pokemon":

@@ -24,7 +24,7 @@ import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
-import pokemonCardSets from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
+import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
@@ -98,6 +98,7 @@ export default async (client, interaction) => {
         if (inCommandInteractions.includes(interaction.customId)) return;
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
+        let valuesByDate = {}; // Values that need to be timesorted
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -497,6 +498,16 @@ export default async (client, interaction) => {
                                             if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
                                         });
                                         break;
+                                    case "cardset":
+                                        pokemonCardSetsJSON.forEach(set => {
+                                            const setReleaseDateSplit = set.releaseDate.split("/");
+                                            const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
+                                            if (set.name.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                                valuesByDate[set.id] = setReleaseDate;
+                                                choices.push({ name: set.name, value: set.id });
+                                            };
+                                        });
+                                        break;
                                 };
                                 break;
                             case "format":
@@ -514,20 +525,17 @@ export default async (client, interaction) => {
                                 });
                                 break;
                             case "card":
-                                let cardsByDate = {};
                                 for await (const card of pokemonCardsAll) {
                                     const pokemonCardSetId = card.id.split("-")[0];
-                                    const pokemonCardNumberInSet = card.id.split("-")[1];
-                                    const pokemonCardSet = pokemonCardSets.find((element) => element.id == pokemonCardSetId);
+                                    const pokemonCardSet = pokemonCardSetsJSON.find((element) => element.id == pokemonCardSetId);
                                     const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
                                     const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
-                                    const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${pokemonCardNumberInSet}/${pokemonCardSet.printedTotal}`;
+                                    const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${card.number}/${pokemonCardSet.printedTotal}`;
                                     if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
-                                        cardsByDate[card.id] = pokemonCardReleaseDate;
+                                        valuesByDate[card.id] = pokemonCardReleaseDate;
                                         choices.push({ name: cardOptionString, value: card.id });
                                     };
                                 };
-                                choices.sort((a, b) => cardsByDate[b.value] - cardsByDate[a.value]); // Sort from new to old
                                 break;
                         };
                         break;
@@ -803,6 +811,7 @@ export default async (client, interaction) => {
                         break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
+                if (Object.keys(valuesByDate).length > 0) choices.sort((a, b) => valuesByDate[b.value] - valuesByDate[a.value]); // Sort from new to old
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
                 if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
