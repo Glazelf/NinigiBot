@@ -26,10 +26,10 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
+const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const allNatures = Dex.natures.all();
-const currentYear = new Date().getFullYear();
 
 export default async (interaction, ephemeral) => {
     // Command settings
