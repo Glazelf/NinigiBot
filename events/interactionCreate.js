@@ -519,8 +519,7 @@ export default async (client, interaction) => {
                     case "splatoon3":
                         let languageInput = interaction.options.getString("language");
                         if (!languageInput) languageInput = "EUen";
-                        let languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } });
-                        languageJSON = languageJSON.default;
+                        let languageJSON = globalVars.splatoon3LanguageJSONs[languageInput];
                         switch (focusedOption.name) {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
