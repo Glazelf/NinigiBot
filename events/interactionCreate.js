@@ -24,21 +24,22 @@ import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
+import pokemonCardSets from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
-import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
-import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
+import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
 // DQM3
-import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json"};
-import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json"};
-// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json"};
-import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json"};
-import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json"};
-import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
-import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
+import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json" };
+import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
+// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json" };
+import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json" };
+import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json" };
+import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
+import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
@@ -459,6 +460,7 @@ export default async (client, interaction) => {
                     case "pokemon":
                         let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
+                        console.log("am here")
                         switch (focusedOption.name) {
                             case "pokemon":
                             case "name":
@@ -511,6 +513,15 @@ export default async (client, interaction) => {
                                 ratings.forEach(rating => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
+                                break;
+                            case "card":
+                                console.log("am here")
+                                pokemonCardsAll.forEach(card => {
+                                    let cardOptionName = "";
+                                    const pokemonCardSetId = card.id.split("-")[0];
+                                    const pokemonCardSetName = pokemonCardSets.find((element) => element.id == pokemonCardSetId);
+                                    console.log(pokemonCardSetName)
+                                })
                                 break;
                         };
                         break;
