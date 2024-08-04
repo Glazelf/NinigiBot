@@ -460,7 +460,6 @@ export default async (client, interaction) => {
                     case "pokemon":
                         let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
-                        console.log("am here")
                         switch (focusedOption.name) {
                             case "pokemon":
                             case "name":
@@ -515,13 +514,20 @@ export default async (client, interaction) => {
                                 });
                                 break;
                             case "card":
-                                console.log("am here")
-                                pokemonCardsAll.forEach(card => {
-                                    let cardOptionName = "";
+                                let cardsByDate = {};
+                                for await (const card of pokemonCardsAll) {
                                     const pokemonCardSetId = card.id.split("-")[0];
-                                    const pokemonCardSetName = pokemonCardSets.find((element) => element.id == pokemonCardSetId);
-                                    console.log(pokemonCardSetName)
-                                })
+                                    const pokemonCardNumberInSet = card.id.split("-")[1];
+                                    const pokemonCardSet = pokemonCardSets.find((element) => element.id == pokemonCardSetId);
+                                    const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
+                                    const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
+                                    const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${pokemonCardNumberInSet}/${pokemonCardSet.printedTotal}`;
+                                    if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                        cardsByDate[card.id] = pokemonCardReleaseDate;
+                                        choices.push({ name: cardOptionString, value: card.id });
+                                    };
+                                };
+                                choices.sort((a, b) => cardsByDate[b.value] - cardsByDate[a.value]); // Sort from new to old
                                 break;
                         };
                         break;
