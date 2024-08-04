@@ -64,14 +64,12 @@ const gens = new Generations(Dex);
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
 // Persona 5
 // Submodule is documented in persona5 command
-let skillMapRoyal;
+let skillMapRoyal, personaMapRoyal, itemMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
-let personaMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
-let itemMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
 // Genshin Impact
-let giAPI = `https://genshin.jmp.blue/`;
+const giAPI = `https://genshin.jmp.blue/`;
 
 export default async (client, interaction) => {
     try {
