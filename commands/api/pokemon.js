@@ -44,7 +44,7 @@ export default async (interaction, ephemeral) => {
     if (shinyArg === true) shinyBool = true;
     // Variables
     let embedColor = globalVars.embedColor;
-    let pokemonName = interaction.options.getString("pokemon");
+    let nameInput = interaction.options.getString("name");
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles = null;
     let nameBulbapedia = null;
@@ -56,14 +56,13 @@ export default async (interaction, ephemeral) => {
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
     let pokemon = null;
-    if (pokemonName) pokemon = Dex.species.get(pokemonName);
-    let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
-    if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
+    if (nameInput) pokemon = Dex.species.get(nameInput);
+    let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
+    if (nameInput && nameInput.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
-    let moveSearch = interaction.options.getString("move");
-    let move = Dex.moves.get(moveSearch);
+    let move = Dex.moves.get(nameInput);
     let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
     // Embed initialization
     let pokemonEmbed = new EmbedBuilder();
@@ -71,9 +70,8 @@ export default async (interaction, ephemeral) => {
     switch (interaction.options.getSubcommand()) {
         // Abilities
         case "ability":
-            let abilitySearch = interaction.options.getString("ability");
-            let ability = Dex.abilities.get(abilitySearch);
-            let abilityGen = genData.abilities.get(abilitySearch);
+            let ability = Dex.abilities.get(nameInput);
+            let abilityGen = genData.abilities.get(nameInput);
             // let abilityGen = genData.abilities.get(abilitySearch);
             let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
@@ -107,9 +105,8 @@ export default async (interaction, ephemeral) => {
             break;
         // Items
         case "item":
-            let itemSearch = interaction.options.getString("item");
-            let item = Dex.items.get(itemSearch);
-            let itemGen = genData.items.get(itemSearch);
+            let item = Dex.items.get(nameInput);
+            let itemGen = genData.items.get(nameInput);
             let generationFooter = generation; // Might be usefull to move to top of file
             let itemIsFuture = (item.gen > generation);
             let itemIsAvailable = (itemGen == undefined);
@@ -146,7 +143,7 @@ export default async (interaction, ephemeral) => {
             break;
         // Moves
         case "move":
-            let moveGen = genData.moves.get(moveSearch);
+            let moveGen = genData.moves.get(nameInput);
             let moveIsAvailable = true;
             if (!moveGen) {
                 moveGen = move;
@@ -214,8 +211,7 @@ export default async (interaction, ephemeral) => {
             break;
         // Natures
         case "nature":
-            let natureSearch = interaction.options.getString("nature");
-            let nature = Dex.natures.get(natureSearch);
+            let nature = Dex.natures.get(nameInput);
             if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.` });
 
             let boosted = Dex.stats.names[nature.plus];
@@ -281,7 +277,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "learn":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${nameInput}\`.` });
             // Set variables
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
@@ -377,11 +373,11 @@ export default async (interaction, ephemeral) => {
             let usageRank = 0;
             let genericDataSplitPokemon = null;
             let pokemonDataSplitLine = null;
-            if (pokemonName) {
-                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // Space is to exclude matching more popular subforms
-                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
+            if (nameInput) {
+                let usagePokemonString = usageArray.find(element => element.startsWith(nameInput + " ")); // Space is to exclude matching more popular subforms
+                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${nameInput} in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
-                genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
@@ -395,7 +391,7 @@ export default async (interaction, ephemeral) => {
                 let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
                 let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
                 pokemonEmbed
-                    .setTitle(`${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
+                    .setTitle(`${nameInput} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                     .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
@@ -410,12 +406,12 @@ export default async (interaction, ephemeral) => {
                 let usageList = [];
                 let usageListIndex = 1;
                 await usageArray.forEach(element => {
-                    pokemonName = element.split("Raw count")[0].trim();
+                    nameInput = element.split("Raw count")[0].trim();
                     // Percentage determination copied from generic usage data parsing for specific pokemon
-                    genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                    genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
-                    usageList.push(`${usageListIndex}.${pokemonName} ${usagePercentage}`);
+                    usageList.push(`${usageListIndex}.${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
                 let usageListPart1 = [];
@@ -441,6 +437,10 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
+            break;
+        // Card
+        case "card":
+            await interaction.deferReply({ ephemeral: ephemeral });
             break;
         // Pokémon
         case "pokemon":
@@ -524,37 +524,41 @@ allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });
 
-const pokemonOptionName = "pokemon";
 const pokemonOptionDescription = "Pokémon to get info on.";
 const generationOptionName = "generation";
 const generationOptionDescription = "Generation to use.";
 // String options
 const pokemonOption = new SlashCommandStringOption()
-    .setName(pokemonOptionName)
+    .setName("pokemon") // Named differently since it's only used in usage subcommand
     .setDescription(pokemonOptionDescription)
     .setAutocomplete(true);
 const pokemonOptionRequired = new SlashCommandStringOption()
-    .setName(pokemonOptionName)
+    .setName("pokemon")
+    .setDescription(pokemonOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const pokemonOptionRequiredName = new SlashCommandStringOption()
+    .setName("name")
     .setDescription(pokemonOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
 const abilityOption = new SlashCommandStringOption()
-    .setName("ability")
+    .setName("name")
     .setDescription("Ability to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
 const itemOption = new SlashCommandStringOption()
-    .setName("item")
+    .setName("name")
     .setDescription("Item to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
 const moveOption = new SlashCommandStringOption()
-    .setName("move")
+    .setName("name")
     .setDescription("Move to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
 const natureOption = new SlashCommandStringOption()
-    .setName("nature")
+    .setName("name")
     .setDescription("Nature to get info on.")
     .setChoices(natureChoices)
     .setRequired(true);
@@ -563,6 +567,7 @@ const formatOption = new SlashCommandStringOption()
     .setDescription("Format to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
+const cardOption = new SlashCommandBooleanOption()
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
@@ -604,7 +609,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
 const pokemonSubcommand = new SlashCommandSubcommandBuilder()
     .setName("pokemon")
     .setDescription("Get info on a Pokémon.")
-    .addStringOption(pokemonOptionRequired)
+    .addStringOption(pokemonOptionRequiredName)
     .addIntegerOption(generationOption)
     .addBooleanOption(learnsetOption)
     .addBooleanOption(shinyOption)
@@ -652,6 +657,9 @@ const usageSubcommand = new SlashCommandSubcommandBuilder()
     .addIntegerOption(yearOption)
     .addIntegerOption(ratingOption)
     .addBooleanOption(ephemeralOption);
+const cardSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("card")
+    .setDescription("Get info on a card.")
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
@@ -668,4 +676,5 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(formatSubcommand)
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
+    .addSubcommand(cardSubcommand)
     .addSubcommand(whosThatSubcommand);

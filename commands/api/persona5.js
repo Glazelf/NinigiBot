@@ -33,14 +33,14 @@ export default async (interaction, ephemeral) => {
 
     let p5Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
+    let nameInput = interaction.options.getString("name");
 
     switch (interaction.options.getSubcommand()) {
         case "persona":
             // TODO: use calculator to calc paths to fuse this monster
-            let personaInput = interaction.options.getString("persona");
-            let personaObject = personaMapRoyal[personaInput];
+            let personaObject = personaMapRoyal[nameInput];
             if (!personaObject) return sendMessage({ interaction: interaction, content: `Could not find that Persona.` });
-            let personaWikiName = personaInput.replace(/ /g, "_");
+            let personaWikiName = nameInput.replace(/ /g, "_");
             if (personaWikiName == "Mara") personaWikiName = "Mara_FF";
             let personaImageFile = `${personaWikiName}_P5R.jpg`;
             let personaImage = getWikiURL(personaImageFile, personaWiki);
@@ -57,7 +57,7 @@ export default async (interaction, ephemeral) => {
             let personaItem = getItemString(personaObject.item);
             let personaItemAlarm = getItemString(personaObject.itemr);
             p5Embed
-                .setTitle(`${personaInput} (${personaObject.arcana})`)
+                .setTitle(`${nameInput} (${personaObject.arcana})`)
                 .setDescription(elementalMatchup)
                 .setImage(personaImage)
                 .addFields([
@@ -68,8 +68,7 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "skill":
-            let skillInput = interaction.options.getString("skill");
-            let skillObject = skillMapRoyal[skillInput];
+            let skillObject = skillMapRoyal[nameInput];
             if (!skillObject || skillObject.element == "trait") return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
             let skillPersonas = "";
             if (skillObject.unique) {
@@ -81,30 +80,28 @@ export default async (interaction, ephemeral) => {
                 };
             };
             p5Embed
-                .setTitle(`${skillInput} (${capitalizeString(skillObject.element)})`)
+                .setTitle(`${nameInput} (${capitalizeString(skillObject.element)})`)
                 .setDescription(skillObject.effect)
                 .addFields([{ name: "Personas:", value: skillPersonas, inline: false }]);
             break;
         case "trait":
-            let traitInput = interaction.options.getString("trait");
-            let traitObject = skillMapRoyal[traitInput];
+            let traitObject = skillMapRoyal[nameInput];
             if (!traitObject || traitObject.element !== "trait") return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
             let traitPersonas = Object.keys(traitObject.personas).join("\n");
             p5Embed
-                .setTitle(traitInput)
+                .setTitle(nameInput)
                 .setDescription(traitObject.effect)
                 .addFields([{ name: "Personas:", value: traitPersonas, inline: false }]);
             break;
         case "item":
-            let itemInput = interaction.options.getString("item");
-            let itemObject = itemMapRoyal[itemInput];
+            let itemObject = itemMapRoyal[nameInput];
             if (!itemObject) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
             if (itemObject.type && itemObject.description) {
                 p5Embed.addFields([{ name: itemObject.type, value: itemObject.description, inline: false }]);
             } else if (itemObject.skillCard) {
-                p5Embed.addFields([{ name: `Skill Card:`, value: `Teaches a Persona ${itemInput}.`, inline: false }]);
+                p5Embed.addFields([{ name: `Skill Card:`, value: `Teaches a Persona ${nameInput}.`, inline: false }]);
             };
-            p5Embed.setTitle(itemInput);
+            p5Embed.setTitle(nameInput);
     };
     return sendMessage({ interaction: interaction, embeds: p5Embed, ephemeral: ephemeral, components: buttonArray });
 };
@@ -126,22 +123,22 @@ function getItemString(string) {
 
 // String options
 const personaOption = new SlashCommandStringOption()
-    .setName("persona")
+    .setName("name")
     .setDescription("Specify Persona by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const skillOption = new SlashCommandStringOption()
-    .setName("skill")
+    .setName("name")
     .setDescription("Specify skill by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const traitOption = new SlashCommandStringOption()
-    .setName("trait")
+    .setName("name")
     .setDescription("Specify trait by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const itemOption = new SlashCommandStringOption()
-    .setName("item")
+    .setName("name")
     .setDescription("Specify item by name.")
     .setAutocomplete(true)
     .setRequired(true);

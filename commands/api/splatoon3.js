@@ -60,7 +60,7 @@ export default async (interaction, ephemeral) => {
     if (!languageKey) languageKey = "EUen";
     let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`, { assert: { type: "json" } });
     languageJSON = languageJSON.default;
-    let inputID;
+    let inputID = interaction.options.getString("name");
     let inputRegion = interaction.options.getString("region");
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
     let star = "⭐";
@@ -75,7 +75,6 @@ export default async (interaction, ephemeral) => {
         .setColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
         case "clothing":
-            inputID = interaction.options.getString("clothing");
             // Get clothing type as added in events/interactionCreate.js
             let inputIDSplit = inputID.split("_");
             let clothingType = inputIDSplit[inputIDSplit.length - 1];
@@ -128,7 +127,6 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "weapon":
-            inputID = interaction.options.getString("weapon");
             let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
             if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
 
@@ -170,7 +168,6 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "subweapon":
-            inputID = interaction.options.getString("subweapon");
             let subweaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                 let weaponSubID = weapon.SubWeapon.split("/");
                 weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
@@ -197,7 +194,6 @@ export default async (interaction, ephemeral) => {
                 .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }]);
             break;
         case "special":
-            inputID = interaction.options.getString("special");
             let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                 let weaponSpecialID = weapon.SpecialWeapon.split("/");
                 weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
@@ -495,27 +491,23 @@ function getGearString(gear, type) {
 };
 
 // String options
-const languageOption = new SlashCommandStringOption()
-    .setName("language")
-    .setDescription("Specify a language")
-    .setChoices(splatoon3Languages);
 const clothingOption = new SlashCommandStringOption()
-    .setName("clothing")
+    .setName("name")
     .setDescription("Specify a piece of clothing by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const weaponOption = new SlashCommandStringOption()
-    .setName("weapon")
+    .setName("name")
     .setDescription("Specify a weapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const subweaponOption = new SlashCommandStringOption()
-    .setName("subweapon")
+    .setName("name")
     .setDescription("Specify a subweapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const specialOption = new SlashCommandStringOption()
-    .setName("special")
+    .setName("name")
     .setDescription("Specify a special weapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
@@ -524,6 +516,10 @@ const modeOption = new SlashCommandStringOption()
     .setDescription("Specify a mode")
     .setAutocomplete(true)
     .setRequired(true);
+const languageOption = new SlashCommandStringOption()
+    .setName("language")
+    .setDescription("Specify a language")
+    .setChoices(splatoon3Languages);
 const regionOption = new SlashCommandStringOption()
     .setName("region")
     .setDescription("Specify a region. Default is EU.")

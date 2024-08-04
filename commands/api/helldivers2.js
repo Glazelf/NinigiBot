@@ -24,7 +24,7 @@ export default async (interaction, ephemeral) => {
 
     switch (interaction.options.getSubcommand()) {
         case "planet":
-            let inputPlanet = interaction.options.getString("planet");
+            let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
             let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
@@ -80,7 +80,7 @@ export default async (interaction, ephemeral) => {
 
 // String options
 const planetOption = new SlashCommandStringOption()
-    .setName("planet")
+    .setName("name")
     .setDescription("Specify planet by name.")
     .setAutocomplete(true)
     .setRequired(true);

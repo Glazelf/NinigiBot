@@ -22,14 +22,14 @@ export default async (interaction, ephemeral) => {
     let response;
     let giEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
+    let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
             giAPI += `characters/`;
-            let characterName = interaction.options.getString("character").toLowerCase();
             let detailed = false;
             let detailedArg = interaction.options.getBoolean("detailed");
             if (detailedArg === true) detailed = true;
-            response = await axios.get(giAPI + characterName);
+            response = await axios.get(giAPI + nameInput);
             if (response.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred, make sure that character exists.` });
             let character = response.data;
             let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
@@ -80,8 +80,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "weapon":
             giAPI += `weapons/`;
-            let weaponName = interaction.options.getString("weapon").toLowerCase();
-            response = await axios.get(giAPI + weaponName);
+            response = await axios.get(giAPI + nameInput);
             let weapon = response.data;
 
             let weaponThumbnailFile = `Weapon_${weapon.name}.png`;
@@ -99,8 +98,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "artifact":
             giAPI += `artifacts/`;
-            let artifactName = interaction.options.getString("artifact").toLowerCase();
-            response = await axios.get(giAPI + artifactName);
+            response = await axios.get(giAPI + nameInput);
             let artifact = response.data;
             giEmbed
                 .setTitle(artifact.name)
