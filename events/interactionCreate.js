@@ -464,6 +464,7 @@ export default async (client, interaction) => {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "format": // Pokemon selection in format
+                                    case "usage":
                                     case "pokemon":
                                         // For some reason filtering breaks the original sorted order, sort by number to restore it
                                         let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
@@ -496,6 +497,7 @@ export default async (client, interaction) => {
                                         });
                                         break;
                                 };
+                                break;
                             case "format":
                                 let formats = DexSim.formats.all();
                                 formats.forEach(format => {
@@ -527,6 +529,7 @@ export default async (client, interaction) => {
                                         });
                                         break;
                                 };
+                                break;
                         };
                         break;
                     case "splatoon3":
@@ -604,6 +607,7 @@ export default async (client, interaction) => {
                                         };
                                         break;
                                 };
+                                break;
                             case "mode":
                                 let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules.
                                 let responseSchedules = await axios.get(schedulesAPI);
@@ -654,6 +658,7 @@ export default async (client, interaction) => {
                                         };
                                         break;
                                 };
+                                break;
                         };
                         break;
                     case "persona5":
@@ -682,7 +687,9 @@ export default async (client, interaction) => {
                                             if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
                                                 !value.skillCard) choices.push({ name: key, value: key });
                                         };
+                                        break;
                                 };
+                                break;
                         };
                         break;
                     case "dqm3":
@@ -717,6 +724,7 @@ export default async (client, interaction) => {
                                         targetJSON = DQMTraitsJSON;
                                         break;
                                 };
+                                break;
                         };
                         if (targetJSON) {
                             for await (const [key, value] of Object.entries(targetJSON)) {
@@ -744,6 +752,7 @@ export default async (client, interaction) => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 });
+                                break;
                         };
                         break;
                     case "trophy":
@@ -772,6 +781,7 @@ export default async (client, interaction) => {
                                         // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
                                         break;
                                 };
+                                break;
                         };
                         break;
                 };
