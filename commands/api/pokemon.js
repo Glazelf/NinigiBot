@@ -566,7 +566,11 @@ const formatOption = new SlashCommandStringOption()
     .setDescription("Format to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
-const cardOption = new SlashCommandBooleanOption()
+const cardOption = new SlashCommandStringOption()
+    .setName("card")
+    .setDescription("Pick a card. Any card.")
+    .setAutocomplete(true)
+    .setRequired(true);
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
@@ -659,6 +663,8 @@ const usageSubcommand = new SlashCommandSubcommandBuilder()
 const cardSubcommand = new SlashCommandSubcommandBuilder()
     .setName("card")
     .setDescription("Get info on a card.")
+    .addStringOption(cardOption)
+    .addBooleanOption(ephemeralOption);
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
