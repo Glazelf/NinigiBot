@@ -467,7 +467,7 @@ export default async (interaction, ephemeral) => {
             });
 
             pokemonEmbed
-                .setAuthor({ name: `${cardData.subtypes.join(", ")} ${cardData.supertype}` })
+                .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
                 .setTitle(cardTitle)
                 .setImage(cardData.images.large)
                 .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
