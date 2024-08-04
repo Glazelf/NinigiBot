@@ -452,17 +452,17 @@ export default async (interaction, ephemeral) => {
             if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
             let cardTitle = cardData.name; // Space for fomatting with emojis below
-            if (cardData.hp) cardTitle += ` - ${cardData.hp}HP`;
+            if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
+            if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
             if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`); // Capitalize first character
-            if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
             if (cardData.attacks) cardData.attacks.forEach(attack => {
                 let attackName = attack.name;
                 if (attack.damage) attackName += ` - ${attack.damage}`;
                 let attackDescription = attack.text || "No extra effect.";
-                if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`);
+                if (attack.cost) attack.cost.forEach(cost => attackName = `${cardTypeEmojis[cost]} ${attackName}`);
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
             if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses), inline: true }]);
