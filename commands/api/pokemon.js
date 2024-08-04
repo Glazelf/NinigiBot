@@ -451,7 +451,8 @@ export default async (interaction, ephemeral) => {
             const cardData = cardSetJSON.default.find(element => element.id == cardInput);
             if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
-            let cardTitle = `${cardData.name} - ${cardData.hp}HP `; // Space for fomatting with emojis below
+            let cardTitle = cardData.name; // Space for fomatting with emojis below
+            if (cardData.hp) cardTitle += ` - ${cardData.hp}HP`;
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
             if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`); // Capitalize first character
