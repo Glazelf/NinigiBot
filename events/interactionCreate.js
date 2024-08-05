@@ -463,12 +463,22 @@ export default async (client, interaction) => {
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
+                            case "move":
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "format": // Pokemon selection in format
                                     case "usage":
                                     case "learn":
                                     case "pokemon":
+                                       if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
+                                           // I wrote this on mobile while on vacation to fix a bug, will fix the formatting when im home de
+                                           // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                        let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                        moves.forEach(move => {
+                                            if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
+                                        });
+                                         break;
+                                       } else {
                                         // For some reason filtering breaks the original sorted order, sort by number to restore it
                                         let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
                                         let usageBool = (interaction.options.getSubcommand() == "usage");
@@ -477,7 +487,8 @@ export default async (client, interaction) => {
                                             if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
                                                 && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
                                         });
-                                        break;
+                                           break;
+                                       };
                                     case "ability":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
                                         let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
@@ -486,11 +497,7 @@ export default async (client, interaction) => {
                                         });
                                         break;
                                     case "move":
-                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                        let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                        moves.forEach(move => {
-                                            if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
-                                        });
+                                        
                                         break;
                                     case "item":
                                         // For some reason filtering breaks the original sorted order, sort by name to restore it
