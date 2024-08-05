@@ -534,7 +534,7 @@ export default async (interaction, ephemeral) => {
 
 function getLearnData(learnData) {
     let learnInfo = "";
-    if (learnData.length == 0) return learnInfo;
+    if (!learnData || learnData.length == 0) return learnInfo;
     learnData.forEach(learnMethod => {
         let learnGen = learnMethod.charAt(0);
         let learnType = learnMethod.charAt(1);
