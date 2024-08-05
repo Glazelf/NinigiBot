@@ -307,7 +307,7 @@ export default async (interaction, ephemeral) => {
             if (learnsMove) {
                 if (pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) learnInfo += getLearnData(pokemonLearnset?.learnset[move.id]);
                 while ((prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
-                      (prevoprevoLearnset && prevoorevoLearnset.learnset && prevoprevoLearnset.learnset[move.id]) ) {
+                      (prevoprevoLearnset && prevoprevoLearnset.learnset && prevoprevoLearnset.learnset[move.id]) ) {
                     let learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
                     if (learnDataToAdd.length > 0) {
                         learnsMove = true;
