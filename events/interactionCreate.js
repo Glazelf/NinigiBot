@@ -467,6 +467,7 @@ export default async (client, interaction) => {
                                 switch (interaction.options.getSubcommand()) {
                                     case "format": // Pokemon selection in format
                                     case "usage":
+                                    case "learn":
                                     case "pokemon":
                                         // For some reason filtering breaks the original sorted order, sort by number to restore it
                                         let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
