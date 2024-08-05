@@ -381,11 +381,11 @@ export default async (interaction, ephemeral) => {
             let usageRank = 0;
             let genericDataSplitPokemon = null;
             let pokemonDataSplitLine = null;
-            if (nameInput) {
-                let usagePokemonString = usageArray.find(element => element.startsWith(nameInput + " ")); // Space is to exclude matching more popular subforms
+            if (pokemon) {
+                let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
                 if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${nameInput} in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
-                genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
+                genericDataSplitPokemon = genericUsageResponse.data.split(pokemon.name);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
@@ -399,7 +399,7 @@ export default async (interaction, ephemeral) => {
                 let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
                 let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
                 pokemonEmbed
-                    .setTitle(`${nameInput} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
+                    .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                     .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
