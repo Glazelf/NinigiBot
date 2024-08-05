@@ -588,6 +588,7 @@ allNatures.forEach(nature => {
 });
 
 const pokemonOptionDescription = "Pokémon to get info on.";
+const moveOptionDescription = "Move to get info on.";
 const generationOptionName = "generation";
 const generationOptionDescription = "Generation to use.";
 // String options
@@ -616,8 +617,13 @@ const itemOption = new SlashCommandStringOption()
     .setAutocomplete(true)
     .setRequired(true);
 const moveOption = new SlashCommandStringOption()
+    .setName("move")
+    .setDescription(moveOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const moveOptionName = new SlashCommandStringOption()
     .setName("name")
-    .setDescription("Move to get info on.")
+    .setDescription(moveOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
 const natureOption = new SlashCommandStringOption()
@@ -695,7 +701,7 @@ const abilitySubcommand = new SlashCommandSubcommandBuilder()
 const moveSubcommand = new SlashCommandSubcommandBuilder()
     .setName("move")
     .setDescription("Get info on a move.")
-    .addStringOption(moveOption)
+    .addStringOption(moveOptionName)
     .addIntegerOption(generationOption)
     .addBooleanOption(ephemeralOption);
 const itemSubcommand = new SlashCommandSubcommandBuilder()
