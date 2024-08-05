@@ -47,6 +47,8 @@ export default async (interaction, ephemeral) => {
     // Variables
     let embedColor = globalVars.embedColor;
     let nameInput = interaction.options.getString("name");
+    let pokemonInput = interaction.options.getStrinf("pokemon");
+    let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles = null;
     let nameBulbapedia = null;
@@ -58,13 +60,18 @@ export default async (interaction, ephemeral) => {
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
     let pokemon = null;
-    if (nameInput) pokemon = Dex.species.get(nameInput);
+    let move = null;
+    if (nameInput) {
+        pokemon = Dex.species.get(nameInput);
+        move = Dex.moves.get(nameInput);
+    };
+    if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
+    if (moveInput) move = Dex.moves.get(moveInput);
     let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
-    if (nameInput && nameInput.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
+    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemon);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
-    let move = Dex.moves.get(nameInput);
     let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
     // Embed initialization
     let pokemonEmbed = new EmbedBuilder();
