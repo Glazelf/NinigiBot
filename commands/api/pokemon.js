@@ -306,11 +306,13 @@ export default async (interaction, ephemeral) => {
 
             if (learnsMove) {
                 if (pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) learnInfo += getLearnData(pokemonLearnset?.learnset[move.id]);
-                while (prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) {
-                    learnInfo += `**As ${prevo.name}:**\n`;
+                while ((prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
+                      (prevoprevoLearnset && prevoorevoLearnset.learnset && prevoprevoLearnset.learnset[move.id]) ) {
                     let learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
-                    if (learnDataToAdd.length > 0) learnsMove = true;
-                    learnInfo += learnDataToAdd;
+                    if (learnDataToAdd.length > 0) {
+                        learnsMove = true;
+                        learnInfo += `**As ${prevo.name}:**\n${learnDataToAdd}`;
+                    };
                     // Set up next loop
                     prevo = Dex.species.get(prevo.prevo);
                     prevoLearnset = await Dex.learnsets.get(prevo.id);
