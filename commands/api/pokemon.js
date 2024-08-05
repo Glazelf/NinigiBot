@@ -317,6 +317,7 @@ export default async (interaction, ephemeral) => {
                     // Set up next loop
                     prevo = Dex.species.get(prevo.prevo);
                     prevoLearnset = await Dex.learnsets.get(prevo.id);
+                    prevoprevoLearnset = null; // Prevents infinite loops untill we get 4 stage evolution lines
                 };
                 pokemonEmbed.setDescription(learnInfo);
             } else {
