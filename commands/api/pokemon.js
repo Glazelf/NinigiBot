@@ -47,7 +47,7 @@ export default async (interaction, ephemeral) => {
     // Variables
     let embedColor = globalVars.embedColor;
     let nameInput = interaction.options.getString("name");
-    let pokemonInput = interaction.options.getStrinf("pokemon");
+    let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles = null;
