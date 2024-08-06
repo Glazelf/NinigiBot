@@ -469,6 +469,7 @@ export default async (client, interaction) => {
                                     case "format": // Pokemon selection in format
                                     case "usage":
                                     case "learn":
+                                    case "move":
                                     case "pokemon":
                                        if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
                                            // I wrote this on mobile while on vacation to fix a bug, will fix the formatting when im home de
