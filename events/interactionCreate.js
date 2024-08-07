@@ -820,8 +820,7 @@ export default async (client, interaction) => {
                 if (Object.keys(valuesByDate).length > 0) choices.sort((a, b) => valuesByDate[b.value] - valuesByDate[a.value]); // Sort from new to old
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
-                let subcommand = interaction.options.getSubcommand().catch(error=> return null); // USE THIS VARIABLE IN THE WHOLE FILE WHEN IM HOME :)
-                if (["pokemon", "monster"].includes(focusedOption.name) || ["pokemon", "monster"].includes(subcommand)) {
+                if (["pokemon", "monster"].includes(focusedOption.name) || ["pokemon", "monster"].includes(interaction.options.getSubcommand())) {
                     // Only display random suggestion if there enough other choices or value matches "random"
                     if (choices.length == 25) choices.pop();
                     if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
