@@ -819,8 +819,14 @@ export default async (client, interaction) => {
                 if (Object.keys(valuesByDate).length > 0) choices.sort((a, b) => valuesByDate[b.value] - valuesByDate[a.value]); // Sort from new to old
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
-                // DISABLED RANDOM TO CIRCUMVENT BUG, PROPERLY FIX WHEN HOME
-                if (false && (["pokemon", "monster"].includes(focusedOption.name) || ["pokemon", "monster"].includes(interaction.options.getSubcommand()))) {
+                let subcommandSuggestRandom = false;
+                try {
+                    if (["pokemon", "monster"].includes(interaction.options.getSubcommand())) subcommandSuggestRandom = true;
+                } catch (e) {
+                    // console.log(e);
+                    subcommandSuggestRandom = false;
+                };
+                if ((["pokemon", "monster"].includes(focusedOption.name) || subcommandSuggestRandom)) {
                     // Only display random suggestion if there enough other choices or value matches "random"
                     if (choices.length == 25) choices.pop();
                     if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });
