@@ -820,6 +820,7 @@ export default async (client, interaction) => {
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
                 let subcommandSuggestRandom = false;
+                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null. Couldn't get this to work properly with .catch(), though that would be cleaner.
                 try {
                     if (["pokemon", "monster"].includes(interaction.options.getSubcommand())) subcommandSuggestRandom = true;
                 } catch (e) {
