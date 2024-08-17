@@ -39,7 +39,7 @@ export default async (interaction, ephemeral) => {
             if (userData.veteranRank > 0) rankString += `\nVeteran Level: ${userData.veteranRank} ${iconsJSON["LevelVeteran"]}`;
             // General stats
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
-            if (saveData.achievementsClaimed.length > 0) userDescription += `\nAchievements Unlocked: ${saveData.achievementsClaimed.length}/150 ${iconsJSON["Achievements"]}`;
+            if (saveData.achievementsClaimed.length > 0) userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/150 ${iconsJSON["Achievements"]}`;
             if (saveData.lifetimeTrophies > 0) userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies} ${iconsJSON["TrophyStore"]}`;
             if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
             // Hero and tower usage
