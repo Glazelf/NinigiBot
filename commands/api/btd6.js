@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import heroIconsJSON from "../../objects/btd6/heroIcons.json" with { type: "json" };
+import iconsJSON from "../../objects/btd6/icons.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
     let btd6api = "https://data.ninjakiwi.com/btd6/";
@@ -34,20 +34,20 @@ export default async (interaction, ephemeral) => {
             };
             let saveData = saveResponse.data.body;
             let userData = userResponse.data.body;
-            // General stats
-            let userDescription = `Games Played: ${saveData.gamesPlayed}\nTotal EXP: ${saveData.xp + saveData.veteranXp}`;
-            if (saveData.lifetimeTrophies > 0) userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
-            if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
             // Rank string
-            let rankString = `Level ${userData.rank}`;
-            rankString += `\nVeteran Level: ${userData.veteranRank}`;
+            let rankString = `\nLevel: ${userData.rank}`;
+            if (userData.veteranRank > 0) rankString += `\nVeteran Level: ${userData.veteranRank} ${iconsJSON["LevelVeteran"]}`;
+            // General stats
+            let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
+            if (saveData.achievementsClaimed.length > 0) userDescription += `\nAchievements Unlocked: ${saveData.achievementsClaimed.length}/150 ${iconsJSON["Achievements"]}`;
+            if (saveData.lifetimeTrophies > 0) userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies} ${iconsJSON["TrophyStore"]}`;
+            if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
             // Hero and tower usage
             let heroesByUsageString = getUsageListString(userData.heroesPlaced);
             let towersByUsageString = getUsageListString(userData.towersPlaced);
             // Build user embed
             btd6Embed
                 .setTitle(userData.displayName)
-                .setAuthor({ name: rankString })
                 .setDescription(userDescription)
                 .setThumbnail(userData.avatarURL)
                 .setImage(userData.bannerURL)
@@ -73,7 +73,7 @@ function getUsageListString(usageObject) {
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
-        if (heroIconsJSON[element[0]]) usageString += heroIconsJSON[element[0]];
+        if (iconsJSON[element[0]]) usageString += iconsJSON[element[0]];
         usageString += `${element[0]}: ${element[1]}\n`;
     });
     return usageString;
