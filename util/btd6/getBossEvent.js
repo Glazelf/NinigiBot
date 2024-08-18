@@ -63,7 +63,8 @@ export default async (elite = false) => {
             allowedHeroesArray.push(`${towerIcon}${tower.tower}`);
         } else {
             let towerString = tower.tower;
-            if (tower.path1NumBlockedTiers > 0 || tower.path2NumBlockedTiers || tower.path3NumBlockedTiers) towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`
+            if (tower.path1NumBlockedTiers > 0 || tower.path2NumBlockedTiers || tower.path3NumBlockedTiers) towerString += ` (${5 - tower.path1NumBlockedTiers}-${5 - tower.path2NumBlockedTiers}-${5 - tower.path3NumBlockedTiers})`;
+            if (tower.max > 0) towerString += ` (max ${tower.max})`;
             allowedTowersArray.push(towerString);
         };
     });
