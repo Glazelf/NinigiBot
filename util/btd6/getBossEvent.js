@@ -28,8 +28,9 @@ export default async (elite = false) => {
     if (!bossEventMetadataResponse.data.success) return bossEventMetadataResponse.data.error;
 
     let bossEventMetadata = bossEventMetadataResponse.data.body;
-    let bossEventTitle = "Boss Event";
-    if (elite) bossEventTitle += " (Elite)";
+    let bossEventTitle = "Boss Event - ";
+    if (elite) bossEventTitle += "Elite ";
+    bossEventTitle += mostRecentBossEvent.bossType.charAt(0).toUpperCase() + mostRecentBossEvent.bossType.slice(1); // Capitalize first character
     let bossEventDescription = `<t:${Math.floor(mostRecentBossEvent.start / 1000)}:f> to <t:${Math.floor(mostRecentBossEvent.end / 1000)}:f>`;
 
     let rulesArray = [
