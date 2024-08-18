@@ -4,15 +4,18 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    codeBlock
+    codeBlock,
+    ActionRowBuilder
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
+import getBossEvent from "../../util/btd6/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import iconsJSON from "../../objects/btd6/icons.json" with { type: "json" };
 
+const btd6api = "https://data.ninjakiwi.com/btd6/";
+
 export default async (interaction, ephemeral) => {
-    let btd6api = "https://data.ninjakiwi.com/btd6/";
     let oak = interaction.options.getString("oak");
     let apiError = null;
 
@@ -21,13 +24,12 @@ export default async (interaction, ephemeral) => {
     // await interaction.deferReply(ephemeral);
     let btd6Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
+    let btd6ActionRow = new ActionRowBuilder();
 
     switch (interaction.options.getSubcommand()) {
         case "user":
-            let btd6apiSave = `${btd6api}save/${oak}`;
-            let btd6apiUser = `${btd6api}users/${oak}`;
-            let saveResponse = await axios.get(btd6apiSave);
-            let userResponse = await axios.get(btd6apiUser);
+            let saveResponse = await axios.get(`${btd6api}save/${oak}`);
+            let userResponse = await axios.get(`${btd6api}users/${oak}`);
             if (!userResponse.data.success || !saveResponse.data.success) {
                 apiError = userResponse.data.error;
                 break;
@@ -57,6 +59,16 @@ export default async (interaction, ephemeral) => {
                     { name: "Towers Placed:", value: towersByUsageString, inline: true }
                 ]);
             break;
+        case "boss-event":
+            await interaction.deferReply({ ephemeral: ephemeral });
+            let bossEventMessageObject = await getBossEvent(false);
+            if (typeof bossEventMessageObject == "string") {
+                apiError = bossEventMessageObject;
+                break;
+            };
+            btd6Embed = bossEventMessageObject.embeds;
+            btd6ActionRow = bossEventMessageObject.components;
+            break;
     };
     // Handle API errors
     if (apiError) {
@@ -65,7 +77,7 @@ export default async (interaction, ephemeral) => {
             .setColor(globalVars.embedColorError)
             .setDescription(`The following error occurred while getting data from the API:${codeBlock(apiError)}Read more on the Ninja Kiwi API and Open Access Keys (OAKs) [here](<https://support.ninjakiwi.com/hc/en-us/articles/13438499873937-Open-Data-API>).`);
     };
-    return sendMessage({ interaction: interaction, embeds: btd6Embed, ephemeral: ephemeral });
+    return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, ephemeral: ephemeral });
 };
 
 function getUsageListString(usageObject) {
@@ -77,7 +89,7 @@ function getUsageListString(usageObject) {
         usageString += `${element[0]}: ${element[1]}\n`;
     });
     return usageString;
-}
+};
 
 // String options
 const oakOption = new SlashCommandStringOption()
@@ -94,8 +106,13 @@ const userSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("See information on a user.")
     .addStringOption(oakOption)
     .addBooleanOption(ephemeralOption);
+const bossEventSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("boss-event")
+    .setDescription("See current boss event.")
+    .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("btd6")
     .setDescription("Shows BTD6 data.")
-    .addSubcommand(userSubcommand);
+    .addSubcommand(userSubcommand)
+    .addSubcommand(bossEventSubcommand);

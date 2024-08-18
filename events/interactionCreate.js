@@ -40,6 +40,8 @@ import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with {
 import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json" };
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
+// BTD6
+import getBossEvent from "../util/btd6/getBossEvent.js";
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
@@ -346,6 +348,11 @@ export default async (client, interaction) => {
                             let userinfo_page = await getUserInfoSlice(interaction, page, { id: user });
                             embedsReturn = [userinfo_page.embeds];
                             componentsReturn = [userinfo_page.components];
+                        } else if (interaction.customId.startsWith("btd6BossEvent")) {
+                            let bossEventMessageObject = await getBossEvent(interaction.customId.split("|")[1] == "false");
+                            if (typeof bossEventMessageObject == "string") return;
+                            embedsReturn = [bossEventMessageObject.embeds];
+                            componentsReturn = [bossEventMessageObject.components];
                         } else {
                             // Other buttons
                             return;
