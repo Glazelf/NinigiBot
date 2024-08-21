@@ -27,7 +27,7 @@ fs.readdir("./submodules/splat3/data/language/", (err, files) => {
         if (!fileName.endsWith("_full")) return; // Skip to next iteration, only count full language files
         const languageKey = fileName.split("_")[0];
         const languageJSON = await import(`../../submodules/splat3/data/language/${file}`, { assert: { type: "json" } });
-        globalVars.splatoon3LanguageJSONs[languageKey] = languageJSON.default;
+        globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
     });
 });
 
@@ -64,7 +64,7 @@ export default async (interaction, ephemeral) => {
     // Check language
     let languageKey = interaction.options.getString("language");
     if (!languageKey) languageKey = "EUen";
-    let languageJSON = globalVars.splatoon3LanguageJSONs[languageKey];
+    let languageJSON = globalVars.splatoon3.languageJSONs[languageKey];
     let inputID = interaction.options.getString("name");
     let inputRegion = interaction.options.getString("region");
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API

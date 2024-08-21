@@ -10,6 +10,7 @@ import iconsJSON from "../../objects/btd6/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
+
 export default async (elite = false) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
     if (!bossEventsResponse.data.success) return bossEventsResponse.data.error;

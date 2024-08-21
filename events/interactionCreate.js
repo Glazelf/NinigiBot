@@ -466,7 +466,7 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
+                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
@@ -572,7 +572,7 @@ export default async (client, interaction) => {
                     case "splatoon3":
                         let languageInput = interaction.options.getString("language");
                         if (!languageInput) languageInput = "EUen";
-                        let languageJSON = globalVars.splatoon3LanguageJSONs[languageInput];
+                        let languageJSON = globalVars.splatoon3.languageJSONs[languageInput];
                         switch (focusedOption.name) {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
