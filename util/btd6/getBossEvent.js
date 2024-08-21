@@ -9,7 +9,50 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import iconsJSON from "../../objects/btd6/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
-
+const heroesOrdered = [
+    "Quincy",
+    "Gwendolin",
+    "StrikerJones",
+    "ObynGreenfoot",
+    "Rosalia",
+    "CaptainChurchill",
+    "Benjamin",
+    "PatFusty",
+    "Ezili",
+    "Adora",
+    "Etienne",
+    "Sauda",
+    "AdmiralBrickell",
+    "Psi",
+    "Geraldo",
+    "Corvus"
+];
+const towersOrdered = [
+    "DartMonkey",
+    "BoomerangMonkey",
+    "BombShooter",
+    "TackShooter",
+    "IceMonkey",
+    "GlueGunner",
+    "SniperMonkey",
+    "MonkeySub",
+    "MonkeyBuccaneer",
+    "MonkeyAce",
+    "HeliPilot",
+    "MortarMonkey",
+    "DartlingGunner",
+    "WizardMonkey",
+    "SuperMonkey",
+    "NinjaMonkey",
+    "Alchemist",
+    "Druid",
+    "Mermonkey",
+    "BananaFarm",
+    "SpikeFactory",
+    "MonkeyVillage",
+    "EngineerMonkey",
+    "BeastHandler"
+];
 
 export default async (elite = false) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
@@ -69,6 +112,8 @@ export default async (elite = false) => {
             allowedTowersArray.push(towerString);
         };
     });
+    allowedHeroesArray = sortTowersToIngame(allowedHeroesArray, true);
+    allowedTowersArray = sortTowersToIngame(allowedTowersArray, false);
     let allowedHeroesString = allowedHeroesArray.join("\n");
     if (allowedHeroesArray.length == 0) allowedHeroesString = "None.";
     let allowedTowersString = allowedTowersArray.join("\n");
@@ -98,4 +143,20 @@ export default async (elite = false) => {
     bossEventActionRow.addComponents(bossEventEliteButton);
 
     return { embeds: bossEventEmbed, components: bossEventActionRow };
+};
+
+function sortTowersToIngame(towerList, isHeroes) {
+    let comparisonArray = isHeroes ? heroesOrdered : towersOrdered;
+    let sortedArray = towerList.sort((a, b) => {
+        a = filterTowerStringToName(a);
+        b = filterTowerStringToName(b);
+        return comparisonArray.indexOf(a) - comparisonArray.indexOf(b);
+    });
+    return sortedArray;
+};
+
+function filterTowerStringToName(towerString) {
+    if (towerString.includes(" ")) towerString = towerString.split(" ")[0]; // Catch towers with limited upgrades appended to the end
+    if (towerString.includes(">")) towerString = towerString.split(">")[1]; // Catch heroes with emotes appended to the front
+    return towerString;
 };
