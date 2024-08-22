@@ -58,13 +58,6 @@ export default async (elite = false) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
     if (!bossEventsResponse.data.success) return bossEventsResponse.data.error;
     let mostRecentBossEvent = bossEventsResponse.data.body[0];
-    // Check if next boss event can be seen when no boss event is ongoing?
-    if (mostRecentBossEvent.end < Date.now()) {
-        btd6Embed
-            .setTitle("Boss Event")
-            .setColor(globalVars.embedColor)
-            .setDescription("No boss event is currently ongoing.");
-    };
 
     let metadataURL = mostRecentBossEvent.metadataStandard;
     if (elite) metadataURL = mostRecentBossEvent.metadataElite;
@@ -129,6 +122,7 @@ export default async (elite = false) => {
             { name: "Heroes:", value: allowedHeroesString, inline: true },
             { name: "Towers:", value: allowedTowersString, inline: true }
         ]);
+    if (mostRecentBossEvent.end < Date.now()) bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the most recent one instead:" });
 
     const bossEventActionRow = new ActionRowBuilder();
     const bossEventEliteButton = new ButtonBuilder()
