@@ -63,11 +63,9 @@ export default async (client, message) => {
                 };
             };
             // Attachments
-            let messageImage = null; // Very inconsistent, almost never works
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
             if (message.attachments.size > 0) {
-                messageImage = message.attachments.first().proxyURL;
                 messageAttachmentsTitle += ` (${message.attachments.size})`;
                 message.attachments.forEach(attachment => {
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
@@ -80,7 +78,6 @@ export default async (client, message) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Deleted ❌`)
                 .setThumbnail(avatar)
-                .setImage(messageImage)
                 .setDescription(`Author: ${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})`);
             if (messageContent.length > 0) deleteEmbed.addFields([{ name: `Content:`, value: messageContent, inline: false }]);
             if (messageAttachmentsString.length > 0) deleteEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
