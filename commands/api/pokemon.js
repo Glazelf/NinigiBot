@@ -109,7 +109,7 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed
                 .setTitle(abilityGen.name)
                 .setDescription(abilityGen.desc)
-                .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generation} data` })
+                .setFooter({ text: `Introduced in generation ${ability.gen}\nGeneration ${generation} data` })
                 .addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
             break;
         // Items
@@ -147,7 +147,7 @@ export default async (interaction, ephemeral) => {
                 .setTitle(itemGen.name)
                 .setThumbnail(itemImage)
                 .setDescription(itemDescription)
-                .setFooter({ text: `Introduced in generation ${item.gen} | Generation ${generationFooter} data` });
+                .setFooter({ text: `Introduced in generation ${item.gen}\nGeneration ${generationFooter} data` });
             if (itemGen.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: itemGen.fling.basePower.toString(), inline: true }]);
             break;
         // Moves
@@ -202,7 +202,7 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
-                .setFooter({ text: `Introduced in generation ${move.gen} | Generation ${generation} data` });
+                .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
             if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
@@ -466,8 +466,11 @@ export default async (interaction, ephemeral) => {
             if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
             if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
-            if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark} -`;
-            if (cardData.legalities) Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
+            if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
+            if (cardData.legalities) {
+                cardFooter += ": "; // Seperation between regulation and legalities
+                Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
+            };
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
             if (cardData.attacks) cardData.attacks.forEach(attack => {
                 let attackName = attack.name;
