@@ -404,7 +404,7 @@ export default async (interaction, ephemeral) => {
                 let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
                 pokemonEmbed
                     .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
-                    .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
+                    .setDescription(`Usage Rank: #${usageRank}\nUsage Percentage: ${usagePercentage}\nRaw Uses: ${rawUsage}`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
                         { name: "Items:", value: itemsString, inline: true },
