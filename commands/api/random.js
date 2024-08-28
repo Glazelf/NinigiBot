@@ -15,42 +15,46 @@ import sendMessage from "../../util/sendMessage.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-const catAAS = "https://cataas.com/cat";
+const catAPI = "https://cataas.com/cat";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    await interaction.deferReply({ ephemeral: ephemeral });
 
+    let randomEmbed = new EmbedBuilder()
+        .setColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
         case "number":
             let lowNumber = interaction.options.getInteger("number-min");
             let highNumber = interaction.options.getInteger("number-max");
             if (lowNumber > highNumber) [lowNumber, highNumber] = [highNumber, lowNumber]; // Flip variables in case lowNumber is higher. randomNumber() does this too but we do it again here to keep the end string sorted from low to high
             let randomValue = randomNumber(lowNumber, highNumber);
-            return sendMessage({ interaction: interaction, content: `Your random number between \`${lowNumber}\` and \`${highNumber}\` is \`${randomValue}\`.`, ephemeral: ephemeral });
+            randomEmbed
+                .setTitle(randomValue.toString())
+                .setFooter({ text: `Min: ${lowNumber}\nMax: ${highNumber}` });
+            break;
         case "cat":
+            await interaction.deferReply({ ephemeral: ephemeral });
             let catText = interaction.options.getString("caption");
             let standardCatText = "Meow";
             if (!catText) catText = standardCatText;
 
-            let catAPI = `${catAAS}?json=true`;
-            let response = await axios.get(catAPI);
+            let response = await axios.get(`${catAPI}?json=true`);
             let catImage = null;
             let catNameSeed = null;
-            catImage = `${catAAS}/${response.data._id}`;
+            catImage = `${catAPI}/${response.data._id}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
             catNameSeed = response.data._id;
             let catName = uniqueNamesGenerator({
                 dictionaries: [names],
                 seed: catNameSeed
             });
-            const catEmbed = new EmbedBuilder()
-                .setColor(globalVars.embedColor)
+            randomEmbed
                 .setImage(catImage)
                 .setFooter({ text: `"${catText}" -${catName}` });
-            return sendMessage({ interaction: interaction, embeds: catEmbed, ephemeral: ephemeral });
+            break;
     };
+    return sendMessage({ interaction: interaction, embeds: randomEmbed, ephemeral: ephemeral });
 };
 
 // String options
