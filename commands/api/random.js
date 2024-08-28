@@ -16,6 +16,7 @@ import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const catAPI = "https://cataas.com/cat";
+const foxAPI = "https://randomfox.ca/floof/";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -39,12 +40,12 @@ export default async (interaction, ephemeral) => {
             let standardCatText = "Meow";
             if (!catText) catText = standardCatText;
 
-            let response = await axios.get(`${catAPI}?json=true`);
+            let catResponse = await axios.get(`${catAPI}?json=true`);
             let catImage = null;
             let catNameSeed = null;
-            catImage = `${catAPI}/${response.data._id}`;
+            catImage = `${catAPI}/${catResponse.data._id}`;
             if (catText !== standardCatText) catImage += `/says/${encodeURIComponent(encodeURIComponent(catText))}`; // Double encode to escape periods and slashes
-            catNameSeed = response.data._id;
+            catNameSeed = catResponse.data._id;
             let catName = uniqueNamesGenerator({
                 dictionaries: [names],
                 seed: catNameSeed
@@ -52,6 +53,11 @@ export default async (interaction, ephemeral) => {
             randomEmbed
                 .setImage(catImage)
                 .setFooter({ text: `"${catText}" -${catName}` });
+            break;
+        case "fox":
+            await interaction.deferReply({ ephemeral: ephemeral });
+            let foxResponse = await axios.get(foxAPI);
+            randomEmbed.setImage(foxResponse.data.image);
             break;
     };
     return sendMessage({ interaction: interaction, embeds: randomEmbed, ephemeral: ephemeral });
@@ -86,9 +92,14 @@ const catSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Random cat image.")
     .addStringOption(captionOption)
     .addBooleanOption(ephemeralOption);
+const foxSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("fox")
+    .setDescription("Random fox image.")
+    .addBooleanOption(ephemeralOption);
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("random")
-    .setDescription("Various random things.")
+    .setDescription("Various random results.")
     .addSubcommand(numberSubcommand)
-    .addSubcommand(catSubcommand);
+    .addSubcommand(catSubcommand)
+    .addSubcommand(foxSubcommand);
