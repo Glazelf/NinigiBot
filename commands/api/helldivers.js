@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -98,9 +99,14 @@ const campaignSubcommand = new SlashCommandSubcommandBuilder()
     .setName("campaign")
     .setDescription("Get info on current campaigns.")
     .addBooleanOption(ephemeralOption);
-// Full command
-export const commandObject = new SlashCommandBuilder()
-    .setName("helldivers2")
-    .setDescription("Shows Helldivers 2 info.")
+// Subcommand groups
+const helldivers2SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("2")
+    .setDescription("Helldivers 2.")
     .addSubcommand(planetSubcommand)
     .addSubcommand(campaignSubcommand);
+// Full command
+export const commandObject = new SlashCommandBuilder()
+    .setName("helldivers")
+    .setDescription("Shows Helldivers info.")
+    .addSubcommandGroup(helldivers2SubcommandGroup);

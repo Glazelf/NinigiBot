@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -585,11 +586,11 @@ const splashtagRandomSubcommand = new SlashCommandSubcommandBuilder()
     .setName("splashtag-random")
     .setDescription("Generate a random splashtag.")
     .addStringOption(languageOption)
-    .addBooleanOption(ephemeralOption)
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("splatoon3")
-    .setDescription("Shows Splatoon 3 data.")
+    .addBooleanOption(ephemeralOption);
+// Subcommand groups
+const splat3SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("3")
+    .setDescription("Splatoon 3.")
     .addSubcommand(clothingSubcommand)
     .addSubcommand(weaponSubcommand)
     .addSubcommand(subweaponSubcommand)
@@ -599,3 +600,8 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(splatfestsSubcommand)
     .addSubcommand(replaySubcommand)
     .addSubcommand(splashtagRandomSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("splatoon")
+    .setDescription("Shows Splatoon data.")
+    .addSubcommandGroup(splat3SubcommandGroup);

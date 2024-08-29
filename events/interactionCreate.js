@@ -32,7 +32,7 @@ import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with 
 import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
-// DQM3
+// DQM
 import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json" };
 import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
 // import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json" };
@@ -40,7 +40,7 @@ import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with {
 import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json" };
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
-// BTD6
+// BTD
 import getBossEvent from "../util/btd6/getBossEvent.js";
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
@@ -80,8 +80,8 @@ fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
 });
 // Helldivers
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
-// Persona 5
-// Submodule is documented in persona5 command
+// Persona
+// Submodule is documented in persona command
 let skillMapRoyal, personaMapRoyal, itemMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
 eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
@@ -569,7 +569,7 @@ export default async (client, interaction) => {
                                 break;
                         };
                         break;
-                    case "splatoon3":
+                    case "splatoon":
                         let languageInput = interaction.options.getString("language");
                         if (!languageInput) languageInput = "EUen";
                         let languageJSON = globalVars.splatoon3.languageJSONs[languageInput];
@@ -698,7 +698,7 @@ export default async (client, interaction) => {
                                 break;
                         };
                         break;
-                    case "persona5":
+                    case "persona":
                         switch (focusedOption.name) {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
@@ -729,7 +729,7 @@ export default async (client, interaction) => {
                                 break;
                         };
                         break;
-                    case "dqm3":
+                    case "dqm":
                         let targetJSON = null;
                         switch (focusedOption.name) {
                             case "parent1":
@@ -769,7 +769,7 @@ export default async (client, interaction) => {
                             };
                         };
                         break;
-                    case "helldivers2":
+                    case "helldivers":
                         switch (focusedOption.name) {
                             case "name":
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);

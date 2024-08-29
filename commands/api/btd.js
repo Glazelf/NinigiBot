@@ -5,7 +5,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     codeBlock,
-    ActionRowBuilder
+    ActionRowBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -111,9 +112,14 @@ const bossEventSubcommand = new SlashCommandSubcommandBuilder()
     .setName("boss-event")
     .setDescription("See current boss event.")
     .addBooleanOption(ephemeralOption);
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("btd6")
-    .setDescription("Shows BTD6 data.")
+// Subcommand groups
+const btd6SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("6")
+    .setDescription("BTD6")
     .addSubcommand(userSubcommand)
     .addSubcommand(bossEventSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("btd")
+    .setDescription("Shows Bloons Tower Defense data.")
+    .addSubcommandGroup(btd6SubcommandGroup);

@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import synthesis from "../../submodules/DQM3-db/util/synthesis.js";
@@ -300,13 +301,18 @@ const synthesisSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(parent2Option)
     .addStringOption(targetOption)
     .addBooleanOption(ephemeralOption);
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("dqm3")
-    .setDescription("Shows Dragon Quest Monsters 3: The Dark Prince data.")
+// Subcommand groups
+const dqm3SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("3")
+    .setDescription("Dragon Quest Monsters 3: The Dark Prince.")
     .addSubcommand(monsterSubcommand)
     .addSubcommand(talentSubcommand)
     .addSubcommand(skillSubcommand)
     .addSubcommand(traitSubcommand)
     .addSubcommand(itemSubcommand)
     .addSubcommand(synthesisSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("dqm")
+    .setDescription("Shows Dragon Quest Monsters data.")
+    .addSubcommandGroup(dqm3SubcommandGroup);

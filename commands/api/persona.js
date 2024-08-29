@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import fs from "fs";
 import sendMessage from "../../util/sendMessage.js";
@@ -168,11 +169,16 @@ const itemSubcommand = new SlashCommandSubcommandBuilder()
     .setDescription("Get info on an item.")
     .addStringOption(itemOption)
     .addBooleanOption(ephemeralOption);
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("persona5")
-    .setDescription("Shows Persona 5 data.")
+// Subcommand groups
+const p5SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("5")
+    .setDescription("Persona 5.")
     .addSubcommand(personaSubcommand)
     .addSubcommand(skillSubcommand)
     .addSubcommand(traitSubcommand)
     .addSubcommand(itemSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("persona")
+    .setDescription("Shows Persona data.")
+    .addSubcommandGroup(p5SubcommandGroup);
