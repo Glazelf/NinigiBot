@@ -33,9 +33,9 @@ export default async ({ exception, client, interaction = null }) => {
             if (interaction.member) user = interaction.author;
             if (interaction.user) user = interaction.user;
         };
-        let exceptionCode = codeBlock(errorInspectResult); // Used to be exception.stack
+        let exceptionCode = codeBlock("fix", errorInspectResult); // Used to be exception.stack
         let messageContentCode = "";
-        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = codeBlock(interaction.content);
+        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = codeBlock("fix", interaction.content);
         let interactionOptions = "\n";
         let subCommand = "";
         if (interaction && interaction.options) {

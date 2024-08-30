@@ -22,7 +22,7 @@ export default async (interaction, ephemeral) => {
         evaled = await eval(`async () => {${input}}`)();
     } catch (e) {
         // console.log(e);
-        return sendMessage({ interaction: interaction, content: `Error occurred:\n${codeBlock(e.stack)}` });
+        return sendMessage({ interaction: interaction, content: `Error occurred:\n${codeBlock("fix", e.stack)}` });
     };
     if (typeof evaled !== "string") evaled = util.inspect(evaled);
     if (evaled.length > 1990) evaled = evaled.substring(0, 1990);
