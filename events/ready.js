@@ -1,3 +1,4 @@
+import { codeBlock } from 'discord.js';
 import getTime from '../util/getTime.js';
 import stan from "../affairs/stan.js";
 import birthday from "../affairs/birthday.js";
@@ -30,16 +31,12 @@ export default async (client) => {
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();
         // });
+
         let timestamp = getTime();
-
-        // await client.user.setPresence(globalVars.presence);
-        console.log(`Presence set to "${client.user.presence.activities[0].type} ${client.user.presence.activities[0].name}"`);
-
-        console.log(`Commands: ${client.commands.size}
-Guilds: ${client.guilds.cache.size}
-Channels: ${client.channels.cache.size}
-Users: ${client.users.cache.size} (cached)
-Connected as ${client.user.username}. (${timestamp})`);
+        let devChannel = await client.channels.fetch(config.devChannelID);
+        const startupStats = `Commands: ${client.commands.size}\nGuilds: ${client.guilds.cache.size}\nChannels: ${client.channels.cache.size}\nUsers: ${client.users.cache.size} (All stats are from cache)`;
+        console.log(`${startupStats}\nConnected as ${client.user.username}. (${timestamp})`);
+        return devChannel.send({ content: `Successfully connected. ${codeBlock("fix", startupStats)}` });
 
     } catch (e) {
         console.log(e);
