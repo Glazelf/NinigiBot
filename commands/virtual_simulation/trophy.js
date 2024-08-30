@@ -20,8 +20,9 @@ import getTrophyEmbedSlice from "../../util/trophies/getTrophyEmbedSlice.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
+    let trophy_name = interaction.options.getString("name");
     let messageFile = null;
-    let trophy_name, res;
+    let res;
     let embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let returnString = '';
@@ -61,7 +62,6 @@ export default async (interaction, ephemeral) => {
                 ephemeral: ephemeral
             });
         case "buy":
-            trophy_name = interaction.options.getString("shoptrophy");
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
                 case 'NoTrophy':
@@ -106,7 +106,6 @@ export default async (interaction, ephemeral) => {
                 ephemeral: ephemeral,
             });
         case "info":
-            trophy_name = interaction.options.getString("trophy");
             res = await getShopTrophyWithName(trophy_name);
             let isShop = true;
             if (!res) {
@@ -142,12 +141,12 @@ export default async (interaction, ephemeral) => {
 
 // String options
 const trophyOption = new SlashCommandStringOption()
-    .setName("trophy")
+    .setName("name")
     .setDescription("Trophy to show info about.")
     .setAutocomplete(true)
     .setRequired(true);
 const shopTrophyOption = new SlashCommandStringOption()
-    .setName("shoptrophy")
+    .setName("name")
     .setDescription("Trophy to buy.")
     .setAutocomplete(true)
     .setRequired(true);

@@ -24,12 +24,14 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
+import cardTypeEmojis from "../../objects/pokemon/cardTypeEmojis.json" with { type: "json" };
 import emojis from "../../objects/discord/emojis.json" with { type: "json" };
+import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
+const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const allNatures = Dex.natures.all();
-const currentYear = new Date().getFullYear();
 
 export default async (interaction, ephemeral) => {
     // Command settings
@@ -44,26 +46,32 @@ export default async (interaction, ephemeral) => {
     if (shinyArg === true) shinyBool = true;
     // Variables
     let embedColor = globalVars.embedColor;
-    let pokemonName = interaction.options.getString("pokemon");
+    let nameInput = interaction.options.getString("name");
+    let pokemonInput = interaction.options.getString("pokemon");
+    let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
     let pokemonFiles = null;
     let nameBulbapedia = null;
     let linkBulbapedia = null;
     let colorPokemonName = null;
     // Set generation
-    let generation = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
+    let generation = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
     let pokemon = null;
-    if (pokemonName) pokemon = Dex.species.get(pokemonName);
-    let noPokemonString = `Sorry, I could not find a Pokémon called \`${pokemonName}\` in generation ${generation}.`;
-    if (pokemonName && pokemonName.toLowerCase() == "random") pokemon = getRandomObjectItem(allPokemon);
+    let move = null;
+    if (nameInput) {
+        pokemon = Dex.species.get(nameInput);
+        move = Dex.moves.get(nameInput);
+    };
+    if (pokemonInput) pokemon = Dex.species.get(pokemonInput);
+    if (moveInput) move = Dex.moves.get(moveInput);
+    let noPokemonString = `Sorry, I could not find a Pokémon called \`${nameInput}\` in generation ${generation}.`;
+    if ((nameInput && nameInput.toLowerCase() == "random") || (pokemonInput && pokemonInput.toLowerCase() == "random")) pokemon = getRandomObjectItem(allPokemon);
     let pokemonExists = (pokemon && pokemon.exists && pokemon.num > 0);
     if (pokemonExists) colorPokemonName = pokemon.name;
     // Used for move and learn
-    let moveSearch = interaction.options.getString("move");
-    let move = Dex.moves.get(moveSearch);
     let moveExists = (move && move.exists && move.isNonstandard !== "CAP");
     // Embed initialization
     let pokemonEmbed = new EmbedBuilder();
@@ -71,9 +79,8 @@ export default async (interaction, ephemeral) => {
     switch (interaction.options.getSubcommand()) {
         // Abilities
         case "ability":
-            let abilitySearch = interaction.options.getString("ability");
-            let ability = Dex.abilities.get(abilitySearch);
-            let abilityGen = genData.abilities.get(abilitySearch);
+            let ability = Dex.abilities.get(nameInput);
+            let abilityGen = genData.abilities.get(nameInput);
             // let abilityGen = genData.abilities.get(abilitySearch);
             let abilityIsFuture = (ability.gen > generation); // Since abilities stay functional just undistributed, rarely get "Past" flag including Desolate Land and Primordial Sea
             let abilityFailString = `I could not find that ability in generation ${generation}.`;
@@ -102,14 +109,13 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed
                 .setTitle(abilityGen.name)
                 .setDescription(abilityGen.desc)
-                .setFooter({ text: `Introduced in generation ${ability.gen} | Generation ${generation} data` })
+                .setFooter({ text: `Introduced in generation ${ability.gen}\nGeneration ${generation} data` })
                 .addFields([{ name: "Pokémon:", value: abilityMatchesString, inline: false }]);
             break;
         // Items
         case "item":
-            let itemSearch = interaction.options.getString("item");
-            let item = Dex.items.get(itemSearch);
-            let itemGen = genData.items.get(itemSearch);
+            let item = Dex.items.get(nameInput);
+            let itemGen = genData.items.get(nameInput);
             let generationFooter = generation; // Might be usefull to move to top of file
             let itemIsFuture = (item.gen > generation);
             let itemIsAvailable = (itemGen == undefined);
@@ -117,7 +123,7 @@ export default async (interaction, ephemeral) => {
             if (itemIsFuture) itemFailString += `\n\`${item.name}\` was introduced in generation ${item.gen}.`;
             if (!itemGen) {
                 itemGen = item;
-                generationFooter = globalVars.pokemonCurrentGeneration;
+                generationFooter = globalVars.pokemon.currentGeneration;
             };
             if (!item || !item.exists || item.isNonstandard == "CAP" || itemIsFuture) {
                 pokemonEmbed
@@ -141,12 +147,12 @@ export default async (interaction, ephemeral) => {
                 .setTitle(itemGen.name)
                 .setThumbnail(itemImage)
                 .setDescription(itemDescription)
-                .setFooter({ text: `Introduced in generation ${item.gen} | Generation ${generationFooter} data` });
+                .setFooter({ text: `Introduced in generation ${item.gen}\nGeneration ${generationFooter} data` });
             if (itemGen.fling) pokemonEmbed.addFields([{ name: "Fling Power:", value: itemGen.fling.basePower.toString(), inline: true }]);
             break;
         // Moves
         case "move":
-            let moveGen = genData.moves.get(moveSearch);
+            let moveGen = genData.moves.get(nameInput);
             let moveIsAvailable = true;
             if (!moveGen) {
                 moveGen = move;
@@ -196,7 +202,7 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed
                 .setTitle(moveTitle)
                 .setDescription(description)
-                .setFooter({ text: `Introduced in generation ${move.gen} | Generation ${generation} data` });
+                .setFooter({ text: `Introduced in generation ${move.gen}\nGeneration ${generation} data` });
             if (move.basePower > 1 && !move.isMax) pokemonEmbed.addFields([{ name: "Power:", value: move.basePower.toString(), inline: true }]);
             if (target !== "Self") pokemonEmbed.addFields([{ name: "Accuracy:", value: accuracy, inline: true }]);
             pokemonEmbed.addFields([
@@ -214,8 +220,7 @@ export default async (interaction, ephemeral) => {
             break;
         // Natures
         case "nature":
-            let natureSearch = interaction.options.getString("nature");
-            let nature = Dex.natures.get(natureSearch);
+            let nature = Dex.natures.get(nameInput);
             if (!nature || !nature.exists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find that nature.` });
 
             let boosted = Dex.stats.names[nature.plus];
@@ -281,7 +286,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "learn":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${moveSearch}\`.` });
+            if (!moveExists) return sendMessage({ interaction: interaction, content: `Sorry, I could not find a move called \`${nameInput}\`.` });
             // Set variables
             let learnAuthor = `${pokemon.name} learns ${move.name}`;
             let learnInfo = "";
@@ -301,14 +306,18 @@ export default async (interaction, ephemeral) => {
 
             if (learnsMove) {
                 if (pokemonLearnset.learnset && pokemonLearnset.learnset[move.id]) learnInfo += getLearnData(pokemonLearnset?.learnset[move.id]);
-                while (prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) {
-                    learnInfo += `**As ${prevo.name}:**\n`;
-                    let learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
-                    if (learnDataToAdd.length > 0) learnsMove = true;
-                    learnInfo += learnDataToAdd;
+                while ((prevoLearnset && prevoLearnset.learnset && prevoLearnset.learnset[move.id]) ||
+                    (prevoprevoLearnset && prevoprevoLearnset.learnset && prevoprevoLearnset.learnset[move.id])) {
+                    let learnDataToAdd = "";
+                    if (prevoLearnset && prevoLearnset.learnset) learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
+                    if (learnDataToAdd.length > 0) {
+                        learnsMove = true;
+                        learnInfo += `**As ${prevo.name}:**\n${learnDataToAdd}`;
+                    };
                     // Set up next loop
                     prevo = Dex.species.get(prevo.prevo);
                     prevoLearnset = await Dex.learnsets.get(prevo.id);
+                    prevoprevoLearnset = null; // Prevents infinite loops untill we get 4 stage evolution lines
                 };
                 pokemonEmbed.setDescription(learnInfo);
             } else {
@@ -336,7 +345,6 @@ export default async (interaction, ephemeral) => {
                 month = date.getMonth();
                 // Test month existence, otherwise default to last month
                 let currentMonnthExists = urlExists(`https://www.smogon.com/stats/${year}-${leadingZeros(month, 2)}/`);
-                console.log(currentMonnthExists)
                 if (!currentMonnthExists) month = month - 1;
             };
             if (month < 1) {
@@ -377,11 +385,11 @@ export default async (interaction, ephemeral) => {
             let usageRank = 0;
             let genericDataSplitPokemon = null;
             let pokemonDataSplitLine = null;
-            if (pokemonName) {
-                let usagePokemonString = usageArray.find(element => element.startsWith(pokemonName + " ")); // Space is to exclude matching more popular subforms
-                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for ${pokemonName} in ${formatInput} during the specified month.`, components: usageButtons });
+            if (pokemon) {
+                let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
+                if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
                 // Data from generic usage page
-                genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                genericDataSplitPokemon = genericUsageResponse.data.split(pokemon.name);
                 pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                 rawUsage = pokemonDataSplitLine[2].trim();
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
@@ -395,8 +403,8 @@ export default async (interaction, ephemeral) => {
                 let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
                 let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
                 pokemonEmbed
-                    .setTitle(`${pokemonName} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
-                    .setDescription(`#${usageRank} | ${usagePercentage} | ${rawUsage} uses`)
+                    .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
+                    .setDescription(`Usage Rank: #${usageRank}\nUsage Percentage: ${usagePercentage}\nRaw Uses: ${rawUsage}`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
                         { name: "Items:", value: itemsString, inline: true },
@@ -410,12 +418,12 @@ export default async (interaction, ephemeral) => {
                 let usageList = [];
                 let usageListIndex = 1;
                 await usageArray.forEach(element => {
-                    pokemonName = element.split("Raw count")[0].trim();
+                    nameInput = element.split("Raw count")[0].trim();
                     // Percentage determination copied from generic usage data parsing for specific pokemon
-                    genericDataSplitPokemon = genericUsageResponse.data.split(pokemonName);
+                    genericDataSplitPokemon = genericUsageResponse.data.split(nameInput);
                     pokemonDataSplitLine = genericDataSplitPokemon[1].split("|");
                     usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
-                    usageList.push(`${usageListIndex}.${pokemonName} ${usagePercentage}`);
+                    usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
                 let usageListPart1 = [];
@@ -441,6 +449,68 @@ export default async (interaction, ephemeral) => {
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
+            break;
+        // Card
+        case "card":
+            const cardInput = interaction.options.getString("card");
+            const cardSetId = cardInput.split("-")[0];
+            const cardFailString = "Could not find that card. Please make sure to pick a card from the autocomplete options.";
+            const cardSetJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${cardSetId}.json`, { assert: { type: "json" } }).catch(e => {
+                return null;
+            });
+            if (!cardSetJSON) return sendMessage({ interaction: interaction, content: cardFailString });
+            const cardData = cardSetJSON.default.find(element => element.id == cardInput);
+            if (!cardData) return sendMessage({ interaction: interaction, content: cardFailString });
+            const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
+            let cardTitle = cardData.name; // Space for fomatting with emojis below
+            if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
+            if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
+            let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
+            if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
+            if (cardData.legalities) {
+                cardFooter += ": "; // Seperation between regulation and legalities
+                Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
+            };
+            if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
+            if (cardData.attacks) cardData.attacks.forEach(attack => {
+                let attackName = attack.name;
+                if (attack.damage) attackName += ` - ${attack.damage}`;
+                let attackDescription = attack.text || "No extra effect.";
+                if (attack.cost) {
+                    attackName = ` ${attackName}`; // Space looks better between cost and name
+                    attack.cost.reverse().forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`); // Reverse because we are adding to the front
+                };
+                pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
+            });
+            if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses), inline: true }]);
+            if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances), inline: true }]);
+            if (cardData.retreatCost) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: cardData.retreatCost.map(cost => cardTypeEmojis[cost]).join(""), inline: true }]);
+
+            pokemonEmbed
+                .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
+                .setTitle(cardTitle)
+                .setImage(cardData.images.large)
+                .setFooter({ text: cardFooter, iconURL: cardSetData.images.symbol });
+            if (cardData.rules) pokemonEmbed.setDescription(cardData.rules.join("\n"));
+            break;
+        case "cardset":
+            const setData = pokemonCardSetsJSON.find(element => element.id == nameInput);
+            const setJSON = await import(`../../submodules/pokemon-tcg-data/cards/en/${nameInput}.json`, { assert: { type: "json" } }).catch(e => {
+                return null;
+            });
+            if (!setJSON || !setData) return sendMessage({ interaction: interaction, content: "Could not find that set. Please make sure to pick a set from the autocomplete options." });
+            let setFooter = `${setData.releaseDate}\n`;
+            if (setData.legalities) Object.keys(setData.legalities).forEach(legality => setFooter += ` ✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)}`);
+            let setDescription = "";
+            setJSON.default.forEach(card => {
+                setDescription += `\n${card.number} ${card.name}`;
+            });
+            pokemonEmbed
+                .setAuthor({ name: `${setData.printedTotal} cards` })
+                .setTitle(setData.name)
+                .setThumbnail(setData.images.logo)
+                .setDescription(setDescription)
+                .setFooter({ text: setFooter, iconURL: setData.images.symbol });
             break;
         // Pokémon
         case "pokemon":
@@ -469,7 +539,7 @@ export default async (interaction, ephemeral) => {
 
 function getLearnData(learnData) {
     let learnInfo = "";
-    if (learnData.length == 0) return learnInfo;
+    if (!learnData || learnData.length == 0) return learnInfo;
     learnData.forEach(learnMethod => {
         let learnGen = learnMethod.charAt(0);
         let learnType = learnMethod.charAt(1);
@@ -516,6 +586,13 @@ function isIdenticalForm(pokemonName) {
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
+// Get weakness/resistance string from dataset's array format
+function getCardMatchupString(matchupArray) {
+    let matchupString = "";
+    matchupArray.forEach(matchup => matchupString += cardTypeEmojis[matchup.type]);
+    matchupString += ` ${matchupArray[0].value}`; // This operates under the assumption that all resistances/weaknesses are equal within each card. Rewrite if this ever changes.
+    return matchupString;
+};
 
 // Set nature choices. The max is 25 and there are exactly 25 natures. 
 // If Gamefreak ever adds a 26th nature this will need to be moved back into autocomplete.
@@ -524,37 +601,47 @@ allNatures.forEach(nature => {
     natureChoices.push({ name: nature.name, value: nature.name });
 });
 
-const pokemonOptionName = "pokemon";
 const pokemonOptionDescription = "Pokémon to get info on.";
+const moveOptionDescription = "Move to get info on.";
 const generationOptionName = "generation";
 const generationOptionDescription = "Generation to use.";
 // String options
 const pokemonOption = new SlashCommandStringOption()
-    .setName(pokemonOptionName)
+    .setName("pokemon") // Named differently since it's only used in usage subcommand
     .setDescription(pokemonOptionDescription)
     .setAutocomplete(true);
 const pokemonOptionRequired = new SlashCommandStringOption()
-    .setName(pokemonOptionName)
+    .setName("pokemon")
+    .setDescription(pokemonOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const pokemonOptionRequiredName = new SlashCommandStringOption()
+    .setName("name")
     .setDescription(pokemonOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
 const abilityOption = new SlashCommandStringOption()
-    .setName("ability")
+    .setName("name")
     .setDescription("Ability to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
 const itemOption = new SlashCommandStringOption()
-    .setName("item")
+    .setName("name")
     .setDescription("Item to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
 const moveOption = new SlashCommandStringOption()
     .setName("move")
-    .setDescription("Move to get info on.")
+    .setDescription(moveOptionDescription)
+    .setAutocomplete(true)
+    .setRequired(true);
+const moveOptionName = new SlashCommandStringOption()
+    .setName("name")
+    .setDescription(moveOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
 const natureOption = new SlashCommandStringOption()
-    .setName("nature")
+    .setName("name")
     .setDescription("Nature to get info on.")
     .setChoices(natureChoices)
     .setRequired(true);
@@ -563,17 +650,27 @@ const formatOption = new SlashCommandStringOption()
     .setDescription("Format to get info on.")
     .setAutocomplete(true)
     .setRequired(true);
+const cardOption = new SlashCommandStringOption()
+    .setName("card")
+    .setDescription("Pick a card. Any card.")
+    .setAutocomplete(true)
+    .setRequired(true);
+const cardSetOption = new SlashCommandStringOption()
+    .setName("name")
+    .setDescription("Specify set by name.")
+    .setAutocomplete(true)
+    .setRequired(true);
 // Integer options
 const generationOption = new SlashCommandIntegerOption()
     .setName(generationOptionName)
     .setDescription(generationOptionDescription)
     .setMinValue(1)
-    .setMaxValue(globalVars.pokemonCurrentGeneration);
+    .setMaxValue(globalVars.pokemon.currentGeneration);
 const generationOptionAbilities = new SlashCommandIntegerOption()
     .setName(generationOptionName)
     .setDescription(generationOptionDescription)
     .setMinValue(3)
-    .setMaxValue(globalVars.pokemonCurrentGeneration);
+    .setMaxValue(globalVars.pokemon.currentGeneration);
 const monthOption = new SlashCommandIntegerOption()
     .setName("month")
     .setDescription("Month (number) to get data from.")
@@ -604,7 +701,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
 const pokemonSubcommand = new SlashCommandSubcommandBuilder()
     .setName("pokemon")
     .setDescription("Get info on a Pokémon.")
-    .addStringOption(pokemonOptionRequired)
+    .addStringOption(pokemonOptionRequiredName)
     .addIntegerOption(generationOption)
     .addBooleanOption(learnsetOption)
     .addBooleanOption(shinyOption)
@@ -618,7 +715,7 @@ const abilitySubcommand = new SlashCommandSubcommandBuilder()
 const moveSubcommand = new SlashCommandSubcommandBuilder()
     .setName("move")
     .setDescription("Get info on a move.")
-    .addStringOption(moveOption)
+    .addStringOption(moveOptionName)
     .addIntegerOption(generationOption)
     .addBooleanOption(ephemeralOption);
 const itemSubcommand = new SlashCommandSubcommandBuilder()
@@ -652,6 +749,16 @@ const usageSubcommand = new SlashCommandSubcommandBuilder()
     .addIntegerOption(yearOption)
     .addIntegerOption(ratingOption)
     .addBooleanOption(ephemeralOption);
+const cardSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("card")
+    .setDescription("Get info on a card.")
+    .addStringOption(cardOption)
+    .addBooleanOption(ephemeralOption);
+const cardSetSubcommand = new SlashCommandSubcommandBuilder()
+    .setName("cardset")
+    .setDescription("Get info on a card set.")
+    .addStringOption(cardSetOption)
+    .addBooleanOption(ephemeralOption);
 const whosThatSubcommand = new SlashCommandSubcommandBuilder()
     .setName("whosthat")
     .setDescription("Who's that Pokémon?")
@@ -668,4 +775,6 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(formatSubcommand)
     .addSubcommand(learnSubcommand)
     .addSubcommand(usageSubcommand)
+    .addSubcommand(cardSubcommand)
+    .addSubcommand(cardSetSubcommand)
     .addSubcommand(whosThatSubcommand);

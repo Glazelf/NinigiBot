@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -24,7 +25,7 @@ export default async (interaction, ephemeral) => {
 
     switch (interaction.options.getSubcommand()) {
         case "planet":
-            let inputPlanet = interaction.options.getString("planet");
+            let inputPlanet = interaction.options.getString("name");
             let planetsResponse = await axios.get(`${api}planets`);
             let planetsData = planetsResponse.data;
             let planetObject = Object.entries(planetsData).find(([key, value]) => value.name.toLowerCase() == inputPlanet.toLowerCase());
@@ -80,7 +81,7 @@ export default async (interaction, ephemeral) => {
 
 // String options
 const planetOption = new SlashCommandStringOption()
-    .setName("planet")
+    .setName("name")
     .setDescription("Specify planet by name.")
     .setAutocomplete(true)
     .setRequired(true);
@@ -98,9 +99,14 @@ const campaignSubcommand = new SlashCommandSubcommandBuilder()
     .setName("campaign")
     .setDescription("Get info on current campaigns.")
     .addBooleanOption(ephemeralOption);
-// Full command
-export const commandObject = new SlashCommandBuilder()
-    .setName("helldivers2")
-    .setDescription("Shows Helldivers 2 info.")
+// Subcommand groups
+const helldivers2SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("2")
+    .setDescription("Helldivers 2.")
     .addSubcommand(planetSubcommand)
     .addSubcommand(campaignSubcommand);
+// Full command
+export const commandObject = new SlashCommandBuilder()
+    .setName("helldivers")
+    .setDescription("Shows Helldivers info.")
+    .addSubcommandGroup(helldivers2SubcommandGroup);

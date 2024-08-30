@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -11,8 +12,27 @@ import sendMessage from "../../util/sendMessage.js";
 import getSplatfests from "../../util/splat/getSplatfests.js";
 import randomNumber from "../../util/math/randomNumber.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
+const version = "latest"; // Use version number without periods or "latest"
+import GearInfoClothesJSON from "../../submodules/splat3/data/mush/latest/GearInfoClothes.json" with { type: "json" };
+import GearInfoHeadJSON from "../../submodules/splat3/data/mush/latest/GearInfoHead.json" with { type: "json" };
+import GearInfoShoesJSON from "../../submodules/splat3/data/mush/latest/GearInfoShoes.json" with { type: "json" };
+import WeaponInfoMainJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoMain.json" with { type: "json" };
+// import WeaponInfoSpecialJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSpecial.json" with { type: "json" };
+// import WeaponInfoSubJSON from "../../submodules/splat3/data/mush/latest/WeaponInfoSub.json" with { type: "json" };
 
-let splatoon3Languages = [
+// Import language files
+fs.readdir("./submodules/splat3/data/language/", (err, files) => {
+    if (err) return console.error(err);
+    files.forEach(async (file) => {
+        const fileName = file.split(".")[0];
+        if (!fileName.endsWith("_full")) return; // Skip to next iteration, only count full language files
+        const languageKey = fileName.split("_")[0];
+        const languageJSON = await import(`../../submodules/splat3/data/language/${file}`, { assert: { type: "json" } });
+        globalVars.splatoon3.languageJSONs[languageKey] = languageJSON.default;
+    });
+});
+
+const splatoon3Languages = [
     { name: "English", value: "EUen" },
     { name: "French | Français", value: "EUfr" },
     { name: "German | Deutsch", value: "EUde" },
@@ -25,7 +45,7 @@ let splatoon3Languages = [
     { name: "Chinese (Simplified) | 中文（简体)", value: "CNzh" },
     { name: "Chinese (Traditional) | 中文（繁體)", value: "TWzh" }
 ];
-let splatoon3Regions = [
+const splatoon3Regions = [
     { value: "EU", name: "Europe" },
     { value: "US", name: "United States" },
     { value: "JP", name: "Japan" },
@@ -34,33 +54,19 @@ let splatoon3Regions = [
 
 export default async (interaction, ephemeral) => {
     // Game data
-    let version = "latest"; // Use version number without periods or "latest"
     let versionLatest = version;
     if (versionLatest == "latest") versionLatest = await fs.promises.readlink("./submodules/splat3/data/mush/latest");
     let versionSplit = versionLatest.split("").join(".");
     if (versionSplit.startsWith("1.")) versionSplit = versionSplit.replace("1.", "1");
     let versionString = `Splatoon 3 v${versionSplit}`;
-    let GearInfoClothesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoClothes.json`, { assert: { type: "json" } });
-    GearInfoClothesJSON = GearInfoClothesJSON.default;
-    let GearInfoHeadJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoHead.json`, { assert: { type: "json" } });
-    GearInfoHeadJSON = GearInfoHeadJSON.default;
-    let GearInfoShoesJSON = await import(`../../submodules/splat3/data/mush/${version}/GearInfoShoes.json`, { assert: { type: "json" } });
-    GearInfoShoesJSON = GearInfoShoesJSON.default;
-    let WeaponInfoMainJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoMain.json`, { assert: { type: "json" } });
-    WeaponInfoMainJSON = WeaponInfoMainJSON.default;
-    // const WeaponInfoSpecialJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSpecial.json`, { assert: { type: "json" } });
-    // WeaponInfoSpecialJSON = WeaponInfoSpecialJSON.default;
-    // const WeaponInfoSubJSON = await import(`../../submodules/splat3/data/mush/${version}/WeaponInfoSub.json`, { assert: { type: "json" } });
-    // WeaponInfoSubJSON = WeaponInfoSubJSON.default;
 
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Check language
     let languageKey = interaction.options.getString("language");
     if (!languageKey) languageKey = "EUen";
-    let languageJSON = await import(`../../submodules/splat3/data/language/${languageKey}_full.json`, { assert: { type: "json" } });
-    languageJSON = languageJSON.default;
-    let inputID;
+    let languageJSON = globalVars.splatoon3.languageJSONs[languageKey];
+    let inputID = interaction.options.getString("name");
     let inputRegion = interaction.options.getString("region");
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
     let star = "⭐";
@@ -75,7 +81,6 @@ export default async (interaction, ephemeral) => {
         .setColor(globalVars.embedColor);
     switch (interaction.options.getSubcommand()) {
         case "clothing":
-            inputID = interaction.options.getString("clothing");
             // Get clothing type as added in events/interactionCreate.js
             let inputIDSplit = inputID.split("_");
             let clothingType = inputIDSplit[inputIDSplit.length - 1];
@@ -128,7 +133,6 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "weapon":
-            inputID = interaction.options.getString("weapon");
             let weaponObject = await Object.values(WeaponInfoMainJSON).find(weapon => weapon.GameActor.includes(inputID));
             if (!weaponObject) return sendMessage({ interaction: interaction, content: `Couldn't find that weapon. Make sure you select an autocomplete option.` });
 
@@ -170,7 +174,6 @@ export default async (interaction, ephemeral) => {
                 ]);
             break;
         case "subweapon":
-            inputID = interaction.options.getString("subweapon");
             let subweaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                 let weaponSubID = weapon.SubWeapon.split("/");
                 weaponSubID = weaponSubID[weaponSubID.length - 1].split(".")[0];
@@ -197,7 +200,6 @@ export default async (interaction, ephemeral) => {
                 .addFields([{ name: weaponListTitle, value: allSubweaponMatchesNames, inline: false }]);
             break;
         case "special":
-            inputID = interaction.options.getString("special");
             let specialWeaponMatches = Object.values(WeaponInfoMainJSON).filter(weapon => {
                 let weaponSpecialID = weapon.SpecialWeapon.split("/");
                 weaponSpecialID = weaponSpecialID[weaponSpecialID.length - 1].split(".")[0];
@@ -397,7 +399,6 @@ export default async (interaction, ephemeral) => {
             await interaction.deferReply({ ephemeral: ephemeral });
             let splatfestReplyObject = await getSplatfests({ interaction: interaction, page: 1, region: inputRegion });
             return sendMessage({ interaction: interaction, embeds: splatfestReplyObject.embeds, components: splatfestReplyObject.components, ephemeral: ephemeral });
-            break;
         case "replay":
             await interaction.deferReply({ ephemeral: ephemeral });
             let replayCode = interaction.options.getString("code");
@@ -495,27 +496,23 @@ function getGearString(gear, type) {
 };
 
 // String options
-const languageOption = new SlashCommandStringOption()
-    .setName("language")
-    .setDescription("Specify a language")
-    .setChoices(splatoon3Languages);
 const clothingOption = new SlashCommandStringOption()
-    .setName("clothing")
+    .setName("name")
     .setDescription("Specify a piece of clothing by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const weaponOption = new SlashCommandStringOption()
-    .setName("weapon")
+    .setName("name")
     .setDescription("Specify a weapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const subweaponOption = new SlashCommandStringOption()
-    .setName("subweapon")
+    .setName("name")
     .setDescription("Specify a subweapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const specialOption = new SlashCommandStringOption()
-    .setName("special")
+    .setName("name")
     .setDescription("Specify a special weapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
@@ -524,6 +521,10 @@ const modeOption = new SlashCommandStringOption()
     .setDescription("Specify a mode")
     .setAutocomplete(true)
     .setRequired(true);
+const languageOption = new SlashCommandStringOption()
+    .setName("language")
+    .setDescription("Specify a language")
+    .setChoices(splatoon3Languages);
 const regionOption = new SlashCommandStringOption()
     .setName("region")
     .setDescription("Specify a region. Default is EU.")
@@ -585,11 +586,11 @@ const splashtagRandomSubcommand = new SlashCommandSubcommandBuilder()
     .setName("splashtag-random")
     .setDescription("Generate a random splashtag.")
     .addStringOption(languageOption)
-    .addBooleanOption(ephemeralOption)
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("splatoon3")
-    .setDescription("Shows Splatoon 3 data.")
+    .addBooleanOption(ephemeralOption);
+// Subcommand groups
+const splat3SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("3")
+    .setDescription("Splatoon 3.")
     .addSubcommand(clothingSubcommand)
     .addSubcommand(weaponSubcommand)
     .addSubcommand(subweaponSubcommand)
@@ -599,3 +600,8 @@ export const commandObject = new SlashCommandBuilder()
     .addSubcommand(splatfestsSubcommand)
     .addSubcommand(replaySubcommand)
     .addSubcommand(splashtagRandomSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("splatoon")
+    .setDescription("Shows Splatoon data.")
+    .addSubcommandGroup(splat3SubcommandGroup);

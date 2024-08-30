@@ -3,7 +3,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import synthesis from "../../submodules/DQM3-db/util/synthesis.js";
@@ -21,17 +22,16 @@ import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { typ
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
-    let inputID = null;
     let detailed = false;
     let detailedArg = interaction.options.getBoolean("detailed");
     if (detailedArg === true) detailed = true;
 
     let dqm3Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
+    let nameInput = interaction.options.getString("name");
     switch (interaction.options.getSubcommand()) {
         case "monster":
-            inputID = interaction.options.getString("monster");
-            let monsterData = monstersJSON[inputID];
+            let monsterData = monstersJSON[nameInput];
             if (!monsterData) return sendMessage({ interaction: interaction, content: `Could not find that monster.` });
             let monsterTitle = monsterData.name;
             if (monsterData.number) monsterTitle = `${monsterData.number}: ${monsterTitle}`; // Redundant check in complete dataset
@@ -76,8 +76,7 @@ export default async (interaction, ephemeral) => {
             };
             break;
         case "talent":
-            inputID = interaction.options.getString("talent");
-            let talentData = talentsJSON[inputID];
+            let talentData = talentsJSON[nameInput];
             if (!talentData) return sendMessage({ interaction: interaction, content: `Could not find that talent.` });
             let talentSkillsString = "";
             if (talentData.skills) {
@@ -96,7 +95,7 @@ export default async (interaction, ephemeral) => {
             let talentMonstersArray = [];
             let talentMonsters = Object.entries(monstersJSON).filter(monster => {
                 if (!monster[1].talents) return false; // Check might be redundant in complete dataset
-                return monster[1].talents.includes(inputID);
+                return monster[1].talents.includes(nameInput);
             });
             talentMonsters.forEach(monster => {
                 talentMonstersArray.push(monstersJSON[monster[0]].name);
@@ -108,15 +107,14 @@ export default async (interaction, ephemeral) => {
             if (talentMonstersString.length > 0) dqm3Embed.addFields([{ name: "Monsters:", value: talentMonstersString, inline: false }]);
             break;
         case "skill":
-            inputID = interaction.options.getString("skill");
-            let skillData = skillsJSON[inputID];
+            let skillData = skillsJSON[nameInput];
             if (!skillData) return sendMessage({ interaction: interaction, content: `Could not find that skill.` });
             let mpCostString = skillData.mp_cost.toString();
             if (skillData.mp_cost < 0) mpCostString = `${skillData.mp_cost * -100}%`;
             let skillTalents = [];
             for (const [talentID, talentObject] of Object.entries(talentsJSON)) {
                 if (talentObject.skills == null) continue;
-                if (Object.keys(talentObject.skills).includes(inputID)) skillTalents.push(`${talentObject.name} (${talentObject.skills[inputID]})`);
+                if (Object.keys(talentObject.skills).includes(nameInput)) skillTalents.push(`${talentObject.name} (${talentObject.skills[nameInput]})`);
             };
             dqm3Embed
                 .setTitle(skillData.name)
@@ -128,19 +126,18 @@ export default async (interaction, ephemeral) => {
             if (skillTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: skillTalents.join("\n"), inline: false }]);
             break;
         case "trait":
-            inputID = interaction.options.getString("trait");
-            let traitData = traitsJSON[inputID];
+            let traitData = traitsJSON[nameInput];
             if (!traitData) return sendMessage({ interaction: interaction, content: `Could not find that trait.` });
             let traitMonsters = [];
             for (const [monsterID, monsterObject] of Object.entries(monstersJSON)) {
                 if (monsterObject.traits == null) continue;
-                if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(inputID)) traitMonsters.push(monsterObject.name);
-                if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(inputID)) traitMonsters.push(`${monsterObject.name} (L)`);
+                if (monsterObject.traits.small && Object.keys(monsterObject.traits.small).includes(nameInput)) traitMonsters.push(monsterObject.name);
+                if (monsterObject.traits.large && Object.keys(monsterObject.traits.large).includes(nameInput)) traitMonsters.push(`${monsterObject.name} (L)`);
             };
             let traitTalents = [];
             for (const [talentID, talentObject] of Object.entries(talentsJSON)) {
                 if (talentObject.traits == null) continue;
-                if (Object.keys(talentObject.traits).includes(inputID)) traitTalents.push(`${talentObject.name} (${talentObject.traits[inputID]})`);
+                if (Object.keys(talentObject.traits).includes(nameInput)) traitTalents.push(`${talentObject.name} (${talentObject.traits[nameInput]})`);
             };
             dqm3Embed
                 .setTitle(traitData.name)
@@ -149,8 +146,7 @@ export default async (interaction, ephemeral) => {
             if (traitTalents.length > 0) dqm3Embed.addFields([{ name: "Talents:", value: traitTalents.join("\n"), inline: false }]);
             break;
         case "item":
-            inputID = interaction.options.getString("item");
-            let itemData = itemsJSON[inputID];
+            let itemData = itemsJSON[nameInput];
             if (!itemData) return sendMessage({ interaction: interaction, content: `Could not find that item.` });
             dqm3Embed
                 .setTitle(itemData.name)
@@ -228,27 +224,27 @@ export default async (interaction, ephemeral) => {
 const monsterOptionDescription = "Specify monster by name.";
 // String options
 const monsterOption = new SlashCommandStringOption()
-    .setName("monster")
+    .setName("name")
     .setDescription(monsterOptionDescription)
     .setAutocomplete(true)
     .setRequired(true);
 const talentOption = new SlashCommandStringOption()
-    .setName("talent")
+    .setName("name")
     .setDescription("Specify talent by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const skillOption = new SlashCommandStringOption()
-    .setName("skill")
+    .setName("name")
     .setDescription("Specify skill by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const traitOption = new SlashCommandStringOption()
-    .setName("trait")
+    .setName("name")
     .setDescription("Specify trait by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const itemOption = new SlashCommandStringOption()
-    .setName("item")
+    .setName("name")
     .setDescription("Specify item by name.")
     .setAutocomplete(true)
     .setRequired(true);
@@ -305,13 +301,18 @@ const synthesisSubcommand = new SlashCommandSubcommandBuilder()
     .addStringOption(parent2Option)
     .addStringOption(targetOption)
     .addBooleanOption(ephemeralOption);
-// Final command
-export const commandObject = new SlashCommandBuilder()
-    .setName("dqm3")
-    .setDescription("Shows Dragon Quest Monsters 3: The Dark Prince data.")
+// Subcommand groups
+const dqm3SubcommandGroup = new SlashCommandSubcommandGroupBuilder()
+    .setName("3")
+    .setDescription("Dragon Quest Monsters 3: The Dark Prince.")
     .addSubcommand(monsterSubcommand)
     .addSubcommand(talentSubcommand)
     .addSubcommand(skillSubcommand)
     .addSubcommand(traitSubcommand)
     .addSubcommand(itemSubcommand)
     .addSubcommand(synthesisSubcommand);
+// Final command
+export const commandObject = new SlashCommandBuilder()
+    .setName("dqm")
+    .setDescription("Shows Dragon Quest Monsters data.")
+    .addSubcommandGroup(dqm3SubcommandGroup);

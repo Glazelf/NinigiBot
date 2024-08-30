@@ -28,11 +28,12 @@ export default async (interaction, ephemeral) => {
     let buttonArray = [];
     let mhEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
+    let nameInput = interaction.options.getString("name");
 
     switch (interaction.options.getSubcommand()) {
         // Specific quest
         case "quest":
-            let questName = interaction.options.getString("quest").toLowerCase();
+            let questName = nameInput.toLowerCase();
             let questData;
             questsJSON.quests.forEach(quest => {
                 if (quest.name.toLowerCase() == questName) questData = quest;
@@ -65,12 +66,11 @@ export default async (interaction, ephemeral) => {
             break;
         // All quests from a game
         case "questlist":
-            let gameName = interaction.options.getString("game");
-            let questsMessageObject = await getQuests({ interaction: interaction, gameName: gameName, page: 1 });
+            let questsMessageObject = await getQuests({ interaction: interaction, gameName: nameInput, page: 1 });
             return sendMessage({ interaction: interaction, embeds: questsMessageObject.embeds, components: questsMessageObject.components, ephemeral: ephemeral });
         // Monsters
         case "monster":
-            let monsterName = interaction.options.getString("monster").toLowerCase();
+            let monsterName = nameInput.toLowerCase();
             // Get monster
             let monsterData;
             if (monsterName == "random") {
@@ -103,12 +103,12 @@ const gameChoices = [
 
 // String options
 const monsterOption = new SlashCommandStringOption()
-    .setName("monster")
+    .setName("name")
     .setDescription("Specify monster by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const questOption = new SlashCommandStringOption()
-    .setName("quest")
+    .setName("name")
     .setDescription("Specify quest by name.")
     .setAutocomplete(true)
     .setRequired(true);

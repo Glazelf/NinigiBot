@@ -60,7 +60,7 @@ export default async (interaction, ephemeral) => {
             if (trophy_price < 1) error += 'Price cannot be lower than 1';
 
             if (error.length > 0) {
-                let errorBlock = codeBlock(error);
+                let errorBlock = codeBlock("fix", error);
                 returnString = `Could not add the trophy due to the following issues:${errorBlock}`;
             } else {
                 await createShopTrophy(trophy_name, trophy_emote, trophy_desc, trophy_price);

@@ -23,5 +23,10 @@
         "extension": "png",
         "dynamic": true
     },
-    "pokemonCurrentGeneration": 9
+    "pokemon": {
+        "currentGeneration": 9
+    },
+    "splatoon3": {
+        "languageJSONs": {}
+    }
 }

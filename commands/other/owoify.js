@@ -45,7 +45,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
     .setDescription(globalVars.ephemeralOptionDescription);
 // Final command
 export const commandObject = new SlashCommandBuilder()
-    .setName("input")
+    .setName("owoify")
     .setDescription("OwOify text.")
     .addStringOption(inputOption)
     .addStringOption(severityOption)

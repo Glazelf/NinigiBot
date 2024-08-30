@@ -114,7 +114,7 @@ export default async (client, member, newMember) => {
                     if (rolesString.length == 0) rolesString = "None";
                     if (newRolesString.length == 0) newRolesString = "None";
                     topText = "Roles Updated ⚒️";
-                    changeText = `Roles for ${user.username} were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
+                    changeText = `Roles for **${user.username}** were changed.\nOld (${rolesSorted.length}): ${rolesString}\nNew (${newRolesSorted.length}): ${newRolesString}`;
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";

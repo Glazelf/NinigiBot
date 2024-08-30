@@ -4,7 +4,6 @@ import {
     SlashCommandBuilder,
     SlashCommandRoleOption
 } from "discord.js";
-import logger from "../../util/logger.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 

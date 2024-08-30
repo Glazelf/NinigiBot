@@ -4,12 +4,12 @@ import {
     ButtonBuilder,
     ButtonStyle
 } from "discord.js";
+import getWikiURL from "../getWikiURL.js";
+import urlExists from "../urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import elementEmojis from "../../objects/monsterhunter/elementEmojis.json" with { type: "json" };
 import ailmentEmojis from "../../objects/monsterhunter/ailmentEmojis.json" with { type: "json" };
-import getWikiURL from "../getWikiURL.js";
-import urlExists from "../urlExists.js";
 
 let iconsRepo = "https://github.com/CrimsonNynja/monster-hunter-DB/blob/master/icons/";
 let mhWiki = "https://static.wikia.nocookie.net/monsterhunter/images/";

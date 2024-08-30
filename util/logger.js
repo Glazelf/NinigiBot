@@ -22,7 +22,7 @@ export default async ({ exception, client, interaction = null }) => {
             return; // Connection/network errors, not a bot issue for the most part. Might be Discord rate limits involved, especially with ECONNRESET socket hang up errors
         } else if (exceptionString.includes("AxiosError")) {
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
-            return sendMessage({ interaction: interaction, content: "API took too long to respond. Please try again later.", ephemeral: true });
+            return sendMessage({ interaction: interaction, content: "API took too long to respond. Please try again later." });
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`${timestamp}: Error occurred`);
@@ -33,9 +33,9 @@ export default async ({ exception, client, interaction = null }) => {
             if (interaction.member) user = interaction.author;
             if (interaction.user) user = interaction.user;
         };
-        let exceptionCode = codeBlock(errorInspectResult); // Used to be exception.stack
+        let exceptionCode = codeBlock("fix", errorInspectResult); // Used to be exception.stack
         let messageContentCode = "";
-        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = codeBlock(interaction.content);
+        if (interaction && interaction.content && interaction.content.length > 0) messageContentCode = codeBlock("fix", interaction.content);
         let interactionOptions = "\n";
         let subCommand = "";
         if (interaction && interaction.options) {

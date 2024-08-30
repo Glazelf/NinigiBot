@@ -24,6 +24,7 @@ export default async (client, entitlement) => {
 
         let SKUs = await client.application.fetchSKUs();
         let matchingSKU = Object.entries(SKUs).find(SKU => SKU.id == entitlement.skuId);
+        if (!matchingSKU) return;
 
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)

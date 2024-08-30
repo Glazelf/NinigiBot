@@ -22,18 +22,26 @@ export default async (client, message, newMessage) => {
         if (!log) return;
 
         let botMember = message.guild.members.me;
-        // Check message content
+        let updateEmbeds = []; // Max embeds is 10, max images is also 10, so this doesn't need to be size limited
         let adminBool = isAdmin(botMember);
 
         if ((log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) || adminBool) {
             // Attachments
-            let messageImage = null; // Very inconsistent, almost never works
             let messageAttachmentsTitle = "Attachments:";
             let messageAttachmentsString = "";
+            let messageImage = null;
             if (message.attachments.size > 0) {
                 messageImage = message.attachments.first().proxyURL;
                 messageAttachmentsTitle += ` (${message.attachments.size})`;
                 message.attachments.forEach(attachment => {
+                    // Image tiling
+                    if (attachment.proxyURL !== message.attachments.first().proxyURL) {
+                        let imageEmbed = new EmbedBuilder()
+                            .setImage(attachment.proxyURL)
+                            .setURL(message.url);
+                        updateEmbeds.push(imageEmbed);
+                    };
+                    // Image links
                     if ((messageAttachmentsString.length + attachment.proxyURL.length) < 1024) messageAttachmentsString += `${attachment.proxyURL}\n`;
                 });
             };
@@ -59,16 +67,18 @@ export default async (client, message, newMessage) => {
             const updateEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
                 .setTitle(`Message Edited ⚒️`)
+                .setImage(messageImage)
+                .setURL(message.url)
                 .setThumbnail(avatar)
                 .setDescription(`Author:${message.author} (${message.author.id})\nChannel: ${message.channel} (${message.channel.id})\nContext: ${message.url}`)
-                .setImage(messageImage)
                 .setFooter({ text: message.author.username })
                 .setTimestamp(message.createdTimestamp);
             if (messageContent.length > 0) updateEmbed.addFields([{ name: `Before:`, value: messageContent, inline: false }]);
             updateEmbed.addFields([{ name: `After:`, value: newMessageContent, inline: false }]);
             if (messageAttachmentsString.length > 0) updateEmbed.addFields([{ name: messageAttachmentsTitle, value: messageAttachmentsString }]);
             if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) updateEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: false }]);
-            return log.send({ embeds: [updateEmbed] });
+            updateEmbeds.unshift(updateEmbed);
+            return log.send({ embeds: updateEmbeds });
         } else if (log.permissionsFor(botMember).has(PermissionFlagsBits.SendMessages) && !log.permissionsFor(botMember).has(PermissionFlagsBits.EmbedLinks)) {
             try {
                 return log.send({ content: `I lack permissions to send embeds in ${log}.` });

@@ -11,12 +11,11 @@ import path from 'path';
 import globalVars from "./objects/globalVars.json" with { type: "json" };
 import config from './config.json' with { type: "json" };
 
+const fsp = fs.promises;
+
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildModeration,
-    GatewayIntentBits.GuildEmojisAndStickers,
-    GatewayIntentBits.GuildIntegrations,
-    // GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.DirectMessages,
@@ -57,10 +56,10 @@ const client = new Client({
     },
     shards: "auto"
 });
+
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-fs.readdir("./events/", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(async (file) => {
+await fsp.readdir("./events/").then(async (files) => {
+    for await (const file of files) {
         // If the file is not a JS file, ignore it.
         if (!file.endsWith(".js")) return;
         // Load the event file itself
@@ -71,22 +70,26 @@ fs.readdir("./events/", (err, files) => {
         // Each event will be called with the client argument,
         // followed by its "normal" arguments, like message, member, etc.
         client.on(eventName, event.bind(null, client));
-    });
+    };
+}).catch((err) => {
+    console.log(err);
 });
+console.log("Loaded events!");
+
 client.commands = new Collection();
 await walk(`./commands/`);
 console.log("Loaded commands!");
 
 client.login(config.token);
+
 // This loop reads the /commands/ folder and attaches each command file to the appropriate command.
 async function walk(dir, callback) {
-    fs.readdir(dir, function (err, files) {
-        if (err) throw err;
-        files.forEach(function (file) {
+    await fsp.readdir(dir).then(async (files) => {
+        for (const file of files) {
             let filepath = path.join(dir, file);
-            fs.stat(filepath, async function (err, stats) {
+            await fsp.stat(filepath).then(async (stats) => {
                 if (stats.isDirectory()) {
-                    walk(filepath, callback);
+                    await walk(filepath, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
@@ -95,6 +98,8 @@ async function walk(dir, callback) {
                     client.commands.set(commandName, props);
                 };
             });
-        });
+        };
+    }).catch((err) => {
+        console.log(err);
     });
 };

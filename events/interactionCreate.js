@@ -24,21 +24,24 @@ import { Dex as DexSim } from '@pkmn/sim';
 import { Generations } from '@pkmn/data';
 import getPokemon from "../util/pokemon/getPokemon.js";
 import getWhosThatPokemon from "../util/pokemon/getWhosThatPokemon.js";
+import pokemonCardSetsJSON from "../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 // Monster Hunter
 import getMHMonster from "../util/mh/getMonster.js";
 import getMHQuests from "../util/mh/getQuests.js";
-import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json"};
-import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json"};
+import MHMonstersJSON from "../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
+import MHQuestsJSON from "../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 // Splatoon
 import getSplatfests from "../util/splat/getSplatfests.js";
-// DQM3
-import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json"};
-import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json"};
-// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json"};
-import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json"};
-import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json"};
-import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json"};
-import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json"};
+// DQM
+import DQMTraitsJSON from "../submodules/DQM3-db/objects/traits.json" with { type: "json" };
+import DQMMonstersJSON from "../submodules/DQM3-db/objects/monsters.json" with { type: "json" };
+// import DQMAreasJSON from "../submodules/DQM3-db/objects/areas.json" with { type: "json" };
+import DQMFamiliesJSON from "../submodules/DQM3-db/objects/families.json" with { type: "json" };
+import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type: "json" };
+import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
+import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
+// BTD
+import getBossEvent from "../util/btd6/getBossEvent.js";
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
@@ -60,18 +63,31 @@ import getTrophyEmbedSlice from "../util/trophies/getTrophyEmbedSlice.js";
 
 // Pokémon
 const gens = new Generations(Dex);
+// List all Pokemon Cards
+let pokemonCardsBySet = {};
+let pokemonCardsAll = [];
+fs.readdir("./submodules/pokemon-tcg-data/cards/en", (err, files) => {
+    if (err) return console.error(err);
+    files.forEach(async (file) => {
+        const fileName = file.split(".")[0];
+        if (!pokemonCardsBySet[fileName]) pokemonCardsBySet[fileName] = [];
+        const setJSON = await import(`../submodules/pokemon-tcg-data/cards/en/${file}`, { assert: { type: "json" } });
+        setJSON.default.forEach(card => {
+            pokemonCardsBySet[fileName].push(card);
+            pokemonCardsAll.push(card);
+        });
+    });
+});
 // Helldivers
 let apiHelldivers = "https://helldiverstrainingmanual.com/api/v1/";
-// Persona 5
-// Submodule is documented in persona5 command
-let skillMapRoyal;
+// Persona
+// Submodule is documented in persona command
+let skillMapRoyal, personaMapRoyal, itemMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/SkillDataRoyal.js", "utf8").replace("var", ""));
-let personaMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/PersonaDataRoyal.js", "utf8").replace("var", ""));
-let itemMapRoyal;
 eval(fs.readFileSync("submodules/persona5_calculator/data/ItemDataRoyal.js", "utf8").replace("var", ""));
 // Genshin Impact
-let giAPI = `https://genshin.jmp.blue/`;
+const giAPI = `https://genshin.jmp.blue/`;
 
 export default async (client, interaction) => {
     try {
@@ -84,6 +100,7 @@ export default async (client, interaction) => {
         if (inCommandInteractions.includes(interaction.customId)) return;
         // Common variables
         let pkmQuizModalId = 'pkmQuizModal';
+        let valuesByDate = {}; // Values that need to be timesorted
         switch (interaction.type) {
             case InteractionType.ApplicationCommand:
                 // Grab the command data from the client.commands collection
@@ -331,6 +348,11 @@ export default async (client, interaction) => {
                             let userinfo_page = await getUserInfoSlice(interaction, page, { id: user });
                             embedsReturn = [userinfo_page.embeds];
                             componentsReturn = [userinfo_page.components];
+                        } else if (interaction.customId.startsWith("btd6BossEvent")) {
+                            let bossEventMessageObject = await getBossEvent(interaction.customId.split("|")[1] == "false");
+                            if (typeof bossEventMessageObject == "string") return;
+                            embedsReturn = [bossEventMessageObject.embeds];
+                            componentsReturn = [bossEventMessageObject.components];
                         } else {
                             // Other buttons
                             return;
@@ -444,39 +466,61 @@ export default async (client, interaction) => {
                         };
                         break;
                     case "pokemon":
-                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemonCurrentGeneration;
+                        let generationInput = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
                         let dexModified = Dex.mod(`gen${generationInput}`);
                         switch (focusedOption.name) {
                             case "pokemon":
-                                // For some reason filtering breaks the original sorted order, sort by number to restore it
-                                let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
-                                let usageBool = (interaction.options.getSubcommand() == "usage");
-                                pokemonSpecies.forEach(species => {
-                                    let pokemonIdentifier = `${species.num}: ${species.name}`;
-                                    if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
-                                        && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
-                                });
-                                break;
-                            case "ability":
-                                // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                abilities.forEach(ability => {
-                                    if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
-                                });
-                                break;
                             case "move":
-                                // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                moves.forEach(move => {
-                                    if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
-                                });
-                                break;
-                            case "item":
-                                // For some reason filtering breaks the original sorted order, sort by name to restore it
-                                let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
-                                items.forEach(item => {
-                                    if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
-                                });
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "format": // Pokemon selection in format
+                                    case "usage":
+                                    case "learn":
+                                    case "move":
+                                    case "pokemon":
+                                        if ([focusedOption.name, interaction.options.getSubcommand()].includes("move")) {
+                                            // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                            let moves = dexModified.moves.all().filter(move => move.exists && !["CAP", "Future"].includes(move.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                            moves.forEach(move => {
+                                                if (move.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: move.name, value: move.name });
+                                            });
+                                            break;
+                                        } else {
+                                            // For some reason filtering breaks the original sorted order, sort by number to restore it
+                                            let pokemonSpecies = dexModified.species.all().filter(species => species.num > 0 && species.exists && !["CAP", "Future"].includes(species.isNonstandard)).sort((a, b) => a.num - b.num);
+                                            let usageBool = (interaction.options.getSubcommand() == "usage");
+                                            pokemonSpecies.forEach(species => {
+                                                let pokemonIdentifier = `${species.num}: ${species.name}`;
+                                                if ((pokemonIdentifier.toLowerCase().includes(focusedOption.value))
+                                                    && !(usageBool && species.name.endsWith("-Gmax"))) choices.push({ name: pokemonIdentifier, value: species.name });
+                                            });
+                                            break;
+                                        };
+                                    case "ability":
+                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                        let abilities = dexModified.abilities.all().filter(ability => ability.exists && ability.name !== "No Ability" && !["CAP", "Future"].includes(ability.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                        abilities.forEach(ability => {
+                                            if (ability.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: ability.name, value: ability.name });
+                                        });
+                                        break;
+                                    case "item":
+                                        // For some reason filtering breaks the original sorted order, sort by name to restore it
+                                        let items = dexModified.items.all().filter(item => item.exists && !["CAP", "Future"].includes(item.isNonstandard)).sort((a, b) => a.name.localeCompare(b.name));
+                                        items.forEach(item => {
+                                            if (item.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: item.name, value: item.name });
+                                        });
+                                        break;
+                                    case "cardset":
+                                        pokemonCardSetsJSON.forEach(set => {
+                                            const setReleaseDateSplit = set.releaseDate.split("/");
+                                            const setReleaseDate = new Date(setReleaseDateSplit[0], setReleaseDateSplit[1] - 1, setReleaseDateSplit[2]);
+                                            if (set.name.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                                valuesByDate[set.id] = setReleaseDate;
+                                                choices.push({ name: set.name, value: set.id });
+                                            };
+                                        });
+                                        break;
+                                };
                                 break;
                             case "format":
                                 let formats = DexSim.formats.all();
@@ -492,93 +536,113 @@ export default async (client, interaction) => {
                                     choices.push({ name: rating.toString(), value: rating });
                                 });
                                 break;
+                            case "card":
+                                for await (const card of pokemonCardsAll) {
+                                    const pokemonCardSetId = card.id.split("-")[0];
+                                    const pokemonCardSet = pokemonCardSetsJSON.find((element) => element.id == pokemonCardSetId);
+                                    const pokemonCardReleaseDateSplit = pokemonCardSet.releaseDate.split("/");
+                                    const pokemonCardReleaseDate = new Date(pokemonCardReleaseDateSplit[0], pokemonCardReleaseDateSplit[1] - 1, pokemonCardReleaseDateSplit[2]);
+                                    const cardOptionString = `${card.name} | ${pokemonCardSet.name} ${card.number}/${pokemonCardSet.printedTotal}`;
+                                    if (cardOptionString.toLowerCase().includes(focusedOption.value.toLowerCase())) {
+                                        valuesByDate[card.id] = pokemonCardReleaseDate;
+                                        choices.push({ name: cardOptionString, value: card.id });
+                                    };
+                                };
+                                break;
                         };
                         break;
                     case "monsterhunter":
                         switch (focusedOption.name) {
-                            case "monster":
-                                MHMonstersJSON.monsters.forEach(monster => {
-                                    if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
-                                });
-                                break;
-                            case "quest":
-                                MHQuestsJSON.quests.forEach(quest => {
-                                    if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
-                                });
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "monster":
+                                        MHMonstersJSON.monsters.forEach(monster => {
+                                            if (monster.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: monster.name, value: monster.name });
+                                        });
+                                        break;
+                                    case "quest":
+                                        MHQuestsJSON.quests.forEach(quest => {
+                                            if (quest.name.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: quest.name, value: quest.name });
+                                        });
+                                        break;
+                                };
                                 break;
                         };
                         break;
-                    case "splatoon3":
+                    case "splatoon":
                         let languageInput = interaction.options.getString("language");
                         if (!languageInput) languageInput = "EUen";
-                        let languageJSON = await import(`../submodules/splat3/data/language/${languageInput}_full.json`, { assert: { type: "json" } });
-                        languageJSON = languageJSON.default;
+                        let languageJSON = globalVars.splatoon3.languageJSONs[languageInput];
                         switch (focusedOption.name) {
-                            case "clothing":
-                                let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
-                                let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
-                                let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
-                                for await (const [key, value] of Object.entries(allClothesHead)) {
-                                    let clothesHeadEndString = "_Head";
-                                    if (!key.endsWith(clothesHeadEndString)) {
-                                        allClothesHead[`${key}${clothesHeadEndString}`] = allClothesHead[key];
-                                        delete allClothesHead[key];
-                                    };
-                                };
-                                for await (const [key, value] of Object.entries(allClothesBody)) {
-                                    let clothesBodyEndString = "_Clothes";
-                                    if (!key.endsWith(clothesBodyEndString)) {
-                                        allClothesBody[`${key}${clothesBodyEndString}`] = allClothesBody[key];
-                                        delete allClothesBody[key];
-                                    };
-                                };
-                                for await (const [key, value] of Object.entries(allClothesShoes)) {
-                                    let clothesShoesEndString = "_Shoes";
-                                    if (!key.endsWith(clothesShoesEndString)) {
-                                        allClothesShoes[`${key}${clothesShoesEndString}`] = allClothesShoes[key];
-                                        delete allClothesShoes[key];
-                                    };
-                                };
-                                let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
-                                for await (const [key, value] of Object.entries(allClothesNames)) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !key.startsWith("COP00") &&
-                                        !key.startsWith("Msn00")) choices.push({ name: value, value: key });
-                                };
-                                break;
-                            case "weapon":
-                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !key.endsWith("_Coop") &&
-                                        !key.endsWith("_Msn") &&
-                                        !key.endsWith("_Rival") &&
-                                        !key.endsWith("_Sdodr") &&
-                                        !key.includes("_AMB_") &&
-                                        key !== "Free" &&
-                                        value !== "-") choices.push({ name: value, value: key });
-                                };
-                                break;
-                            case "subweapon":
-                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !key.endsWith("_Rival") &&
-                                        !key.endsWith("_Coop") &&
-                                        !key.endsWith("_Sdodr") &&
-                                        value !== "-" &&
-                                        !key.includes("SalmonBuddy")) choices.push({ name: value, value: key });
-                                };
-                                break;
-                            case "special":
-                                for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
-                                    // Gachihoko = Rainmaker, Splashdown is only available in singleplayer missions but is for some reason still properly included here. To avoid importing more JSONs and reading whole objects, it's excluded this way.
-                                    if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !key.endsWith("_Coop") &&
-                                        !key.endsWith("_Mission") &&
-                                        !key.endsWith("Sdodr") &&
-                                        !key.includes("_Rival") &&
-                                        value !== "-" &&
-                                        !key.includes("Gachihoko") &&
-                                        !key.includes("SpSuperLanding")) choices.push({ name: value, value: key });
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "clothing":
+                                        let allClothesHead = languageJSON["CommonMsg/Gear/GearName_Head"];
+                                        let allClothesBody = languageJSON["CommonMsg/Gear/GearName_Clothes"];
+                                        let allClothesShoes = languageJSON["CommonMsg/Gear/GearName_Shoes"];
+                                        for await (const [key, value] of Object.entries(allClothesHead)) {
+                                            let clothesHeadEndString = "_Head";
+                                            if (!key.endsWith(clothesHeadEndString)) {
+                                                allClothesHead[`${key}${clothesHeadEndString}`] = allClothesHead[key];
+                                                delete allClothesHead[key];
+                                            };
+                                        };
+                                        for await (const [key, value] of Object.entries(allClothesBody)) {
+                                            let clothesBodyEndString = "_Clothes";
+                                            if (!key.endsWith(clothesBodyEndString)) {
+                                                allClothesBody[`${key}${clothesBodyEndString}`] = allClothesBody[key];
+                                                delete allClothesBody[key];
+                                            };
+                                        };
+                                        for await (const [key, value] of Object.entries(allClothesShoes)) {
+                                            let clothesShoesEndString = "_Shoes";
+                                            if (!key.endsWith(clothesShoesEndString)) {
+                                                allClothesShoes[`${key}${clothesShoesEndString}`] = allClothesShoes[key];
+                                                delete allClothesShoes[key];
+                                            };
+                                        };
+                                        let allClothesNames = { ...allClothesHead, ...allClothesBody, ...allClothesShoes };
+                                        for await (const [key, value] of Object.entries(allClothesNames)) {
+                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                !key.startsWith("COP00") &&
+                                                !key.startsWith("Msn00")) choices.push({ name: value, value: key });
+                                        };
+                                        break;
+                                    case "weapon":
+                                        for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Main"])) {
+                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                !key.endsWith("_Coop") &&
+                                                !key.endsWith("_Msn") &&
+                                                !key.endsWith("_Rival") &&
+                                                !key.endsWith("_Sdodr") &&
+                                                !key.includes("_AMB_") &&
+                                                key !== "Free" &&
+                                                value !== "-") choices.push({ name: value, value: key });
+                                        };
+                                        break;
+                                    case "subweapon":
+                                        for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Sub"])) {
+                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                !key.endsWith("_Rival") &&
+                                                !key.endsWith("_Coop") &&
+                                                !key.endsWith("_Sdodr") &&
+                                                value !== "-" &&
+                                                !key.includes("SalmonBuddy")) choices.push({ name: value, value: key });
+                                        };
+                                        break;
+                                    case "special":
+                                        for await (const [key, value] of Object.entries(languageJSON["CommonMsg/Weapon/WeaponName_Special"])) {
+                                            // Gachihoko = Rainmaker, Splashdown is only available in singleplayer missions but is for some reason still properly included here. To avoid importing more JSONs and reading whole objects, it's excluded this way.
+                                            if (value.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                !key.endsWith("_Coop") &&
+                                                !key.endsWith("_Mission") &&
+                                                !key.endsWith("Sdodr") &&
+                                                !key.includes("_Rival") &&
+                                                value !== "-" &&
+                                                !key.includes("Gachihoko") &&
+                                                !key.includes("SpSuperLanding")) choices.push({ name: value, value: key });
+                                        };
+                                        break;
                                 };
                                 break;
                             case "mode":
@@ -604,87 +668,100 @@ export default async (client, interaction) => {
                     case "genshin":
                         let giResponse;
                         switch (focusedOption.name) {
-                            case "character":
-                                giAPI += `characters/`;
-                                giResponse = await axios.get(giAPI);
-                                for (const giCharacter of giResponse.data) {
-                                    let giCharacterCapitalized = capitalizeString(giCharacter);
-                                    if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
-                                };
-                                break;
-                            case "weapon":
-                                giAPI += `weapons/`;
-                                giResponse = await axios.get(giAPI);
-                                for (const giWeapon of giResponse.data) {
-                                    let giWeaponCapitalized = capitalizeString(giWeapon);
-                                    if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
-                                };
-                                break;
-                            case "artifact":
-                                giAPI += `artifacts/`;
-                                giResponse = await axios.get(giAPI);
-                                for (const giArtifact of giResponse.data) {
-                                    let giArtifactCapitalized = capitalizeString(giArtifact);
-                                    if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "character":
+                                        giAPI += `characters/`;
+                                        giResponse = await axios.get(giAPI);
+                                        for (const giCharacter of giResponse.data) {
+                                            let giCharacterCapitalized = capitalizeString(giCharacter);
+                                            if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
+                                        };
+                                        break;
+                                    case "weapon":
+                                        giAPI += `weapons/`;
+                                        giResponse = await axios.get(giAPI);
+                                        for (const giWeapon of giResponse.data) {
+                                            let giWeaponCapitalized = capitalizeString(giWeapon);
+                                            if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
+                                        };
+                                        break;
+                                    case "artifact":
+                                        giAPI += `artifacts/`;
+                                        giResponse = await axios.get(giAPI);
+                                        for (const giArtifact of giResponse.data) {
+                                            let giArtifactCapitalized = capitalizeString(giArtifact);
+                                            if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
+                                        };
+                                        break;
                                 };
                                 break;
                         };
                         break;
-                    case "persona5":
+                    case "persona":
                         switch (focusedOption.name) {
-                            case "persona":
-                                for await (const [key, value] of Object.entries(personaMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "persona":
+                                        for await (const [key, value] of Object.entries(personaMapRoyal)) {
+                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: key, value: key });
+                                        };
+                                        break;
+                                    case "skill":
+                                        for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                value.element !== "trait") choices.push({ name: key, value: key });
+                                        };
+                                        break;
+                                    case "trait":
+                                        for await (const [key, value] of Object.entries(skillMapRoyal)) {
+                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                value.element == "trait") choices.push({ name: key, value: key });
+                                        };
+                                        break;
+                                    case "item":
+                                        for await (const [key, value] of Object.entries(itemMapRoyal)) {
+                                            if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
+                                                !value.skillCard) choices.push({ name: key, value: key });
+                                        };
+                                        break;
                                 };
                                 break;
-                            case "skill":
-                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        value.element !== "trait") choices.push({ name: key, value: key });
-                                };
-                                break;
-                            case "trait":
-                                for await (const [key, value] of Object.entries(skillMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        value.element == "trait") choices.push({ name: key, value: key });
-                                };
-                                break;
-                            case "item":
-                                for await (const [key, value] of Object.entries(itemMapRoyal)) {
-                                    if (key.toLowerCase().includes(focusedOption.value.toLowerCase()) &&
-                                        !value.skillCard) choices.push({ name: key, value: key });
-                                };
                         };
                         break;
-                    case "dqm3":
+                    case "dqm":
                         let targetJSON = null;
-                        if (focusedOption.name.startsWith("trait")) {
-                            targetJSON = DQMTraitsJSON;
-                        } else {
-                            switch (focusedOption.name) {
-                                case "parent1":
-                                case "parent2":
-                                case "target":
-                                case "monster":
-                                    targetJSON = DQMMonstersJSON;
-                                    break;
-                                case "area":
-                                    // Currently unused, add spawns under detailed monster info once the db has them
-                                    // targetJSON = DQMAreasJSON;
-                                    break;
-                                case "family":
-                                    targetJSON = DQMFamiliesJSON;
-                                    break;
-                                case "item":
-                                    targetJSON = DQMItemsJSON;
-                                    break;
-                                case "skill":
-                                    targetJSON = DQMSkillsJSON;
-                                    break;
-                                case "talent":
-                                    targetJSON = DQMTalentsJSON;
-                                    break;
-                            };
+                        switch (focusedOption.name) {
+                            case "parent1":
+                            case "parent2":
+                            case "target":
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "monster":
+                                    case "synthesis":
+                                        targetJSON = DQMMonstersJSON;
+                                        break;
+                                    case "area":
+                                        // Currently unused, add spawns under detailed monster info once the db has them
+                                        // targetJSON = DQMAreasJSON;
+                                        break;
+                                    case "family":
+                                        targetJSON = DQMFamiliesJSON;
+                                        break;
+                                    case "item":
+                                        targetJSON = DQMItemsJSON;
+                                        break;
+                                    case "skill":
+                                        targetJSON = DQMSkillsJSON;
+                                        break;
+                                    case "talent":
+                                        targetJSON = DQMTalentsJSON;
+                                        break;
+                                    case "trait":
+                                        targetJSON = DQMTraitsJSON;
+                                        break;
+                                };
+                                break;
                         };
                         if (targetJSON) {
                             for await (const [key, value] of Object.entries(targetJSON)) {
@@ -692,9 +769,9 @@ export default async (client, interaction) => {
                             };
                         };
                         break;
-                    case "helldivers2":
+                    case "helldivers":
                         switch (focusedOption.name) {
-                            case "planet":
+                            case "name":
                                 let planetsResponse = await axios.get(`${apiHelldivers}planets`);
                                 let planetsData = planetsResponse.data;
                                 for await (const [key, value] of Object.entries(planetsData)) {
@@ -712,38 +789,52 @@ export default async (client, interaction) => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
                                 });
+                                break;
                         };
                         break;
                     case "trophy":
                         switch (focusedOption.name) {
-                            case "shoptrophy":
-                                const buyable_items = await getBuyableShopTrophies(interaction.user.id);
-                                buyable_items.forEach(trophy => {
-                                    choices.push({ name: trophy, value: trophy });
-                                });
-                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
-                                break;
-                            case "trophy":
-                                let trophies = await getShopTrophies();
-                                let temp = ''
-                                trophies.forEach(trophy => {
-                                    temp = trophy.trophy_id;
-                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
-                                });
-                                trophies = await getEventTrophies();
-                                trophies.forEach(trophy => {
-                                    temp = trophy.trophy_id;
-                                    if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
-                                });
-                                // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
+                            case "name":
+                                switch (interaction.options.getSubcommand()) {
+                                    case "shoptrophy":
+                                        const buyable_items = await getBuyableShopTrophies(interaction.user.id);
+                                        buyable_items.forEach(trophy => {
+                                            choices.push({ name: trophy, value: trophy });
+                                        });
+                                        // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                        break;
+                                    case "trophy":
+                                        let trophies = await getShopTrophies();
+                                        let temp = ''
+                                        trophies.forEach(trophy => {
+                                            temp = trophy.trophy_id;
+                                            if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                        });
+                                        trophies = await getEventTrophies();
+                                        trophies.forEach(trophy => {
+                                            temp = trophy.trophy_id;
+                                            if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
+                                        });
+                                        // if (choices.length == 0) choices.push({ name: "You need more money in order to buy!", value: "1"});
+                                        break;
+                                };
                                 break;
                         };
                         break;
                 };
                 choices = [... new Set(choices)]; // Remove duplicates, might not work lol
+                if (Object.keys(valuesByDate).length > 0) choices.sort((a, b) => valuesByDate[b.value] - valuesByDate[a.value]); // Sort from new to old
                 if (choices.length > 25) choices = choices.slice(0, 25); // Max 25 entries
                 // Add random suggestion
-                if (focusedOption.name == "pokemon" || focusedOption.name == "monster") {
+                let subcommandSuggestRandom = false;
+                // Catch is for commands without subcommands, where getSubcommand() errors out instead of returning null. Couldn't get this to work properly with .catch(), though that would be cleaner.
+                try {
+                    if (["pokemon", "monster"].includes(interaction.options.getSubcommand())) subcommandSuggestRandom = true;
+                } catch (e) {
+                    // console.log(e);
+                    subcommandSuggestRandom = false;
+                };
+                if ((["pokemon", "monster"].includes(focusedOption.name) || subcommandSuggestRandom)) {
                     // Only display random suggestion if there enough other choices or value matches "random"
                     if (choices.length == 25) choices.pop();
                     if (choices.length > 5 || "random".includes(focusedOption.value.toLowerCase())) choices.push({ name: "Random", value: "random" });

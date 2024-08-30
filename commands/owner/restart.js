@@ -35,7 +35,7 @@ export default async (interaction, ephemeral) => {
     if (dbinit) await runCommand("node dbInit.js");
     // Return messages then destroy
     let restartString = "Restarting.";
-    let installResultString = codeBlock(installResult.stdout);
+    let installResultString = codeBlock("fix", installResult.stdout);
     if (npmInstall) restartString = `NPM installation result:${installResultString}${restartString}`;
     if (removeInteractions) restartString += "\nRemoving all slash commands, context menus etc. This might take a bit.";
     await sendMessage({ interaction: interaction, content: restartString });
