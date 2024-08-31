@@ -41,7 +41,7 @@ import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type:
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 // BTD
-import getBossEvent from "../util/btd6/getBossEvent.js";
+import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
