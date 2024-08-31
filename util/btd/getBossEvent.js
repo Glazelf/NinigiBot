@@ -109,7 +109,7 @@ export default async (elite = false) => {
             if (tower.max > 0) {
                 towerString += ` (max ${tower.max})`;
             } else if (tower.max == 0) {
-                bannedArray.push(towerString);
+                return bannedArray.push(towerString);
             };
             return allowedTowersArray.push(towerString);
         };
