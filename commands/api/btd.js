@@ -10,9 +10,9 @@ import {
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
-import getBossEvent from "../../util/btd6/getBossEvent.js";
+import getBossEvent from "../../util/btd/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import iconsJSON from "../../objects/btd6/icons.json" with { type: "json" };
+import iconsJSON from "../../objects/btd/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
