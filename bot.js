@@ -5,7 +5,8 @@ import {
     Collection,
     ApplicationCommandType,
     ActivityType,
-    InteractionContextType
+    InteractionContextType,
+    ApplicationIntegrationType
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
@@ -95,10 +96,19 @@ async function walk(dir, callback) {
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
                     // Set default contexts (all)
-                    if (!props.commandObject.context) props.commandObject.context = [
+                    if (!props.commandObject.contexts) props.commandObject.contexts = [
                         InteractionContextType.Guild,
                         InteractionContextType.BotDM,
                         InteractionContextType.PrivateChannel
+                    ];
+                    // If command requires a guild; limit to guild installs
+                    if (!props.commandObject.integration_types &&
+                        props.commandObject.contexts.includes(InteractionContextType.Guild)
+                        && props.commandObject.contexts.length == 1) props.commandObject.integration_types = [ApplicationIntegrationType.GuildInstall];
+                    // All install types by default
+                    if (!props.commandObject.integration_types) props.commandObject.integration_types = [
+                        ApplicationIntegrationType.GuildInstall,
+                        ApplicationIntegrationType.UserInstall
                     ];
                     let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
