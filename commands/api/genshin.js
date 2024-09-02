@@ -114,17 +114,17 @@ export default async (interaction, ephemeral) => {
 
 // String options
 const characterOption = new SlashCommandStringOption()
-    .setName("character")
+    .setName("name")
     .setDescription("Specify character by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const weaponOption = new SlashCommandStringOption()
-    .setName("weapon")
+    .setName("name")
     .setDescription("Specify weapon by name.")
     .setAutocomplete(true)
     .setRequired(true);
 const artifactOption = new SlashCommandStringOption()
-    .setName("artifact")
+    .setName("name")
     .setDescription("Specify artifact by name.")
     .setAutocomplete(true)
     .setRequired(true);
