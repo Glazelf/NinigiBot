@@ -12,10 +12,7 @@ export default async (interaction) => {
     if (!message.stickers || !message.stickers.first()) return sendMessage({ interaction: interaction, content: noStickerString });
 
     await message.stickers.forEach(sticker => {
-        // stickerURL variable becomes obsolete when Discord.JS gif sticker URLs get fixed; https://github.com/discordjs/discord.js/issues/10329
-        let stickerURL = sticker.url;
-        if (stickerURL.endsWith(".gif")) stickerURL = stickerURL.replace("cdn.discordapp.com", "media.discordapp.net");
-        returnString += `\n[${sticker.name}](${stickerURL})`;
+        returnString += `\n[${sticker.name}](${sticker.url})`;
     });
     return sendMessage({ interaction: interaction, content: returnString });
 };
