@@ -15,6 +15,7 @@ const number_of_pages = 2;
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
+    // Find better check so userinfo can be used with userinstall
     if (interaction.inGuild()) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
