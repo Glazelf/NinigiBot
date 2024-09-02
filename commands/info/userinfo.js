@@ -1,6 +1,7 @@
 import {
     ContextMenuCommandBuilder,
-    ApplicationCommandType
+    ApplicationCommandType,
+    ApplicationIntegrationType
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import getUserInfoSlice from "../../util/userinfo/getUserInfoSlice.js";
@@ -13,4 +14,5 @@ export default async (interaction) => {
 
 export const commandObject = new ContextMenuCommandBuilder()
     .setName("Userinfo")
-    .setType(ApplicationCommandType.User);
+    .setType(ApplicationCommandType.User)
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall]); // No way to fetch usefull info

@@ -1,7 +1,8 @@
 import {
     EmbedBuilder,
     ContextMenuCommandBuilder,
-    ApplicationCommandType
+    ApplicationCommandType,
+    ApplicationIntegrationType
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -29,4 +30,5 @@ export default async (interaction) => {
 
 export const commandObject = new ContextMenuCommandBuilder()
     .setName("Avatar")
-    .setType(ApplicationCommandType.User);
+    .setType(ApplicationCommandType.User)
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall]); // No way to fetch avatar without guild access
