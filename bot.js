@@ -103,8 +103,8 @@ async function walk(dir, callback) {
                     ];
                     // If command requires a guild; limit to guild installs
                     if (!props.commandObject.integration_types &&
-                        props.commandObject.contexts.includes(InteractionContextType.Guild)
-                        && props.commandObject.contexts.length == 1) props.commandObject.integration_types = [ApplicationIntegrationType.GuildInstall];
+                        props.commandObject.contexts.includes(InteractionContextType.Guild) &&
+                        props.commandObject.contexts.length == 1) props.commandObject.integration_types = [ApplicationIntegrationType.GuildInstall];
                     // All install types by default
                     if (!props.commandObject.integration_types) props.commandObject.integration_types = [
                         ApplicationIntegrationType.GuildInstall,
