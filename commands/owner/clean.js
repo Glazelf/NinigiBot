@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
@@ -53,5 +54,5 @@ const confirmOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("clean")
     .setDescription("Runs clean up routine of the database files")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addBooleanOption(confirmOption);

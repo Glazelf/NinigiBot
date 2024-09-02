@@ -674,24 +674,21 @@ export default async (client, interaction) => {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "character":
-                                        giAPI += `characters/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}characters/`);
                                         for (const giCharacter of giResponse.data) {
                                             let giCharacterCapitalized = capitalizeString(giCharacter);
                                             if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
                                         };
                                         break;
                                     case "weapon":
-                                        giAPI += `weapons/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}weapons/`);
                                         for (const giWeapon of giResponse.data) {
                                             let giWeaponCapitalized = capitalizeString(giWeapon);
                                             if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
                                         };
                                         break;
                                     case "artifact":
-                                        giAPI += `artifacts/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}artifacts/`);
                                         for (const giArtifact of giResponse.data) {
                                             let giArtifactCapitalized = capitalizeString(giArtifact);
                                             if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });

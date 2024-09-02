@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle,
@@ -42,4 +43,4 @@ export default async (interaction) => {
 export const commandObject = new SlashCommandBuilder()
     .setName("modmail")
     .setDescription("Send a message to mods.")
-    .setDMPermission(false);
+    .setContexts([InteractionContextType.Guild]);

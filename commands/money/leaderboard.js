@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder
@@ -57,6 +58,6 @@ const ephemeralOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("Displays money leaderboard.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addBooleanOption(globalOption)
     .addBooleanOption(ephemeralOption);

@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
@@ -169,5 +170,5 @@ const ephemeralOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("serverinfo")
     .setDescription("Displays info about this server.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addBooleanOption(ephemeralOption);

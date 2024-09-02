@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder
@@ -44,5 +45,5 @@ const infoSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("sku")
     .setDescription("Interact with SKUs.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addSubcommand(infoSubcommand);

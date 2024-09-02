@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
@@ -98,7 +99,7 @@ const userOption = new SlashCommandUserOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("mute")
     .setDescription("Times the target out.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addUserOption(userOption)
     .addIntegerOption(timeOption)

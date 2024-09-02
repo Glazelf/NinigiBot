@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandStringOption
 } from "discord.js";
@@ -43,6 +44,6 @@ const guildIDOption = new SlashCommandStringOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("removeinteraction")
     .setDescription("Remove an interaction.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addStringOption(interactionNameOption)
     .addStringOption(guildIDOption);

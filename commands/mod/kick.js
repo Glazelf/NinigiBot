@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
@@ -64,7 +65,7 @@ const userOption = new SlashCommandUserOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("kick")
     .setDescription("Kick a user from the server.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addUserOption(userOption)
     .addStringOption(reasonOption);
