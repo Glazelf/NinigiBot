@@ -140,6 +140,7 @@ export default async (client, interaction) => {
                             contentReturn = pkmQuizRevealMessageObject.content;
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
                             filesReturn = pkmQuizRevealMessageObject.files;
+                            componentsReturn = pkmQuizRevealMessageObject.components;
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
                             const pkmQuizModal = new ModalBuilder()
@@ -359,8 +360,10 @@ export default async (client, interaction) => {
                         };
                         // Force proper arrays
                         if (embedsReturn && !Array.isArray(embedsReturn)) embedsReturn = [embedsReturn];
-                        if (componentsReturn && !Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
-                        while (componentsReturn.length > 5) componentsReturn.pop();
+                        if (componentsReturn) {
+                            if (!Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
+                            while (componentsReturn.length > 5) componentsReturn.pop();
+                        };
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
                             interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
@@ -901,7 +904,7 @@ export default async (client, interaction) => {
 
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
-                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: [] });
+                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
