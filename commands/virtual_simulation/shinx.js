@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     AttachmentBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -338,7 +339,7 @@ const releaseSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("shinx")
     .setDescription("Interact with your Shinx")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addSubcommand(infoSubcommand)
     .addSubcommand(feedSubcommand)
     .addSubcommand(playSubcommand)

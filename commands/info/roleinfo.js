@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -59,6 +60,6 @@ const ephemeralOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("roleinfo")
     .setDescription("Displays info about a role.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addRoleOption(roleOption)
     .addBooleanOption(ephemeralOption);

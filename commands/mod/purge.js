@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
@@ -81,7 +82,7 @@ const ephemeralOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("purge")
     .setDescription("Bulk delete messages.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addIntegerOption(amountOption)
     .addUserOption(userOption)

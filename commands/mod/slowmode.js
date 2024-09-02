@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
     SlashCommandBuilder,
@@ -39,6 +40,6 @@ const timeOption = new SlashCommandIntegerOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("slowmode")
     .setDescription("Set slowmode in this channel.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addIntegerOption(timeOption);

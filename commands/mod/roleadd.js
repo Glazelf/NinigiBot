@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandRoleOption,
@@ -63,7 +64,7 @@ const roleOption = new SlashCommandRoleOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("roleadd")
     .setDescription("Toggle a role's eligibility to be selfassigned.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addRoleOption(roleOption)
     .addStringOption(descriptionOption);

@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption
@@ -47,6 +48,6 @@ const userOption = new SlashCommandStringOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("moneyadd")
     .setDescription("Add money to a user.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addStringOption(userOption)
     .addIntegerOption(amountOption);

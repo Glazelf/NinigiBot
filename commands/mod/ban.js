@@ -1,5 +1,5 @@
 import {
-    PermissionsBitField,
+    InteractionContextType,
     PermissionFlagsBits,
     codeBlock,
     SlashCommandBuilder,
@@ -124,7 +124,7 @@ const userIDSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("ban")
     .setDescription("Ban target user.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addSubcommand(userSubcommand)
     .addSubcommand(userIDSubcommand);

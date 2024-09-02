@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
     SlashCommandUserOption
@@ -37,6 +38,6 @@ const userOption = new SlashCommandUserOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("expadd")
     .setDescription("Add experience to a user's Shinx.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addUserOption(userOption)
     .addIntegerOption(amountOption);

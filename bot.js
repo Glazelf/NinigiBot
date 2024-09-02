@@ -4,7 +4,8 @@ import {
     Partials,
     Collection,
     ApplicationCommandType,
-    ActivityType
+    ActivityType,
+    InteractionContextType
 } from "discord.js";
 import fs from 'fs';
 import path from 'path';
@@ -93,6 +94,12 @@ async function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
+                    // Set default contexts (all)
+                    if (!props.commandObject.context) props.commandObject.context = [
+                        InteractionContextType.Guild,
+                        InteractionContextType.BotDM,
+                        InteractionContextType.PrivateChannel
+                    ];
                     let commandName = file.split(".")[0].toLowerCase();
                     // console.log(`Loaded command: ${commandName} ✔`);
                     client.commands.set(commandName, props);

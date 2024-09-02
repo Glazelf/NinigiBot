@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     ChannelType,
     SlashCommandBuilder,
@@ -170,7 +171,7 @@ const personalRolesSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("serversettings")
     .setDescription("Change server settings")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addSubcommand(starboardSubcommand)
     .addSubcommand(logSubcommand)
