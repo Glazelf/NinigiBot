@@ -515,7 +515,7 @@ export default async (interaction, ephemeral) => {
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            let messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
+            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;
             break;
