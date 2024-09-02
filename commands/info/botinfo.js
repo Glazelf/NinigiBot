@@ -23,7 +23,6 @@ export default async (interaction, ephemeral) => {
     let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
     await interaction.client.guilds.fetch();
-    let totalGuilds = interaction.client.guilds.cache.size;
     let totalMembers = await getTotalUsers(interaction.client.guilds);
     // Get latest commit
     let githubURLVars = "Glazelf/NinigiBot";
@@ -47,32 +46,27 @@ export default async (interaction, ephemeral) => {
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
     // Owner
-    let owner = "glazelf (232875725898645504)";
+    let owner = "glazelf";
     let ownerBool = await isOwner(interaction.client, interaction.user);
     // SKU
     let shopButtonText = "Donate";
     let SKUID = ""; // Without SKU ID link goes to store page
     let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/${SKUID}`;
 
+    let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
+    if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
+    developmentString += `\nOnline Since: <t:${onlineSince}:R>`;
+
     let botEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(interaction.client.user.username)
         .setThumbnail(avatar)
-        .setDescription(githubRepoResponse.data.description)
+        .setDescription(`${githubRepoResponse.data.description}\nCreated at <t:${createdAt}:f>`)
         .addFields([
-            { name: "Owner:", value: owner, inline: false },
-            { name: "Library:", value: `Discord.JS v${DiscordJSVersion}`, inline: true }
+            { name: "Development:", value: developmentString, inline: true },
+            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nGithub Stars: [${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true },
+            { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
-    if (ownerBool) botEmbed.addFields([{ name: "Memory Usage:", value: memoryUsage, inline: true }]);
-    if (interaction.client.options.shardCount) botEmbed.addFields([{ name: "Shards:", value: interaction.client.options.shardCount.toString(), inline: true }]);
-    botEmbed.addFields([
-        { name: "Servers:", value: totalGuilds.toString(), inline: true },
-        { name: "Total Users:", value: totalMembers.toString(), inline: true },
-        { name: "Created:", value: `<t:${createdAt}:f>`, inline: true },
-        { name: "Online Since:", value: `<t:${onlineSince}:R>`, inline: true }
-    ]);
-    if (githubRepoResponse) botEmbed.addFields([{ name: "GitHub Stars:", value: `[${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true }]);
-    if (githubMasterResponse) botEmbed.addFields([{ name: "Latest Commit:", value: lastCommitString, inline: true }]);
 
     const shopButton = new ButtonBuilder()
         .setLabel(shopButtonText)
