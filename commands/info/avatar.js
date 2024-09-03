@@ -14,7 +14,7 @@ export default async (interaction) => {
     let avatar = null;
     let serverAvatar = null;
     if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
-    if (member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+    if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
     if (!avatar && !serverAvatar) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have an avatar.` });
     if (!serverAvatar) {
         serverAvatar = avatar;
@@ -30,5 +30,4 @@ export default async (interaction) => {
 
 export const commandObject = new ContextMenuCommandBuilder()
     .setName("Avatar")
-    .setType(ApplicationCommandType.User)
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall]); // No way to fetch avatar without guild access
+    .setType(ApplicationCommandType.User);
