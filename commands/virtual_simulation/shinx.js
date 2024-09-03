@@ -459,6 +459,7 @@ export default async (interaction, ephemeral) => {
                             text += addLine(`**${nicks[h]}** won ${exp[0]} exp. points!`);
                             if (exp[1] > 0) {
                                 text += addLine(`**${nicks[h]}** grew to level **${shinxes[h].level}**!`);
+                                shinxApi.addBattleRewards(trainers[h].id, shinxes[h].level);
                             };
                         };
                         for (let p = 0; p < 2; p++) await saveBattle(shinxes[p], p === i);
