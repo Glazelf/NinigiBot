@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -126,6 +127,6 @@ const deleteShopTrophySubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("manager")
     .setDescription("Manage multiple aspects about Ninigi Virtual Simulation Core.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addSubcommand(addShopTrophySubcommand)
     .addSubcommand(deleteShopTrophySubcommand);

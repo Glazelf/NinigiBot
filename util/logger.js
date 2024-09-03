@@ -46,13 +46,14 @@ export default async ({ exception, client, interaction = null }) => {
                 });
             };
         };
+
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
 User: **${user.username}** (${user.id})
+Guild: **${interaction.guild?.name}** (${interaction.guild?.id})
+Channel: **${interaction.channel?.name}** (${interaction.channel?.id})
 Message Link: ${interaction.url}
-Guild: **${interaction.guild.name}** (${interaction.guild.id})
-Channel: **${interaction.channel.name}** (${interaction.channel.id})
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}
 Command: ${interaction.commandName} (${interaction.customId})

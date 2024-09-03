@@ -2,7 +2,8 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    ApplicationIntegrationType
 } from "discord.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
@@ -15,7 +16,8 @@ const number_of_pages = 2;
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
     let member = null;
-    if (interaction.inGuild()) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
+    // Find better check so userinfo can be used with userinstall
+    if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) member = await interaction.guild.members.fetch(user.id).catch(e => { return null; });
     // Accent color
     let embedColor = globalVars.embedColor;
     if (user.accentColor) embedColor = user.accentColor;
@@ -98,7 +100,7 @@ export default async (interaction, page, user) => {
                 // console.log(e);
             };
             let joinRank, joinPercentage, joinRankText = null;
-            if (interaction.inGuild()) {
+            if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) {
                 joinRank = await getJoinRank(user, interaction.guild);
                 joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);
                 joinRankText = `${joinRank}/${interaction.guild.memberCount} (${joinPercentage}%)`;

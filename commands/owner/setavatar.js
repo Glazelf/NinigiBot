@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandAttachmentOption
 } from "discord.js";
@@ -41,5 +42,5 @@ const avatarOption = new SlashCommandAttachmentOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("setavatar")
     .setDescription("Set this bot's avatar.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addAttachmentOption(avatarOption);

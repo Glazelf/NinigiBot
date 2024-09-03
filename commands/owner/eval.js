@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption
@@ -53,5 +54,5 @@ const inputOption = new SlashCommandStringOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("eval")
     .setDescription("Execute JS.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addStringOption(inputOption);

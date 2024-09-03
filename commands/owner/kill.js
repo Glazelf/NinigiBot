@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     SlashCommandBuilder,
     SlashCommandBooleanOption
 } from "discord.js";
@@ -54,5 +55,5 @@ const removeInteractionsOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("kill")
     .setDescription("Shuts down bot.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addBooleanOption(removeInteractionsOption);

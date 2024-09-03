@@ -17,7 +17,7 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ interaction, pokemon, learnsetBool = false, shinyBool = false, genData, ephemeral = true }) => {
+export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex.gen;

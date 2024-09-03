@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
@@ -190,6 +191,6 @@ const deleteSubcommand = new SlashCommandSubcommandBuilder()
 export const commandObject = new SlashCommandBuilder()
     .setName("personalrole")
     .setDescription("Update your personal role.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addSubcommand(editSubcommand)
     .addSubcommand(deleteSubcommand);

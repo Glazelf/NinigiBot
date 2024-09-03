@@ -395,23 +395,32 @@ export default async (interaction, ephemeral) => {
                 usagePercentage = `${Math.round(pokemonDataSplitLine[1].trim().replace("%", "") * 100) / 100}%`;
                 usageRank = genericDataSplitPokemon[0].split("|");
                 usageRank = usageRank[usageRank.length - 2].trim();
-                // Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
-                let abilitiesString = usagePokemonString.split("Abilities")[1].split("Items")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
-                let itemsString = usagePokemonString.split("Items")[1].split("Spreads")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
-                let spreadsString = usagePokemonString.split("Spreads")[1].split("Moves")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "").replace(/:/g, " ");
-                let movesString = usagePokemonString.split("Moves")[1].split("Teammates")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
-                let teammatesString = usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0].split("%").map(function (x) { return x.trim(); }).join("%\n").replace(/   /g, "");
-                let countersString = usagePokemonString.split("Checks and Counters")[1].split("out)").map(function (x) { return x.trim(); }).join("out)\n").replace(/   /g, "");
+                // Not all formats and months have tera types. Counters list exists everywhere but can be empty.
+                let teraTypesString = "";
+                let movesEndsplit = "Teammates";
+                if (usagePokemonString.includes("Tera Types")) {
+                    teraTypesString = mapUsageString(usagePokemonString.split("Tera Types")[1].split("Teammates")[0], "%");
+                    movesEndsplit = "Tera Types";
+                };
+                let abilitiesString = mapUsageString(usagePokemonString.split("Abilities")[1].split("Items")[0], "%");
+                let itemsString = mapUsageString(usagePokemonString.split("Items")[1].split("Spreads")[0], "%");
+                let spreadsString = mapUsageString(usagePokemonString.split("Spreads")[1].split("Moves")[0], "%").replace(/:/g, " ");
+                let movesString = mapUsageString(usagePokemonString.split("Moves")[1].split(movesEndsplit)[0], "%");
+                let teammatesString = mapUsageString(usagePokemonString.split("Teammates")[1].split("Checks and Counters")[0], "%");
+                let countersString = mapUsageString(usagePokemonString.split("Checks and Counters")[1], "out)");
                 pokemonEmbed
                     .setTitle(`${pokemon.name} ${formatInput} ${rating}+ (${stringMonth}/${year})`)
                     .setDescription(`Usage Rank: #${usageRank}\nUsage Percentage: ${usagePercentage}\nRaw Uses: ${rawUsage}`)
                     .addFields([
                         { name: "Moves:", value: movesString, inline: true },
                         { name: "Items:", value: itemsString, inline: true },
-                        { name: "Abilities:", value: abilitiesString, inline: true },
-                        { name: "Spreads:", value: spreadsString, inline: true },
-                        { name: "Teammates:", value: teammatesString, inline: true }
+                        { name: "Abilities:", value: abilitiesString, inline: true }
                     ]);
+                if (teraTypesString.length > 0) pokemonEmbed.addFields([{ name: "Tera Types:", value: teraTypesString, inline: true }]);
+                pokemonEmbed.addFields([
+                    { name: "Spreads:", value: spreadsString, inline: true },
+                    { name: "Teammates:", value: teammatesString, inline: true }
+                ]);
                 if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: false }]);
             } else {
                 // Format generic data display
@@ -515,7 +524,7 @@ export default async (interaction, ephemeral) => {
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            let messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, ephemeral: ephemeral });
+            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;
             break;
@@ -586,12 +595,18 @@ function isIdenticalForm(pokemonName) {
         ["Flapple-Gmax", "Appletun-Gmax", "Toxtricity-Gmax", "Toxtricity-Low-Key-Gmax"].includes(pokemonName)) return true;
     return false;
 };
+
 // Get weakness/resistance string from dataset's array format
 function getCardMatchupString(matchupArray) {
     let matchupString = "";
     matchupArray.forEach(matchup => matchupString += cardTypeEmojis[matchup.type]);
     matchupString += ` ${matchupArray[0].value}`; // This operates under the assumption that all resistances/weaknesses are equal within each card. Rewrite if this ever changes.
     return matchupString;
+};
+
+// Specific data, .map() is to trim each entry in the array to avoid weird spacing on mobile clients
+function mapUsageString(string, seperator) {
+    return string.split(seperator).map(function (x) { return x.trim(); }).join(`${seperator}\n`).replace(/   /g, "");
 };
 
 // Set nature choices. The max is 25 and there are exactly 25 natures. 

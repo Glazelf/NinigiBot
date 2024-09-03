@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     ActionRowBuilder,
     StringSelectMenuBuilder,
@@ -129,6 +130,6 @@ const ephemeralOption = new SlashCommandBooleanOption()
 export const commandObject = new SlashCommandBuilder()
     .setName("role")
     .setDescription("Toggles a role. Use without argument to get a full list.")
-    .setDMPermission(false)
+    .setContexts([InteractionContextType.Guild])
     .addStringOption(roleOption)
     .addBooleanOption(ephemeralOption);

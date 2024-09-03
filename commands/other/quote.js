@@ -1,4 +1,5 @@
 import {
+    InteractionContextType,
     EmbedBuilder,
     SlashCommandBuilder
 } from "discord.js";
@@ -65,4 +66,4 @@ export const guildID = globalVars.ShinxServerID;
 export const commandObject = new SlashCommandBuilder()
     .setName("quote")
     .setDescription("Display a random SAC quote!")
-    .setDMPermission(false);
+    .setContexts([InteractionContextType.Guild]);

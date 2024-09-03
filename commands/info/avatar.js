@@ -1,7 +1,8 @@
 import {
     EmbedBuilder,
     ContextMenuCommandBuilder,
-    ApplicationCommandType
+    ApplicationCommandType,
+    ApplicationIntegrationType
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -13,7 +14,7 @@ export default async (interaction) => {
     let avatar = null;
     let serverAvatar = null;
     if (user.avatarURL()) avatar = await user.avatarURL(globalVars.displayAvatarSettings);
-    if (member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
+    if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && member && member.avatarURL()) serverAvatar = await member.avatarURL(globalVars.displayAvatarSettings);
     if (!avatar && !serverAvatar) return sendMessage({ interaction: interaction, content: `${user.username} doesn't have an avatar.` });
     if (!serverAvatar) {
         serverAvatar = avatar;

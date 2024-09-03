@@ -9,7 +9,7 @@ import sendMessage from "../../util/sendMessage.js";
 
 export default async (interaction, ephemeral) => {
     ephemeral = false;
-    let message = await interaction.channel.messages.fetch(interaction.targetId);
+    let message = interaction.options._hoistedOptions[0].message;
     let input = message.content;
     let questionAskUser = message.author;
     // Swap interaction and message if command is used through apps menu, makes the interaction finish properly by replying to the interaction instead of the message.

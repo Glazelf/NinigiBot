@@ -41,7 +41,7 @@ import DQMItemsJSON from "../submodules/DQM3-db/objects/items.json" with { type:
 import DQMSkillsJSON from "../submodules/DQM3-db/objects/skills.json" with { type: "json" };
 import DQMTalentsJSON from "../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 // BTD
-import getBossEvent from "../util/btd6/getBossEvent.js";
+import getBossEvent from "../util/btd/getBossEvent.js";
 // Minesweeper
 import Minesweeper from "discord.js-minesweeper";
 // Database
@@ -140,6 +140,7 @@ export default async (client, interaction) => {
                             contentReturn = pkmQuizRevealMessageObject.content;
                             embedsReturn = pkmQuizRevealMessageObject.embeds;
                             filesReturn = pkmQuizRevealMessageObject.files;
+                            componentsReturn = pkmQuizRevealMessageObject.components;
                         } else if (interaction.customId.startsWith(pkmQuizGuessButtonIdStart)) {
                             // Who's That Pokémon? modal
                             const pkmQuizModal = new ModalBuilder()
@@ -172,7 +173,7 @@ export default async (client, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ interaction: interaction, pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -359,8 +360,10 @@ export default async (client, interaction) => {
                         };
                         // Force proper arrays
                         if (embedsReturn && !Array.isArray(embedsReturn)) embedsReturn = [embedsReturn];
-                        if (componentsReturn && !Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
-                        while (componentsReturn.length > 5) componentsReturn.pop();
+                        if (componentsReturn) {
+                            if (!Array.isArray(componentsReturn)) componentsReturn = [componentsReturn];
+                            while (componentsReturn.length > 5) componentsReturn.pop();
+                        };
                         if (filesReturn && !Array.isArray(filesReturn)) filesReturn = [filesReturn];
                         if (editOriginalMessage) {
                             interaction.update({ content: contentReturn, embeds: embedsReturn, components: componentsReturn, files: filesReturn });
@@ -671,24 +674,21 @@ export default async (client, interaction) => {
                             case "name":
                                 switch (interaction.options.getSubcommand()) {
                                     case "character":
-                                        giAPI += `characters/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}characters/`);
                                         for (const giCharacter of giResponse.data) {
                                             let giCharacterCapitalized = capitalizeString(giCharacter);
                                             if (giCharacterCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giCharacterCapitalized, value: giCharacter });
                                         };
                                         break;
                                     case "weapon":
-                                        giAPI += `weapons/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}weapons/`);
                                         for (const giWeapon of giResponse.data) {
                                             let giWeaponCapitalized = capitalizeString(giWeapon);
                                             if (giWeaponCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giWeaponCapitalized, value: giWeapon });
                                         };
                                         break;
                                     case "artifact":
-                                        giAPI += `artifacts/`;
-                                        giResponse = await axios.get(giAPI);
+                                        giResponse = await axios.get(`${giAPI}artifacts/`);
                                         for (const giArtifact of giResponse.data) {
                                             let giArtifactCapitalized = capitalizeString(giArtifact);
                                             if (giArtifactCapitalized.toLowerCase().includes(focusedOption.value.toLowerCase())) choices.push({ name: giArtifactCapitalized, value: giArtifact });
@@ -901,7 +901,7 @@ export default async (client, interaction) => {
 
                         if (pkmQuizModalGuess.toLowerCase() == pkmQuizCorrectAnswer.toLowerCase()) {
                             let pkmQuizMessageObject = await getWhosThatPokemon({ pokemon: pkmQuizCorrectAnswer, winner: interaction.user });
-                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: [] });
+                            interaction.update({ embeds: pkmQuizMessageObject.embeds, files: pkmQuizMessageObject.files, components: pkmQuizMessageObject.components });
                         } else {
                             return sendMessage({ interaction: interaction, content: `${interaction.user} guessed incorrectly: \`${pkmQuizModalGuess}\`.`, ephemeral: pkmQuizGuessResultEphemeral });
                         };
