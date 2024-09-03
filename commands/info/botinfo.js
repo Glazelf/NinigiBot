@@ -13,6 +13,9 @@ import isOwner from "../../util/perms/isOwner.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import packageJSON from "../../package.json" with { type: "json" };
 
+const owner = "glazelf";
+const emojiMax = 2000;
+
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
@@ -22,6 +25,7 @@ export default async (interaction, ephemeral) => {
     if (DiscordJSVersion.includes("dev")) DiscordJSVersion = DiscordJSVersion.split("dev")[0] + "dev";
     let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
 
+    let emojis = await interaction.client.application.emojis.fetch();
     await interaction.client.guilds.fetch();
     let totalMembers = await getTotalUsers(interaction.client.guilds);
     // Get latest commit
@@ -45,14 +49,13 @@ export default async (interaction, ephemeral) => {
     let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
-    // Owner
-    let owner = "glazelf";
-    let ownerBool = await isOwner(interaction.client, interaction.user);
+
     // SKU
     let shopButtonText = "Donate";
     let SKUID = ""; // Without SKU ID link goes to store page
     let shopButtonLink = `https://discord.com/application-directory/${interaction.client.user.id}/store/${SKUID}`;
 
+    let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
     developmentString += `\nOnline Since: <t:${onlineSince}:R>`;
@@ -64,7 +67,7 @@ export default async (interaction, ephemeral) => {
         .setDescription(`${githubRepoResponse.data.description}\nCreated at <t:${createdAt}:f>`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
-            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nGithub Stars: [${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true },
+            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: [${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 
