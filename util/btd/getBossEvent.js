@@ -98,8 +98,9 @@ export default async ({ elite = false, emojis }) => {
     bossEventMetadata._towers.forEach(tower => {
         let towerIcon = emojis.find(emoji => emoji.name == `BTD6Hero${tower.tower}`);
         if (tower.tower == "ChosenPrimaryHero") return; // Skip the ChosenPrimaryHero tower
-        if (tower.isHero && towerIcon) {
-            let heroString = `${towerIcon}${tower.tower}`;
+        if (tower.isHero) {
+            let heroString = tower.tower;
+            if (towerIcon) heroString = `${towerIcon}${heroString}`;
             if (tower.max == 0 && !allHeroesAllowed) return bannedArray.push(heroString);
             return allowedHeroesArray.push(heroString);
         } else {
@@ -139,7 +140,6 @@ export default async ({ elite = false, emojis }) => {
     } else if (mostRecentBossEvent.start > Date.now()) {
         bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the next one instead:" });
     };
-
 
     const bossEventActionRow = new ActionRowBuilder();
     const bossEventEliteButton = new ButtonBuilder()
