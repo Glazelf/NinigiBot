@@ -134,7 +134,12 @@ export default async ({ elite = false, emojis }) => {
             { name: "Allowed Towers:", value: allowedTowersString, inline: true },
 
         ]);
-    if (mostRecentBossEvent.end < Date.now()) bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the most recent one instead:" });
+    if (mostRecentBossEvent.end < Date.now()) {
+        bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the most recent one instead:" });
+    } else if (mostRecentBossEvent.start > Date.now()) {
+        bossEventEmbed.setAuthor({ name: "No boss event is currently ongoing.\nHere is info on the next one instead:" });
+    };
+
 
     const bossEventActionRow = new ActionRowBuilder();
     const bossEventEliteButton = new ButtonBuilder()
