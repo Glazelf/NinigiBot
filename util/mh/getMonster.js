@@ -176,5 +176,5 @@ function getStringFromObject(object, emojis, type) {
             itemArray.push(item);
         };
     });
-    return itemArray.join(", ");
+    return itemArray.join("\n");
 };
