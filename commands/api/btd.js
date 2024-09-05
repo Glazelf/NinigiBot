@@ -12,7 +12,6 @@ import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import getBossEvent from "../../util/btd/getBossEvent.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import iconsJSON from "../../objects/btd/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 
@@ -39,15 +38,28 @@ export default async (interaction, ephemeral) => {
             let userData = userResponse.data.body;
             // Rank string
             let rankString = `\nLevel: ${userData.rank}`;
-            if (userData.veteranRank > 0) rankString += `\nVeteran Level: ${userData.veteranRank} ${iconsJSON["LevelVeteran"]}`;
+
+            if (userData.veteranRank > 0) {
+                let veteranEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6LevelVeteran");
+                rankString += `\nVeteran Level: ${userData.veteranRank}`;
+                if (veteranEmoji) rankString += ` ${veteranEmoji}`;
+            };
             // General stats
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
-            if (saveData.achievementsClaimed.length > 0) userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/150 ${iconsJSON["Achievements"]}`; // Total achievement amount is hardcoded, doesn't seem to be a way to reverse engineer it from the data received. Make sure to update if more achievements are added!
-            if (saveData.lifetimeTrophies > 0) userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies} ${iconsJSON["TrophyStore"]}`;
+            if (saveData.achievementsClaimed.length > 0) {
+                let achievementsEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6Achievement");
+                userDescription += `\nAchievements: ${saveData.achievementsClaimed.length}/150`; // Total achievement amount is hardcoded, doesn't seem to be a way to reverse engineer it from the data received. Make sure to update if more achievements are added!
+                if (achievementsEmoji) userDescription += ` ${achievementsEmoji}`;
+            };
+            if (saveData.lifetimeTrophies > 0) {
+                let trophyStoreEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6TrophyStore");
+                userDescription += `\nTrophies Earned: ${saveData.lifetimeTrophies}`;
+                if (trophyStoreEmoji) userDescription += ` ${trophyStoreEmoji}`;
+            };
             if (saveData.lifetimeTeamTrophies > 0) userDescription += `\nTeam Trophies Earned: ${saveData.lifetimeTeamTrophies}`;
             // Hero and tower usage
-            let heroesByUsageString = getUsageListString(userData.heroesPlaced);
-            let towersByUsageString = getUsageListString(userData.towersPlaced);
+            let heroesByUsageString = getUsageListString(userData.heroesPlaced, interaction.client.application.emojis.cache);
+            let towersByUsageString = getUsageListString(userData.towersPlaced, interaction.client.application.emojis.cache);
             // Build user embed
             btd6Embed
                 .setTitle(userData.displayName)
@@ -62,7 +74,7 @@ export default async (interaction, ephemeral) => {
             break;
         case "boss-event":
             await interaction.deferReply({ ephemeral: ephemeral });
-            let bossEventMessageObject = await getBossEvent(false);
+            let bossEventMessageObject = await getBossEvent({ elite: false, emojis: interaction.client.application.emojis.cache });
             if (typeof bossEventMessageObject == "string") {
                 apiError = bossEventMessageObject;
                 break;
@@ -82,12 +94,13 @@ export default async (interaction, ephemeral) => {
     return sendMessage({ interaction: interaction, embeds: btd6Embed, components: btd6ActionRow, ephemeral: ephemeral });
 };
 
-function getUsageListString(usageObject) {
+function getUsageListString(usageObject, emojis) {
     // Rosalia icon is missing
     let usageArray = Object.entries(usageObject).sort((a, b) => b[1] - a[1]);
     let usageString = "";
     usageArray.forEach(element => {
-        if (iconsJSON[element[0]]) usageString += iconsJSON[element[0]];
+        let heroIcon = emojis.find(emoji => emoji.name == `BTD6Hero${element[0]}`);
+        if (heroIcon) usageString += heroIcon.toString(); // toString() because without it the emoji gets represented by just the ID for some reason
         usageString += `${element[0]}: ${element[1]}\n`;
     });
     return usageString;

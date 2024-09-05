@@ -350,7 +350,7 @@ export default async (client, interaction) => {
                             embedsReturn = [userinfo_page.embeds];
                             componentsReturn = [userinfo_page.components];
                         } else if (interaction.customId.startsWith("btd6BossEvent")) {
-                            let bossEventMessageObject = await getBossEvent(interaction.customId.split("|")[1] == "false");
+                            let bossEventMessageObject = await getBossEvent({ elite: interaction.customId.split("|")[1] == "false", emojis: interaction.client.application.emojis.cache });
                             if (typeof bossEventMessageObject == "string") return;
                             embedsReturn = [bossEventMessageObject.embeds];
                             componentsReturn = [bossEventMessageObject.components];
