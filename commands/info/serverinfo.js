@@ -14,7 +14,8 @@ import isAdmin from "../../util/perms/isAdmin.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import languages from "../../objects/discord/languages.json" with { type: "json" };
 import verifLevels from "../../objects/discord/verificationLevels.json" with { type: "json" };
-import emojis from "../../objects/discord/emojis.json" with { type: "json" };
+
+const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, ephemeral) => {
     let adminBool = isAdmin(interaction.member);
@@ -81,7 +82,8 @@ export default async (interaction, ephemeral) => {
                 boosterString = `${guild.premiumSubscriptionCount}/${boosterRequirementTier1}`;
         };
     };
-    boosterString = boosterString + emojis.NitroBoost;
+    let discordNitroEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name === nitroBoostEmojiName);
+    if (discordNitroEmoji) boosterString += discordNitroEmoji;
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
