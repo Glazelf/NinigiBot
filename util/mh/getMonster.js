@@ -162,11 +162,13 @@ function getStringFromObject(object, emojis, type) {
     let itemArray = [];
     object.forEach(item => {
         let emojiType = type;
+        let emojiName = item;
+        // Use matching elemental emojis for blights
         if (item.endsWith("blight") && type == "Ailment") {
             emojiType = "Element";
-            item.replace("blight", "");
+            emojiName = item.replace("blight", "");
         };
-        let itemEmoji = emojis.find(emoji => emoji.name == `MH${emojiType}${item}`);
+        let itemEmoji = emojis.find(emoji => emoji.name == `MH${emojiType}${emojiName}`);
         if (itemEmoji) {
             let itemString = `${itemEmoji}${item}`;
             itemArray.push(itemString);
