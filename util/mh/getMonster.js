@@ -161,7 +161,12 @@ export default async (monsterData, emojis) => {
 function getStringFromObject(object, emojis, type) {
     let itemArray = [];
     object.forEach(item => {
-        let itemEmoji = emojis.find(emoji => emoji.name == `MH${type}${item}`);
+        let emojiType = type;
+        if (item.endsWith("blight") && type == "Ailment") {
+            emojiType = "Element";
+            item.replace("blight", "");
+        };
+        let itemEmoji = emojis.find(emoji => emoji.name == `MH${emojiType}${item}`);
         if (itemEmoji) {
             let itemString = `${itemEmoji}${item}`;
             itemArray.push(itemString);
