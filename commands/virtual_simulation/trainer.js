@@ -2,7 +2,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    ApplicationIntegrationType
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import { getUser } from "../../database/dbServices/user.api.js";
@@ -13,13 +14,16 @@ export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     let embed = new EmbedBuilder();
-    let avatar = null;
     let master = interaction.user;
     switch (interaction.options.getSubcommand()) {
         case "info":
             let user = await getUser(master.id);
-            let member = await interaction.guild.members.fetch(master.id);
-            if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            let avatar = master.displayAvatarURL(globalVars.displayAvatarSettings);
+            if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) {
+                let member = await interaction.guild.members.fetch(master.id);
+                if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
+            };
+
             let trophy_level = 0;
             let trophies = await user.getShopTrophies();
             let trophy_string = '';
