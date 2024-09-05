@@ -24,14 +24,13 @@ import checkBaseSpeciesMoves from "../../util/pokemon/checkBaseSpeciesMoves.js";
 import urlExists from "../../util/urlExists.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
-import cardTypeEmojis from "../../objects/pokemon/cardTypeEmojis.json" with { type: "json" };
-import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 import pokemonCardSetsJSON from "../../submodules/pokemon-tcg-data/sets/en.json" with { type: "json" };
 
 const currentYear = new Date().getFullYear();
 const gens = new Generations(Dex);
 const allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 const allNatures = Dex.natures.all();
+const cardTypeEmojiPrefix = "PokemonCardType";
 
 export default async (interaction, ephemeral) => {
     // Command settings
@@ -185,7 +184,7 @@ export default async (interaction, ephemeral) => {
             if (move.flags.bypasssub) description += " Bypasses Substitute.";
             if (!moveIsAvailable) description += `\nThis move is not usable in generation ${generation}.`;
 
-            let type = getTypeEmojis({ type: move.type });
+            let type = getTypeEmojis({ type: move.type, emojis: interaction.client.application.emojis.cache });
             let category = move.category;
             let ppString = `${move.pp} (${Math.floor(move.pp * 1.6)})`;
 
@@ -227,8 +226,8 @@ export default async (interaction, ephemeral) => {
             let lowered = Dex.stats.names[nature.minus];
             let resultString = "Neutral nature, no stat changes.";
             if (boosted && lowered) {
-                boosted = `${emojis.ArrowUpRed}${boosted}`;
-                lowered = `${emojis.ArrowDownBlue}${lowered}`;
+                boosted = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == "MiscArrowUpRed")}${boosted}`;
+                lowered = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == "MiscArrowDownBlue")}${lowered}`;
                 resultString = `${boosted}\n${lowered}`;
             };
             pokemonEmbed
@@ -473,7 +472,12 @@ export default async (interaction, ephemeral) => {
             const cardSetData = pokemonCardSetsJSON.find(set => set.id == cardSetId);
             let cardTitle = cardData.name; // Space for fomatting with emojis below
             if (cardData.hp) cardTitle += ` - ${cardData.hp}HP `;
-            if (cardData.types) cardData.types.forEach(type => cardTitle = `${cardTitle}${cardTypeEmojis[type]}`);
+            if (cardData.types) {
+                cardData.types.forEach(type => {
+                    let cardTypeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + type);
+                    if (cardTypeEmoji) cardTitle = `${cardTitle}${cardTypeEmoji}`;
+                });
+            };
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
             if (cardData.legalities) {
@@ -487,13 +491,16 @@ export default async (interaction, ephemeral) => {
                 let attackDescription = attack.text || "No extra effect.";
                 if (attack.cost) {
                     attackName = ` ${attackName}`; // Space looks better between cost and name
-                    attack.cost.reverse().forEach(cost => attackName = `${cardTypeEmojis[cost]}${attackName}`); // Reverse because we are adding to the front
+                    attack.cost.reverse().forEach(cost => attackName = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost) || ""}${attackName}`); // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
                 };
                 pokemonEmbed.addFields([{ name: attackName, value: attackDescription, inline: false }]);
             });
-            if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses), inline: true }]);
-            if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances), inline: true }]);
-            if (cardData.retreatCost) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: cardData.retreatCost.map(cost => cardTypeEmojis[cost]).join(""), inline: true }]);
+            if (cardData.weaknesses) pokemonEmbed.addFields([{ name: "Weaknesses:", value: getCardMatchupString(cardData.weaknesses, interaction.client.application.emojis.cache), inline: true }]);
+            if (cardData.resistances) pokemonEmbed.addFields([{ name: "Resistances:", value: getCardMatchupString(cardData.resistances, interaction.client.application.emojis.cache), inline: true }]);
+            if (cardData.retreatCost) {
+                let retreatCostString = cardData.retreatCost.map(cost => interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost)).join("");
+                if (retreatCostString.length > 0) pokemonEmbed.addFields([{ name: "Retreat Cost:", value: retreatCostString, inline: true }]);
+            };
 
             pokemonEmbed
                 .setAuthor({ name: `${cardData.subtypes.join(" ")} ${cardData.supertype}` })
@@ -524,7 +531,7 @@ export default async (interaction, ephemeral) => {
         // Pokémon
         case "pokemon":
             if (!pokemonExists) return sendMessage({ interaction: interaction, content: noPokemonString });
-            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData });
+            let messageObject = await getPokemon({ pokemon: pokemon, learnsetBool: learnsetBool, shinyBool: shinyBool, genData: genData, emojis: interaction.client.application.emojis.cache });
             pokemonEmbed = messageObject.embeds[0];
             pokemonButtons = messageObject.components;
             break;
@@ -597,9 +604,12 @@ function isIdenticalForm(pokemonName) {
 };
 
 // Get weakness/resistance string from dataset's array format
-function getCardMatchupString(matchupArray) {
+function getCardMatchupString(matchupArray, emojis) {
     let matchupString = "";
-    matchupArray.forEach(matchup => matchupString += cardTypeEmojis[matchup.type]);
+    for (const matchup of matchupArray) {
+        const matchupEmoji = emojis.find(emoji => emoji.name == cardTypeEmojiPrefix + matchup.type);
+        if (matchupEmoji) matchupString += matchupEmoji.toString(); // For some reason lists the emoji ID without manually converting to string
+    };
     matchupString += ` ${matchupArray[0].value}`; // This operates under the assumption that all resistances/weaknesses are equal within each card. Rewrite if this ever changes.
     return matchupString;
 };

@@ -173,7 +173,7 @@ export default async (client, interaction) => {
                             newPokemonName = newPokemonName.label;
                             let pokemon = Dex.species.get(newPokemonName);
                             if (!pokemon || !pokemon.exists) return;
-                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool });
+                            messageObject = await getPokemon({ pokemon: pokemon, genData: genData, learnsetBool: learnsetBool, generation: generationButton, shinyBool: shinyBool, emojis: interaction.client.application.emojis.cache });
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -191,7 +191,7 @@ export default async (client, interaction) => {
                                 if (monster.name == newMonsterName) monsterData = monster;
                             });
                             if (!monsterData) return;
-                            messageObject = await getMHMonster(monsterData);
+                            messageObject = await getMHMonster(monsterData, interaction.client.application.emojis.cache);
                             if (!messageObject) return;
                             embedsReturn = messageObject.embeds;
                             componentsReturn = messageObject.components;
@@ -350,7 +350,7 @@ export default async (client, interaction) => {
                             embedsReturn = [userinfo_page.embeds];
                             componentsReturn = [userinfo_page.components];
                         } else if (interaction.customId.startsWith("btd6BossEvent")) {
-                            let bossEventMessageObject = await getBossEvent(interaction.customId.split("|")[1] == "false");
+                            let bossEventMessageObject = await getBossEvent({ elite: interaction.customId.split("|")[1] == "false", emojis: interaction.client.application.emojis.cache });
                             if (typeof bossEventMessageObject == "string") return;
                             embedsReturn = [bossEventMessageObject.embeds];
                             componentsReturn = [bossEventMessageObject.components];

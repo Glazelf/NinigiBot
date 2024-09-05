@@ -27,6 +27,7 @@ export default async (client) => {
         console.log("Loaded affairs!");
 
         await client.guilds.fetch();
+        await client.application.emojis.fetch();
         // List and fetch servers the bot is connected to
         // await client.guilds.cache.forEach(async (guild) => {
         //     await guild.members.fetch();

@@ -17,7 +17,7 @@ import colorHexes from "../../objects/colorHexes.json" with { type: "json" };
 
 let allPokemon = Dex.species.all().filter(pokemon => pokemon.exists && pokemon.num > 0 && pokemon.isNonstandard !== "CAP");
 
-export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData }) => {
+export default async ({ pokemon, learnsetBool = false, shinyBool = false, genData, emojis }) => {
     let messageObject;
     const pkmEmbed = new EmbedBuilder();
     let generation = genData.dex.gen;
@@ -66,8 +66,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     // Typing
     let type1 = pokemonGen.types[0];
     let type2 = pokemonGen.types[1];
-    let typeString = `${getTypeEmojis({ type: type1 })}`;
-    if (type2) typeString += `\n${getTypeEmojis({ type: type2, })}`;
+    let typeString = `${getTypeEmojis({ type: type1, emojis: emojis })}`;
+    if (type2) typeString += `\n${getTypeEmojis({ type: type2, emojis: emojis })}`;
     // Check type matchups
     let superEffectives = [];
     let resistances = [];
@@ -77,7 +77,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
-        let typeEffectString = getTypeEmojis({ type: type.name, bold: typeEmoteBold });
+        let typeEffectString = getTypeEmojis({ type: type.name, bold: typeEmoteBold, emojis: emojis });
         if ([2, 4].includes(effectiveness)) superEffectives.push(typeEffectString);
         if ([0.25, 0.5].includes(effectiveness)) resistances.push(typeEffectString);
         if (effectiveness == 0) immunities.push(typeEffectString);

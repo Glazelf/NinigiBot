@@ -85,7 +85,7 @@ export default async (interaction, ephemeral) => {
             };
             if (!monsterData) return sendMessage({ interaction: interaction, content: "Could not find the specified monster." });
 
-            let messageObject = await getMonster(monsterData);
+            let messageObject = await getMonster(monsterData, interaction.client.application.emojis.cache);
             return sendMessage({ interaction: interaction, embeds: messageObject.embeds, components: messageObject.components, ephemeral: ephemeral })
     };
     return sendMessage({ interaction: interaction, embeds: mhEmbed, ephemeral: ephemeral, components: buttonArray });

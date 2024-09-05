@@ -6,7 +6,6 @@ import {
 } from "discord.js";
 import axios from "axios";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import iconsJSON from "../../objects/btd/icons.json" with { type: "json" };
 
 const btd6api = "https://data.ninjakiwi.com/btd6/";
 const heroesOrdered = [
@@ -54,7 +53,7 @@ const towersOrdered = [
     "BeastHandler"
 ];
 
-export default async (elite = false) => {
+export default async ({ elite = false, emojis }) => {
     let bossEventsResponse = await axios.get(`${btd6api}bosses`);
     if (!bossEventsResponse.data.success) return bossEventsResponse.data.error;
     let mostRecentBossEvent = bossEventsResponse.data.body[0];
@@ -97,7 +96,7 @@ export default async (elite = false) => {
     let bannedArray = [];
     let allHeroesAllowed = bossEventMetadata._towers.find((hero) => hero.tower == "ChosenPrimaryHero").max == 99; // This seems to be how to check if all heroes are allowed? Even when this is 99, heroes inconsistently have either a max of 0 or 1, making it hard to tell otherwise
     bossEventMetadata._towers.forEach(tower => {
-        let towerIcon = iconsJSON[tower.tower];
+        let towerIcon = emojis.find(emoji => emoji.name == `BTD6Hero${tower.tower}`);
         if (tower.tower == "ChosenPrimaryHero") return; // Skip the ChosenPrimaryHero tower
         if (tower.isHero && towerIcon) {
             let heroString = `${towerIcon}${tower.tower}`;

@@ -8,10 +8,9 @@ import {
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
-import badgeEmojis from "../../objects/discord/badgeEmojis.json" with { type: "json" };
-import emojis from "../../objects/discord/emojis.json" with { type: "json" };
 
 const number_of_pages = 2;
+const nitroBoostEmojiName = "DiscordNitroBoost";
 
 export default async (interaction, page, user) => {
     user = await interaction.client.users.fetch(user.id, { force: true });
@@ -83,16 +82,20 @@ export default async (interaction, page, user) => {
             let badgesString = "";
             try {
                 if (user.bot) badgesArray.push("🤖");
-                let guildOwner = await interaction.guild.fetchOwner();
-                if (guildOwner.id === user.id) badgesArray.push("👑");
-                if (member && member.premiumSince > 0) badgesArray.push(emojis.NitroBoost);
+                let guildOwner = await interaction.guild?.fetchOwner();
+                if (guildOwner?.id === user.id) badgesArray.push("👑");
+                if (member && member.premiumSince > 0) {
+                    let boostEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == nitroBoostEmojiName);
+                    if (boostEmoji) badgesArray.push(boostEmoji);
+                };
                 if (user.flags) {
                     let userFlagsAll = user.flags.serialize();
                     let flagsArray = Object.entries(userFlagsAll);
                     let userFlagsTrueEntries = flagsArray.filter(([key, value]) => value === true);
                     let userFlagsTrue = Object.fromEntries(userFlagsTrueEntries);
-                    for (const [key, value] of Object.entries(badgeEmojis)) {
-                        if (Object.keys(userFlagsTrue).includes(key)) badgesArray.push(value);
+                    for (const key of Object.keys(userFlagsTrue)) {
+                        let badgeEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == `Badge${key}`);
+                        if (badgeEmoji) badgesArray.push(badgeEmoji);
                     };
                 };
                 badgesString = badgesArray.join("");
