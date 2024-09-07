@@ -262,11 +262,11 @@ export default async (interaction, ephemeral) => {
                 let currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
                 let currentEggstraWork = responseSchedules.data.data[inputMode].teamContestSchedules.nodes[0];
                 if (currentBigRun) {
-                    currentSalmonRunEventTitle = "⚠️ Big Run ⚠️";
+                    currentSalmonRunEventTitle = "⚠️ **Big Run** ⚠️";
                     currentSalmonRunEvent = currentBigRun;
                 };
                 if (currentEggstraWork) {
-                    currentSalmonRunEventTitle = "🥚 Eggstra Work 🥚";
+                    currentSalmonRunEventTitle = "🥚 **Eggstra Work** 🥚";
                     currentSalmonRunEvent = currentEggstraWork;
                 };
             };
@@ -308,7 +308,7 @@ export default async (interaction, ephemeral) => {
                     await entry.setting.weapons.forEach(weapon => {
                         weaponString += `- ${weapon.name}\n`;
                     });
-                    splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}\n${entry.__splatoon3ink_king_salmonid_guess}`, value: weaponString, inline: true }]);
+                    splat3Embed.addFields([{ name: `${salmonRotationTime}\n${entry.setting.coopStage.name}`, value: `${entry.__splatoon3ink_king_salmonid_guess}\n${weaponString}`, inline: true }]);
                 });
                 if (currentSalmonRunEvent && Date.now() >= Date.parse(currentSalmonRunEvent.startTime)) {
                     splat3Embed.setImage(currentSalmonRunEvent.setting.coopStage.image.url);
