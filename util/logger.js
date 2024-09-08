@@ -7,6 +7,7 @@ import config from "../config.json" with { type: "json" };
 export default async ({ exception, client, interaction = null }) => {
     // Note: interaction may be a message
     try {
+        if (!exception) return;
         let timestamp = getTime();
         let exceptionString = exception.toString();
         let errorInspectResult = util.inspect(exception, { depth: 2 });
