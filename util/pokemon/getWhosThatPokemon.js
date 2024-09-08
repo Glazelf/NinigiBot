@@ -38,7 +38,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
     // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
-    let img = Canvas.loadImage(serebiiRender); // No await is a test to see if it resolves some socket issues
+    let img = await Canvas.loadImage(serebiiRender); // No await is a test to see if it resolves some socket issues
     let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
     let ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
