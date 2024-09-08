@@ -22,9 +22,9 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let quizTitle = "Who's That Pokémon?";
     let quizDescription = null;
     let embedColor = globalVars.embedColor;
-    let pokemonID, serebiiRender
+    let pokemonID, serebiiRender;
     if (!pokemonList && pokemon) {
-        pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed in instead of a list, this is the case on a correct answer
+        pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed instead of a list. This happens if the user guesses correctly.
         if (winner) {
             let pokemonSim = DexSim.species.get(pokemon.name);
             embedColor = colorHexes[pokemonSim.color.toLowerCase()];
