@@ -27,7 +27,7 @@ export default async (interaction, ephemeral) => {
 
     let emojis = await interaction.client.application.emojis.fetch();
     await interaction.client.guilds.fetch();
-    let totalMembers = await getTotalUsers(interaction.client.guilds);
+    let totalMembers = interaction.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
     // Get latest commit
     let githubURLVars = "Glazelf/NinigiBot";
     let githubRepoURL = `https://api.github.com/repos/${githubURLVars}`;
@@ -94,15 +94,6 @@ export default async (interaction, ephemeral) => {
     let botButtons = new ActionRowBuilder()
         .addComponents([shopButton, appDirectoryButton, inviteButton]);
     return sendMessage({ interaction: interaction, embeds: botEmbed, components: botButtons, ephemeral: ephemeral });
-};
-
-async function getTotalUsers(guilds) {
-    // Fast but inaccurate method
-    let userCount = 0;
-    await guilds.cache.forEach(guild => {
-        if (guild.memberCount) userCount += guild.memberCount;
-    });
-    return userCount;
 };
 
 // Boolean options
