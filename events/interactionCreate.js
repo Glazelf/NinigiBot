@@ -123,7 +123,7 @@ export default async (client, interaction) => {
                 switch (interaction.componentType) {
                     case ComponentType.Button:
                         let messageObject = null;
-                        if (!interaction.customId) return;
+                        if (!interaction.customId || interaction.replied) return;
                         let contentReturn, embedsReturn, componentsReturn, filesReturn = null;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
@@ -784,7 +784,7 @@ export default async (client, interaction) => {
                         switch (focusedOption.name) {
                             case "name":
                                 let trophies = await getShopTrophies();
-                                let temp = ''
+                                let temp = '';
                                 trophies.forEach(trophy => {
                                     temp = trophy.trophy_id;
                                     if (temp.toLowerCase().includes(focusedOption.value)) { choices.push({ name: temp, value: temp }); }
@@ -805,7 +805,7 @@ export default async (client, interaction) => {
                                         break;
                                     case "trophy":
                                         let trophies = await getShopTrophies();
-                                        let temp = ''
+                                        let temp = '';
                                         trophies.forEach(trophy => {
                                             temp = trophy.trophy_id;
                                             if (temp.toLowerCase().includes(focusedOption.value)) choices.push({ name: temp, value: temp });
