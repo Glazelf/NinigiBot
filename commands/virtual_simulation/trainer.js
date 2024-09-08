@@ -19,7 +19,7 @@ export default async (interaction, ephemeral) => {
         case "info":
             let user = await getUser(master.id);
             let avatar = master.displayAvatarURL(globalVars.displayAvatarSettings);
-            if (Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall) && interaction.inGuild()) {
+            if (interaction.inGuild() ** Object.keys(interaction.authorizingIntegrationOwners).includes(ApplicationIntegrationType.GuildInstall.toString())) {
                 let member = await interaction.guild.members.fetch(master.id);
                 if (member) avatar = member.displayAvatarURL(globalVars.displayAvatarSettings);
             };
