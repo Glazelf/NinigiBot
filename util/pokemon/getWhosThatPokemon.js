@@ -23,7 +23,6 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
     let quizDescription = null;
     let embedColor = globalVars.embedColor;
     let pokemonID, serebiiRender;
-    console.log("getting pokemon") // For identifying socket hang up issue
     if (!pokemonList && pokemon) {
         pokemon = Dex.species.get(pokemon); // In case a Pokémon is passed instead of a list. This happens if the user guesses correctly.
         if (winner) {
@@ -32,16 +31,14 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         };
     };
     while (!doesRenderExist) {
-        console.log("getting render") // For identifying socket hang up issue
         if (!pokemon && pokemonList) pokemon = getRandomObjectItem(pokemonList);
         pokemonID = getCleanPokemonID(pokemon);
         serebiiRender = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
         doesRenderExist = urlExists(serebiiRender);
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
-    // Initiate image context
-    console.log("loading image and canvas") // For identifying socket hang up issue
-    let img = await Canvas.loadImage(serebiiRender);
+    // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
+    let img = Canvas.loadImage(serebiiRender); // No await is a test to see if it resolves some socket issues
     let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
     let ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
@@ -57,7 +54,6 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         quizDescription += `\nThe answer was **${pokemon.name}**!`;
         pokemonButtons = [];
     } else {
-        console.log("making image black and adding buttons") // For identifying socket hang up issue
         // Make render black
         ctx.globalCompositeOperation = "source-in";
         ctx.fillStyle = "#000000";
@@ -73,10 +69,8 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
             .setStyle(ButtonStyle.Danger);
         pokemonButtons.addComponents([quizGuessButton, quizRevealButton]);
     };
-    console.log("adding image buffer to embed") // For identifying socket hang up issue
     let pokemonImage = new AttachmentBuilder(canvas.toBuffer(), { name: "WhosThatPokemon.jpg" });
 
-    console.log("constructing embed and returning") // For identifying socket hang up issue
     let quizEmbed = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(quizTitle)

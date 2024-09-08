@@ -453,9 +453,7 @@ export default async (interaction, ephemeral) => {
                 !pokemon.name.startsWith("Basculegion-") &&
                 !pokemon.name.endsWith("-Totem")
             );
-            console.log("enter function") // For identifying socket hang up issue
             let whosThatPokemonMessageObject = await getWhosThatPokemon({ pokemonList: allPokemonFiltered });
-            console.log("exit function") // For identifying socket hang up issue
             pokemonEmbed = whosThatPokemonMessageObject.embeds[0];
             pokemonFiles = whosThatPokemonMessageObject.files;
             pokemonButtons = whosThatPokemonMessageObject.components;
