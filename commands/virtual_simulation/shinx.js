@@ -12,6 +12,7 @@ import {
     SlashCommandBooleanOption
 } from "discord.js";
 import Canvas from "canvas";
+import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
 import ShinxBattle from "../../util/shinx/shinxBattle.js";
 import addLine from "../../util/battle/addLine.js";
@@ -449,7 +450,10 @@ export default async (interaction, ephemeral) => {
                         ctx.closePath();
                         ctx.clip();
                         for (let q = 0; q < 2; q++) {
-                            const avatar = await Canvas.loadImage(avatars[q]);
+                            // Might want to rewrite this to use axios
+                            let avatarBuffer = await axios.get(avatars[q], { responseType: 'arraybuffer' }).then(response => response.data);
+                            let avatar = new Canvas.Image();
+                            avatar.src = avatarBuffer;
                             ctx.drawImage(avatar, 18 + 134 * (q === i), 43, 80, 80);
                         };
                         text += addLine(`**${nicks[(i + 1) % 2]}** fainted!`);

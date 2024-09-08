@@ -6,6 +6,7 @@ import {
     EmbedBuilder
 } from "discord.js";
 import Canvas from "canvas";
+import axios from "axios";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
 import urlExists from "../urlExists.js";
@@ -38,7 +39,9 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
         if (!doesRenderExist) pokemon = null; // Prevent infinite loop
     };
     // Initiate image context. If "socket hang up" error occurs, error seems to be in this block of code.
-    let img = await Canvas.loadImage(serebiiRender); // No await is a test to see if it resolves some socket issues
+    let imageBuffer = await axios.get(serebiiRender, { responseType: 'arraybuffer' }).then(response => response.data);
+    let img = new Canvas.Image();
+    img.src = imageBuffer;
     let canvas = Canvas.createCanvas(img.width, img.height); // Serebii renders seem to always be 475x475
     let ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
