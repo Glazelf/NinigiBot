@@ -8,6 +8,8 @@ import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 export default async (interaction, ephemeral) => {
+    let ephemeralArg = interaction.options.getBoolean("ephemeral");
+    if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Date manipulation
     let currentDate = new Date();
     let targetDate = new Date();
