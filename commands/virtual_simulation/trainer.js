@@ -47,7 +47,7 @@ export default async (interaction, ephemeral) => {
                 ]);
             if (trophy_string.length > 0) {
                 embed.addFields([
-                    { name: "Trophy Level:", value: trophy_level + " :beginner", inline: true },
+                    { name: "Trophy Level:", value: trophy_level + " 🔰", inline: true },
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };
