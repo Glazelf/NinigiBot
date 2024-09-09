@@ -481,7 +481,7 @@ export default async (interaction, ephemeral) => {
             let cardFooter = `${cardSetData.name} ${cardData.number}/${cardSetData.printedTotal}\n`;
             if (cardData.regulationMark) cardFooter += `Regulation ${cardData.regulationMark}`;
             if (cardData.legalities) {
-                cardFooter += ": "; // Seperation between regulation and legalities
+                if (cardData.regulationMark) cardFooter += ": "; // Seperation between regulation and legalities
                 Object.keys(cardData.legalities).forEach(legality => cardFooter += `✅ ${legality.charAt(0).toUpperCase() + legality.slice(1)} `); // Capitalize first character
             };
             if (cardData.abilities) cardData.abilities.forEach(ability => pokemonEmbed.addFields([{ name: `${ability.type}: ${ability.name}`, value: ability.text, inline: false }]));
