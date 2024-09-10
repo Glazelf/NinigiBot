@@ -91,7 +91,6 @@ const giAPI = `https://genshin.jmp.blue/`;
 
 export default async (client, interaction) => {
     try {
-        if (interaction.user.bot) return;
         // ID split
         let customIdSplit = null;
         if (interaction.customId) customIdSplit = interaction.customId.split("|");
