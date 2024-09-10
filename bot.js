@@ -95,6 +95,12 @@ async function walk(dir, callback) {
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = await import(`./${filepath}`);
                     if (!props.commandObject.type) props.commandObject.type = ApplicationCommandType.ChatInput;
+                    // Set default contexts (all). This is already the API default (null acts the same) but this lets me keep the later checks simpler
+                    if (!props.commandObject.contexts) props.commandObject.contexts = [
+                        InteractionContextType.Guild,
+                        InteractionContextType.BotDM,
+                        InteractionContextType.PrivateChannel
+                    ];
                     // If command requires a guild; limit to guild installs
                     if (!props.commandObject.integration_types &&
                         props.commandObject.contexts.includes(InteractionContextType.Guild) &&
