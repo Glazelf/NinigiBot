@@ -5,7 +5,8 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandBooleanOption,
-    SlashCommandStringOption
+    SlashCommandStringOption,
+    bold
 } from "discord.js";
 import Canvas from "canvas";
 import sendMessage from "../../util/sendMessage.js";
@@ -38,7 +39,7 @@ export default async (interaction, ephemeral) => {
             trophies = await getFullBuyableShopTrophies(master.id);
             trophies.forEach(trophy => {
                 let trophyPriceBlock = codeBlock("diff", `[${trophy.price}]`);
-                let trophy_header = { name: '\u200B', value: `${trophy.icon} **${trophy.trophy_id}**`, inline: true };
+                let trophy_header = { name: '\u200B', value: `${trophy.icon} ${bold(trophy.trophy_id)}`, inline: true };
                 let trophy_price = { name: '\u200B', value: trophyPriceBlock, inline: true };
                 switch (trophy.temp_bought) {
                     case 'Bought':
@@ -65,18 +66,18 @@ export default async (interaction, ephemeral) => {
             res = await buyShopTrophy(master.id, trophy_name.toLowerCase());
             switch (res) {
                 case 'NoTrophy':
-                    returnString = `**${trophy_name}** isn't available.`;
+                    returnString = `${bold(trophy_name)} isn't available.`;
                     if (trophyCommandId) returnString += `\nTip: check today's stock with </${commandObject.name} stock:${trophyCommandId}>.`;
                     break;
                 case 'HasTrophy':
-                    returnString = `You already have **${trophy_name}!**`
+                    returnString = `You already have ${bold(trophy_name)}!`;
                     break;
                 case 'NoMoney':
-                    returnString = `Not enough money for **${trophy_name}. **`
+                    returnString = `Not enough money for ${bold(trophy_name)}.`;
                     break;
                 case 'Ok':
-                    returnString = `Bought **${trophy_name}**!`
-                    shinx = await getShinx(master.id)
+                    returnString = `Bought ${bold(trophy_name)}!`;
+                    shinx = await getShinx(master.id);
                     canvas = Canvas.createCanvas(428, 310);
                     ctx = canvas.getContext('2d');
                     img = await Canvas.loadImage('./assets/frontier.png');
@@ -113,7 +114,7 @@ export default async (interaction, ephemeral) => {
                 isShop = false;
             };
             if (!res) {
-                let infoNoResString = `**${trophy_name}** doesn't exist.`;
+                let infoNoResString = `${bold(trophy_name)} doesn't exist.`;
                 if (trophyCommandId) infoNoResString += `\nTip: check all trophies with </${commandObject.name} list:${trophyCommandId}>.`;
                 return sendMessage({
                     interaction: interaction,

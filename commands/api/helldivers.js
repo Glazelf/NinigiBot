@@ -4,7 +4,8 @@ import {
     SlashCommandStringOption,
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
+    SlashCommandSubcommandGroupBuilder,
+    bold
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -53,7 +54,7 @@ export default async (interaction, ephemeral) => {
             if (planetObject.environmentals && planetObject.environmentals.length > 0) {
                 environmentals = "";
                 planetObject.environmentals.forEach(environmental => {
-                    environmentals += `**${environmental.name}**: ${environmental.description}\n`;
+                    environmentals += `${bold(`${environmental.name}:`)} ${environmental.description}\n`;
                 });
             };
             helldiversEmbed

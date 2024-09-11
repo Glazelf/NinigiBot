@@ -2,7 +2,9 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    bold,
+    italic
 } from "discord.js";
 import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -122,7 +124,7 @@ export default async ({ interaction, page, region }) => {
                 break;
         };
         let midTermWinner = null;
-        let splatfestResultsTitle = "**Results:**";
+        let splatfestResultsTitle = bold("Results:");
         let splatfestResultsDescription = "";
         let splatfestWinnerPoints = 0;
         let splatfestResultsHoragai = "- Sneak Peek: ";
@@ -130,7 +132,7 @@ export default async ({ interaction, page, region }) => {
         let splatfestResultsRegular = "- Open Battles: ";
         let splatfestResultsChallenge = "- Pro Battles: ";
         let splatfestResultsTricolor = "- Tricolor Battles: ";
-        let splatfestResultsWinner = "**Winner: Team {1} ({2}p)**";
+        let splatfestResultsWinner = bold("Winner: Team {1} ({2}p)");
         let splatfestTeamIndex = 0;
         let splatfestIdols = {
             0: "Shiver",
@@ -150,7 +152,7 @@ export default async ({ interaction, page, region }) => {
             splatfestTeamIndex++;
             // There has to be a way to clean up most of the if statements in the ~50 lines below this comment
             if (team.result && team.result.isWinner) {
-                splatfestDescription += `**${team.teamName}**`;
+                splatfestDescription += bold(team.teamName);
                 if (team.result.isVoteRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.vote.first;
                 if (team.result.isVoteRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.vote.second;
                 if (team.result.isHoragaiRatioTop) splatfestWinnerPoints += currentSplatfestPointValues.horagai.first;
@@ -163,7 +165,7 @@ export default async ({ interaction, page, region }) => {
                 if (team.result.isTricolorContributionRatioSecond) splatfestWinnerPoints += currentSplatfestPointValues.tricolor.second;
                 splatfestResultsWinner = splatfestResultsWinner.replace("{1}", team.teamName).replace("{2}", splatfestWinnerPoints);
             } else if (team.result && team.result.isSecondWinner) {
-                splatfestDescription += `*${team.teamName}*`;
+                splatfestDescription += italic(team.teamName);
             } else {
                 splatfestDescription += team.teamName;
             };
@@ -171,53 +173,53 @@ export default async ({ interaction, page, region }) => {
                 // There HAS to be a cleaner way to do this but i don't care enough to figure it out right now, forEach didn't want to work on the object
                 if (team.result && team.result.horagaiRatio) {
                     let conchShellResultString = `${Math.round(team.result.horagaiRatio * 10000) / 100}%`;
-                    if (team.result.isHoragaiRatioTop) conchShellResultString = `**${conchShellResultString}**`;
-                    if (team.result.isHoragaiRatioSecond) conchShellResultString = `*${conchShellResultString}*`;
+                    if (team.result.isHoragaiRatioTop) conchShellResultString = bold(conchShellResultString);
+                    if (team.result.isHoragaiRatioSecond) conchShellResultString = italic(conchShellResultString);
                     splatfestResultsHoragai += conchShellResultString;
                 };
                 if (team.result && team.result.voteRatio) {
                     let voteResultString = `${Math.round(team.result.voteRatio * 10000) / 100}%`;
-                    if (team.result.isVoteRatioTop) voteResultString = `**${voteResultString}**`;
-                    if (team.result.isVoteRatioSecond) voteResultString = `*${voteResultString}*`;
+                    if (team.result.isVoteRatioTop) voteResultString = bold(voteResultString);
+                    if (team.result.isVoteRatioSecond) voteResultString = italic(voteResultString);
                     splatfestResultsVote += voteResultString;
                 };
                 if (team.result && team.result.regularContributionRatio) {
                     let regularBattleResultString = `${Math.round(team.result.regularContributionRatio * 10000) / 100}%`;
-                    if (team.result.isRegularContributionRatioTop) regularBattleResultString = `**${regularBattleResultString}**`;
-                    if (team.result.isRegularContributionRatioSecond) regularBattleResultString = `*${regularBattleResultString}*`;
+                    if (team.result.isRegularContributionRatioTop) regularBattleResultString = bold(regularBattleResultString);
+                    if (team.result.isRegularContributionRatioSecond) regularBattleResultString = italic(regularBattleResultString);
                     splatfestResultsRegular += regularBattleResultString;
                 };
                 if (team.result && team.result.challengeContributionRatio) {
                     let proBattleResultString = `${Math.round(team.result.challengeContributionRatio * 10000) / 100}%`;
-                    if (team.result.isChallengeContributionRatioTop) proBattleResultString = `**${proBattleResultString}**`;
-                    if (team.result.isChallengeContributionRatioSecond) proBattleResultString = `*${proBattleResultString}*`;
+                    if (team.result.isChallengeContributionRatioTop) proBattleResultString = bold(proBattleResultString);
+                    if (team.result.isChallengeContributionRatioSecond) proBattleResultString = italic(proBattleResultString);
                     splatfestResultsChallenge += proBattleResultString;
                 };
                 if (team.result && team.result.tricolorContributionRatio) {
                     let tricolorBattleResultString = `${Math.round(team.result.tricolorContributionRatio * 10000) / 100}%`;
-                    if (team.result.isTricolorContributionRatioTop) tricolorBattleResultString = `**${tricolorBattleResultString}**`;
-                    if (team.result.isTricolorContributionRatioSecond) tricolorBattleResultString = `*${tricolorBattleResultString}*`;
+                    if (team.result.isTricolorContributionRatioTop) tricolorBattleResultString = bold(tricolorBattleResultString);
+                    if (team.result.isTricolorContributionRatioSecond) tricolorBattleResultString = italic(tricolorBattleResultString);
                     splatfestResultsTricolor += tricolorBattleResultString;
                 };
             };
             if (team.role == "DEFENSE") midTermWinner = team.teamName;
         });
         if (splatfest.teams[0].result) {
-            splatfestResultsHoragai += ` (**${currentSplatfestPointValues.horagai.first}p**)`;
-            splatfestResultsVote += ` (**${currentSplatfestPointValues.vote.first}p**)`;
-            splatfestResultsRegular += ` (**${currentSplatfestPointValues.regular.first}p**)`;
-            splatfestResultsChallenge += ` (**${currentSplatfestPointValues.challenge.first}p**)`;
+            splatfestResultsHoragai += ` (${bold(`${currentSplatfestPointValues.horagai.first}p`)})`;
+            splatfestResultsVote += ` (${bold(`${currentSplatfestPointValues.vote.first}p`)})`;
+            splatfestResultsRegular += ` (${bold(`${currentSplatfestPointValues.regular.first}p`)})`;
+            splatfestResultsChallenge += ` (${bold(`${currentSplatfestPointValues.challenge.first}p`)})`;
             if (currentSplatfestPointValues.horagai.second) {
-                splatfestResultsHoragai = splatfestResultsHoragai.replace(")", ` | *${currentSplatfestPointValues.horagai.second}p*)`);
-                splatfestResultsVote = splatfestResultsVote.replace(")", ` | *${currentSplatfestPointValues.vote.second}p*)`);
-                splatfestResultsRegular = splatfestResultsRegular.replace(")", ` | *${currentSplatfestPointValues.regular.second}p*)`);
-                splatfestResultsChallenge = splatfestResultsChallenge.replace(")", ` | *${currentSplatfestPointValues.challenge.second}p*)`);
+                splatfestResultsHoragai = splatfestResultsHoragai.replace(")", ` | ${italic(`${currentSplatfestPointValues.horagai.second}p`)})`);
+                splatfestResultsVote = splatfestResultsVote.replace(")", ` | ${italic(`${currentSplatfestPointValues.vote.second}p`)}`);
+                splatfestResultsRegular = splatfestResultsRegular.replace(")", ` | ${italic(`${currentSplatfestPointValues.regular.second}p`)})`);
+                splatfestResultsChallenge = splatfestResultsChallenge.replace(")", ` | ${italic(`${currentSplatfestPointValues.challenge.second}p`)})`);
             };
 
             splatfestResultsDescription += `${splatfestResultsHoragai}\n${splatfestResultsVote}\n${splatfestResultsRegular}\n${splatfestResultsChallenge}`;
             if (!midTermWinner && currentSplatfestPointValues.tricolor) {
-                splatfestResultsTricolor += ` (**${currentSplatfestPointValues.tricolor.first}p**)`;
-                if (currentSplatfestPointValues.tricolor.second) splatfestResultsTricolor = splatfestResultsTricolor.replace(")", ` | *${currentSplatfestPointValues.tricolor.second}p*)`);
+                splatfestResultsTricolor += ` (${bold(`${currentSplatfestPointValues.tricolor.first}p`)})`;
+                if (currentSplatfestPointValues.tricolor.second) splatfestResultsTricolor = splatfestResultsTricolor.replace(")", ` | ${italic(`${currentSplatfestPointValues.tricolor.second}p`)})`);
                 splatfestResultsDescription += `\n${splatfestResultsTricolor}`;
             };
             splatfestResultsDescription += `\n${splatfestResultsWinner}`;
@@ -248,7 +250,7 @@ export default async ({ interaction, page, region }) => {
     splatfestButtons.addComponents(rightButton);
     if (page < 2) rightButton.setDisabled(true);
     splat3Embed.setImage(splatfestBanner);
-    if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription("Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n**Bold** indicates the winning team, *italics* indicates second place.");
+    if (!isUpcomingOrOngoingSplatfest) splat3Embed.setDescription(`Note: Upcoming Splatfests will only be available here once you can choose a team ingame.\n${bold("Bold")} indicates the winning team, ${italic("italics")} indicates second place.`);
     let splatfestMessageObject = { embeds: [splat3Embed], components: splatfestButtons };
     return splatfestMessageObject;
 };

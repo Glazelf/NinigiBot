@@ -5,7 +5,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
-    ApplicationIntegrationType
+    ApplicationIntegrationType,
+    bold
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -263,11 +264,11 @@ export default async (interaction, ephemeral) => {
                 let currentBigRun = responseSchedules.data.data[inputMode].bigRunSchedules.nodes[0];
                 let currentEggstraWork = responseSchedules.data.data[inputMode].teamContestSchedules.nodes[0];
                 if (currentBigRun) {
-                    currentSalmonRunEventTitle = "⚠️ **Big Run** ⚠️";
+                    currentSalmonRunEventTitle = `⚠️ ${bold("Big Run")} ⚠️`;
                     currentSalmonRunEvent = currentBigRun;
                 };
                 if (currentEggstraWork) {
-                    currentSalmonRunEventTitle = "🥚 **Eggstra Work** 🥚";
+                    currentSalmonRunEventTitle = `🥚 ${bold("Eggstra Work")} 🥚`;
                     currentSalmonRunEvent = currentEggstraWork;
                 };
             };
@@ -301,7 +302,7 @@ export default async (interaction, ephemeral) => {
                     await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
                         eventWeaponString += `- ${weapon.name}\n`;
                     });
-                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: **${currentSalmonRunEvent.setting.coopStage.name}**.\nWeapons:\n${eventWeaponString}`);
+                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: ${bold(currentSalmonRunEvent.setting.coopStage.name)}\nWeapons:\n${eventWeaponString}`);
                 };
                 await scheduleData.nodes.forEach(async (entry) => {
                     let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
@@ -370,7 +371,7 @@ export default async (interaction, ephemeral) => {
                     await entry.timePeriods.forEach(challengeTimePeriod => {
                         challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
                     });
-                    splat3Embed.addFields([{ name: challengeName, value: `**${challengeDesc}**\n${challengeDescLong}\n**Mode:** ${challengeMode}\n**Maps:** ${challengeMaps}\n**Times:**\n${challengeTimes}`, inline: false }]);
+                    splat3Embed.addFields([{ name: challengeName, value: `${bold(challengeDesc)}\n${challengeDescLong}\n${bold("Mode:")} ${challengeMode}\n${bold("Maps:")} ${challengeMaps}\n${bold("Times:")}\n${challengeTimes}`, inline: false }]);
                 })
             );
             break;
@@ -429,11 +430,11 @@ export default async (interaction, ephemeral) => {
             playerData.push(`Shoes: ${replayData.player.shoesGear.name}`);
             if (replayIsTurfWar) playerData.push(`Points: ${replayData.myTeam.result.paintPoint}`);
             // Skills
-            let headSkills = [`**${replayData.player.headGear.primaryGearPower.name}**`];
+            let headSkills = [bold(replayData.player.headGear.primaryGearPower.name)];
             replayData.player.headGear.additionalGearPowers.forEach(power => { headSkills.push(power.name) });
-            let clothingSkills = [`**${replayData.player.clothingGear.primaryGearPower.name}**`];
+            let clothingSkills = [bold(replayData.player.clothingGear.primaryGearPower.name)];
             replayData.player.clothingGear.additionalGearPowers.forEach(power => { clothingSkills.push(power.name) });
-            let shoesSkills = [`**${replayData.player.shoesGear.primaryGearPower.name}**`];
+            let shoesSkills = [bold(replayData.player.shoesGear.primaryGearPower.name)];
             replayData.player.shoesGear.additionalGearPowers.forEach(power => { shoesSkills.push(power.name) });
             // Awards
             let replayAwards = [];

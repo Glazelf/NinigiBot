@@ -4,7 +4,8 @@ import {
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
@@ -40,9 +41,9 @@ export default async (interaction) => {
     let reasonInfo = `-${interaction.user.username} (${time})`;
     // Kick
     let kickReturn = `Kicked ${user} (${user.id}) for the following reason: ${reasonCodeBlock}`;
-    await user.send({ content: `You've been kicked from **${interaction.guild.name}** by **${interaction.user.username}** for the following reason: ${reasonCodeBlock}` })
-        .then(message => kickReturn += `Succeeded in sending a DM to **${user.username}** with the reason.`)
-        .catch(e => kickReturn += `Failed to send a DM to **${user.username}** with the reason.`);
+    await user.send({ content: `You've been kicked from ${bold(interaction.guild.name)} by ${bold(interaction.user.username)} for the following reason: ${reasonCodeBlock}` })
+        .then(message => kickReturn += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
+        .catch(e => kickReturn += `Failed to send a DM to ${bold(user.username)} with the reason.`);
     try {
         await member.kick([`${reason} ${reasonInfo}`]);
         return sendMessage({ interaction: interaction, content: kickReturn, ephemeral: ephemeral });

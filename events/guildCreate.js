@@ -1,4 +1,7 @@
-import { EmbedBuilder } from "discord.js";
+import {
+    EmbedBuilder,
+    bold
+} from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 import config from "../config.json" with { type: "json" };
@@ -20,7 +23,7 @@ export default async (client, guild) => {
             .setColor(globalVars.embedColor)
             .setTitle(`Guild Joined ⭐`)
             .setThumbnail(icon)
-            .setDescription(`**${client.user.username}** is now in ${client.guilds.cache.size} servers.`)
+            .setDescription(`${bold(client.user.username)} is now in ${client.guilds.cache.size} servers.`)
             .setFooter({ text: guild.id })
             .setTimestamp()
             .addFields([{ name: `Name:`, value: guild.name, inline: true }]);

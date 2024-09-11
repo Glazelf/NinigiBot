@@ -5,7 +5,8 @@ import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
@@ -62,17 +63,17 @@ export default async (interaction, ephemeral) => {
     };
     let time = getTime();
     let reasonInfo = `-${interaction.user.username} (${time})`;
-    let dmString = `You got muted in **${interaction.guild.name}** for ${displayMuteTime}by **${interaction.user.username}** for the following reason: ${reasonCodeBlock}`;
+    let dmString = `You got muted in ${bold(interaction.guild.name)} for ${bold(displayMuteTime)} by ${bold(interaction.user.username)} for the following reason: ${reasonCodeBlock}`;
     // Timeout logic
     try {
         await member.timeout(muteTime, `${reason} ${reasonInfo}`);
         await user.send({ content: dmString })
-            .then(message => muteReturnString += `Succeeded in sending a DM to **${user.username}** with the reason.`)
-            .catch(e => muteReturnString += `Failed to send a DM to **${user.username}** with the reason.`);
+            .then(message => muteReturnString += `Succeeded in sending a DM to ${bold(user.username)} with the reason.`)
+            .catch(e => muteReturnString += `Failed to send a DM to ${bold(user.username)} with the reason.`);
         return sendMessage({ interaction: interaction, content: muteReturnString, ephemeral: ephemeral });
     } catch (e) {
         // console.log(e);
-        return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${user.username}. I probably lack permissions.` });
+        return sendMessage({ interaction: interaction, content: `Failed to toggle timeout on ${bold(user.username)}. I probably lack permissions.` });
     };
 };
 

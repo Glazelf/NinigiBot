@@ -3,7 +3,8 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    bold
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -31,7 +32,7 @@ export default async (client, member) => {
                 .setColor(globalVars.embedColor)
                 .setTitle(`Member Joined ❤️`)
                 .setThumbnail(avatar)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setFooter({ text: member.user.username })
                 .setTimestamp()
                 .addFields([

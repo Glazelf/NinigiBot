@@ -2,7 +2,8 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    bold
 } from "discord.js";
 import { Dex } from '@pkmn/dex';
 import { Dex as DexSim } from '@pkmn/sim';
@@ -77,7 +78,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         let effectiveness = genData.types.totalEffectiveness(type.name, pokemonGen.types);
         let typeEmoteBold = false;
         if ([0.25, 4].includes(effectiveness)) typeEmoteBold = true;
-        let typeEffectString = getTypeEmojis({ type: type.name, bold: typeEmoteBold, emojis: emojis });
+        let typeEffectString = getTypeEmojis({ type: type.name, boldBool: typeEmoteBold, emojis: emojis });
         if ([2, 4].includes(effectiveness)) superEffectives.push(typeEffectString);
         if ([0.25, 0.5].includes(effectiveness)) resistances.push(typeEffectString);
         if (effectiveness == 0) immunities.push(typeEffectString);
@@ -94,11 +95,11 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let pokemonSim = DexSim.forGen(genData.dex.gen).species.get(pokemon.name);
     let heightAmerican = convertMeterFeet(pokemonSim.heightm);
     if (pokemonGen.weightkg && pokemonGen.weightkg > 0) {
-        metricsString += `**Weight:**\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
+        metricsString += `${bold("Weight:")}\n${pokemonGen.weightkg}kg | ${weightAmerican}lbs`;
     } else {
-        metricsString += `**Weight:**\n???`;
+        metricsString += `${bold("Weight:")}\n???`;
     };
-    if (pokemonSim.heightm) metricsString += `\n**Height:**\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
+    if (pokemonSim.heightm) metricsString += `\n${bold("Height:")}\n${pokemonSim.heightm}m | ${heightAmerican}ft`;
     // let urlName = encodeURIComponent(pokemon.name.toLowerCase().replace(" ", "-"));
     // Official art
     let render = `https://www.serebii.net/pokemon/art/${pokemonID}.png`;
@@ -135,23 +136,23 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let abilityString = "";
     if (pokemonGen.abilities['0']) {
         let ability0Desc = genData.abilities.get(pokemonGen.abilities[0]).shortDesc;
-        abilityString += `**${pokemonGen.abilities['0']}**: ${ability0Desc}`;
+        abilityString += `${bold(pokemonGen.abilities['0'])}: ${ability0Desc}`;
     };
     if (pokemonGen.abilities['1']) {
         let ability1Desc = genData.abilities.get(pokemonGen.abilities[1]).shortDesc;
-        abilityString += `\n**${pokemon.abilities['1']}**: ${ability1Desc}`;
+        abilityString += `\n${bold(pokemon.abilities['1'])}: ${ability1Desc}`;
     };
     if (pokemonGen.abilities['H']) {
         let abilityHDesc = genData.abilities.get(pokemonGen.abilities['H']).shortDesc;
         if (pokemonGen.unreleasedHidden) {
-            abilityString += `\n**${pokemonGen.abilities['H']}** (Unreleased Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Unreleased Hidden): ${abilityHDesc}`;
         } else {
-            abilityString += `\n**${pokemonGen.abilities['H']}** (Hidden): ${abilityHDesc}`;
+            abilityString += `\n${bold(pokemonGen.abilities['H'])} (Hidden): ${abilityHDesc}`;
         };
     };
     if (pokemonGen.abilities['S']) {
         let abilitySDesc = genData.abilities.get(pokemonGen.abilities['S']).shortDesc;
-        abilityString += `\n**${pokemonGen.abilities['S']}** (Special): ${abilitySDesc}`;
+        abilityString += `\n${bold(pokemonGen.abilities['S'])} (Special): ${abilitySDesc}`;
     };
     let statLevels = `(lvl50) (lvl100)`;
     let HPstats = calcHP(pokemonGen, generation);
@@ -160,17 +161,17 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     let SpAstats = calcStat(pokemonGen.baseStats.spa, generation);
     let SpDstats = calcStat(pokemonGen.baseStats.spd, generation);
     let Spestats = calcStat(pokemonGen.baseStats.spe, generation);
-    let statsString = `${Dex.stats.shortNames.hp}: **${pokemonGen.baseStats.hp}** ${HPstats}\n${Dex.stats.shortNames.atk}: **${pokemonGen.baseStats.atk}** ${Atkstats}\n${Dex.stats.shortNames.def}: **${pokemonGen.baseStats.def}** ${Defstats}\n`;
+    let statsString = `${Dex.stats.shortNames.hp}: ${bold(pokemonGen.baseStats.hp)} ${HPstats}\n${Dex.stats.shortNames.atk}: ${bold(pokemonGen.baseStats.atk)} ${Atkstats}\n${Dex.stats.shortNames.def}: ${bold(pokemonGen.baseStats.def)} ${Defstats}\n`;
     // Account for gen 1 Special stat
     switch (generation) {
         case 1:
-            statsString += `${genData.stats.dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n`;
+            statsString += `${genData.stats.dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n`;
             break;
         default:
-            statsString += `${Dex.stats.shortNames.spa}: **${pokemonGen.baseStats.spa}** ${SpAstats}\n${Dex.stats.shortNames.spd}: **${pokemonGen.baseStats.spd}** ${SpDstats}\n`;
+            statsString += `${Dex.stats.shortNames.spa}: ${bold(pokemonGen.baseStats.spa)} ${SpAstats}\n${Dex.stats.shortNames.spd}: ${bold(pokemonGen.baseStats.spd)} ${SpDstats}\n`;
             break;
     };
-    statsString += `${Dex.stats.shortNames.spe}: **${pokemonGen.baseStats.spe}** ${Spestats}\nBST: ${pokemonGen.bst}`;
+    statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
 
     let levelMoves = [];
     let levelMovesNames = [];

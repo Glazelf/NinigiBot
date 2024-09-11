@@ -1,7 +1,8 @@
 import {
     EmbedBuilder,
     PermissionFlagsBits,
-    AuditLogEvent
+    AuditLogEvent,
+    bold
 } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -27,7 +28,7 @@ export default async (client, member) => {
             let kicked = false;
             let leaveEmbed = new EmbedBuilder()
                 .setColor(globalVars.embedColor)
-                .setDescription(`**${member.guild.name}** now has ${member.guild.memberCount} members.`)
+                .setDescription(`${bold(member.guild.name)} now has ${member.guild.memberCount} members.`)
                 .setTimestamp();
             if (member) {
                 let avatar = member.user.displayAvatarURL(globalVars.displayAvatarSettings);

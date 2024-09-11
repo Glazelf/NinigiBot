@@ -1,4 +1,7 @@
-import { EmbedBuilder } from "discord.js";
+import {
+    EmbedBuilder,
+    bold
+} from "discord.js";
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/deletePersonalRole.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
@@ -29,7 +32,7 @@ export default async (client, entitlement) => {
         const entitlementEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
             .setTitle("Entitlemend Ended ❌")
-            .setDescription(`${user.username} (${user.id})'s **${matchingSKU.name}** ended.`)
+            .setDescription(`${user.username} (${user.id})'s ${bold(matchingSKU.name)} ended.`)
             .setFooter({ text: entitlement.id })
             .setTimestamp();
         return log.send({ embeds: [entitlementEmbed] });
