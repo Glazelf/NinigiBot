@@ -7,6 +7,7 @@ import {
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
+    userMention,
     bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
@@ -73,8 +74,8 @@ export default async (interaction) => {
     } else if (userIDArg) {
         // Try to ban by ID ("hackban") instead
         // See if target isn't already banned
-        if (bansFetch && bansFetch.has(userIDArg)) return sendMessage({ interaction: interaction, content: `<@${userIDArg}> (${userIDArg}) is already banned.` });
-        banReturn = `Banned <@${userIDArg}> (${userIDArg}) for the following reason: ${reasonCodeBlock}No DM was sent since this ban was by ID or the user was not in the server.`;
+        if (bansFetch && bansFetch.has(userIDArg)) return sendMessage({ interaction: interaction, content: `${userMention(userIDArg)} (${userIDArg}) is already banned.` });
+        banReturn = `Banned ${userMention(userIDArg)} (${userIDArg}) for the following reason: ${reasonCodeBlock}No DM was sent since this ban was by ID or the user was not in the server.`;
         if (deleteMessageSeconds > 0) banReturn += deletedMessagesString;
         try {
             await interaction.guild.members.ban(userIDArg, { reason: `${reason} ${reasonInfo}`, deleteMessageSeconds: deleteMessageSeconds });
