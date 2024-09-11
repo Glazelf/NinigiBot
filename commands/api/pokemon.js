@@ -488,7 +488,7 @@ export default async (interaction, ephemeral) => {
             if (cardData.attacks) cardData.attacks.forEach(attack => {
                 let attackName = attack.name;
                 if (attack.damage) attackName += ` - ${attack.damage}`;
-                let attackDescription = attack.text || "No extra effect.";
+                let attackDescription = attack.text || "No additional effect.";
                 if (attack.cost) {
                     attackName = ` ${attackName}`; // Space looks better between cost and name
                     attack.cost.reverse().forEach(cost => attackName = `${interaction.client.application.emojis.cache.find(emoji => emoji.name == cardTypeEmojiPrefix + cost) || ""}${attackName}`); // Reverse because we are adding to the front. || "" is for the case where the emoji doesn't exist
