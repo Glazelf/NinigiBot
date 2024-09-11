@@ -1,7 +1,8 @@
 import {
     InteractionContextType,
     SlashCommandBuilder,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    bold
 } from "discord.js";
 import forever from "forever";
 import sendMessage from "../../util/sendMessage.js";
@@ -39,7 +40,7 @@ export default async (interaction) => {
     } catch (e) {
         console.log(e);
     };
-    console.log(`Bot killed by **${interaction.user.username}**. (${timestamp})`);
+    console.log(`Bot killed by ${bold(interaction.user.username)}. (${timestamp})`);
 
     await interaction.client.destroy();
     return process.exit();

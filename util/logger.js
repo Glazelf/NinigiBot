@@ -1,4 +1,7 @@
-import { codeBlock } from "discord.js";
+import {
+    codeBlock,
+    bold
+} from "discord.js";
 import getTime from "./getTime.js";
 import sendMessage from "./sendMessage.js";
 import util from "util";
@@ -51,9 +54,9 @@ export default async ({ exception, client, interaction = null }) => {
         // log to dev channel
         let baseMessage = "";
         baseMessage = interaction && user ? `An error occurred in ${interaction.channel}!
-User: **${user.username}** (${user.id})
-Guild: **${interaction.guild?.name}** (${interaction.guild?.id})
-Channel: **${interaction.channel?.name}** (${interaction.channel?.id})
+User: ${bold(user.username)} (${user.id})
+Guild: ${bold(interaction.guild?.name)} (${interaction.guild?.id})
+Channel: ${bold(interaction.channel?.name)} (${interaction.channel?.id})
 Message Link: ${interaction.url}
 Type: ${interaction.type}
 Component Type: ${interaction.componentType}

@@ -7,7 +7,9 @@ import {
     SlashCommandStringOption,
     SlashCommandIntegerOption,
     SlashCommandBooleanOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    bold,
+    hyperlink
 } from "discord.js";
 import axios from "axios";
 import { Dex } from '@pkmn/dex';
@@ -252,9 +254,9 @@ export default async (interaction, ephemeral) => {
             // Leading newlines get ignored if format.desc is empty
             let formatDescription = (format.desc + "\n").replace(/&eacute;/g, "é");
             if (format.searchShow) {
-                formatDescription += `\nThis format has an ongoing [ladder](https://pokemonshowdown.com/ladder/${format.id}).`;
+                formatDescription += `\nThis format has an ongoing ${hyperlink(ladder, `https://pokemonshowdown.com/ladder/${format.id}`)}.`;
             } else if (format.rated) {
-                formatDescription += `\nThis format has a [ladder](https://pokemonshowdown.com/ladder/${format.id}) but can not currently be played on said ladder.`;
+                formatDescription += `\nThis format has a ${hyperlink(ladder, `https://pokemonshowdown.com/ladder/${format.id}`)} but can not currently be played on said ladder.`;
             } else {
                 formatDescription += "\nThis format does not have a ladder.";
             };
@@ -311,7 +313,7 @@ export default async (interaction, ephemeral) => {
                     if (prevoLearnset && prevoLearnset.learnset) learnDataToAdd = getLearnData(prevoLearnset.learnset[move.id]);
                     if (learnDataToAdd.length > 0) {
                         learnsMove = true;
-                        learnInfo += `**As ${prevo.name}:**\n${learnDataToAdd}`;
+                        learnInfo += `${bold(`As ${prevo.name}:`)}\n${learnDataToAdd}`;
                     };
                     // Set up next loop
                     prevo = Dex.species.get(prevo.prevo);

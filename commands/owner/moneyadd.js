@@ -2,7 +2,8 @@ import {
     InteractionContextType,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandIntegerOption
+    SlashCommandIntegerOption,
+    userMention
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import {
@@ -29,7 +30,7 @@ export default async (interaction) => {
     await addMoney(transferTargetID, +transferAmount);
     userBalance = `${Math.floor(dbBalance + transferAmount)}${currency}`;
 
-    return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${currency} to <@${transferTargetID}> (${transferTargetID}). They now have ${userBalance}.` });
+    return sendMessage({ interaction: interaction, content: `Added ${transferAmount}${currency} to ${userMention(transferTargetID)} (${transferTargetID}). They now have ${userBalance}.` });
 };
 
 export const guildID = config.devServerID;

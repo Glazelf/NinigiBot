@@ -4,7 +4,8 @@ import {
     SlashCommandBooleanOption,
     SlashCommandBuilder,
     SlashCommandIntegerOption,
-    SlashCommandUserOption
+    SlashCommandUserOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
@@ -37,7 +38,7 @@ export default async (interaction, ephemeral) => {
             let messages = Object.values(Object.fromEntries(messagesFiltered)).slice(0, amount);
             await interaction.channel.bulkDelete(messages, [true])
                 .then(messagesDeleted => {
-                    returnString = `Deleted ${messagesDeleted.size} messages from **${user.username}** within the last ${amount} messages.`;
+                    returnString = `Deleted ${messagesDeleted.size} messages from ${bold(user.username)} within the last ${amount} messages.`;
                     if (messagesDeleted.size < amount) returnString += missingMessagesString;
                     sendMessage({ interaction: interaction, content: returnString });
                 });

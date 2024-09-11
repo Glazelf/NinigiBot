@@ -3,7 +3,8 @@ import {
     AttachmentBuilder,
     ButtonBuilder,
     ButtonStyle,
-    EmbedBuilder
+    EmbedBuilder,
+    bold
 } from "discord.js";
 import Canvas from "canvas";
 import axios from "axios";
@@ -52,7 +53,7 @@ export default async ({ pokemonList, winner, pokemon, reveal }) => {
             quizDescription = `${winner} guessed correctly and won ${pkmQuizPrize}${globalVars.currency}!`;
             addMoney(winner.id, pkmQuizPrize);
         };
-        quizDescription += `\nThe answer was **${pokemon.name}**!`;
+        quizDescription += `\nThe answer was ${bold(pokemon.name)}!`;
         messageObject.files = [];
         messageObject.components = [];
     } else {

@@ -2,7 +2,9 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    time,
+    TimestampStyles
 } from "discord.js";
 import axios from "axios";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -89,7 +91,7 @@ export default async ({ elite = false, emojis }) => {
     if (bossEventMetadata._bloonModifiers.allRegen) rulesArray.push(`All bloons are regen.`);
     let rulesString = rulesArray.join("\n");
 
-    let bossEventDescription = `<t:${Math.floor(mostRecentBossEvent.start / 1000)}:f> to <t:${Math.floor(mostRecentBossEvent.end / 1000)}:f>\n${rulesString}`;
+    let bossEventDescription = `${time(Math.floor(mostRecentBossEvent.start / 1000), TimestampStyles.ShortDateTime)} to ${time(Math.floor(mostRecentBossEvent.end / 1000), TimestampStyles.ShortDateTime)}\n${rulesString}`;
 
     let allowedHeroesArray = [];
     let allowedTowersArray = [];

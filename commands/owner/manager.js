@@ -4,7 +4,8 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandStringOption,
-    SlashCommandIntegerOption
+    SlashCommandIntegerOption,
+    underline
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import checker from "../../util/string/checkFormat.js";
@@ -75,7 +76,7 @@ export default async (interaction, ephemeral) => {
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
             res = await deleteShopTrophy(trophy_name);
-            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the __shop__`;
+            returnString = res ? `${trophy_name} deleted successfully from the shop!` : `${trophy_name} does not exist in the ${underline(shop)}`;
             return sendMessage({
                 interaction: interaction,
                 content: returnString,

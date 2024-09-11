@@ -7,7 +7,10 @@ import {
     ChannelType,
     PermissionFlagsBits,
     SlashCommandBooleanOption,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    time,
+    TimestampStyles,
+    hyperlink
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import isAdmin from "../../util/perms/isAdmin.js";
@@ -99,7 +102,7 @@ export default async (interaction, ephemeral) => {
     if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
-    if (guild.vanityURLCode) serverLinks += `discord.gg/[${guild.vanityURLCode}](https://discord.gg/${guild.vanityURLCode})\n`;
+    if (guild.vanityURLCode) serverLinks += `discord.gg/[${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
     await guild.channels.cache.forEach(async channel => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
         if (channel.type == ChannelType.GuildThread) threadCount += 1;
@@ -156,7 +159,7 @@ export default async (interaction, ephemeral) => {
     };
     serverEmbed.addFields([
         { name: "Verification Level:", value: verifLevels[guild.verificationLevel], inline: true },
-        { name: "Created:", value: `<t:${Math.floor(guild.createdAt.valueOf() / 1000)}:f>`, inline: false }
+        { name: "Created:", value: time(Math.floor(guild.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: false }
     ]);
     //// Doesn't add much value with 1 shard and autosharding
     // if (interaction.client.options.shardCount) serverEmbed.addFields([{ name: "Ninigi Shard:", value: `${guild.shardId + 1}/${interaction.client.options.shardCount}`, inline: true }]);

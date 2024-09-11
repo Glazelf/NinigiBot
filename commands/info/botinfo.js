@@ -5,6 +5,9 @@ import {
     ButtonStyle,
     SlashCommandBooleanOption,
     SlashCommandBuilder,
+    time,
+    TimestampStyles,
+    hyperlink
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import urlExists from "../../util/urlExists.js";
@@ -44,9 +47,9 @@ export default async (interaction, ephemeral) => {
     let onlineSince = Math.floor((date - interaction.client.uptime) / 1000);
     let lastCommitTimestamp = Math.floor(new Date(githubMasterResponse.data.commit.commit.author.date).getTime() / 1000);
 
-    let lastCommitMessage = `"[${githubMasterResponse.data.commit.commit.message.split("\n")[0]}](https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha})"`;
-    let lastCommitAuthor = `-[${githubMasterResponse.data.commit.author.login}](https://github.com/${githubMasterResponse.data.commit.author.login})`;
-    let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n<t:${lastCommitTimestamp}:R>`;
+    let lastCommitMessage = `"${hyperlink(githubMasterResponse.data.commit.commit.message.split("\n")[0], `https://github.com/${githubURLVars}/commit/${githubMasterResponse.data.commit.sha}`)}"`;
+    let lastCommitAuthor = `-${hyperlink(githubMasterResponse.data.commit.author.login, `https://github.com/${githubMasterResponse.data.commit.author.login}`)}`;
+    let lastCommitString = `${lastCommitMessage}\n${lastCommitAuthor}\n${time(lastCommitTimestamp, TimestampStyles.RelativeTime)}`;
 
     let avatar = interaction.client.user.displayAvatarURL(globalVars.displayAvatarSettings);
 
@@ -58,16 +61,16 @@ export default async (interaction, ephemeral) => {
     let ownerBool = await isOwner(interaction.client, interaction.user);
     let developmentString = `Owner: ${owner}\nLibrary: Discord.JS v${DiscordJSVersion}\nShards: ${interaction.client.options.shardCount}`;
     if (ownerBool) developmentString += `\nMemory Usage: ${memoryUsage}`;
-    developmentString += `\nOnline Since: <t:${onlineSince}:R>`;
+    developmentString += `\nOnline Since: ${time(onlineSince, TimestampStyles.RelativeTime)}`;
 
     let botEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor)
         .setTitle(interaction.client.user.username)
         .setThumbnail(avatar)
-        .setDescription(`${githubRepoResponse.data.description}\nCreated at <t:${createdAt}:f>`)
+        .setDescription(`${githubRepoResponse.data.description}\nCreated at ${time(createdAt, TimestampStyles.ShortDateTime)}`)
         .addFields([
             { name: "Development:", value: developmentString, inline: true },
-            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: [${githubRepoResponse.data.stargazers_count}](https://github.com/${githubURLVars}/stargazers)⭐`, inline: true },
+            { name: "Stats:", value: `User Installs: ${interaction.client.application.approximateUserInstallCount}\nServers: ${interaction.client.application.approximateGuildCount}\nTotal Members: ${totalMembers}\nEmojis: ${emojis.size}/${emojiMax}\nGithub Stars: ${hyperlink(githubRepoResponse.data.stargazers_count, `https://github.com/${githubURLVars}/stargazers`)}⭐`, inline: true },
             { name: "Latest Commit:", value: lastCommitString, inline: false }
         ]);
 

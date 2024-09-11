@@ -3,7 +3,8 @@ import {
     PermissionFlagsBits,
     SlashCommandBuilder,
     SlashCommandRoleOption,
-    SlashCommandStringOption
+    SlashCommandStringOption,
+    bold
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -30,9 +31,9 @@ export default async (interaction) => {
         if (description.length > selectDescriptionCharacterLimit) return sendMessage({ interaction: interaction, content: `Role description must be ${selectDescriptionCharacterLimit} characters or less.` });
     };
 
-    if (role.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage the **${role.name}** role because it is being automatically managed by an integration.` });
-    if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage the **${role.name}** role because it is above my highest role.` });
-    if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to make the **${role.name}** role selfassignable.` });
+    if (role.managed == true) return sendMessage({ interaction: interaction, content: `I can't manage the ${bold(role.name)} role because it is being automatically managed by an integration.` });
+    if (interaction.guild.members.me.roles.highest.comparePositionTo(role) <= 0 && !adminBoolBot) return sendMessage({ interaction: interaction, content: `I can't manage the ${bold(role.name)} role because it is above my highest role.` });
+    if (interaction.member.roles.highest.comparePositionTo(role) <= 0 && !adminBoolUser) return sendMessage({ interaction: interaction, content: `You don't have a high enough role to make the ${bold(role.name)} role selfassignable.` });
 
     let roleIDs = await serverApi.EligibleRoles.findAll({ where: { role_id: role.id } });
     if (roleIDs.length > 0) {
