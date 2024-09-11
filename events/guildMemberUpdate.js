@@ -2,7 +2,9 @@ import {
     EmbedBuilder,
     PermissionFlagsBits,
     AuditLogEvent,
-    bold
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import logger from "../util/logger.js";
 import deletePersonalRole from "../util/deletePersonalRole.js";
@@ -119,7 +121,7 @@ export default async (client, member, newMember) => {
                     break;
                 case "timeoutStart":
                     topText = "Timed Out ⏸";
-                    changeText = `Timed out untill <t:${Math.floor(newMember.communicationDisabledUntilTimestamp / 1000)}:F>.`;
+                    changeText = `Timed out untill ${time(Math.floor(newMember.communicationDisabledUntilTimestamp / 1000), TimestampStyles.LongDateTime)}.`;
                     break;
                 case "timeoutEnd":
                     topText = "Timeout Ended ▶️";

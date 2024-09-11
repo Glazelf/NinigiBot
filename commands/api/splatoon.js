@@ -6,7 +6,9 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
     ApplicationIntegrationType,
-    bold
+    bold,
+    time,
+    TimestampStyles
 } from "discord.js";
 import fs from "fs";
 import axios from "axios";
@@ -302,10 +304,10 @@ export default async (interaction, ephemeral) => {
                     await currentSalmonRunEvent.setting.weapons.forEach(weapon => {
                         eventWeaponString += `- ${weapon.name}\n`;
                     });
-                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: <t:${Date.parse(currentSalmonRunEvent.startTime) / 1000}:f>\nEnd: <t:${Date.parse(currentSalmonRunEvent.endTime) / 1000}:f>\nMap: ${bold(currentSalmonRunEvent.setting.coopStage.name)}\nWeapons:\n${eventWeaponString}`);
+                    splat3Embed.setDescription(`${currentSalmonRunEventTitle}\nStart: ${time(Date.parse(currentSalmonRunEvent.startTime) / 1000, TimestampStyles.ShortDateTime)}\nEnd: ${time(Date.parse(currentSalmonRunEvent.endTime) / 1000, TimestampStyles.ShortDateTime)}\nMap: ${bold(currentSalmonRunEvent.setting.coopStage.name)}\nWeapons:\n${eventWeaponString}`);
                 };
                 await scheduleData.nodes.forEach(async (entry) => {
-                    let salmonRotationTime = `<t:${Date.parse(entry.startTime) / 1000}:f>`;
+                    let salmonRotationTime = time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortDateTime);
                     let weaponString = "";
                     await entry.setting.weapons.forEach(weapon => {
                         weaponString += `- ${weapon.name}\n`;
@@ -332,8 +334,8 @@ export default async (interaction, ephemeral) => {
                     splatfestScheduleDescription += team.teamName;
                     if (team.role == "DEFENSE") splatfestDefender = team.teamName;
                 });
-                splatfestScheduleDescription += `\nDuration: <t:${Date.parse(currentFest.startTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
-                let tricolorSchedule = `<t:${Date.parse(currentFest.midtermTime) / 1000}:f>-<t:${Date.parse(currentFest.endTime) / 1000}:f>`;
+                splatfestScheduleDescription += `\nDuration: ${time(Date.parse(currentFest.startTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(currentFest.endTime) / 1000, TimestampStyles.ShortDateTime)}`;
+                let tricolorSchedule = `${time(Date.parse(currentFest.midtermTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(currentFest.endTime) / 1000, TimestampStyles.ShortDateTime)}`;
                 if (splatfestDefender) tricolorSchedule += `\nDefense: Team ${splatfestDefender}`;
                 tricolorSchedule += `\n${currentFest.tricolorStage.name}`;
                 splat3Embed
@@ -345,7 +347,7 @@ export default async (interaction, ephemeral) => {
                 // Turf War, Anarchy, xBattle and SplatfestTW
                 await scheduleData.nodes.forEach(entry => {
                     entrySettings = entry[modeSettings];
-                    let mapEntryTimes = `<t:${Date.parse(entry.startTime) / 1000}:t>-<t:${Date.parse(entry.endTime) / 1000}:t>`;
+                    let mapEntryTimes = `${time(Date.parse(entry.startTime) / 1000, TimestampStyles.ShortTime)}-${time(Date.parse(entry.endTime) / 1000, TimestampStyles.ShortTime)}`;
                     let mapEntryTitle = mapEntryTimes;
                     if (inputMode == anarchyID) {
                         entrySettings = entrySettings[modeIndex];
@@ -369,7 +371,7 @@ export default async (interaction, ephemeral) => {
                     let challengeMaps = `${entry.leagueMatchSetting.vsStages[0].name}, ${entry.leagueMatchSetting.vsStages[1].name}`;
                     let challengeTimes = "";
                     await entry.timePeriods.forEach(challengeTimePeriod => {
-                        challengeTimes += `- <t:${Date.parse(challengeTimePeriod.startTime) / 1000}:f>-<t:${Date.parse(challengeTimePeriod.endTime) / 1000}:t>\n`;
+                        challengeTimes += `- ${time(Date.parse(challengeTimePeriod.startTime) / 1000, TimestampStyles.ShortDateTime)}-${time(Date.parse(challengeTimePeriod.endTime) / 1000, TimestampStyles.ShortTime)}\n`;
                     });
                     splat3Embed.addFields([{ name: challengeName, value: `${bold(challengeDesc)}\n${challengeDescLong}\n${bold("Mode:")} ${challengeMode}\n${bold("Maps:")} ${challengeMaps}\n${bold("Times:")}\n${challengeTimes}`, inline: false }]);
                 })
@@ -385,13 +387,13 @@ export default async (interaction, ephemeral) => {
                 .setTitle("SplatNet3 Shop")
                 .setImage(splatnetData.pickupBrand.image.url)
                 .setFooter({ text: `${splatnetData.pickupBrand.brand.name} promotional image.` })
-                .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts <t:${Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000}:R>.`, inline: false }]);
+                .addFields([{ name: `Daily Drop (${splatnetData.pickupBrand.brand.name})`, value: `${splatnetData.pickupBrand.brand.name} Common Ability: ${splatnetData.pickupBrand.brand.usualGearPower.name}\nDaily Drop (${splatnetData.pickupBrand.nextBrand.name}) starts ${time(Date.parse(splatnetData.pickupBrand.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
             await splatnetData.pickupBrand.brandGears.forEach(brandGear => {
                 let brandGearString = getGearString(brandGear, "brand");
                 splat3Embed.addFields([{ name: brandGear.gear.name, value: brandGearString, inline: true }]);
             });
             // Individual gear pieces
-            splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item <t:${Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000}:R>.`, inline: false }]);
+            splat3Embed.addFields([{ name: "Gear On Sale Now", value: `New item ${time(Date.parse(splatnetData.limitedGears[0].saleEndTime) / 1000, TimestampStyles.RelativeTime)}.`, inline: false }]);
             await splatnetData.limitedGears.forEach(limitedGear => {
                 let limitedGearString = getGearString(limitedGear, "limited");
                 splat3Embed.addFields([{ name: limitedGear.gear.name, value: limitedGearString, inline: true }]);
@@ -410,7 +412,7 @@ export default async (interaction, ephemeral) => {
             let replayData = replayResponse.data.replay.historyDetail;
             let replayIsTurfWar = replayData.vsRule.name == "Turf War";
             // Match data
-            let replayTimestamp = `Timestamp: <t:${Date.parse(replayData.playedTime) / 1000}:f>`;
+            let replayTimestamp = `Timestamp: ${time(Date.parse(replayData.playedTime) / 1000, TimestampStyles.ShortDateTime)}`;
             let replayMode = `${replayData.vsRule.name} Replay`;
             if (!replayIsTurfWar) replayMode += ` (${replayData.vsMode.name})`;
             let replayStage = `Stage: ${replayData.vsStage.name}`;
@@ -486,7 +488,7 @@ export default async (interaction, ephemeral) => {
 
 function getGearString(gear, type) {
     let limitedGearString = "";
-    if (type == "limited") limitedGearString += `Sale ends <t:${Date.parse(gear.saleEndTime) / 1000}:R>.\n`;
+    if (type == "limited") limitedGearString += `Sale ends ${time(Date.parse(gear.saleEndTime) / 1000, TimestampStyles.RelativeTime)}.\n`;
     limitedGearString += `Ability: ${gear.gear.primaryGearPower.name}\n`;
     let limitedGearStars = star.repeat(gear.gear.additionalGearPowers.length - 1);
     let limitedGearStarString = `Slots: ${gear.gear.additionalGearPowers.length}`;

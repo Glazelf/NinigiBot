@@ -3,7 +3,9 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ApplicationIntegrationType
+    ApplicationIntegrationType,
+    time,
+    TimestampStyles
 } from "discord.js";
 import { getUser } from "../../database/dbServices/user.api.js";
 import parseDate from "../../util/parseDate.js";
@@ -114,9 +116,9 @@ export default async (interaction, page, user) => {
             if (switchCode && switchCode !== 'None' && member) profileEmbed.addFields([{ name: "Switch FC:", value: switchCode, inline: true }]);
             if (joinRank) profileEmbed.addFields([{ name: "Join Ranking:", value: joinRankText, inline: true }]);
             if (memberRoles) profileEmbed.addFields([{ name: `Roles: (${roleCount})`, value: rolesSorted, inline: false }]);
-            profileEmbed.addFields([{ name: "Created:", value: `<t:${Math.floor(user.createdAt.valueOf() / 1000)}:f>`, inline: true }]);
-            if (member) profileEmbed.addFields([{ name: "Joined:", value: `<t:${Math.floor(member.joinedAt.valueOf() / 1000)}:R>`, inline: true }]);
-            if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: `<t:${Math.floor(member.premiumSince.valueOf() / 1000)}:R>`, inline: true }]);
+            profileEmbed.addFields([{ name: "Created:", value: time(Math.floor(user.createdAt.valueOf() / 1000), TimestampStyles.ShortDateTime), inline: true }]);
+            if (member) profileEmbed.addFields([{ name: "Joined:", value: time(Math.floor(member.joinedAt.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
+            if (member && member.premiumSince > 0) profileEmbed.addFields([{ name: `Boosting Since:`, value: time(Math.floor(member.premiumSince.valueOf() / 1000), TimestampStyles.RelativeTime), inline: true }]);
             if (banner) profileEmbed.setImage(banner);
             profileEmbed.setFooter({ text: user.id });
             break;
@@ -127,7 +129,7 @@ export default async (interaction, page, user) => {
             let userBalance = `${dbBalance}${globalVars.currency}`;
             profileEmbed.addFields([
                 { name: "Balance:", value: userBalance, inline: true },
-                { name: "Food:", value: user_db.food.toString() + ' :poultry_leg:', inline: true }
+                { name: "Food:", value: user_db.food.toString() + ' 🍗', inline: true }
             ]);
             let trophy_level = 0;
             let trophy_string = '';
@@ -143,7 +145,7 @@ export default async (interaction, page, user) => {
             trophy_level += trophies.length;
             if (trophy_string.length > 0) {
                 profileEmbed.addFields([
-                    { name: "Trophy Level:", value: trophy_level + ' :beginner:', inline: true },
+                    { name: "Trophy Level:", value: trophy_level + ' 🔰', inline: true },
                     { name: "Trophies:", value: trophy_string, inline: true }
                 ]);
             };

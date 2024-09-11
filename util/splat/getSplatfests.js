@@ -4,7 +4,9 @@ import {
     ButtonBuilder,
     ButtonStyle,
     bold,
-    italic
+    italic,
+    time,
+    TimestampStyles
 } from "discord.js";
 import sendMessage from "../sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -224,7 +226,7 @@ export default async ({ interaction, page, region }) => {
             };
             splatfestResultsDescription += `\n${splatfestResultsWinner}`;
         };
-        splatfestDescription += `\n<t:${Date.parse(splatfest.startTime) / 1000}:d>-<t:${Date.parse(splatfest.endTime) / 1000}:d>`;
+        splatfestDescription += `\n${time(Date.parse(splatfest.startTime) / 1000, TimestampStyles.ShortDate)}-${time(Date.parse(splatfest.endTime) / 1000, TimestampStyles.ShortDate)}`;
         if (midTermWinner) splatfestDescription += `\nTricolor Defense: Team ${midTermWinner}`;
         if (splatfest.teams[0].result) splatfestDescription += `\n${splatfestResultsTitle}\n${splatfestResultsDescription}`;
         // Character limit per embed is 6000. Paginate this sometime. For now show 10 most recent Splatfests.
