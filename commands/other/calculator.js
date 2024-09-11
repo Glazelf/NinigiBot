@@ -2,7 +2,9 @@ import {
     codeBlock,
     SlashCommandBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    hyperlink,
+    hideLinkEmbed
 } from "discord.js";
 import sendMessage from "../../util/sendMessage.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
@@ -49,7 +51,7 @@ export default async (interaction, ephemeral) => {
     // Amount of 0's is the amount of decimals to round to
     let rounded = Math.round((evaled + Number.EPSILON) * 10000) / 10000;
     let output = codeBlock("js", `${rounded} (${calcInput})`);
-    if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently [not supported](<https://github.com/Glazelf/NinigiBot/issues/436>).`;
+    if (calcInput.includes("^")) output += `Note: Exponentials (^) are currently ${hyperlink("not supported", hideLinkEmbed("https://github.com/Glazelf/NinigiBot/issues/436"))}.`;
     let returnString = output;
     if (output.length > maxMessageLength) returnString = codeBlock("js", rounded.toString());
 

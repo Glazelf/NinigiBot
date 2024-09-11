@@ -2,7 +2,8 @@ import {
     SlashCommandBuilder,
     EmbedBuilder,
     SlashCommandStringOption,
-    SlashCommandBooleanOption
+    SlashCommandBooleanOption,
+    hyperlink
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
@@ -57,7 +58,7 @@ export default async (interaction, ephemeral) => {
         let wordPhoneticsArray = wordStatus[0].phonetics.filter(phonetic => phonetic.text && phonetic.text.length > 0);
         let wordPhoneticsArrayAudio = wordPhoneticsArray.filter(phonetic => phonetic.audio && phonetic.audio.length > 0); // Prefer entries with audio available
         if (wordPhoneticsArrayAudio.length > 0) {
-            wordPhoneticString = `[${wordPhoneticsArrayAudio[0].text}](<${wordPhoneticsArrayAudio[0].audio}>)`;
+            wordPhoneticString = hyperlink(wordPhoneticsArrayAudio[0].text, wordPhoneticsArrayAudio[0].audio);
         } else if (wordPhoneticsArray.length > 0) {
             wordPhoneticString = wordPhoneticsArray[0].text;
         };
