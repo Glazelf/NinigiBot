@@ -14,12 +14,12 @@ export default async (client, messageReaction) => {
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
         if (messageReaction.emoji.name !== starboardEmote && !isNoStar) return;
-        // Try to fetch message
-        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id);
-        if (!targetMessage) return;
+        //// Try to fetch message
+        // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
+        // if (!targetMessage) return;
+        let targetMessage = messageReaction.message; // No fetch is a test, if this doesn't work, try fetching with { force: true }
         // Try to find the starboard channel, won't exist if server hasn't set one
-        let starboardChannel;
-        let starboard;
+        let starboardChannel, starboard;
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         if (isNoStar) { // Find altboard channel
