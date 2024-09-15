@@ -279,7 +279,7 @@ export default async (interaction, ephemeral) => {
             if (format.unbanlist && format.unbanlist.length > 0) unbanlist = format.unbanlist.join(", ");
 
             pokemonEmbed
-                .setTitle(`${format.name} (${format.section})`)
+                .setTitle(format.name)
                 .setDescription(formatDescription)
             if (ruleset) pokemonEmbed.addFields([{ name: "Ruleset:", value: ruleset, inline: false }]);
             if (banlist) pokemonEmbed.addFields([{ name: "Banlist:", value: banlist, inline: false }]);
