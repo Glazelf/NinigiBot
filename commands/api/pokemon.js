@@ -254,9 +254,9 @@ export default async (interaction, ephemeral) => {
             // Leading newlines get ignored if format.desc is empty
             let formatDescription = (format.desc + "\n").replace(/&eacute;/g, "é");
             if (format.searchShow) {
-                formatDescription += `\nThis format has an ongoing ${hyperlink(ladder, `https://pokemonshowdown.com/ladder/${format.id}`)}.`;
+                formatDescription += `\nThis format has an ongoing ${hyperlink("ladder", `https://pokemonshowdown.com/ladder/${format.id}`)}.`;
             } else if (format.rated) {
-                formatDescription += `\nThis format has a ${hyperlink(ladder, `https://pokemonshowdown.com/ladder/${format.id}`)} but can not currently be played on said ladder.`;
+                formatDescription += `\nThis format has a ${hyperlink("ladder", `https://pokemonshowdown.com/ladder/${format.id}`)} but can not currently be played on said ladder.`;
             } else {
                 formatDescription += "\nThis format does not have a ladder.";
             };
