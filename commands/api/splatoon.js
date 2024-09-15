@@ -56,6 +56,14 @@ const splatoon3Regions = [
     { value: "AP", name: "Asia/Pacific" }
 ];
 
+const star = "⭐";
+const githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
+const schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
+const splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
+const salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
+const splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
+const replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
+
 export default async (interaction, ephemeral) => {
     // Game data
     let versionLatest = version;
@@ -73,13 +81,6 @@ export default async (interaction, ephemeral) => {
     let inputID = interaction.options.getString("name");
     let inputRegion = interaction.options.getString("region");
     if (!inputRegion) inputRegion = "US"; // Change back to "EU" when Splatfests get fixed in the SplatNet API
-    let star = "⭐";
-    let githubRaw = `https://raw.githubusercontent.com/Leanny/splat3/main/`;
-    let schedulesAPI = `https://splatoon3.ink/data/schedules.json`; // Includes all schedules
-    let splatnetAPI = `https://splatoon3.ink/data/gear.json`; // SplatNet gear data
-    let salmonRunGearAPI = `https://splatoon3.ink/data/coop.json`; // Current Salmon Run gear reward
-    let splatfestAPI = `https://splatoon3.ink/data/festivals.json`; // All Splatfest results
-    let replayAPI = `https://splatoon3-replay-lookup.fancy.org.uk/api/splatnet3/replay/`; // Replay lookup
     let weaponListTitle = `${languageJSON["LayoutMsg/Cmn_Menu_00"]["L_BtnMap_05-T_Text_00"]}:`;
     let splat3Embed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
