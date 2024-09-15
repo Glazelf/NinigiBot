@@ -19,7 +19,6 @@ import skillsJSON from "../../submodules/DQM3-db/objects/skills.json" with { typ
 import talentsJSON from "../../submodules/DQM3-db/objects/talents.json" with { type: "json" };
 import traitsJSON from "../../submodules/DQM3-db/objects/traits.json" with { type: "json" };
 
-
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
