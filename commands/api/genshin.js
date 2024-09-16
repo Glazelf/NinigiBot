@@ -29,7 +29,7 @@ export default async (interaction, ephemeral) => {
             let detailed = false;
             let detailedArg = interaction.options.getBoolean("detailed");
             if (detailedArg === true) detailed = true;
-            response = await axios.get(giAPI + nameInput);
+            response = await axios.get(characterAPI + nameInput);
             if (response.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred, make sure that character exists.` });
             let character = response.data;
             let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
