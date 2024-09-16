@@ -25,11 +25,10 @@ export default async (interaction, ephemeral) => {
     let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
-            let characterAPI =`${giAPI}characters/`;
             let detailed = false;
             let detailedArg = interaction.options.getBoolean("detailed");
             if (detailedArg === true) detailed = true;
-            response = await axios.get(characterAPI + nameInput);
+            response = await axios.get(`${giAPI}characters/${nameInput}`);
             if (response.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred, make sure that character exists.` });
             let character = response.data;
             let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
@@ -79,8 +78,7 @@ export default async (interaction, ephemeral) => {
             };
             break;
         case "weapon":
-            let weaponAPI = `${giAPI}weapons/`;
-            response = await axios.get(weaponAPI + nameInput);
+            response = await axios.get(`${giAPI}weapons/${nameInput}`);
             let weapon = response.data;
 
             let weaponThumbnailFile = `Weapon_${weapon.name}.png`;
@@ -97,8 +95,7 @@ export default async (interaction, ephemeral) => {
             if (weapon.passiveName !== "-") giEmbed.addFields([{ name: `${weapon.passiveName} (Passive)`, value: weapon.passiveDesc, inline: false }]);
             break;
         case "artifact":
-            let artifactAPI = `${giAPI}artifacts/`;
-            response = await axios.get(artifactAPI + nameInput);
+            response = await axios.get(`${giAPI}artifacts/${nameInput}`);
             let artifact = response.data;
             giEmbed
                 .setTitle(artifact.name)
