@@ -27,7 +27,7 @@ export default async ({ exception, client, interaction = null }) => {
         } else if (exceptionString.includes("AxiosError")) {
             // console.log(exception);
             // console.log(`${timestamp}: Axios error occurred (likely remote server connection or bad gateway)`);
-            return sendMessage({ interaction: interaction, content: "An error occurred getting a response from the API or it did not respond. Please try again later." });
+            return sendMessage({ interaction: interaction, content: "An error occurred getting a response from the API or it did not respond.\nPlease try again later." });
         } else if (!exceptionString.includes("Missing Permissions")) {
             // Log error
             console.log(`${timestamp}: Error occurred`);
