@@ -213,7 +213,7 @@ export default async ({ interaction, page, region }) => {
             splatfestResultsChallenge += ` (${bold(`${currentSplatfestPointValues.challenge.first}p`)})`;
             if (currentSplatfestPointValues.horagai.second) {
                 splatfestResultsHoragai = splatfestResultsHoragai.replace(")", ` | ${italic(`${currentSplatfestPointValues.horagai.second}p`)})`);
-                splatfestResultsVote = splatfestResultsVote.replace(")", ` | ${italic(`${currentSplatfestPointValues.vote.second}p`)}`);
+                splatfestResultsVote = splatfestResultsVote.replace(")", ` | ${italic(`${currentSplatfestPointValues.vote.second}p`)})`);
                 splatfestResultsRegular = splatfestResultsRegular.replace(")", ` | ${italic(`${currentSplatfestPointValues.regular.second}p`)})`);
                 splatfestResultsChallenge = splatfestResultsChallenge.replace(")", ` | ${italic(`${currentSplatfestPointValues.challenge.second}p`)})`);
             };
