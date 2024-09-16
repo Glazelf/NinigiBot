@@ -56,7 +56,7 @@ export default async (interaction, ephemeral) => {
     if (interaction.guild.id == globalVars.ShinxServerID) {
         let entitlements = await interaction.client.application.entitlements.fetch({ excludeEnded: true });
         let ninigiSubscriptions = entitlements.find(entitlement => entitlement.skuId == "1164974692889808999" && entitlement.userId == interaction.user.id);
-        if (ninigiSubscritpions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
+        if (ninigiSubscriptions && Object.entries(ninigiSubscriptions).length > 0) botSubscriberBool = true;
     };
     // Check if user is eligible to use this command
     if (!boosterBool && !modBool && !adminBool && !botSubscriberBool) return sendMessage({ interaction: interaction, content: `You need to be a Nitro Booster or moderator to manage a personal role.` });
