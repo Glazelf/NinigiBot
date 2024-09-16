@@ -11,8 +11,8 @@ import getWikiURL from "../../util/getWikiURL.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
-let giAPI = `https://genshin.jmp.blue/`;
-let giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
+const giAPI = `https://genshin.jmp.blue/`;
+const giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
@@ -25,7 +25,7 @@ export default async (interaction, ephemeral) => {
     let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
-            giAPI += `characters/`;
+            let characterAPI =`${giAPI}characters/`;
             let detailed = false;
             let detailedArg = interaction.options.getBoolean("detailed");
             if (detailedArg === true) detailed = true;
@@ -79,8 +79,8 @@ export default async (interaction, ephemeral) => {
             };
             break;
         case "weapon":
-            giAPI += `weapons/`;
-            response = await axios.get(giAPI + nameInput);
+            let weaponAPI = `${giAPI}weapons/`;
+            response = await axios.get(weaponAPI + nameInput);
             let weapon = response.data;
 
             let weaponThumbnailFile = `Weapon_${weapon.name}.png`;
@@ -97,8 +97,8 @@ export default async (interaction, ephemeral) => {
             if (weapon.passiveName !== "-") giEmbed.addFields([{ name: `${weapon.passiveName} (Passive)`, value: weapon.passiveDesc, inline: false }]);
             break;
         case "artifact":
-            giAPI += `artifacts/`;
-            response = await axios.get(giAPI + nameInput);
+            let artifactAPI = `${giAPI}artifacts/`;
+            response = await axios.get(artifactAPI + nameInput);
             let artifact = response.data;
             giEmbed
                 .setTitle(artifact.name)
