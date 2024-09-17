@@ -43,9 +43,7 @@ export default async (interaction, ephemeral) => {
         banCount = 0;
     };
     // Check emote and sticker caps, and boosters
-    let emoteMax;
-    let stickerMax;
-    let boosterString;
+    let emoteMax, stickerMax, boosterString;
     // Variables for the above
     let emoteCapTier0 = 100;
     let emoteCapTier1 = 200;
@@ -86,7 +84,7 @@ export default async (interaction, ephemeral) => {
         };
     };
     let discordNitroEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name === nitroBoostEmojiName);
-    if (discordNitroEmoji) boosterString += discordNitroEmoji;
+    if (discordNitroEmoji) boosterString += discordNitroEmoji.toString(); // Shows up as just ID without explicit string conversion
     // Icon and banner
     let icon = guild.iconURL(globalVars.displayAvatarSettings);
     let banner = null;
