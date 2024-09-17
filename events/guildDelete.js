@@ -28,7 +28,7 @@ export default async (client, guild) => {
             .setTimestamp()
             .addFields([{ name: `Name:`, value: guild.name, inline: true }]);
         if (guildOwner) guildEmbed.addFields([{ name: `Owner:`, value: `${guildOwner.user.username} (${guildOwner.id})`, inline: false }]);
-        guildEmbed.addFields([{ name: `Users:`, value: guild.memberCount.toString(), inline: false }])
+        guildEmbed.addFields([{ name: `Members:`, value: guild.memberCount.toString(), inline: false }])
         return log.send({ embeds: [guildEmbed] });
 
     } catch (e) {
