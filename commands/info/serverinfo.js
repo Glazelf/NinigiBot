@@ -100,7 +100,7 @@ export default async (interaction, ephemeral) => {
     if (guild.features.includes("COMMUNITY")) serverLinks += `<id:guide>\n<id:customize>\n`;
     serverLinks += `<id:browse>\n`;
     if (guild.rulesChannel) serverLinks += `${rules}\n`;
-    if (guild.vanityURLCode) serverLinks += `discord.gg/[${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
+    if (guild.vanityURLCode) serverLinks += `discord.gg/${hyperlink(guild.vanityURLCode, `https://discord.gg/${guild.vanityURLCode}`)}\n`;
     await guild.channels.cache.forEach(async channel => {
         if ([ChannelType.GuildVoice, ChannelType.GuildText].includes(channel.type)) channelCount += 1;
         if (channel.type == ChannelType.GuildThread) threadCount += 1;
