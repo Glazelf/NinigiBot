@@ -38,12 +38,13 @@ export default async (interaction, ephemeral) => {
             let saveData = saveResponse.data.body;
             let userData = userResponse.data.body;
             // Rank string
-            let rankString = `\nLevel: ${userData.rank}`;
-
+            let rankString = "\nLevel: ";
             if (userData.veteranRank > 0) {
                 let veteranEmoji = interaction.client.application.emojis.cache.find(emoji => emoji.name == "BTD6LevelVeteran");
-                rankString += `\nVeteran Level: ${userData.veteranRank}`;
+                rankString += userData.veteranRank;
                 if (veteranEmoji) rankString += ` ${veteranEmoji}`;
+            } else {
+                rankString += userData.rank;
             };
             // General stats
             let userDescription = `${rankString}\nTotal EXP: ${saveData.xp + saveData.veteranXp}\nGames Played: ${saveData.gamesPlayed}`;
