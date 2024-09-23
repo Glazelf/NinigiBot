@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import getStarboardMessage from "../util/getStarboardMessage.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
@@ -32,48 +32,7 @@ export default async (client, messageReaction) => {
         if (targetMessage.channel == starboard) return;
         // Try to find the starred message in database
         let messageDB = await serverApi.StarboardMessages.findOne({ where: { channel_id: targetMessage.channel.id, message_id: targetMessage.id } });
-        // Get attachment, don't need to check videos since those are in seperate message anyways
-        let messageImage = null;
-        let starboardEmbeds = [];
-        if (targetMessage.attachments.size > 0) {
-            messageImage = targetMessage.attachments.first().proxyURL;
-            targetMessage.attachments.forEach(attachment => {
-                if (attachment.proxyURL !== messageImage) {
-                    let imageEmbed = new EmbedBuilder()
-                        .setImage(attachment.proxyURL)
-                        .setURL(targetMessage.url);
-                    starboardEmbeds.push(imageEmbed);
-                };
-            });
-        };
-        // Get user's avatar, try to use server avatar, otherwise default to global avatar
-        let avatar = targetMessage.author.displayAvatarURL(globalVars.displayAvatarSettings);
-        if (targetMessage.member) avatar = targetMessage.member.displayAvatarURL(globalVars.displayAvatarSettings);
-        // Check if the starred message is replying to another message
-        let isReply = false;
-        let replyMessage;
-        if (targetMessage.reference) isReply = true;
-        if (isReply) {
-            // Format message the starred message is replying to
-            try {
-                replyMessage = await targetMessage.channel.messages.fetch(targetMessage.reference.messageId);
-            } catch (e) {
-                isReply = false;
-            };
-        };
-        // Format starred message embed
-        const starEmbed = new EmbedBuilder()
-            .setColor(globalVars.embedColor)
-            .setTitle(`${boardEmote}${messageReaction.count}`)
-            .setURL(targetMessage.url)
-            .setThumbnail(avatar)
-            .setImage(messageImage)
-            .setFooter({ text: targetMessage.author.username })
-            .setTimestamp(targetMessage.createdTimestamp);
-        if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
-        starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}\nContext: ${targetMessage.url}`, inline: false }]);
-        if (isReply && replyMessage && replyMessage.author && replyMessage.content.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: `"${replyMessage.content.slice(0, 950)}"\n-${replyMessage.author}`, inline: true }]);
-        starboardEmbeds.unshift(starEmbed);
+        let starboardMessage = await getStarboardMessage({ messageReaction: messageReaction, targetMessage: targetMessage, boardEmote: boardEmote });
         if (messageReaction.count == 0 && messageDB) {
             // If star amount is 0 now, delete starboard message and database entry
             let starChannel = await client.channels.fetch(messageDB.starboard_channel_id);
@@ -88,7 +47,7 @@ export default async (client, messageReaction) => {
             let starMessage = await starChannel.messages.fetch(messageDB.starboard_message_id);
             if (!starMessage) return;
             if (starChannel !== starboard) return; // Fix cross-updating between starboard and evil starboard
-            await starMessage.edit({ embeds: starboardEmbeds });
+            await starMessage.edit(starboardMessage);
             return;
         } else {
             return;
