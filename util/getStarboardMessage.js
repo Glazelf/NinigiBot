@@ -6,6 +6,7 @@ import globalVars from "../objects/globalVars.json" with { type: "json" };
 export default async ({ messageReaction, targetMessage, boardEmote }) => {
     // Check for atached files
     let attachmentsTitle = "Attachments:";
+    let attachmentsString = "";
     let messageImage = null;
     let starboardEmbeds = [];
     // let seperateFiles = null;
@@ -21,6 +22,7 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
                     .setURL(targetMessage.url);
                 starboardEmbeds.push(imageEmbed);
             };
+            if ((attachmentsString.length + attachment.proxyURL.length) < 1024) attachmentsString += `${attachment.proxyURL}\n`;
         });
     };
     // Get user's avatar, try to use server avatar, otherwise default to global avatar
@@ -51,8 +53,9 @@ export default async ({ messageReaction, targetMessage, boardEmote }) => {
         .setFooter({ text: targetMessage.author.username })
         .setTimestamp(targetMessage.createdTimestamp);
     if (targetMessage.content) starEmbed.setDescription(targetMessage.content);
-    starEmbed.addFields([{ name: `Sent:`, value: `By ${targetMessage.author} in ${targetMessage.channel}\nContext: ${targetMessage.url}`, inline: false }]);
-    if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: true }]);
+    starEmbed.addFields([{ name: `Context:`, value: targetMessage.url, inline: false }]);
+    if (targetMessage.attachments.size > 0) starEmbed.addFields([{ name: attachmentsTitle, value: attachmentsString, inline: false }])
+    if (isReply && replyString.length > 0) starEmbed.addFields([{ name: `Replying to:`, value: replyString, inline: false }]);
     starboardEmbeds.unshift(starEmbed);
     return { embeds: starboardEmbeds };
 };
