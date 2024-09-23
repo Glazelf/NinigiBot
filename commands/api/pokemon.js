@@ -39,10 +39,9 @@ export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Bools
-    let learnsetBool = false;
+    let learnsetBool, shinyBool = false;
     let learnsetArg = interaction.options.getBoolean("learnset");
     if (learnsetArg === true) learnsetBool = true;
-    let shinyBool = false;
     let shinyArg = interaction.options.getBoolean("shiny");
     if (shinyArg === true) shinyBool = true;
     // Variables
@@ -51,17 +50,12 @@ export default async (interaction, ephemeral) => {
     let pokemonInput = interaction.options.getString("pokemon");
     let moveInput = interaction.options.getString("move");
     let pokemonButtons = new ActionRowBuilder();
-    let pokemonFiles = null;
-    let nameBulbapedia = null;
-    let linkBulbapedia = null;
-    let colorPokemonName = null;
+    let pokemonFiles, nameBulbapedia, linkBulbapedia, colorPokemonName, pokemon, move = null;
     // Set generation
     let generation = interaction.options.getInteger("generation") || globalVars.pokemon.currentGeneration;
     let genData = gens.get(generation);
     let allPokemonGen = Array.from(genData.species).filter(pokemon => pokemon.exists && pokemon.num > 0 && !["CAP", "Future"].includes(pokemon.isNonstandard));
     // Used for pokemon and learn
-    let pokemon = null;
-    let move = null;
     if (nameInput) {
         pokemon = Dex.species.get(nameInput);
         move = Dex.moves.get(nameInput);
@@ -294,8 +288,7 @@ export default async (interaction, ephemeral) => {
             let learnInfo = "";
 
             let prevo = Dex.species.get(pokemon.prevo);
-            let prevoLearnset = null;
-            let prevoprevoLearnset = null;
+            let prevoLearnset, prevoprevoLearnset = null;
             let pokemonLearnset = await Dex.learnsets.get(pokemon.id);
             pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
             if (pokemon.prevo) prevoLearnset = await Dex.learnsets.get(pokemon.prevo);
@@ -382,11 +375,8 @@ export default async (interaction, ephemeral) => {
             usageArray = usageArray.map(element => element.trim());
             // Variables for generic usage data
             // let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
-            let rawUsage = 0;
-            let usagePercentage = 0;
-            let usageRank = 0;
-            let genericDataSplitPokemon = null;
-            let pokemonDataSplitLine = null;
+            let rawUsage, usagePercentage, usageRank = 0;
+            let genericDataSplitPokemon, pokemonDataSplitLine = null;
             if (pokemon) {
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
                 if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
@@ -426,7 +416,7 @@ export default async (interaction, ephemeral) => {
                 if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: false }]);
             } else {
                 // Format generic data display
-                let usageList = [];
+                let usageList, usageListPart1, usageListPart2 = [];
                 let usageListIndex = 1;
                 await usageArray.forEach(element => {
                     nameInput = element.split("Raw count")[0].trim();
@@ -437,8 +427,6 @@ export default async (interaction, ephemeral) => {
                     usageList.push(`${usageListIndex} ${nameInput} ${usagePercentage}`);
                     usageListIndex++;
                 });
-                let usageListPart1 = [];
-                let usageListPart2 = [];
                 usageList.forEach(element => { if (usageListPart1.length < 50) usageListPart1.push(element); else if (usageListPart2.length < 50) usageListPart2.push(element) });
                 pokemonEmbed
                     .setTitle(`Usage for ${formatInput} ${rating}+ (${stringMonth}/${year})`)

@@ -173,15 +173,7 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     };
     statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
 
-    let levelMoves = [];
-    let levelMovesNames = [];
-    let tmMoves = [];
-    let eggMoves = [];
-    let tutorMoves = [];
-    let specialMoves = [];
-    let transferMoves = [];
-    let reminderMoves = [];
-    let vcMoves = [];
+    let levelMoves, levelMovesNames, tmMoves, eggMoves, tutorMoves, specialMoves, transferMoves, reminderMoves, vcMoves = [];
     let prevoDataMoves = Dex.species.get(pokemon.prevo);
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
     if (learnsetBool && pokemonLearnset) {
