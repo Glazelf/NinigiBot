@@ -2,25 +2,26 @@ import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-let starboardEmote = "⭐";
+const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
     try {
+        const boardEmote = starboardEmote;
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
-        if (messageReaction.emoji.name !== starboardEmote && !isNoStar) return;
-        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
+        if (messageReaction.emoji.name !== boardEmote && !isNoStar) return;
+        let targetMessage = messageReaction.message;
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel, starboard;
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         if (isNoStar == true) { // Find altboard channel
-            starboardEmote = altboardEmote;
+            boardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
             starboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
@@ -63,7 +64,7 @@ export default async (client, messageReaction) => {
         // Format starred message embed
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setTitle(`${boardEmote}${messageReaction.count}`)
             .setURL(targetMessage.url)
             .setThumbnail(avatar)
             .setImage(messageImage)

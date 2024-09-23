@@ -2,13 +2,14 @@ import { EmbedBuilder } from "discord.js";
 import logger from "../util/logger.js";
 import globalVars from "../objects/globalVars.json" with { type: "json" };
 
-let starboardEmote = "⭐";
+const starboardEmote = "⭐";
 const altboardChannelID = "1234922298255872092"; // Evil starboard
 const altboardEmote = "<:nostar:780198211913646130>";
 const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
     try {
+        let boardEmote = starboardEmote;
         // Check if message has reactions and if reaction is a star
         if (!messageReaction.count) {
             console.log(messageReaction);
@@ -17,22 +18,22 @@ export default async (client, messageReaction) => {
         };
         // Check if message is reacting to nostar in Shinx server
         const isNoStar = (messageReaction.emoji.id === altboardEmoteID && messageReaction.message.guildId == globalVars.ShinxServerID);
-        if (messageReaction.emoji.name !== starboardEmote && !isNoStar) {
+        if (messageReaction.emoji.name !== boardEmote && !isNoStar) {
             console.log(messageReaction.emoji.name);
-            console.log(starboardEmote);
+            console.log(boardEmote);
             console.log(isNoStar);
             return console.log("Reaction is not star or is noStar");
         };
         // Try to fetch message
-        let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
-        // let targetMessage = messageReaction.message; // No fetch is a test, if this doesn't work, try fetching with { force: true }
+        // let targetMessage = await messageReaction.message.channel.messages.fetch(messageReaction.message.id, { force: true });
+        let targetMessage = messageReaction.message; // No fetch is a test, if this doesn't work, try fetching with { force: true }
         if (!targetMessage) return console.log("No target message");
         // Try to find the starboard channel, won't exist if server hasn't set one
         let starboardChannel, starboard;
         let serverApi = await import("../database/dbServices/server.api.js");
         serverApi = await serverApi.default();
         if (isNoStar) { // Find altboard channel
-            starboardEmote = altboardEmote;
+            boardEmote = altboardEmote;
             starboard = await targetMessage.guild.channels.fetch(altboardChannelID);
         } else { // Find starboard channel
             starboardChannel = await serverApi.StarboardChannels.findOne({ where: { server_id: targetMessage.guild.id } });
@@ -91,7 +92,7 @@ export default async (client, messageReaction) => {
         // Format the starboard embed message
         const starEmbed = new EmbedBuilder()
             .setColor(globalVars.embedColor)
-            .setTitle(`${starboardEmote}${messageReaction.count}`)
+            .setTitle(`${boardEmote}${messageReaction.count}`)
             .setURL(targetMessage.url)
             .setThumbnail(avatar)
             .setImage(messageImage)
