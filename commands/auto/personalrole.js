@@ -30,7 +30,8 @@ export default async (interaction, ephemeral) => {
     let colorArg = interaction.options.getString('color-hex');
     let iconArg = interaction.options.getAttachment("icon");
 
-    let roleColor, iconImg = null;
+    let roleColor = null;
+    let iconImg = null;
     let deleteBool = false;
     let fileIsImg = false;
     let iconSize = 0;

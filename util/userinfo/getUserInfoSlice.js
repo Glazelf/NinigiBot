@@ -105,7 +105,9 @@ export default async (interaction, page, user) => {
             } catch (e) {
                 // console.log(e);
             };
-            let joinRank, joinPercentage, joinRankText = null;
+            let joinRank = null;
+            let joinPercentage = null;
+            let joinRankText = null;
             if (guildDataAvailable) {
                 joinRank = await getJoinRank(user, interaction.guild);
                 joinPercentage = Math.ceil(joinRank / interaction.guild.memberCount * 100);

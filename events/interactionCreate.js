@@ -121,9 +121,12 @@ export default async (client, interaction) => {
             case InteractionType.MessageComponent:
                 switch (interaction.componentType) {
                     case ComponentType.Button:
-                        let messageObject = null;
                         if (!interaction.customId || interaction.replied) return;
-                        let contentReturn, embedsReturn, componentsReturn, filesReturn = null;
+                        let messageObject = null;
+                        let contentReturn = null;
+                        let embedsReturn = null;
+                        let componentsReturn = null;
+                        let filesReturn = null;
                         let pkmQuizGuessButtonIdStart = "pkmQuizGuess";
                         // Check for behaviour of interacting with buttons depending on user
                         let isOriginalUser = (interaction.user.id == interaction.message.interaction?.user.id);

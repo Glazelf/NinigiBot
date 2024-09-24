@@ -289,7 +289,8 @@ export default async (interaction, ephemeral) => {
             let learnInfo = "";
 
             let prevo = Dex.species.get(pokemon.prevo);
-            let prevoLearnset, prevoprevoLearnset = null;
+            let prevoLearnset = null;
+            let prevoprevoLearnset = null;
             let pokemonLearnset = await Dex.learnsets.get(pokemon.id);
             pokemonLearnset = await checkBaseSpeciesMoves(pokemon, pokemonLearnset);
             if (pokemon.prevo) prevoLearnset = await Dex.learnsets.get(pokemon.prevo);
@@ -379,7 +380,8 @@ export default async (interaction, ephemeral) => {
             let rawUsage = 0;
             let usagePercentage = 0;
             let usageRank = 0;
-            let genericDataSplitPokemon, pokemonDataSplitLine = null;
+            let genericDataSplitPokemon = null;
+            let pokemonDataSplitLine = null;
             if (pokemon) {
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
                 if (!usagePokemonString) return sendMessage({ interaction: interaction, content: `Could not find any data for \`${pokemon.name}\` in ${formatInput} during the specified month.`, components: usageButtons });
