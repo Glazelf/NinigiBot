@@ -173,10 +173,24 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
     };
     statsString += `${Dex.stats.shortNames.spe}: ${bold(pokemonGen.baseStats.spe)} ${Spestats}\nBST: ${pokemonGen.bst}`;
 
-    let levelMoves, levelMovesNames, tmMoves, eggMoves, tutorMoves, specialMoves, transferMoves, reminderMoves, vcMoves = [];
+    let levelMoves = [];
+    let levelMovesNames = [];
+    let tmMoves = [];
+    let tmMovesStrings = [];
+    let eggMoves = [];
+    let tutorMoves = [];
+    let specialMoves = [];
+    let transferMoves = [];
+    let transferMovesStrings = [];
+    let reminderMoves = [];
+    let vcMoves = [];
+    let levelMovesString = "";
+    let eggMovesString = "";
+    let tutorMovesString = "";
+    let specialMovesString = "";
     let prevoDataMoves = Dex.species.get(pokemon.prevo);
     if (prevoDataMoves && prevoDataMoves.prevo) prevoDataMoves = Dex.species.get(prevoDataMoves.prevo);
-    if (learnsetBool && pokemonLearnset) {
+    if (learnsetBool && pokemonLearnset && pokemonAvailable) {
         for (let [moveName, learnData] of Object.entries(pokemonLearnset.learnset)) {
             let moveData = genData.moves.get(moveName);
             if (moveData) moveName = moveData.name;
@@ -221,33 +235,29 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
                 };
             };
         };
-    };
-    let levelMovesString = "";
-    for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
-    for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
-    let tmMovesStrings = [];
-    let tmMoveIndex = 0;
-    for (const tmMove of tmMoves) {
-        if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
-        tmMovesStrings[tmMoveIndex].push(tmMove);
-        if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
-    };
-    let eggMovesString = eggMoves.join(", ");
-    let tutorMovesString = tutorMoves.join(", ");
-    specialMoves = [...new Set(specialMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
-    let specialMovesString = specialMoves.join(", ");
-    let transferMovesStrings = [];
-    let transferMoveIndex = 0;
-    transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
-    for (const transferMove of transferMoves) {
-        if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
-        transferMovesStrings[transferMoveIndex].push(transferMove);
-        if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
+
+        for (let reminderMove in Object.entries(reminderMoves)) levelMovesString += `0: ${reminderMoves[reminderMove]}\n`;
+        for (let levelMove in Object.entries(levelMoves)) levelMovesString += `${levelMoves[levelMove][1]}: ${levelMoves[levelMove][0]}\n`;
+        let tmMoveIndex = 0;
+        let transferMoveIndex = 0;
+        for (const tmMove of tmMoves) {
+            if (!tmMovesStrings[tmMoveIndex]) tmMovesStrings[tmMoveIndex] = [];
+            tmMovesStrings[tmMoveIndex].push(tmMove);
+            if (tmMovesStrings[tmMoveIndex].join(", ").length > 1000) tmMoveIndex += 1; // 1000 instead of 1024 to add an extra entry for the overflow
+        };
+        eggMovesString = eggMoves.join(", ");
+        tutorMovesString = tutorMoves.join(", ");
+        specialMoves = [...new Set(specialMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el));
+        specialMovesString = specialMoves.join(", ");
+        transferMoves = [...new Set(transferMoves)].filter((el) => !levelMovesNames.includes(el)).filter((el) => !tmMoves.includes(el)).filter((el) => !eggMoves.includes(el)).filter((el) => !tutorMoves.includes(el)).filter((el) => !specialMoves.includes(el));
+        for (const transferMove of transferMoves) {
+            if (!transferMovesStrings[transferMoveIndex]) transferMovesStrings[transferMoveIndex] = [];
+            transferMovesStrings[transferMoveIndex].push(transferMove);
+            if (transferMovesStrings[transferMoveIndex].join(", ").length > 1000) transferMoveIndex += 1;
+        };
     };
     // Get relative Pokédex variables
-    let previousPokemon = null;
-    let nextPokemon = null;
-
+    let previousPokemon, nextPokemon = null;
     let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
     let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
     let previousPokemonID = pokemon.num - 1;
