@@ -107,7 +107,7 @@ export default async (interaction, ephemeral) => {
                 default:
                     return sendMessage({ interaction: interaction, content: clothingFailedString });
             };
-            let clothingObject = await Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
+            let clothingObject = Object.values(selectedClothesJSON).find(clothing => clothing.__RowId.includes(inputID));
             if (!clothingObject) return sendMessage({ interaction: interaction, content: clothingFailedString });
             let clothingAuthor = languageJSON[`CommonMsg/Gear/GearName_${clothingType}`][`${inputID}_${clothingType}`]; // Possible to read .__RowId property instead of using clothingType
             if (!clothingAuthor) clothingAuthor = inputID;
