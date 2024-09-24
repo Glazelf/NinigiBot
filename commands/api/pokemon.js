@@ -39,7 +39,8 @@ export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");
     if (ephemeralArg !== null) ephemeral = ephemeralArg;
     // Bools
-    let learnsetBool, shinyBool = false;
+    let learnsetBool = false;
+    let shinyBool = false;
     let learnsetArg = interaction.options.getBoolean("learnset");
     if (learnsetArg === true) learnsetBool = true;
     let shinyArg = interaction.options.getBoolean("shiny");
@@ -375,7 +376,9 @@ export default async (interaction, ephemeral) => {
             usageArray = usageArray.map(element => element.trim());
             // Variables for generic usage data
             // let totalBattleCount = genericUsageResponse.data.split("battles: ")[1].split("Avg.")[0].replace("\n", "").trim();
-            let rawUsage, usagePercentage, usageRank = 0;
+            let rawUsage = 0;
+            let usagePercentage = 0;
+            let usageRank = 0;
             let genericDataSplitPokemon, pokemonDataSplitLine = null;
             if (pokemon) {
                 let usagePokemonString = usageArray.find(element => element.startsWith(pokemon.name + " ")); // Space is to exclude matching more popular subforms
@@ -416,7 +419,9 @@ export default async (interaction, ephemeral) => {
                 if (countersString.length > 0) pokemonEmbed.addFields([{ name: "Checks and Counters:", value: countersString, inline: false }]);
             } else {
                 // Format generic data display
-                let usageList, usageListPart1, usageListPart2 = [];
+                let usageList = [];
+                let usageListPart1 = [];
+                let usageListPart2 = [];
                 let usageListIndex = 1;
                 await usageArray.forEach(element => {
                     nameInput = element.split("Raw count")[0].trim();

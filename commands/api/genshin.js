@@ -28,7 +28,9 @@ export default async (interaction, ephemeral) => {
     let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
-            let skillsBool, passivesBool, constellationsBool = false;
+            let skillsBool = false;
+            let passivesBool = false;
+            let constellationsBool = false;
             if (interaction.options.getBoolean("skills") === true) skillsBool = true;
             if (interaction.options.getBoolean("passives") === true) passivesBool = true;
             if (interaction.options.getBoolean("constellations") === true) constellationsBool = true;

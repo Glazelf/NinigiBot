@@ -13,13 +13,13 @@ import globalVars from "../../objects/globalVars.json" with { type: "json" };
 import monstersJSON from "../../submodules/monster-hunter-DB/monsters.json" with { type: "json" };
 import questsJSON from "../../submodules/monster-hunter-DB/quests.json" with { type: "json" };
 
-let mhRiseString = "Monster Hunter Rise";
-let mhWorldString = "Monster Hunter World";
-let mhguString = "Monster Hunter Generations Ultimate";
-let mh4uString = "Monster Hunter 4 Ultimate";
-let mh3uString = "Monster Hunter 3 Ultimate";
-let mhStories2String = "Monster Hunter Stories 2";
-let mhStoriesString = "Monster Hunter Stories";
+const mhRiseString = "Monster Hunter Rise";
+const mhWorldString = "Monster Hunter World";
+const mhguString = "Monster Hunter Generations Ultimate";
+const mh4uString = "Monster Hunter 4 Ultimate";
+const mh3uString = "Monster Hunter 3 Ultimate";
+const mhStories2String = "Monster Hunter Stories 2";
+const mhStoriesString = "Monster Hunter Stories";
 
 export default async (interaction, ephemeral) => {
     let ephemeralArg = interaction.options.getBoolean("ephemeral");

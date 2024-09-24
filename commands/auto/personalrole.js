@@ -31,7 +31,8 @@ export default async (interaction, ephemeral) => {
     let iconArg = interaction.options.getAttachment("icon");
 
     let roleColor, iconImg = null;
-    let deleteBool, fileIsImg = false;
+    let deleteBool = false;
+    let fileIsImg = false;
     let iconSize = 0;
     if (colorArg) roleColor = colorArg;
     if (iconArg) {
