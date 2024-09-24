@@ -257,7 +257,8 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         };
     };
     // Get relative Pokédex variables
-    let previousPokemon, nextPokemon = null;
+    let previousPokemon = null;
+    let nextPokemon = null;
     let buttonAppend = `${learnsetBool}|${shinyBool}|${generation}`;
     let maxPkmID = allPokemonGen[allPokemonGen.length - 1].num;
     let previousPokemonID = pokemon.num - 1;
