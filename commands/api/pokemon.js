@@ -166,7 +166,7 @@ export default async (interaction, ephemeral) => {
 
             let moveLearnPool = [];
             for (const pokemon of allPokemonGen) {
-                if (isIdenticalForm(pokemon.name) || pokemon.name.startsWith("Terapagos-")) continue;
+                if (isIdenticalForm(pokemon.name) || pokemon.name.startsWith("Terapagos-") || pokemon.name.endsWith("-Origin")) continue;
                 let canLearnBool = await genData.learnsets.canLearn(pokemon.name, move.name);
                 if (canLearnBool) moveLearnPool.push(pokemon.name);
             };
