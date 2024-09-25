@@ -9,7 +9,7 @@ const altboardEmoteID = altboardEmote.replace(/[^0-9]+/g, "");
 
 export default async (client, messageReaction) => {
     try {
-        const boardEmote = starboardEmote;
+        let boardEmote = starboardEmote;
         // Check if message reaction counts are valid and that reaction is a star
         if (messageReaction.count == null || messageReaction.count == undefined) return;
         // Check if message is reacting to nostar in Shinx server
