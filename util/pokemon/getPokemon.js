@@ -276,6 +276,12 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
         .setStyle(ButtonStyle.Primary)
         .setEmoji('⬅️');
     pkmButtons.addComponents(previousPokemonButton);
+    const nextPokemonButton = new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name })
+        .setCustomId(`pkmright|${buttonAppend}`)
+        .setLabel(nextPokemon.name)
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('➡️');
+    pkmButtons.addComponents(nextPokemonButton);
     if (pokemon.name !== pokemon.baseSpecies) {
         const baseSpeciesButton = new ButtonBuilder()
             .setCustomId(`pkmbase|${buttonAppend}`)
@@ -284,12 +290,6 @@ export default async ({ pokemon, learnsetBool = false, shinyBool = false, genDat
             .setEmoji('⬇️');
         pkmButtons.addComponents(baseSpeciesButton);
     };
-    const nextPokemonButton = new ButtonBuilder({ customId: `pkmright|${buttonAppend}`, style: ButtonStyle.Primary, emoji: '➡️', label: nextPokemon.name })
-        .setCustomId(`pkmright|${buttonAppend}`)
-        .setLabel(nextPokemon.name)
-        .setStyle(ButtonStyle.Primary)
-        .setEmoji('➡️');
-    pkmButtons.addComponents(nextPokemonButton);
     if (pokemon.prevo) {
         let prevoDataEvo = Dex.species.get(pokemon.prevo); // Second prevoData is required, initial one can be overwritten by prevo of prevo
         let evoMethod = getEvoMethod(pokemon);
