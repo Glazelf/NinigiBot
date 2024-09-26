@@ -32,12 +32,12 @@ let severityChoices = [
 // String options
 const inputOption = new SlashCommandStringOption()
     .setName("input")
-    .setDescription("Text to OwOify")
+    .setDescription("Text to OwOify.")
     .setMaxLength(1950) // Set limit shortly under 2000 character limit to avoid going over with code block text etc.
     .setRequired(true);
 const severityOption = new SlashCommandStringOption()
     .setName("severity")
-    .setDescription("Severity of OwOification")
+    .setDescription("Severity of OwOification.")
     .setChoices(severityChoices);
 // Boolean options
 const ephemeralOption = new SlashCommandBooleanOption()

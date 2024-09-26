@@ -585,7 +585,7 @@ const battleSubcommand = new SlashCommandSubcommandBuilder()
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("shinx")
-    .setDescription("Interact with your Shinx")
+    .setDescription("Interact with your Shinx.")
     .setContexts([InteractionContextType.Guild])
     .addSubcommand(infoSubcommand)
     .addSubcommand(feedSubcommand)

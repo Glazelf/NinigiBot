@@ -171,7 +171,7 @@ const personalRolesSubcommand = new SlashCommandSubcommandBuilder()
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("serversettings")
-    .setDescription("Change server settings")
+    .setDescription("Change server settings.")
     .setContexts([InteractionContextType.Guild])
     .setDefaultMemberPermissions(requiredPermission)
     .addSubcommand(starboardSubcommand)

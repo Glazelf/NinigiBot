@@ -53,6 +53,6 @@ const confirmOption = new SlashCommandBooleanOption()
 // Final command
 export const commandObject = new SlashCommandBuilder()
     .setName("clean")
-    .setDescription("Runs clean up routine of the database files")
+    .setDescription("Runs clean up routine of the database files.")
     .setContexts([InteractionContextType.Guild])
     .addBooleanOption(confirmOption);

@@ -35,7 +35,7 @@ export const guildID = config.devServerID;
 // String options
 const interactionNameOption = new SlashCommandStringOption()
     .setName("interaction-name")
-    .setDescription("Interaction to remove")
+    .setDescription("Interaction to remove.")
     .setRequired(true);
 const guildIDOption = new SlashCommandStringOption()
     .setName("guild-id")
