@@ -7,12 +7,10 @@ import {
 } from "discord.js";
 import axios from "axios";
 import sendMessage from "../../util/sendMessage.js";
-import getWikiURL from "../../util/getWikiURL.js";
 import parseDate from "../../util/parseDate.js";
 import globalVars from "../../objects/globalVars.json" with { type: "json" };
 
 const giAPI = `https://genshin.jmp.blue/`;
-const giWiki = `https://static.wikia.nocookie.net/gensin-impact/images/`;
 const embedCharacterLimit = 6000;
 const descCharacterLimit = 1024;
 
@@ -22,25 +20,23 @@ export default async (interaction, ephemeral) => {
     await interaction.deferReply({ ephemeral: ephemeral });
 
     let response;
+    let error200ReturnString = `Error occurred, make sure that your input is valid and exists.`;
     let returnString = "";
     let giEmbed = new EmbedBuilder()
         .setColor(globalVars.embedColor);
     let nameInput = interaction.options.getString("name").toLowerCase();
     switch (interaction.options.getSubcommand()) {
         case "character":
+            const giAPICharacter = `${giAPI}characters/${nameInput}`;
             let skillsBool = false;
             let passivesBool = false;
             let constellationsBool = false;
             if (interaction.options.getBoolean("skills") === true) skillsBool = true;
             if (interaction.options.getBoolean("passives") === true) passivesBool = true;
             if (interaction.options.getBoolean("constellations") === true) constellationsBool = true;
-            response = await axios.get(`${giAPI}characters/${nameInput}`);
-            if (response.status != 200) return sendMessage({ interaction: interaction, content: `Error occurred, make sure that character exists.` });
+            response = await axios.get(giAPICharacter);
+            if (response.status != 200) return sendMessage({ interaction: interaction, content: error200ReturnString });
             let character = response.data;
-            let characterThumbnailFile = `Character_${character.name}_Thumb.png`;
-            let characterThumbnail = getWikiURL(characterThumbnailFile, giWiki);
-            let characterBannerFile = `Character_${character.name}_Full_Wish.png`;
-            let characterBanner = getWikiURL(characterBannerFile, giWiki);
             // We should REALLY change how birthdays are stored LOL
             let characterBirthdayArray = [];
             let characterBirthday = "";
@@ -49,9 +45,9 @@ export default async (interaction, ephemeral) => {
                 characterBirthday = parseDate(`${characterBirthdayArray[2]}${characterBirthdayArray[1]}`);
             };
             giEmbed
-                .setTitle(`${character.name} - ${character.affiliation}`)
-                .setThumbnail(characterThumbnail)
-                .setImage(characterBanner)
+                .setAuthor({ name: `${character.name} - ${character.affiliation}`, iconURL: `${giAPICharacter}/icon-side` })
+                .setThumbnail(`${giAPICharacter}/constellation-shape`)
+                .setImage(`${giAPICharacter}/gacha-splash`)
                 .addFields([
                     { name: "Rarity:", value: `${character.rarity}⭐`, inline: true },
                     { name: "Vision:", value: character.vision, inline: true },
@@ -78,14 +74,13 @@ export default async (interaction, ephemeral) => {
             if (giEmbed.length > embedCharacterLimit - descCharacterLimit) returnString = `Embeds can only be ${embedCharacterLimit} characters long.\nIf you are missing fields they might have gone over this limit and not been added.\nTry selecting less attributes to display (\`skills\`, \`passives\`, \`constellations\`) at once.`;
             break;
         case "weapon":
-            response = await axios.get(`${giAPI}weapons/${nameInput}`);
+            const giAPIWeapon = `${giAPI}weapons/${nameInput}`;
+            response = await axios.get(giAPIWeapon);
+            if (response.status != 200) return sendMessage({ interaction: interaction, content: error200ReturnString });
             let weapon = response.data;
-
-            let weaponThumbnailFile = `Weapon_${weapon.name}.png`;
-            let weaponThumbnail = getWikiURL(weaponThumbnailFile, giWiki);
             giEmbed
                 .setTitle(weapon.name)
-                .setThumbnail(weaponThumbnail)
+                .setThumbnail(`${giAPIWeapon}/icon`)
                 .addFields([
                     { name: "Type:", value: `${weapon.rarity}⭐ ${weapon.type}`, inline: true },
                     { name: "Location:", value: weapon.location, inline: true },
@@ -95,10 +90,13 @@ export default async (interaction, ephemeral) => {
             if (weapon.passiveName !== "-") giEmbed.addFields([{ name: `${weapon.passiveName} (Passive)`, value: weapon.passiveDesc, inline: false }]);
             break;
         case "artifact":
-            response = await axios.get(`${giAPI}artifacts/${nameInput}`);
+            const giAPIArtifact = `${giAPI}artifacts/${nameInput}`;
+            response = await axios.get(giAPIArtifact);
+            if (response.status != 200) return sendMessage({ interaction: interaction, content: error200ReturnString });
             let artifact = response.data;
             giEmbed
                 .setTitle(artifact.name)
+                .setThumbnail(`${giAPIArtifact}/flower-of-life`)
                 .addFields([{ name: "Max Rarity:", value: `${artifact.max_rarity}⭐`, inline: true }]);
             let pieceBonusVarName = "-piece_bonus";
             for (let i = 1; i <= 5; i++) {
