@@ -21,7 +21,7 @@ import config from "../../config.json" with { type: "json" };
 export default async (interaction, ephemeral) => {
     ephemeral = true;
     let ownerBool = await isOwner(interaction.client, interaction.user);
-    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString });
+    if (!ownerBool) return sendMessage({ interaction: interaction, content: globalVars.lackPermsString, ephemeral: true });
 
     let trophy_name, res, returnString;
     const regexpUnicode = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
@@ -71,7 +71,7 @@ export default async (interaction, ephemeral) => {
             return sendMessage({
                 interaction: interaction,
                 content: returnString,
-                ephemeral: true
+                ephemeral: ephemeral
             });
         case "deleteshoptrophy":
             trophy_name = interaction.options.getString("name").trim();
@@ -80,7 +80,7 @@ export default async (interaction, ephemeral) => {
             return sendMessage({
                 interaction: interaction,
                 content: returnString,
-                ephemeral: true
+                ephemeral: ephemeral
             });
     };
 };
